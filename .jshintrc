@@ -1,4 +1,4 @@
 {
-  "predef": ["document"],
+  "predef": ["document", "require"],
   "node": true
 }
