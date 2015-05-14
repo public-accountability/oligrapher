@@ -1,13 +1,25 @@
 'use strict'
 
-var React = require('react')
+var React = require('react');
+var SearchForm = require('./SearchForm');
+var SearchResults = require('./SearchResults');
+
+/**
+* Heirarchy:
+* - SearchContainer
+*   - SearchForm
+*   - SearchResults
+* */
 
 module.exports = React.createClass({
-  displayName: 'SearchContainerReact',
+  displayName: 'SearchContainer',
   render: function () {
     return (
       <div className="searchContainer">
-        goodbye
-      </div>);
+        <h1>Search</h1>
+        <SearchForm />
+        <SearchResults results={this.props.results}/>
+      </div>
+    );
   }
 });
