@@ -2,8 +2,10 @@
 
 var React = require('react');
 var SearchContainer = require('./SearchContainer');
+var FAKE_RESULTS = require('./test/support/sampleData.js').fakeResults;
+
 
 React.render(
-  <SearchContainer />,
+  <SearchContainer results={FAKE_RESULTS} />,
   document.getElementById('content')
 );
