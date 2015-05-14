@@ -4,14 +4,14 @@ var SearchResult = require('./SearchResult');
 module.exports = React.createClass({
   displayName: 'SearchResults',
   render: function(){
-    var resNodes = this.props.results.map(function(result){
+    var results = this.props.results.map(function(result){
       return (
         <SearchResult result={result} />
       );
     });
     return (
       <div className="searchResults">
-        {resNodes}
+        {results}
       </div>
     );
   }
