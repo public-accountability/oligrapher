@@ -1,5 +1,3 @@
-'use strict'
-
 var React = require('react');
 var SearchForm = require('./SearchForm');
 var SearchResults = require('./SearchResults');
