@@ -13,11 +13,16 @@
     "type": "git",
     "url": "https://github.com/aguestuser/show-me-the-money.git"
   },
-  "author": "",
+  "author": "aguestuser",
   "license": "gpl",
   "bugs": {
     "url": "https://github.com/aguestuser/show-me-the-money/issues"
   },
+ "jest": {
+   "scriptPreprocessor": "./preprocessor.js",
+   "moduleFileExtensions": ["js", "jsx"],
+   "unmockedModulePathPatterns": ["react", "superagent"]
+ },
   "homepage": "https://github.com/aguestuser/show-me-the-money",
   "dependencies": {
     "react": "^0.13.3",
@@ -28,6 +33,7 @@
     "jest-cli": "^0.4.5",
     "jsx-loader": "^0.13.2",
     "node-libs-browser": "^0.5.0",
+    "react-tools": "^0.13.3",
     "webpack": "^1.9.5",
     "webpack-dev-server": "^1.8.2"
   }

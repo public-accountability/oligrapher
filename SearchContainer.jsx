@@ -1,13 +1,8 @@
 var React = require('react');
 var SearchForm = require('./SearchForm');
 var SearchResults = require('./SearchResults');
-var apiService = require('./util/apiService')
-var FAKE_RESULTS = require('./test/support/sampleData.js')
-                            .fakeResults
-                            .Response
-                            .Data
-                            .Entities
-                            .Entity;
+var apiService = require('./util/apiService');
+
 /**
 * Heirarchy:
 * - SearchContainer
@@ -24,7 +19,6 @@ module.exports = React.createClass({
         else that.setState({results: res});
       }
     );
-    /* this.setState({results: FAKE_RESULTS}); */
   },
   getInitialState: function(){
     return {results: []};

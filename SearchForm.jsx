@@ -11,9 +11,9 @@ module.exports = React.createClass({
   },
   render: function(){
     return(
-      <form classNanme="searchContainer" onSubmit={this.onSubmit} >
-        <input type="text" placeholder="Enter a name..." ref="query" />
-        <input type="submit" value="Search"/>
+      <form className="searchForm" onSubmit={this.onSubmit} >
+        <input className="searchInput" type="text" placeholder="Enter a name..." ref="query" />
+        <input className="searchSubmit" type="submit" value="Search"/>
       </form>
     );
   }
