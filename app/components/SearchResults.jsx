@@ -3,6 +3,7 @@ var SearchResult = require('./SearchResult');
 
 class SearchResults extends React.Component {
   constructor(){
+    super();
     this.displayName = 'SearchResults';
   }
   render(){
@@ -16,5 +17,4 @@ class SearchResults extends React.Component {
     );
   }
 }
-
 module.exports = SearchResults;

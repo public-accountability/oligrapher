@@ -1,8 +1,8 @@
 var React = require('react');
 
 class SearchResult extends React.Component {
-  constructor(options){
-    super(options);
+  constructor(){
+    super();
     this.displayName = 'SearchResult';
   }
   render() {

@@ -1,7 +1,8 @@
 var React = require('react');
 
 class SearchForm extends React.Component {
-  constructor(){
+  constructor() {
+    super();
     this.displayName = 'SearchForm';
     this.handleSubmit = this.handleSubmit.bind(this);
   }
