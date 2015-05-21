@@ -2,7 +2,7 @@
   "name": "show-me-the-money",
   "version": "1.0.0",
   "description": "learning react w/ little sis",
-  "main": "index.js",
+  "main": "./components/",
   "scripts": {
     "start": "npm run serve | npm run dev",
     "serve": "./node_modules/.bin/http-server -p 8080",
@@ -23,7 +23,7 @@
    "moduleFileExtensions": ["js", "jsx"],
    "unmockedModulePathPatterns": ["react", "superagent"]
  },
-  "homepage": "https://github.com/aguestuser/show-me-the-money",
+  "homepage": "https://github.com/aguestuser/show-me-the-money/",
   "dependencies": {
     "react": "^0.13.3",
     "superagent": "^1.2.0"
