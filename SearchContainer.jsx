@@ -1,4 +1,4 @@
-var React = require('react');
+var BaseComponent = require('./BaseComponent');
 var SearchForm = require('./SearchForm');
 var SearchResults = require('./SearchResults');
 var apiService = require('./util/apiService');
@@ -10,26 +10,29 @@ var apiService = require('./util/apiService');
 *   - SearchResults
 * */
 
-module.exports = React.createClass({
-  displayName: 'SearchContainer',
-  onSearchSubmit: function(query){
+class SearchContainer extends BaseComponent {
+  constructor(){
+    super();
+    this.displayName = 'SearchContainer';
+    this.state = {results: []};
+    this.bindAll('handleSearchSubmit');
+  }
+  handleSearchSubmit(query){
     var that = this;
-    apiService.searchEntities(query, function(err,res){
-        if (err) console.error(JSON.sringify(err));
-        else that.setState({results: res});
-      }
-    );
-  },
-  getInitialState: function(){
-    return {results: []};
-  },
-  render: function () {
+    apiService.searchEntities(query, (err, res) => {
+      if (err) console.error(JSON.stringify(err));
+      else that.setState({results: res});
+    });
+  }
+  render(){
     return (
       <div className="searchContainer">
         <h1>Search</h1>
-        <SearchForm onSubmit={this.onSearchSubmit}/>
+        <SearchForm handleSubmit={this.handleSearchSubmit}/>
         <SearchResults results={this.state.results}/>
       </div>
     );
   }
-});
+}
+
+module.exports = SearchContainer;

@@ -9,13 +9,15 @@ describe('SearchContainer', function(){
 
   var React = require('react/addons');
   var TestUtils = React.addons.TestUtils;
-
   var SearchContainer = require('../SearchContainer.jsx');
 
   var container = TestUtils.renderIntoDocument(
       <SearchContainer /> );
+
+  var form = TestUtils.findRenderedDOMComponentWithClass(
+    container, 'searchForm');
   var button = TestUtils.findRenderedDOMComponentWithClass(
-      container, 'searchSubmit');
+    container, 'searchSubmit');
   var input = TestUtils.findRenderedDOMComponentWithClass(
     container, 'searchInput');
 
@@ -28,16 +30,18 @@ describe('SearchContainer', function(){
 
   it('displays search results', function(){
 
-    //TODO: figure out correct syntax for this
+    form.onSubmit = jest.genMockFunction().mockImplementation(function(){
+    var result = TestUtils.findRenderedDOMComponentWithClass(
+      container, 'searchResult');
+
+    console.log('result: ', result);
+    expect(true).toEqual(true);
+    });
 
     // TestUtils.Simulate.change(input, { target: { value: "Walmart" }});
-    // TestUtils.Simulate.keyDown(button, {key: "Enter"});
-
-    // var result = TestUtils.findRenderedDOMComponentWithClass(
-    //   container, 'searchResult');
-
-    // console.log('result: ', result);
-    // expect(true).toEqual(true);
+    input.getDOMNode().value = 'Walmart';
+    TestUtils.Simulate.submit(form);
+    console.log("HELLO??");
 
   });
 });

@@ -1,6 +1,0 @@
-{
-  "predef": ["document", "require"],
-  "node": true,
-  "esnext": true,
-  "strict": true
-}

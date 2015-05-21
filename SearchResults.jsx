@@ -1,18 +1,20 @@
 var React = require('react');
 var SearchResult = require('./SearchResult');
 
-module.exports = React.createClass({
-  displayName: 'SearchResults',
-  render: function(){
-    var results = this.props.results.map(function(result){
-      return (
-        <SearchResult result={result} />
-      );
-    });
+class SearchResults extends React.Component {
+  constructor(){
+    this.displayName = 'SearchResults';
+  }
+  render(){
+    var results = this.props.results.map(r =>
+      <SearchResult result={r} />
+    );
     return (
       <div className="searchResults">
         {results}
       </div>
     );
   }
-});
+}
+
+module.exports = SearchResults;
