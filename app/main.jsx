@@ -1,10 +1,7 @@
-(function(){'use strict';}());
-
 var React = require('react');
-var SearchContainer = require('./components/SearchContainer');
-
+var Container = require('./components/Container');
 
 React.render(
-  <SearchContainer />,
+  <Container />,
   document.getElementById('content')
 );

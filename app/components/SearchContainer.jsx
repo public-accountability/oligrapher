@@ -2,7 +2,7 @@ var BaseComponent = require('./BaseComponent');
 var SearchForm = require('./SearchForm');
 var SearchResults = require('./SearchResults');
 var lsApi = require('../api/lsApi');
-require('../../styles/_main.scss');
+//require('../../styles/_main.scss');
 
 /**
 * Heirarchy:
@@ -28,8 +28,7 @@ class SearchContainer extends BaseComponent {
   render(){
     return (
       <div className="searchContainer">
-        <h1>Search</h1>
-        <SearchForm handleSubmit={this.handleSearchSubmit}/>
+         <SearchForm handleSubmit={this.handleSearchSubmit}/>
         <SearchResults results={this.state.results}/>
       </div>
     );

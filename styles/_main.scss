@@ -1,18 +1,32 @@
+//$icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
+//@import '~bootstrap-sass/assets/stylesheets/_bootstrap.scss';
+
+//.container {
+//  @extend .row;
+//}
+
+.canvasContainer {
+  @extend .col-md-8;
+  border: 1px solid black;
+  height: 500px;
+  //padding-bottom: 400em;
+}
+
 .searchContainer {
-  h1 {
-    background-color: red;
-  }
-  input {
-    margin: .2em;
-  }
-  .searchResult {
-    background-color: blue;
-    color: orange;
+  @extend .col-md-4;
+  //margin-top: -4em;
+}
+
+.searchForm {
+  input[type='text'] {
+    width: 15em;
+    margin-right: .5em;
   }
   .searchSubmit {
     @extend .btn-primary;
   }
-  .searchContainer {
-    @extend .col
-  }
+}
+
+.searchResult {
+
 }
