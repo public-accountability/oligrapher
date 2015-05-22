@@ -10,7 +10,6 @@ class SearchForm extends React.Component {
     e.preventDefault();
     var query = React.findDOMNode(this.refs.query).value.trim();
     this.props.handleSubmit(query);
-    React.findDOMNode(this.refs.query).value = '';
     return;
   }
   render(){

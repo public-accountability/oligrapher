@@ -1,4 +1,5 @@
 var React = require('react');
+require('../../styles/_main.scss');
 
 class SearchResult extends React.Component {
   constructor(){

@@ -2,6 +2,7 @@ var BaseComponent = require('./BaseComponent');
 var SearchForm = require('./SearchForm');
 var SearchResults = require('./SearchResults');
 var lsApi = require('../api/lsApi');
+require('../../styles/_main.scss');
 
 /**
 * Heirarchy:

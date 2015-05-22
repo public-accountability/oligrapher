@@ -1,0 +1,18 @@
+.searchContainer {
+  h1 {
+    background-color: red;
+  }
+  input {
+    margin: .2em;
+  }
+  .searchResult {
+    background-color: blue;
+    color: orange;
+  }
+  .searchSubmit {
+    @extend .btn-primary;
+  }
+  .searchContainer {
+    @extend .col
+  }
+}
