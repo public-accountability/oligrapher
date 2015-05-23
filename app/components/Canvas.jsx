@@ -1,9 +1,9 @@
 var BaseComponent = require('./BaseComponent');
 
-class CanvasContainer extends BaseComponent {
+class Canvas extends BaseComponent {
   constructor(){
     super();
-    this.displayName = 'CanvasContainer';
+    this.displayName = 'Canvas';
   }
   render(){
     return (
@@ -14,4 +14,4 @@ class CanvasContainer extends BaseComponent {
   }
 }
 
-module.exports = CanvasContainer;
+module.exports = Canvas;

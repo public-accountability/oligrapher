@@ -4,12 +4,6 @@ var SearchResults = require('./SearchResults');
 var lsApi = require('../api/lsApi');
 //require('../../styles/_main.scss');
 
-/**
-* Heirarchy:
-* - SearchContainer
-*   - SearchForm
-*   - SearchResults
-* */
 
 class SearchContainer extends BaseComponent {
   constructor(){
@@ -20,15 +14,15 @@ class SearchContainer extends BaseComponent {
   }
   handleSearchSubmit(query){
     var that = this;
-    lsApi.searchEntities(query, (err, res) => {
-      if (err) console.error(JSON.stringify(err));
-      else that.setState({results: res});
-    });
+    lsApi.searchEntities(query).then(
+      (res) => that.setState({results: res}),
+      (err) => console.error(JSON.stringify(err))
+    );
   }
   render(){
     return (
       <div className="searchContainer">
-         <SearchForm handleSubmit={this.handleSearchSubmit}/>
+        <SearchForm handleSubmit={this.handleSearchSubmit}/>
         <SearchResults results={this.state.results}/>
       </div>
     );

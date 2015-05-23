@@ -3,7 +3,8 @@
   "env": {
     "browser": true,
     "es6": true,
-    "node": true
+    "node": true,
+    "mocha": true
   },
   "ecmaFeatures": {
     "arrowFunctions": true,
@@ -27,6 +28,7 @@
     "no-shadow": [0],
     "no-unused-vars": [1],
     "no-use-before-define": [2, "nofunc"],
-    "curly": [2, "multi-line"]
+    "curly": [2, "multi-line"],
+    "camelcase": [2, {"properties": "never"}]
   }
 }
