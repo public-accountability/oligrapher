@@ -1,10 +1,11 @@
 var React = require('react');
+var BaseComponent = require('./BaseComponent');
 
-class SearchForm extends React.Component {
+class SearchForm extends BaseComponent {
   constructor() {
     super();
     this.displayName = 'SearchForm';
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.bindAll('handleSubmit');
   }
   handleSubmit(e){
     e.preventDefault();

@@ -23,7 +23,7 @@ class SearchContainer extends BaseComponent {
     return (
       <div className="searchContainer">
         <SearchForm handleSubmit={this.handleSearchSubmit}/>
-        <SearchResults results={this.state.results}/>
+        <SearchResults results={this.state.results} addNode={this.props.addNode} />
       </div>
     );
   }

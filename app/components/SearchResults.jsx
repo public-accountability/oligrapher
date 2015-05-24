@@ -8,7 +8,7 @@ class SearchResults extends React.Component {
   }
   render(){
     var results = this.props.results.map(r =>
-      <SearchResult result={r} />
+      <SearchResult result={r} addNode={this.props.addNode}/>
     );
     return (
       <div className="searchResults">
