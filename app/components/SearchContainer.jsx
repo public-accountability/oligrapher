@@ -10,20 +10,12 @@ class SearchContainer extends BaseComponent {
     super();
     this.displayName = 'SearchContainer';
     this.state = {results: []};
-    this.bindAll('handleSearchSubmit');
-  }
-  handleSearchSubmit(query){
-    var that = this;
-    lsApi.searchEntities(query).then(
-      (res) => that.setState({results: res}),
-      (err) => console.error(JSON.stringify(err))
-    );
   }
   render(){
     return (
       <div className="searchContainer">
-        <SearchForm handleSubmit={this.handleSearchSubmit}/>
-        <SearchResults results={this.state.results} addNode={this.props.addNode} />
+        <SearchForm handleSubmit={this.props.handleSearchSubmit} ref="searchForm" />
+        <SearchResults query={this.props.query} results={this.props.results} addNode={this.props.addNode} />
       </div>
     );
   }

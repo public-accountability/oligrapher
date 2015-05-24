@@ -9,8 +9,10 @@ class SearchForm extends BaseComponent {
   }
   handleSubmit(e){
     e.preventDefault();
-    var query = React.findDOMNode(this.refs.query).value.trim();
+    var qNode = React.findDOMNode(this.refs.query);
+    var query = qNode.value.trim();
     this.props.handleSubmit(query);
+    qNode.value = '';
     return;
   }
   render(){
