@@ -8,7 +8,7 @@ var unwrap = (res) => res.body.Response.Data;
 //module
 var lsApi = {};
 
-//searchEntities(String, Function) -> Unit
+//searchEntities(String) -> Promise[Entity]
 lsApi.searchEntities = (query, handleResponse) => {
   var unwrapThis = res => unwrap(res).Entities.Entity || [];
   return new Promise((resolve, reject) =>
@@ -18,7 +18,7 @@ lsApi.searchEntities = (query, handleResponse) => {
       .end((err, res) => err ? reject(err) : resolve(unwrapThis(res))));
 };
 
-//getAdjacentEntities(String, Function) -> Unit
+//getAdjacentEntities(String) -> Promise[Array[Entity]]
 lsApi.getAdjacentEntities = (id, handleResponse) => {
   var unwrapThis = res =>  unwrap(res).Degree2Entities.Entity || [];
   return new Promise((resolve, reject) =>
