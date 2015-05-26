@@ -1,25 +1,29 @@
 // Search_integration_spec.js
 
-jest.dontMock('../SearchContainer');
-jest.dontMock('../SearchResults');
-jest.dontMock('../SearchResult');
-jest.dontMock('../SearchForm');
+var sd = require('../test/support/sampleData.js');
 
-describe('SearchContainer', function(){
+jest.dontMock('../app/Main');
+jest.dontMock('../app/components/BaseComponent');
+jest.dontMock('../app/components/SearchContainer');
+jest.dontMock('../app/components/SearchForm');
+jest.dontMock('../app/components/SearchResults.jsx');
+jest.dontMock('../app/components/SearchResult.jsx');
+
+describe('Main', function(){
 
   var React = require('react/addons');
   var TestUtils = React.addons.TestUtils;
-  var SearchContainer = require('../SearchContainer.jsx');
+  var Main = require('../app/Main.jsx');
 
-  var container = TestUtils.renderIntoDocument(
-      <SearchContainer /> );
+  var main = TestUtils.renderIntoDocument(
+      <Main /> );
 
   var form = TestUtils.findRenderedDOMComponentWithClass(
-    container, 'searchForm');
+    main, 'searchForm');
   var button = TestUtils.findRenderedDOMComponentWithClass(
-    container, 'searchSubmit');
+    main, 'searchSubmit');
   var input = TestUtils.findRenderedDOMComponentWithClass(
-    container, 'searchInput');
+    main, 'searchInput');
 
   it('has a search form', function(){
 
@@ -30,18 +34,17 @@ describe('SearchContainer', function(){
 
   it('displays search results', function(){
 
-    form.onSubmit = jest.genMockFunction().mockImplementation(function(){
-    var result = TestUtils.findRenderedDOMComponentWithClass(
-      container, 'searchResult');
+    //TODO figure out integration tests!
 
-    console.log('result: ', result);
-    expect(true).toEqual(true);
+    form.onSubmit = jest.genMockFunction().mockImplementation(function(){
+      this.setState({results: sd.searchEntitiesResult});
     });
 
-    // TestUtils.Simulate.change(input, { target: { value: "Walmart" }});
     input.getDOMNode().value = 'Walmart';
     TestUtils.Simulate.submit(form);
-    console.log("HELLO??");
+    var results = TestUtils.findRenderedDOMComponentWithClass(
+      container, 'searchResults');
+    expect(results).toContain('Walmart');
 
   });
 });
