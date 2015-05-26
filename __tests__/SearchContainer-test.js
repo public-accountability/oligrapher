@@ -36,7 +36,7 @@ describe('Main', function(){
 
     //TODO figure out integration tests!
 
-    form.onSubmit = jest.genMockFunction().mockImplementation(function(){
+    Main.handleSearchSubmit = jest.genMockFunction().mockImplementation(function(){
       this.setState({results: sd.searchEntitiesResult});
     });
 
