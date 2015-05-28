@@ -9,7 +9,7 @@ var unwrap = (res) => res.body.Response.Data;
 var lsApi = {};
 
 //searchEntities(String) -> Promise[Entity]
-lsApi.searchEntities = (query, handleResponse) => {
+lsApi.searchEntities = (query) => {
   var unwrapThis = res => unwrap(res).Entities.Entity || [];
   return new Promise((resolve, reject) =>
     request
@@ -19,7 +19,7 @@ lsApi.searchEntities = (query, handleResponse) => {
 };
 
 //getAdjacentEntities(String) -> Promise[Array[Entity]]
-lsApi.getAdjacentEntities = (id, handleResponse) => {
+lsApi.getAdjacentEntities = (id) => {
   var unwrapThis = res =>  unwrap(res).Degree2Entities.Entity || [];
   return new Promise((resolve, reject) =>
     request

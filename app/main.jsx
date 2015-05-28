@@ -66,6 +66,7 @@ class Main extends BaseComponent {
   }
 }
 
+
 React.render(
   <Main />,
   document.getElementById('content')
