@@ -5,7 +5,7 @@ class Entity {
     this.id = options.id; //String
     this.name = options.name; //String
     this.parent_id = options.parent_id; //String
-    this.primary_type = options.primary_type; //Strin
+    this.primary_type = options.primary_type; //String
     this.start_date = options.start_date; //String
     this.summary = options.summary; //String
     this.updated_at = options.updated_at; //String

@@ -5,6 +5,8 @@ var SearchContainer = require('./components/SearchContainer');
 var _ = require('lodash');
 var lsApi = require('./api/lsApi');
 var Node = require('./models/Node');
+var Edge = require('./models/Edge');
+var Graph = require('./models/Graph');
 var imm = require('immutable');
 
 /* Main
@@ -20,9 +22,12 @@ var imm = require('immutable');
 class Main extends BaseComponent {
   constructor(){
     super();
-    this.displayName = 'Main';
-    this.state = { nodes: [], results: [], query: null };
-    this.bindAll('handleSearchSubmit', 'addNode');
+    this.displayName = 'Container';
+    var graph = new Graph({});
+    this.zero_node = new Node({ entity: { id: "x0", name: 'Man Behind The Throne' } })
+    graph.addNode(this.zero_node);
+    this.state = { graph: graph, results: [], query: null };
+    this.bindAll('handleSearchSubmit', 'addNode', 'handleNodeDrag');
   }
   handleSearchSubmit(query){
     var that = this;
@@ -32,19 +37,23 @@ class Main extends BaseComponent {
     );
   }
   addNode(entity){
-    var node = new Node(entity);
-    var newState = _.assign( this.state, {
-      nodes: this.state.nodes.concat([node]),
+    var node1 = new Node({ entity: entity });
+    this.setState({
+      graph: this.state.graph.addNode(node1).connect(node1.id, this.zero_node.id),
       results: []
     });
-    this.setState(newState);
+  }
+  handleNodeDrag(id, position){
+    this.setState({
+      graph: this.state.graph.moveNode(id, position)
+    });
   }
   render(){
     return (
       <div className="container">
         <h1>Show Me The Money!</h1>
         <div class="row">
-          <GraphContainer nodes={this.state.nodes}/>
+          <GraphContainer graph={this.state.graph} handleNodeDrag={this.handleNodeDrag} />
           <SearchContainer
             query={this.query}
             results={this.state.results}

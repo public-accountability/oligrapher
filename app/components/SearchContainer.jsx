@@ -9,7 +9,6 @@ class SearchContainer extends BaseComponent {
   constructor(){
     super();
     this.displayName = 'SearchContainer';
-    this.state = {results: []};
   }
   render(){
     return (
