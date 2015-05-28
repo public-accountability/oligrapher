@@ -17,7 +17,7 @@ class SearchForm extends BaseComponent {
   }
   render(){
     return (
-      <form className="searchForm" onSubmit={this.handleSubmit} >
+      <form className="searchForm" onSubmit={this.handleSubmit}>
         <input className="searchInput" type="text" placeholder="Enter a name..." ref="query" />
         <input className="searchSubmit" type="submit" value="Search"/>
       </form>

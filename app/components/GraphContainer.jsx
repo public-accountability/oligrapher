@@ -1,5 +1,5 @@
 var BaseComponent = require('./BaseComponent');
-var Nodes = require('./Nodes');
+var Graph = require('./Graph');
 
 class GraphContainer extends BaseComponent {
   constructor(){
@@ -9,7 +9,7 @@ class GraphContainer extends BaseComponent {
   render(){
     return (
       <div className="graphContainer">
-        <Nodes nodes={this.props.nodes} />
+        <Graph graph={this.props.graph} handleNodeDrag={this.props.handleNodeDrag} />
       </div>
     );
   }
