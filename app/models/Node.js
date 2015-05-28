@@ -7,7 +7,7 @@ class Node {
     this.adj = Immutable.Set();
     this.x = nodable.x || 400;
     this.y = nodable.y || 400;
-    //this.id = this.entity.id || this.generateId();
+    this.id = this.entity.id || this.generateId();
   }
 
   generateId(){
@@ -16,7 +16,3 @@ class Node {
 }
 
 module.exports = Node;
-
-//Nodable is a quasi-ADT
-// variants include:
-// Entity

@@ -40,13 +40,13 @@ class Main extends BaseComponent {
   addNode(entity){
     var node1 = new Node({ entity: entity });
     this.setState({
-      graph: this.state.graph.addNode(node1).connect(node1, this.zero_node),
+      graph: this.state.graph.addNode(node1).connect(node1.id, this.zero_node.id),
       results: []
     });
   }
-  handleNodeDrag(node, position){
+  handleNodeDrag(id, position){
     this.setState({
-      graph: this.state.graph.moveNode(node, position)
+      graph: this.state.graph.moveNode(id, position)
     });
   }
   render(){
