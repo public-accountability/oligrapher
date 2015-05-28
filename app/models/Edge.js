@@ -1,11 +1,13 @@
 var Immutable = require('immutable');
 
 class Edge {
-  //constructor(Edgeable) -> Edge
-  constructor(edgeable){
-    this.n1 = edgeable.n1;
-    this.n2 = edgeable.n2;    
-    this.id = edgeable.id || this.generateId();
+  //constructor(EdgeSpecs) -> Edge
+  constructor(specs){
+    this.id = specs.id || this.generateId();
+    this.n1 = specs.n1;
+    this.n2 = specs.n2;
+    this.content = specs.content || {};
+    this.display = specs.display || {};
   }
 
   generateId(){
@@ -15,6 +17,11 @@ class Edge {
 
 module.exports = Edge;
 
-//Edgeable is a quasi-ADT
-// variants include:
-// Relationship
+// EdgeSpecs
+// {
+//   id: Int,
+//   n1: {},
+//   n2: {}
+//   contents: {},
+//   display: {},
+// }

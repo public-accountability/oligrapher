@@ -22,7 +22,7 @@ class Node extends BaseComponent {
         <g>
           <circle className="handle" r="30" fill="#88f" opacity="1"></circle>
           <text dy="50" textAnchor="middle">
-            {this.props.node.entity.name}
+            {this.props.node.content.entity.name}
           </text>
         </g>
 

@@ -8,6 +8,7 @@ var Node = require('./models/Node');
 var Edge = require('./models/Edge');
 var Graph = require('./models/Graph');
 var imm = require('immutable');
+var mapData = require('../test/support/sampleData').mitchellMap;
 
 /* Main
    |- SearchContainer
@@ -25,7 +26,8 @@ class Main extends BaseComponent {
     this.displayName = 'Container';
     this.zero_node = new Node({ entity: { id: "x0", name: 'Man Behind The Throne' } });
     this.state = {
-      graph: new Graph({}).addNode(this.zero_node),
+      /* graph: new Graph({}).addNode(this.zero_node), */
+      graph: new Graph({}),
       results: [],
       query: null };
     this.bindAll('handleSearchSubmit', 'addNode', 'handleNodeDrag');
@@ -48,6 +50,9 @@ class Main extends BaseComponent {
     this.setState({
       graph: this.state.graph.moveNode(id, position)
     });
+  }
+  handleMapImport(mapData){
+    this.setState( { graph: this.state.graph.import(mapData) });
   }
   render(){
     return (
