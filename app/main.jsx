@@ -25,15 +25,8 @@ class Main extends BaseComponent {
   constructor(){
     super();
     this.displayName = 'Container';
-    this.zero_node = new Node({
-      id: 'xo',
-      display: {
-        name: 'Man Behind The Throne',
-        x: 400,
-        y: 400 }
-    });
     this.state = {
-      graph: new Graph({}).addNode(this.zero_node),
+      graph: new Graph({}).importMap(mapData),
       results: [],
       query: null };
     this.bindAll('handleSearchSubmit', 'addNode', 'handleNodeDrag');
@@ -48,7 +41,7 @@ class Main extends BaseComponent {
   addNode(entity){
     var node1 = converter.entityToNode(entity);
     this.setState({
-      graph: this.state.graph.addNode(node1).connect(node1.id, this.zero_node.id),
+      graph: this.state.graph.addNode(node1),
       results: []
     });
   }

@@ -22,6 +22,6 @@ module.exports = Edge;
 //   id: Int,
 //   n1: {},
 //   n2: {}
-//   contents: {},
+//   content: {},
 //   display: {},
 // }
