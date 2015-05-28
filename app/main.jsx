@@ -17,11 +17,10 @@ var imm = require('immutable');
    |----- Nodes
    |------- Node */
 
-
 class Main extends BaseComponent {
   constructor(){
     super();
-    this.displayName = 'Container';
+    this.displayName = 'Main';
     this.state = { nodes: [], results: [], query: null };
     this.bindAll('handleSearchSubmit', 'addNode');
   }
@@ -57,7 +56,6 @@ class Main extends BaseComponent {
     );
   }
 }
-
 
 React.render(
   <Main />,
