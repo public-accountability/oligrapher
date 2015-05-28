@@ -54,13 +54,14 @@ class Main extends BaseComponent {
       <div className="container">
         <h1>Show Me The Money!</h1>
         <div class="row">
-          <GraphContainer graph={this.state.graph} handleNodeDrag={this.handleNodeDrag} />
+          <GraphContainer
+            graph={this.state.graph}
+            handleNodeDrag={this.handleNodeDrag} />
           <SearchContainer
             query={this.query}
             results={this.state.results}
             addNode={this.addNode}
-            handleSearchSubmit={this.handleSearchSubmit}
-          />
+            handleSearchSubmit={this.handleSearchSubmit} />
         </div>
       </div>
     );
