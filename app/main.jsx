@@ -23,10 +23,11 @@ class Main extends BaseComponent {
   constructor(){
     super();
     this.displayName = 'Container';
-    var graph = new Graph({});
-    this.zero_node = new Node({ entity: { id: "x0", name: 'Man Behind The Throne' } })
-    graph.addNode(this.zero_node);
-    this.state = { graph: graph, results: [], query: null };
+    this.zero_node = new Node({ entity: { id: "x0", name: 'Man Behind The Throne' } });
+    this.state = {
+      graph: new Graph({}).addNode(this.zero_node),
+      results: [],
+      query: null };
     this.bindAll('handleSearchSubmit', 'addNode', 'handleNodeDrag');
   }
   handleSearchSubmit(query){
@@ -39,13 +40,13 @@ class Main extends BaseComponent {
   addNode(entity){
     var node1 = new Node({ entity: entity });
     this.setState({
-      graph: this.state.graph.addNode(node1).connect(node1.id, this.zero_node.id),
+      graph: this.state.graph.addNode(node1).connect(node1, this.zero_node),
       results: []
     });
   }
-  handleNodeDrag(id, position){
+  handleNodeDrag(node, position){
     this.setState({
-      graph: this.state.graph.moveNode(id, position)
+      graph: this.state.graph.moveNode(node, position)
     });
   }
   render(){

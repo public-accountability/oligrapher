@@ -9,7 +9,7 @@ class Node extends BaseComponent {
   }
 
   handleDrag(event, ui) {
-    this.props.handleDrag(this.props.node.id, ui.position);
+    this.props.handleDrag(this.props.node, ui.position);
   }
 
   render() {

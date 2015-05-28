@@ -4,10 +4,10 @@ class Node {
   //constructor(Nodable) -> Node
   constructor(nodable){
     this.entity = nodable.entity;
-    this.id = this.entity.id || this.generateId();
     this.adj = Immutable.Set();
     this.x = nodable.x || 400;
     this.y = nodable.y || 400;
+    //this.id = this.entity.id || this.generateId();
   }
 
   generateId(){
