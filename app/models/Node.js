@@ -12,7 +12,7 @@ var defaults =  {
 class Node {
  //constructor(NodeSpecs) -> Node
   constructor(specs){
-    this.id = this.entity.id || this.generateId();
+    this.id = specs.id || this.generateId();
     this.content = specs.content;
     this.adj = specs.adj || Immutable.Set();
     this.display = _.merge({}, defaults.display, specs.display);
@@ -21,8 +21,6 @@ class Node {
     return `x${Math.random() * 1000000000000}`;
   }
 }
-
-
 
 module.exports = Node;
 

@@ -14,7 +14,7 @@ class Node extends BaseComponent {
     return (
       <Draggable
         handle=".handle"
-        start={{x: this.props.node.x, y: this.props.node.y}}
+        start={{x: this.props.node.display.x, y: this.props.node.display.y}}
         moveOnStartChange={false}
         zIndex={100}
         onDrag={this.handleDrag} >
@@ -22,7 +22,7 @@ class Node extends BaseComponent {
         <g>
           <circle className="handle" r="30" fill="#88f" opacity="1"></circle>
           <text dy="50" textAnchor="middle">
-            {this.props.node.content.entity.name}
+            {this.props.node.display.name}
           </text>
         </g>
 

@@ -8,7 +8,7 @@ class Edge extends BaseComponent {
   }
   render() {
     var e = this.props.edge;
-    var curve = `M ${this.props.edge.n1.x} ${this.props.edge.n1.y} L ${e.n2.x} ${e.n2.y}`
+    var curve = `M ${e.n1.display.x} ${e.n1.display.y} L ${e.n2.display.x} ${e.n2.display.y}`;
     return (
         <path d={curve} stroke="black">
         </path>

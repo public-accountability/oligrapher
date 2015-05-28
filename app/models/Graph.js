@@ -1,6 +1,7 @@
 var Immutable = require('immutable');
 var Node = require('./Node');
 var Edge = require('./Edge');
+var converter = require('./Converter');
 
 class Graph {
   //constructor(Graphable) -> Graph
@@ -29,14 +30,14 @@ class Graph {
 
   moveNode(id, position){
     var n = this.nodes.get(id);
-    n.x = position.left;
-    n.y = position.top;
+    n.display.x = position.left;
+    n.display.y = position.top;
     return this;
   }
 
-  // { entities: Array[Entityable], rels: Array[Relationship], text: Hash[str,pos] }
+  // { entities: Array[Entityable], rels: Array[Relationship], text: Hash[str,pos] }p
   importMap(data){
-    data.entities.forEach(e => this.addNode(new Node({entity: e})));
+    data.entities.forEach(e => this.addNode(converter.entityToNode(e)));
   }
 
 }

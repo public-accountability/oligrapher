@@ -9,6 +9,7 @@ var Edge = require('./models/Edge');
 var Graph = require('./models/Graph');
 var imm = require('immutable');
 var mapData = require('../test/support/sampleData').mitchellMap;
+var converter = require('./models/Converter');
 
 /* Main
    |- SearchContainer
@@ -24,10 +25,15 @@ class Main extends BaseComponent {
   constructor(){
     super();
     this.displayName = 'Container';
-    this.zero_node = new Node({ entity: { id: "x0", name: 'Man Behind The Throne' } });
+    this.zero_node = new Node({
+      id: 'xo',
+      display: {
+        name: 'Man Behind The Throne',
+        x: 400,
+        y: 400 }
+    });
     this.state = {
-      /* graph: new Graph({}).addNode(this.zero_node), */
-      graph: new Graph({}),
+      graph: new Graph({}).addNode(this.zero_node),
       results: [],
       query: null };
     this.bindAll('handleSearchSubmit', 'addNode', 'handleNodeDrag');
@@ -40,7 +46,7 @@ class Main extends BaseComponent {
     );
   }
   addNode(entity){
-    var node1 = new Node({ entity: entity });
+    var node1 = converter.entityToNode(entity);
     this.setState({
       graph: this.state.graph.addNode(node1).connect(node1.id, this.zero_node.id),
       results: []
@@ -52,7 +58,7 @@ class Main extends BaseComponent {
     });
   }
   handleMapImport(mapData){
-    this.setState( { graph: this.state.graph.import(mapData) });
+    this.setState( { graph: this.state.graph.importMap(mapData) });
   }
   render(){
     return (

@@ -17,8 +17,8 @@ class Graph extends BaseComponent {
       <Edge edge={e} />);
     return (
       <svg className="Graph" width="1000" height="1000">
-        {nodes}
         {edges}
+        {nodes}
       </svg>
     );
   }
