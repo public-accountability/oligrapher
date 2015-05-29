@@ -1,5 +1,6 @@
-var React = require('react');
-var SearchResult = require('./SearchResult');
+const React = require('react');
+const SearchResult = require('./SearchResult');
+const Marty = require('marty');
 
 class SearchResults extends React.Component {
   constructor(){
@@ -7,9 +8,8 @@ class SearchResults extends React.Component {
     this.displayName = 'SearchResults';
   }
   render(){
-    var results = this.props.results.map(r =>
-      <SearchResult result={r} addNode={this.props.addNode}/>
-    );
+    let results = this.props.results.map(r =>
+      <SearchResult result={r} addNode={this.props.addNode}/>);
     return (
       <div className="searchResults">
         {results}
@@ -17,4 +17,12 @@ class SearchResults extends React.Component {
     );
   }
 }
-module.exports = SearchResults;
+
+module.exports = Marty.createContainer(SearchResults, {
+  listenTo: ['entitySearchStore'],
+  fetch: {
+    results() {
+      return this.app.entitySearchStore.getResults();
+    }
+  }
+});

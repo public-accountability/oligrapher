@@ -6,9 +6,6 @@ class SearchResult extends BaseComponent {
     this.displayName = 'SearchResult';
     this.bindAll('handleSearchResultClick');
   }
-  handleSearchResultClick(){
-    this.props.addNode(this.props.result);
-  }
   render() {
     return (
       <div className="searchResult" onClick={this.handleSearchResultClick}>
@@ -17,6 +14,9 @@ class SearchResult extends BaseComponent {
         </a>
       </div>
     );
+  }
+  handleSearchResultClick(){
+    this.props.addNode(this.props.result);
   }
 }
 

@@ -1,9 +1,7 @@
 var BaseComponent = require('./BaseComponent');
 var SearchForm = require('./SearchForm');
 var SearchResults = require('./SearchResults');
-var lsApi = require('../api/lsApi');
-//require('../../styles/_main.scss');
-
+var Marty = require('marty');
 
 class SearchContainer extends BaseComponent {
   constructor(){
@@ -13,8 +11,8 @@ class SearchContainer extends BaseComponent {
   render(){
     return (
       <div className="searchContainer">
-        <SearchForm handleSubmit={this.props.handleSearchSubmit} ref="searchForm" />
-        <SearchResults query={this.props.query} results={this.props.results} addNode={this.props.addNode} />
+        <SearchForm />
+        <SearchResults addNode={this.props.addNode} />
       </div>
     );
   }
