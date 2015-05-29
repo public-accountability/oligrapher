@@ -2,10 +2,13 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-  entry: [
+  entry: {
+    app: [
     './app/main.jsx',
-    'bootstrap-sass!./bootstrap-sass.config.js'
-  ],
+      'bootstrap-sass!./bootstrap-sass.config.js'
+    ],
+    vendors: ['marty']
+  },
   output: {
     //path: path.resolve(__dirname, 'build'),
     filename: 'bundle.js',
