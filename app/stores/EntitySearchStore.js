@@ -27,4 +27,5 @@ class EntitySearchStore extends Marty.Store {
   }
 }
 
-module.exports = EntitySearchStore;
+//module.exports = EntitySearchStore;
+module.exports = Marty.register('entitySearchStore', EntitySearchStore);

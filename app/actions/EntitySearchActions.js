@@ -1,5 +1,5 @@
 const Marty = require('marty');
-const sc = require('../constants/SearchConstants.js');
+const sc = require('../constants/SearchConstants');
 const lsApi = require('../api/lsApi.js');
 
 class EntitySearchActions extends Marty.ActionCreators {
@@ -14,4 +14,4 @@ class EntitySearchActions extends Marty.ActionCreators {
   }
 }
 
-module.exports = EntitySearchActions;
+module.exports = Marty.register('entitySearchActions', EntitySearchActions);

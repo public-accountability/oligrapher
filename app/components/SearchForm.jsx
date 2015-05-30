@@ -1,6 +1,7 @@
 const React = require('react');
 const BaseComponent = require('./BaseComponent');
-const EntitySearchActions = require('../actions/EntitySearchActions');
+const Marty = require('marty');
+//const EntitySearchActions = require('../actions/EntitySearchActions');
 
 class SearchForm extends BaseComponent {
   constructor() {
@@ -12,7 +13,7 @@ class SearchForm extends BaseComponent {
     e.preventDefault();
     var qNode = React.findDOMNode(this.refs.query);
     var query = qNode.value.trim();
-    EntitySearchActions.search(query);
+    this.app.entitySearchActions.search(query);
     //this.props.handleSubmit(query);
     qNode.value = '';
     return;
@@ -27,4 +28,4 @@ class SearchForm extends BaseComponent {
   }
 }
 
-module.exports = SearchForm;
+module.exports = Marty.createContainer(SearchForm);
