@@ -19,10 +19,10 @@ class SearchResults extends React.Component {
 }
 
 module.exports = Marty.createContainer(SearchResults, {
-  listenTo: ['entitySearchStore'],
+  listenTo: ['EntitySearchStore'],
   fetch: {
     results() {
-      return this.app.entitySearchStore.getResults();
+      return this.app.EntitySearchStore.getResults();
     }
   }
 });

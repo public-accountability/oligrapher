@@ -1,81 +1,20 @@
-var React = require('react');
-var BaseComponent = require('./components/BaseComponent');
-var GraphContainer = require('./components/GraphContainer');
-var SearchContainer = require('./components/SearchContainer');
-var _ = require('lodash');
-var lsApi = require('./api/lsApi');
-var Node = require('./models/Node');
-var Edge = require('./models/Edge');
-var Graph = require('./models/Graph');
-var imm = require('immutable');
-var mapData = require('../test/support/sampleData').mitchellMap;
-var converter = require('./models/Converter');
+const React = require('react');
+const Marty = require('marty');
+const Application = require('./application');
+const ApplicationContainer = Marty.ApplicationContainer;
+const Root = require('./components/Root');
 
-/* Main
-   |- SearchContainer
-   |--- SearchForm
-   |--- SearchResults
-   |----- SearchResult
-   |- GraphContainer
-   |--- Graph
-   |----- Nodes
-   |------- Node */
+window.React = React;
+window.Marty = Marty;
 
-class Main extends BaseComponent {
-  constructor(){
-    super();
-    this.displayName = 'Container';
-    this.state = {
-      graph: new Graph({}).importMap(mapData),
-      results: [],
-      query: null };
-    this.bindAll('handleSearchSubmit', 'addNode', 'handleNodeDrag');
-  }
-  handleSearchSubmit(query){
-    var that = this;
-    lsApi.searchEntities(query).then(
-      (res) => that.setState({results: res}),
-      (err) => console.error(JSON.stringify(err))
-    );
-  }
-  addNode(entity){
-    var node1 = converter.entityToNode(entity);
-    this.setState({
-      graph: this.state.graph.addNode(node1),
-      results: []
-    });
-  }
-  handleNodeDrag(id, position){
-    this.setState({
-      graph: this.state.graph.moveNode(id, position)
-    });
-  }
-  handleMapImport(mapData){
-    this.setState( { graph: this.state.graph.importMap(mapData) });
-  }
-  render(){
-    return (
-      <div className="container">
-        <h1>Show Me The Money!</h1>
-        <div class="row">
-          <GraphContainer
-            graph={this.state.graph}
-            handleNodeDrag={this.handleNodeDrag} />
-          <SearchContainer
-            query={this.query}
-            results={this.state.results}
-            addNode={this.addNode}
-            handleSearchSubmit={this.handleSearchSubmit} />
-        </div>
-      </div>
-    );
-  }
+if (process.env.NODE_ENV !== 'test'){
+
+  const app = new Application();
+  //const { ApplicationContainer } = require('marty')
+
+  React.render((
+    <ApplicationContainer app={app}>
+      <Root />
+    </ApplicationContainer>
+  ), document.getElementById('content'));
 }
-
-
-React.render(
-  <Main />,
-  document.getElementById('content')
-);
-
-module.exports = Main;

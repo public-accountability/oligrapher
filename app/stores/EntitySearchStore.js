@@ -1,5 +1,5 @@
 const Marty = require('marty');
-const sc = require('../constants/SearchConstants.js');
+const sc = require('../constants/SearchConstants');
 
 class EntitySearchStore extends Marty.Store {
   constructor(options){
@@ -28,4 +28,4 @@ class EntitySearchStore extends Marty.Store {
 }
 
 //module.exports = EntitySearchStore;
-module.exports = Marty.register('entitySearchStore', EntitySearchStore);
+module.exports = EntitySearchStore;

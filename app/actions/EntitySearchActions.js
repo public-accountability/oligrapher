@@ -14,4 +14,4 @@ class EntitySearchActions extends Marty.ActionCreators {
   }
 }
 
-module.exports = Marty.register('entitySearchActions', EntitySearchActions);
+module.exports = EntitySearchActions;
