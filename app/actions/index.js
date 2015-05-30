@@ -1,3 +1,4 @@
 module.exports = {
-  entitySearchActions: require('./EntitySearchActions')
+  entitySearchActions: require('./EntitySearchActions'),
+  graphActions: require('./GraphActions')
 };

@@ -1,3 +1,4 @@
 module.exports = {
-  entitySearchStore: require('./EntitySearchStore')
+  entitySearchStore: require('./EntitySearchStore'),
+  graphStore: require('./GraphStore')
 };

@@ -2,13 +2,10 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-  entry: {
-    app: [
+  entry: [
     './app/main.jsx',
-      'bootstrap-sass!./bootstrap-sass.config.js'
-    ],
-    vendors: ['marty']
-  },
+    'bootstrap-sass!./bootstrap-sass.config.js'
+  ],
   output: {
     //path: path.resolve(__dirname, 'build'),
     filename: 'bundle.js',
@@ -25,13 +22,14 @@ module.exports = {
       { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,    loader: "url?limit=10000&minetype=application/octet-stream" },
       { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,    loader: "file" },
       { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,    loader: "url?limit=10000&minetype=image/svg+xml" },
-      { test: /\/marty\//, loader: "babel" }
+//      { test: /\/marty\//, loader: "babel" }
     ]
   },
   externals: {
     //don't bundle the 'react' npm package with our bundle.js
     //but get it from a global 'React' variable
-    'react': 'React'
+    'react': 'React',
+    'marty': 'Marty'
   },
   resolve: {
     extensions: ['', '.js', '.jsx']

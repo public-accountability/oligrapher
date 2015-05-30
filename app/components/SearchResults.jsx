@@ -9,7 +9,7 @@ class SearchResults extends React.Component {
   }
   render(){
     let results = this.props.results.map(r =>
-      <SearchResult result={r} addNode={this.props.addNode}/>);
+      <SearchResult result={r} />);
     return (
       <div className="searchResults">
         {results}
@@ -19,10 +19,10 @@ class SearchResults extends React.Component {
 }
 
 module.exports = Marty.createContainer(SearchResults, {
-  listenTo: ['EntitySearchStore'],
+  listenTo: ['entitySearchStore'],
   fetch: {
     results() {
-      return this.app.EntitySearchStore.getResults();
+      return this.app.entitySearchStore.getResults();
     }
   }
 });

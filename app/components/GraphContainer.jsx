@@ -10,7 +10,7 @@ class GraphContainer extends BaseComponent {
     return (
       <div className="graphContainer">
         <Graph
-          graph={this.props.graph}
+      /* graph={this.props.graph} */
           handleNodeDrag={this.props.handleNodeDrag} />
       </div>
     );

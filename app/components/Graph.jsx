@@ -1,19 +1,15 @@
-var BaseComponent = require('./BaseComponent');
-var Node = require('./Node');
-var Edge = require('./Edge');
-var imm = require("immutable");
+const BaseComponent = require('./BaseComponent');
+const Node = require('./Node');
+const Edge = require('./Edge');
+const Marty = require('marty');
 
 class Graph extends BaseComponent {
-  constructor(){
-    super();
-    this.displayName = 'Graph';
-  }
   render(){
-    var nodes = this.props.graph.nodes.map(n =>
+    const nodes = this.props.graph.nodes.map(n =>
       <Node
         node={n}
-        handleDrag={this.props.handleNodeDrag} />);
-     var edges = this.props.graph.edges.map(e =>
+        handleDrag={this.props.handleNodeDrag} />);  //TODO: use GraphActions.handleNodeDrag here
+    const edges = this.props.graph.edges.map(e =>
       <Edge edge={e} />);
     return (
       <svg className="Graph" width="1000" height="1000">
@@ -27,4 +23,11 @@ class Graph extends BaseComponent {
   }
 }
 
-module.exports = Graph;
+module.exports = Marty.createContainer(Graph, {
+  listenTo: ['graphStore'],
+  fetch: {
+    graph() {
+      return this.app.graphStore.state.graph;
+    }
+  }
+});

@@ -1,23 +1,27 @@
-var BaseComponent = require('./BaseComponent');
+const BaseComponent = require('./BaseComponent');
+const Marty = require('marty');
+const converter = require('../models/Converter');
 
 class SearchResult extends BaseComponent {
   constructor(){
     super();
     this.displayName = 'SearchResult';
-    this.bindAll('handleSearchResultClick');
+    this.bindAll('_handleSearchResultClick');
   }
   render() {
     return (
-      <div className="searchResult" onClick={this.handleSearchResultClick}>
+      <div className="searchResult" onClick={this._handleSearchResultClick}>
         <a href="#">
           {this.props.result.name} ({this.props.result.primary_type})
         </a>
       </div>
     );
   }
-  handleSearchResultClick(){
-    this.props.addNode(this.props.result);
+  _handleSearchResultClick(){
+    this.app.graphActions.addNode(
+      converter.entityToNode(this.props.result)
+    );
   }
 }
 
-module.exports = SearchResult;
+module.exports = Marty.createContainer(SearchResult);

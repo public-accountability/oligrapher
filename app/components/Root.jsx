@@ -19,38 +19,21 @@ var converter = require('../models/Converter');
 class Root extends BaseComponent {
   constructor(){
     super();
-    this.displayName = 'Container';
-    this.state = {
-      graph: new Graph({}).importMap(mapData),
-      results: [],
-      query: null };
-    this.bindAll('addNode', 'handleMapImport', 'handleNodeDrag');
+    this.bindAll('handleNodeDrag');
   }
-  addNode(entity){
-    var node1 = converter.entityToNode(entity);
-    this.setState({
-      graph: this.state.graph.addNode(node1),
-      results: []
-    });
-  }
-  handleNodeDrag(id, position){
+  handleNodeDrag(id, position){ //TODO: move this to GraphActions
     this.setState({
       graph: this.state.graph.moveNode(id, position)
     });
   }
-  handleMapImport(mapData){
-    this.setState( { graph: this.state.graph.importMap(mapData) });
-  }
   render(){
     return (
       <div className="container">
-        <h1>Show Me The Money!</h1>
-        <div class="row">
+      <h1>Show Me The Money!</h1>
+      <div class="row">
           <GraphContainer
-            graph={this.state.graph}
             handleNodeDrag={this.handleNodeDrag} />
           <SearchContainer
-            addNode={this.addNode}
           />
         </div>
       </div>

@@ -1,20 +1,20 @@
-const React = require('react');
 const Marty = require('marty');
-const Application = require('./application');
-const ApplicationContainer = Marty.ApplicationContainer;
+//const ApplicationContainer = Marty.ApplicationContainer;
 const Root = require('./components/Root');
+const React = require('react');
+const Application = require('./application');
 
 window.React = React;
 window.Marty = Marty;
 
-if (process.env.NODE_ENV !== 'test'){
+//if (process.env.NODE_ENV !== 'test'){
 
   const app = new Application();
-  //const { ApplicationContainer } = require('marty')
+  const { ApplicationContainer } = require('marty')
 
   React.render((
     <ApplicationContainer app={app}>
       <Root />
     </ApplicationContainer>
   ), document.getElementById('content'));
-}
+//}

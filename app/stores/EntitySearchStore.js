@@ -4,7 +4,7 @@ const sc = require('../constants/SearchConstants');
 class EntitySearchStore extends Marty.Store {
   constructor(options){
     super(options);
-    this.state = {};
+    this.state = { results: [] };
     this.handlers = {
       receiveResults: sc.SEARCH_ENTITIES_DONE,
       receiveFailure: sc.SEARCH_ENTITIES_FAILED,
@@ -27,5 +27,4 @@ class EntitySearchStore extends Marty.Store {
   }
 }
 
-//module.exports = EntitySearchStore;
 module.exports = EntitySearchStore;
