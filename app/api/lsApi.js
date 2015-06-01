@@ -1,5 +1,8 @@
 //privates
 var apiKey = require('../../credentials').lsApiKey;
+//var apiKey = process.env.LS_API_KEY;
+console.log("PROCESS ENV >>>>", process.env);
+console.log("API KEY>>>>>", apiKey);
 var request = require('superagent');
 var baseUrl = 'http://api.littlesis.org/';
 var unwrap = (res) => res.body.Response.Data;

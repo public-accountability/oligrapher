@@ -31,7 +31,8 @@ var config = {
     publicPath: 'http://localhost:8090/build'
   },
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js')
+    new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js'),
+    new webpack.DefinePlugin({ "process.env": JSON.stringify(process.env)})
   ],
   module: {
     loaders: [
