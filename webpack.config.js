@@ -11,10 +11,6 @@ var deps = [
 ];
 
 var config = {
-  addVendor: function(name, path) {
-    this.resolve.alias[name] = path;
-    this.module.noParse.push(new RegExp('^' + name + '$'));
-  },
   entry: {
     app: [
     'webpack/hot/dev-server',
@@ -68,12 +64,6 @@ var config = {
     },
     extensions: ['', '.js', '.jsx']
   }
-  // externals: {
-  //   //don't bundle the 'react' npm package with our bundle.js
-  //   //but get it from a global 'React' variable
-  //   'react': 'React',
-  //   'marty': 'Marty'
-  // },
 };
 
 deps.forEach(function(dep) {
@@ -81,8 +71,5 @@ deps.forEach(function(dep) {
   config.resolve.alias[dep.split(path.sep)[0]] = depPath;
   config.module.noParse.push(depPath);
 });
-
-
-//config.addVendor('react', node_modules_dir + 'react/dist/react-with-addons.min.js');
 
 module.exports = config;
