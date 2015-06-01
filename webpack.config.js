@@ -1,44 +1,88 @@
 var path = require('path');
 var webpack = require('webpack');
+var node_modules = path.resolve(__dirname, 'node_modules/');
 
-module.exports = {
-  entry: [
-    'webpack/hot/dev-server',
-    path.resolve(__dirname, 'app/main.jsx'),
-    'bootstrap-sass!./bootstrap-sass.config.js'
-  ],
-  output: {
-    path: path.resolve(__dirname, 'build'),
-    filename: 'bundle.js',
-    publicPath: 'http://localhost:8090/build'
+var deps = [
+  'react/dist/react-with-addons.min.js',
+  'marty/dist/marty.min.js',
+  'immutable/dist/immutable.min.js',
+  'jquery/dist/jquery.min.js',
+  'lodash/index.js'
+];
+
+var config = {
+  addVendor: function(name, path) {
+    this.resolve.alias[name] = path;
+    this.module.noParse.push(new RegExp('^' + name + '$'));
   },
-  module: {
-    loaders: [
-      { test: /\.jsx?$/, loaders: ['react-hot','babel'] },
-      { test: /\.scss$/, loader: "style!css!sass?outputStyle=expanded&includePaths[]=" +
-        (path.resolve(__dirname, "./node_modules")) },
-      { test: /bootstrap-sass\/assets\/javascripts\//, loader: 'imports?jQuery=jquery' },
-      { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,   loader: "url?limit=10000&minetype=application/font-woff" },
-      { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,  loader: "url?limit=10000&minetype=application/font-woff" },
-      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,    loader: "url?limit=10000&minetype=application/octet-stream" },
-      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,    loader: "file" },
-      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,    loader: "url?limit=10000&minetype=image/svg+xml" },
-//      { test: /\/marty\//, loader: "babel" }
+  entry: {
+    app: [
+    'webpack/hot/dev-server',
+      path.resolve(__dirname, 'app/main.jsx'),
+      'bootstrap-sass!./bootstrap-sass.config.js'
+    ],
+    vendors: [
+      'react',
+      'marty',
+      'immutable',
+      'jquery',
+      'lodash'
     ]
   },
-  externals: {
-    //don't bundle the 'react' npm package with our bundle.js
-    //but get it from a global 'React' variable
-    'react': 'React',
-    'marty': 'Marty'
-  },
-  resolve: {
-    extensions: ['', '.js', '.jsx']
+  output: {
+    path: path.resolve(__dirname, 'build'),
+    filename: 'app.js',
+    publicPath: 'http://localhost:8090/build'
   },
   plugins: [
-    new webpack.ProvidePlugin({
-      $: "jquery",
-      jQuery: "jquery"
-    })
-  ]
+    new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js')
+  ],
+  module: {
+    loaders: [
+      { test: path.resolve(node_modules, deps[0]),
+        loader: "expose?React" },
+      { test: /\.jsx?$/,
+        exclude: [node_modules],
+        loaders: ['react-hot', 'babel'] },
+      { test: /\.scss$/,
+        loader: "style!css!sass?outputStyle=expanded&includePaths[]=" +
+        (path.resolve(__dirname, "./node_modules")) },
+      { test: /bootstrap-sass\/assets\/javascripts\//,
+        loader: 'imports?jQuery=jquery' },
+      { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url?limit=10000&minetype=application/font-woff" },
+      { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url?limit=10000&minetype=application/font-woff" },
+      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url?limit=10000&minetype=application/octet-stream" },
+      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "file" },
+      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url?limit=10000&minetype=image/svg+xml" },
+    ],
+    noParse:[]
+  },
+  resolve: {
+    alias: {
+      'react/lib': path.resolve(node_modules, 'react/lib')
+    },
+    extensions: ['', '.js', '.jsx']
+  }
+  // externals: {
+  //   //don't bundle the 'react' npm package with our bundle.js
+  //   //but get it from a global 'React' variable
+  //   'react': 'React',
+  //   'marty': 'Marty'
+  // },
 };
+
+deps.forEach(function(dep) {
+  var depPath = path.resolve(node_modules, dep);
+  config.resolve.alias[dep.split(path.sep)[0]] = depPath;
+  config.module.noParse.push(depPath);
+});
+
+
+//config.addVendor('react', node_modules_dir + 'react/dist/react-with-addons.min.js');
+
+module.exports = config;

@@ -19,8 +19,8 @@ class Graph {
     var n1 = this.nodes.get(id1);
     var n2 = this.nodes.get(id2);
 
-    n1.adj.add(n2);
-    n2.adj.add(n1);
+    // n1.adj.add(n2);
+    // n2.adj.add(n1);
 
     var edge = new Edge({
       n1: n1,
