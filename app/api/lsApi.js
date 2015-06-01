@@ -1,5 +1,5 @@
 //privates
-var apiKey = require('../credentials').lsApiKey;
+var apiKey = require('../../credentials').lsApiKey;
 var request = require('superagent');
 var baseUrl = 'http://api.littlesis.org/';
 var unwrap = (res) => res.body.Response.Data;
