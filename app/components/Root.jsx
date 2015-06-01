@@ -1,10 +1,10 @@
 var BaseComponent = require('./BaseComponent');
 var GraphContainer = require('./GraphContainer');
-var SearchContainer = require('./SearchContainer');
-var lsApi = require('../api/lsApi');
-var Graph = require('../models/Graph');
-var mapData = require('../../test/support/sampleData').mitchellMap;
-var converter = require('../models/Converter');
+var SearchContainer = require('./SearchContainer.jsx');
+var lsApi = require('../api/lsApi.js');
+var Graph = require('../models/Graph.jsx');
+var mapData = require('../../test/support/sampleData.js').mitchellMap;
+var converter = require('../models/Converter.js');
 
 /* Root
    |- SearchContainer
