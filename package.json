@@ -8,6 +8,7 @@
     "start": "npm run serve | npm run dev",
     "serve": "./node_modules/.bin/http-server -p 8080",
     "dev": "webpack-dev-server --devtool eval --progress --colors --hot --content-base build --port 8090",
+    "deploy": "NODE_ENV=production webpack -p --config webpack.production.config.js",
     "test": "mocha --compilers js:babel/register",
     "jtest": "jest"
   },
