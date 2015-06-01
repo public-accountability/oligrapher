@@ -7,7 +7,7 @@
     "build": "webpack",
     "start": "npm run serve | npm run dev",
     "serve": "./node_modules/.bin/http-server -p 8080",
-    "dev": "webpack-dev-server --devtool eval --progress, --colors, --hot, --content-base build --port 8090",
+    "dev": "webpack-dev-server --devtool eval --progress --colors --hot --content-base build --port 8090",
     "test": "mocha --compilers js:babel/register",
     "jtest": "jest"
   },

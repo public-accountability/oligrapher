@@ -12,7 +12,7 @@ class SearchResult extends BaseComponent {
     return (
       <div className="searchResult" onClick={this._handleSearchResultClick}>
         <a href="#">
-          {this.props.result.name} ({this.props.result.primary_type})
+          {this.props.result.name}
         </a>
       </div>
     );

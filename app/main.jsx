@@ -9,12 +9,24 @@ window.Marty = Marty;
 
 //if (process.env.NODE_ENV !== 'test'){
 
-  const app = new Application();
-  const { ApplicationContainer } = require('marty')
+const app = new Application();
+const { ApplicationContainer } = require('marty');
+/* React.render((
+   <ApplicationContainer app={app}>
+   <Root />
+   </ApplicationContainer>
+   ), document.getElementById('content')); */
+let rootInstance = React.render((
+  <ApplicationContainer app={app}>
+    <Root />
+  </ApplicationContainer>
+), document.getElementById('content'));
 
-  React.render((
-    <ApplicationContainer app={app}>
-      <Root />
-    </ApplicationContainer>
-  ), document.getElementById('content'));
+if (module.hot) {
+  require('react-hot-loader/Injection').RootInstanceProvider.injectProvider({
+    getRootInstances: () => [rootInstance]
+  });
+}
+
+
 //}

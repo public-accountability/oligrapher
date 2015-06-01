@@ -3,17 +3,18 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: [
-    './app/main.jsx',
+    'webpack/hot/dev-server',
+    path.resolve(__dirname, 'app/main.jsx'),
     'bootstrap-sass!./bootstrap-sass.config.js'
   ],
   output: {
-    //path: path.resolve(__dirname, 'build'),
+    path: path.resolve(__dirname, 'build'),
     filename: 'bundle.js',
     publicPath: 'http://localhost:8090/build'
   },
   module: {
     loaders: [
-      { test: /\.jsx?$/, loader: 'babel' },
+      { test: /\.jsx?$/, loaders: ['react-hot','babel'] },
       { test: /\.scss$/, loader: "style!css!sass?outputStyle=expanded&includePaths[]=" +
         (path.resolve(__dirname, "./node_modules")) },
       { test: /bootstrap-sass\/assets\/javascripts\//, loader: 'imports?jQuery=jquery' },
