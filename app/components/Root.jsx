@@ -1,5 +1,5 @@
-var BaseComponent = require('./BaseComponent');
-var GraphContainer = require('./GraphContainer');
+var BaseComponent = require('./BaseComponent.jsx');
+var GraphContainer = require('./GraphContainer.jsx');
 var SearchContainer = require('./SearchContainer.jsx');
 var lsApi = require('../api/lsApi.js');
 var Graph = require('../models/Graph.jsx');
