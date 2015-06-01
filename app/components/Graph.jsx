@@ -5,19 +5,14 @@ const Marty = require('marty');
 
 class Graph extends BaseComponent {
   render(){
-    const nodes = this.props.graph.nodes.map(n =>
-      <Node
-        node={n}
-        handleDrag={this.props.handleNodeDrag} />);  //TODO: use GraphActions.handleNodeDrag here
-    const edges = this.props.graph.edges.map(e =>
-      <Edge edge={e} />);
     return (
       <svg className="Graph" width="1000" height="1000">
         <g transform="translate(500, 500)">
-          {edges}
-          {nodes}
+          { this.props.graph.edges.map(e =>
+              <Edge edge={e} />) }
+          { this.props.graph.nodes.map(n =>
+              <Node node={n} />) }
         </g>
-
       </svg>
     );
   }

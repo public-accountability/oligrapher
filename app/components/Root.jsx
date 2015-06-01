@@ -19,22 +19,14 @@ var converter = require('../models/Converter');
 class Root extends BaseComponent {
   constructor(){
     super();
-    this.bindAll('handleNodeDrag');
-  }
-  handleNodeDrag(id, position){ //TODO: move this to GraphActions
-    this.setState({
-      graph: this.state.graph.moveNode(id, position)
-    });
   }
   render(){
     return (
       <div className="container">
       <h1>Show Me The Money!</h1>
       <div class="row">
-          <GraphContainer
-            handleNodeDrag={this.handleNodeDrag} />
-          <SearchContainer
-          />
+          <GraphContainer />
+          <SearchContainer />
         </div>
       </div>
     );

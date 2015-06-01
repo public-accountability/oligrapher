@@ -1,5 +1,6 @@
-var BaseComponent = require('./BaseComponent');
-var Draggable = require('react-draggable');
+const BaseComponent = require('./BaseComponent');
+const Draggable = require('react-draggable');
+const Marty = require('marty');
 
 class Node extends BaseComponent {
   constructor(){
@@ -8,7 +9,7 @@ class Node extends BaseComponent {
     this.bindAll('handleDrag');
   }
   handleDrag(e, ui) {
-    this.props.handleDrag(this.props.node.id, ui.position);
+    this.app.graphActions.moveNode(this.props.node.id, ui.position);
   }
   render() {
     return (
@@ -32,4 +33,4 @@ class Node extends BaseComponent {
   }
 }
 
-module.exports = Node;
+module.exports = Marty.createContainer(Node);

@@ -8,6 +8,9 @@ class GraphActions extends Marty.ActionCreators {
     this.dispatch(gc.ADD_NODE, node);
     this.dispatch(sc.CLEAR_ENTITY_SEARCH);
   }
+  moveNode(id, position){
+    this.dispatch(gc.MOVE_NODE, id, position);
+  }
 }
 
 module.exports = GraphActions;

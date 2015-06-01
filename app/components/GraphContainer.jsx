@@ -9,9 +9,7 @@ class GraphContainer extends BaseComponent {
   render(){
     return (
       <div className="graphContainer">
-        <Graph
-      /* graph={this.props.graph} */
-          handleNodeDrag={this.props.handleNodeDrag} />
+        <Graph />
       </div>
     );
   }
