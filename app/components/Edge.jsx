@@ -1,5 +1,6 @@
-var BaseComponent = require('./BaseComponent');
-var Draggable = require('react-draggable');
+const BaseComponent = require('./BaseComponent');
+const Draggable = require('react-draggable');
+const Marty = require('marty');
 
 class Edge extends BaseComponent {
   constructor(){
@@ -17,4 +18,11 @@ class Edge extends BaseComponent {
   }
 }
 
-module.exports = Edge;
+module.exports = Marty.createContainer(Edge, {
+  listenTo: ['graphStore'],
+  fetch: {
+    edge() {
+      return this.app.graphStore.getEdge(this.props.edge_id);
+    }
+  }
+});

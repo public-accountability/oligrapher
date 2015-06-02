@@ -24,6 +24,12 @@ class GraphStore extends Marty.Store {
   getGraph(){
     return this.state.graph;
   }
+  getNode(id){
+    return this.state.graph.nodes.get(id);
+  }
+  getEdge(id){
+    return this.state.graph.edges.get(id);
+  }
 }
 
 module.exports = GraphStore;

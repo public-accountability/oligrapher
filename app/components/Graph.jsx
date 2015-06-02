@@ -6,12 +6,12 @@ const Marty = require('marty');
 class Graph extends BaseComponent {
   render(){
     return (
-      <svg className="Graph" width="1000" height="1000">
+      <svg className="Graph" width='100%' height='100%'>
         <g transform="translate(500, 500)">
           { this.props.graph.edges.map(e =>
-              <Edge edge={e} />) }
+              <Edge edge_id={e.id} />) }
           { this.props.graph.nodes.map(n =>
-              <Node node={n} />) }
+              <Node node_id={n.id} />) }
         </g>
       </svg>
     );
