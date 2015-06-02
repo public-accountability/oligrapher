@@ -8,6 +8,7 @@ var config = {
     'bootstrap-sass!./bootstrap-sass.config.js'
   ],
   output: {
+    publicPath: path.resolve(__dirname, 'build'),
     path: path.resolve(__dirname, 'build'),
     filename: 'app.js'
   },
