@@ -64,9 +64,7 @@
     "style-loader": "^0.12.2",
     "superagent": "^1.2.0",
     "url-loader": "^0.5.5",
-    "webpack": "^1.9.10"
-  },
-  "devDependencies": {
+    "webpack": "^1.9.10",
     "babel-jest": "^5.2.0",
     "chai-as-promised": "^5.0.0",
     "expose-loader": "^0.7.0",
