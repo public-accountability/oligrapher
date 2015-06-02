@@ -2,6 +2,9 @@
   "name": "show-me-the-money",
   "version": "1.0.0",
   "description": "learning react w/ little sis",
+  "engines": {
+    "node": "0.10.x"
+  },
   "main": "app/main.jsx",
   "scripts": {
     "build": "webpack",

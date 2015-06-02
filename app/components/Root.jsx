@@ -2,7 +2,7 @@ var BaseComponent = require('./BaseComponent.jsx');
 var GraphContainer = require('./GraphContainer.jsx');
 var SearchContainer = require('./SearchContainer.jsx');
 var lsApi = require('../api/lsApi.js');
-var Graph = require('../models/Graph.jsx');
+var Graph = require('../models/Graph');
 var mapData = require('../../test/support/sampleData.js').mitchellMap;
 var converter = require('../models/Converter.js');
 
