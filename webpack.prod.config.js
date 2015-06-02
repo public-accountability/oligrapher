@@ -1,6 +1,7 @@
 var path = require('path');
 var node_modules = path.resolve(__dirname, 'node_modules');
 var webpack = require('webpack');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var config = {
   entry: [
@@ -8,12 +9,15 @@ var config = {
     'bootstrap-sass!./bootstrap-sass.config.js'
   ],
   output: {
-    publicPath: path.resolve(__dirname, 'build'),
-    path: path.resolve(__dirname, 'build'),
+    path: 'build',
     filename: 'app.js'
   },
   plugins: [
-    new webpack.DefinePlugin({ "process.env": JSON.stringify(process.env)})
+    new webpack.DefinePlugin({ "process.env": JSON.stringify(process.env)}),
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: path.resolve(__dirname, 'build/index-template.html')
+    })
   ],
   module: {
     loaders: [

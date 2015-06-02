@@ -4,7 +4,7 @@ logs
 
 # Build files
 build/
-!build/index.html
+!build/index-template.html
 
 # Runtime data
 pids
