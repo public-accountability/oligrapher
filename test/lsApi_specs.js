@@ -20,7 +20,7 @@ describe('LittleSis API Client', () => {
 
   });
 
-  describe('getting Adjacent Entities', () => {
+  xdescribe('getting Adjacent Entities', () => {
 
     it('returns an array of entities when the entity has adjacencies', () =>
        Promise.resolve(lsApi.getAdjacentEntities('1'))
@@ -29,6 +29,15 @@ describe('LittleSis API Client', () => {
     it("throws an error when the queried entity doesn't exist", () =>
        Promise.resolve(lsApi.getAdjacentEntities('0'))
          .should.be.rejectedWith('Not Found'));
+
+  });
+
+  describe('getting a Map', () => {
+
+    it('returns a map that exists', () => {
+      Promise.resolve(lsApi.getMap('556'))
+        .should.eventually.eql(sd.mitchellMap);
+    });
 
   });
 
