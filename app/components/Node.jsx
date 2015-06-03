@@ -33,11 +33,4 @@ class Node extends BaseComponent {
   }
 }
 
-module.exports = Marty.createContainer(Node, {
-  listenTo: ['graphStore'],
-  fetch: {
-    node() {
-      return this.app.graphStore.getNode(this.props.node_id);
-    }
-  }
-});
+module.exports = Marty.createContainer(Node);

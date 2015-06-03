@@ -9,9 +9,9 @@ class Graph extends BaseComponent {
       <svg className="Graph" width='100%' height='100%'>
         <g transform="translate(500, 500)">
           { this.props.graph.edges.map(e =>
-              <Edge edge_id={e.id} />) }
+              <Edge edge={e} />) }
           { this.props.graph.nodes.map(n =>
-              <Node node_id={n.id} />) }
+              <Node node={n} />) }
         </g>
       </svg>
     );

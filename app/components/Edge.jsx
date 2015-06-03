@@ -18,11 +18,4 @@ class Edge extends BaseComponent {
   }
 }
 
-module.exports = Marty.createContainer(Edge, {
-  listenTo: ['graphStore'],
-  fetch: {
-    edge() {
-      return this.app.graphStore.getEdge(this.props.edge_id);
-    }
-  }
-});
+module.exports = Marty.createContainer(Edge);
