@@ -6,7 +6,6 @@ const mapData = require('../../test/support/sampleData').mitchellMap; // TODO: u
 class GraphStore extends Marty.Store {
   constructor(options){
     super(options);
-    // this.state = { graph: new Graph({})};
     this.state = { graph: new Graph({}).importMap(mapData) }; //TODO: unmock this!
     this.handlers = {
       addNode: gc.ADD_NODE,

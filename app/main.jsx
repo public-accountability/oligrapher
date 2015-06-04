@@ -11,11 +11,7 @@ window.Marty = Marty;
 
 const app = new Application();
 const { ApplicationContainer } = require('marty');
-/* React.render((
-   <ApplicationContainer app={app}>
-   <Root />
-   </ApplicationContainer>
-   ), document.getElementById('content')); */
+
 let rootInstance = React.render((
   <ApplicationContainer app={app}>
     <Root />
