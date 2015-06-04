@@ -18,6 +18,12 @@ class Graph {
     return this;
   }
 
+  edgesWithNode(id){
+    return this.edges.filter(function(edge) {
+      return edge.n1.id == id || edge.n2.id == id;
+    });
+  };
+
   connectNodes(id1, id2, specs={}){
     var n1 = this.nodes.get(id1);
     var n2 = this.nodes.get(id2);
@@ -26,6 +32,7 @@ class Graph {
     // n2.adj.add(n1);
 
     var edge = new Edge({
+      id: specs.id,
       n1: n1,
       n2: n2,
       content: specs.content,
@@ -40,6 +47,19 @@ class Graph {
     var n = this.nodes.get(id);
     n.display.x = position.left;
     n.display.y = position.top;
+    this.edgesWithNode(id).forEach(function(edge) {
+      edge.updatePosition();
+    })
+    return this;
+  }
+
+  moveEdge(id, x, y, cx, cy){
+    var e = this.edges.get(id);
+    console.log("GRAPH POSITION", x, y)
+    e.display.x = x;
+    e.display.y = y;
+    e.display.cx = cx;
+    e.display.cy = cy;
     return this;
   }
 
@@ -47,13 +67,28 @@ class Graph {
   importMap(data){
 
     data.entities.forEach(
-      e => this.addNode(converter.entityToNode(e)));
+      e => this.addNode(converter.entityToNode(e))
+    );
 
-    data.rels.forEach(
-      r => this.connectNodes(
+    data.rels.forEach((r) => {
+      // convert control point from relative to absolute
+      let specs = converter.relToEdgeSpecs(r);
+
+      if (specs.display.cx != null && specs.display.cy != null){
+        let n1 = this.nodes.get(specs.content.rel.entity1_id);
+        let n2 = this.nodes.get(specs.content.rel.entity2_id);
+        let ax = (n1.display.x + n2.display.x) / 2;
+        let ay = (n1.display.y + n2.display.y) / 2;
+        specs.display.cx += ax;
+        specs.display.cy += ay;
+      }
+
+      this.connectNodes(
         r.entity1_id,
         r.entity2_id,
-        converter.relToEdgeSpecs(r)));
+        specs
+      )
+    });
 
     return this;
   }

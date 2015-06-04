@@ -6,7 +6,13 @@ class Converter{
     return new Node({
       id: genId(),
       content: { entity: entity },
-      display: { x: entity.x, y: entity.y, name: entity.name}
+      display: { 
+        x: entity.x, 
+        y: entity.y, 
+        name: entity.name, 
+        scale: entity.scale,
+        image: entity.image.indexOf('assets/netmap') == -1 ? entity.image : null
+      }
     });
     function genId(){ return entity.id; }
   }
@@ -19,8 +25,11 @@ class Converter{
       },
       display: {
         label: rel.label,
-        x1: rel.x1,
-        y1: rel.y1
+        cx: rel.x1,
+        cy: rel.y1,
+        dash: rel.is_current !== 1,
+        scale: rel.scale,
+        is_directional: rel.is_directional === true
       }
     };
   }

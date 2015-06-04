@@ -10,7 +10,8 @@ class GraphStore extends Marty.Store {
     this.state = { graph: new Graph({}).importMap(mapData) }; //TODO: unmock this!
     this.handlers = {
       addNode: gc.ADD_NODE,
-      moveNode: gc.MOVE_NODE
+      moveNode: gc.MOVE_NODE,
+      moveEdge: gc.MOVE_EDGE
     };
   }
   addNode(node){
@@ -19,6 +20,10 @@ class GraphStore extends Marty.Store {
   }
   moveNode(id, position){
     this.state.graph = this.state.graph.moveNode(id, position);
+    this.hasChanged();
+  }
+  moveEdge(id, x, y, cx, cy){
+    this.state.graph = this.state.graph.moveEdge(id, x, y, cx, cy);
     this.hasChanged();
   }
   getGraph(){
