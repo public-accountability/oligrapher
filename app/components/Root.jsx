@@ -2,10 +2,7 @@ const BaseComponent = require('./BaseComponent');
 const NavBar = require('./NavBar.jsx');
 const GraphContainer = require('./GraphContainer');
 const SearchContainer = require('./SearchContainer');
-const lsApi = require('../api/lsApi.js');
-const Graph = require('../models/Graph');
-const mapData = require('../../test/support/sampleData.js').mitchellMap;
-const converter = require('../models/Converter.js');
+const { Grid, Row, Col } = require('react-bootstrap');
 
 class Root extends BaseComponent {
   constructor(){
@@ -13,14 +10,17 @@ class Root extends BaseComponent {
   }
   render() {
     return (
-      <div className="root">
-        <h1>Show Me The Money!</h1>
-        <NavBar />
-        <div class="row">
+      <Grid className="root">
+        <Row className="header">
+          <h1>Show Me the Money!</h1>
+          <NavBar />
+        </Row>
+        <Row className="mainContainer">
           <GraphContainer />
           <SearchContainer />
-        </div>
-      </div>
+        </Row>
+      </Grid>
+
     );
   }
 }
