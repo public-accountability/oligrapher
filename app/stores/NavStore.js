@@ -1,6 +1,7 @@
 const Marty = require('marty');
 const NavConstants = require('../constants/NavConstants');
 const util = require('./util/NavStoreUtil');
+const GraphConstants = require('../constants/GraphConstants');
 const _ = require('lodash');
 
 class NavStore extends Marty.Store {
@@ -11,12 +12,10 @@ class NavStore extends Marty.Store {
       selected: false,
       cells: [{
         name: 'Mitchell Family',
-        id: 556,
-        action: 'showGraph'
+        action: [GraphConstants.SHOW_GRAPH, 556]
       }, {
         name: 'Berman-Considine',
-        id: 146,
-        action: 'showGraph'
+        action: [GraphConstants.SHOW_GRAPH, 146]
       }]
     }];
     this.state = { menu: util.deselectAll(this.fullMenu) };
@@ -29,11 +28,13 @@ class NavStore extends Marty.Store {
     this.setState({
       menu: util.selectColumn(this.state.menu, this.fullMenu, header)
     });
+    this.hasChanged();
   }
   handleCellClick(cell){
     this.setState({
       menu: util.deselectAll(this.state.menu)
     });
+    this.hasChanged();
   }
 }
 

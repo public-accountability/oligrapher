@@ -5,7 +5,6 @@ const converter = require('../models/Converter');
 class SearchResult extends BaseComponent {
   constructor(){
     super();
-    this.displayName = 'SearchResult';
     this.bindAll('_handleSearchResultClick');
   }
   render() {

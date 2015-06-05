@@ -78,6 +78,8 @@
     "serve": "^1.4.0",
     "style-loader": "^0.12.2",
     "superagent": "^1.2.0",
+    "superagent-jsonp": "0.0.2",
+    "underscore": "^1.8.3",
     "url-loader": "^0.5.5",
     "webpack": "^1.9.10",
     "webpack-dev-server": "^1.8.2"

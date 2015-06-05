@@ -9,20 +9,13 @@ class Graph extends BaseComponent {
       <svg className="Graph" width='100%' height='100%'>
         <g transform="translate(500, 500)">
           { this.props.graph.edges.map(e =>
-              <Edge edge={e} />) }
+              <Edge key={e.id} edge={e} />) }
           { this.props.graph.nodes.map(n =>
-              <Node node={n} />) }
+              <Node key={n.id} node={n} />) }
         </g>
       </svg>
     );
   }
 }
 
-module.exports = Marty.createContainer(Graph, {
-  listenTo: ['graphStore'],
-  fetch: {
-    graph() {
-      return this.app.graphStore.state.graph;
-    }
-  }
-});
+module.exports = Marty.createContainer(Graph);

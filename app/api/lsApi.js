@@ -1,6 +1,7 @@
 //privates
 const apiKey = require('../../credentials').lsApiKey;
 const request = require('superagent');
+//require('superagent-jsonp')(request);
 const baseUrlSymf = 'https://api.littlesis.org/';
 const baseUrlRails = 'https://littlesis.org/';
 const parse = (res) => res.body.Response.Data;
@@ -30,11 +31,12 @@ lsApi.getAdjacentEntities = (id) => {
 
 //getMap(Int) -> Promise[GraphSpecs]
 lsApi.getMap = (id) => {
-  const parseThis = res => res.data || {};
-  return new Promise((resolve, reject) =>
-    request
-      .get(`${baseUrlRails}maps/${id}.json`)
-      .end((err, res) => err ? reject(err) : resolve(parseThis(res))));
+  const parseThis = res => res.body.data || {};
+  return new Promise(
+    (resolve, reject) =>
+      request
+        .get(`${baseUrlRails}maps/${id}.json`)
+        .end((err, res) => err ? reject(err) : resolve(parseThis(res))));
 };
 
 module.exports = lsApi;

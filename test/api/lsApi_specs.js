@@ -1,6 +1,6 @@
 var chai = require('chai');
 var chaiAsPromised = require('chai-as-promised');
-var should = chai.should();('')
+var should = chai.should();
 var sd = require('./support/sampleData');
 var lsApi = require('../app/api/lsApi');
 

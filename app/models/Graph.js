@@ -1,16 +1,15 @@
-var Immutable = require('immutable');
-var Node = require('./Node');
-var Edge = require('./Edge');
-var converter = require('./Converter');
-
-
-
+const Immutable = require('immutable');
+const Node = require('./Node');
+const Edge = require('./Edge');
+const converter = require('./Converter');
+const helpers = require('./helpers/GraphHelpers');
 
 class Graph {
-  //constructor(Graphable) -> Graph
-  constructor(graphable){
-    this.nodes = graphable.nodes || Immutable.Map();
-    this.edges = graphable.edges || Immutable.Map();
+  //constructor(GraphSpecs) -> Graph
+  constructor(specs){
+    this.id = specs.id || helpers.generateId();
+    this.nodes = specs.nodes || Immutable.Map();
+    this.edges = specs.edges || Immutable.Map();
   }
 
   addNode(node){

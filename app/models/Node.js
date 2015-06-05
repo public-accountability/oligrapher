@@ -1,5 +1,6 @@
-var Immutable = require('immutable');
-var _ = require('lodash');
+const Immutable = require('immutable');
+const helpers = require('./helpers/GraphHelpers');
+const _ = require('lodash');
 
 var defaults =  {
   display: {
@@ -12,13 +13,10 @@ var defaults =  {
 class Node {
  //constructor(NodeSpecs) -> Node
   constructor(specs){
-    this.id = specs.id || this.generateId();
+    this.id = specs.id || helpers.generateId();
     this.content = specs.content;
     this.adj = specs.adj || Immutable.Set();
     this.display = _.merge({}, defaults.display, specs.display);
-  }
-  generateId(){
-    return `x${Math.random() * 1000000000000}`;
   }
 }
 

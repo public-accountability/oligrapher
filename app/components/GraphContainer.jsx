@@ -1,14 +1,22 @@
-var BaseComponent = require('./BaseComponent');
-var Graph = require('./Graph');
+const Marty = require('marty');
+const BaseComponent = require('./BaseComponent');
+const Graph = require('./Graph');
 
 class GraphContainer extends BaseComponent {
   render(){
     return (
       <div className="graphContainer">
-        <Graph />
+        <Graph graph={this.props.graph}/>
       </div>
     );
   }
 }
 
-module.exports = GraphContainer;
+module.exports = Marty.createContainer(GraphContainer, {
+  listenTo: ['graphStore'],
+  fetch: {
+    graph() {
+      return this.app.graphStore.getCurrentGraph();
+    }
+  }
+});

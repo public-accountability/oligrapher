@@ -1,33 +1,74 @@
 const Marty = require('marty');
-const gc = require('../constants/GraphConstants');
+const GraphConstants = require('../constants/GraphConstants');
 const Graph = require('../models/Graph');
 const mapData = require('../../test/support/sampleData').mitchellMap; // TODO: unmock this!
+const Immutable = require('immutable');
+const _ = require('lodash');
 
 class GraphStore extends Marty.Store {
   constructor(options){
     super(options);
-    this.state = { graph: new Graph({}).importMap(mapData) }; //TODO: unmock this!
+    const mm = new Graph({id: 556}).importMap(mapData);
+    const nullGraph = new Graph({});
+    this.state = Immutable.fromJS({
+      graphs: { [nullGraph.id]: nullGraph, 556: mm },
+      currentGraphID: nullGraph.id
+    });
     this.handlers = {
-      addNode: gc.ADD_NODE,
-      moveNode: gc.MOVE_NODE
+      addGraph: GraphConstants.RECEIVE_GRAPH_DONE,
+      setCurrentGraph: GraphConstants.SHOW_GRAPH,
+      addNode: GraphConstants.ADD_NODE,
+      moveNode: GraphConstants.MOVE_NODE
     };
   }
+
+  //Graph methods
+  addGraph(graph){
+    this.replaceState(
+      this.state.mergeDeep(
+        Immutable.Map({graphs: Immutable.Map({[graph.id]: graph})})));
+  }
+  setCurrentGraph(id){
+    this.replaceState(
+      this.state.merge(
+        Immutable.Map({currentGraphID: id})));
+  }
+  getCurrentGraph(){
+    const id = this.state.get('currentGraphID');
+    return this.getGraph(id);
+  }
+  getGraph(id){
+    return this.fetch({
+      id: id,
+      locally: () => this.state.getIn(['graphs', id.toString()]),
+      remotely: () => this.app.graphQueries.getGraph(id)
+    });
+  }
+
+  //Node methods
   addNode(node){
-    this.state.graph = this.state.graph.addNode(node);
+    const cg = this.getCurrentGraph().result;
+    this.replaceState(
+      this.state.mergeDeep(
+        Immutable.Map({graphs: Immutable.Map({
+          [cg.id]: cg.addNode(node)})})));
     this.hasChanged();
   }
-  moveNode(id, position){
-    this.state.graph = this.state.graph.moveNode(id, position);
+  moveNode(nodeId, position){
+    const cg = this.getCurrentGraph().result;
+    this.replaceState(
+      this.state.mergeDeep(
+        Immutable.Map({ graphs: Immutable.Map({
+          [cg.id]: cg.moveNode(nodeId, position)})})));
     this.hasChanged();
   }
-  getGraph(){
-    return this.state.graph;
+  getNode(graphId, nodeId){
+    return this.state.get('graphs').get(graphId).nodes.get(nodeId);
   }
-  getNode(id){
-    return this.state.graph.nodes.get(id);
-  }
-  getEdge(id){
-    return this.state.graph.edges.get(id);
+
+  //Edge methods
+  getEdge(graphId, edgeId){
+    return this.state.get('graphs').get(graphId).edges.get(edgeId);
   }
 }
 
