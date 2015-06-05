@@ -17,15 +17,15 @@
 
 .searchContainer {
   @extend .col-md-3;
+  float: right;
+  margin: .5em;
+  margin-top: 1em;
 }
 
 .searchForm {
+
   input[type='text'] {
     width: 15em;
-    margin-right: .5em;
-  }
-  .searchSubmit {
-    @extend .btn-primary;
   }
 }
 
