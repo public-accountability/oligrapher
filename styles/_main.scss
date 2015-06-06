@@ -15,8 +15,20 @@
   padding-bottom: 1em;
 }
 
+.navBar{
+  //position: relative;
+  z-index: -1;
+}
+
 .searchContainer {
-  @extend .col-md-3;
+  //position: relative;
+  float: right;
+  top: -4em;
+  margin-right: 1em;
+  z-index: 1;
+}
+
+.searchBox {
   float: right;
   margin: .5em;
   margin-top: 1em;
@@ -29,6 +41,18 @@
   }
 }
 
-.searchResult {
+.searchResults {
+  background-color: white;
+  border: 1px solid grey;
+  padding: 1em;
+  a {
+    color: grey;
+  }
+  a:hover {
+    text-decoration: none;
+  }
+}
 
+.rw-btn{
+  visibility: hidden;
 }

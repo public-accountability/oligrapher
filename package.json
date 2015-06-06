@@ -73,6 +73,7 @@
     "react-draggable": "^0.8.0",
     "react-hot-loader": "^1.2.7",
     "react-tools": "^0.13.3",
+    "react-widgets": "^2.6.2",
     "sass": "^0.5.0",
     "sass-loader": "^1.0.2",
     "serve": "^1.4.0",
