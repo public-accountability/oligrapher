@@ -1,6 +1,7 @@
-var BaseComponent = require('./BaseComponent');
-var SearchForm = require('./SearchForm');
-var SearchResults = require('./SearchResults');
+const BaseComponent = require('./BaseComponent');
+const Marty = require('marty');
+const SearchForm = require('./SearchForm');
+const SearchResults = require('./SearchResults');
 
 class SearchContainer extends BaseComponent {
   constructor(){
@@ -11,10 +12,20 @@ class SearchContainer extends BaseComponent {
     return (
       <div className="searchContainer">
         <SearchForm />
-        <SearchResults addNode={this.props.addNode} />
+        <SearchResults results={this.props.results} visible={this.props.visible} />
       </div>
     );
   }
 }
 
-module.exports = SearchContainer;
+module.exports = Marty.createContainer(SearchContainer, {
+  listenTo: ['entitySearchStore'],
+  fetch: {
+    results() {
+      return this.app.entitySearchStore.state.results;
+    },
+    visible(){
+      return this.app.entitySearchStore.state.visible;
+    }
+  }
+});

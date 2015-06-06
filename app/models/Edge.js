@@ -1,6 +1,5 @@
 const Immutable = require('immutable');
 const helpers = require('./helpers/GraphHelpers');
-const Graph = require('./Graph');
 
 class Edge {
   //constructor(EdgeSpecs) -> Edge

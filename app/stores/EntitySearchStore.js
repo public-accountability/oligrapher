@@ -4,7 +4,7 @@ const sc = require('../constants/SearchConstants');
 class EntitySearchStore extends Marty.Store {
   constructor(options){
     super(options);
-    this.state = { results: [] };
+    this.state = { results: [] , visible: false };
     this.handlers = {
       receiveResults: sc.SEARCH_ENTITIES_DONE,
       receiveFailure: sc.SEARCH_ENTITIES_FAILED,
@@ -12,18 +12,21 @@ class EntitySearchStore extends Marty.Store {
     };
   }
   receiveResults(entities){
-    this.state.results = entities;
+    this.setState({
+      results: entities,
+      visible: true
+    });
     this.hasChanged();
   }
   receiveFailure(err){
     console.error('Entity Search Failed: ', err);
   }
   clearResults(){
-    this.state.results = [];
+    this.setState({
+      results: [],
+      visible: false
+    });
     this.hasChanged();
-  }
-  getResults(){
-    return this.state.results;
   }
 }
 

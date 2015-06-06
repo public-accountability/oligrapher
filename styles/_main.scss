@@ -9,29 +9,28 @@
   padding: 1em;
 }
 
+.navbar {
+  position: relative;
+  z-index: -1;
+}
+
+.navbar {
+  position: relative;
+  z-index: 0;
+}
+
 .graphContainer {
   width: 100%;
   height: 1000px;
   padding-bottom: 1em;
 }
 
-.navBar{
-  //position: relative;
-  z-index: -1;
-}
-
 .searchContainer {
-  //position: relative;
+  position: relative;
+  z-index: 1;
   float: right;
   top: -4em;
   margin-right: 1em;
-  z-index: 1;
-}
-
-.searchBox {
-  float: right;
-  margin: .5em;
-  margin-top: 1em;
 }
 
 .searchForm {
@@ -41,18 +40,18 @@
   }
 }
 
+.hidden {
+  visibility: hidden;
+}
+
 .searchResults {
-  background-color: white;
+  padding: .5em;
+  background: white;
   border: 1px solid grey;
-  padding: 1em;
   a {
     color: grey;
   }
   a:hover {
     text-decoration: none;
   }
-}
-
-.rw-btn{
-  visibility: hidden;
 }

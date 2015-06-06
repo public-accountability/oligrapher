@@ -1,6 +1,6 @@
 const BaseComponent = require('./BaseComponent');
 const Marty = require('marty');
-const SearchBox = require('./SearchBox');
+const NavBar = require('./NavBar');
 const SearchContainer = require('./SearchContainer');
 const { Row, Navbar, Nav, NavItem, DropdownButton, MenuItem } = require('react-bootstrap');
 const GraphConstants = require('../constants/GraphConstants');
@@ -11,14 +11,14 @@ class Header extends BaseComponent {
   }
   render() {
     const maps = [
-      { name: 'Mitchell Faxmily Founctaion', id: 556},
+      { name: 'Mitchell Family Founctaion', id: 556},
       { name: 'Frackademia', id: 507},
       { name: 'Andrew Cuomo', id: 456 },
       { name: 'Hillary Clinton', id: 431 }
     ]
     return (
       <Row className="header">
-        <Navbar brand="Show Me The Money!" className="navBar">
+        <Navbar brand="Show Me The Money!" className="navbar">
           <Nav className="nav">
             <DropdownButton eventKey={1} title="Maps">
               {maps.map(m =>
