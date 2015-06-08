@@ -1,7 +1,7 @@
 const BaseComponent = require('./BaseComponent');
 const Marty = require('marty');
 const NavBar = require('./NavBar');
-const SearchContainer = require('./SearchContainer');
+const SearchBox = require('./SearchBox');
 const { Row, Navbar, Nav, NavItem, DropdownButton, MenuItem } = require('react-bootstrap');
 const GraphConstants = require('../constants/GraphConstants');
 
@@ -29,7 +29,7 @@ class Header extends BaseComponent {
             </DropdownButton>
           </Nav>
         </Navbar>
-        <SearchContainer />
+        <SearchBox />
       </Row>
 
     );
