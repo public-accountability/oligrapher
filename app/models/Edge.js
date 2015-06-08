@@ -69,8 +69,6 @@ class Edge {
     let xmb = rb * dxmb / rmb;
     let ymb = rb * dymb / rmb;
 
-    console.log(this.display.is_reverse);
-
     this.display.xa = xa - xma;
     this.display.ya = ya - yma;
     this.display.xb = xb - xmb;

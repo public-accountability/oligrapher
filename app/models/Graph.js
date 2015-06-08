@@ -55,7 +55,6 @@ class Graph {
 
   moveEdge(id, x, y, cx, cy){
     var e = this.edges.get(id);
-    console.log("GRAPH POSITION", x, y)
     e.display.x = x;
     e.display.y = y;
     e.display.cx = cx;
