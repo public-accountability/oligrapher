@@ -10,7 +10,6 @@ class SearchBox extends BaseComponent {
   constructor(options){
     super(options);
     this.bindAll('_submitSearch', '_handleSearchResultClick');
-    //this.state = ({picked: {}});
   }
   render(){
     return (

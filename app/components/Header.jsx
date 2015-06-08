@@ -15,25 +15,23 @@ class Header extends BaseComponent {
       { name: 'Frackademia', id: 507},
       { name: 'Andrew Cuomo', id: 456 },
       { name: 'Hillary Clinton', id: 431 }
-    ]
+    ];
     return (
       <Row className="header">
         <Navbar brand="Show Me The Money!" className="navbar">
           <Col md={6} xs={12}>
-          <Nav className="nav">
+            <Nav className="nav">
               <DropdownButton eventKey={1} title="Maps" className="nav-dropdown">
                 {maps.map(m =>
-                  <MenuItem
-                    onSelect={this._handleMapNavClick.bind(this, m.id)}
-                  >
+                  <MenuItem onSelect={this._handleMapNavClick.bind(this, m.id)}>
                     {m.name}
                   </MenuItem>
                 )}
               </DropdownButton>
-          </Nav>
+            </Nav>
           </Col>
           <Col md={3} xs={12}>
-         <SearchBox />
+            <SearchBox />
           </Col>
         </Navbar>
       </Row>
