@@ -11,7 +11,7 @@ class GraphStore extends Marty.Store {
     const mm = new Graph({id: 556}).importMap(mapData);
     const nullGraph = new Graph({});
     this.state = Immutable.fromJS({
-      graphs: { [nullGraph.id]: nullGraph, 556: mm },
+      graphs: { [nullGraph.id]: nullGraph },
       currentGraphID: nullGraph.id
     });
     this.handlers = {

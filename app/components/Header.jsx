@@ -1,6 +1,5 @@
 const BaseComponent = require('./BaseComponent');
 const Marty = require('marty');
-const NavBar = require('./NavBar');
 const SearchBox = require('./SearchBox');
 const { Grid, Row, Col, Navbar, Nav, NavItem, DropdownButton, MenuItem } = require('react-bootstrap');
 const GraphConstants = require('../constants/GraphConstants');
