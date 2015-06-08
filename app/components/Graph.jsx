@@ -12,20 +12,13 @@ class Graph extends BaseComponent {
         <defs dangerouslySetInnerHTML={ { __html: markers } }/>
         <g transform="translate(600, 600)">
           { this.props.graph.edges.map(e =>
-              <Edge edge={e} />) }
+              <Edge key={e.id} edge={e} />) }
           { this.props.graph.nodes.map(n =>
-              <Node node={n} />) }
+              <Node key={n.id} node={n} />) }
         </g>
       </svg>
     );
   }
 }
 
-module.exports = Marty.createContainer(Graph, {
-  listenTo: ['graphStore'],
-  fetch: {
-    graph() {
-      return this.app.graphStore.state.graph;
-    }
-  }
-});
+module.exports = Marty.createContainer(Graph);

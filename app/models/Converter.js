@@ -6,12 +6,12 @@ class Converter{
     return new Node({
       id: genId(),
       content: { entity: entity },
-      display: { 
-        x: entity.x, 
-        y: entity.y, 
-        name: entity.name, 
+      display: {
+        x: entity.x,
+        y: entity.y,
+        name: entity.name,
         scale: entity.scale,
-        image: entity.image.indexOf('assets/netmap') == -1 ? entity.image : null
+        image: entity.image && entity.image.indexOf('assets/netmap') === -1 ? entity.image : null
       }
     });
     function genId(){ return entity.id; }

@@ -4,5 +4,7 @@ module.exports = Marty.createConstants([
   'ADD_NODE',
   'MOVE_NODE',
   'IMPORT_GRAPH',
-  'MOVE_EDGE'
+  'MOVE_EDGE',
+  'RECEIVE_GRAPH',
+  'SHOW_GRAPH'
 ]);

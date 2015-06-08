@@ -5,29 +5,33 @@
 //  @extend .row;
 //}
 
+.root{
+  padding: 1em;
+}
+
+.nav-element {
+  margin-top: .5em;
+}
+
 .graphContainer {
-  @extend .col-md-8;
-  border: 1px solid black;
-  width: 1200px;
-  height: 1200px;
-  //padding-bottom: 400em;
+  width: 100%;
+  height: 1000px;
+  padding-bottom: 1em;
 }
 
-.searchContainer {
-  @extend .col-md-4;
-  //margin-top: -4em;
+.hidden {
+  visibility: hidden;
 }
 
-.searchForm {
-  input[type='text'] {
-    width: 15em;
-    margin-right: .5em;
-  }
-  .searchSubmit {
-    @extend .btn-primary;
-  }
+.searchBox {
+  @extend .nav-element;
+  float: right;
 }
 
-.searchResult {
+.nav-dropdown {
+  @extend .nav-element;
+}
 
+.rw-popup ul li {
+  padding-left: 10px;
 }
