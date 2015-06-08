@@ -23,8 +23,9 @@ var config = {
     loaders: [
       { test: /\.jsx?$/,
         exclude: [node_modules],
-        loader: 'babel'
-      },
+        loader: 'babel' },
+      { test: /\.less$/,
+        loader: 'style-loader!css-loader!less-loader' },
       { test: /\.scss$/,
         loader: "style!css!sass?outputStyle=expanded&includePaths[]=" +
         node_modules },
@@ -38,6 +39,12 @@ var config = {
         loader: "url?limit=10000&minetype=application/octet-stream" },
       { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
         loader: "file" },
+      { test: /\.xml$/,
+        loader: 'xml-loader' },
+      { test: /\.(jpe?g|png|gif)$/i,
+        loaders: [
+            'file?hash=sha512&digest=hex&name=[hash].[ext]',
+            'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false']},
       { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
         loader: "url?limit=10000&minetype=image/svg+xml" }
     ]

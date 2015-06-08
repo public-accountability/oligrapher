@@ -1,6 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 var node_modules = path.resolve(__dirname, 'node_modules/');
+var loaders = require('./webpack.loaders');
 
 var deps = [
   'react/dist/react-with-addons.min.js',
@@ -63,7 +64,7 @@ var config = {
             'file?hash=sha512&digest=hex&name=[hash].[ext]',
             'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false']},
       { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url?limit=10000&minetype=image/svg+xml" },
+        loader: "url?limit=10000&minetype=image/svg+xml" }
     ],
     noParse:[]
   },
