@@ -9,20 +9,8 @@
   padding: 1em;
 }
 
-.navbar {
-  position: relative;
-  z-index: -1;
-}
-
-.navbar {
-  position: relative;
-  z-index: 0;
-}
-
-.mainContainer {
-  position: relative;
-  top: 10em;
-  z-index: 0;
+.nav-element {
+  margin-top: .5em;
 }
 
 .graphContainer {
@@ -31,33 +19,15 @@
   padding-bottom: 1em;
 }
 
-.searchContainer {
-  position: relative;
-  z-index: 1;
-  float: right;
-  top: -4em;
-  margin-right: 1em;
-}
-
-.searchForm {
-
-  input[type='text'] {
-    width: 15em;
-  }
-}
-
 .hidden {
   visibility: hidden;
 }
 
-.searchResults {
-  padding: .5em;
-  background: white;
-  border: 1px solid grey;
-  a {
-    color: grey;
-  }
-  a:hover {
-    text-decoration: none;
-  }
+.searchBox {
+  @extend .nav-element;
+  float: right;
+}
+
+.nav-dropdown {
+  @extend .nav-element;
 }

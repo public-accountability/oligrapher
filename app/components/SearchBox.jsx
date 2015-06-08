@@ -3,6 +3,8 @@ const Marty = require('marty');
 const { Combobox, configure } = require('react-widgets');
 const lsApi = require('../api/lsApi');
 const converter = require('../models/Converter');
+require('../../node_modules/react-widgets/lib/less/react-widgets.less');
+//TODO rip out SASS bootstrap and only use less for main css file
 
 class SearchBox extends BaseComponent {
   constructor(options){
@@ -20,6 +22,7 @@ class SearchBox extends BaseComponent {
         placeholder='Search..'
         onChange={ query => this._submitSearch(query)}
         onSelect={ entity => this._handleSearchResultClick(entity)}
+        messages={{emptyList: ' No search results'}}
       />
     );
   }
