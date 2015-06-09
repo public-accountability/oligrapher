@@ -1,7 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
 var node_modules = path.resolve(__dirname, 'node_modules/');
-var loaders = require('./webpack.loaders');
 
 var deps = [
   'react/dist/react-with-addons.min.js',
