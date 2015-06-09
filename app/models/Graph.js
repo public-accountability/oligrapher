@@ -3,6 +3,7 @@ const Node = require('./Node');
 const Edge = require('./Edge');
 const converter = require('./Converter');
 const helpers = require('./helpers/GraphHelpers');
+const _ = require('lodash');
 
 class Graph {
   //constructor(GraphSpecs) -> Graph
@@ -59,7 +60,26 @@ class Graph {
     e.display.y = y;
     e.display.cx = cx;
     e.display.cy = cy;
+    e.updatePosition();
     return this;
+  }
+
+  computeWidth() {
+    if (this.nodes.count()) {
+      const xs = this.nodes.toArray().map(n => n.display.x);
+      return _.max(xs) - _.min(xs);      
+    } else {
+      return 0;
+    }
+  }
+
+  computeHeight() {
+    if (this.nodes.count()) {
+      const ys = this.nodes.toArray().map(n => n.display.y);
+      return _.max(ys) - _.min(ys);
+    } else {
+      return 0;
+    }
   }
 
   // { entities: Array[Entityable], rels: Array[Relationship], text: Hash[str,pos] }p
@@ -104,14 +124,19 @@ class Graph {
   }
 
   _convertCurves() {
-    this.edges.forEach(r => {
+    this.edges.forEach(e => {
       // convert control point from relative to absolute
-      if (r.display.cx != null && r.display.cy != null){
-        const ax = (r.n1.display.x + r.n2.display.x) / 2;
-        const ay = (r.n1.display.y + r.n2.display.y) / 2;
-        r.display.cx += ax;
-        r.display.cy += ay;
+      console.log(this.edges.get(e.id).display.cx);
+      if (e.display.cx != null && e.display.cy != null) {
+        let ax = (e.n1.display.x + e.n2.display.x) / 2;
+        let ay = (e.n1.display.y + e.n2.display.y) / 2;
+        e.display.cx += ax;
+        e.display.cy += ay;
       }
+      
+      e.updatePosition();
+      this.edges.set(e.id, e);
+      console.log(this.edges.get(e.id).display.cx);
     });
 
     return this;

@@ -10,7 +10,6 @@ class Edge {
     this.n2 = specs.n2;
     this.content = specs.content || {};
     this.display = specs.display || {};
-    this.updatePosition();
   }
 
   updatePosition(){
@@ -42,7 +41,7 @@ class Edge {
     }
 
     let cx, cy;
-    let n = 0.5;
+    let n = 0.1;
 
     if (this.display.cx != null && this.display.cy != null){
       cx = this.display.cx;
