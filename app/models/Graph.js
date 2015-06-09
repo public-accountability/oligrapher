@@ -10,6 +10,7 @@ class Graph {
     this.id = specs.id || helpers.generateId();
     this.nodes = specs.nodes || Immutable.Map();
     this.edges = specs.edges || Immutable.Map();
+    this.display = specs.display;
   }
 
   addNode(node){
@@ -62,24 +63,35 @@ class Graph {
   }
 
   // { entities: Array[Entityable], rels: Array[Relationship], text: Hash[str,pos] }p
-  importMap(data){
+  static parseMap(specs){
+    return new Graph({})
+      ._importBase(specs)
+      .importEntities(specs.entities)
+      .importRels(specs.rels)
+      ._convertCurves();
+  }
 
-    data.entities.forEach(
+  _importBase(map) {
+    this.id = map.id;
+    this.display = {
+      title: map.title,
+      description: map.description
+    };
+
+    return this;
+  }
+
+  importEntities(entities) {
+    entities.map(
       e => this.addNode(converter.entityToNode(e))
     );
 
-    data.rels.forEach((r) => {
-      // convert control point from relative to absolute
-      let specs = converter.relToEdgeSpecs(r);
+    return this;
+  }
 
-      if (specs.display.cx != null && specs.display.cy != null){
-        let n1 = this.nodes.get(specs.content.rel.entity1_id);
-        let n2 = this.nodes.get(specs.content.rel.entity2_id);
-        let ax = (n1.display.x + n2.display.x) / 2;
-        let ay = (n1.display.y + n2.display.y) / 2;
-        specs.display.cx += ax;
-        specs.display.cy += ay;
-      }
+  importRels(rels) {
+    rels.map((r) => {
+      const specs = converter.relToEdgeSpecs(r);
 
       this.connectNodes(
         r.entity1_id,
@@ -91,6 +103,19 @@ class Graph {
     return this;
   }
 
+  _convertCurves() {
+    this.edges.forEach(r => {
+      // convert control point from relative to absolute
+      if (r.display.cx != null && r.display.cy != null){
+        const ax = (r.n1.display.x + r.n2.display.x) / 2;
+        const ay = (r.n1.display.y + r.n2.display.y) / 2;
+        r.display.cx += ax;
+        r.display.cy += ay;
+      }
+    });
+
+    return this;
+  }
 }
 
 module.exports = Graph;

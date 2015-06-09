@@ -10,7 +10,7 @@ class Root extends BaseComponent {
   }
   render() {
     return (
-      <Grid className="root">
+      <Grid className="root" fluid={true}>
         <Header />
         <MainContainer />
         <Footer />

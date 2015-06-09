@@ -10,7 +10,6 @@
 }
 
 .nav-element {
-  margin-top: .5em;
 }
 
 .graphContainer {
@@ -26,6 +25,7 @@
 .searchBox {
   @extend .nav-element;
   float: right;
+  margin-top: 0.5em;
 }
 
 .nav-dropdown {

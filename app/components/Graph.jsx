@@ -10,7 +10,7 @@ class Graph extends BaseComponent {
     return (
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" className="Graph" width='100%' height='100%'>
         <defs dangerouslySetInnerHTML={ { __html: markers } }/>
-        <g transform="translate(600, 600)">
+        <g transform="translate(600, 450)">
           { this.props.graph.edges.map(e =>
               <Edge key={e.id} edge={e} />) }
           { this.props.graph.nodes.map(n =>

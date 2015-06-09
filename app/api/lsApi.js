@@ -9,6 +9,16 @@ const parse = (res) => res.body.Response.Data;
 //module
 var lsApi = {};
 
+//getEntity(Int) -> Promise[GraphSpecs]
+lsApi.getEntity = (id) => {
+  const parseThis = res => res.body.entity || {};
+  return new Promise(
+    (resolve, reject) =>
+      request
+        .get(`${baseUrlRails}entiites/${id}.json`)
+        .end((err, res) => err ? reject(err) : resolve(parseThis(res))));
+};
+
 //searchEntities(String) -> Promise[Entity]
 lsApi.searchEntities = (query) => {
   const parseThis = res => parse(res).Entities.Entity || [];
@@ -31,7 +41,7 @@ lsApi.getAdjacentEntities = (id) => {
 
 //getMap(Int) -> Promise[GraphSpecs]
 lsApi.getMap = (id) => {
-  const parseThis = res => res.body.data || {};
+  const parseThis = res => res.body.map || {};
   return new Promise(
     (resolve, reject) =>
       request

@@ -17,21 +17,17 @@ class Header extends BaseComponent {
     ];
     return (
       <Row className="header">
-        <Navbar brand="Show Me The Money!" className="navbar">
-          <Col md={6} xs={12}>
-            <Nav className="nav">
-              <DropdownButton eventKey={1} title="Maps" className="nav-dropdown">
-                {maps.map(m =>
-                  <MenuItem onSelect={this._handleMapNavClick.bind(this, m.id)}>
-                    {m.name}
-                  </MenuItem>
-                )}
-              </DropdownButton>
-            </Nav>
-          </Col>
-          <Col md={3} xs={12}>
-            <SearchBox />
-          </Col>
+        <Navbar brand="Show Me The Money!" className="navbar" fluid={true}>
+          <Nav className="nav">
+            <DropdownButton eventKey={1} title="Maps" className="nav-dropdown">
+              {maps.map(m =>
+                <MenuItem onSelect={this._handleMapNavClick.bind(this, m.id)}>
+                  {m.name}
+                </MenuItem>
+              )}
+            </DropdownButton>
+          </Nav>
+          <SearchBox />
         </Navbar>
       </Row>
     );
