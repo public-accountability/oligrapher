@@ -6,24 +6,24 @@ const EntityInfo = require('./EntityInfo');
 class InfoContainer extends BaseComponent {
   constructor() {
     super();
+    this.bindAll('_getInfo');
   }
 
-  contentFor(type = 'blank', id = null) {
+  render(){
+    return (
+      <div className="infoContainer">
+        {this._getInfo(this.props.type, this.props.id)}
+      </div>
+    );
+  }
+
+  _getInfo(type = 'blank', id) {
     return {
       map: <MapInfo id={id} />,
       entity: <EntityInfo id={id} />,
       blank: <div>Welcome to the maps!</div>
     }[type];
   }
-
-  render(){
-    let content = this.contentFor(this.props.type, this.props.id);
-    return (
-      <div className="infoContainer">
-        {content}
-      </div>
-    );
-  }
 }
 
-module.exports = InfoContainer
+module.exports = InfoContainer;

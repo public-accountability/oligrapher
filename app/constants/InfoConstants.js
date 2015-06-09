@@ -1,5 +1,6 @@
 const Marty = require('marty');
 
 module.exports = Marty.createConstants([
-  'SELECT_MAP'
+  'SHOW_MAP_INFO',
+  'SHOW_ENTITY_INFO'
 ]);

@@ -1,5 +1,6 @@
 module.exports = {
   entitySearchStore: require('./EntitySearchStore'),
   graphStore: require('./GraphStore'),
-  navStore: require('./NavStore')
+  navStore: require('./NavStore'),
+  infoStore: require('./InfoStore')
 };
