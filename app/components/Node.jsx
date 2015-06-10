@@ -11,8 +11,8 @@ class Node extends BaseComponent {
   }
 
   render() {
-    let n = this.props.node;
-    let sp = this._getSvgParams(n);
+    const n = this.props.node;
+    const sp = this._getSvgParams(n);
 
     return (
       <Draggable
@@ -45,7 +45,7 @@ class Node extends BaseComponent {
     let textOffsetY = ds.textMarginTop + r;
     let textLines = this._textLines(n.display.name);
     let tspans = textLines.map((line, i) => {
-      let dy = (i == 0 ? textOffsetY : 0) + (i * ds.lineHeight);
+      let dy = (i == 0 ? textOffsetY : ds.lineHeight);
       return <tspan className="node-text-line" x="0" dy={dy}>{line}</tspan>;
     });
     let rects = textLines.map((line, i) => {
@@ -69,6 +69,7 @@ class Node extends BaseComponent {
   }
 
   _textLines(text){
+    const maxWidth = text.length > 40 ? 30 : 20;
     let words = text.split(" "),
         wordCount = words.length,
         word,
@@ -82,7 +83,7 @@ class Node extends BaseComponent {
       lineWords.push(word);
       line = lineWords.join(" ");
 
-      if (line.length > 20) {
+      if (line.length > maxWidth) {
         lineWords.pop();
         line = lineWords.join(" ");
         lines.push(line);

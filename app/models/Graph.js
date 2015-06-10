@@ -11,7 +11,7 @@ class Graph {
     this.id = specs.id || helpers.generateId();
     this.nodes = specs.nodes || Immutable.Map();
     this.edges = specs.edges || Immutable.Map();
-    this.display = specs.display;
+    this.display = specs.display || {};
   }
 
   addNode(node){
@@ -64,6 +64,11 @@ class Graph {
     return this;
   }
 
+  addCaption(caption) {
+    this.display.captions = _.assign({}, this.display.captions, { [caption.id]: caption });
+    return this;
+  }
+
   computeWidth() {
     if (this.nodes.count()) {
       const xs = this.nodes.toArray().map(n => n.display.x);
@@ -82,21 +87,20 @@ class Graph {
     }
   }
 
-  // { entities: Array[Entityable], rels: Array[Relationship], text: Hash[str,pos] }p
+  // { entities: Array[Entityable], rels: Array[Relationship], texts: Hash[str,pos] }p
   static parseMap(specs){
     return new Graph({})
       ._importBase(specs)
       .importEntities(specs.entities)
       .importRels(specs.rels)
+      .importCaptions(specs.texts)
       ._convertCurves();
   }
 
   _importBase(map) {
     this.id = map.id;
-    this.display = {
-      title: map.title,
-      description: map.description
-    };
+    this.display.title = map.title;
+    this.display.description = map.description;
 
     return this;
   }
@@ -123,10 +127,20 @@ class Graph {
     return this;
   }
 
+  importCaptions(captions) {
+    let that = this;
+    if (captions) {
+      captions.forEach(function(t) {
+        that.addCaption(t)
+      });
+    }
+
+    return this;
+  }
+
   _convertCurves() {
     this.edges.forEach(e => {
       // convert control point from relative to absolute
-      console.log(this.edges.get(e.id).display.cx);
       if (e.display.cx != null && e.display.cy != null) {
         let ax = (e.n1.display.x + e.n2.display.x) / 2;
         let ay = (e.n1.display.y + e.n2.display.y) / 2;
@@ -136,7 +150,6 @@ class Graph {
       
       e.updatePosition();
       this.edges.set(e.id, e);
-      console.log(this.edges.get(e.id).display.cx);
     });
 
     return this;
