@@ -66,7 +66,7 @@ class GraphStore extends Marty.Store {
     const cg = this.getCurrentGraph().result;
     this.replaceState(
       this.state.mergeDeep(
-        Immutable.Map({graphs: Immutable.Map({
+        Map({graphs: Map({
           [cg.id]: cg.moveEdge(id, x, y, cx, cy)})})));
     this.hasChanged();
     this.hasChanged();

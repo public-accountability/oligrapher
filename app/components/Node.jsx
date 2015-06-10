@@ -58,7 +58,7 @@ class Node extends BaseComponent {
     let clipPath = `url(#${clipId})`;
     let imageWidth = r * ds.imageScale;
     let innerHTML = { __html: `<clipPath id="${clipId}"><circle r="${r}" opacity="1"></circle>
-          </clipPath><image className="handle" x="${-imageWidth/2}" y="${-imageWidth/2}" xlink:href="${n.display.image}" height="${imageWidth}" width="${imageWidth}" clip-path="${clipPath}"></image>` };
+          </clipPath><image class="handle" x="${-imageWidth/2}" y="${-imageWidth/2}" xlink:href="${n.display.image}" height="${imageWidth}" width="${imageWidth}" clip-path="${clipPath}"></image>` };
 
     return {
       groupId: `node-${n.id}`,
