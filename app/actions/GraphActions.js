@@ -17,6 +17,12 @@ class GraphActions extends Marty.ActionCreators {
   moveEdge(id, x, y, cx, cy){
     this.dispatch(gc.MOVE_EDGE, id, x, y, cx, cy);
   }
+  zoomIn(scale){
+    this.dispatch(gc.ZOOMED_IN, scale);
+  }
+  zoomOut(scale){
+    this.dispatch(gc.ZOOMED_OUT, scale);
+  }
 }
 
 module.exports = GraphActions;

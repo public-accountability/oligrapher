@@ -11,7 +11,11 @@ class Graph {
     this.id = specs.id || helpers.generateId();
     this.nodes = specs.nodes || Immutable.Map();
     this.edges = specs.edges || Immutable.Map();
-    this.display = specs.display || {};
+    this.display = _.assign({ shrinkFactor: 1.2 }, specs.display);
+  }
+
+  isNull() {
+    return this.id === -1;
   }
 
   addNode(node){
@@ -61,7 +65,6 @@ class Graph {
     return this;
   }
 
-
   addCaption(caption) {
     this.display.captions = _.assign({}, this.display.captions, { [caption.id]: caption });
     return this;
@@ -83,6 +86,11 @@ class Graph {
     } else {
       return 0;
     }
+  }
+
+  setShrinkFactor(factor) {
+    this.display.shrinkFactor = factor;
+    return this;
   }
 
   static parseMap(specs){

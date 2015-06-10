@@ -21,7 +21,7 @@ class SearchBox extends BaseComponent {
         placeholder='Search...'
         onChange={ query => this._submitSearch(query)}
         onSelect={ entity => this._handleSearchResultClick(entity)}
-        messages={{emptyList: ' No search results'}}
+        messages={{emptyList: 'No search results'}}
       />
     );
   }
