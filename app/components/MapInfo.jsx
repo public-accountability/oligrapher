@@ -9,6 +9,10 @@ class MapInfo extends BaseComponent {
   render(){
     return (
       <div className="mapInfo">
+        <h2>{this.props.info.get('title')}</h2>
+        <div className="mapInfoDesription"
+             dangerouslySetInnerHTML=
+             { { __html: this.props.info.get('description') } } />
       </div>
     );
   }

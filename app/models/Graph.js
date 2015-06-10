@@ -21,16 +21,13 @@ class Graph {
 
   edgesWithNode(id){
     return this.edges.filter(function(edge) {
-      return edge.n1.id == id || edge.n2.id == id;
+      return edge.n1.id === id || edge.n2.id === id;
     });
   };
 
   connectNodes(id1, id2, specs={}){
     var n1 = this.nodes.get(id1);
     var n2 = this.nodes.get(id2);
-
-    // n1.adj.add(n2);
-    // n2.adj.add(n1);
 
     var edge = new Edge({
       id: specs.id,
@@ -50,7 +47,7 @@ class Graph {
     n.display.y = position.top;
     this.edgesWithNode(id).forEach(function(edge) {
       edge.updatePosition();
-    })
+    });
     return this;
   }
 
@@ -64,6 +61,7 @@ class Graph {
     return this;
   }
 
+
   addCaption(caption) {
     this.display.captions = _.assign({}, this.display.captions, { [caption.id]: caption });
     return this;
@@ -72,7 +70,7 @@ class Graph {
   computeWidth() {
     if (this.nodes.count()) {
       const xs = this.nodes.toArray().map(n => n.display.x);
-      return _.max(xs) - _.min(xs);      
+      return _.max(xs) - _.min(xs);
     } else {
       return 0;
     }
@@ -87,7 +85,6 @@ class Graph {
     }
   }
 
-  // { entities: Array[Entityable], rels: Array[Relationship], texts: Hash[str,pos] }p
   static parseMap(specs){
     return new Graph({})
       ._importBase(specs)
@@ -121,7 +118,7 @@ class Graph {
         r.entity1_id,
         r.entity2_id,
         specs
-      )
+      );
     });
 
     return this;
@@ -147,7 +144,7 @@ class Graph {
         e.display.cx += ax;
         e.display.cy += ay;
       }
-      
+
       e.updatePosition();
       this.edges.set(e.id, e);
     });

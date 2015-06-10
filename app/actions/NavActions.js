@@ -1,15 +1,13 @@
 const Marty = require('marty');
 const NavConstants = require('../constants/NavConstants');
 const GraphConstants = require('../constants/GraphConstants');
+const InfoConstants = require('../constants/InfoConstants');
 
 class NavActions extends Marty.ActionCreators {
-  clickHeader(headerName){
-    this.dispatch(NavConstants.CLICK_NAV_HEADER, headerName);
-  }
-  clickCell(cell){
-    this.dispatch(NavConstants.CLICK_NAV_CELL, cell);
-    this.dispatch(...cell.action);
-  }
+  // selectMap(id){
+  //   this.dispatch(GraphConstants.SHOW_GRAPH, id);
+  //   this.dispatch(InfoConstants.SHOW_MAP_INFO, id);
+  // }
 }
 
 module.exports = NavActions;
