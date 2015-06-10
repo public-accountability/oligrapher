@@ -20,16 +20,13 @@ class Graph {
 
   edgesWithNode(id){
     return this.edges.filter(function(edge) {
-      return edge.n1.id == id || edge.n2.id == id;
+      return edge.n1.id === id || edge.n2.id === id;
     });
   };
 
   connectNodes(id1, id2, specs={}){
     var n1 = this.nodes.get(id1);
     var n2 = this.nodes.get(id2);
-
-    // n1.adj.add(n2);
-    // n2.adj.add(n1);
 
     var edge = new Edge({
       id: specs.id,
@@ -49,7 +46,7 @@ class Graph {
     n.display.y = position.top;
     this.edgesWithNode(id).forEach(function(edge) {
       edge.updatePosition();
-    })
+    });
     return this;
   }
 
@@ -62,7 +59,7 @@ class Graph {
     return this;
   }
 
-  // { entities: Array[Entityable], rels: Array[Relationship], text: Hash[str,pos] }p
+  // { entities: Array[Entityable], rels: Array[Relationship], text: Hash[str,pos] }
   static parseMap(specs){
     return new Graph({})
       ._importBase(specs)
@@ -97,7 +94,7 @@ class Graph {
         r.entity1_id,
         r.entity2_id,
         specs
-      )
+      );
     });
 
     return this;

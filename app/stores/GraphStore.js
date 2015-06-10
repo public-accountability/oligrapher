@@ -2,21 +2,21 @@ const Marty = require('marty');
 const GraphConstants = require('../constants/GraphConstants');
 const Graph = require('../models/Graph');
 const mapData = require('../../test/support/sampleData').mitchellMap; // TODO: unmock this!
-const Immutable = require('immutable');
+const { fromJS, Map } = require('immutable');
 const _ = require('lodash');
 
 class GraphStore extends Marty.Store {
   constructor(options){
     super(options);
     const nullGraph = new Graph({});
-    this.state = Immutable.fromJS({
-      graphs: { [nullGraph.id]: nullGraph },
+    this.state = Map({
+      graphs: Map({ [nullGraph.id]: nullGraph }),
       currentGraphID: nullGraph.id
     });
     this.handlers = {
       moveEdge: GraphConstants.MOVE_EDGE,
-      addGraph: GraphConstants.RECEIVE_GRAPH_DONE,
-      setCurrentGraph: GraphConstants.SHOW_GRAPH,
+      addGraph: GraphConstants.RECEIVE_GRAPH_DONE,//RETRIEVE_GRAPH_DONE
+      setCurrentGraph: GraphConstants.SHOW_GRAPH,//GRAPH_SELECTED
       addNode: GraphConstants.ADD_NODE,
       moveNode: GraphConstants.MOVE_NODE
     };
@@ -26,12 +26,12 @@ class GraphStore extends Marty.Store {
   addGraph(graph){
     this.replaceState(
       this.state.mergeDeep(
-        Immutable.Map({graphs: Immutable.Map({[graph.id]: graph})})));
+        Map({graphs: Map({[graph.id]: graph})})));
   }
   setCurrentGraph(id){
     this.replaceState(
       this.state.merge(
-        Immutable.Map({currentGraphID: id})));
+        Map({currentGraphID: id})));
   }
   getCurrentGraph(){
     const id = this.state.get('currentGraphID');
@@ -39,7 +39,7 @@ class GraphStore extends Marty.Store {
   }
   getGraph(id){
     return this.fetch({
-      id: id,
+      id: 'getGraph',
       locally: () => this.state.getIn(['graphs', id.toString()]),
       remotely: () => this.app.graphQueries.getGraph(id)
     });
@@ -50,7 +50,7 @@ class GraphStore extends Marty.Store {
     const cg = this.getCurrentGraph().result;
     this.replaceState(
       this.state.mergeDeep(
-        Immutable.Map({graphs: Immutable.Map({
+        Map({graphs: Map({
           [cg.id]: cg.addNode(node)})})));
     this.hasChanged();
   }
@@ -58,7 +58,7 @@ class GraphStore extends Marty.Store {
     const cg = this.getCurrentGraph().result;
     this.replaceState(
       this.state.mergeDeep(
-        Immutable.Map({ graphs: Immutable.Map({
+        Map({ graphs: Map({
           [cg.id]: cg.moveNode(nodeId, position)})})));
     this.hasChanged();
   }

@@ -2,28 +2,39 @@ const Marty = require('marty');
 const BaseComponent = require('./BaseComponent');
 const MapInfo = require('./MapInfo');
 const EntityInfo = require('./EntityInfo');
+const EmptyInfo = require('./EmptyInfo');
+const { Map } = require('immutable');
 
 class InfoContainer extends BaseComponent {
-  constructor() {
-    super();
-    this.bindAll('_getInfo');
-  }
-
   render(){
     return (
       <div className="infoContainer">
-        {this._getInfo(this.props.type, this.props.id)}
+        {{
+          map: <MapInfo info={this.props.info} />,
+          entity: <EntityInfo info={this.props.info} />,
+          empty: <EmptyInfo />
+         }[this.props.infoType] }
       </div>
     );
   }
 
-  _getInfo(type = 'blank', id) {
-    return {
-      map: <MapInfo id={id} />,
-      entity: <EntityInfo id={id} />,
-      blank: <div>Welcome to the maps!</div>
-    }[type];
-  }
 }
 
-module.exports = InfoContainer;
+module.exports = Marty.createContainer(InfoContainer, {
+  listenTo: ['infoStore'],
+  fetch: {
+    info(){
+      const { infoStore, graphStore } = this.app;
+      switch(infoStore.state.get('type')){
+        case 'map':
+          return infoStore.getGraphInfo()
+        case 'empty':
+          return Map({});
+      }
+    },
+    infoType(){
+      return this.app.infoStore.state.get('type');
+    }
+  }
+
+});

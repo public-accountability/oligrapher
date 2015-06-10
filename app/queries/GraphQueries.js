@@ -10,7 +10,9 @@ class GraphQueries extends Marty.Queries {
       .then(res => {
         const graph = Graph.parseMap(res);
         this.dispatch(GraphConstants.RECEIVE_GRAPH_DONE, graph); })
-      .catch(err => this.dispatch(GraphConstants.RECEIVE_GRAPH_FAILED, id, err));
+      .catch(err => {
+        this.dispatch(GraphConstants.RECEIVE_GRAPH_FAILED, id, err);
+      });
   }
 }
 

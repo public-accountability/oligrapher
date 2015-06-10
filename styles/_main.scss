@@ -1,15 +1,8 @@
 //$icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 //@import '~bootstrap-sass/assets/stylesheets/_bootstrap.scss';
 
-//.container {
-//  @extend .row;
-//}
-
 .root{
-  padding: 1em;
-}
-
-.nav-element {
+  margin: 1em;
 }
 
 .graphContainer {
@@ -23,13 +16,8 @@
 }
 
 .searchBox {
-  @extend .nav-element;
   float: right;
   margin-top: 0.5em;
-}
-
-.nav-dropdown {
-  @extend .nav-element;
 }
 
 .rw-popup ul li {
