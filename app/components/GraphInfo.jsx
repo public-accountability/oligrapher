@@ -1,7 +1,7 @@
 const Marty = require('marty');
 const BaseComponent = require('./BaseComponent');
 
-class MapInfo extends BaseComponent {
+class GraphInfo extends BaseComponent {
   constructor() {
     super();
   }
@@ -18,4 +18,4 @@ class MapInfo extends BaseComponent {
   }
 }
 
-module.exports = MapInfo;
+module.exports = GraphInfo;

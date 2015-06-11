@@ -75,6 +75,7 @@ class GraphStore extends Marty.Store {
     return this.state.get('graphs').get(graphId).nodes.get(nodeId);
   }
 
+
   //Edge methods
   getEdge(graphId, edgeId){
     return this.state.get('graphs').get(graphId).edges.get(edgeId);

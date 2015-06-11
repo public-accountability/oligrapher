@@ -17,6 +17,9 @@ class GraphActions extends Marty.ActionCreators {
   moveEdge(id, x, y, cx, cy){
     this.dispatch(gc.MOVE_EDGE, id, x, y, cx, cy);
   }
+  clickNode(nodeId){
+    this.dispatch(gc.NODE_CLICKED, nodeId);
+  }
 }
 
 module.exports = GraphActions;

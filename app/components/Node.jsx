@@ -7,7 +7,7 @@ class Node extends BaseComponent {
   constructor(){
     super();
     this.displayName = "Node";
-    this.bindAll('_handleDrag');
+    this.bindAll('_handleDrag', '_handleClick');
   }
 
   render() {
@@ -20,14 +20,17 @@ class Node extends BaseComponent {
         start={{x: n.display.x, y: n.display.y}}
         moveOnStartChange={false}
         zIndex={100}
-        onDrag={this._handleDrag} >
+        onDrag={this._handleDrag}
+      >
 
         <g id={sp.groupId}>
           {sp.circle}
           {sp.rects}
-          <text dy={sp.textOffsetY} textAnchor="middle">
-            {sp.tspans}
-          </text>
+          <a href='#' onClick={this._handleClick}>
+            <text dy={sp.textOffsetY} textAnchor="middle">
+              {sp.tspans}
+            </text>
+          </a>
         </g>
 
       </Draggable>
@@ -36,6 +39,11 @@ class Node extends BaseComponent {
 
   _handleDrag(e, ui) {
     this.app.graphActions.moveNode(this.props.node.id, ui.position);
+  }
+
+  _handleClick(node){
+    //TODO -- add conditional handling
+    this.app.graphActions.clickNode(this.props.node.id);
   }
 
   _getSvgParams(node) {

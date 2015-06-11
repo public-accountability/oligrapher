@@ -1,3 +1,4 @@
 module.exports = {
-  graphQueries: require('./GraphQueries')
+  graphQueries: require('./GraphQueries'),
+  entityQueries: require('./EntityQueries')
 };
