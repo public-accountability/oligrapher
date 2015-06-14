@@ -28,3 +28,27 @@
   border-left: 1px solid #eee;
   padding: 1em;
 }
+
+#zoom-in {
+  top: 0px;
+}
+
+#zoom-out {
+  top: 25px;
+}
+
+.zoomButton {
+  position: absolute;
+  display: block;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  background-color: #eee;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  padding: 0px;
+
+  &:focus {
+    outline: none;
+  }
+}

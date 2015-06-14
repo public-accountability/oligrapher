@@ -8,7 +8,7 @@ const _ = require('lodash');
 class GraphStore extends Marty.Store {
   constructor(options){
     super(options);
-    const nullGraph = new Graph({});
+    const nullGraph = new Graph({id: -1});
     this.state = Map({
       graphs: Map({ [nullGraph.id]: nullGraph }),
       currentGraphID: nullGraph.id
@@ -18,7 +18,8 @@ class GraphStore extends Marty.Store {
       addGraph: GraphConstants.RECEIVE_GRAPH_DONE, //RETRIEVE_GRAPH_DONE
       setCurrentGraph: GraphConstants.SHOW_GRAPH, //GRAPH_SELECTED
       addNode: GraphConstants.ADD_NODE,
-      moveNode: GraphConstants.MOVE_NODE
+      moveNode: GraphConstants.MOVE_NODE,
+      zoom: [GraphConstants.ZOOMED_IN, GraphConstants.ZOOMED_OUT]
     };
   }
 
@@ -43,6 +44,17 @@ class GraphStore extends Marty.Store {
       locally: () => this.state.getIn(['graphs', id.toString()]),
       remotely: () => this.app.graphQueries.getGraph(id)
     });
+  }
+  zoom(scale){
+    const cg = this.getCurrentGraph().result;
+    const oldShrinkFactor = cg.display.shrinkFactor;
+    let newShrinkFactor = oldShrinkFactor * 1/scale;
+    newShrinkFactor = Math.round(newShrinkFactor * 100) / 100;
+    this.replaceState(
+      this.state.mergeDeep(
+        Map({graphs: Map({
+          [cg.id]: cg.setShrinkFactor(newShrinkFactor)})})));
+    this.hasChanged();    
   }
 
   //Node methods

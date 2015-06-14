@@ -20,6 +20,13 @@ class GraphActions extends Marty.ActionCreators {
   clickNode(nodeId){
     this.dispatch(gc.NODE_CLICKED, nodeId);
   }
+  zoomIn(scale){
+    this.dispatch(gc.ZOOMED_IN, scale);
+  }
+  zoomOut(scale){
+    this.dispatch(gc.ZOOMED_OUT, scale);
+
+  }
 }
 
 module.exports = GraphActions;
