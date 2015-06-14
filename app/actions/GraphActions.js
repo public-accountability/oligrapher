@@ -25,7 +25,6 @@ class GraphActions extends Marty.ActionCreators {
   }
   zoomOut(scale){
     this.dispatch(gc.ZOOMED_OUT, scale);
-
   }
 }
 
