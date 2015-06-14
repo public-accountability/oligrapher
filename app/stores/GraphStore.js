@@ -15,8 +15,8 @@ class GraphStore extends Marty.Store {
     });
     this.handlers = {
       moveEdge: GraphConstants.MOVE_EDGE,
-      addGraph: GraphConstants.RECEIVE_GRAPH_DONE,//RETRIEVE_GRAPH_DONE
-      setCurrentGraph: GraphConstants.SHOW_GRAPH,//GRAPH_SELECTED
+      addGraph: GraphConstants.RECEIVE_GRAPH_DONE, //RETRIEVE_GRAPH_DONE
+      setCurrentGraph: GraphConstants.SHOW_GRAPH, //GRAPH_SELECTED
       addNode: GraphConstants.ADD_NODE,
       moveNode: GraphConstants.MOVE_NODE
     };
