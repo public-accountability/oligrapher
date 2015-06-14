@@ -7,7 +7,7 @@ module.exports = Marty.createConstants([
   'MOVE_EDGE',
   'RECEIVE_GRAPH',
   'SHOW_GRAPH',
-  'NODE_CLICKED'
+  'NODE_CLICKED',
   'ZOOMED_IN',
   'ZOOMED_OUT'
 ]);
