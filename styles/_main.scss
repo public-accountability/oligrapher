@@ -56,3 +56,11 @@
 .nodeLabel {
   cursor: pointer;
 }
+
+.edge text {
+  display: none;
+}
+
+.edge:hover text {
+  display: inline;
+}

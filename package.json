@@ -87,6 +87,7 @@
     "superagent-jsonp": "0.0.2",
     "underscore": "^1.8.3",
     "url-loader": "^0.5.5",
+    "uuid": "^2.0.1",
     "webpack": "^1.9.10",
     "webpack-dev-server": "^1.8.2",
     "xml-loader": "^1.0.0"

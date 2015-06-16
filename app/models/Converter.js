@@ -1,10 +1,11 @@
 var Node = require('./Node');
+const helpers = require('./helpers/GraphHelpers');
 
 class Converter{
 
   static entityToNode(entity){
     return new Node({
-      id: genId(),
+      id: helpers.generateId(),
       content: { entity: entity },
       display: {
         x: entity.x,
@@ -14,12 +15,11 @@ class Converter{
         image: entity.image && entity.image.indexOf('assets/netmap') === -1 ? entity.image : null
       }
     });
-    function genId(){ return entity.id; }
   }
 
   static relToEdgeSpecs(rel){
     return {
-      id: rel.id,
+      id: helpers.generateId(),
       content: {
         rel: rel
       },

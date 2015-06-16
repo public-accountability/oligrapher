@@ -1,5 +1,6 @@
+const uuid = require('uuid');
 const helpers = {};
 
-helpers.generateId = () =>`x${Math.random() * 1000000000000}`;
+helpers.generateId = () => uuid.v4();
 
 module.exports = helpers;

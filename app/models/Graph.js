@@ -93,6 +93,10 @@ class Graph {
     return this;
   }
 
+  getNodeByEntityId(id) {
+    return this.nodes.find(n => n.content.entity.id === id);
+  }
+
   static parseMap(specs){
     return new Graph({})
       ._importBase(specs)
@@ -123,8 +127,8 @@ class Graph {
       const specs = converter.relToEdgeSpecs(r);
 
       this.connectNodes(
-        r.entity1_id,
-        r.entity2_id,
+        this.getNodeByEntityId(r.entity1_id).id,
+        this.getNodeByEntityId(r.entity2_id).id,
         specs
       );
     });

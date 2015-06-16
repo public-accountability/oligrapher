@@ -23,7 +23,7 @@ class Edge extends BaseComponent {
         onStart={this._handleStart}
         onDrag={this._handleDrag} >
 
-        <g id={sp.groupId}>
+        <g id={sp.groupId} className="edge">
           <path className="handle edge-background" d={sp.curve} stroke="white" strokeOpacity="0" strokeWidth="5" fill="none"></path>
           <path id={sp.pathId} className="edge-line" d={sp.curve} stroke="black" strokeDasharray={sp.dash} strokeWidth={e.display.scale} fill="none" markerStart={sp.markerStart} markerEnd={sp.markerEnd}></path>
           <text dy={sp.dy} fill="#999" textAnchor="middle" dangerouslySetInnerHTML={sp.textPath}></text>
@@ -52,15 +52,17 @@ class Edge extends BaseComponent {
 
   _getSvgParams(edge) {
     let e = edge;
+    const pathId = `path-${e.id}`;
+    const fontSize = 10 * Math.sqrt(e.display.scale);
 
     return {
       curve: `M ${e.display.xa}, ${e.display.ya} Q ${e.display.cx}, ${e.display.cy}, ${e.display.xb}, ${e.display.yb}`,
       groupId: `edge-${e.id}`,
-      pathId: `path-${e.id}`,
+      pathId: pathId,
       dash: e.display.dash ? "5, 2" : "",
-      fontSize: 10 * Math.sqrt(e.display.scale),
+      fontSize: fontSize,
       dy: -6 * Math.sqrt(e.display.scale),
-      textPath: { __html: `<textPath class="labelpath" startOffset="50%" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#${this.pathId}" font-size="${this.fontSize}">${e.display.label}</textPath>` },
+      textPath: { __html: `<textPath class="labelpath" startOffset="50%" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#${pathId}" font-size="${fontSize}">${e.display.label}</textPath>` },
       markerStart: (e.display.is_directional && e.display.is_reverse) ? "url(#marker2)" : "",
       markerEnd: (e.display.is_directional && !e.display.is_reverse) ? "url(#marker1)" : ""
     };
