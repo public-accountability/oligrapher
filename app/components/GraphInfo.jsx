@@ -9,10 +9,13 @@ class GraphInfo extends BaseComponent {
   render(){
     return (
       <div className="mapInfo">
-        <h2>{this.props.info.get('title')}</h2>
-        <div className="mapInfoDesription"
+        <div className="title">
+          <h2>{this.props.info.get('title')}</h2>
+        </div>
+        <div className="text"
              dangerouslySetInnerHTML=
-             { { __html: this.props.info.get('description') } } />
+             { { __html: this.props.info.get('description') } }
+        />
       </div>
     );
   }

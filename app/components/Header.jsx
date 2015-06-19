@@ -17,7 +17,11 @@ class Header extends BaseComponent {
     ];
     return (
       <Row className="header">
-        <Navbar brand="Show Me The Money!" className="navbar" fluid={true}>
+        <Navbar
+          brand="Show Me The Money!"
+          className="navbar"
+          fluid={true}
+          fixedTop={true} >
           <Nav className="nav">
             <DropdownButton eventKey={1} title="Maps" className="nav-dropdown">
               {maps.map(m =>

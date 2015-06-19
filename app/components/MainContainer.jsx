@@ -8,7 +8,7 @@ class MainContainer extends BaseComponent {
     return (
       <Row className="mainContainer">
         <Col md={8}>
-          <GraphContainer />
+        <GraphContainer />
         </Col>
         <Col md={4}>
           <InfoContainer />

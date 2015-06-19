@@ -14,7 +14,7 @@ class GraphContainer extends BaseComponent {
     return (
       <div className="graphContainer">
         {zoomButtons}
-        <Graph graph={this.props.graph}/>
+        <Graph graph={this.props.graph} />
       </div>
     );
   }
