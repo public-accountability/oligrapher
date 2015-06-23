@@ -13,6 +13,7 @@ class GraphStore extends Marty.Store {
       graphs: Map({ [nullGraph.id]: nullGraph }),
       currentGraphID: nullGraph.id
     });
+
     this.handlers = {
       moveEdge: GraphConstants.MOVE_EDGE,
       addGraph: GraphConstants.RECEIVE_GRAPH_DONE, //RETRIEVE_GRAPH_DONE
@@ -54,7 +55,7 @@ class GraphStore extends Marty.Store {
       this.state.mergeDeep(
         Map({graphs: Map({
           [cg.id]: cg.setShrinkFactor(newShrinkFactor)})})));
-    this.hasChanged();    
+    this.hasChanged();
   }
 
   //Node methods

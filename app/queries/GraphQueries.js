@@ -13,6 +13,7 @@ class GraphQueries extends Marty.Queries {
       .catch(err => {
         this.dispatch(GraphConstants.RECEIVE_GRAPH_FAILED, id, err);
       });
+
   }
 }
 

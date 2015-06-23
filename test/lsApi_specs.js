@@ -1,7 +1,8 @@
 var chai = require('chai');
 var chaiAsPromised = require('chai-as-promised');
 var should = chai.should();
-var sd = require('./support/sampleData');
+var sd = require('./support/sampleData.js');
+var mockDeck = require('./support/sampleData/mockDeck');
 var lsApi = require('../app/api/lsApi');
 
 chai.use(chaiAsPromised);
@@ -37,6 +38,15 @@ describe('LittleSis API Client', () => {
     it('returns a map that exists', () => {
       Promise.resolve(lsApi.getMap('556'))
         .should.eventually.eql(sd.mitchellMap);
+    });
+
+  });
+
+  describe('getting a Deck', () => {
+
+    it('returns a deck', () => {
+      Promise.resolve(lsApi.getMap('fracking'))
+        .should.eventually.eql(mockDeck);
     });
 
   });
