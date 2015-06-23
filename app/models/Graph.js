@@ -103,7 +103,8 @@ class Graph {
       .importEntities(specs.entities)
       .importRels(specs.rels)
       .importCaptions(specs.texts)
-      ._convertCurves();
+      ._convertCurves()
+      ._verifyEdgeStatuses();
   }
 
   _importBase(map) {
@@ -158,6 +159,18 @@ class Graph {
       }
 
       e.updatePosition();
+      this.edges.set(e.id, e);
+    });
+
+    return this;
+  }
+
+  _verifyEdgeStatuses() {
+    this.edges.filter(e => e.display.status === "highlighted").forEach(e => {
+      if (e.n1.display.status != "highlighted" || e.n2.display.status != "highlighted") {
+        e.display.status = "faded";
+      }
+
       this.edges.set(e.id, e);
     });
 

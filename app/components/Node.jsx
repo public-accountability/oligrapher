@@ -1,7 +1,7 @@
 const BaseComponent = require('./BaseComponent');
 const Draggable = require('react-draggable');
 const Marty = require('marty');
-const NodeDisplaySettings = require('../NodeDisplaySettings');
+const ds = require('../NodeDisplaySettings');
 
 class Node extends BaseComponent {
   constructor(){
@@ -24,6 +24,7 @@ class Node extends BaseComponent {
       >
 
         <g id={sp.groupId}>
+          {sp.bgCircle}
           {sp.circle}
           {sp.rects}
           {sp.tspans}
@@ -45,7 +46,6 @@ class Node extends BaseComponent {
   _getSvgParams(node) {
 
     let n = node;
-    let ds = NodeDisplaySettings;
     let r = ds.defaultCircleRadius * n.display.scale;
     let textOffsetY = ds.textMarginTop + r;
     let textLines = this._textLines(n.display.name);
@@ -57,7 +57,7 @@ class Node extends BaseComponent {
                 textLines.map(
                  (line, i) => {
                    let dy = (i == 0 ? textOffsetY : ds.lineHeight);
-                   return <tspan className="node-text-line" x="0" dy={dy}>{line}</tspan>;
+                   return <tspan className="node-text-line" x="0" dy={dy} fill={ds.textColor[n.display.status]}>{line}</tspan>;
                  })
               }
             </text>
@@ -81,6 +81,7 @@ class Node extends BaseComponent {
     let clipId = `image-clip-${n.id}`;
     let clipPath = `url(#${clipId})`;
     let imageWidth = r * ds.imageScale;
+    let imageOpacity = ds.imageOpacity[n.display.status];
     let innerHTML = { __html:
                       `<clipPath id="${clipId}">
                          <circle r="${r}" opacity="1"></circle>
@@ -92,6 +93,7 @@ class Node extends BaseComponent {
                          xlink:href="${n.display.image}"
                          height="${imageWidth}"
                          width="${imageWidth}"
+                         opacity="${imageOpacity}"
                          clip-path="${clipPath}">
                        </image>` };
 
@@ -100,15 +102,20 @@ class Node extends BaseComponent {
         <g dangerouslySetInnerHTML={innerHTML} /> :
         <circle className="handle"
                 r={r}
-                fill={ds.defaultCircleColor}
+                fill={ds.circleColor[n.display.status]}
                 opacity="1">
         </circle>;
+
+    const bgColor = ds.bgColor[n.display.status];
+    const bgOpacity = ds.bgOpacity[n.display.status];
+    const bgCircle = <circle className="node-background" r={r+ds.bgRadiusDiff} fill={bgColor} opacity={bgOpacity}></circle>;
 
     return {
       groupId: `node-${n.id}`,
       circle: circle,
       rects: rects,
-      tspans: tspans
+      tspans: tspans,
+      bgCircle: bgCircle
     };
   }
 

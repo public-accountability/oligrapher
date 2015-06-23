@@ -12,7 +12,8 @@ class Converter{
         y: entity.y,
         name: entity.name,
         scale: entity.scale,
-        image: entity.image && entity.image.indexOf('assets/netmap') === -1 ? entity.image : null
+        image: entity.image && entity.image.indexOf('assets/netmap') === -1 ? entity.image : null,
+        status: entity.status || "normal"
       }
     });
   }
@@ -29,7 +30,8 @@ class Converter{
         cy: rel.y1,
         dash: rel.is_current !== 1,
         scale: rel.scale,
-        is_directional: rel.is_directional === true
+        is_directional: rel.is_directional === true,
+        status: rel.status || "normal"
       }
     };
   }

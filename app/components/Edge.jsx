@@ -1,6 +1,7 @@
 const BaseComponent = require('./BaseComponent');
 const Draggable = require('react-draggable');
 const Marty = require('marty');
+const ds = require('../EdgeDisplaySettings');
 
 class Edge extends BaseComponent {
   constructor(){
@@ -24,9 +25,9 @@ class Edge extends BaseComponent {
         onDrag={this._handleDrag} >
 
         <g id={sp.groupId} className="edge">
-          <path className="handle edge-background" d={sp.curve} stroke="white" strokeOpacity="0" strokeWidth="5" fill="none"></path>
-          <path id={sp.pathId} className="edge-line" d={sp.curve} stroke="black" strokeDasharray={sp.dash} strokeWidth={e.display.scale} fill="none" markerStart={sp.markerStart} markerEnd={sp.markerEnd}></path>
-          <text dy={sp.dy} fill="#999" textAnchor="middle" dangerouslySetInnerHTML={sp.textPath}></text>
+          <path className="handle edge-background" d={sp.curve} stroke={sp.bgColor} strokeOpacity={sp.bgOpacity} strokeWidth={e.display.scale + 5} fill="none"></path>
+          <path id={sp.pathId} className="edge-line" d={sp.curve} stroke={sp.lineColor} strokeDasharray={sp.dash} strokeWidth={e.display.scale} fill="none" markerStart={sp.markerStart} markerEnd={sp.markerEnd}></path>
+          <text dy={sp.dy} fill={sp.textColor} textAnchor="middle" dangerouslySetInnerHTML={sp.textPath}></text>
         </g>
 
       </Draggable>
@@ -64,7 +65,11 @@ class Edge extends BaseComponent {
       dy: -6 * Math.sqrt(e.display.scale),
       textPath: { __html: `<textPath class="labelpath" startOffset="50%" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#${pathId}" font-size="${fontSize}">${e.display.label}</textPath>` },
       markerStart: (e.display.is_directional && e.display.is_reverse) ? "url(#marker2)" : "",
-      markerEnd: (e.display.is_directional && !e.display.is_reverse) ? "url(#marker1)" : ""
+      markerEnd: (e.display.is_directional && !e.display.is_reverse) ? "url(#marker1)" : "",
+      lineColor: ds.lineColor[e.display.status],
+      textColor: ds.textColor[e.display.status],
+      bgColor: ds.bgColor[e.display.status],
+      bgOpacity: ds.bgOpacity[e.display.status]
     };
   }
 }
