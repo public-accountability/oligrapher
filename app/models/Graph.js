@@ -88,6 +88,24 @@ class Graph {
     }
   }
 
+  computeViewbox() {
+    const nodes = this.nodes.toArray()
+      .filter(n => n.display.status != "faded")
+      .map(function(n) { return { x: n.display.x, y: n.display.y } });
+    const edges = this.edges.toArray()
+      .filter(e => e.display.status != "faded")
+      .map(function(e) { return { x: e.display.cx, y: e.display.cy } });
+    const items = nodes;
+
+    if (items.length > 0) {
+      const xs = items.map(i => i.x);
+      const ys = items.map(i => i.y);
+      return { x: _.min(xs), y: _.min(ys), w: _.max(xs) - _.min(xs), h: _.max(ys) - _.min(ys) };
+    } else {
+      return { x: 0, y: 0, w: 0, h: 0 };
+    }
+  }
+
   setShrinkFactor(factor) {
     this.display.shrinkFactor = factor;
     return this;
@@ -103,8 +121,7 @@ class Graph {
       .importEntities(specs.entities)
       .importRels(specs.rels)
       .importCaptions(specs.texts)
-      ._convertCurves()
-      ._verifyEdgeStatuses();
+      ._convertCurves();
   }
 
   _importBase(map) {
@@ -159,18 +176,6 @@ class Graph {
       }
 
       e.updatePosition();
-      this.edges.set(e.id, e);
-    });
-
-    return this;
-  }
-
-  _verifyEdgeStatuses() {
-    this.edges.filter(e => e.display.status === "highlighted").forEach(e => {
-      if (e.n1.display.status != "highlighted" || e.n2.display.status != "highlighted") {
-        e.display.status = "faded";
-      }
-
       this.edges.set(e.id, e);
     });
 

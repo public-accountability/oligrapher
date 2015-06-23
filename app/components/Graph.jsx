@@ -44,10 +44,19 @@ class Graph extends BaseComponent {
   }
 
   _computeViewbox(shrinkFactor = 1.2) {
-    const w = this.props.graph.computeWidth() * shrinkFactor;
-    const h = this.props.graph.computeHeight() * shrinkFactor;
-    const x = -w/2;
-    const y = -h/2;
+    // INCLUDES FADED NODES
+    // const w = this.props.graph.computeWidth({ ignoreFaded: true }) * shrinkFactor;
+    // const h = this.props.graph.computeHeight({ ignoreFaded: true }) * shrinkFactor;
+    // const x = -w/2;
+    // const y = -h/2;
+
+    // IGNORES FADED NODES
+    const rect = this.props.graph.computeViewbox();
+    const w = rect.w * shrinkFactor;
+    const h = rect.h * shrinkFactor;
+    const x = rect.x + rect.w/2 - (w/2);
+    const y = rect.y + rect.h/2 - (h/2);
+
     return `${x} ${y} ${w} ${h}`;
   }
 }
