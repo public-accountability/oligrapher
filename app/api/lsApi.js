@@ -4,7 +4,6 @@ const request = require('superagent');
 const baseUrlSymf = 'https://api.littlesis.org/';
 const baseUrlRails = 'https://littlesis.org/';
 const parse = (res) => res.body.Response.Data;
-const fakeApiDecks = require('../../test/support/sampleData/fakeApiDecks');
 
 //module
 var lsApi = {};
@@ -13,17 +12,16 @@ var lsApi = {};
 lsApi.getEntity = (id) => {
   const parseThis = res => res.body.entity || {};
   return new Promise(
-    (resolve, reject) =>
-      request
-        .get(`${baseUrlRails}entiites/${id}.json`)
-        .end((err, res) => err ? reject(err) : resolve(parseThis(res))));
+    (resolve, reject) => request
+      .get(`${baseUrlRails}entiites/${id}.json`)
+      .end((err, res) => err ? reject(err) : resolve(parseThis(res))));
 };
 
 //searchEntities(String) -> Promise[Entity]
 lsApi.searchEntities = (query) => {
   const parseThis = res => parse(res).Entities.Entity || [];
-  return new Promise((resolve, reject) =>
-    request
+  return new Promise(
+    (resolve, reject) => request
       .get(baseUrlSymf + 'entities.json')
       .query({q: query, _key: apiKey})
       .end((err, res) => err ? reject(err) : resolve(parseThis(res))));
@@ -33,16 +31,18 @@ lsApi.searchEntities = (query) => {
 lsApi.getMap = (id) => {
   const parseThis = res => res.body.map || {};
   return new Promise(
-    (resolve, reject) =>
-      request
-        .get(`${baseUrlRails}maps/${id}.json`)
-        .end((err, res) => err ? reject(err) : resolve(parseThis(res))));
+    (resolve, reject) => request
+      .get(`${baseUrlRails}maps/${id}.json`)
+      .end((err, res) => err ? reject(err) : resolve(parseThis(res))));
 };
 
+//getDecks(String) -> Promise[Array[ApiDeck]]
 lsApi.getDecks = (topicName) => {
-  return new Promise((resolve, reject) => {
-    resolve(fakeApiDecks.map_collections);
-   });
+  const parseThis = res => res.body.map_collections || [];
+  return new Promise(
+    (resolve, reject) => request
+      .get(`${baseUrlRails}topics/${topicName}/map_collections.json`)
+      .end((err, res) => err ? reject(err) : resolve(parseThis(res))));
 };
 
 module.exports = lsApi;

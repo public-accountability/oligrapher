@@ -20,7 +20,7 @@ class Root extends BaseComponent {
     );
   }
   componentDidMount(){
-    this.app.deckQueries.fetchDecks('fracking');
+    this.app.deckQueries.fetchDecks('frackingtest');
   }
 }
 
