@@ -9,7 +9,7 @@ class Deck {
     this.graphIds = specs.graphIds || [];
   }
 
-  //parseApiGraph(apiGraph): { decks: [Deck], graphs: [Graph] }
+  //parseApiGraph(apiDecks): { decks: [Deck], graphs: [Graph] }
   static parseApiDecks(apiDecks) {
     const [decks, graphs] = _.unzip(apiDecks.map(this.parseApiDeck));
     return { decks: decks, graphs: _.flatten(graphs)};

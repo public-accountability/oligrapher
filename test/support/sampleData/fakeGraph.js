@@ -2,7 +2,7 @@ module.exports = {
   id: 556,
   "display": {
     "description": undefined,
-    "shrinkFactor": 1.2,
+    "shrinkFactor": 1.3,
     "title": undefined,
   },
   "edges": {

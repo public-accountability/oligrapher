@@ -12,8 +12,10 @@ class DeckQueries extends Marty.Queries {
           this.dispatch(DeckConstants.FETCH_DECKS_DONE, Deck.parseApiDecks(res));
         })
       .catch(
-        err =>
-          this.dispatch(DeckConstants.FETCH_DECKS_FAILED, err));
+        err => {
+          this.dispatch(DeckConstants.FETCH_DECKS_FAILED, err);
+          throw new Error(err);
+        });
   }
 }
 
