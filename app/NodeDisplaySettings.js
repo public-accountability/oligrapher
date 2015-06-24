@@ -21,7 +21,7 @@ module.exports = {
   },
   bgOpacity: {
     normal: 0,
-    highlighted: 1,
+    highlighted: 0.5,
     faded: 0
   },
   imageOpacity: {
