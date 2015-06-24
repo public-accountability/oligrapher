@@ -31,6 +31,7 @@ class DeckStore extends Marty.Store {
     this.setState({
       position: { deck: id, slide: 0 }
     });
+
   }
 
 
