@@ -23,7 +23,7 @@ module.exports = {
     is_current: '1',
     primary_type: 'Org',
     parent_id: '',
-    updated_at: '2015-05-18 19:15:21',
+    updated_at: '2015-06-15 12:22:47',
     uri: 'http://littlesis.org/org/1/Walmart',
     api_uri: 'http://api.littlesis.org/entity/1.xml' },
   { id: '77304',

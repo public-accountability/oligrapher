@@ -3,18 +3,17 @@ const Marty = require('marty');
 const SearchBox = require('./SearchBox');
 const { Grid, Row, Col, Navbar, Nav, NavItem, DropdownButton, MenuItem } = require('react-bootstrap');
 const GraphConstants = require('../constants/GraphConstants');
+const _ = require('underscore');
 
 class Header extends BaseComponent {
   constructor(options){
     super(options);
   }
   render() {
-    const maps = [
-      { name: 'Mitchell Family Foundation', id: 556},
-      { name: 'Frackademia', id: 507},
-      { name: 'Andrew Cuomo', id: 456 },
-      { name: 'Hillary Clinton', id: 431 }
-    ];
+    /* const decks = [
+       { title: 'Mitchell Family Foundation', id: 146},
+       { title: 'Frackademia', id: 282 }
+       ]; */
     return (
       <Row className="header">
         <Navbar
@@ -23,10 +22,10 @@ class Header extends BaseComponent {
           fluid={true}
           fixedTop={true} >
           <Nav className="nav">
-            <DropdownButton eventKey={1} title="Maps" className="nav-dropdown">
-              {maps.map(m =>
-                <MenuItem onSelect={this._handleMapNavClick.bind(this, m.id)}>
-                  {m.name}
+            <DropdownButton eventKey={1} title="Webs of Influence" className="nav-dropdown">
+              {this.props.decks.map(d =>
+                <MenuItem onSelect={this._handleMapNavClick.bind(this, d.id)}>
+                  {d.title}
                 </MenuItem>
               )}
             </DropdownButton>
@@ -37,8 +36,15 @@ class Header extends BaseComponent {
     );
   }
   _handleMapNavClick(id){
-    this.app.graphActions.showGraph(id);
+    this.app.deckActions.selectDeck(id);
   }
 }
 
-module.exports = Marty.createContainer(Header);
+module.exports = Marty.createContainer(Header, {
+  listenTo: ['deckStore'],
+  fetch: {
+    decks(){
+      return _.values(this.app.deckStore.state.decks);
+    }
+  }
+});

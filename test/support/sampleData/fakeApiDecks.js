@@ -1945,7 +1945,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 3,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 35999,
@@ -1959,7 +1959,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 48070,
@@ -1974,7 +1975,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 20,
@@ -1989,7 +1990,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1.5,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 33849,
@@ -2003,7 +2004,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 669,
@@ -2017,7 +2019,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 37,
@@ -2031,7 +2034,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 33560,
@@ -2045,7 +2049,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 15224,
@@ -2059,7 +2064,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 37096,
@@ -2073,7 +2079,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 35992,
@@ -2087,7 +2094,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 33576,
@@ -2101,7 +2109,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 33577,
@@ -2115,7 +2124,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 8302,
@@ -2129,7 +2139,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 50090,
@@ -2143,7 +2154,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 37085,
@@ -2157,7 +2169,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 477,
@@ -2171,7 +2184,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 35984,
@@ -2185,7 +2199,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 39585,
@@ -2199,7 +2214,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 15213,
@@ -2213,7 +2229,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 38526,
@@ -2227,7 +2244,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 15050,
@@ -2242,7 +2260,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 88683,
@@ -2256,7 +2274,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 33180,
@@ -2270,7 +2289,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 15391,
@@ -2284,7 +2304,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 37769,
@@ -2298,7 +2319,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 12,
@@ -2312,7 +2334,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 50093,
@@ -2326,7 +2349,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 15052,
@@ -2340,7 +2364,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 37777,
@@ -2354,7 +2379,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 95715,
@@ -2368,7 +2394,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 49456,
@@ -2382,7 +2409,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 68841,
@@ -2397,7 +2425,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 75307,
@@ -2412,7 +2440,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 35989,
@@ -2426,7 +2454,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 35991,
@@ -2441,7 +2470,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 39743,
@@ -2455,7 +2484,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 30,
@@ -2469,7 +2499,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 46417,
@@ -2483,7 +2514,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 37751,
@@ -2497,7 +2529,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             }
           ],
           "rels": [
@@ -2518,7 +2551,8 @@ module.exports = {
               "x1": 24.34782409668,
               "y1": -55.65217590332,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 514700,
@@ -2537,7 +2571,8 @@ module.exports = {
               "x1": -42,
               "y1": -34,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 445878,
@@ -2556,7 +2591,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 91603,
@@ -2575,7 +2611,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 91567,
@@ -2594,7 +2631,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 91571,
@@ -2613,7 +2651,8 @@ module.exports = {
               "x1": 73.664810180664,
               "y1": -5.5248413085938,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94961,
@@ -2632,7 +2671,8 @@ module.exports = {
               "x1": 10,
               "y1": -78,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": "x1",
@@ -2651,7 +2691,8 @@ module.exports = {
               "x1": -14.217391967773,
               "y1": -45.260864257812,
               "fixed": true,
-              "custom": true
+              "custom": true,
+              "status": "faded"
             },
             {
               "id": 94964,
@@ -2670,7 +2711,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 117337,
@@ -2689,7 +2731,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94949,
@@ -2708,7 +2751,8 @@ module.exports = {
               "x1": 39.071662425995,
               "y1": -22.496917724609,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 515008,
@@ -2727,7 +2771,8 @@ module.exports = {
               "x1": -5.0497131347656,
               "y1": -66.674011230469,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 91163,
@@ -2746,7 +2791,8 @@ module.exports = {
               "x1": -10.534057617188,
               "y1": -57.406997680664,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94933,
@@ -2765,7 +2811,8 @@ module.exports = {
               "x1": 19.723747253418,
               "y1": -6.9502716064453,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 232781,
@@ -2784,7 +2831,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411298,
@@ -2803,7 +2851,8 @@ module.exports = {
               "x1": 30,
               "y1": -2,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 119558,
@@ -2823,7 +2872,8 @@ module.exports = {
               "x1": 31.882141113281,
               "y1": -21.009216308594,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94940,
@@ -2842,7 +2892,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 515550,
@@ -2861,7 +2912,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 124193,
@@ -2880,7 +2932,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411301,
@@ -2899,7 +2952,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 519423,
@@ -2918,7 +2972,8 @@ module.exports = {
               "x1": -20,
               "y1": 48,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 117799,
@@ -2937,7 +2992,8 @@ module.exports = {
               "x1": 24.347839355469,
               "y1": 48.695648193359,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": "x2",
@@ -2956,7 +3012,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": true
+              "custom": true,
+              "status": "faded"
             },
             {
               "id": 117800,
@@ -2975,7 +3032,8 @@ module.exports = {
               "x1": 47.882141113281,
               "y1": 34.990783691406,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 439853,
@@ -2994,7 +3052,8 @@ module.exports = {
               "x1": 101.28912353516,
               "y1": -132.59667523205,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 91598,
@@ -3013,7 +3072,8 @@ module.exports = {
               "x1": -5.5248718261719,
               "y1": -138.12152099609,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 285388,
@@ -3032,7 +3092,8 @@ module.exports = {
               "x1": -29.465927124023,
               "y1": 235.72744750977,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411296,
@@ -3051,7 +3112,8 @@ module.exports = {
               "x1": 34,
               "y1": -16,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 118663,
@@ -3070,7 +3132,8 @@ module.exports = {
               "x1": -2,
               "y1": -70,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 118662,
@@ -3089,7 +3152,8 @@ module.exports = {
               "x1": -44,
               "y1": -34,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 386260,
@@ -3108,7 +3172,8 @@ module.exports = {
               "x1": -10.338806152344,
               "y1": -39.381240844727,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411299,
@@ -3127,7 +3192,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 232877,
@@ -3146,7 +3212,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 136004,
@@ -3165,7 +3232,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411294,
@@ -3184,7 +3252,8 @@ module.exports = {
               "x1": -22.09944152832,
               "y1": -25.782691955566,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 414812,
@@ -3203,7 +3272,8 @@ module.exports = {
               "x1": 16.574584960938,
               "y1": 49.723754882812,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 514797,
@@ -3222,7 +3292,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 411295,
@@ -3241,7 +3312,8 @@ module.exports = {
               "x1": -2,
               "y1": -38,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 516378,
@@ -3260,7 +3332,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 827269,
@@ -3279,7 +3352,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 291127,
@@ -3298,7 +3372,8 @@ module.exports = {
               "x1": -38,
               "y1": 68,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94946,
@@ -3317,7 +3392,8 @@ module.exports = {
               "x1": 80,
               "y1": -66,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94948,
@@ -3336,7 +3412,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 124642,
@@ -3355,7 +3432,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 384178,
@@ -3374,7 +3452,8 @@ module.exports = {
               "x1": -2,
               "y1": 24,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 124643,
@@ -3393,7 +3472,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411305,
@@ -3412,7 +3492,8 @@ module.exports = {
               "x1": 54,
               "y1": -30,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 124194,
@@ -3431,7 +3512,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 827271,
@@ -3450,7 +3532,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             }
           ],
           "texts": [
@@ -3475,7 +3558,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 3,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 35999,
@@ -3489,7 +3572,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 48070,
@@ -3503,7 +3587,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 20,
@@ -3517,7 +3602,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 33849,
@@ -3532,7 +3618,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 669,
@@ -3546,7 +3632,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 37,
@@ -3561,7 +3648,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1.5,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 33560,
@@ -3575,7 +3662,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 15224,
@@ -3589,7 +3677,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 37096,
@@ -3603,7 +3692,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 35992,
@@ -3617,7 +3707,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 33576,
@@ -3631,7 +3722,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 33577,
@@ -3645,7 +3737,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 8302,
@@ -3659,7 +3752,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 50090,
@@ -3673,7 +3767,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 37085,
@@ -3687,7 +3782,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 477,
@@ -3701,7 +3797,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 35984,
@@ -3716,7 +3813,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 39585,
@@ -3731,7 +3828,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 15213,
@@ -3745,7 +3842,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 38526,
@@ -3759,7 +3857,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 15050,
@@ -3773,7 +3872,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 88683,
@@ -3787,7 +3887,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 33180,
@@ -3801,7 +3902,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 15391,
@@ -3815,7 +3917,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 37769,
@@ -3829,7 +3932,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 12,
@@ -3843,7 +3947,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 50093,
@@ -3857,7 +3962,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 15052,
@@ -3871,7 +3977,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 37777,
@@ -3885,7 +3992,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 95715,
@@ -3899,7 +4007,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 49456,
@@ -3913,7 +4022,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 68841,
@@ -3927,7 +4037,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 75307,
@@ -3941,7 +4052,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 35989,
@@ -3955,7 +4067,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 35991,
@@ -3969,7 +4082,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 39743,
@@ -3983,7 +4097,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 30,
@@ -3997,7 +4112,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 46417,
@@ -4011,7 +4127,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 37751,
@@ -4025,7 +4142,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             }
           ],
           "rels": [
@@ -4046,7 +4164,8 @@ module.exports = {
               "x1": 24.34782409668,
               "y1": -55.65217590332,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 514700,
@@ -4065,7 +4184,8 @@ module.exports = {
               "x1": -42,
               "y1": -34,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 445878,
@@ -4084,7 +4204,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 91603,
@@ -4103,7 +4224,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 91567,
@@ -4122,7 +4244,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 91571,
@@ -4141,7 +4264,8 @@ module.exports = {
               "x1": 73.664810180664,
               "y1": -5.5248413085938,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 94961,
@@ -4160,7 +4284,8 @@ module.exports = {
               "x1": 10,
               "y1": -78,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": "x1",
@@ -4179,7 +4304,8 @@ module.exports = {
               "x1": -14.217391967773,
               "y1": -45.260864257812,
               "fixed": true,
-              "custom": true
+              "custom": true,
+              "status": "faded"
             },
             {
               "id": 94964,
@@ -4198,7 +4324,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 117337,
@@ -4217,7 +4344,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94949,
@@ -4236,7 +4364,8 @@ module.exports = {
               "x1": 39.071662425995,
               "y1": -22.496917724609,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 515008,
@@ -4255,7 +4384,8 @@ module.exports = {
               "x1": -5.0497131347656,
               "y1": -66.674011230469,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 91163,
@@ -4274,7 +4404,8 @@ module.exports = {
               "x1": -10.534057617188,
               "y1": -57.406997680664,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94933,
@@ -4293,7 +4424,8 @@ module.exports = {
               "x1": 19.723747253418,
               "y1": -6.9502716064453,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 232781,
@@ -4312,7 +4444,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411298,
@@ -4331,7 +4464,8 @@ module.exports = {
               "x1": 30,
               "y1": -2,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 119558,
@@ -4351,7 +4485,8 @@ module.exports = {
               "x1": 31.882141113281,
               "y1": -21.009216308594,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94940,
@@ -4370,7 +4505,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 515550,
@@ -4389,7 +4525,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 124193,
@@ -4408,7 +4545,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 411301,
@@ -4427,7 +4565,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 519423,
@@ -4446,7 +4585,8 @@ module.exports = {
               "x1": -20,
               "y1": 48,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 117799,
@@ -4465,7 +4605,8 @@ module.exports = {
               "x1": 24.347839355469,
               "y1": 48.695648193359,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": "x2",
@@ -4484,7 +4625,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": true
+              "custom": true,
+              "status": "faded"
             },
             {
               "id": 117800,
@@ -4503,7 +4645,8 @@ module.exports = {
               "x1": 47.882141113281,
               "y1": 34.990783691406,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 439853,
@@ -4522,7 +4665,8 @@ module.exports = {
               "x1": 101.28912353516,
               "y1": -132.59667523205,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 91598,
@@ -4541,7 +4685,8 @@ module.exports = {
               "x1": -5.5248718261719,
               "y1": -138.12152099609,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 285388,
@@ -4560,7 +4705,8 @@ module.exports = {
               "x1": -29.465927124023,
               "y1": 235.72744750977,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411296,
@@ -4579,7 +4725,8 @@ module.exports = {
               "x1": 34,
               "y1": -16,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 118663,
@@ -4598,7 +4745,8 @@ module.exports = {
               "x1": -2,
               "y1": -70,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 118662,
@@ -4617,7 +4765,8 @@ module.exports = {
               "x1": -44,
               "y1": -34,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 386260,
@@ -4636,7 +4785,8 @@ module.exports = {
               "x1": -10.338806152344,
               "y1": -39.381240844727,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411299,
@@ -4655,7 +4805,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 232877,
@@ -4674,7 +4825,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 136004,
@@ -4693,7 +4845,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411294,
@@ -4712,7 +4865,8 @@ module.exports = {
               "x1": -22.09944152832,
               "y1": -25.782691955566,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 414812,
@@ -4731,7 +4885,8 @@ module.exports = {
               "x1": 16.574584960938,
               "y1": 49.723754882812,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 514797,
@@ -4750,7 +4905,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411295,
@@ -4769,7 +4925,8 @@ module.exports = {
               "x1": -2,
               "y1": -38,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 516378,
@@ -4788,7 +4945,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 827269,
@@ -4807,7 +4965,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 291127,
@@ -4826,7 +4985,8 @@ module.exports = {
               "x1": -38,
               "y1": 68,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94946,
@@ -4845,7 +5005,8 @@ module.exports = {
               "x1": 80,
               "y1": -66,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94948,
@@ -4864,7 +5025,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 124642,
@@ -4883,7 +5045,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 384178,
@@ -4902,7 +5065,8 @@ module.exports = {
               "x1": -2,
               "y1": 24,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 124643,
@@ -4921,7 +5085,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411305,
@@ -4940,7 +5105,8 @@ module.exports = {
               "x1": 54,
               "y1": -30,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 124194,
@@ -4959,7 +5125,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 827271,
@@ -4978,7 +5145,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             }
           ],
           "texts": [
@@ -5002,7 +5170,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 3
+              "scale": 3,
+              "status": "faded"
             },
             {
               "id": 35999,
@@ -5016,7 +5185,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 48070,
@@ -5030,7 +5200,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 20,
@@ -5044,7 +5215,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 33849,
@@ -5059,7 +5231,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 669,
@@ -5074,7 +5246,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1.5,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 37,
@@ -5089,7 +5261,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1.5,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 33560,
@@ -5103,7 +5275,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 15224,
@@ -5117,7 +5290,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 37096,
@@ -5131,7 +5305,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 35992,
@@ -5145,7 +5320,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 33576,
@@ -5159,7 +5335,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 33577,
@@ -5173,7 +5350,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 8302,
@@ -5187,7 +5365,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 50090,
@@ -5201,7 +5380,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 37085,
@@ -5215,7 +5395,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 477,
@@ -5229,7 +5410,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 35984,
@@ -5243,7 +5425,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 39585,
@@ -5258,7 +5441,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 15213,
@@ -5272,7 +5455,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 38526,
@@ -5286,7 +5470,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 15050,
@@ -5300,7 +5485,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 88683,
@@ -5314,7 +5500,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 33180,
@@ -5329,7 +5516,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1.5,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 15391,
@@ -5343,7 +5530,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 37769,
@@ -5357,7 +5545,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 12,
@@ -5371,7 +5560,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 50093,
@@ -5385,7 +5575,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 15052,
@@ -5399,7 +5590,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 37777,
@@ -5413,7 +5605,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 95715,
@@ -5427,7 +5620,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 49456,
@@ -5441,7 +5635,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 68841,
@@ -5455,7 +5650,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 75307,
@@ -5469,7 +5665,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 35989,
@@ -5483,7 +5680,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 35991,
@@ -5497,7 +5695,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 39743,
@@ -5511,7 +5710,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 30,
@@ -5525,7 +5725,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 46417,
@@ -5539,7 +5740,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 37751,
@@ -5553,7 +5755,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             }
           ],
           "rels": [
@@ -5574,7 +5777,8 @@ module.exports = {
               "x1": 24.34782409668,
               "y1": -55.65217590332,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 514700,
@@ -5593,7 +5797,8 @@ module.exports = {
               "x1": -42,
               "y1": -34,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 445878,
@@ -5612,7 +5817,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 91603,
@@ -5631,7 +5837,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 91567,
@@ -5650,7 +5857,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 91571,
@@ -5669,7 +5877,8 @@ module.exports = {
               "x1": 73.664810180664,
               "y1": -5.5248413085938,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 94961,
@@ -5688,7 +5897,8 @@ module.exports = {
               "x1": 10,
               "y1": -78,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": "x1",
@@ -5707,7 +5917,8 @@ module.exports = {
               "x1": -14.217391967773,
               "y1": -45.260864257812,
               "fixed": true,
-              "custom": true
+              "custom": true,
+              "status": "faded"
             },
             {
               "id": 94964,
@@ -5726,7 +5937,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 117337,
@@ -5745,7 +5957,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94949,
@@ -5764,7 +5977,8 @@ module.exports = {
               "x1": 39.071662425995,
               "y1": -22.496917724609,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 515008,
@@ -5783,7 +5997,8 @@ module.exports = {
               "x1": -5.0497131347656,
               "y1": -66.674011230469,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 91163,
@@ -5802,7 +6017,8 @@ module.exports = {
               "x1": -10.534057617188,
               "y1": -57.406997680664,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94933,
@@ -5821,7 +6037,8 @@ module.exports = {
               "x1": 19.723747253418,
               "y1": -6.9502716064453,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 232781,
@@ -5840,7 +6057,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411298,
@@ -5859,7 +6077,8 @@ module.exports = {
               "x1": 30,
               "y1": -2,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 119558,
@@ -5879,7 +6098,8 @@ module.exports = {
               "x1": 31.882141113281,
               "y1": -21.009216308594,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94940,
@@ -5898,7 +6118,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 515550,
@@ -5917,7 +6138,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 124193,
@@ -5936,7 +6158,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 411301,
@@ -5955,7 +6178,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 519423,
@@ -5974,7 +6198,8 @@ module.exports = {
               "x1": -20,
               "y1": 48,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 117799,
@@ -5993,7 +6218,8 @@ module.exports = {
               "x1": 24.347839355469,
               "y1": 48.695648193359,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": "x2",
@@ -6012,7 +6238,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": true
+              "custom": true,
+              "status": "faded"
             },
             {
               "id": 117800,
@@ -6031,7 +6258,8 @@ module.exports = {
               "x1": 47.882141113281,
               "y1": 34.990783691406,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 439853,
@@ -6050,7 +6278,8 @@ module.exports = {
               "x1": 101.28912353516,
               "y1": -132.59667523205,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 91598,
@@ -6069,7 +6298,8 @@ module.exports = {
               "x1": -5.5248718261719,
               "y1": -138.12152099609,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 285388,
@@ -6088,7 +6318,8 @@ module.exports = {
               "x1": -29.465927124023,
               "y1": 235.72744750977,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 411296,
@@ -6107,7 +6338,8 @@ module.exports = {
               "x1": 34,
               "y1": -16,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 118663,
@@ -6126,7 +6358,8 @@ module.exports = {
               "x1": -2,
               "y1": -70,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 118662,
@@ -6145,7 +6378,8 @@ module.exports = {
               "x1": -44,
               "y1": -34,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 386260,
@@ -6164,7 +6398,8 @@ module.exports = {
               "x1": -10.338806152344,
               "y1": -39.381240844727,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411299,
@@ -6183,7 +6418,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 232877,
@@ -6202,7 +6438,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 136004,
@@ -6221,7 +6458,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411294,
@@ -6240,7 +6478,8 @@ module.exports = {
               "x1": -22.09944152832,
               "y1": -25.782691955566,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 414812,
@@ -6259,7 +6498,8 @@ module.exports = {
               "x1": 16.574584960938,
               "y1": 49.723754882812,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 514797,
@@ -6278,7 +6518,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411295,
@@ -6297,7 +6538,8 @@ module.exports = {
               "x1": -2,
               "y1": -38,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 516378,
@@ -6316,7 +6558,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 827269,
@@ -6335,7 +6578,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 291127,
@@ -6354,7 +6598,8 @@ module.exports = {
               "x1": -38,
               "y1": 68,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94946,
@@ -6373,7 +6618,8 @@ module.exports = {
               "x1": 80,
               "y1": -66,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94948,
@@ -6392,7 +6638,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 124642,
@@ -6411,7 +6658,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 384178,
@@ -6430,7 +6678,8 @@ module.exports = {
               "x1": -2,
               "y1": 24,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 124643,
@@ -6449,7 +6698,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411305,
@@ -6468,7 +6718,8 @@ module.exports = {
               "x1": 54,
               "y1": -30,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 124194,
@@ -6487,7 +6738,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 827271,
@@ -6506,7 +6758,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             }
           ],
           "texts": [
@@ -6531,7 +6784,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 3,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 35999,
@@ -6545,7 +6798,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 48070,
@@ -6559,7 +6813,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 20,
@@ -6573,7 +6828,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 33849,
@@ -6587,7 +6843,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 669,
@@ -6601,7 +6858,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 37,
@@ -6615,7 +6873,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 33560,
@@ -6629,7 +6888,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 15224,
@@ -6643,7 +6903,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 37096,
@@ -6657,7 +6918,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 35992,
@@ -6671,7 +6933,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 33576,
@@ -6685,7 +6948,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 33577,
@@ -6699,7 +6963,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 8302,
@@ -6713,7 +6978,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 50090,
@@ -6727,7 +6993,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 37085,
@@ -6741,7 +7008,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 477,
@@ -6755,7 +7023,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 35984,
@@ -6769,7 +7038,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 39585,
@@ -6783,7 +7053,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 15213,
@@ -6797,7 +7068,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 38526,
@@ -6811,7 +7083,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 15050,
@@ -6825,7 +7098,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 88683,
@@ -6839,7 +7113,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 33180,
@@ -6853,7 +7128,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 15391,
@@ -6867,7 +7143,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 37769,
@@ -6881,7 +7158,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 12,
@@ -6895,7 +7173,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 50093,
@@ -6910,7 +7189,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 15052,
@@ -6925,7 +7204,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 37777,
@@ -6940,7 +7219,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1.5,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 95715,
@@ -6954,7 +7233,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 49456,
@@ -6968,7 +7248,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 68841,
@@ -6982,7 +7263,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 75307,
@@ -6996,7 +7278,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 35989,
@@ -7010,7 +7293,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 35991,
@@ -7025,7 +7309,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 39743,
@@ -7040,7 +7324,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 30,
@@ -7055,7 +7339,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1.5,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 46417,
@@ -7069,7 +7353,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 37751,
@@ -7083,7 +7368,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             }
           ],
           "rels": [
@@ -7104,7 +7390,8 @@ module.exports = {
               "x1": 24.34782409668,
               "y1": -55.65217590332,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 514700,
@@ -7123,7 +7410,8 @@ module.exports = {
               "x1": -42,
               "y1": -34,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 445878,
@@ -7142,7 +7430,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 91603,
@@ -7161,7 +7450,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 91567,
@@ -7180,7 +7470,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 91571,
@@ -7199,7 +7490,8 @@ module.exports = {
               "x1": 73.664810180664,
               "y1": -5.5248413085938,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94961,
@@ -7218,7 +7510,8 @@ module.exports = {
               "x1": 10,
               "y1": -78,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": "x1",
@@ -7237,7 +7530,8 @@ module.exports = {
               "x1": -14.217391967773,
               "y1": -45.260864257812,
               "fixed": true,
-              "custom": true
+              "custom": true,
+              "status": "faded"
             },
             {
               "id": 94964,
@@ -7256,7 +7550,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 117337,
@@ -7275,7 +7570,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94949,
@@ -7294,7 +7590,8 @@ module.exports = {
               "x1": 39.071662425995,
               "y1": -22.496917724609,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 515008,
@@ -7313,7 +7610,8 @@ module.exports = {
               "x1": -5.0497131347656,
               "y1": -66.674011230469,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 91163,
@@ -7332,7 +7630,8 @@ module.exports = {
               "x1": -10.534057617188,
               "y1": -57.406997680664,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94933,
@@ -7351,7 +7650,8 @@ module.exports = {
               "x1": 19.723747253418,
               "y1": -6.9502716064453,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 232781,
@@ -7370,7 +7670,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411298,
@@ -7389,7 +7690,8 @@ module.exports = {
               "x1": 30,
               "y1": -2,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 119558,
@@ -7409,7 +7711,8 @@ module.exports = {
               "x1": 31.882141113281,
               "y1": -21.009216308594,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94940,
@@ -7428,7 +7731,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 515550,
@@ -7447,7 +7751,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 124193,
@@ -7466,7 +7771,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411301,
@@ -7485,7 +7791,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 519423,
@@ -7504,7 +7811,8 @@ module.exports = {
               "x1": -20,
               "y1": 48,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 117799,
@@ -7523,7 +7831,8 @@ module.exports = {
               "x1": 24.347839355469,
               "y1": 48.695648193359,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": "x2",
@@ -7542,7 +7851,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": true
+              "custom": true,
+              "status": "faded"
             },
             {
               "id": 117800,
@@ -7561,7 +7871,8 @@ module.exports = {
               "x1": 47.882141113281,
               "y1": 34.990783691406,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 439853,
@@ -7580,7 +7891,8 @@ module.exports = {
               "x1": 101.28912353516,
               "y1": -132.59667523205,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 91598,
@@ -7599,7 +7911,8 @@ module.exports = {
               "x1": -5.5248718261719,
               "y1": -138.12152099609,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 285388,
@@ -7618,7 +7931,8 @@ module.exports = {
               "x1": -29.465927124023,
               "y1": 235.72744750977,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411296,
@@ -7637,7 +7951,8 @@ module.exports = {
               "x1": 34,
               "y1": -16,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 118663,
@@ -7656,7 +7971,8 @@ module.exports = {
               "x1": -2,
               "y1": -70,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 118662,
@@ -7675,7 +7991,8 @@ module.exports = {
               "x1": -44,
               "y1": -34,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 386260,
@@ -7694,7 +8011,8 @@ module.exports = {
               "x1": -10.338806152344,
               "y1": -39.381240844727,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411299,
@@ -7713,7 +8031,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 232877,
@@ -7732,7 +8051,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 136004,
@@ -7751,7 +8071,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 411294,
@@ -7770,7 +8091,8 @@ module.exports = {
               "x1": -22.09944152832,
               "y1": -25.782691955566,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 414812,
@@ -7789,7 +8111,8 @@ module.exports = {
               "x1": 16.574584960938,
               "y1": 49.723754882812,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 514797,
@@ -7808,7 +8131,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411295,
@@ -7827,7 +8151,8 @@ module.exports = {
               "x1": -2,
               "y1": -38,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 516378,
@@ -7846,7 +8171,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 827269,
@@ -7865,7 +8191,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 291127,
@@ -7884,7 +8211,8 @@ module.exports = {
               "x1": -38,
               "y1": 68,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94946,
@@ -7903,7 +8231,8 @@ module.exports = {
               "x1": 80,
               "y1": -66,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94948,
@@ -7922,7 +8251,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 124642,
@@ -7941,7 +8271,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 384178,
@@ -7960,7 +8291,8 @@ module.exports = {
               "x1": -2,
               "y1": 24,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 124643,
@@ -7979,7 +8311,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 411305,
@@ -7998,7 +8331,8 @@ module.exports = {
               "x1": 54,
               "y1": -30,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 124194,
@@ -8017,7 +8351,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 827271,
@@ -8036,7 +8371,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             }
           ],
           "texts": [
@@ -8061,7 +8397,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 3,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 35999,
@@ -8076,7 +8412,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 48070,
@@ -8090,7 +8426,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 20,
@@ -8104,7 +8441,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 33849,
@@ -8118,7 +8456,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 669,
@@ -8132,7 +8471,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 37,
@@ -8146,7 +8486,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 33560,
@@ -8160,7 +8501,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 15224,
@@ -8175,7 +8517,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 37096,
@@ -8189,7 +8531,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 35992,
@@ -8204,7 +8547,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 33576,
@@ -8218,7 +8561,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 33577,
@@ -8232,7 +8576,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 8302,
@@ -8246,7 +8591,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 50090,
@@ -8260,7 +8606,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 37085,
@@ -8274,7 +8621,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 477,
@@ -8288,7 +8636,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 35984,
@@ -8302,7 +8651,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 39585,
@@ -8316,7 +8666,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 15213,
@@ -8330,7 +8681,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 38526,
@@ -8344,7 +8696,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 15050,
@@ -8358,7 +8711,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 88683,
@@ -8372,7 +8726,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 33180,
@@ -8386,7 +8741,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 15391,
@@ -8401,7 +8757,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 37769,
@@ -8415,7 +8771,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 12,
@@ -8429,7 +8786,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 50093,
@@ -8443,7 +8801,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 15052,
@@ -8457,7 +8816,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 37777,
@@ -8471,7 +8831,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 95715,
@@ -8485,7 +8846,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 49456,
@@ -8499,7 +8861,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 68841,
@@ -8513,7 +8876,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 75307,
@@ -8527,7 +8891,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 35989,
@@ -8542,7 +8907,7 @@ module.exports = {
               "hide_image": false,
               "custom": false,
               "scale": 1,
-              "highlighted": true
+              "status": "highlighted"
             },
             {
               "id": 35991,
@@ -8556,7 +8921,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 39743,
@@ -8570,7 +8936,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 30,
@@ -8584,7 +8951,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             },
             {
               "id": 46417,
@@ -8598,7 +8966,8 @@ module.exports = {
               "type": "Person",
               "hide_image": false,
               "custom": false,
-              "scale": 1
+              "scale": 1,
+              "status": "faded"
             },
             {
               "id": 37751,
@@ -8612,7 +8981,8 @@ module.exports = {
               "type": "Org",
               "hide_image": false,
               "custom": false,
-              "scale": 1.5
+              "scale": 1.5,
+              "status": "faded"
             }
           ],
           "rels": [
@@ -8633,7 +9003,8 @@ module.exports = {
               "x1": 24.34782409668,
               "y1": -55.65217590332,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 514700,
@@ -8652,7 +9023,8 @@ module.exports = {
               "x1": -42,
               "y1": -34,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 445878,
@@ -8671,7 +9043,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 91603,
@@ -8690,7 +9063,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 91567,
@@ -8709,7 +9083,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 91571,
@@ -8728,7 +9103,8 @@ module.exports = {
               "x1": 73.664810180664,
               "y1": -5.5248413085938,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94961,
@@ -8747,7 +9123,8 @@ module.exports = {
               "x1": 10,
               "y1": -78,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": "x1",
@@ -8766,7 +9143,8 @@ module.exports = {
               "x1": -14.217391967773,
               "y1": -45.260864257812,
               "fixed": true,
-              "custom": true
+              "custom": true,
+              "status": "faded"
             },
             {
               "id": 94964,
@@ -8785,7 +9163,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 117337,
@@ -8804,7 +9183,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94949,
@@ -8823,7 +9203,8 @@ module.exports = {
               "x1": 39.071662425995,
               "y1": -22.496917724609,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 515008,
@@ -8842,7 +9223,8 @@ module.exports = {
               "x1": -5.0497131347656,
               "y1": -66.674011230469,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 91163,
@@ -8861,7 +9243,8 @@ module.exports = {
               "x1": -10.534057617188,
               "y1": -57.406997680664,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94933,
@@ -8880,7 +9263,8 @@ module.exports = {
               "x1": 19.723747253418,
               "y1": -6.9502716064453,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 232781,
@@ -8899,7 +9283,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411298,
@@ -8918,7 +9303,8 @@ module.exports = {
               "x1": 30,
               "y1": -2,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 119558,
@@ -8938,7 +9324,8 @@ module.exports = {
               "x1": 31.882141113281,
               "y1": -21.009216308594,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94940,
@@ -8957,7 +9344,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 515550,
@@ -8976,7 +9364,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 124193,
@@ -8995,7 +9384,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411301,
@@ -9014,7 +9404,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 519423,
@@ -9033,7 +9424,8 @@ module.exports = {
               "x1": -20,
               "y1": 48,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 117799,
@@ -9052,7 +9444,8 @@ module.exports = {
               "x1": 24.347839355469,
               "y1": 48.695648193359,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": "x2",
@@ -9071,7 +9464,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": true
+              "custom": true,
+              "status": "faded"
             },
             {
               "id": 117800,
@@ -9090,7 +9484,8 @@ module.exports = {
               "x1": 47.882141113281,
               "y1": 34.990783691406,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 439853,
@@ -9109,7 +9504,8 @@ module.exports = {
               "x1": 101.28912353516,
               "y1": -132.59667523205,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 91598,
@@ -9128,7 +9524,8 @@ module.exports = {
               "x1": -5.5248718261719,
               "y1": -138.12152099609,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 285388,
@@ -9147,7 +9544,8 @@ module.exports = {
               "x1": -29.465927124023,
               "y1": 235.72744750977,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411296,
@@ -9166,7 +9564,8 @@ module.exports = {
               "x1": 34,
               "y1": -16,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 118663,
@@ -9185,7 +9584,8 @@ module.exports = {
               "x1": -2,
               "y1": -70,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 118662,
@@ -9204,7 +9604,8 @@ module.exports = {
               "x1": -44,
               "y1": -34,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 386260,
@@ -9223,7 +9624,8 @@ module.exports = {
               "x1": -10.338806152344,
               "y1": -39.381240844727,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411299,
@@ -9242,7 +9644,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 232877,
@@ -9261,7 +9664,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 136004,
@@ -9280,7 +9684,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411294,
@@ -9299,7 +9704,8 @@ module.exports = {
               "x1": -22.09944152832,
               "y1": -25.782691955566,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 414812,
@@ -9318,7 +9724,8 @@ module.exports = {
               "x1": 16.574584960938,
               "y1": 49.723754882812,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 514797,
@@ -9337,7 +9744,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411295,
@@ -9356,7 +9764,8 @@ module.exports = {
               "x1": -2,
               "y1": -38,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 516378,
@@ -9375,7 +9784,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 827269,
@@ -9394,7 +9804,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 291127,
@@ -9413,7 +9824,8 @@ module.exports = {
               "x1": -38,
               "y1": 68,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 94946,
@@ -9432,7 +9844,8 @@ module.exports = {
               "x1": 80,
               "y1": -66,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "highlighted"
             },
             {
               "id": 94948,
@@ -9451,7 +9864,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 124642,
@@ -9470,7 +9884,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 384178,
@@ -9489,7 +9904,8 @@ module.exports = {
               "x1": -2,
               "y1": 24,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 124643,
@@ -9508,7 +9924,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 411305,
@@ -9527,7 +9944,8 @@ module.exports = {
               "x1": 54,
               "y1": -30,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 124194,
@@ -9546,7 +9964,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             },
             {
               "id": 827271,
@@ -9565,7 +9984,8 @@ module.exports = {
               "x1": null,
               "y1": null,
               "fixed": true,
-              "custom": false
+              "custom": false,
+              "status": "faded"
             }
           ],
           "texts": [

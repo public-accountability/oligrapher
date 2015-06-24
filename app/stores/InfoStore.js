@@ -1,9 +1,11 @@
 const Marty = require('marty');
 const InfoConstants = require('../constants/InfoConstants');
 const GraphConstants = require('../constants/GraphConstants');
+const DeckConstants = require('../constants/DeckConstants');
 const { Map } = require('immutable');
 
 class InfoStore extends Marty.Store {
+
   constructor(options){
     super(options);
     this.state = Map({
@@ -11,22 +13,23 @@ class InfoStore extends Marty.Store {
       id: null
     });
     this.handlers = ({
-      setGraphInfo: GraphConstants.SHOW_GRAPH, // GRAPH_SELECTED
+      setGraphInfo: [GraphConstants.SHOW_GRAPH, DeckConstants.DECK_SELECTED], // GRAPH_SELECTED
       setNodeInfo: GraphConstants.NODE_CLICKED
     });
   }
+
   setGraphInfo(id){
     this.waitFor(this.app.graphStore);
     this.setInfo('map', id);
   }
+
   setNodeInfo(id){
     this.setInfo('node', id);
   }
+
   setInfo(type, id){//TODO: add param about graph_id into each node, so they can be passed here?
     this.replaceState(Map({type: type, id: id}));
   }
-
-
 
   getGraphInfo(){
     const id = this.state.get('id');

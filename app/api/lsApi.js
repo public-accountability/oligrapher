@@ -4,7 +4,7 @@ const request = require('superagent');
 const baseUrlSymf = 'https://api.littlesis.org/';
 const baseUrlRails = 'https://littlesis.org/';
 const parse = (res) => res.body.Response.Data;
-const mockDeck = require('../../test/support/sampleData/mockDeck');
+const fakeApiDecks = require('../../test/support/sampleData/fakeApiDecks');
 
 //module
 var lsApi = {};
@@ -39,8 +39,10 @@ lsApi.getMap = (id) => {
         .end((err, res) => err ? reject(err) : resolve(parseThis(res))));
 };
 
-lsApi.getDeck = (topicName) => {
-  return new Promise((resolve, reject) => resolve(mockDeck));
+lsApi.getDecks = (topicName) => {
+  return new Promise((resolve, reject) => {
+    resolve(fakeApiDecks.map_collections);
+   });
 };
 
 module.exports = lsApi;

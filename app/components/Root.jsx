@@ -1,3 +1,4 @@
+const Marty = require('marty');
 const BaseComponent = require('./BaseComponent');
 const Header = require('./Header');
 const MainContainer = require('./MainContainer');
@@ -18,6 +19,9 @@ class Root extends BaseComponent {
 
     );
   }
+  componentDidMount(){
+    this.app.deckQueries.fetchDecks('fracking');
+  }
 }
 
-module.exports = Root;
+module.exports = Marty.createContainer(Root);
