@@ -1,6 +1,7 @@
 const Marty = require('marty');
 const Deck = require('../models/Deck');
 const DeckConstants = require('../constants/DeckConstants');
+const _ = require('lodash');
 
 class DeckStore extends Marty.Store {
 
@@ -16,7 +17,9 @@ class DeckStore extends Marty.Store {
 
     this.handlers = {
       addDecks: DeckConstants.FETCH_DECKS_DONE,
-      setCurrentDeck: DeckConstants.DECK_SELECTED
+      setCurrentDeck: DeckConstants.DECK_SELECTED,
+      incrementSlide: DeckConstants.NEXT_SLIDE_REQUESTED,
+      decrementSlide: DeckConstants.PREVIOUS_SLIDE_REQUESTED
     };
   }
 
@@ -31,7 +34,42 @@ class DeckStore extends Marty.Store {
     this.setState({
       position: { deck: id, slide: 0 }
     });
+  }
 
+  incrementSlide(){
+    this.replaceState(_.merge({}, this.state, {
+      position: { slide: this._nextSlide(this.state.position.slide) }
+    }));
+  }
+
+  decrementSlide(){
+    this.replaceState(_.merge({}, this.state, {
+      position: { slide: this._prevSlide(this.state.position.slide) }
+    }));
+  }
+
+  getCurrentDeck() {
+    return this._getDeckById(this.state.position.deck);
+  }
+
+  _getDeckById(id) {
+    return this.state.decks[id];
+  }
+
+  _nextSlide(currentSlide) {
+    return this._isLastSlide(currentSlide) ? currentSlide : currentSlide + 1;
+  }
+
+  _prevSlide(currentSlide) {
+    return this._isFirstSlide(currentSlide) ? currentSlide : this.state.position.slide - 1;
+  }
+
+  _isFirstSlide(slide) {
+    return slide == 0;
+  }
+
+  _isLastSlide(slide) {
+    return slide == this.getCurrentDeck().graphIds.length - 1;
   }
 }
 
