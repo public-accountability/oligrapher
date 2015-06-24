@@ -5,10 +5,22 @@
   margin: 1em;
 }
 
+.header {
+  height: 4em;
+}
+
 .graphContainer {
-  width: 100%;
+  position: fixed;
+  top: 0px;
+  width: inherit;
+  top: 6em;
   height: 1000px;
   padding-bottom: 1em;
+}
+
+.footer{
+  position: fixed;
+  bottom: .5em;
 }
 
 .hidden {
@@ -27,6 +39,16 @@
 .infoContainer {
   border-left: 1px solid #eee;
   padding: 1em;
+  .title {
+    position: fixed;
+    top: 3em;
+    background-color: white;
+    z-index: 1;
+  }
+  .text {
+    position: relative;
+    top: 7em;
+  }
 }
 
 #zoom-in {

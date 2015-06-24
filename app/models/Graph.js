@@ -111,11 +111,7 @@ class Graph {
     return this;
   }
 
-  getNodeByEntityId(id) {
-    return this.nodes.find(n => n.content.entity.id === id);
-  }
-
-  static parseMap(specs){
+  static parseApiGraph(specs){
     return new Graph({})
       ._importBase(specs)
       .importEntities(specs.entities)
@@ -155,10 +151,10 @@ class Graph {
   }
 
   importCaptions(captions) {
-    let that = this;
+    const that = this;
     if (captions) {
       captions.forEach(function(t) {
-        that.addCaption(t)
+        that.addCaption(t);
       });
     }
 

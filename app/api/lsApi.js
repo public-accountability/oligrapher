@@ -1,10 +1,10 @@
 //privates
 const apiKey = require('../../credentials').lsApiKey;
 const request = require('superagent');
-//require('superagent-jsonp')(request);
 const baseUrlSymf = 'https://api.littlesis.org/';
 const baseUrlRails = 'https://littlesis.org/';
 const parse = (res) => res.body.Response.Data;
+const fakeApiDecks = require('../../test/support/sampleData/fakeApiDecks');
 
 //module
 var lsApi = {};
@@ -37,6 +37,12 @@ lsApi.getMap = (id) => {
       request
         .get(`${baseUrlRails}maps/${id}.json`)
         .end((err, res) => err ? reject(err) : resolve(parseThis(res))));
+};
+
+lsApi.getDecks = (topicName) => {
+  return new Promise((resolve, reject) => {
+    resolve(fakeApiDecks.map_collections);
+   });
 };
 
 module.exports = lsApi;

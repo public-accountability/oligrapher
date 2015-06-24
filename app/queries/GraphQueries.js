@@ -7,12 +7,11 @@ class GraphQueries extends Marty.Queries {
   getGraph(id){
     this.dispatch(GraphConstants.RECEIVE_GRAPH_STARTING);
     return lsApi.getMap(id)
-      .then(res => {
-        const graph = Graph.parseMap(res);
-        this.dispatch(GraphConstants.RECEIVE_GRAPH_DONE, graph); })
-      .catch(err => {
-        this.dispatch(GraphConstants.RECEIVE_GRAPH_FAILED, id, err);
-      });
+      .then(res =>
+        this.dispatch(GraphConstants.RECEIVE_GRAPH_DONE, Graph.parseApiGraph(res)))
+      .catch(err =>
+        this.dispatch(GraphConstants.RECEIVE_GRAPH_FAILED, id, err));
+
   }
 }
 

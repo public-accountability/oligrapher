@@ -32,7 +32,7 @@ module.exports = Marty.createContainer(InfoContainer, {
         map: () => infoStore.getGraphInfo(),
         node: () => infoStore.getNodeInfo(),
         empty: () => Map({})
-      }[this.app.infoStore.state.get('type')]();
+      }[infoStore.state.get('type')]();
     }
   }
 });
