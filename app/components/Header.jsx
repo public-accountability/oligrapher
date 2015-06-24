@@ -10,10 +10,6 @@ class Header extends BaseComponent {
     super(options);
   }
   render() {
-    /* const decks = [
-       { title: 'Mitchell Family Foundation', id: 146},
-       { title: 'Frackademia', id: 282 }
-       ]; */
     return (
       <Row className="header">
         <Navbar
@@ -23,8 +19,8 @@ class Header extends BaseComponent {
           fixedTop={true} >
           <Nav className="nav">
             <DropdownButton eventKey={1} title="Webs of Influence" className="nav-dropdown">
-              {this.props.decks.map(d =>
-                <MenuItem onSelect={this._handleMapNavClick.bind(this, d.id)}>
+              {_.map(this.props.decks, (d,i) =>
+                <MenuItem onSelect={this._handleMapNavClick.bind(this, i)}>
                   {d.title}
                 </MenuItem>
               )}
@@ -34,8 +30,8 @@ class Header extends BaseComponent {
       </Row>
     );
   }
-  _handleMapNavClick(id){
-    this.app.deckActions.selectDeck(id);
+  _handleMapNavClick(index){
+    this.app.deckActions.selectDeck(index);
   }
 }
 

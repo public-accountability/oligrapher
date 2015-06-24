@@ -14,8 +14,7 @@ class InfoStore extends Marty.Store {
     });
     this.handlers = ({
       setGraphInfo: [
-        GraphConstants.SHOW_GRAPH, // GRAPH_SELECTED
-        DeckConstants.DECK_SELECTED, 
+        DeckConstants.DECK_SELECTED,
         DeckConstants.PREVIOUS_SLIDE_REQUESTED,
         DeckConstants.NEXT_SLIDE_REQUESTED,
         DeckConstants.SLIDE_SELECTED

@@ -12,10 +12,7 @@ class Deck {
   //parseApiGraph(apiGraph): { decks: [Deck], graphs: [Graph] }
   static parseApiDecks(apiDecks) {
     const [decks, graphs] = _.unzip(apiDecks.map(this.parseApiDeck));
-    return {
-      decks: _.zipObject(decks.map(d => [d.id, d])),
-      graphs: _.flatten(graphs)
-    };
+    return { decks: decks, graphs: _.flatten(graphs)};
   }
 
   //parseApiDeck(apiDeck): [Deck,[Graph]]

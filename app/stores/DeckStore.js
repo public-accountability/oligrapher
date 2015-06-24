@@ -11,7 +11,7 @@ class DeckStore extends Marty.Store {
     const nullPosition = { deck: -1, slide: -1 };
 
     this.state = {
-      decks: { [nullDeck.id]: nullDeck },
+      decks: [nullDeck],
       position: nullPosition
     };
 
@@ -30,9 +30,9 @@ class DeckStore extends Marty.Store {
     });
   }
 
-  setCurrentDeck(id){
+  setCurrentDeck(index){
     this.setState({
-      position: { deck: id, slide: 0 }
+      position: { deck: index, slide: 0 }
     });
   }
 
