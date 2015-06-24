@@ -98,7 +98,7 @@ class Node extends BaseComponent {
                        </image>` };
 
     const circle =
-      n.display.image ?
+      n.content.entity.type == "Person" && n.display.image ?
         <g dangerouslySetInnerHTML={innerHTML} /> :
         <circle className="handle"
                 r={r}
