@@ -13,7 +13,7 @@
   position: fixed;
   top: 0px;
   width: inherit;
-  top: 6em;
+  top: 10em;
   height: 1000px;
   padding-bottom: 1em;
 }
@@ -41,13 +41,16 @@
   padding: 1em;
   .title {
     position: fixed;
-    top: 3em;
+    top: 4.2em;
     background-color: white;
     z-index: 1;
+    h2 {
+      font-size: 2em;
+    }
   }
   .text {
     position: relative;
-    top: 7em;
+    top: 6em;
   }
 }
 
@@ -101,4 +104,8 @@
       opacity: 1;
     }
   }
+}
+
+h1#deckTitle {
+  margin-top: 0;  
 }

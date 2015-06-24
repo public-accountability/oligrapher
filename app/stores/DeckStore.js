@@ -52,6 +52,11 @@ class DeckStore extends Marty.Store {
     return this._getDeckById(this.state.position.deck);
   }
 
+  getCurrentTitle() {
+    const deck = this.getCurrentDeck();
+    return deck ? deck.title : "";
+  }
+
   isFirstSlide(slide) {
     return !this.isNullPosition() && slide == 0;
   }
