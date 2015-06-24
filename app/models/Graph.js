@@ -90,11 +90,11 @@ class Graph {
 
   computeViewbox() {
     const nodes = this.nodes.toArray()
-      .filter(n => n.display.status != "faded")
-      .map(function(n) { return { x: n.display.x, y: n.display.y } });
-    const edges = this.edges.toArray()
-      .filter(e => e.display.status != "faded")
-      .map(function(e) { return { x: e.display.cx, y: e.display.cy } });
+      // .filter(n => n.display.status != "faded")
+      .map(n => ({ x: n.display.x, y: n.display.y }));
+    // const edges = this.edges.toArray()
+    //   .filter(e => e.display.status != "faded")
+    //   .map(e => ({ x: e.display.cx, y: e.display.cy }));
     const items = nodes;
 
     if (items.length > 0) {
