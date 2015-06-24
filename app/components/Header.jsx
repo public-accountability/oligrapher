@@ -30,7 +30,6 @@ class Header extends BaseComponent {
               )}
             </DropdownButton>
           </Nav>
-          <SearchBox />
         </Navbar>
       </Row>
     );

@@ -11,7 +11,7 @@ class Graph {
     this.id = specs.id || helpers.generateId();
     this.nodes = specs.nodes || Immutable.Map();
     this.edges = specs.edges || Immutable.Map();
-    this.display = _.assign({ shrinkFactor: 1.2 }, specs.display);
+    this.display = _.assign({ shrinkFactor: 1.3 }, specs.display);
   }
 
   isNull() {

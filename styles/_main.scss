@@ -9,12 +9,12 @@
   height: 4em;
 }
 
+.mainContainer {
+  height: 750px;
+}
+
 .graphContainer {
-  position: fixed;
-  top: 0px;
-  width: inherit;
-  top: 10em;
-  height: 1000px;
+  height: 700px;
   padding-bottom: 1em;
 }
 
@@ -39,27 +39,29 @@
 .infoContainer {
   border-left: 1px solid #eee;
   padding: 1em;
+  padding-top: 0.8em;
+
   .title {
-    position: fixed;
-    top: 4.2em;
     background-color: white;
-    z-index: 1;
+
     h2 {
+      margin-top: 0;
       font-size: 2em;
     }
   }
   .text {
-    position: relative;
-    top: 6em;
+    height: 700px;
+    overflow: scroll;
+    padding-right: 10px;
   }
 }
 
 #zoom-in {
-  top: 0px;
+  top: 20px;
 }
 
 #zoom-out {
-  top: 25px;
+  top: 75px;
 }
 
 .zoomButton {
@@ -92,8 +94,8 @@
 
 #deckNavButtons {
   position: absolute;
-  top: 0px;
-  right: 40px;
+  top: 10px;
+  right: 10px;
 
   button {
     margin-left: 10px;
@@ -108,4 +110,14 @@
 
 h1#deckTitle {
   margin-top: 0;  
+}
+
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
 }
