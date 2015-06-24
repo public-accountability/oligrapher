@@ -13,14 +13,20 @@ class InfoStore extends Marty.Store {
       id: null
     });
     this.handlers = ({
-      setGraphInfo: [GraphConstants.SHOW_GRAPH, DeckConstants.DECK_SELECTED], // GRAPH_SELECTED
+      setGraphInfo: [
+        GraphConstants.SHOW_GRAPH, // GRAPH_SELECTED
+        DeckConstants.DECK_SELECTED, 
+        DeckConstants.PREVIOUS_SLIDE_REQUESTED,
+        DeckConstants.NEXT_SLIDE_REQUESTED,
+        DeckConstants.SLIDE_SELECTED
+      ],
       setNodeInfo: GraphConstants.NODE_CLICKED
     });
   }
 
-  setGraphInfo(id){
+  setGraphInfo(){
     this.waitFor(this.app.graphStore);
-    this.setInfo('map', id);
+    this.setInfo('map', this.app.graphStore.state.get('currentGraphId'));
   }
 
   setNodeInfo(id){

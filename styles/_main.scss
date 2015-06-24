@@ -89,10 +89,16 @@
 
 #deckNavButtons {
   position: absolute;
-  top: 20px;
+  top: 0px;
   right: 40px;
 
   button {
-    margin-left: 10px;    
+    margin-left: 10px;
+
+    &:disabled {
+      color: #ccc;
+      background-color: #f8f8f8;
+      opacity: 1;
+    }
   }
 }

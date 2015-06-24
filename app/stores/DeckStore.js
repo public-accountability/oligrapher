@@ -52,24 +52,32 @@ class DeckStore extends Marty.Store {
     return this._getDeckById(this.state.position.deck);
   }
 
+  isFirstSlide(slide) {
+    return !this.isNullPosition() && slide == 0;
+  }
+
+  isLastSlide(slide) {
+    return !this.isNullPosition() && slide == this.getCurrentDeck().graphIds.length - 1;
+  }
+
+  isNullPosition() {
+    return this.state.position.deck == -1;
+  }
+
+  getCurrentSlide() {
+    return this.state.position.slide;
+  }
+
   _getDeckById(id) {
     return this.state.decks[id];
   }
 
   _nextSlide(currentSlide) {
-    return this._isLastSlide(currentSlide) ? currentSlide : currentSlide + 1;
+    return this.isLastSlide(currentSlide) ? currentSlide : currentSlide + 1;
   }
 
   _prevSlide(currentSlide) {
-    return this._isFirstSlide(currentSlide) ? currentSlide : this.state.position.slide - 1;
-  }
-
-  _isFirstSlide(slide) {
-    return slide == 0;
-  }
-
-  _isLastSlide(slide) {
-    return slide == this.getCurrentDeck().graphIds.length - 1;
+    return this.isFirstSlide(currentSlide) ? currentSlide : this.state.position.slide - 1;
   }
 }
 

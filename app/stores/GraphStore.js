@@ -12,7 +12,7 @@ class GraphStore extends Marty.Store {
     const nullGraph = new Graph({id: -1});
     this.state = Map({
       graphs: Map({ [nullGraph.id]: nullGraph }),
-      currentGraphID: nullGraph.id
+      currentGraphId: nullGraph.id
     });
 
     this.handlers = {
@@ -23,7 +23,12 @@ class GraphStore extends Marty.Store {
       setGraphToFirstInDeck: DeckConstants.DECK_SELECTED,
       addNode: GraphConstants.ADD_NODE,
       moveNode: GraphConstants.MOVE_NODE,
-      zoom: [GraphConstants.ZOOMED_IN, GraphConstants.ZOOMED_OUT]
+      zoom: [GraphConstants.ZOOMED_IN, GraphConstants.ZOOMED_OUT],
+      setGraphToCurrentInDeck: [
+        DeckConstants.PREVIOUS_SLIDE_REQUESTED, 
+        DeckConstants.NEXT_SLIDE_REQUESTED,
+        DeckConstants.SLIDE_SELECTED
+      ]
     };
   }
 
@@ -45,12 +50,18 @@ class GraphStore extends Marty.Store {
   setCurrentGraph(id){
     this.replaceState(
       this.state.merge(
-        Map({currentGraphID: id})));
+        Map({currentGraphId: id})));
   }
 
   setGraphToFirstInDeck(id){
     this.waitFor(this.app.deckStore);
     this.setGraphInDeck(id, 0);
+  }
+
+  setGraphToCurrentInDeck() {
+    this.waitFor(this.app.deckStore);
+    const { deck, slide } = this.app.deckStore.state.position;
+    this.setGraphInDeck(deck, slide);
   }
 
   setGraphInDeck(deckId, index){
@@ -59,7 +70,7 @@ class GraphStore extends Marty.Store {
   }
 
   getCurrentGraph(){
-    const id = this.state.get('currentGraphID');
+    const id = this.state.get('currentGraphId');
     return this.getGraph(id);
   }
 
