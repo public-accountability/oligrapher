@@ -111,6 +111,10 @@ class Graph {
     return this;
   }
 
+  getNodeByEntityId(id) {
+    return this.nodes.find(n => n.content.entity.id === id);
+  }
+
   static parseApiGraph(specs){
     return new Graph({})
       ._importBase(specs)

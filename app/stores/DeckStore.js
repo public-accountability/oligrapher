@@ -33,10 +33,6 @@ class DeckStore extends Marty.Store {
     });
 
   }
-
-
-
-
 }
 
 module.exports = DeckStore;
