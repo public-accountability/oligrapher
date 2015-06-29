@@ -2,6 +2,7 @@ const Marty = require('marty');
 const Deck = require('../models/Deck');
 const DeckConstants = require('../constants/DeckConstants');
 const _ = require('lodash');
+const yarr = require('../yarr.js');
 
 class DeckStore extends Marty.Store {
 
@@ -18,6 +19,7 @@ class DeckStore extends Marty.Store {
     this.handlers = {
       addDecks: DeckConstants.FETCH_DECKS_DONE,
       setCurrentDeck: DeckConstants.DECK_SELECTED,
+      setCurrentSlide: DeckConstants.SLIDE_SELECTED,
       incrementSlide: DeckConstants.NEXT_SLIDE_REQUESTED,
       decrementSlide: DeckConstants.PREVIOUS_SLIDE_REQUESTED
     };
@@ -30,26 +32,34 @@ class DeckStore extends Marty.Store {
     });
   }
 
-  setCurrentDeck(index){
+  setCurrentDeck(id){
     this.setState({
-      position: { deck: index, slide: 0 }
+      position: { deck: id, slide: 0 }
+    });
+  }
+
+  setCurrentSlide(index){
+    this.setState({
+      position: { deck: this.state.position.deck, slide: index }
     });
   }
 
   incrementSlide(){
+    const index = this._nextSlide(this.state.position.slide);
     this.replaceState(_.merge({}, this.state, {
-      position: { slide: this._nextSlide(this.state.position.slide) }
+      position: { slide: index }
     }));
   }
 
   decrementSlide(){
+    const index = this._prevSlide(this.state.position.slide);
     this.replaceState(_.merge({}, this.state, {
-      position: { slide: this._prevSlide(this.state.position.slide) }
+      position: { slide: index }
     }));
   }
 
   getCurrentDeck() {
-    return this._getDeckById(this.state.position.deck);
+    return this.getDeckById(this.state.position.deck);
   }
 
   getCurrentTitle() {
@@ -73,16 +83,32 @@ class DeckStore extends Marty.Store {
     return this.state.position.slide;
   }
 
-  _getDeckById(id) {
-    return this.state.decks[id];
+  getDeckById(id) {
+    return _.find(this.state.decks, d => d.id === id);
+  }
+
+  getPrevSlide() {
+    return this._prevSlide(this.state.position.slide);
+  }
+
+  getNextSlide() {
+    return this._nextSlide(this.state.position.slide);
+  }
+
+  _prevSlide(currentSlide) {
+    return this.isFirstSlide(currentSlide) ? currentSlide : this.state.position.slide - 1;
   }
 
   _nextSlide(currentSlide) {
     return this.isLastSlide(currentSlide) ? currentSlide : currentSlide + 1;
   }
 
-  _prevSlide(currentSlide) {
-    return this.isFirstSlide(currentSlide) ? currentSlide : this.state.position.slide - 1;
+  _updateUrl(currentSlide) {
+    if (this.isFirstSlide(currentSlide)) {
+      yarr(`/maps/${this.getCurrentDeck().slug()}`);
+    } else {
+      yarr(`/maps/${this.getCurrentDeck().slug()}/${currentSlide}`);
+    }
   }
 }
 

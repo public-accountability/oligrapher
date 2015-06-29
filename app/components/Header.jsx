@@ -4,6 +4,7 @@ const SearchBox = require('./SearchBox');
 const { Grid, Row, Col, Navbar, Nav, NavItem, DropdownButton, MenuItem } = require('react-bootstrap');
 const GraphConstants = require('../constants/GraphConstants');
 const _ = require('underscore');
+const yarr = require('../yarr.js');
 
 class Header extends BaseComponent {
   constructor(options){
@@ -20,7 +21,7 @@ class Header extends BaseComponent {
           <Nav className="nav">
             <DropdownButton eventKey={1} title="Webs of Influence" className="nav-dropdown">
               {_.map(this.props.decks, (d,i) =>
-                <MenuItem onSelect={this._handleMapNavClick.bind(this, i)}>
+                <MenuItem onSelect={this._handleMapNavClick.bind(this, d.slug())}>
                   {d.title}
                 </MenuItem>
               )}
@@ -30,8 +31,9 @@ class Header extends BaseComponent {
       </Row>
     );
   }
-  _handleMapNavClick(index){
-    this.app.deckActions.selectDeck(index);
+  _handleMapNavClick(id){
+    yarr(`/maps/${id}`);
+    //this.app.deckActions.selectDeck(index);
   }
 }
 

@@ -72,7 +72,8 @@ var config = {
       'react/lib': path.resolve(node_modules, 'react/lib')
     },
     extensions: ['', '.js', '.jsx']
-  }
+  },
+  historyApiFallback: true
 };
 
 deps.forEach(function(dep) {

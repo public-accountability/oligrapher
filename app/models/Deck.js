@@ -9,6 +9,18 @@ class Deck {
     this.graphIds = specs.graphIds || [];
   }
 
+  slug() {
+    return `${this.id}-${this._titleSlug()}`;
+  }
+
+  slugWithSlide(slide) {
+    return this.slug() + (slide === 0 ? '' : '/' + slide);
+  }
+
+  _titleSlug() {
+    return this.title.replace(/[^a-z0-9\-_]+/gi, '-').replace(/\-+/, '-').toLowerCase();
+  }
+
   //parseApiGraph(apiDecks): { decks: [Deck], graphs: [Graph] }
   static parseApiDecks(apiDecks) {
     const [decks, graphs] = _.unzip(apiDecks.map(this.parseApiDeck));

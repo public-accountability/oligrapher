@@ -9,8 +9,8 @@
   "main": "app/main.jsx",
   "scripts": {
     "dev": "npm run dev-serve | npm run dev-build",
-    "dev-build": "webpack-dev-server --devtool eval --progress --colors --hot --content-base build --port 8090 --config webpack.dev.config",
-    "dev-serve": "http-server -p 8080 ./dev",
+    "dev-build": "webpack-dev-server --devtool eval --progress --history-api-fallback --colors --hot --content-base build --port 8090 --config webpack.dev.config",
+    "dev-serve": "http-server -p 8080 ./build",
     "prod": "npm run prod-build && npm run prod-serve",
     "prod-build": "NODE_ENV=production webpack -p --config webpack.prod.config.js",
     "prod-serve": "http-server -p $PORT ./build",

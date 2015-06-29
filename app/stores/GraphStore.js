@@ -65,8 +65,8 @@ class GraphStore extends Marty.Store {
   }
 
   setGraphInDeck(deckId, index){
-    const { decks } = this.app.deckStore.state;
-    this.setCurrentGraph(decks[deckId].graphIds[index]);
+    const deck = this.app.deckStore.getDeckById(deckId);
+    this.setCurrentGraph(deck.graphIds[index]);
   }
 
   getCurrentGraph(){

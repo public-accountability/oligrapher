@@ -1,5 +1,6 @@
 const Marty = require('marty');
 const BaseComponent = require('./BaseComponent');
+const yarr = require('../yarr.js');
 
 class DeckNavButtons extends BaseComponent {
   constructor(options){
@@ -25,11 +26,11 @@ class DeckNavButtons extends BaseComponent {
   }
 
   _handlePrevSlideClick() {
-    this.app.deckActions.decrementSlide();
+    yarr(`/maps/${this.props.deck.slugWithSlide(this.props.prevSlide)}`);
   }
 
   _handleNextSlideClick() {
-    this.app.deckActions.incrementSlide();
+    yarr(`/maps/${this.props.deck.slugWithSlide(this.props.nextSlide)}`);
   }
 
 }
@@ -46,6 +47,15 @@ module.exports = Marty.createContainer(DeckNavButtons, {
     isLastSlide() {
       const store = this.app.deckStore;
       return store.isLastSlide(store.getCurrentSlide());
+    },
+    prevSlide() {
+      return this.app.deckStore.getPrevSlide();
+    },
+    nextSlide() {
+      return this.app.deckStore.getNextSlide();
+    },
+    deck() {
+      return this.app.deckStore.getCurrentDeck();
     }
   }
 });
