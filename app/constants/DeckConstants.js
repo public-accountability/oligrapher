@@ -8,5 +8,6 @@ module.exports = Marty.createConstants([
   'DECK_SELECTED', // (id: String)
   'SLIDE_SELECTED', // (index: Int)
   'NEXT_SLIDE_REQUESTED',
-  'PREVIOUS_SLIDE_REQUESTED'
+  'PREVIOUS_SLIDE_REQUESTED',
+  'CLOSE_DECK'
 ]);

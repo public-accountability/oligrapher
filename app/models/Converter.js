@@ -1,7 +1,7 @@
 var Node = require('./Node');
 const helpers = require('./helpers/GraphHelpers');
 
-class Converter{
+class Converter {
 
   static entityToNode(entity){
     return new Node({

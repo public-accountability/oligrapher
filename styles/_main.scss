@@ -9,7 +9,20 @@
   height: 4em;
 }
 
-.mainContainer {
+nav.navbar div.container-fluid {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+.header a.navbar-brand {
+  color: #008;
+
+  &:hover {
+    color: #00f;
+  }
+}
+
+#mainContainer {
   height: 750px;
 }
 
@@ -122,4 +135,16 @@ h1#deckTitle {
     border-radius: 4px;
     background-color: rgba(0,0,0,.5);
     -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
+
+#welcome h1 {
+  margin-top: 0;
+}
+
+#deckList {
+  margin-top: 1em;
+
+  a {
+    font-size: 1.3em;
+  }
 }

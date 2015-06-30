@@ -3,7 +3,7 @@ var webpack = require('webpack');
 var node_modules = path.resolve(__dirname, 'node_modules/');
 
 var deps = [
-  'react/dist/react-with-addons.min.js',
+  'react/dist/react-with-addons.js',
   'marty/dist/marty.min.js',
   'immutable/dist/immutable.min.js',
   'jquery/dist/jquery.min.js',
@@ -72,8 +72,7 @@ var config = {
       'react/lib': path.resolve(node_modules, 'react/lib')
     },
     extensions: ['', '.js', '.jsx']
-  },
-  historyApiFallback: true
+  }
 };
 
 deps.forEach(function(dep) {

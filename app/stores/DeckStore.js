@@ -2,7 +2,6 @@ const Marty = require('marty');
 const Deck = require('../models/Deck');
 const DeckConstants = require('../constants/DeckConstants');
 const _ = require('lodash');
-const yarr = require('../yarr.js');
 
 class DeckStore extends Marty.Store {
 
@@ -95,20 +94,16 @@ class DeckStore extends Marty.Store {
     return this._nextSlide(this.state.position.slide);
   }
 
+  getDecks() {
+    return this.state.decks;
+  }
+
   _prevSlide(currentSlide) {
     return this.isFirstSlide(currentSlide) ? currentSlide : this.state.position.slide - 1;
   }
 
   _nextSlide(currentSlide) {
     return this.isLastSlide(currentSlide) ? currentSlide : currentSlide + 1;
-  }
-
-  _updateUrl(currentSlide) {
-    if (this.isFirstSlide(currentSlide)) {
-      yarr(`/maps/${this.getCurrentDeck().slug()}`);
-    } else {
-      yarr(`/maps/${this.getCurrentDeck().slug()}/${currentSlide}`);
-    }
   }
 }
 
