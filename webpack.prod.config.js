@@ -10,7 +10,7 @@ var config = {
   ],
   output: {
     path: 'build',
-    filename: 'app.js'
+    filename: '/app.js'
   },
   plugins: [
     new webpack.DefinePlugin({ "process.env": JSON.stringify(process.env)}),
