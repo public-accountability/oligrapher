@@ -38,7 +38,7 @@ class Graph extends BaseComponent {
       edges: graph.edges.map(e => <Edge key={e.id} edge={e} />),
       nodes: graph.nodes.map(n => <Node key={n.id} node={n} />),
       markers: `<marker id="marker1" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L10,0L0,5" fill="#999"></path></marker><marker id="marker2" viewBox="-10 -5 10 10" refX="-8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L-10,0L0,5" fill="#999"></path></marker><marker id="fadedmarker1" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L10,0L0,5"></path></marker>`,
-      viewBox: this._computeViewbox(this.props.graph.display.shrinkFactor || 1.2),
+      viewBox: this._computeViewbox(this.props.shrinkFactor),
       captions: _.values(this.props.graph.display.captions || []).map(c => <text x={c.x} y={c.y}>{c.text}</text>)
     };
   }
@@ -54,4 +54,11 @@ class Graph extends BaseComponent {
   }
 }
 
-module.exports = Marty.createContainer(Graph);
+module.exports = Marty.createContainer(Graph, {
+  listenTo: ['deckStore'],
+  fetch: {
+    shrinkFactor() {
+      return this.app.deckStore.getShrinkFactor();
+    }
+  }
+});

@@ -14,6 +14,12 @@ class DeckActions extends Marty.ActionCreators {
   decrementSlide(){
     this.dispatch(DeckConstants.PREVIOUS_SLIDE_REQUESTED);
   }
+  zoomIn(scale){
+    this.dispatch(DeckConstants.ZOOMED_IN, scale);
+  }
+  zoomOut(scale){
+    this.dispatch(DeckConstants.ZOOMED_OUT, scale);
+  }
 }
 
 module.exports = DeckActions;

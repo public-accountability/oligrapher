@@ -17,8 +17,8 @@ class Edge {
     let y1 = this.n1.display.y;
     let x2 = this.n2.display.x;
     let y2 = this.n2.display.y;
-    let r1 = this.n1.display.scale * NodeDisplaySettings.defaultCircleRadius;
-    let r2 = this.n2.display.scale * NodeDisplaySettings.defaultCircleRadius;
+    let r1 = this.n1.display.scale * NodeDisplaySettings.circleRadius;
+    let r2 = this.n2.display.scale * NodeDisplaySettings.circleRadius;
 
     // set edge position at midpoint between nodes
     let ax = this.display.x = (x1 + x2) / 2;
@@ -52,8 +52,10 @@ class Edge {
     }
 
     // lines should stop at edge of node circles
-    let ra = (this.display.is_reverse ? r2 : r1);
-    let rb = (this.display.is_reverse ? r1 : r2);
+    let sa = this.display.is_reverse ? this.n2.display.scale : this.n1.display.scale;
+    let sb = this.display.is_reverse ? this.n1.display.scale : this.n2.display.scale;
+    let ra = (this.display.is_reverse ? r2 : r1) + (sa * NodeDisplaySettings.circleSpacing);
+    let rb = (this.display.is_reverse ? r1 : r2) + (sb * NodeDisplaySettings.circleSpacing);
     let dxma = xa - cx;
     let dyma = ya - cy;
     let dxmb = xb - cx;

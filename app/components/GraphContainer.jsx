@@ -10,7 +10,12 @@ class GraphContainer extends BaseComponent {
   }
 
   render(){
-    const zoomButtons = this.props.graph.isNull() ? null : <div id="zoomButtons"><button id="zoom-in" className="zoomButton" onClick={this._handleZoomIn}>+</button><button id="zoom-out" className="zoomButton" onClick={this._handleZoomOut}>&ndash;</button></div>;
+    const zoomButtons = this.props.graph.isNull() ? null : (
+      <div id="zoomButtons">
+        <button id="zoom-in" className="zoomButton" onClick={this._handleZoomIn}>+</button>
+        <button id="zoom-out" className="zoomButton" onClick={this._handleZoomOut}>&ndash;</button>
+      </div>
+    );
 
     return (
       <div className="graphContainer">
@@ -22,11 +27,11 @@ class GraphContainer extends BaseComponent {
   }
 
   _handleZoomIn() {
-    this.app.graphActions.zoomIn(1.2);
+    this.app.deckActions.zoomIn(1.2);
   }
 
   _handleZoomOut() {
-    this.app.graphActions.zoomOut(0.8333);
+    this.app.deckActions.zoomOut(0.8333);
   }
 }
 

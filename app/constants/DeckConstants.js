@@ -9,5 +9,7 @@ module.exports = Marty.createConstants([
   'SLIDE_SELECTED', // (index: Int)
   'NEXT_SLIDE_REQUESTED',
   'PREVIOUS_SLIDE_REQUESTED',
-  'CLOSE_DECK'
+  'CLOSE_DECK',
+  'ZOOMED_IN',
+  'ZOOMED_OUT'
 ]);

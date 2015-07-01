@@ -46,7 +46,7 @@ class Node extends BaseComponent {
   _getSvgParams(node) {
 
     let n = node;
-    let r = ds.defaultCircleRadius * n.display.scale;
+    let r = ds.circleRadius * n.display.scale;
     let textOffsetY = ds.textMarginTop + r;
     let textLines = this._textLines(n.display.name);
 
@@ -108,7 +108,8 @@ class Node extends BaseComponent {
 
     const bgColor = ds.bgColor[n.display.status];
     const bgOpacity = ds.bgOpacity[n.display.status];
-    const bgCircle = <circle className="node-background" r={r+ds.bgRadiusDiff} fill={bgColor} opacity={bgOpacity}></circle>;
+    const bgRadius = r + (ds.bgRadiusDiff * n.display.scale);
+    const bgCircle = <circle className="node-background" r={bgRadius} fill={bgColor} opacity={bgOpacity}></circle>;
 
     return {
       groupId: `node-${n.id}`,

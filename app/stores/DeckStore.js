@@ -12,7 +12,8 @@ class DeckStore extends Marty.Store {
 
     this.state = {
       decks: [nullDeck],
-      position: nullPosition
+      position: nullPosition,
+      shrinkFactor: 1.2
     };
 
     this.handlers = {
@@ -20,7 +21,8 @@ class DeckStore extends Marty.Store {
       setCurrentDeck: DeckConstants.DECK_SELECTED,
       setCurrentSlide: DeckConstants.SLIDE_SELECTED,
       incrementSlide: DeckConstants.NEXT_SLIDE_REQUESTED,
-      decrementSlide: DeckConstants.PREVIOUS_SLIDE_REQUESTED
+      decrementSlide: DeckConstants.PREVIOUS_SLIDE_REQUESTED,
+      zoom: [DeckConstants.ZOOMED_IN, DeckConstants.ZOOMED_OUT]
     };
   }
 
@@ -96,6 +98,19 @@ class DeckStore extends Marty.Store {
 
   getDecks() {
     return this.state.decks;
+  }
+
+  zoom(scale) {
+    const oldShrinkFactor = this.state.shrinkFactor;
+    let newShrinkFactor = oldShrinkFactor * 1/scale;
+    newShrinkFactor = Math.round(newShrinkFactor * 100) / 100;
+    this.setState({
+      shrinkFactor: newShrinkFactor
+    });
+  }
+
+  getShrinkFactor() {
+    return this.state.shrinkFactor;
   }
 
   _prevSlide(currentSlide) {

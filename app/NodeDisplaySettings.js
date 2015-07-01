@@ -1,5 +1,6 @@
 module.exports = {
-  defaultCircleRadius: 25,
+  circleRadius: 25,
+  circleSpacing: 4,
   textMarginTop: 20,
   lineHeight: 20,
   imageScale: 3,
@@ -29,5 +30,5 @@ module.exports = {
     highlighted: 1,
     faded: 0.2
   },
-  bgRadiusDiff: 10
+  bgRadiusDiff: 4
 };
