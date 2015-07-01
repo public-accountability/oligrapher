@@ -27,9 +27,9 @@ module.exports = Marty.createContainer(InfoContainer, {
       return this.app.infoStore.state.get('type');
     },
     info() {
-      const { infoStore, graphStore } = this.app;
+      const { infoStore, deckStore } = this.app;
       return {
-        map: () => infoStore.getGraphInfo(),
+        map: () => infoStore.getGraphInfo(this.app.deckStore.getCurrentGraphId()),
         node: () => infoStore.getNodeInfo(),
         empty: () => Map({})
       }[infoStore.state.get('type')]();

@@ -24,8 +24,7 @@ class InfoStore extends Marty.Store {
   }
 
   setGraphInfo(){
-    this.waitFor(this.app.graphStore);
-    this.setInfo('map', this.app.graphStore.state.get('currentGraphId'));
+    this.setInfo('map', this.app.deckStore.getCurrentGraphId());
   }
 
   setNodeInfo(id){
@@ -36,8 +35,7 @@ class InfoStore extends Marty.Store {
     this.replaceState(Map({type: type, id: id}));
   }
 
-  getGraphInfo(){
-    const id = this.state.get('id');
+  getGraphInfo(id){
     return this.fetch({
       id: 'getGraphInfo',
       dependsOn: [this.app.graphStore.getGraph(id)],
@@ -55,9 +53,9 @@ class InfoStore extends Marty.Store {
     const id = this.state.get('id');
     return this.fetch({
       id: 'getNodeInfo',
-      dependsOn: [this.app.graphStore.getCurrentGraph()],
+      dependsOn: [this.app.graphStore.getGraph(this.app.deckStore.getCurrentGraphId())],
       locally() {
-        const n = this.app.graphStore.getCurrentGraph().result.nodes.get(id);
+        const n = this.app.graphStore.getGraph(this.app.deckStore.getCurrentGraphId()).result.nodes.get(id);
         return this._parseNode(n);
       }
     });

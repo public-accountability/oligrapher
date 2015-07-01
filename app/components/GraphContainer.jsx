@@ -36,10 +36,10 @@ class GraphContainer extends BaseComponent {
 }
 
 module.exports = Marty.createContainer(GraphContainer, {
-  listenTo: ['graphStore'],
+  listenTo: ['deckStore'],
   fetch: {
     graph() {
-      return this.app.graphStore.getCurrentGraph();
+      return this.app.graphStore.getGraph(this.app.deckStore.getCurrentGraphId());
     }
   }
 });

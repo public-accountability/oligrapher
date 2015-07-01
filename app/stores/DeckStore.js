@@ -100,6 +100,10 @@ class DeckStore extends Marty.Store {
     return this.state.decks;
   }
 
+  getCurrentGraphId() {
+    return this.getCurrentDeck().graphIds[this.state.position.slide];
+  }
+
   zoom(scale) {
     const oldShrinkFactor = this.state.shrinkFactor;
     let newShrinkFactor = oldShrinkFactor * 1/scale;
