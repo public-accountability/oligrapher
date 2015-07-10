@@ -122,7 +122,7 @@ class Node extends BaseComponent {
 
   _textLines(text){
     const maxWidth = text.length > 40 ? 30 : 20;
-    let words = text.split(" "),
+    let words = text.trim().split(" "),
         wordCount = words.length,
         word,
         lines = [],
