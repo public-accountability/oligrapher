@@ -1,7 +1,6 @@
 const Marty = require('marty');
 const BaseComponent = require('./BaseComponent');
 const Graph = require('./Graph');
-const DeckNavButtons = require('./DeckNavButtons');
 
 class GraphContainer extends BaseComponent {
   constructor(options){
@@ -20,7 +19,6 @@ class GraphContainer extends BaseComponent {
     return (
       <div className="graphContainer">
         {zoomButtons}
-        <DeckNavButtons graph={this.props.graph} />
         <Graph graph={this.props.graph} />
       </div>
     );

@@ -100,7 +100,8 @@ class Graph {
     if (items.length > 0) {
       const xs = items.map(i => i.x);
       const ys = items.map(i => i.y);
-      return { x: _.min(xs), y: _.min(ys), w: _.max(xs) - _.min(xs), h: _.max(ys) - _.min(ys) };
+      const textPadding = 30; // node text might extend below node
+      return { x: _.min(xs), y: _.min(ys), w: _.max(xs) - _.min(xs), h: _.max(ys) - _.min(ys) + textPadding };
     } else {
       return { x: 0, y: 0, w: 0, h: 0 };
     }

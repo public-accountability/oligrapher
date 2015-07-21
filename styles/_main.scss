@@ -1,17 +1,15 @@
 //$icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 //@import '~bootstrap-sass/assets/stylesheets/_bootstrap.scss';
 
-.root{
-  margin: 1em;
+html, body, #content, .root {
+  height: 100%;
 }
 
 .header {
-  height: 4em;
+  height: 50px;
 }
 
 nav.navbar div.container-fluid {
-  margin-left: 1em;
-  margin-right: 1em;
 }
 
 .header a.navbar-brand {
@@ -23,17 +21,29 @@ nav.navbar div.container-fluid {
 }
 
 #mainContainer {
-  height: 750px;
+  height: calc(100% - 50px);
+  padding-top: 20px;
+}
+
+#mainRow, #graphCol {
+  height: 100%;
+}
+
+#deckTitle {
 }
 
 .graphContainer {
-  height: 700px;
+  height: calc(100% - 80px);
   padding-bottom: 1em;
+  position: relative;
 }
 
-.footer{
+.footer {
   position: fixed;
-  bottom: .5em;
+  bottom: 5px;
+  left: 30px;
+  height: 20px;
+  font-size: 12px;
 }
 
 .hidden {
@@ -52,7 +62,7 @@ nav.navbar div.container-fluid {
 .infoContainer {
   border-left: 1px solid #eee;
   padding: 1em;
-  padding-top: 0.8em;
+  padding-top: 0.6em;
 
   .title {
     background-color: white;
@@ -63,13 +73,15 @@ nav.navbar div.container-fluid {
     }
   }
   .text {
-    height: 700px;
+    height: 100%;
     overflow: scroll;
     padding-right: 10px;
   }
 }
 
 #zoomButtons {
+  position: absolute;
+  top: 0px;
 }
 
 #zoom-in {
@@ -108,7 +120,7 @@ nav.navbar div.container-fluid {
 
 #deckNavButtons {
   position: absolute;
-  top: 10px;
+  top: 0px;
   right: 10px;
 
   button {
