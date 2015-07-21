@@ -21,10 +21,10 @@ class GraphActions extends Marty.ActionCreators {
     this.dispatch(GraphConstants.NODE_CLICKED, nodeId);
   }
   zoomIn(scale){
-    this.dispatch(GraphConstants.ZOOMED_IN, scale);
+    this.dispatch(GraphConstants.GRAPH_ZOOMED_IN, scale);
   }
   zoomOut(scale){
-    this.dispatch(GraphConstants.ZOOMED_OUT, scale);
+    this.dispatch(GraphConstants.GRAPH_ZOOMED_OUT, scale);
   }
 }
 
