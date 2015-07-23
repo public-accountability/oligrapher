@@ -10,13 +10,13 @@ class Welcome extends BaseComponent {
     return (
       <div id="welcome">
         <h1>
-          Welcome to the Show
+          Welcome to Oligrapher+
         </h1>
 
         <p>Here you can view some interesting influence maps from <a href="http://littlesis.org">LittleSis</a>.</p>
 
         <br />
-        <h3>Webs of Influence</h3>
+        <h3>Influence Maps</h3>
         <DeckList />
       </div>
     );

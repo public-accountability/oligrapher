@@ -1,5 +1,4 @@
 const NodeDisplaySettings = require('../NodeDisplaySettings');
-const Immutable = require('immutable');
 const helpers = require('./helpers/GraphHelpers');
 
 class Edge {

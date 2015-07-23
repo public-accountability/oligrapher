@@ -1,4 +1,3 @@
-const Immutable = require('immutable');
 const helpers = require('./helpers/GraphHelpers');
 const _ = require('lodash');
 
@@ -15,7 +14,7 @@ class Node {
   constructor(specs){
     this.id = specs.id || helpers.generateId();
     this.content = specs.content;
-    this.adj = specs.adj || Immutable.Set();
+    this.adj = specs.adj || [];
     this.display = _.merge({}, defaults.display, specs.display);
   }
 }

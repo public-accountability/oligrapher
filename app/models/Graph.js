@@ -1,4 +1,3 @@
-const Immutable = require('immutable');
 const Node = require('./Node');
 const Edge = require('./Edge');
 const converter = require('./Converter');
@@ -9,8 +8,8 @@ class Graph {
   //constructor(GraphSpecs) -> Graph
   constructor(specs){
     this.id = specs.id || helpers.generateId();
-    this.nodes = specs.nodes || Immutable.Map();
-    this.edges = specs.edges || Immutable.Map();
+    this.nodes = specs.nodes || {};
+    this.edges = specs.edges || {};
     this.display = _.assign({ shrinkFactor: 1.3 }, specs.display);
   }
 
@@ -19,34 +18,34 @@ class Graph {
   }
 
   addNode(node){
-    this.nodes = this.nodes.set(node.id, node);
+    this.nodes[node.id] = node;
     return this;
   }
 
   edgesWithNode(id){
-    return this.edges.filter(function(edge) {
+    return _.values(this.edges).filter(function(edge) {
       return edge.n1.id === id || edge.n2.id === id;
     });
   };
 
   connectNodes(id1, id2, specs={}){
-    var n1 = this.nodes.get(id1);
-    var n2 = this.nodes.get(id2);
+    const n1 = this.nodes[id1];
+    const n2 = this.nodes[id2];
 
-    var edge = new Edge({
+    const edge = new Edge({
       id: specs.id,
       n1: n1,
       n2: n2,
       content: specs.content,
       display: specs.display});
 
-    this.edges = this.edges.set(edge.id, edge);
+    this.edges[edge.id] = edge;
 
     return this;
   }
 
   moveNode(id, position){
-    var n = this.nodes.get(id);
+    const n = this.nodes[id];
     n.display.x = position.left;
     n.display.y = position.top;
     this.edgesWithNode(id).forEach(function(edge) {
@@ -56,7 +55,7 @@ class Graph {
   }
 
   moveEdge(id, x, y, cx, cy){
-    var e = this.edges.get(id);
+    var e = this.edges[id];
     e.display.x = x;
     e.display.y = y;
     e.display.cx = cx;
@@ -71,8 +70,8 @@ class Graph {
   }
 
   computeWidth() {
-    if (this.nodes.count()) {
-      const xs = this.nodes.toArray().map(n => n.display.x);
+    if (_.keys(this.nodes).length > 0) {
+      const xs = _.values(this.nodes).map(n => n.display.x);
       return _.max(xs) - _.min(xs);
     } else {
       return 0;
@@ -80,8 +79,8 @@ class Graph {
   }
 
   computeHeight() {
-    if (this.nodes.count()) {
-      const ys = this.nodes.toArray().map(n => n.display.y);
+    if (_.keys(this.nodes).length > 0) {
+      const ys = _.values(this.nodes).map(n => n.display.y);
       return _.max(ys) - _.min(ys);
     } else {
       return 0;
@@ -89,7 +88,7 @@ class Graph {
   }
 
   computeViewbox() {
-    const nodes = this.nodes.toArray()
+    const nodes = _.values(this.nodes)
       // .filter(n => n.display.status != "faded")
       .map(n => ({ x: n.display.x, y: n.display.y }));
     // const edges = this.edges.toArray()
@@ -113,7 +112,7 @@ class Graph {
   }
 
   getNodeByEntityId(id) {
-    return this.nodes.find(n => n.content.entity.id === id);
+    return _.find(_.values(this.nodes), n => n.content.entity.id === id);
   }
 
   static parseApiGraph(specs){
@@ -167,7 +166,7 @@ class Graph {
   }
 
   _convertCurves() {
-    this.edges.forEach(e => {
+    _.values(this.edges).forEach(e => {
       // convert control point from relative to absolute
       if (e.display.cx != null && e.display.cy != null) {
         let ax = (e.n1.display.x + e.n2.display.x) / 2;
@@ -177,7 +176,7 @@ class Graph {
       }
 
       e.updatePosition();
-      this.edges.set(e.id, e);
+      this.edges[e.id] = e;
     });
 
     return this;

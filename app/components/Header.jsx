@@ -15,12 +15,12 @@ class Header extends BaseComponent {
     return (
       <Row className="header">
         <Navbar
-          brand={<a href="" onClick={this._handleBrandClick}>MoneyShow</a>}
+          brand={<a href="" onClick={this._handleBrandClick}>Oligrapher+</a>}
           className="navbar"
           fluid={true}
           fixedTop={true} >
           <Nav className="nav">
-            <DropdownButton eventKey={1} title="Webs of Influence" className="nav-dropdown">
+            <DropdownButton eventKey={1} title="Influence Maps" className="nav-dropdown">
               {_.map(this.props.decks, (d,i) =>
                 <MenuItem onSelect={this._handleMapNavClick.bind(this, d)}>
                   {d.title}
