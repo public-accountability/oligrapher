@@ -36,6 +36,15 @@ lsApi.getMap = (id) => {
       .end((err, res) => err ? reject(err) : resolve(parseThis(res))));
 };
 
+//getDeck(String) -> Promise[Array[ApiDeck]]
+lsApi.getDeck = (id) => {
+  const parseThis = res => res.body.map_collection || {};
+  return new Promise(
+    (resolve, reject) => request
+      .get(`${baseUrlRails}maps/${id}/collection.json`)
+      .end((err, res) => err ? reject(err) : resolve(parseThis(res))));
+}
+
 //getDecks(String) -> Promise[Array[ApiDeck]]
 lsApi.getDecks = (topicName) => {
   const parseThis = res => res.body.map_collections || [];

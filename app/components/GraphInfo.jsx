@@ -10,11 +10,11 @@ class GraphInfo extends BaseComponent {
     return (
       <div className="mapInfo">
         <div className="title">
-          <h2>{this.props.info.get('title')}</h2>
+          <h2>{this.props.info.title}</h2>
         </div>
         <div className="text"
              dangerouslySetInnerHTML=
-             { { __html: this.props.info.get('description') } }
+             { { __html: this.props.info.description } }
         />
       </div>
     );

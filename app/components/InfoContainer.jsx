@@ -3,7 +3,6 @@ const BaseComponent = require('./BaseComponent');
 const GraphInfo = require('./GraphInfo');
 const NodeInfo = require('./NodeInfo');
 const EmptyInfo = require('./EmptyInfo');
-const { Map } = require('immutable');
 
 class InfoContainer extends BaseComponent {
   render(){
@@ -24,15 +23,15 @@ module.exports = Marty.createContainer(InfoContainer, {
   listenTo: ['infoStore'],
   fetch: {
     infoType(){
-      return this.app.infoStore.state.get('type');
+      return this.app.infoStore.state.type;
     },
     info() {
       const { infoStore, deckStore } = this.app;
       return {
         map: () => infoStore.getGraphInfo(this.app.deckStore.getCurrentGraphId()),
         node: () => infoStore.getNodeInfo(),
-        empty: () => Map({})
-      }[infoStore.state.get('type')]();
+        empty: () => {}
+      }[infoStore.state.type]();
     }
   }
 });

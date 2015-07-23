@@ -11,12 +11,13 @@ class DeckStore extends Marty.Store {
     const nullPosition = { deck: -1, slide: -1 };
 
     this.state = {
-      decks: [nullDeck],
+      decks: { [nullDeck.id]: nullDeck },
       position: nullPosition,
       shrinkFactor: 1.2
     };
 
     this.handlers = {
+      addDeck: DeckConstants.FETCH_DECK_DONE,
       addDecks: DeckConstants.FETCH_DECKS_DONE,
       setCurrentDeck: DeckConstants.DECK_SELECTED,
       setCurrentSlide: DeckConstants.SLIDE_SELECTED,
@@ -26,10 +27,17 @@ class DeckStore extends Marty.Store {
     };
   }
 
+  addDeck(specs){
+    const deck = specs.deck;
+    this.setState({
+      decks: _.merge(this.state.decks, { [deck.id]: deck })
+    });
+  }
+
   addDecks(specs){
     this.waitFor(this.app.graphStore);
     this.setState({
-      decks: specs.decks
+      decks: _(specs.decks).map(d => [d.id, d]).zipObject().value()
     });
   }
 
@@ -60,7 +68,7 @@ class DeckStore extends Marty.Store {
   }
 
   getCurrentDeck() {
-    return this.getDeckById(this.state.position.deck);
+    return this.getDeck(this.state.position.deck);
   }
 
   getCurrentTitle() {
@@ -84,7 +92,13 @@ class DeckStore extends Marty.Store {
     return this.state.position.slide;
   }
 
-  getDeckById(id) {
+  getDeck(id) {
+    // return this.fetch({
+    //   id: id,
+    //   locally: () => this.state.decks[id],
+    //   remotely: () => this.app.deckQueries.fetchDeck(id)
+    // }).result;
+
     return _.find(this.state.decks, d => d.id === id);
   }
 

@@ -2,8 +2,8 @@ const Marty = require('marty');
 const DeckConstants = require('../constants/DeckConstants');
 
 class DeckActions extends Marty.ActionCreators {
-  selectDeck(index){
-    this.dispatch(DeckConstants.DECK_SELECTED, index);
+  selectDeck(id){
+    this.dispatch(DeckConstants.DECK_SELECTED, id);
   }
   selectSlide(index){
     this.dispatch(DeckConstants.SLIDE_SELECTED, index);

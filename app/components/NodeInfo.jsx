@@ -9,12 +9,12 @@ class NodeInfo extends BaseComponent {
   render(){
     return (
       <div className="nodeInfo">
-        <h2>{this.props.info.get('title')}</h2>
+        <h2>{this.props.info.title}</h2>
         <div className="nodeInfoText">
-          {this.props.info.get('text')}
+          {this.props.info.text}
         </div>
         <div className="nodeInfoLongText">
-          {this.props.info.get('longText')}
+          {this.props.info.longText}
         </div>
       </div>
     );

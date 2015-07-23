@@ -39,7 +39,11 @@ class Root extends BaseComponent {
     yarr('/maps/:id', function(ctx) {
       const match = ctx.params.id.match(/^\d+/);
       if (match) {
-        that.app.deckActions.selectDeck(parseInt(match[0]));
+        const id = parseInt(match[0]);
+        that.app.deckQueries.fetchDeck(id)
+          .then(res => {
+            that.app.deckActions.selectDeck(id);
+          });
       }
     });
     yarr('/maps/:id/:slide', function(ctx) {

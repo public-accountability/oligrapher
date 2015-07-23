@@ -11,5 +11,6 @@ module.exports = Marty.createConstants([
   'PREVIOUS_SLIDE_REQUESTED',
   'CLOSE_DECK',
   'ZOOMED_IN',
-  'ZOOMED_OUT'
+  'ZOOMED_OUT',
+  'FETCH_DECK'
 ]);

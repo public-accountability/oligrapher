@@ -2,6 +2,7 @@ const Marty = require('marty');
 const BaseComponent = require('./BaseComponent');
 const yarr = require('yarr.js');
 const RoutesHelper = require('../routes/RoutesHelper');
+const _ = require('lodash');
 
 class DeckList extends BaseComponent {
   constructor(options){
@@ -30,7 +31,7 @@ module.exports = Marty.createContainer(DeckList, {
   listenTo: ['deckStore'],
   fetch: {
     decks() {
-      return this.app.deckStore.getDecks();
+      return _.values(this.app.deckStore.getDecks());
     }
   }
 });
