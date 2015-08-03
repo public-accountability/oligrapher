@@ -5,12 +5,12 @@ class RoutesHelper {
     return '/';
   }
 
-  static mapBaseUrl() {
+  static mapBasePath() {
     return config.basePath;
   }
 
   static mapUrl(deck, slide = 0) {
-    return `/${this.mapBaseUrl()}/${this.deckSlugWithSlide(deck, slide)}`;
+    return `/${this.mapBasePath()}/${this.deckSlugWithSlide(deck, slide)}`;
   }
 
   static deckSlugWithSlide(deck, slide = 0) {
