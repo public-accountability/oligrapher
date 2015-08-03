@@ -1,10 +1,16 @@
+const config = require('../../config');
+
 class RoutesHelper {
   static homeUrl() {
     return '/';
   }
 
+  static mapBaseUrl() {
+    return config.basePath;
+  }
+
   static mapUrl(deck, slide = 0) {
-    return `/maps/${this.deckSlugWithSlide(deck, slide)}`;
+    return `/${this.mapBaseUrl()}/${this.deckSlugWithSlide(deck, slide)}`;
   }
 
   static deckSlugWithSlide(deck, slide = 0) {

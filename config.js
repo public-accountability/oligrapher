@@ -1,4 +1,5 @@
 var config = {
+  basePath: "story_maps",
   brandUrl: "http://littlesis.org",
   brandImageUrl: "http://pai-littlesis.s3.amazonaws.com/images/system/lilsis-logo-trans-200.png",
   lsApiKey: process.env.LS_API_KEY,

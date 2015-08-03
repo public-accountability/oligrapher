@@ -5,6 +5,7 @@ const Content = require('./Content');
 const Footer = require('./Footer');
 const { Grid } = require('react-bootstrap');
 const yarr = require('yarr.js');
+const RoutesHelper = require('../routes/RoutesHelper');
 
 class Root extends BaseComponent {
   constructor(){
@@ -36,7 +37,7 @@ class Root extends BaseComponent {
     yarr('/', function(ctx) {
       that.app.contentActions.showHome();
     });
-    yarr('/maps/:id', function(ctx) {
+    yarr(`/${RoutesHelper.mapBaseUrl()}/:id`, function(ctx) {
       const match = ctx.params.id.match(/^\d+/);
       if (match) {
         const id = parseInt(match[0]);
@@ -46,7 +47,7 @@ class Root extends BaseComponent {
           });
       }
     });
-    yarr('/maps/:id/:slide', function(ctx) {
+    yarr(`/${RoutesHelper.mapBaseUrl()}/:id/:slide`, function(ctx) {
       const match = ctx.params.id.match(/^\d+/);
       if (match) {
         that.app.deckActions.selectDeck(parseInt(match[0]));
