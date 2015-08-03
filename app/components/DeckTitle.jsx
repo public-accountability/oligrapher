@@ -1,5 +1,6 @@
 const Marty = require('marty');
 const BaseComponent = require('./BaseComponent');
+const config = require('../../config');
 
 class DeckTitle extends BaseComponent {
   constructor(options){
@@ -16,6 +17,10 @@ class DeckTitle extends BaseComponent {
       </div>
     );
   }
+
+  componentDidMount() {
+    document.title = this.props.deck.title + " - " + config.brandName;
+  }  
 
   _handlePrevSlideClick() {
     this.app.deckActions.decrementSlide();

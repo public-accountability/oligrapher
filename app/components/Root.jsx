@@ -54,7 +54,7 @@ class Root extends BaseComponent {
         that.app.deckActions.selectSlide(parseInt(ctx.params.slide));
       }
     });
-    yarr('*', function() { console.log("yarr didn't match map"); })
+    yarr('*', function() { })
   }
 }
 
