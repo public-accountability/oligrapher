@@ -1,5 +1,5 @@
 //privates
-const apiKey = require('../../credentials').lsApiKey;
+const apiKey = require('../../config').lsApiKey;
 const request = require('superagent');
 const baseUrlSymf = 'https://api.littlesis.org/';
 const baseUrlRails = 'https://littlesis.org/';

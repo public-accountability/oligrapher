@@ -6,11 +6,14 @@ class DeckTitle extends BaseComponent {
     super(options);
   }
 
-  render(){
+  render() {
     return this.props.isNullPosition ? (<h1></h1>) : (
-      <h1 id="deckTitle">
-        {this.props.title}
-      </h1>
+      <div id="deckTitle">
+        <h1>{this.props.deck.title}</h1>
+        <div id="deckAuthor">
+          by <a href={this.props.deck.userUrl()}>{this.props.deck.user.name}</a> <span id="deckDate">{this.props.deck.date}</span>
+        </div>
+      </div>
     );
   }
 
@@ -32,8 +35,8 @@ module.exports = Marty.createContainer(DeckTitle, {
     isNullPosition() {
       return this.app.deckStore.isNullPosition();
     },
-    title() {
-      return this.app.deckStore.getCurrentTitle();
+    deck() {
+      return this.app.deckStore.getCurrentDeck();
     }
   }
 });

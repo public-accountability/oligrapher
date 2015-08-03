@@ -29,9 +29,6 @@ nav.navbar div.container-fluid {
   height: 100%;
 }
 
-#deckTitle {
-}
-
 .graphContainer {
   height: calc(100% - 80px);
   padding-bottom: 1em;
@@ -120,7 +117,7 @@ nav.navbar div.container-fluid {
 
 #deckNavButtons {
   position: absolute;
-  top: 0px;
+  top: 5px;
   right: 10px;
 
   button {
@@ -134,9 +131,16 @@ nav.navbar div.container-fluid {
   }
 }
 
-h1#deckTitle {
-  margin-top: 0;  
-  margin-right: 100px;
+#deckTitle {
+  margin-bottom: 10px;
+
+  h1 {
+    margin-top: 0;  
+    margin-right: 100px;
+    font-size: 50px;
+    font-weight: 300;
+    margin-bottom: 5px;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -159,4 +163,17 @@ h1#deckTitle {
   a {
     font-size: 1.3em;
   }
+}
+
+#logo {
+  width: 180px;
+  margin-top: -3px;
+}
+
+#deckAuthor {
+  margin-left: 5px;
+}
+
+#deckDate {
+  color: #888;
 }

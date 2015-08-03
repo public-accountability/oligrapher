@@ -7,10 +7,17 @@ class Deck {
     this.id = specs.id || -1;
     this.title = specs.title || 'empty deck';
     this.graphIds = specs.graphIds || [];
+    this.user = specs.user || {};
+    this.date = specs.date || 'no date';
+    this.source = specs.source || {};
   }
 
   hasSlides() {
     return this.graphIds.length > 1;
+  }
+
+  userUrl() {
+    return this.source.url + this.user.url;
   }
 
   //parseApiGraph(apiDecks): { decks: [Deck], graphs: [Graph] }
@@ -25,7 +32,10 @@ class Deck {
       new Deck({
         id: apiDeck.id,
         title: apiDeck.title,
-        graphIds: apiDeck.maps.map(m => m.id)
+        graphIds: apiDeck.maps.map(m => m.id),
+        user: apiDeck.user,
+        date: apiDeck.date,
+        source: { name: 'littlesis', url: 'http://littlesis.org' }
       }),
       apiDeck.maps.map(Graph.parseApiGraph)
     ];
