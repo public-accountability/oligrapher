@@ -14,7 +14,7 @@ class Graph extends BaseComponent {
     const sp = this._getSvgParams(this.props.graph);
 
     return (
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" className="Graph" width='100%' height='100%' viewBox={sp.viewBox} preserveAspectRatio="xMinYMin">
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" className="Graph" width='100%' height='100%' viewBox={sp.viewBox} preserveAspectRatio="xMinYMin">
         <Draggable
           handle="#zoom-handle"
           moveOnStartChange={false}
@@ -31,6 +31,10 @@ class Graph extends BaseComponent {
         <defs dangerouslySetInnerHTML={ { __html: sp.markers } }/>
       </svg>
     );
+  }
+
+  componentDidMount() {
+    React.findDOMNode(this).setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
   }
 
   _getSvgParams(graph) {

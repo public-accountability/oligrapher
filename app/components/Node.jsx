@@ -2,6 +2,7 @@ const BaseComponent = require('./BaseComponent');
 const Draggable = require('react-draggable');
 const Marty = require('marty');
 const ds = require('../NodeDisplaySettings');
+const config = require('../../config');
 
 class Node extends BaseComponent {
   constructor(){
@@ -49,19 +50,23 @@ class Node extends BaseComponent {
     let r = ds.circleRadius * n.display.scale;
     let textOffsetY = ds.textMarginTop + r;
     let textLines = this._textLines(n.display.name);
-
-    let tspans =
-          <a className="nodeLabel" onClick={this._handleClick}>
-            <text textAnchor="middle">
-              {
-                textLines.map(
-                 (line, i) => {
-                   let dy = (i == 0 ? textOffsetY : ds.lineHeight);
-                   return <tspan className="node-text-line" x="0" dy={dy} fill={ds.textColor[n.display.status]}>{line}</tspan>;
-                 })
-              }
-            </text>
-          </a>;
+    const linkAttributes = `xlink:href="${this.props.node.sourceUrl}" target="_blank"`;
+    
+    let tspans = config.externalNodeLinks ?
+      <g dangerouslySetInnerHTML={ { __html: (`<a class="nodeLabel" ${linkAttributes}><text text-anchor="middle">` + 
+          textLines.map((line, i) => {
+             let dy = (i == 0 ? textOffsetY : ds.lineHeight);
+             return `<tspan class="node-text-line" x="0" dy="${dy}" fill="${ds.textColor[n.display.status]}">${line}</tspan>`;
+           }) + `</text></a>`)
+      } } /> 
+      : 
+      (<a className="nodeLabel" onClick={this._handleClick}><text textAnchor="middle">
+        { textLines.map(
+           (line, i) => {
+             let dy = (i == 0 ? textOffsetY : ds.lineHeight);
+             return <tspan className="node-text-line" x="0" dy={dy} fill={ds.textColor[n.display.status]}>{line}</tspan>;
+           }) }
+      </text></a>);
 
     let rects = textLines.map(
       (line, i) => {
