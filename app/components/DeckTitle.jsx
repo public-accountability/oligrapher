@@ -1,6 +1,7 @@
 const Marty = require('marty');
 const BaseComponent = require('./BaseComponent');
 const config = require('../../config');
+const DeckByline = require('./DeckByline');
 
 class DeckTitle extends BaseComponent {
   constructor(options){
@@ -11,9 +12,7 @@ class DeckTitle extends BaseComponent {
     return this.props.isNullPosition ? (<h1></h1>) : (
       <div id="deckTitle">
         <h1>{this.props.deck.title}</h1>
-        <div id="deckAuthor">
-          by <a href={this.props.deck.userUrl()}>{this.props.deck.user.name}</a> <span id="deckDate">{this.props.deck.date}</span>
-        </div>
+        <DeckByline />
       </div>
     );
   }

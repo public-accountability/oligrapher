@@ -14,7 +14,8 @@ class Converter {
         scale: entity.scale,
         image: entity.image && entity.image.indexOf('assets/netmap') === -1 ? entity.image : null,
         status: entity.status || "normal"
-      }
+      },
+      sourceUrl: entity.url
     });
   }
 

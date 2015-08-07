@@ -16,6 +16,7 @@ class Node {
     this.content = specs.content;
     this.adj = specs.adj || [];
     this.display = _.merge({}, defaults.display, specs.display);
+    this.sourceUrl = specs.sourceUrl;
   }
 }
 
