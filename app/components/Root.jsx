@@ -46,8 +46,12 @@ class Root extends BaseComponent {
     yarr(`/${RoutesHelper.mapBasePath()}/:id/:slide`, function(ctx) {
       const match = ctx.params.id.match(/^\d+/);
       if (match) {
-        that.app.deckActions.selectDeck(parseInt(match[0]));
-        that.app.deckActions.selectSlide(parseInt(ctx.params.slide));
+        const id = parseInt(match[0]);
+        that.app.deckQueries.fetchDeck(id)
+          .then(res => {
+            that.app.deckActions.selectDeck(id);
+            that.app.deckActions.selectSlide(parseInt(ctx.params.slide));
+          });
       }
     });
     yarr('*', function() { })
