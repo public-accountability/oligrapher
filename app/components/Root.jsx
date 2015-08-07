@@ -25,16 +25,23 @@ class Root extends BaseComponent {
   componentDidMount(){
     this._defineRoutes();
 
-    yarr();
+    this.app.deckQueries.fetchDecks('frackingtest')
+      .then(res => yarr())
+      .catch(err => {
+        throw new Error(err);
+      });
   }
 
   _defineRoutes(){
     const that = this;
+
     yarr('/', function(ctx) {
       that.app.contentActions.showHome();
     });
+
     yarr(`/${RoutesHelper.mapBasePath()}/:id`, function(ctx) {
       const match = ctx.params.id.match(/^\d+/);
+      
       if (match) {
         const id = parseInt(match[0]);
         that.app.deckQueries.fetchDeck(id)
@@ -43,17 +50,26 @@ class Root extends BaseComponent {
           });
       }
     });
+
     yarr(`/${RoutesHelper.mapBasePath()}/:id/:slide`, function(ctx) {
       const match = ctx.params.id.match(/^\d+/);
+
       if (match) {
         const id = parseInt(match[0]);
-        that.app.deckQueries.fetchDeck(id)
-          .then(res => {
-            that.app.deckActions.selectDeck(id);
-            that.app.deckActions.selectSlide(parseInt(ctx.params.slide));
-          });
+
+        if (that.app.deckStore.getDeck(id)) {
+          that.app.deckActions.selectDeck(id);
+          that.app.deckActions.selectSlide(parseInt(ctx.params.slide));
+        } else {
+          that.app.deckQueries.fetchDeck(id)
+            .then(res => {
+              that.app.deckActions.selectDeck(id);
+              that.app.deckActions.selectSlide(parseInt(ctx.params.slide));
+            });
+        }
       }
     });
+    
     yarr('*', function() { })
   }
 }
