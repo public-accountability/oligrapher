@@ -1,8 +1,9 @@
 //privates
-const apiKey = require('../../config').lsApiKey;
+const config = require('../../config');
+const apiKey = config.lsApiKey;
+const baseUrlSymf = config.baseApiUrlSymf;
+const baseUrlRails = config.baseApiUrlRails;
 const request = require('superagent');
-const baseUrlSymf = 'https://api.littlesis.org/';
-const baseUrlRails = 'https://littlesis.org/';
 const parse = (res) => res.body.Response.Data;
 
 //module

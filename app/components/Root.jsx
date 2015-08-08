@@ -17,19 +17,13 @@ class Root extends BaseComponent {
       <Grid className="root" fluid={true}>
         <Header />
         <Content />
-        <Footer />
       </Grid>
     );
   }
 
   componentDidMount(){
     this._defineRoutes();
-
-    this.app.deckQueries.fetchDecks('frackingtest')
-      .then(res => yarr())
-      .catch(err => {
-        throw new Error(err);
-      });
+    yarr();
   }
 
   _defineRoutes(){
@@ -69,7 +63,7 @@ class Root extends BaseComponent {
         }
       }
     });
-    
+
     yarr('*', function() { })
   }
 }
