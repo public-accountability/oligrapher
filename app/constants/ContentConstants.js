@@ -1,5 +1,6 @@
 const Marty = require('marty');
 
 module.exports = Marty.createConstants([
-  'HOME_SELECTED'
+  'HOME_SELECTED',
+  'TAB_SELECTED'
 ]);

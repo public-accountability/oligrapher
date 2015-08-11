@@ -8,12 +8,14 @@ class ContentStore extends Marty.Store {
     super(options);
 
     this.state = {
-      content: 'empty'
+      content: 'empty',
+      tab: 'graph'
     };
 
     this.handlers = {
       showHome: ContentConstants.HOME_SELECTED,
-      showDeck: DeckConstants.DECK_SELECTED
+      showDeck: DeckConstants.DECK_SELECTED,
+      showTab: ContentConstants.TAB_SELECTED
     };
   }
 
@@ -35,8 +37,18 @@ class ContentStore extends Marty.Store {
     });
   }
 
+  showTab(tab) {
+    this.setState({
+      tab: tab
+    });
+  }
+
   getContent() {
     return this.state.content;
+  }
+
+  getTab() {
+    return this.state.tab;
   }
 }
  

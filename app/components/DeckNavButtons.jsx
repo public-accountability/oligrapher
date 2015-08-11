@@ -57,6 +57,12 @@ module.exports = Marty.createContainer(DeckNavButtons, {
     },
     graph() {
       return this.app.graphStore.getGraph(this.app.deckStore.getCurrentGraphId());
+    },
+    slide() {
+      return this.app.deckStore.getCurrentSlide() + 1;
+    },
+    num() {
+      return this.app.deckStore.getNumSlides();
     }
   }
 });

@@ -9,7 +9,7 @@ class GraphInfo extends BaseComponent {
   render(){
     return (
       <div className="mapInfo">
-        <div className="title">
+        <div className="title hidden-sm hidden-xs">
           <h2>{this.props.info.title}</h2>
         </div>
         <div className="text"

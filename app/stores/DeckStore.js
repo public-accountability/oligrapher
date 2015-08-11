@@ -87,6 +87,10 @@ class DeckStore extends Marty.Store {
     return this.state.position.slide;
   }
 
+  getNumSlides() {
+    return this.getCurrentDeck().graphIds.length;
+  }
+
   getDeck(id) {
     // return this.fetch({
     //   id: id,

@@ -31,8 +31,6 @@ class DeckTitle extends BaseComponent {
 
 }
 
-// module.exports = Marty.createContainer(DeckNavButtons);
-
 module.exports = Marty.createContainer(DeckTitle, {
   listenTo: ['deckStore'],
   fetch: {

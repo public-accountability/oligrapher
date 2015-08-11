@@ -57,8 +57,11 @@ nav.navbar div.container-fluid {
 }
 
 .infoContainer {
-  border-left: 1px solid #eee;
-  padding: 1em;
+  @media (min-width: 990px) {
+    border-left: 1px solid #eee;
+    padding: 1em;
+  }
+
   padding-top: 0.6em;
 
   .title {
@@ -69,10 +72,20 @@ nav.navbar div.container-fluid {
       font-size: 2em;
     }
   }
+
   .text {
     height: 100%;
     overflow: scroll;
     padding-right: 10px;
+
+    @media (max-width: 989px) {
+      font-size: 1.5em;
+    }
+  }
+
+  blockquote {
+    font-size: 1em;
+    font-style: italic;
   }
 }
 
@@ -176,4 +189,29 @@ nav.navbar div.container-fluid {
 
 #deckDate {
   color: #888;
+}
+
+#contentTabs {
+  margin-top: 1.5em;
+  margin-bottom: 1em;
+
+  li {
+    margin-right: 0.5em;
+  }
+
+  li a {
+    font-size: 1.5em;
+
+    &:not(.active) {
+      border: 1px solid #ccc;
+    }
+  }
+}
+
+#slideInfo {
+  display: inline-block;
+  font-size: 1.5em;
+  position: relative;
+  top: 4px;
+  margin-right: 5px;
 }

@@ -87,9 +87,9 @@ class Graph {
     }
   }
 
-  computeViewbox() {
+  computeViewbox(highlightedOnly = true) {
     const nodes = _.values(this.nodes)
-      // .filter(n => n.display.status != "faded")
+      .filter(n => !highlightedOnly || n.display.status != "faded")
       .map(n => ({ x: n.display.x, y: n.display.y }));
     // const edges = this.edges.toArray()
     //   .filter(e => e.display.status != "faded")
@@ -97,10 +97,16 @@ class Graph {
     const items = nodes;
 
     if (items.length > 0) {
+      const padding = highlightedOnly ? 50 : 0;
       const xs = items.map(i => i.x);
       const ys = items.map(i => i.y);
       const textPadding = 30; // node text might extend below node
-      return { x: _.min(xs), y: _.min(ys), w: _.max(xs) - _.min(xs), h: _.max(ys) - _.min(ys) + textPadding };
+      return { 
+        x: _.min(xs) - padding, 
+        y: _.min(ys) - padding, 
+        w: _.max(xs) - _.min(xs) + padding * 2, 
+        h: _.max(ys) - _.min(ys) + textPadding + padding
+      };
     } else {
       return { x: 0, y: 0, w: 0, h: 0 };
     }

@@ -48,7 +48,8 @@ class Graph extends BaseComponent {
   }
 
   _computeViewbox(shrinkFactor = 1.2) {
-    const rect = this.props.graph.computeViewbox();
+    const highlightedOnly = false && (window.innerWidth < 990);
+    const rect = this.props.graph.computeViewbox(highlightedOnly);
     const w = rect.w * shrinkFactor;
     const h = rect.h * shrinkFactor;
     const x = rect.x + rect.w/2 - (w/2);
