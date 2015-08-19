@@ -80,6 +80,7 @@
     "pushstate-server": "^1.6.0",
     "react": "^0.13.3",
     "react-bootstrap": "^0.22.6",
+    "react-doc-meta": "^0.2.0",
     "react-draggable": "^0.8.0",
     "react-hot-loader": "^1.2.7",
     "react-spark-scroll-rekapi": "^1.0.1",
