@@ -14,7 +14,7 @@ class ContentStore extends Marty.Store {
 
     this.handlers = {
       showHome: ContentConstants.HOME_SELECTED,
-      showDeck: DeckConstants.DECK_SELECTED,
+      showDeck: [DeckConstants.DECK_SELECTED, DeckConstants.SLIDE_SELECTED],
       showTab: ContentConstants.TAB_SELECTED
     };
   }

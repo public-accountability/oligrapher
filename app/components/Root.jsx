@@ -38,10 +38,14 @@ class Root extends BaseComponent {
       
       if (match) {
         const id = parseInt(match[0]);
-        that.app.deckQueries.fetchDeck(id)
-          .then(res => {
-            that.app.deckActions.selectDeck(id);
-          });
+        if (that.app.deckStore.getDeck(id)) {
+          that.app.deckActions.selectSlide(id, 0);
+        } else {
+          that.app.deckQueries.fetchDeck(id)
+            .then(res => {
+              that.app.deckActions.selectSlide(id, 0);
+            });
+        }
       }
     });
 
@@ -52,13 +56,11 @@ class Root extends BaseComponent {
         const id = parseInt(match[0]);
 
         if (that.app.deckStore.getDeck(id)) {
-          that.app.deckActions.selectDeck(id);
-          that.app.deckActions.selectSlide(parseInt(ctx.params.slide));
+          that.app.deckActions.selectSlide(id, parseInt(ctx.params.slide));
         } else {
           that.app.deckQueries.fetchDeck(id)
             .then(res => {
-              that.app.deckActions.selectDeck(id);
-              that.app.deckActions.selectSlide(parseInt(ctx.params.slide));
+              that.app.deckActions.selectSlide(id, parseInt(ctx.params.slide));
             });
         }
       }

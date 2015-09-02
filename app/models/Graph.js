@@ -100,7 +100,7 @@ class Graph {
       const padding = highlightedOnly ? 50 : 0;
       const xs = items.map(i => i.x);
       const ys = items.map(i => i.y);
-      const textPadding = 30; // node text might extend below node
+      const textPadding = 50; // node text might extend below node
       return { 
         x: _.min(xs) - padding, 
         y: _.min(ys) - padding, 

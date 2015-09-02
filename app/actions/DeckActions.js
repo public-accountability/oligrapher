@@ -5,8 +5,8 @@ class DeckActions extends Marty.ActionCreators {
   selectDeck(id){
     this.dispatch(DeckConstants.DECK_SELECTED, id);
   }
-  selectSlide(index){
-    this.dispatch(DeckConstants.SLIDE_SELECTED, index);
+  selectSlide(id, index){
+    this.dispatch(DeckConstants.SLIDE_SELECTED, id, index);
   }
   incrementSlide(){
     this.dispatch(DeckConstants.NEXT_SLIDE_REQUESTED);

@@ -10,10 +10,12 @@ class DeckStore extends Marty.Store {
     const nullDeck = new Deck({});
     const nullPosition = { deck: -1, slide: -1 };
 
+    this.defaultZoom = 1.2;
+
     this.state = {
       decks: { [nullDeck.id]: nullDeck },
       position: nullPosition,
-      shrinkFactor: 1.2
+      shrinkFactor: this.defaultZoom
     };
 
     this.handlers = {
@@ -47,10 +49,18 @@ class DeckStore extends Marty.Store {
     });
   }
 
-  setCurrentSlide(index){
+  setCurrentSlide(id, index){
+    const oldSlide = this.state.position.slide + 0;
+    this.trackSlideTransition(oldSlide, index);
     this.setState({
-      position: { deck: this.state.position.deck, slide: index }
+      position: { deck: id, slide: index },
+      shrinkFactor: oldSlide == -1 ? this.state.shrinkFactor : this.defaultZoom
     });
+  }
+
+  trackSlideTransition(oldSlide, newSlide){
+    sessionStorage.setItem('oldSlide', oldSlide);
+    sessionStorage.setItem('newSlide', newSlide);    
   }
 
   incrementSlide(){
@@ -92,12 +102,6 @@ class DeckStore extends Marty.Store {
   }
 
   getDeck(id) {
-    // return this.fetch({
-    //   id: id,
-    //   locally: () => this.state.decks[id],
-    //   remotely: () => this.app.deckQueries.fetchDeck(id)
-    // }).result;
-
     return _.find(this.state.decks, d => d.id === id);
   }
 
@@ -117,7 +121,18 @@ class DeckStore extends Marty.Store {
     return this.getCurrentDeck().graphIds[this.state.position.slide];
   }
 
+  getPrevGraphId() {
+    const deck = this.getCurrentDeck();
+
+    if (!deck) {
+      return;
+    }
+
+    return deck.graphIds[sessionStorage.getItem('oldSlide')];
+  }
+
   zoom(scale) {
+    sessionStorage.setItem('oldSlide', -1);
     const oldShrinkFactor = this.state.shrinkFactor;
     let newShrinkFactor = oldShrinkFactor * 1/scale;
     newShrinkFactor = Math.round(newShrinkFactor * 100) / 100;
