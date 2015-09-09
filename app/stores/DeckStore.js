@@ -58,9 +58,15 @@ class DeckStore extends Marty.Store {
     });
   }
 
+  hasSessions(){
+    return typeof sessionStorage !== 'undefined';
+  }
+
   trackSlideTransition(oldSlide, newSlide){
-    sessionStorage.setItem('oldSlide', oldSlide);
-    sessionStorage.setItem('newSlide', newSlide);    
+    if (this.hasSessions()) {
+      sessionStorage.setItem('oldSlide', oldSlide);
+      sessionStorage.setItem('newSlide', newSlide);      
+    }
   }
 
   incrementSlide(){
@@ -128,11 +134,18 @@ class DeckStore extends Marty.Store {
       return;
     }
 
+    if (!this.hasSessions()) {
+      return;
+    }
+
     return deck.graphIds[sessionStorage.getItem('oldSlide')];
   }
 
   zoom(scale) {
-    sessionStorage.setItem('oldSlide', -1);
+    if (this.hasSessions()) {
+      sessionStorage.setItem('oldSlide', -1);
+    }
+
     const oldShrinkFactor = this.state.shrinkFactor;
     let newShrinkFactor = oldShrinkFactor * 1/scale;
     newShrinkFactor = Math.round(newShrinkFactor * 100) / 100;

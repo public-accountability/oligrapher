@@ -3,7 +3,7 @@ const Marty = require('marty');
 const { Combobox } = require('react-widgets');
 const lsApi = require('../api/lsApi');
 const converter = require('../models/Converter');
-require('../../node_modules/react-widgets/lib/less/react-widgets.less');
+//require('../../node_modules/react-widgets/lib/less/react-widgets.less');
 //TODO rip out SASS bootstrap and only use less for main css file
 
 class SearchBox extends BaseComponent {

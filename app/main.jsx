@@ -12,6 +12,8 @@ window.Marty = Marty;
 const app = new Application();
 const { ApplicationContainer } = require('marty');
 
+app.rehydrate();
+
 let rootInstance = React.render((
   <ApplicationContainer app={app}>
     <Root />

@@ -1,3 +1,4 @@
+const React = require('react');
 const BaseComponent = require('./BaseComponent');
 const Node = require('./Node');
 const Edge = require('./Edge');
@@ -10,12 +11,12 @@ class Graph extends BaseComponent {
     super();
   }
 
-  render(){
+  render() {
     const sp = this._getSvgParams(this.props.graph);
     const viewBox = this.props.prevGraph ? this._computeViewbox(this.props.prevGraph, this.props.shrinkFactor) : sp.viewBox;
 
     return (
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" className="Graph" width="100%" viewBox={viewBox} preserveAspectRatio="xMidYMin">
+      <svg id="svg" version="1.1" xmlns="http://www.w3.org/2000/svg" className="Graph" width="100%" viewBox={viewBox} preserveAspectRatio="xMidYMin">
         <Draggable
           ref="zoom"
           handle="#zoom-handle"

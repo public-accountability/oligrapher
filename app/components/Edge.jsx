@@ -1,3 +1,4 @@
+const React = require('react');
 const BaseComponent = require('./BaseComponent');
 const Draggable = require('react-draggable');
 const Marty = require('marty');
@@ -15,22 +16,11 @@ class Edge extends BaseComponent {
     let sp = this._getSvgParams(e);
 
     return (
-      <Draggable
-        handle=".handle"
-        axis="none"
-        start={{x: this.props.edge.display.x, y: this.props.edge.display.y}}
-        moveOnStartChange={false}
-        zIndex={100}
-        onStart={this._handleStart}
-        onDrag={this._handleDrag} >
-
-        <g id={sp.groupId} className="edge">
-          <path className="handle edge-background" d={sp.curve} stroke={sp.bgColor} strokeOpacity={sp.bgOpacity} strokeWidth={e.display.scale + 5} fill="none"></path>
-          <path id={sp.pathId} className="edge-line" d={sp.curve} stroke={sp.lineColor} strokeDasharray={sp.dash} strokeWidth={e.display.scale} fill="none" markerStart={sp.markerStart} markerEnd={sp.markerEnd}></path>
-          <text dy={sp.dy} fill={sp.textColor} textAnchor="middle" dangerouslySetInnerHTML={sp.textPath}></text>
-        </g>
-
-      </Draggable>
+      <g id={sp.groupId} className="edge">
+        <path className="handle edge-background" d={sp.curve} stroke={sp.bgColor} strokeOpacity={sp.bgOpacity} strokeWidth={e.display.scale + 5} fill="none"></path>
+        <path id={sp.pathId} className="edge-line" d={sp.curve} stroke={sp.lineColor} strokeDasharray={sp.dash} strokeWidth={e.display.scale} fill="none" markerStart={sp.markerStart} markerEnd={sp.markerEnd}></path>
+        <text dy={sp.dy} fill={sp.textColor} textAnchor="middle" dangerouslySetInnerHTML={sp.textPath}></text>
+      </g>
     );
   }
 

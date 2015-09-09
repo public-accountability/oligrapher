@@ -1,3 +1,4 @@
+const React = require('react');
 const BaseComponent = require('./BaseComponent');
 
 class EmptyContent extends BaseComponent {

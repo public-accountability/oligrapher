@@ -13,7 +13,7 @@ var deps = [
 var config = {
   entry: {
     app: [
-    'webpack/hot/dev-server',
+      'webpack/hot/dev-server',
       path.resolve(__dirname, 'app/main.jsx'),
       'bootstrap-sass!./bootstrap-sass.config.js'
     ],

@@ -1,3 +1,4 @@
+const React = require('react');
 const BaseComponent = require('./BaseComponent');
 const Marty = require('marty');
 const SearchBox = require('./SearchBox');

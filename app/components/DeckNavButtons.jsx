@@ -1,3 +1,4 @@
+const React = require('react');
 const Marty = require('marty');
 const BaseComponent = require('./BaseComponent');
 const yarr = require('yarr.js');

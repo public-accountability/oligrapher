@@ -1,3 +1,4 @@
+const React = require('react');
 const BaseComponent = require('./BaseComponent');
 const Draggable = require('react-draggable');
 const Marty = require('marty');
@@ -16,22 +17,12 @@ class Node extends BaseComponent {
     const sp = this._getSvgParams(n);
 
     return (
-      <Draggable
-        handle=".handle"
-        start={{x: n.display.x, y: n.display.y}}
-        moveOnStartChange={false}
-        zIndex={100}
-        onDrag={this._handleDrag}
-      >
-
-        <g id={sp.groupId}>
-          {sp.bgCircle}
-          {sp.circle}
-          {sp.rects}
-          {sp.tspans}
-        </g>
-
-      </Draggable>
+      <g id={sp.groupId} transform={sp.transform}>
+        {sp.bgCircle}
+        {sp.circle}
+        {sp.rects}
+        {sp.tspans}
+      </g>
     );
   }
 
@@ -121,7 +112,8 @@ class Node extends BaseComponent {
       circle: circle,
       rects: rects,
       tspans: tspans,
-      bgCircle: bgCircle
+      bgCircle: bgCircle,
+      transform: `translate(${n.display.x}, ${n.display.y})`
     };
   }
 
