@@ -23,12 +23,14 @@
     <div id="content">
       <%- content %>
     </div>
-    <script>
-      var svg = document.getElementById('svg');
-      svg.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
-      var height = document.getElementById("mainContainer").clientHeight - 120;
-      svg.setAttribute("height", height);
-    </script>
+    <% if (content) { %> 
+      <script>
+        var svg = document.getElementById('svg');
+        svg.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+        var height = document.getElementById("mainContainer").clientHeight - 120;
+        svg.setAttribute("height", height);
+      </script>
+    <% } %>
     <script src="/react/app.js"></script>
   </body>
 </html>

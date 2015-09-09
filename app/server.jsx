@@ -13,38 +13,47 @@ const Application = require('./application');
 const Root = require('./components/Root');
 var app = new Application();
 
-var renderDeckAndSlide = function(res, id, slide) {
-  app.deckQueries.fetchDeck(id)
-    .then(function(result) {
-      app.deckActions.selectSlide(id, slide);
+var isBot = function(req) {
+  return req.headers['user-agent'].match(/baiduspider|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora\ link\ preview|showyoubot|outbrain|pinterest|slackbot|vkShare|W3C_Validator/);
+};
 
-      var deck = app.deckStore.getDeck(id);
+var renderDeckAndSlide = function(req, res, id, slide) {
+  if (isBot(req)) {
+    app.deckQueries.fetchDeck(id)
+      .then(function(result) {
+        app.deckActions.selectSlide(id, slide);
 
-      app.renderToString(React.createElement(Root))
-        .then(function(render) { 
-          res.render('story_map.ejs', { 
-            content: render.html,
-            title: deck.title,
-            image: "http://s3.amazonaws.com/pai-littlesis/images/maps/" + id + ".png"
+        var deck = app.deckStore.getDeck(id);
+
+        app.renderToString(React.createElement(Root))
+          .then(function(render) { 
+            res.render('story_map.ejs', { 
+              content: render.html,
+              title: deck.title,
+              image: "http://s3.amazonaws.com/pai-littlesis/images/maps/" + id + ".png"
+            });
           });
-        });
-    })
-    .catch(function(error) {
-      console.error(error.stack);
-    });    
+      })
+      .catch(function(error) {
+        console.error(error.stack);
+        debugger;
+      });    
+  } else {
+    res.render('story_map.ejs', { content: null, title: null, image: null });
+  }
 };
 
 exp.get(/\/story_maps\/(\d+).*\/(\d+).*/, function (req, res) {
   var id = parseInt(req.params[0]);
   var slide = parseInt(req.params[1]);
 
-  renderDeckAndSlide(res, id, slide);
+  renderDeckAndSlide(req, res, id, slide);
 });
 
 exp.get(/\/story_maps\/(\d+).*/, function (req, res) {
   var id = parseInt(req.params[0]);
 
-  renderDeckAndSlide(res, id, 0);
+  renderDeckAndSlide(req, res, id, 0);
 });
 
 var server = exp.listen(8080, function () {
