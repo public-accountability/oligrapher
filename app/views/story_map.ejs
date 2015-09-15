@@ -16,7 +16,7 @@
       <meta property="og:image" content="<%= image %>">
     <% } %>
     <% if (description) { %>
-      <meta property="og:description" content="<%- description %>">
+      <meta property="og:description" content="<%= description %>">
     <% } %>
     <% if (content) { %>
       <link href="<%= env == 'development' ? 'http://localhost:8090' : '/react' %>/main.css" rel="stylesheet"/>

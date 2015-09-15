@@ -12,6 +12,7 @@ const React = require('react');
 const Application = require('./application');
 const Root = require('./components/Root');
 var app = new Application();
+var striptags = require('striptags');
 
 var isBot = function(req) {
   return req.headers['user-agent'].match(/baiduspider|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora\ link\ preview|showyoubot|outbrain|pinterest|slackbot|vkShare|W3C_Validator/);
@@ -31,7 +32,7 @@ var renderDeckAndSlide = function(req, res, id, slide) {
             res.render('story_map.ejs', { 
               content: render.html,
               title: deck.title,
-              description: graph.display.description,
+              description: striptags(graph.display.description),
               image: "http://s3.amazonaws.com/pai-littlesis/images/maps/" + id + ".png",
               env: process.env.NODE_ENV
             });
