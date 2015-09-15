@@ -15,8 +15,11 @@
     <% if (image) { %>
       <meta property="og:image" content="<%= image %>">
     <% } %>
+    <% if (description) { %>
+      <meta property="og:description" content="<%- description %>">
+    <% } %>
     <% if (content) { %>
-      <link href="/react/main.css" rel="stylesheet"/>
+      <link href="<%= env == 'development' ? 'http://localhost:8090' : '/react' %>/main.css" rel="stylesheet"/>
       <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" />
     <% } %>
   </head>
@@ -33,6 +36,12 @@
         svg.setAttribute("height", height);
       </script>
     <% } %>
-    <script src="/react/app.js"></script>
+    <% if (env == 'development') { %>
+      <script src="http://localhost:8090/webpack-dev-server.js"></script>
+      <script src="http://localhost:8090/build/vendors.js"></script>
+      <script src="http://localhost:8090/build/app.js"></script>
+    <% } else { %>
+      <script src="/react/app.js"></script>
+    <% } %>
   </body>
 </html>

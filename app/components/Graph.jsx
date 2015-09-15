@@ -60,7 +60,11 @@ class Graph extends BaseComponent {
       const start = this._now();
       const that = this;
 
-      const timer = setInterval(function() {
+      let req;
+
+      const draw = function() {
+        req = requestAnimationFrame(draw);
+
         let time = (that._now() - start);
         let fraction = time / duration;
         let viewbox = oldViewbox.map(function(part, i) {
@@ -70,9 +74,12 @@ class Graph extends BaseComponent {
         React.findDOMNode(that).setAttribute("viewBox", viewbox);
 
         if (time > duration) {
-          clearInterval(timer);
+          cancelAnimationFrame(req);
         }
-      }, 20);
+      };
+
+      requestAnimationFrame(draw);
+
     } else {
       React.findDOMNode(this).setAttribute("viewBox", this._computeViewbox(this.props.graph, this.props.shrinkFactor));
     }

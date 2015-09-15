@@ -6,6 +6,7 @@ class Deck {
   constructor(specs){
     this.id = specs.id || -1;
     this.title = specs.title || 'empty deck';
+    this.description = specs.description;
     this.graphIds = specs.graphIds || [];
     this.author = specs.author || {};
     this.date = specs.date || 'no date';
@@ -32,6 +33,7 @@ class Deck {
       new Deck({
         id: apiDeck.id,
         title: apiDeck.title,
+        description: apiDeck.description,
         graphIds: apiDeck.maps.map(m => m.id),
         author: apiDeck.user,
         date: apiDeck.date,

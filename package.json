@@ -8,12 +8,13 @@
   },
   "main": "app/main.jsx",
   "scripts": {
+    "build-css": "sass ./styles/_main.scss ./build/main.css",
     "dev": "npm run dev-serve | npm run dev-build",
-    "dev-build": "webpack-dev-server --devtool eval --progress --history-api-fallback --colors --hot --content-base build --port 8090 --config webpack.dev.config",
-    "dev-serve": "node app/server.jsx",
+    "dev-build": "npm run build-css && webpack-dev-server --devtool eval --progress --history-api-fallback --colors --hot --content-base build --port 8090 --config webpack.dev.config",
+    "dev-serve": "NODE_ENV=development node app/server.jsx",
     "prod": "npm run prod-build && npm run prod-serve",
-    "prod-build": "NODE_ENV=production webpack -p --config webpack.prod.config.js && sass ./styles/_main.scss ./build/main.css",
-    "prod-serve": "node app/server.jsx",
+    "prod-build": "NODE_ENV=production webpack -p --config webpack.prod.config.js && build-css",
+    "prod-serve": "NODE_ENV=production node app/server.jsx",
     "test": "mocha --recursive --compilers js:babel/register",
     "debug-test": "mocha --debug --recursive --compilers js:babel/register",
     "jtest": "jest"

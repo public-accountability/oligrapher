@@ -13,7 +13,8 @@ class GraphContainer extends BaseComponent {
   render(){
     const tags = [
       { property: "og:title", content: this.props.deck.title + " - LittleSis" },
-      { property: "og:image", content: "http://s3.amazonaws.com/pai-littlesis/images/maps/" + this.props.deck.id + ".png" }
+      { property: "og:image", content: "http://s3.amazonaws.com/pai-littlesis/images/maps/" + this.props.deck.id + ".png" },
+      { property: "og:description", content: this.props.graph.display.description }
     ];
 
     const zoomButtons = this.props.graph.isNull() ? null : (

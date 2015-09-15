@@ -24,22 +24,29 @@ var renderDeckAndSlide = function(req, res, id, slide) {
         app.deckActions.selectSlide(id, slide);
 
         var deck = app.deckStore.getDeck(id);
+        var graph = app.graphStore.getGraph(deck.graphIds[slide]).result;
 
         app.renderToString(React.createElement(Root))
           .then(function(render) { 
             res.render('story_map.ejs', { 
               content: render.html,
               title: deck.title,
-              image: "http://s3.amazonaws.com/pai-littlesis/images/maps/" + id + ".png"
+              description: graph.display.description,
+              image: "http://s3.amazonaws.com/pai-littlesis/images/maps/" + id + ".png",
+              env: process.env.NODE_ENV
             });
           });
       })
       .catch(function(error) {
         console.error(error.stack);
-        debugger;
       });    
   } else {
-    res.render('story_map.ejs', { content: null, title: null, image: null });
+    res.render('story_map.ejs', { 
+      content: null, 
+      title: null,
+      description: null, 
+      image: null,
+      env: process.env.NODE_ENV });
   }
 };
 
