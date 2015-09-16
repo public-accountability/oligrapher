@@ -19,8 +19,12 @@ class GraphContainer extends BaseComponent {
 
     const zoomButtons = this.props.graph.isNull() ? null : (
       <div id="zoomButtons">
-        <button id="zoom-in" className="zoomButton" onClick={this._handleZoomIn}>+</button>
-        <button id="zoom-out" className="zoomButton" onClick={this._handleZoomOut}>&ndash;</button>
+        <button id="zoom-in" className="zoomButton" onClick={this._handleZoomIn}>
+          <span className="glyphicon glyphicon-plus"></span>
+        </button>
+        <button id="zoom-out" className="zoomButton" onClick={this._handleZoomOut}>
+          <span className="glyphicon glyphicon-minus"></span>
+        </button>
       </div>
     );
 

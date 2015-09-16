@@ -20,7 +20,7 @@ class DeckNavButtons extends BaseComponent {
           onClick={this._handlePrevSlideClick}>Prev</button>
         <button 
           id="nextSlideButton" 
-          className="btn btn-lg btn-default" 
+          className="btn btn-lg btn-default clickplz" 
           disabled={this.props.isLastSlide ? "disabled" : false} 
           onClick={this._handleNextSlideClick}>Next</button>
       </div>

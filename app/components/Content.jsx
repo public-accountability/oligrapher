@@ -23,30 +23,32 @@ class Content extends BaseComponent {
           empty: <EmptyContent />,
           home: <Welcome />, 
           deck: (
-            <div>
-              <Row id="mainRow">
-                <Col id="graphCol" md={8}>
-                  <DeckTitle />
-                  <DeckNavButtons />
-                  <div className="hidden-sm hidden-xs">
+            <div id="deck">
+              <div className="hidden-sm hidden-xs">
+                <Row id="mainRow">
+                  <Col id="graphCol" md={8}>
+                    <DeckTitle />
                     <GraphContainer />
-                  </div>
-                  <div className="visible-sm visible-xs">
-                    <GraphInfoTitle />
-                    <Nav id="contentTabs" bsStyle='pills' activeKey={this.props.tab} onSelect={this._handleSelect}>
-                      <NavItem eventKey={'graph'} title='Map'>Map</NavItem>
-                      <NavItem eventKey={'info'} title='Info'>Info</NavItem>
-                    </Nav>
-                    { {
-                      graph: <GraphContainer />,
-                      info: <InfoContainer />
-                    }[this.props.tab] }
-                  </div>
-                </Col>
-                <Col md={4} className="hidden-sm hidden-xs">
-                  <InfoContainer />
-                </Col>
-              </Row>
+                  </Col>
+                  <Col id="infoCol" md={4}>
+                    <DeckNavButtons />
+                    <InfoContainer />
+                  </Col>
+                </Row>
+              </div>
+              <div className="visible-sm visible-xs">
+                <DeckTitle />
+                <DeckNavButtons />
+                <GraphInfoTitle />
+                <Nav id="contentTabs" bsStyle='pills' activeKey={this.props.tab} onSelect={this._handleSelect}>
+                  <NavItem eventKey={'graph'} title='Map'>Map</NavItem>
+                  <NavItem eventKey={'info'} title='Info'>Info</NavItem>
+                </Nav>
+                { {
+                  graph: <GraphContainer />,
+                  info: <InfoContainer />
+                }[this.props.tab] }
+              </div>
             </div>
           )
         }[this.props.content] }

@@ -30,7 +30,7 @@ nav.navbar div.container-fluid {
 }
 
 .graphContainer {
-  height: calc(100% - 100px);
+  height: calc(100% - 105px);
   padding-bottom: 1em;
   position: relative;
 }
@@ -56,19 +56,23 @@ nav.navbar div.container-fluid {
   padding-left: 10px;
 }
 
+#infoCol {
+  border-left: 0px solid #eee;  
+}
+
 .infoContainer {
   @media (min-width: 990px) {
-    border-left: 1px solid #eee;
     padding: 1em;
   }
 
-  padding-top: 0.6em;
+  padding-top: 0.6;
 
   .title {
     background-color: white;
 
     h2 {
       margin-top: 0;
+      margin-bottom: 15px;
       font-size: 2em;
     }
   }
@@ -91,26 +95,32 @@ nav.navbar div.container-fluid {
 
 #zoomButtons {
   position: absolute;
-  top: 0px;
+  top: 15px;
+  left: 15px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  padding: 5px;
+  box-shadow: 0 0 5px #f8f8f8;
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
 #zoom-in {
 }
 
 #zoom-out {
+  margin-top: 5px;
 }
 
 .zoomButton {
-  margin-top: 10px;  
-  margin-left: 10px;
   display: block;
   width: 20px;
   height: 20px;
   text-align: center;
-  background-color: #eee;
-  border: 1px solid #ddd;
+  background-color: rgba(0, 0, 0, 0);
+  border: 0px solid #ddd;
   cursor: pointer;
   padding: 0px;
+  color: #666;
 
   &:focus {
     outline: none;
@@ -129,13 +139,44 @@ nav.navbar div.container-fluid {
   display: inline;
 }
 
+.title {
+  .button-col {
+    padding-right: 5px;
+  }
+
+  .title-col {
+    padding: 0;
+  }
+
+  #prevSlideButton, #nextSlideButton {
+    width: 44px;
+    height: 44px;
+    text-align: center;
+    padding: 10px;
+    background-color: #f8f8f8;
+    margin-right: 5px;
+
+    .glyphicon {
+      font-size: 22px;
+      color: #888;
+    }
+  }
+}
+
 #deckNavButtons {
-  position: absolute;
-  top: 5px;
-  right: 10px;
+  margin-top: 5px;
+  margin-bottom: 20px;
 
   button {
     margin-left: 10px;
+    font-size: 24px;
+    font-weight: 200;
+    border: 0px solid #eee;
+    background-color: #eee;
+
+    .glyphicon {
+      color: #888;
+    }
 
     &:disabled {
       color: #ccc;
@@ -145,16 +186,26 @@ nav.navbar div.container-fluid {
   }
 }
 
+:not(#infoCol) > #deckNavButtons {
+  margin-top: 0;
+  position: absolute;
+  top: 7px;
+  right: 10px;  
+}
+
 #deckTitle {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 
   h1 {
     margin-top: 0;  
-    margin-right: 100px;
     font-size: 50px;
     font-weight: 300;
     margin-bottom: 5px;
   }
+}
+
+:not(#graphCol) > #deckTitle h1 {
+  margin-right: 180px;
 }
 
 ::-webkit-scrollbar {
@@ -215,4 +266,31 @@ nav.navbar div.container-fluid {
   position: relative;
   top: 4px;
   margin-right: 5px;
+}
+
+#deck {
+  position: relative;
+}
+
+#svg {
+  border: 1px solid #eee;
+}
+
+.clickplz:enabled:not(:focus) {
+  animation: clickplz 3s;
+  -webkit-animation: clickplz 3s;
+  animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
+
+@keyframes clickplz {
+  0%   { color: #666; background-color:#eee; text-shadow: 0 0 9px rgba(255,255,255,0); }
+  50%  { color: #666; background-color:#ffd; text-shadow: 0 0 9px rgba(255,255,128,0.75); }
+  100% { color: #666; background-color:#eee; text-shadow: 0 0 9px rgba(255,255,255,0); }
+}
+
+@-webkit-keyframes clickplz {
+  0%   { color: #666; background-color:#eee; text-shadow: 0 0 9px rgba(255,255,255,0); }
+  50%  { color: #666; background-color:#ffd; text-shadow: 0 0 9px rgba(255,255,128,0.75); }
+  100% { color: #666; background-color:#eee; text-shadow: 0 0 9px rgba(255,255,255,0); }
 }
