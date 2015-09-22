@@ -11,6 +11,7 @@ const Marty = require('marty');
 const React = require('react');
 const Application = require('./application');
 const Root = require('./components/Root');
+const config = require(__dirname + '/../config.js');
 var app = new Application();
 var striptags = require('striptags');
 
@@ -34,7 +35,8 @@ var renderDeckAndSlide = function(req, res, id, slide) {
               title: deck.title,
               description: striptags(graph.display.description),
               image: "http://s3.amazonaws.com/pai-littlesis/images/maps/" + id + ".png",
-              env: process.env.NODE_ENV
+              env: process.env.NODE_ENV,
+              ga_id: config.googleAnalyticsId
             });
           });
       })
@@ -47,7 +49,9 @@ var renderDeckAndSlide = function(req, res, id, slide) {
       title: null,
       description: null, 
       image: null,
-      env: process.env.NODE_ENV });
+      env: process.env.NODE_ENV,
+      ga_id: config.googleAnalyticsId
+    });
   }
 };
 

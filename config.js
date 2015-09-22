@@ -7,6 +7,7 @@ var config = {
   brandName: "LittleSis",
   brandUrl: "http://littlesis.org",
   brandImageUrl: "http://pai-littlesis.s3.amazonaws.com/images/system/lilsis-logo-trans-200.png",
+  googleAnalyticsId: process.env.GOOGLE_ANALYTICS_ID,
   navLinks: { 
     Oligrapher: "/oligrapher",
     Explore: {
