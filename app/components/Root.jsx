@@ -27,6 +27,22 @@ class Root extends BaseComponent {
     yarr();
   }
 
+  importGraph(specs){
+    const Graph = require('../models/Graph');
+    const Deck = require('../models/Deck');
+    const uuid = require('uuid');
+
+    let graph = new Graph.importGraph(specs);
+    let deck = new Deck({
+      id: "import-" + graph.id,
+      title: graph.display.title,
+      graphIds: [graph.id]
+    });
+    graph.display.title = undefined;
+
+    this.app.deckActions.importDeck(deck, [graph]);
+  }
+
   _defineRoutes(){
     const that = this;
 
@@ -67,7 +83,10 @@ class Root extends BaseComponent {
       }
     });
 
-    yarr('*', function() { })
+    yarr('*', function() { 
+      let testimport = require('../../test/testimport');      
+      that.importGraph(testimport);
+    })
   }
 }
 

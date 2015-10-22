@@ -15,7 +15,7 @@ class GraphStore extends Marty.Store {
 
     this.handlers = {
       moveEdge: GraphConstants.MOVE_EDGE,
-      addGraphsFromDecks: [DeckConstants.FETCH_DECKS_DONE, DeckConstants.FETCH_DECK_DONE],
+      addGraphsFromDecks: [DeckConstants.FETCH_DECKS_DONE, DeckConstants.FETCH_DECK_DONE, DeckConstants.DECK_IMPORTED],
       addNode: GraphConstants.ADD_NODE,
       moveNode: GraphConstants.MOVE_NODE,
       zoom: [GraphConstants.GRAPH_ZOOMED_IN, GraphConstants.GRAPH_ZOOMED_OUT],

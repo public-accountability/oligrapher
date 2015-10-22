@@ -19,7 +19,7 @@ class DeckStore extends Marty.Store {
     };
 
     this.handlers = {
-      addDeck: DeckConstants.FETCH_DECK_DONE,
+      addDeck: [DeckConstants.FETCH_DECK_DONE, DeckConstants.DECK_IMPORTED],
       addDecks: DeckConstants.FETCH_DECKS_DONE,
       setCurrentDeck: DeckConstants.DECK_SELECTED,
       setCurrentSlide: DeckConstants.SLIDE_SELECTED,

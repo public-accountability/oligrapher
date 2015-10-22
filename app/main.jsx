@@ -20,9 +20,11 @@ let rootInstance = React.render((
   </ApplicationContainer>
 ), document.getElementById('content'));
 
+window.oligrapher = rootInstance;
+
 if (module.hot) {
   require('react-hot-loader/Injection').RootInstanceProvider.injectProvider({
-    getRootInstances: () => [rootInstance]
+    getRootInstances: () => [oligrapher]
   });
 }
 

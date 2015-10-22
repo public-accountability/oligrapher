@@ -12,5 +12,6 @@ module.exports = Marty.createConstants([
   'CLOSE_DECK',
   'ZOOMED_IN',
   'ZOOMED_OUT',
-  'FETCH_DECK'
+  'FETCH_DECK',
+  'DECK_IMPORTED'
 ]);

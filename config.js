@@ -2,7 +2,7 @@ var config = {
   baseApiUrlSymf: "http://api.littlesis.org/",
   baseApiUrlRails: "http://littlesis.org/",
   lsApiKey: process.env.LS_API_KEY,
-  externalNodeLinks: true,
+  externalNodeLinks: false,
   basePath: "story_maps",
   brandName: "LittleSis",
   brandUrl: "http://littlesis.org",

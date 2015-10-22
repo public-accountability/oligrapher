@@ -6,6 +6,18 @@ const lsApi = require('../api/lsApi');
 class DeckQueries extends Marty.Queries {
   fetchDeck(id){
     this.dispatch(DeckConstants.FETCH_DECK_STARTING);
+    // return FakeApi.getDeck(id)
+    //   .then(
+    //     res => {
+    //       const [ deck, graphs ] = res;
+    //       this.dispatch(DeckConstants.FETCH_DECK_DONE, { deck: deck, graphs: graphs });
+    //     })
+    //   .catch(
+    //     err => {
+    //       this.dispatch(DeckConstants.FETCH_DECK_FAILED, err);
+    //       throw new Error(err);
+    //     });
+
     return lsApi.getDeck(id)
       .then(
         res => {

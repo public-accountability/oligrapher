@@ -8,8 +8,8 @@ class Deck {
     this.title = specs.title || 'empty deck';
     this.description = specs.description;
     this.graphIds = specs.graphIds || [];
-    this.author = specs.author || {};
-    this.date = specs.date || 'no date';
+    this.author = specs.author || null;
+    this.date = specs.date || null;
     this.source = specs.source || {};
   }
 

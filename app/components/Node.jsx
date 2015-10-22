@@ -36,7 +36,6 @@ class Node extends BaseComponent {
   }
 
   _getSvgParams(node) {
-
     let n = node;
     let r = ds.circleRadius * n.display.scale;
     let textOffsetY = ds.textMarginTop + r;
@@ -94,7 +93,7 @@ class Node extends BaseComponent {
                        </image>` };
 
     const circle =
-      n.content.entity.type == "Person" && n.display.image ?
+      n.display.image ?
         <g dangerouslySetInnerHTML={innerHTML} /> :
         <circle className="handle"
                 r={r}

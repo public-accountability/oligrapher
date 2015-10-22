@@ -68,6 +68,17 @@ exp.get(/\/story_maps\/(\d+).*/, function (req, res) {
   renderDeckAndSlide(req, res, id, 0);
 });
 
+exp.get(/\/test/, function(req, res) {
+  res.render('story_map.ejs', { 
+    content: null, 
+    title: null,
+    description: null, 
+    image: null,
+    env: process.env.NODE_ENV,
+    ga_id: config.googleAnalyticsId
+  });  
+});
+
 var server = exp.listen(8080, function () {
   var host = server.address().address;
   var port = server.address().port;

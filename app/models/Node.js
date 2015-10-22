@@ -5,7 +5,9 @@ var defaults =  {
   display: {
     x: 100,
     y: 100,
-    name: 'Node'
+    name: 'Node',
+    scale: 1,
+    status: "normal"
   }
 };
 

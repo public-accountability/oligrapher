@@ -121,6 +121,67 @@ class Graph {
     return _.find(_.values(this.nodes), n => n.content.entity.id === id);
   }
 
+  static importGraph(specs){
+    return new Graph({})
+      ._importBase(specs)
+      .importNodes(specs.nodes)
+      .importEdges(specs.edges)
+      .positionNodes()
+      .positionEdges();
+  }
+
+  importNodes(nodes) {
+    nodes.map(
+      n => this.addNode(new Node(n))
+    );
+
+    return this;
+  }
+
+  importEdges(edges) {
+    edges.map(e => {
+      this.connectNodes(
+        e.n1,
+        e.n2,
+        e
+      );
+
+    });
+
+    return this;
+  }
+
+  // arranges nodes in circle around origin
+  positionNodes() {
+    let ary = _.values(this.nodes);
+    let radius = Math.pow(ary.length * 100, 0.85);
+
+    ary.forEach((node, i) => {
+      let angle = (2 * Math.PI) * (i / ary.length);
+      node.display.x = Math.cos(angle) * radius;
+      node.display.y = Math.sin(angle) * radius;
+      // this.nodes[key].display.x = Math.round(Math.random() * 500) - 250;
+      // this.nodes[key].display.y = Math.round(Math.random() * 500) - 250;
+    });
+
+    return this;
+  }
+
+  positionEdges() {
+    Object.keys(this.edges).map(key => {
+      let edge = this.edges[key];
+
+      edge.display.xa = edge.n1.display.x;
+      edge.display.ya = edge.n1.display.y;
+      edge.display.xb = edge.n2.display.x;
+      edge.display.yb = edge.n2.display.y;
+      edge.display.cx = (edge.n1.display.x + edge.n2.display.x) / 2;
+      edge.display.cy = (edge.n1.display.y + edge.n2.display.y) / 2;
+    });
+
+    return this;
+  }
+
   static parseApiGraph(specs){
     return new Graph({})
       ._importBase(specs)

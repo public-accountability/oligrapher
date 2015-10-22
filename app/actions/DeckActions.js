@@ -20,6 +20,10 @@ class DeckActions extends Marty.ActionCreators {
   zoomOut(scale){
     this.dispatch(DeckConstants.ZOOMED_OUT, scale);
   }
+  importDeck(deck, graphs){
+    this.dispatch(DeckConstants.DECK_IMPORTED, { deck: deck, graphs: graphs });
+    this.dispatch(DeckConstants.DECK_SELECTED, deck.id);
+  }
 }
 
 module.exports = DeckActions;

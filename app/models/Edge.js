@@ -1,5 +1,14 @@
 const NodeDisplaySettings = require('../NodeDisplaySettings');
 const helpers = require('./helpers/GraphHelpers');
+const _ = require('lodash');
+
+var defaults =  {
+  display: {
+    label: 'Edge',
+    scale: 1,
+    status: "normal"
+  }
+};
 
 class Edge {
   //constructor(EdgeSpecs) -> Edge
@@ -8,7 +17,7 @@ class Edge {
     this.n1 = specs.n1;
     this.n2 = specs.n2;
     this.content = specs.content || {};
-    this.display = specs.display || {};
+    this.display = _.merge({}, defaults.display, specs.display);
   }
 
   updatePosition(){
