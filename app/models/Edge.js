@@ -20,6 +20,10 @@ class Edge {
     this.display = _.merge({}, defaults.display, specs.display);
   }
 
+  hasCurve(){
+    return this.display && this.display.x && this.display.y;
+  }
+
   updatePosition(){
     let x1 = this.n1.display.x;
     let y1 = this.n1.display.y;

@@ -11,26 +11,22 @@ const app = new Application();
 const { ApplicationContainer } = require('marty');
 
 var main = {
-  run: function(data = null) {
-
+  run: function(deckData = null) {
     let rootInstance = React.render((
       <ApplicationContainer app={app}>
-        <Root data={data} />
+        <Root data={deckData} />
       </ApplicationContainer>
     ), document.getElementById('story-map'));
-
-    window.oligrapher = rootInstance;
 
     if (module.hot) {
       require('react-hot-loader/Injection').RootInstanceProvider.injectProvider({
         getRootInstances: () => [oligrapher]
       });
     }
-
   }
 }
 
-window.main = main;
+window.Oligrapher = main;
 
 export default main;
 

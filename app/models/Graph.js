@@ -122,13 +122,12 @@ class Graph {
   }
 
   static importGraph(specs){
-    console.log(specs);
     return new Graph({})
       ._importBase(specs)
       .importNodes(specs.nodes)
       .importEdges(specs.edges)
       .positionNodes()
-      .positionEdges();
+      ._convertCurves();
   }
 
   importNodes(nodes) {
@@ -152,9 +151,9 @@ class Graph {
     return this;
   }
 
-  // arranges nodes in circle around origin
+  // arranges nodes without layout in circle around origin
   positionNodes() {
-    let ary = _.values(this.nodes);
+    let ary = _.values(this.nodes).filter(n => !n.hasPosition());
     let radius = Math.pow(ary.length * 100, 0.85);
 
     ary.forEach((node, i) => {
@@ -169,7 +168,7 @@ class Graph {
   }
 
   positionEdges() {
-    Object.keys(this.edges).map(key => {
+    Object.keys(this.edges).filter(edge => !edge.hasCurve()).map(key => {
       let edge = this.edges[key];
 
       edge.display.xa = edge.n1.display.x;
@@ -177,7 +176,7 @@ class Graph {
       edge.display.xb = edge.n2.display.x;
       edge.display.yb = edge.n2.display.y;
       edge.display.cx = (edge.n1.display.x + edge.n2.display.x) / 2;
-      edge.display.cy = (edge.n1.display.y + edge.n2.display.y) / 2;
+      edge.display.cy = (edge.n1.display.y + edge.n2.display.y) / 2;        
     });
 
     return this;

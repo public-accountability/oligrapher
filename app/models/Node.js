@@ -20,6 +20,10 @@ class Node {
     this.display = _.merge({}, defaults.display, specs.display);
     this.sourceUrl = specs.sourceUrl;
   }
+
+  hasPosition() {
+    return this.display && this.display.x && this.display.y;
+  }
 }
 
 module.exports = Node;
