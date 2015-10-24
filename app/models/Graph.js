@@ -122,6 +122,7 @@ class Graph {
   }
 
   static importGraph(specs){
+    console.log(specs);
     return new Graph({})
       ._importBase(specs)
       .importNodes(specs.nodes)

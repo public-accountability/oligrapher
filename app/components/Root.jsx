@@ -1,4 +1,3 @@
-const React = require('react');
 const Marty = require('marty');
 const BaseComponent = require('./BaseComponent');
 const Header = require('./Header');
@@ -23,14 +22,31 @@ class Root extends BaseComponent {
   }
 
   componentDidMount(){
-    this._defineRoutes();
-    yarr();
+    if (this.props.data) {
+      this.importDeck(data);
+    } else {
+      this._defineRoutes();
+      yarr();
+    }
+  }
+
+  importDeck(specs){
+    const Graph = require('../models/Graph');
+    const Deck = require('../models/Deck');
+
+    let graphs = specs.graphs.map(graph => Graph.importGraph(graph));
+    let deck = new Deck({
+      id: specs.id,
+      title: specs.title,
+      graphIds: graphs.map(graph => graph.id)
+    });
+
+    this.app.deckActions.importDeck(deck, graphs);
   }
 
   importGraph(specs){
     const Graph = require('../models/Graph');
     const Deck = require('../models/Deck');
-    const uuid = require('uuid');
 
     let graph = new Graph.importGraph(specs);
     let deck = new Deck({

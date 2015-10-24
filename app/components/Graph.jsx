@@ -7,13 +7,9 @@ const Draggable = require('react-draggable');
 const _ = require('lodash');
 
 class Graph extends BaseComponent {
-  constructor() {
-    super();
-  }
-
   render() {
-    const sp = this._getSvgParams(this.props.graph);
-    const viewBox = this.props.prevGraph ? this._computeViewbox(this.props.prevGraph, this.props.shrinkFactor) : sp.viewBox;
+    let sp = this._getSvgParams(this.props.graph);
+    let viewBox = this.props.prevGraph ? this._computeViewbox(this.props.prevGraph, this.props.shrinkFactor) : sp.viewBox;
 
     return (
       <svg id="svg" version="1.1" xmlns="http://www.w3.org/2000/svg" className="Graph" width="100%" viewBox={viewBox} preserveAspectRatio="xMidYMin">
@@ -47,7 +43,7 @@ class Graph extends BaseComponent {
   }
 
   _setSVGHeight() {
-    const height = document.getElementById("mainContainer").clientHeight - 120;
+    let height = document.getElementById("mainContainer").clientHeight - 120;
     React.findDOMNode(this).setAttribute("height", height);    
   }
 
@@ -55,10 +51,10 @@ class Graph extends BaseComponent {
     this._resetZoomState();
 
     if (!this._isSmallDevice() && this.props.prevGraph !== undefined) {
-      const oldViewbox = this._computeViewbox(this.props.prevGraph).split(" ").map(function(part) { return parseInt(part); });
-      const newViewbox = this._computeViewbox(this.props.graph).split(" ").map(function(part) { return parseInt(part); });
-      const start = this._now();
-      const that = this;
+      let oldViewbox = this._computeViewbox(this.props.prevGraph).split(" ").map(function(part) { return parseInt(part); });
+      let newViewbox = this._computeViewbox(this.props.graph).split(" ").map(function(part) { return parseInt(part); });
+      let start = this._now();
+      let that = this;
 
       let req;
 
@@ -112,12 +108,12 @@ class Graph extends BaseComponent {
   }
 
   _computeViewbox(graph, shrinkFactor = 1.2) {
-    const highlightedOnly = true;
-    const rect = graph.computeViewbox(highlightedOnly);
-    const w = Math.max(rect.w * shrinkFactor, 600);
-    const h = Math.max(rect.h * shrinkFactor, 400);
-    const x = rect.x + rect.w/2 - (w/2);
-    const y = rect.y + rect.h/2 - (h/2);
+    let highlightedOnly = true;
+    let rect = graph.computeViewbox(highlightedOnly);
+    let w = Math.max(rect.w * shrinkFactor, 600);
+    let h = Math.max(rect.h * shrinkFactor, 400);
+    let x = rect.x + rect.w/2 - (w/2);
+    let y = rect.y + rect.h/2 - (h/2);
 
     return `${x} ${y} ${w} ${h}`;
   }

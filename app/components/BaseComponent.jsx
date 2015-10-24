@@ -1,4 +1,4 @@
-var React = require('react');
+import React from 'react';
 
 class BaseComponent extends React.Component {
   bindAll(...methods) {
