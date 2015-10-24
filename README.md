@@ -1,2 +1,11 @@
-# show-me-the-money
-toy project for learning react to explore the littlsis dataset via its api
+# Oligrapher 2
+React app for displaying annotated network graphs from the LittleSis API and other data sources
+
+Install
+-------
+```npm install```
+
+
+Run
+---
+```npm run dev``` then visit http://localhost:8080
