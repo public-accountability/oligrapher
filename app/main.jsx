@@ -1,26 +1,25 @@
-const Marty = require('marty');
-//const ApplicationContainer = Marty.ApplicationContainer;
-const Root = require('./components/Root');
-const React = require('react');
-const Application = require('./application');
-
-window.React = React;
-window.Marty = Marty;
-
-const app = new Application();
-const { ApplicationContainer } = require('marty');
+import React from 'react';
+import { render } from 'react-dom';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+import Root from './components/Root';
+import oligrapherApp from './reducers';
 
 var main = {
-  run: function(deckData = null) {
-    let rootInstance = React.render((
-      <ApplicationContainer app={app}>
-        <Root data={deckData} />
-      </ApplicationContainer>
-    ), document.getElementById('story-map'));
+  run: function(graphData = null) {
+    let store = createStore(oligrapherApp);
+    let rootElement = document.getElementById('oligrapher');
+
+    let rootInstance = render(
+      <Provider store={store}>
+        <Root data={graphData} />
+      </Provider>,
+      rootElement
+    );
 
     if (module.hot) {
       require('react-hot-loader/Injection').RootInstanceProvider.injectProvider({
-        getRootInstances: () => [oligrapher]
+        getRootInstances: () => [rootInstance]
       });
     }
   }

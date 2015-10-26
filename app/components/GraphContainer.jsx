@@ -1,9 +1,8 @@
-import Marty from 'marty';
-import BaseComponent from './BaseComponent';
+import React, { Component, PropTypes } from 'react';
 import GraphZoomButtons from './GraphZoomButtons';
 import Graph from './Graph';
 
-class GraphContainer extends BaseComponent {
+export default class GraphContainer extends Component {
   render(){
     return (
       <div className="graphContainer">
@@ -14,11 +13,4 @@ class GraphContainer extends BaseComponent {
   }
 }
 
-module.exports = Marty.createContainer(GraphContainer, {
-  listenTo: ['deckStore'],
-  fetch: {
-    graph() {
-      return this.app.graphStore.getGraph(this.app.deckStore.getCurrentGraphId());
-    }
-  }
-});
+

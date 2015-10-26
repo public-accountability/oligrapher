@@ -1,109 +1,40 @@
-const Marty = require('marty');
-const BaseComponent = require('./BaseComponent');
-const Header = require('./Header');
-const Content = require('./Content');
-const Footer = require('./Footer');
-const { Grid } = require('react-bootstrap');
-const yarr = require('yarr.js');
-const RoutesHelper = require('../routes/RoutesHelper');
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { loadGraph, showGraph, zoomIn, zoomOut, resetZoom, moveNode } from '../actions';
+import Graph from './Graph';
+import GraphZoomButtons from './GraphZoomButtons';
 
-class Root extends BaseComponent {
-  constructor(){
-    super();
-  }
-
+class Root extends Component {
   render() {
-    return (
-      <Grid className="root" fluid={true}>
-        <Header />
-        <Content />
-      </Grid>
-    );
+    const { dispatch } = this.props;
+    return this.props.graph ? (
+      <div id="graphContainer">
+        <GraphZoomButtons zoomIn={() => dispatch(zoomIn())} zoomOut={() => dispatch(zoomOut())} />
+        <Graph 
+          graph={this.props.graph} 
+          zoom={this.props.zoom} 
+          prevGraph={this.props.prevGraph} 
+          resetZoom={() => dispatch(resetZoom())} 
+          moveNode={(graphId, nodeId, x, y) => dispatch(moveNode(graphId, nodeId, x, y))} />
+      </div>
+    ) : (<div id="graphContainer"></div>);
   }
 
   componentDidMount(){
     if (this.props.data) {
-      this.importDeck(data);
-    } else {
-      this._defineRoutes();
-      yarr();
+      const { dispatch } = this.props;
+      dispatch(loadGraph(this.props.data));
+      dispatch(showGraph(this.props.data.id));
     }
-  }
-
-  importDeck(specs){
-    const Graph = require('../models/Graph');
-    const Deck = require('../models/Deck');
-
-    let graphs = specs.graphs.map(graph => Graph.importGraph(graph));
-    let deck = new Deck({
-      id: specs.id,
-      title: specs.title,
-      graphIds: graphs.map(graph => graph.id)
-    });
-
-    this.app.deckActions.importDeck(deck, graphs);
-  }
-
-  importGraph(specs){
-    const Graph = require('../models/Graph');
-    const Deck = require('../models/Deck');
-
-    let graph = new Graph.importGraph(specs);
-    let deck = new Deck({
-      id: "import-" + graph.id,
-      title: graph.display.title,
-      graphIds: [graph.id]
-    });
-    graph.display.title = undefined;
-
-    this.app.deckActions.importDeck(deck, [graph]);
-  }
-
-  _defineRoutes(){
-    const that = this;
-
-    yarr('/', function(ctx) {
-      that.app.contentActions.showHome();
-    });
-
-    yarr(`/${RoutesHelper.mapBasePath()}/:id`, function(ctx) {
-      const match = ctx.params.id.match(/^\d+/);
-      
-      if (match) {
-        const id = parseInt(match[0]);
-        if (that.app.deckStore.getDeck(id)) {
-          that.app.deckActions.selectSlide(id, 0);
-        } else {
-          that.app.deckQueries.fetchDeck(id)
-            .then(res => {
-              that.app.deckActions.selectSlide(id, 0);
-            });
-        }
-      }
-    });
-
-    yarr(`/${RoutesHelper.mapBasePath()}/:id/:slide`, function(ctx) {
-      const match = ctx.params.id.match(/^\d+/);
-
-      if (match) {
-        const id = parseInt(match[0]);
-
-        if (that.app.deckStore.getDeck(id)) {
-          that.app.deckActions.selectSlide(id, parseInt(ctx.params.slide));
-        } else {
-          that.app.deckQueries.fetchDeck(id)
-            .then(res => {
-              that.app.deckActions.selectSlide(id, parseInt(ctx.params.slide));
-            });
-        }
-      }
-    });
-
-    yarr('*', function() { 
-      let testimport = require('../../test/testimport');      
-      that.importGraph(testimport);
-    })
   }
 }
 
-module.exports = Marty.createContainer(Root);
+function select(state) {
+  return {
+    graph: state.graphs.find(graph => graph.id == state.position.currentId),
+    prevGraph: state.graphs.find(graph => graph.id == state.position.prevId),
+    zoom: state.zoom
+  };
+}
+
+export default connect(select)(Root);

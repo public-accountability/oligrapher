@@ -7,7 +7,8 @@ var LsDataConverter = {
           name: e.name,
           x: e.x,
           y: e.y,
-          scale: e.scale
+          scale: e.scale ? e.scale : 1,
+          status: e.status ? e.status : "normal"
         }
       };
     });
@@ -15,15 +16,16 @@ var LsDataConverter = {
     var edges = data.rels.map(function(r) {
       return {
         id: r.id,
-        n1: r.entity1_id,
-        n2: r.entity2_id,
+        node1_id: r.entity1_id,
+        node2_id: r.entity2_id,
         display: { 
           label: r.label,
           cx: r.x1,
           cy: r.y1,
-          scale: r.scale,
+          scale: r.scale ? r.scale : 1,
           is_directional: r.is_directional === true,
-          is_current: r.is_current === true
+          is_current: r.is_current === true,
+          status: r.status ? r.status : "normal"
         }
       }
     });
@@ -32,7 +34,8 @@ var LsDataConverter = {
       id: data.id,
       title: data.title,
       nodes: nodes,
-      edges: edges
+      edges: edges,
+      captions: []
     };
   },
 

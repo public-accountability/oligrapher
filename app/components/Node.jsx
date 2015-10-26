@@ -1,38 +1,33 @@
-const React = require('react');
-const BaseComponent = require('./BaseComponent');
-const Draggable = require('react-draggable');
-const Marty = require('marty');
+import React, { Component, PropTypes } from 'react';
 const ds = require('../NodeDisplaySettings');
 const config = require('../../config');
+const Draggable = require('react-draggable');
 
-class Node extends BaseComponent {
-  constructor(){
-    super();
-    this.displayName = "Node";
-    this.bindAll('_handleDrag', '_handleClick');
-  }
-
+export default class Node extends Component {
   render() {
     const n = this.props.node;
     const sp = this._getSvgParams(n);
 
+    let that = this;
+    let handleDrag = function(e, ui) {
+      that.props.moveNode(that.props.graphId, that.props.node.id, ui.position.left, ui.position.top);
+    };
+
     return (
-      <g id={sp.groupId} transform={sp.transform}>
-        {sp.bgCircle}
-        {sp.circle}
-        {sp.rects}
-        {sp.tspans}
-      </g>
+      <Draggable
+        handle=".handle"
+        start={{x: this.props.node.display.x, y: this.props.node.display.y}}
+        moveOnStartChange={false}
+        zIndex={100}
+        onDrag={handleDrag}>
+        <g id={sp.groupId} transform={sp.transform}>
+          {sp.bgCircle}
+          {sp.circle}
+          {sp.rects}
+          {sp.tspans}
+        </g>
+      </Draggable>
     );
-  }
-
-  _handleDrag(e, ui) {
-    this.app.graphActions.moveNode(this.props.node.id, ui.position);
-  }
-
-  _handleClick(node){
-    //TODO -- add conditional handling
-    this.app.graphActions.clickNode(this.props.node.id);
   }
 
   _getSvgParams(node) {
@@ -151,5 +146,3 @@ class Node extends BaseComponent {
     return lines;
   }
 }
-
-module.exports = Marty.createContainer(Node);

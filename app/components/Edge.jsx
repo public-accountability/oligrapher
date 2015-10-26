@@ -1,16 +1,7 @@
-const React = require('react');
-const BaseComponent = require('./BaseComponent');
-const Draggable = require('react-draggable');
-const Marty = require('marty');
+import React, { Component, PropTypes } from 'react';
 const ds = require('../EdgeDisplaySettings');
 
-class Edge extends BaseComponent {
-  constructor(){
-    super();
-    this.displayName = "Edge";
-    this.bindAll('_handleStart', '_handleDrag');
-  }
-
+export default class Edge extends Component {
   render() {
     let e = this.props.edge;
     let sp = this._getSvgParams(e);
@@ -47,7 +38,7 @@ class Edge extends BaseComponent {
     const fontSize = 10 * Math.sqrt(e.display.scale);
 
     return {
-      curve: `M ${e.display.xa}, ${e.display.ya} Q ${e.display.cx}, ${e.display.cy}, ${e.display.xb}, ${e.display.yb}`,
+      curve: `M ${e.display.xa}, ${e.display.ya} Q ${e.display.x + e.display.cx}, ${e.display.y + e.display.cy}, ${e.display.xb}, ${e.display.yb}`,
       groupId: `edge-${e.id}`,
       pathId: pathId,
       dash: e.display.dash ? "5, 2" : "",
@@ -63,5 +54,3 @@ class Edge extends BaseComponent {
     };
   }
 }
-
-module.exports = Marty.createContainer(Edge);

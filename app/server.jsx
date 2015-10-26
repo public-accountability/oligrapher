@@ -7,12 +7,14 @@ exp.use(express.static('build'));
 exp.set('views', __dirname + '/views');
 exp.set('view engine', 'ejs');  
 
-const Marty = require('marty');
 const React = require('react');
-const Application = require('./application');
+const render = require('react-dom').render;
+const createStore = require('redux').createStore;
+const Provider = require('react-redux').Provider;
 const Root = require('./components/Root');
-const config = require(__dirname + '/../config.js');
-var app = new Application();
+const oligrapherApp = require('./reducers');
+const renderToString = require('react-dom/server').renderToString;
+var config = require('../config');
 var striptags = require('striptags');
 
 var isBot = function(req) {

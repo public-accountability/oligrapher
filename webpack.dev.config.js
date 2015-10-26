@@ -4,7 +4,6 @@ var node_modules = path.resolve(__dirname, 'node_modules/');
 
 var deps = [
   'react/dist/react-with-addons.js',
-  'marty/dist/marty.min.js',
   'immutable/dist/immutable.min.js',
   'jquery/dist/jquery.min.js',
   'lodash/index.js'
@@ -19,7 +18,6 @@ var config = {
     ],
     vendors: [
       'react',
-      'marty',
       'immutable',
       'jquery',
       'lodash'
