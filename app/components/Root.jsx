@@ -15,6 +15,7 @@ class Root extends Component {
           zoom={this.props.zoom} 
           prevGraph={this.props.prevGraph} 
           resetZoom={() => dispatch(resetZoom())} 
+          clickNode={() => null}
           moveNode={(graphId, nodeId, x, y) => dispatch(moveNode(graphId, nodeId, x, y))} />
       </div>
     ) : (<div id="graphContainer"></div>);

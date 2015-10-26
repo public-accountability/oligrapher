@@ -45,7 +45,7 @@ export default class Graph extends Component {
     }
 
     if (container) {
-      let height = container.clientHeight - 120;
+      let height = container.clientHeight; // - 120;
       ReactDOM.findDOMNode(this).setAttribute("height", height);
     }
   }
@@ -100,7 +100,7 @@ export default class Graph extends Component {
     let that = this;
     return {
       edges: _.values(graph.edges).map((e, i) => <Edge key={i} edge={e} />),
-      nodes: _.values(graph.nodes).map((n, i) => <Node key={i} node={n} graphId={this.props.graph.id} moveNode={that.props.moveNode} />),
+      nodes: _.values(graph.nodes).map((n, i) => <Node key={i} node={n} graphId={this.props.graph.id} clickNode={that.props.clickNode} moveNode={that.props.moveNode} />),
       markers: `<marker id="marker1" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L10,0L0,5" fill="#999"></path></marker><marker id="marker2" viewBox="-10 -5 10 10" refX="-8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L-10,0L0,5" fill="#999"></path></marker><marker id="fadedmarker1" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L10,0L0,5"></path></marker>`,
       viewBox: this._computeViewbox(graph, this.props.zoom),
       captions: _.values(this.props.graph.captions || []).map((c, index) => <text key={index} x={c.x} y={c.y}>{c.text}</text>)
@@ -122,13 +122,13 @@ export default class Graph extends Component {
     const nodes = _.values(graph.nodes)
       .filter(n => !highlightedOnly || n.display.status != "faded")
       .map(n => ({ x: n.display.x, y: n.display.y }));
-    // const edges = graph.edges.toArray()
+    // const edges = _.values(graph.edges)
     //   .filter(e => e.display.status != "faded")
     //   .map(e => ({ x: e.display.cx, y: e.display.cy }));
     const items = nodes;
 
     if (items.length > 0) {
-      const padding = highlightedOnly ? 50 : 0;
+      const padding = highlightedOnly ? 100 : 100;
       const xs = items.map(i => i.x);
       const ys = items.map(i => i.y);
       const textPadding = 50; // node text might extend below node

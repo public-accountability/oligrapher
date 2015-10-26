@@ -35,9 +35,9 @@ export default class Node extends Component {
     let r = ds.circleRadius * n.display.scale;
     let textOffsetY = ds.textMarginTop + r;
     let textLines = this._textLines(n.display.name);
-    const linkAttributes = `xlink:href="${this.props.node.sourceUrl}" target="_blank"`;
+    let linkAttributes = `xlink:href="${node.display.url}" target="_blank"`;
     
-    let tspans = config.externalNodeLinks ?
+    let tspans = node.display.url ?
       <g dangerouslySetInnerHTML={ { __html: (`<a class="nodeLabel" ${linkAttributes}><text text-anchor="middle">` + 
           textLines.map((line, i) => {
              let dy = (i == 0 ? textOffsetY : ds.lineHeight);
@@ -45,7 +45,7 @@ export default class Node extends Component {
            }) + `</text></a>`)
       } } /> 
       : 
-      (<a className="nodeLabel" onClick={this._handleClick}><text textAnchor="middle">
+      (<a className="nodeLabel" onClick={this.props.clickNode}><text textAnchor="middle">
         { textLines.map(
            (line, i) => {
              let dy = (i == 0 ? textOffsetY : ds.lineHeight);

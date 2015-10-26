@@ -8,7 +8,8 @@ var LsDataConverter = {
           x: e.x,
           y: e.y,
           scale: e.scale ? e.scale : 1,
-          status: e.status ? e.status : "normal"
+          status: e.status ? e.status : "normal",
+          url: null // e.url.match(/littlesis\.org/) ? e.url : "//littlesis.org" + e.url
         }
       };
     });
