@@ -6,7 +6,7 @@ module.exports = {
   imageScale: 3,
   cornerRadius: 5,
   circleColor: {
-    normal: "#7bc7f2",
+    normal: "#ccc",
     highlighted: "#7bc7f2",
     faded: "#eee"
   },

@@ -28,6 +28,11 @@ export default class Graph extends Component {
     );
   }
 
+  componentWillMount() {
+    this.nodes = {};
+    this.edges = {};
+  }
+
   componentDidMount() {
     document.getElementById("svg").setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
     this._setSVGHeight();
@@ -99,11 +104,11 @@ export default class Graph extends Component {
   _getSvgParams(graph) {
     let that = this;
     return {
-      edges: _.values(graph.edges).map((e, i) => <Edge key={i} edge={e} />),
-      nodes: _.values(graph.nodes).map((n, i) => <Node key={i} node={n} graphId={this.props.graph.id} clickNode={that.props.clickNode} moveNode={that.props.moveNode} />),
+      edges: _.values(graph.edges).map((e, i) => <Edge ref={(c) => this.edges[e.id] = c} key={i} edge={e} graphId={this.props.graph.id} moveEdge={this.props.moveEdge} />),
+      nodes:  _.values(graph.nodes).map((n, i) => <Node ref={(c) => this.nodes[n.id] = c} key={i} node={n} graphId={this.props.graph.id} clickNode={that.props.clickNode} moveNode={that.props.moveNode} />),
       markers: `<marker id="marker1" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L10,0L0,5" fill="#999"></path></marker><marker id="marker2" viewBox="-10 -5 10 10" refX="-8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L-10,0L0,5" fill="#999"></path></marker><marker id="fadedmarker1" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L10,0L0,5"></path></marker>`,
       viewBox: this._computeViewbox(graph, this.props.zoom),
-      captions: _.values(this.props.graph.captions || []).map((c, index) => <text key={index} x={c.x} y={c.y}>{c.text}</text>)
+      captions: _.values(graph.captions).map((c, index) => <text key={index} x={c.x} y={c.y}>{c.text}</text>)
     };
   }
 
@@ -121,7 +126,7 @@ export default class Graph extends Component {
   _computeRect(graph, highlightedOnly = true) {
     const nodes = _.values(graph.nodes)
       .filter(n => !highlightedOnly || n.display.status != "faded")
-      .map(n => ({ x: n.display.x, y: n.display.y }));
+      .map(n => n.display);
     // const edges = _.values(graph.edges)
     //   .filter(e => e.display.status != "faded")
     //   .map(e => ({ x: e.display.cx, y: e.display.cy }));

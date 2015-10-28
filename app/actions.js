@@ -8,16 +8,19 @@ export const ZOOM_IN = 'ZOOM_IN';
 export const ZOOM_OUT = 'ZOOM_OUT';
 export const RESET_ZOOM = 'RESET_ZOOM';
 export const MOVE_NODE = 'MOVE_NODE';
+export const MOVE_EDGE = 'MOVE_EDGE';
 
 /*
  * action creators
  */
 
 export function loadGraph(graph) {
+  console.log(LOAD_GRAPH);
   return { type: LOAD_GRAPH, graph };
 }
 
 export function showGraph(id) {
+  console.log(SHOW_GRAPH);
   return { type: SHOW_GRAPH, id };
 }
 
@@ -34,5 +37,9 @@ export function resetZoom() {
 }
 
 export function moveNode(graphId, nodeId, x, y) {
-  return { type: MOVE_NODE, graphId, nodeId, x: x, y: y };
+  return { type: MOVE_NODE, graphId, nodeId, x, y };
+}
+
+export function moveEdge(graphId, edgeId, cx, cy) {
+  return { type: MOVE_EDGE, graphId, edgeId, cx, cy };
 }

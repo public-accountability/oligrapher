@@ -1,7 +1,13 @@
 var LsDataConverter = {
+  convertUrl: function(url) {
+    return url ? (url.match(/littlesis\.org/) ? url : "//littlesis.org" + url) : null;
+  },
+
   convertMapData: function(data) {
-    var nodes =  data.entities.map(function(e) {
-      return {
+    var that = this;
+
+    var nodes =  data.entities.reduce(function(result, e) {
+      result[e.id] = {
         id: e.id,
         display: { 
           name: e.name,
@@ -9,13 +15,16 @@ var LsDataConverter = {
           y: e.y,
           scale: e.scale ? e.scale : 1,
           status: e.status ? e.status : "normal",
-          url: null // e.url.match(/littlesis\.org/) ? e.url : "//littlesis.org" + e.url
+          image: e.image,
+          url: that.convertUrl(e.url)
         }
       };
-    });
 
-    var edges = data.rels.map(function(r) {
-      return {
+      return result;
+    }, {});
+
+    var edges = data.rels.reduce(function(result, r) {
+      result[r.id] = {
         id: r.id,
         node1_id: r.entity1_id,
         node2_id: r.entity2_id,
@@ -26,17 +35,20 @@ var LsDataConverter = {
           scale: r.scale ? r.scale : 1,
           is_directional: r.is_directional === true,
           is_current: r.is_current === true,
-          status: r.status ? r.status : "normal"
+          status: r.status ? r.status : "normal",
+          url: that.convertUrl(r.url)
         }
-      }
-    });
+      };
+
+      return result;
+    }, {});
 
     return {
       id: data.id,
       title: data.title,
       nodes: nodes,
       edges: edges,
-      captions: []
+      captions: {}
     };
   },
 

@@ -1,56 +1,105 @@
 import React, { Component, PropTypes } from 'react';
+import BaseComponent from './BaseComponent';
+import { DraggableCore } from 'react-draggable';
+
 const ds = require('../EdgeDisplaySettings');
 
-export default class Edge extends Component {
+export default class Edge extends BaseComponent {
+  constructor(props) {
+    super(props);
+    this.bindAll('_handleDragStart', '_handleDrag', '_handleTextClick');
+  }
+
   render() {
     let e = this.props.edge;
     let sp = this._getSvgParams(e);
+    let scale  = e.display.scale;
 
     return (
-      <g id={sp.groupId} className="edge">
-        <path className="handle edge-background" d={sp.curve} stroke={sp.bgColor} strokeOpacity={sp.bgOpacity} strokeWidth={e.display.scale + 5} fill="none"></path>
-        <path id={sp.pathId} className="edge-line" d={sp.curve} stroke={sp.lineColor} strokeDasharray={sp.dash} strokeWidth={e.display.scale} fill="none" markerStart={sp.markerStart} markerEnd={sp.markerEnd}></path>
-        <text dy={sp.dy} fill={sp.textColor} textAnchor="middle" dangerouslySetInnerHTML={sp.textPath}></text>
-      </g>
+      <DraggableCore
+        ref={(c) => this.draggable = c}
+        handle=".handle"
+        moveOnStartChange={false}
+        onStart={this._handleDragStart}
+        onDrag={this._handleDrag}>      
+        <g id={sp.groupId} className="edge">
+          <path 
+            className="edge-background" 
+            d={sp.curve} 
+            stroke={sp.bgColor} 
+            strokeOpacity={sp.bgOpacity} 
+            strokeWidth={scale + 5} 
+            fill="none"></path>
+          <path 
+            id={sp.pathId} 
+            className="edge-line" 
+            d={sp.curve} 
+            stroke={sp.lineColor} 
+            strokeDasharray={sp.dash} 
+            strokeWidth={scale} 
+            fill="none" 
+            markerStart={sp.markerStart} 
+            markerEnd={sp.markerEnd}></path>
+          <text 
+            className={e.display.url ? "link" : null}
+            dy={sp.dy} 
+            fill={sp.textColor} 
+            textAnchor="middle" 
+            onClick={this._handleTextClick}
+            dangerouslySetInnerHTML={sp.textPath}></text>
+          <path 
+            className="handle edge-handle" 
+            d={sp.curve} 
+            stroke={sp.bgColor} 
+            strokeOpacity={sp.bgOpacity} 
+            strokeWidth={scale + 20} 
+            fill="none"></path>
+        </g>
+      </DraggableCore>
     );
   }
 
-  _handleStart(event, ui) {
-    // subtract existing control point position from start position so that dragging adds to existing curve instead of replacing it
-    let e = this.props.edge;
-    this.startDrag = ui.position;
-    this.startPosition = { left: e.display.x, top: e.display.y };
-    this.startDrag.left = this.startDrag.left - e.display.cx;
-    this.startDrag.top = this.startDrag.top - e.display.cy;
-  }
+  _handleDragStart(event, ui) {
+    this._startPosition = ui.position;
+    this._startControlPoint = this.props.edge.display;
+  };
 
   _handleDrag(event, ui) {
-    let cx = ui.position.left - this.startDrag.left;
-    let cy = ui.position.top - this.startDrag.top;
-    let x = this.startPosition.left;
-    let y = this.startPosition.top;
-    this.app.graphActions.moveEdge(this.props.edge.id, x, y, cx, cy);
+    let e = this.props.edge;
+    let cx = (ui.position.lastX - this._startPosition.lastX) + this._startControlPoint.cx;
+    let cy = (ui.position.lastY - this._startPosition.lastY) + this._startControlPoint.cy;
+    this.props.moveEdge(this.props.graphId, this.props.edge.id, cx, cy);
+  }
+
+  _handleTextClick() {
+    if (this.props.edge.display.url) {
+      let tab = window.open(this.props.edge.display.url, '_blank');
+      tab.focus();
+    }
   }
 
   _getSvgParams(edge) {
     let e = edge;
+
+    let { x, y, xa, ya, xb, yb, cx, cy, label, scale, is_directional, is_reverse, dash, status } = e.display;
+
     const pathId = `path-${e.id}`;
-    const fontSize = 10 * Math.sqrt(e.display.scale);
+    const fontSize = 10 * Math.sqrt(scale);
 
     return {
-      curve: `M ${e.display.xa}, ${e.display.ya} Q ${e.display.x + e.display.cx}, ${e.display.y + e.display.cy}, ${e.display.xb}, ${e.display.yb}`,
+      curve: `M ${xa}, ${ya} Q ${x + cx}, ${y + cy}, ${xb}, ${yb}`,
       groupId: `edge-${e.id}`,
       pathId: pathId,
-      dash: e.display.dash ? "5, 2" : "",
+      dash: dash ? "5, 2" : "",
       fontSize: fontSize,
-      dy: -6 * Math.sqrt(e.display.scale),
-      textPath: { __html: `<textPath class="labelpath" startOffset="50%" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#${pathId}" font-size="${fontSize}">${e.display.label}</textPath>` },
-      markerStart: (e.display.is_directional && e.display.is_reverse) ? "url(#marker2)" : "",
-      markerEnd: (e.display.is_directional && !e.display.is_reverse) ? "url(#marker1)" : "",
-      lineColor: ds.lineColor[e.display.status],
-      textColor: ds.textColor[e.display.status],
-      bgColor: ds.bgColor[e.display.status],
-      bgOpacity: ds.bgOpacity[e.display.status]
+      dy: -6 * Math.sqrt(scale),
+      textPath: { __html: `<textPath class="labelpath" startOffset="50%" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#${pathId}" font-size="${fontSize}">${label}</textPath>` },
+      markerStart: (is_directional && is_reverse) ? "url(#marker2)" : "",
+      markerEnd: (is_directional && !is_reverse) ? "url(#marker1)" : "",
+      lineColor: ds.lineColor[status],
+      textColor: ds.textColor[status],
+      bgColor: ds.bgColor[status],
+      bgOpacity: ds.bgOpacity[status]
     };
   }
 }

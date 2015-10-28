@@ -1,6 +1,6 @@
-import React from 'react';
+import { Component } from 'react';
 
-class BaseComponent extends React.Component {
+class BaseComponent extends Component {
   bindAll(...methods) {
     methods.forEach( (method) => this[method] = this[method].bind(this) );
   }

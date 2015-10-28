@@ -3,14 +3,14 @@ import { render } from 'react-dom';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import Root from './components/Root';
-import oligrapherApp from './reducers';
+import reducers from './reducers';
 
 var main = {
   run: function(graphData = null) {
-    let store = createStore(oligrapherApp);
+    let store = createStore(reducers);
     let rootElement = document.getElementById('oligrapher');
 
-    let rootInstance = render(
+    this.rootInstance = render(
       <Provider store={store}>
         <Root data={graphData} />
       </Provider>,
@@ -19,9 +19,15 @@ var main = {
 
     if (module.hot) {
       require('react-hot-loader/Injection').RootInstanceProvider.injectProvider({
-        getRootInstances: () => [rootInstance]
+        getRootInstances: () => [this.rootInstance]
       });
     }
+
+    return this.rootInstance;
+  },
+
+  export: function() {
+    return Oligrapher.graphInstance.props.graph;
   }
 }
 

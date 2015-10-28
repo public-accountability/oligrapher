@@ -1,47 +1,62 @@
 import React, { Component, PropTypes } from 'react';
-const ds = require('../NodeDisplaySettings');
-const config = require('../../config');
-const Draggable = require('react-draggable');
+import BaseComponent from './BaseComponent';
+import ds from '../NodeDisplaySettings';
+import config from '../../config';
+import { DraggableCore } from 'react-draggable';
 
-export default class Node extends Component {
+export default class Node extends BaseComponent {
+  constructor(props) {
+    super(props);
+    this.bindAll('_handleDragStart', '_handleDrag');
+  }
+
   render() {
     const n = this.props.node;
     const sp = this._getSvgParams(n);
 
-    let that = this;
-    let handleDrag = function(e, ui) {
-      that.props.moveNode(that.props.graphId, that.props.node.id, ui.position.left, ui.position.top);
-    };
+    let { x, y } = n.display;
 
     return (
-      <Draggable
+      <DraggableCore
         handle=".handle"
-        start={{x: this.props.node.display.x, y: this.props.node.display.y}}
         moveOnStartChange={false}
-        zIndex={100}
-        onDrag={handleDrag}>
+        onStart={this._handleDragStart}
+        onDrag={this._handleDrag}>
         <g id={sp.groupId} transform={sp.transform}>
           {sp.bgCircle}
           {sp.circle}
           {sp.rects}
           {sp.tspans}
         </g>
-      </Draggable>
+      </DraggableCore>
     );
   }
 
+
+  _handleDragStart(e, ui) {
+    this._startDrag = ui.position;
+    this._startPosition = this.props.node.display;
+  }
+
+  _handleDrag(e, ui) {
+    let x = (ui.position.clientX - this._startDrag.clientX) + this._startPosition.x;
+    let y = (ui.position.clientY - this._startDrag.clientY) + this._startPosition.y;
+    this.props.moveNode(this.props.graphId, this.props.node.id, x, y);
+  };
+
   _getSvgParams(node) {
     let n = node;
-    let r = ds.circleRadius * n.display.scale;
+    let { x, y, image, name, scale, url, status } = n.display;
+    let r = ds.circleRadius * scale;
     let textOffsetY = ds.textMarginTop + r;
-    let textLines = this._textLines(n.display.name);
-    let linkAttributes = `xlink:href="${node.display.url}" target="_blank"`;
-    
-    let tspans = node.display.url ?
+    let textLines = this._textLines(name);
+    let linkAttributes = `xlink:href="${url}" target="_blank"`;
+
+    let tspans = url ?
       <g dangerouslySetInnerHTML={ { __html: (`<a class="nodeLabel" ${linkAttributes}><text text-anchor="middle">` + 
           textLines.map((line, i) => {
              let dy = (i == 0 ? textOffsetY : ds.lineHeight);
-             return `<tspan class="node-text-line" x="0" dy="${dy}" fill="${ds.textColor[n.display.status]}">${line}</tspan>`;
+             return `<tspan class="node-text-line" x="0" dy="${dy}" fill="${ds.textColor[status]}">${line}</tspan>`;
            }) + `</text></a>`)
       } } /> 
       : 
@@ -49,7 +64,7 @@ export default class Node extends Component {
         { textLines.map(
            (line, i) => {
              let dy = (i == 0 ? textOffsetY : ds.lineHeight);
-             return <tspan className="node-text-line" x="0" dy={dy} fill={ds.textColor[n.display.status]}>{line}</tspan>;
+             return <tspan className="node-text-line" x="0" dy={dy} fill={ds.textColor[status]}>{line}</tspan>;
            }) }
       </text></a>);
 
@@ -71,7 +86,7 @@ export default class Node extends Component {
     let clipId = `image-clip-${n.id}`;
     let clipPath = `url(#${clipId})`;
     let imageWidth = r * ds.imageScale;
-    let imageOpacity = ds.imageOpacity[n.display.status];
+    let imageOpacity = ds.imageOpacity[status];
     let innerHTML = { __html:
                       `<clipPath id="${clipId}">
                          <circle r="${r}" opacity="1"></circle>
@@ -80,7 +95,7 @@ export default class Node extends Component {
                          class="handle"
                          x="${-imageWidth/2}"
                          y="${-imageWidth/2}"
-                         xlink:href="${n.display.image}"
+                         xlink:href="${image}"
                          height="${imageWidth}"
                          width="${imageWidth}"
                          opacity="${imageOpacity}"
@@ -88,17 +103,17 @@ export default class Node extends Component {
                        </image>` };
 
     const circle =
-      n.display.image ?
+      image ?
         <g dangerouslySetInnerHTML={innerHTML} /> :
         <circle className="handle"
                 r={r}
-                fill={ds.circleColor[n.display.status]}
+                fill={ds.circleColor[status]}
                 opacity="1">
         </circle>;
 
-    const bgColor = ds.bgColor[n.display.status];
-    const bgOpacity = ds.bgOpacity[n.display.status];
-    const bgRadius = r + (ds.bgRadiusDiff * n.display.scale);
+    const bgColor = ds.bgColor[status];
+    const bgOpacity = ds.bgOpacity[status];
+    const bgRadius = r + (ds.bgRadiusDiff * scale);
     const bgCircle = <circle className="node-background" r={bgRadius} fill={bgColor} opacity={bgOpacity}></circle>;
 
     return {
@@ -107,7 +122,7 @@ export default class Node extends Component {
       rects: rects,
       tspans: tspans,
       bgCircle: bgCircle,
-      transform: `translate(${n.display.x}, ${n.display.y})`
+      transform: `translate(${x}, ${y})`
     };
   }
 
