@@ -13,6 +13,7 @@
     "dev-build": "npm run build-css && webpack-dev-server --devtool eval --progress --history-api-fallback --colors --hot --content-base build --port 8090 --config webpack.dev.config",
     "dev-serve": "NODE_ENV=development node app/server.jsx",
     "prod": "npm run prod-build && npm run prod-serve",
+    "prod-build-nomin": "NODE_ENV=production webpack --config webpack.prod.config.js && npm run build-css",
     "prod-build": "NODE_ENV=production webpack -p --config webpack.prod.config.js && npm run build-css",
     "prod-serve": "NODE_ENV=production node app/server.jsx",
     "test": "mocha --recursive --compilers js:babel/register",

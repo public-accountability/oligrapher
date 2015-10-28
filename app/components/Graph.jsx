@@ -55,12 +55,11 @@ export default class Graph extends Component {
     }
   }
 
-  _animateTransition(duration = 0.7) {    
-
-    if (!this._isSmallDevice() && this.props.prevGraph !== undefined) {
+  _animateTransition(duration = 0.7) {
+    if (!this._isSmallDevice() && this.props.prevGraph) {
       this.props.resetZoom();
-      let oldViewbox = this._computeViewbox(this.props.prevGraph).split(" ").map(function(part) { return parseInt(part); });
-      let newViewbox = this._computeViewbox(this.props.graph).split(" ").map(function(part) { return parseInt(part); });
+      let oldViewbox = this._computeViewbox(this.props.prevGraph, this.props.zoom).split(" ").map(function(part) { return parseInt(part); });
+      let newViewbox = this._computeViewbox(this.props.graph, this.props.zoom).split(" ").map(function(part) { return parseInt(part); });
       let start = this._now();
       let that = this;
 
@@ -79,6 +78,7 @@ export default class Graph extends Component {
 
         if (time > duration) {
           cancelAnimationFrame(req);
+
         }
       };
 
@@ -115,8 +115,8 @@ export default class Graph extends Component {
   _computeViewbox(graph, zoom = 1.2) {
     let highlightedOnly = true;
     let rect = this._computeRect(graph, highlightedOnly);
-    let w = Math.max(rect.w / zoom, 600);
-    let h = Math.max(rect.h / zoom, 400);
+    let w = Math.max(rect.w / zoom, 600 / zoom);
+    let h = Math.max(rect.h / zoom, 400 / zoom);
     let x = rect.x + rect.w/2 - (w/2);
     let y = rect.y + rect.h/2 - (h/2);
 
@@ -133,10 +133,10 @@ export default class Graph extends Component {
     const items = nodes;
 
     if (items.length > 0) {
-      const padding = highlightedOnly ? 100 : 100;
+      const padding = highlightedOnly ? 50 : 50;
       const xs = items.map(i => i.x);
       const ys = items.map(i => i.y);
-      const textPadding = 50; // node text might extend below node
+      const textPadding = 100; // node text might extend below node
       return { 
         x: _.min(xs) - padding, 
         y: _.min(ys) - padding, 
