@@ -5,8 +5,7 @@ var node_modules = path.resolve(__dirname, 'node_modules/');
 var deps = [
   'react/dist/react-with-addons.js',
   'immutable/dist/immutable.min.js',
-  'jquery/dist/jquery.min.js',
-  'lodash/index.js'
+  'jquery/dist/jquery.min.js'
 ];
 
 var config = {
@@ -14,13 +13,11 @@ var config = {
     app: [
       'webpack/hot/dev-server',
       path.resolve(__dirname, 'app/main.jsx'),
-      'bootstrap-sass!./bootstrap-sass.config.js'
     ],
     vendors: [
       'react',
       'immutable',
-      'jquery',
-      'lodash'
+      'jquery'
     ]
   },
   output: {
@@ -39,13 +36,6 @@ var config = {
       { test: /\.jsx?$/,
         exclude: [node_modules],
         loaders: ['react-hot', 'babel'] },
-      { test: /\.scss$/,
-        loader: "style!css!sass?outputStyle=expanded&includePaths[]=" +
-        (path.resolve(__dirname, "./node_modules")) },
-      { test: /bootstrap-sass\/assets\/javascripts\//,
-        loader: 'imports?jQuery=jquery' },
-      { test: /\.less$/,
-        loader: 'style-loader!css-loader!less-loader' },
       { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
         loader: "url?limit=10000&minetype=application/font-woff" },
       { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,

@@ -15,12 +15,10 @@ export const MOVE_EDGE = 'MOVE_EDGE';
  */
 
 export function loadGraph(graph) {
-  console.log(LOAD_GRAPH);
   return { type: LOAD_GRAPH, graph };
 }
 
 export function showGraph(id) {
-  console.log(SHOW_GRAPH);
   return { type: SHOW_GRAPH, id };
 }
 

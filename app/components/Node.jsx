@@ -3,25 +3,26 @@ import BaseComponent from './BaseComponent';
 import ds from '../NodeDisplaySettings';
 import config from '../../config';
 import { DraggableCore } from 'react-draggable';
+import Graph from '../models/Graph';
 
 export default class Node extends BaseComponent {
   constructor(props) {
     super(props);
-    this.bindAll('_handleDragStart', '_handleDrag');
+    this.bindAll('_handleDragStart', '_handleDrag', '_handleDragStop');
+    this.state = this.props.node.display;
   }
 
   render() {
     const n = this.props.node;
     const sp = this._getSvgParams(n);
 
-    let { x, y } = n.display;
-
     return (
       <DraggableCore
         handle=".handle"
         moveOnStartChange={false}
         onStart={this._handleDragStart}
-        onDrag={this._handleDrag}>
+        onDrag={this._handleDrag}
+        onStop={this._handleDragStop}>
         <g id={sp.groupId} transform={sp.transform}>
           {sp.bgCircle}
           {sp.circle}
@@ -32,21 +33,61 @@ export default class Node extends BaseComponent {
     );
   }
 
+  componentWillReceiceProps(props) {
+    this.setState({ x: props.display.x, y: props.display.y });
+  }
 
   _handleDragStart(e, ui) {
     this._startDrag = ui.position;
-    this._startPosition = this.props.node.display;
+    this._startPosition = {
+      x: this.props.node.display.x,
+      y: this.props.node.display.y
+    }
   }
 
   _handleDrag(e, ui) {
+    let n = this.props.node;
     let x = (ui.position.clientX - this._startDrag.clientX) + this._startPosition.x;
     let y = (ui.position.clientY - this._startDrag.clientY) + this._startPosition.y;
-    this.props.moveNode(this.props.graphId, this.props.node.id, x, y);
-  };
+
+    this.setState(_.merge({}, n.display, { x, y }));
+
+    // update state of connecting edges
+    let edges = Graph.edgesConnectedToNode(this.props.graph, n.id);
+    edges.forEach((edge) => {
+      let thisNodeNum = edge.node1_id == n.id ? 1 : 2;
+      let otherNode = this.props.graph.nodes[thisNodeNum == 1 ? edge.node2_id : edge.node1_id];
+      let x1, y1, x2, y2, s1, s2;
+
+      if (thisNodeNum == 1) {
+        x1 = x;
+        y1 = y;
+        s1 = n.display.scale;
+        x2 = otherNode.display.x;
+        y2 = otherNode.display.y;
+        s2 = otherNode.display.scale;
+      } else {
+        x1 = otherNode.display.x;
+        y1 = otherNode.display.y;
+        s1 = otherNode.display.scale;
+        x2 = x;
+        y2 = y;
+        s2 = n.display.scale;
+      }
+
+      let newEdge = Graph.calculateEdgePosition(edge, x1, y1, x2, y2, s1, s2);
+      Oligrapher.graphInstance.edges[edge.id].setState(newEdge.display);
+    });
+  }
+
+  _handleDragStop(e, ui) {
+    this.props.moveNode(this.props.graph.id, this.props.node.id, this.state.x, this.state.y);
+  }
 
   _getSvgParams(node) {
     let n = node;
-    let { x, y, image, name, scale, url, status } = n.display;
+    let { image, name, scale, url, status } = n.display;
+    let { x, y } = this.state;
     let r = ds.circleRadius * scale;
     let textOffsetY = ds.textMarginTop + r;
     let textLines = this._textLines(name);

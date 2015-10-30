@@ -1,252 +1,158 @@
-const Node = require('./Node');
-const Edge = require('./Edge');
-const converter = require('./Converter');
-const helpers = require('./helpers/GraphHelpers');
+import Node from './Node';
+import Edge from './Edge';
+import NodeDisplaySettings from '../NodeDisplaySettings';
+import helpers from './Helpers';
 const _ = require('lodash');
 
 class Graph {
-  //constructor(GraphSpecs) -> Graph
-  constructor(specs){
-    this.id = specs.id || helpers.generateId();
-    this.nodes = specs.nodes || {};
-    this.edges = specs.edges || {};
-    this.display = _.assign({ shrinkFactor: 1.3 }, specs.display);
+  static generateId() {
+    return helpers.generateId();
   }
 
-  isNull() {
-    return this.id === -1;
+  static defaults() {
+    return {
+      id: this.generateId(),
+      title: "Untitled Graph"
+    };
   }
 
-  addNode(node){
-    this.nodes[node.id] = node;
-    return this;
+  static setDefaults(graph) {
+    return _.merge({}, this.defaults(), graph);
   }
 
-  edgesWithNode(id){
-    return _.values(this.edges).filter(function(edge) {
-      return edge.n1.id === id || edge.n2.id === id;
+  static prepare(graph) {
+    return this.prepareEdges(this.prepareNodes(this.setDefaults(graph)));
+  }
+
+  static prepareEdges(graph) {
+    return _.merge({}, graph, { 
+      edges: _.values(graph.edges).reduce((result, edge) => { 
+        return _.merge({}, result, { [edge.id]: this.updateEdgePosition(Edge.setDefaults(edge), graph) });
+      }, {}) 
     });
-  };
-
-  connectNodes(id1, id2, specs={}){
-    const n1 = this.nodes[id1];
-    const n2 = this.nodes[id2];
-
-    const edge = new Edge({
-      id: specs.id,
-      n1: n1,
-      n2: n2,
-      content: specs.content,
-      display: specs.display});
-
-    this.edges[edge.id] = edge;
-
-    return this;
   }
 
-  moveNode(id, position){
-    const n = this.nodes[id];
-    n.display.x = position.left;
-    n.display.y = position.top;
-    this.edgesWithNode(id).forEach(function(edge) {
-      edge.updatePosition();
-    });
-    return this;
+  static prepareNodes(graph) {
+    let nodes = _.values(graph.nodes).reduce((result, node) => {
+      return _.merge({}, result, { [node.id]: Node.setDefaults(node) });
+    }, {});
+    nodes = this.prepareNodePositions(nodes);
+    return _.merge({}, graph, { nodes: nodes });
   }
 
-  moveEdge(id, x, y, cx, cy){
-    var e = this.edges[id];
-    e.display.x = x;
-    e.display.y = y;
-    e.display.cx = cx;
-    e.display.cy = cy;
-    e.updatePosition();
-    return this;
-  }
-
-  addCaption(caption) {
-    this.display.captions = _.assign({}, this.display.captions, { [caption.id]: caption });
-    return this;
-  }
-
-  computeWidth() {
-    if (_.keys(this.nodes).length > 0) {
-      const xs = _.values(this.nodes).map(n => n.display.x);
-      return _.max(xs) - _.min(xs);
-    } else {
-      return 0;
-    }
-  }
-
-  computeHeight() {
-    if (_.keys(this.nodes).length > 0) {
-      const ys = _.values(this.nodes).map(n => n.display.y);
-      return _.max(ys) - _.min(ys);
-    } else {
-      return 0;
-    }
-  }
-
-  computeViewbox(highlightedOnly = true) {
-    const nodes = _.values(this.nodes)
-      .filter(n => !highlightedOnly || n.display.status != "faded")
-      .map(n => ({ x: n.display.x, y: n.display.y }));
-    // const edges = this.edges.toArray()
-    //   .filter(e => e.display.status != "faded")
-    //   .map(e => ({ x: e.display.cx, y: e.display.cy }));
-    const items = nodes;
-
-    if (items.length > 0) {
-      const padding = highlightedOnly ? 50 : 0;
-      const xs = items.map(i => i.x);
-      const ys = items.map(i => i.y);
-      const textPadding = 50; // node text might extend below node
-      return { 
-        x: _.min(xs) - padding, 
-        y: _.min(ys) - padding, 
-        w: _.max(xs) - _.min(xs) + padding * 2, 
-        h: _.max(ys) - _.min(ys) + textPadding + padding
-      };
-    } else {
-      return { x: 0, y: 0, w: 0, h: 0 };
-    }
-  }
-
-  setShrinkFactor(factor) {
-    this.display.shrinkFactor = factor;
-    return this;
-  }
-
-  getNodeByEntityId(id) {
-    return _.find(_.values(this.nodes), n => n.content.entity.id === id);
-  }
-
-  static importGraph(specs){
-    return new Graph({})
-      ._importBase(specs)
-      .importNodes(specs.nodes)
-      .importEdges(specs.edges)
-      .positionNodes()
-      ._convertCurves();
-  }
-
-  importNodes(nodes) {
-    nodes.map(
-      n => this.addNode(new Node(n))
-    );
-
-    return this;
-  }
-
-  importEdges(edges) {
-    edges.map(e => {
-      this.connectNodes(
-        e.n1,
-        e.n2,
-        e
-      );
-
-    });
-
-    return this;
-  }
-
-  // arranges nodes without layout in circle around origin
-  positionNodes() {
-    let ary = _.values(this.nodes).filter(n => !n.hasPosition());
+  static prepareNodePositions(nodes) {
+    // arrange unpositioned nodes into a circle
+    let ary = _.values(nodes).filter(n => !(n.display.x && n.display.y));
     let radius = Math.pow(ary.length * 100, 0.85);
 
-    ary.forEach((node, i) => {
+    return _.merge({}, nodes, ary.reduce((result, node, i) => {
       let angle = (2 * Math.PI) * (i / ary.length);
-      node.display.x = Math.cos(angle) * radius;
-      node.display.y = Math.sin(angle) * radius;
-      // this.nodes[key].display.x = Math.round(Math.random() * 500) - 250;
-      // this.nodes[key].display.y = Math.round(Math.random() * 500) - 250;
-    });
-
-    return this;
-  }
-
-  positionEdges() {
-    Object.keys(this.edges).filter(edge => !edge.hasCurve()).map(key => {
-      let edge = this.edges[key];
-
-      edge.display.xa = edge.n1.display.x;
-      edge.display.ya = edge.n1.display.y;
-      edge.display.xb = edge.n2.display.x;
-      edge.display.yb = edge.n2.display.y;
-      edge.display.cx = (edge.n1.display.x + edge.n2.display.x) / 2;
-      edge.display.cy = (edge.n1.display.y + edge.n2.display.y) / 2;        
-    });
-
-    return this;
-  }
-
-  static parseApiGraph(specs){
-    return new Graph({})
-      ._importBase(specs)
-      .importEntities(specs.entities)
-      .importRels(specs.rels)
-      .importCaptions(specs.texts)
-      ._convertCurves();
-  }
-
-  _importBase(map) {
-    this.id = map.id;
-    this.display.title = map.title;
-    this.display.description = map.description;
-
-    return this;
-  }
-
-  importEntities(entities) {
-    entities.map(
-      e => this.addNode(converter.entityToNode(e))
-    );
-
-    return this;
-  }
-
-  importRels(rels) {
-    rels.map((r) => {
-      const specs = converter.relToEdgeSpecs(r);
-
-      this.connectNodes(
-        this.getNodeByEntityId(r.entity1_id).id,
-        this.getNodeByEntityId(r.entity2_id).id,
-        specs
-      );
-    });
-
-    return this;
-  }
-
-  importCaptions(captions) {
-    const that = this;
-    if (captions) {
-      captions.forEach(function(t) {
-        that.addCaption(t);
+      return _.merge({}, result, { 
+        [node.id]: { display: { 
+          x: Math.cos(angle) * radius, 
+          y: Math.sin(angle) * radius 
+        } } 
       });
+    }, {}));
+  }
+
+  static updateEdgePosition(edge, graph) {
+    // get nodes connected by edge
+    let n1 = graph.nodes[edge.node1_id];
+    let n2 = graph.nodes[edge.node2_id];
+
+    // shortcut variables
+    let x1 = n1.display.x;
+    let y1 = n1.display.y;
+    let x2 = n2.display.x;
+    let y2 = n2.display.y;
+    let s1 = n1.display.scale;
+    let s2 = n2.display.scale;
+
+    return this.calculateEdgePosition(edge, x1, y1, x2, y2, s1, s2);
+  }
+
+  static calculateEdgePosition(edge, x1, y1, x2, y2, scale1, scale2) {
+    let cx = edge.display.cx;
+    let cy = edge.display.cy;
+    let r1 = scale1 * NodeDisplaySettings.circleRadius;
+    let r2 = scale2 * NodeDisplaySettings.circleRadius;
+
+    // set edge position at midpoint between nodes
+    let x = (x1 + x2) / 2;
+    let y = (y1 + y2) / 2;
+
+    // keep track of which node is on left and right ("a" is left, "b" is right)
+    let xa, ya, xb, yb, is_reverse;
+    if (x1 < x2) {
+      xa = x1;
+      ya = y1;
+      xb = x2;
+      yb = y2;
+      is_reverse = false;
+    } else {
+      xa = x2;
+      ya = y2;
+      xb = x1;
+      yb = y1;
+      is_reverse = true;
     }
 
-    return this;
+    // generate curve offset if it doesn't exist
+    if (cx == null || cy == null) {
+      let strength = 0.1;
+      cx = -(ya - y) * strength;
+      cy = (xa - x) * strength;
+    }
+
+    // calculate absolute position of curve midpoint
+    let mx = cx + x;
+    let my = cy + y;
+
+    // curves should not reach the centers of nodes but rather stop at their edges, so we:
+
+    // calculate spacing between curve endpoint and node center
+    let sa = is_reverse ? scale2 : scale1;
+    let sb = is_reverse ? scale1 : scale2;
+    let ra = (is_reverse ? r2 : r1) + (sa * NodeDisplaySettings.circleSpacing);
+    let rb = (is_reverse ? r1 : r2) + (sb * NodeDisplaySettings.circleSpacing);
+
+    // calculate angle from curve midpoint to node center
+    let angleA = Math.atan2(ya - my, xa - mx);
+    let angleB = Math.atan2(yb - my, xb - mx);
+
+    // x and y offsets for curve endpoints are the above spacing times the cos and sin of the angle
+    let xma = ra * Math.cos(angleA);
+    let yma = ra * Math.sin(angleA);
+    let xmb = rb * Math.cos(angleB);
+    let ymb = rb * Math.sin(angleB);
+
+    // finally update edge with new curve endpoints
+    xa = xa - xma;
+    ya = ya - yma;
+    xb = xb - xmb;
+    yb = yb - ymb;
+
+    return _.merge({}, edge, { display: { x, y, cx, cy, is_reverse, xa, ya, xb, yb } });
   }
 
-  _convertCurves() {
-    _.values(this.edges).forEach(e => {
-      // convert control point from relative to absolute
-      if (e.display.cx != null && e.display.cy != null) {
-        let ax = (e.n1.display.x + e.n2.display.x) / 2;
-        let ay = (e.n1.display.y + e.n2.display.y) / 2;
-        e.display.cx += ax;
-        e.display.cy += ay;
-      }
+  static moveNode(graph, nodeId, x, y) {
+    // first update the node
+    graph = _.merge({}, graph, { nodes: { [nodeId]: { display: { x, y } } } });
 
-      e.updatePosition();
-      this.edges[e.id] = e;
-    });
+    // then update the edges
+    return _.merge({}, graph, { edges: _.values(graph.edges).reduce((result, edge) => {
+      return _.merge({}, result, { [edge.id]: (edge.node1_id == nodeId || edge.node2_id == nodeId) ? this.updateEdgePosition(edge, graph) : edge });
+    }, {}) });
 
-    return this;
+  }
+
+  static moveEdge(graph, edgeId, cx, cy) {
+    return _.merge({}, graph, { edges: { [edgeId]: this.updateEdgePosition(_.merge({}, graph.edges[edgeId], { display: { cx, cy } }), graph) } });
+  }
+
+  static edgesConnectedToNode(graph, nodeId) {
+    return _.values(graph.edges).filter((e) => e.node1_id == nodeId || e.node2_id == nodeId);
   }
 }
 

@@ -6,12 +6,18 @@ const _ = require('lodash');
 const Draggable = require('react-draggable');
 
 export default class Graph extends Component {
+  constructor(props) {
+    super(props);
+    this.nodes = {};
+    this.edges = {};
+  }
+
   render() {
     let sp = this._getSvgParams(this.props.graph);
     let viewBox = this.props.prevGraph ? this._computeViewbox(this.props.prevGraph, this.props.zoom) : sp.viewBox;
 
     return (
-      <svg id="svg" version="1.1" xmlns="http://www.w3.org/2000/svg" className="Graph" width="100%" viewBox={viewBox} preserveAspectRatio="xMidYMin">       
+      <svg id="svg" version="1.1" xmlns="http://www.w3.org/2000/svg" className="Graph" width="100%" height="100%" viewBox={viewBox} preserveAspectRatio="xMidYMin">       
         <Draggable
           handle="#zoom-handle"
           moveOnStartChange={false}
@@ -44,10 +50,7 @@ export default class Graph extends Component {
   }
 
   _setSVGHeight() {
-    let container = document.getElementById("mainContainer");
-    if (!container) {
-      container = document.getElementById("oligrapher");
-    }
+    let container = Oligrapher.rootElement;
 
     if (container) {
       let height = container.clientHeight; // - 120;
@@ -78,7 +81,6 @@ export default class Graph extends Component {
 
         if (time > duration) {
           cancelAnimationFrame(req);
-
         }
       };
 
@@ -104,8 +106,25 @@ export default class Graph extends Component {
   _getSvgParams(graph) {
     let that = this;
     return {
-      edges: _.values(graph.edges).map((e, i) => <Edge ref={(c) => this.edges[e.id] = c} key={i} edge={e} graphId={this.props.graph.id} moveEdge={this.props.moveEdge} />),
-      nodes:  _.values(graph.nodes).map((n, i) => <Node ref={(c) => this.nodes[n.id] = c} key={i} node={n} graphId={this.props.graph.id} clickNode={that.props.clickNode} moveNode={that.props.moveNode} />),
+      edges: _.values(graph.edges).map((e, i) =>  
+        <Edge 
+          ref={(c) => this.edges[e.id] = c} 
+          key={i} 
+          edge={e} 
+          graphId={this.props.graph.id} 
+          zoom={this.props.zoom} 
+          moveEdge={this.props.moveEdge} />
+      ),
+      nodes:  _.values(graph.nodes).map((n, i) => 
+        <Node 
+          ref={(c) => this.nodes[n.id] = c} 
+          key={i} 
+          node={n} 
+          graph={this.props.graph} 
+          zoom={this.props.zoom} 
+          clickNode={that.props.clickNode} 
+          moveNode={that.props.moveNode} />
+      ),
       markers: `<marker id="marker1" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L10,0L0,5" fill="#999"></path></marker><marker id="marker2" viewBox="-10 -5 10 10" refX="-8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L-10,0L0,5" fill="#999"></path></marker><marker id="fadedmarker1" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L10,0L0,5"></path></marker>`,
       viewBox: this._computeViewbox(graph, this.props.zoom),
       captions: _.values(graph.captions).map((c, index) => <text key={index} x={c.x} y={c.y}>{c.text}</text>)

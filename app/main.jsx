@@ -4,12 +4,12 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import Root from './components/Root';
 import reducers from './reducers';
-import { loadGraph, showGraph } from './actions';
+import { loadGraph, showGraph, zoomIn, zoomOut } from './actions';
 
 var main = {
-  run: function(graphData = null) {
+  run: function(elementId, graphData = null) {
     let store = createStore(reducers);
-    let rootElement = document.getElementById('oligrapher');
+    Oligrapher.rootElement = document.getElementById(elementId);
 
     this.providerInstance = render(
       <Provider store={store}>
@@ -17,7 +17,7 @@ var main = {
           data={graphData} 
           ref={(c) => Oligrapher.rootInstance = c} />
       </Provider>,
-      rootElement
+      Oligrapher.rootElement
     );
 
     if (module.hot) {
@@ -32,6 +32,18 @@ var main = {
   load: function(graphData) {
     Oligrapher.rootInstance.dispatchProps.dispatch(loadGraph(graphData));
     Oligrapher.rootInstance.dispatchProps.dispatch(showGraph(graphData.id));
+  },
+
+  show: function(id) {
+    Oligrapher.rootInstance.dispatchProps.dispatch(showGraph(id));
+  },
+
+  zoomIn: function(id) {
+    Oligrapher.rootInstance.dispatchProps.dispatch(zoomIn());
+  },
+
+  zoomOut: function(id) {
+    Oligrapher.rootInstance.dispatchProps.dispatch(zoomOut());
   },
 
   export: function() {

@@ -1,13 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import BaseComponent from './BaseComponent';
 import { DraggableCore } from 'react-draggable';
-
+import lodash from 'lodash';
 const ds = require('../EdgeDisplaySettings');
 
 export default class Edge extends BaseComponent {
   constructor(props) {
     super(props);
     this.bindAll('_handleDragStart', '_handleDrag', '_handleTextClick');
+    this.state = _.merge({}, this.props.edge.display);
   }
 
   render() {
@@ -59,6 +60,10 @@ export default class Edge extends BaseComponent {
     );
   }
 
+  componentWillReceiveProps(props) {
+    this.setState(_.merge({}, props.edge.display));
+  }
+
   _handleDragStart(event, ui) {
     this._startPosition = ui.position;
     this._startControlPoint = this.props.edge.display;
@@ -81,7 +86,8 @@ export default class Edge extends BaseComponent {
   _getSvgParams(edge) {
     let e = edge;
 
-    let { x, y, xa, ya, xb, yb, cx, cy, label, scale, is_directional, is_reverse, dash, status } = e.display;
+    let { label, scale, is_directional, is_reverse, dash, status } = e.display;
+    let { x, y, xa, ya, xb, yb, cx, cy } = this.state;
 
     const pathId = `path-${e.id}`;
     const fontSize = 10 * Math.sqrt(scale);

@@ -1,37 +1,19 @@
-const helpers = require('./helpers/GraphHelpers');
 const _ = require('lodash');
 
-var defaults =  {
-  display: {
-    x: 100,
-    y: 100,
-    name: 'Node',
-    scale: 1,
-    status: "normal"
-  }
-};
-
 class Node {
- //constructor(NodeSpecs) -> Node
-  constructor(specs){
-    this.id = specs.id || helpers.generateId();
-    this.content = specs.content;
-    this.adj = specs.adj || [];
-    this.display = _.merge({}, defaults.display, specs.display);
-    this.sourceUrl = specs.sourceUrl;
+  static defaults() {
+    return {
+      display: {
+        name: 'Node',
+        scale: 1,
+        status: "normal"
+      }
+    };    
   }
 
-  hasPosition() {
-    return this.display && this.display.x && this.display.y;
+  static setDefaults(node) {
+    return _.merge({}, this.defaults(), node);
   }
 }
 
 module.exports = Node;
-
-//NodeSpecs
-// {
-//   id: Int,
-//   adj: [],
-//   content: {},
-//   display: {}
-// }

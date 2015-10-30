@@ -46,6 +46,7 @@ var LsDataConverter = {
     return {
       id: data.id,
       title: data.title,
+      description: data.description,
       nodes: nodes,
       edges: edges,
       captions: {}
