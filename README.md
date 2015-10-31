@@ -68,10 +68,10 @@ Nodes only require an ```id``` and a ```name```; edges also require ```node1_id`
 - ```id:``` **(required)** an integer or string uniquely identifying the node
 - ```display:``` **(required)** an object with attributes related to the node's appearance
   - ```name:``` **(required)** a string, which will be displayed underneath the node (on multiple lines if necessary)
-  - ```x:``` x-coordinate of the node's position
-  - ```y:``` y-coordinate of the node's position
   - ```scale:``` relative size of node (```1``` is default, ```1.5``` is 50% wider, etc)
   - ```status:```  default is ```normal```, can also be ```highlighted``` or ```faded```
+  - ```x:``` x-coordinate of the node's position
+  - ```y:``` y-coordinate of the node's position
 
 ### Edge Attributes
 - ```id:``` **(required)** an integer or string uniquely identifying the edge
@@ -83,3 +83,5 @@ Nodes only require an ```id``` and a ```name```; edges also require ```node1_id`
   - ```status:```  default is ```normal```, can also be ```highlighted``` or ```faded```
   - ```arrow:``` whether the edge has an arrow indicating a direction (default is ```false```)
   - ```dash:``` the kind of dash displayed in edge's line (default is ```null```, a solid line)
+  - ```cx:``` x-coordinate of the control point for the edge's quadratic [Bezier curve](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Bezier_Curves), *relative to the midpoint of the straight line between the two nodes* (if not specified, this is computed to display a slight curve)
+  - ```cy:``` y-coordinate of the control point for the edge's quadratic [Bezier curve](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Bezier_Curves), *relative to the midpoint of the straight line between the two nodes* (if not specified, this is computed to display a slight curve)fa
