@@ -7,7 +7,6 @@ export default class Edge {
         label: "Edge",
         scale: 1,
         is_directional: false,
-        is_current: true,
         status: "normal",
       }      
     };

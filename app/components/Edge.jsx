@@ -51,8 +51,8 @@ export default class Edge extends BaseComponent {
           <path 
             className="handle edge-handle" 
             d={sp.curve} 
-            stroke={sp.bgColor} 
-            strokeOpacity={sp.bgOpacity} 
+            stroke="#fff" 
+            strokeOpacity="0"
             strokeWidth={scale + 20} 
             fill="none"></path>
         </g>
@@ -85,7 +85,7 @@ export default class Edge extends BaseComponent {
   _getSvgParams(edge) {
     let e = edge;
 
-    let { label, scale, is_directional, is_reverse, dash, status } = e.display;
+    let { label, scale, arrow, is_reverse, dash, status } = e.display;
     let { x, y, xa, ya, xb, yb, cx, cy } = this.state;
 
     const pathId = `path-${e.id}`;
@@ -95,12 +95,12 @@ export default class Edge extends BaseComponent {
       curve: `M ${xa}, ${ya} Q ${x + cx}, ${y + cy}, ${xb}, ${yb}`,
       groupId: `edge-${e.id}`,
       pathId: pathId,
-      dash: dash ? "5, 2" : "",
+      dash: dash ? dash : "",
       fontSize: fontSize,
       dy: -6 * Math.sqrt(scale),
       textPath: { __html: `<textPath class="labelpath" startOffset="50%" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#${pathId}" font-size="${fontSize}">${label}</textPath>` },
-      markerStart: (is_directional && is_reverse) ? "url(#marker2)" : "",
-      markerEnd: (is_directional && !is_reverse) ? "url(#marker1)" : "",
+      markerStart: (arrow && is_reverse) ? "url(#marker2)" : "",
+      markerEnd: (arrow && !is_reverse) ? "url(#marker1)" : "",
       lineColor: ds.lineColor[status],
       textColor: ds.textColor[status],
       bgColor: ds.bgColor[status],

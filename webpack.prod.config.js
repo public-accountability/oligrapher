@@ -9,14 +9,10 @@ var config = {
   ],
   output: {
     path: 'build',
-    filename: '/app.js'
+    filename: '/oligrapher.min.js'
   },
   plugins: [
-    new webpack.DefinePlugin({ "process.env": JSON.stringify(process.env)}),
-    new HtmlWebpackPlugin({
-      inject: true,
-      template: path.resolve(__dirname, 'build/index-template.html')
-    })
+    new webpack.DefinePlugin({ "process.env": { 'NODE_ENV': JSON.stringify('production') } })
   ],
   module: {
     loaders: [

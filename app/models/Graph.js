@@ -12,8 +12,7 @@ class Graph {
 
   static defaults() {
     return {
-      id: this.generateId(),
-      title: "Untitled Graph"
+      id: this.generateId()
     };
   }
 

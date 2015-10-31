@@ -2,11 +2,6 @@
 logs
 *.log
 
-# Build files
-!build/
-build/*
-!build/index-template.html
-
 # Runtime data
 pids
 *.pid

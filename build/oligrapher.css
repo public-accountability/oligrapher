@@ -1,10 +1,17 @@
+#oligrapherContainer:focus, #oligrapherContainer :focus {
+  outline: none;
+}
+
 .nodeLabel {
   cursor: pointer;
-  font-family: Helvetica, Arial, sans-serif;
 }
 
 .nodeLabel:hover {
   text-decoration: none;
+}
+
+.nodeLabel text tspan {
+  font-family: Helvetica, Arial, sans-serif;  
 }
 
 .edge text {

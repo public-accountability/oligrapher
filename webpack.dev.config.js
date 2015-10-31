@@ -11,7 +11,7 @@ var config = {
   },
   output: {
     path: path.resolve(__dirname, 'build'),
-    filename: 'app.js',
+    filename: 'oligrapher.js',
     publicPath: 'http://localhost:8090/build'
   },
   plugins: [

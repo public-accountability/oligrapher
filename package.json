@@ -14,10 +14,7 @@
     "prod": "npm run prod-build && npm run prod-serve",
     "prod-build-nomin": "NODE_ENV=production webpack --config webpack.prod.config.js",
     "prod-build": "NODE_ENV=production webpack -p --display-modules --config webpack.prod.config.js",
-    "prod-serve": "NODE_ENV=production node app/server.jsx",
-    "test": "mocha --recursive --compilers js:babel/register",
-    "debug-test": "mocha --debug --recursive --compilers js:babel/register",
-    "jtest": "jest"
+    "prod-serve": "NODE_ENV=production node app/server.jsx"
   },
   "repository": {
     "type": "git",
@@ -28,24 +25,7 @@
   "bugs": {
     "url": "https://github.com/aguestuser/show-me-the-money/issues"
   },
-  "jest": {
-    "scriptPreprocessor": "./node_modules/babel-jest",
-    "testFileExtensions": [
-      "es6",
-      "js"
-    ],
-    "moduleFileExtensions": [
-      "js",
-      "jsx",
-      "json",
-      "es6"
-    ],
-    "unmockedModulePathPatterns": [
-      "react",
-      "superagent"
-    ]
-  },
-  "homepage": "https://github.com/aguestuser/show-me-the-money/",
+  "homepage": "https://github.com/skomputer/oligrapher2/",
   "dependencies": {
     "babel": "^5.4.7",
     "babel-core": "^5.4.7",

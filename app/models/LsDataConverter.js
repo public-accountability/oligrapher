@@ -33,8 +33,8 @@ var LsDataConverter = {
           cx: r.x1,
           cy: r.y1,
           scale: r.scale ? r.scale : 1,
-          is_directional: r.is_directional === true,
-          is_current: r.is_current === true,
+          arrow: r.is_directional === true,
+          dash: r.is_current === true ? "5, 2": null,
           status: r.status ? r.status : "normal",
           url: that.convertUrl(r.url)
         }
