@@ -5,6 +5,8 @@ Oligrapher 1 was originally developed by [LittleSis](http://littlesis.org) befor
 
 Oligrapher 2 is built with [React](http://reactjs.com) and [Redux](http://rackt.org/redux) and is easy to embed in a web page or web application.
 
+![Oligrapher Demo Screenshot](https://cloud.githubusercontent.com/assets/981611/10861420/b209fc5a-7f54-11e5-82e9-164a5fca11c8.png)
+
 Install
 -------
 This repository is a small Node.js application with a single demo page. To simple view the demo, point your browser to the /build directory. If you want to tinker with the code, install the dependencies and launch the dev server:
