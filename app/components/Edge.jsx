@@ -1,14 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import BaseComponent from './BaseComponent';
 import { DraggableCore } from 'react-draggable';
-import lodash from 'lodash';
+import { merge } from 'lodash';
 const ds = require('../EdgeDisplaySettings');
 
 export default class Edge extends BaseComponent {
   constructor(props) {
     super(props);
     this.bindAll('_handleDragStart', '_handleDrag', '_handleTextClick');
-    this.state = _.merge({}, this.props.edge.display);
+    this.state = merge({}, this.props.edge.display);
   }
 
   render() {
@@ -61,7 +61,7 @@ export default class Edge extends BaseComponent {
   }
 
   componentWillReceiveProps(props) {
-    this.setState(_.merge({}, props.edge.display));
+    this.setState(merge({}, props.edge.display));
   }
 
   _handleDragStart(event, ui) {
@@ -70,7 +70,6 @@ export default class Edge extends BaseComponent {
   };
 
   _handleDrag(event, ui) {
-    let e = this.props.edge;
     let cx = (ui.position.lastX - this._startPosition.lastX) + this._startControlPoint.cx;
     let cy = (ui.position.lastY - this._startPosition.lastY) + this._startControlPoint.cy;
     this.props.moveEdge(this.props.graphId, this.props.edge.id, cx, cy);

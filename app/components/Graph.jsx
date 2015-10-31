@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
-const Node = require('./Node');
-const Edge = require('./Edge');
-const _ = require('lodash');
-const Draggable = require('react-draggable');
+import Node from './Node';
+import Edge from './Edge';
+import Draggable from 'react-draggable';
+import { values, min, max }  from 'lodash';
 
 export default class Graph extends Component {
   constructor(props) {
@@ -106,7 +106,7 @@ export default class Graph extends Component {
   _getSvgParams(graph) {
     let that = this;
     return {
-      edges: _.values(graph.edges).map((e, i) =>  
+      edges: values(graph.edges).map((e, i) =>  
         <Edge 
           ref={(c) => this.edges[e.id] = c} 
           key={i} 
@@ -115,7 +115,7 @@ export default class Graph extends Component {
           zoom={this.props.zoom} 
           moveEdge={this.props.moveEdge} />
       ),
-      nodes:  _.values(graph.nodes).map((n, i) => 
+      nodes:  values(graph.nodes).map((n, i) => 
         <Node 
           ref={(c) => this.nodes[n.id] = c} 
           key={i} 
@@ -127,7 +127,7 @@ export default class Graph extends Component {
       ),
       markers: `<marker id="marker1" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L10,0L0,5" fill="#999"></path></marker><marker id="marker2" viewBox="-10 -5 10 10" refX="-8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L-10,0L0,5" fill="#999"></path></marker><marker id="fadedmarker1" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L10,0L0,5"></path></marker>`,
       viewBox: this._computeViewbox(graph, this.props.zoom),
-      captions: _.values(graph.captions).map((c, index) => <text key={index} x={c.x} y={c.y}>{c.text}</text>)
+      captions: values(graph.captions).map((c, index) => <text key={index} x={c.x} y={c.y}>{c.text}</text>)
     };
   }
 
@@ -143,10 +143,10 @@ export default class Graph extends Component {
   }
 
   _computeRect(graph, highlightedOnly = true) {
-    const nodes = _.values(graph.nodes)
+    const nodes = values(graph.nodes)
       .filter(n => !highlightedOnly || n.display.status != "faded")
       .map(n => n.display);
-    // const edges = _.values(graph.edges)
+    // const edges = values(graph.edges)
     //   .filter(e => e.display.status != "faded")
     //   .map(e => ({ x: e.display.cx, y: e.display.cy }));
     const items = nodes;
@@ -157,10 +157,10 @@ export default class Graph extends Component {
       const ys = items.map(i => i.y);
       const textPadding = 100; // node text might extend below node
       return { 
-        x: _.min(xs) - padding, 
-        y: _.min(ys) - padding, 
-        w: _.max(xs) - _.min(xs) + padding * 2, 
-        h: _.max(ys) - _.min(ys) + textPadding + padding
+        x: min(xs) - padding, 
+        y: min(ys) - padding, 
+        w: max(xs) - min(xs) + padding * 2, 
+        h: max(ys) - min(ys) + textPadding + padding
       };
     } else {
       return { x: 0, y: 0, w: 0, h: 0 };

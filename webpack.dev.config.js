@@ -2,23 +2,12 @@ var path = require('path');
 var webpack = require('webpack');
 var node_modules = path.resolve(__dirname, 'node_modules/');
 
-var deps = [
-  'react/dist/react-with-addons.js',
-  'immutable/dist/immutable.min.js',
-  'jquery/dist/jquery.min.js'
-];
-
 var config = {
   entry: {
     app: [
       'webpack/hot/dev-server',
       path.resolve(__dirname, 'app/main.jsx'),
     ],
-    vendors: [
-      'react',
-      'immutable',
-      'jquery'
-    ]
   },
   output: {
     path: path.resolve(__dirname, 'build'),
@@ -31,8 +20,6 @@ var config = {
   ],
   module: {
     loaders: [
-      { test: path.resolve(node_modules, deps[0]),
-        loader: "expose?React" },
       { test: /\.jsx?$/,
         exclude: [node_modules],
         loaders: ['react-hot', 'babel'] },
@@ -62,11 +49,5 @@ var config = {
     extensions: ['', '.js', '.jsx']
   }
 };
-
-deps.forEach(function(dep) {
-  var depPath = path.resolve(node_modules, dep);
-  config.resolve.alias[dep.split(path.sep)[0]] = depPath;
-  config.module.noParse.push(depPath);
-});
 
 module.exports = config;

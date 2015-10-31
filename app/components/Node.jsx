@@ -4,6 +4,7 @@ import ds from '../NodeDisplaySettings';
 import config from '../../config';
 import { DraggableCore } from 'react-draggable';
 import Graph from '../models/Graph';
+import { merge } from 'lodash';
 
 export default class Node extends BaseComponent {
   constructor(props) {
@@ -50,7 +51,7 @@ export default class Node extends BaseComponent {
     let x = (ui.position.clientX - this._startDrag.clientX) + this._startPosition.x;
     let y = (ui.position.clientY - this._startDrag.clientY) + this._startPosition.y;
 
-    this.setState(_.merge({}, n.display, { x, y }));
+    this.setState(merge({}, n.display, { x, y }));
 
     // update state of connecting edges
     let edges = Graph.edgesConnectedToNode(this.props.graph, n.id);
@@ -170,13 +171,11 @@ export default class Node extends BaseComponent {
   _textLines(text){
     const maxWidth = text.length > 40 ? 30 : 20;
     let words = text.trim().split(" "),
-        wordCount = words.length,
         word,
         lines = [],
         lineNumber = 1,
         line = "",
-        lineWords = [],
-        wordNumber = 1;
+        lineWords = [];
 
     while (word = words.shift()) {
       lineWords.push(word);

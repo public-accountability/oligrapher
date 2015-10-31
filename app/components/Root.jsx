@@ -21,7 +21,7 @@ class Root extends Component {
 
     return this.props.graph ? (
       <div id="oligrapherContainer" style={{ height: '100%' }}>
-        <HotKeys focused={true} keyMap={keyMap} handlers={keyHandlers}>
+        <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={keyHandlers}>
           <Graph 
             ref={(g) => Oligrapher.graphInstance = g}
             graph={this.props.graph} 

@@ -1,4 +1,4 @@
-const _ = require('lodash');
+import { merge } from 'lodash';
 
 class Node {
   static defaults() {
@@ -12,7 +12,7 @@ class Node {
   }
 
   static setDefaults(node) {
-    return _.merge({}, this.defaults(), node);
+    return merge({}, this.defaults(), node);
   }
 }
 

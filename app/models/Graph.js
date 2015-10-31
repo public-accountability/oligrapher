@@ -2,7 +2,8 @@ import Node from './Node';
 import Edge from './Edge';
 import NodeDisplaySettings from '../NodeDisplaySettings';
 import helpers from './Helpers';
-const _ = require('lodash');
+import { merge } from 'lodash';
+import { values } from 'lodash';
 
 class Graph {
   static generateId() {
@@ -17,7 +18,7 @@ class Graph {
   }
 
   static setDefaults(graph) {
-    return _.merge({}, this.defaults(), graph);
+    return merge({}, this.defaults(), graph);
   }
 
   static prepare(graph) {
@@ -25,29 +26,29 @@ class Graph {
   }
 
   static prepareEdges(graph) {
-    return _.merge({}, graph, { 
-      edges: _.values(graph.edges).reduce((result, edge) => { 
-        return _.merge({}, result, { [edge.id]: this.updateEdgePosition(Edge.setDefaults(edge), graph) });
+    return merge({}, graph, { 
+      edges: values(graph.edges).reduce((result, edge) => { 
+        return merge({}, result, { [edge.id]: this.updateEdgePosition(Edge.setDefaults(edge), graph) });
       }, {}) 
     });
   }
 
   static prepareNodes(graph) {
-    let nodes = _.values(graph.nodes).reduce((result, node) => {
-      return _.merge({}, result, { [node.id]: Node.setDefaults(node) });
+    let nodes = values(graph.nodes).reduce((result, node) => {
+      return merge({}, result, { [node.id]: Node.setDefaults(node) });
     }, {});
     nodes = this.prepareNodePositions(nodes);
-    return _.merge({}, graph, { nodes: nodes });
+    return merge({}, graph, { nodes: nodes });
   }
 
   static prepareNodePositions(nodes) {
     // arrange unpositioned nodes into a circle
-    let ary = _.values(nodes).filter(n => !(n.display.x && n.display.y));
+    let ary = values(nodes).filter(n => !(n.display.x && n.display.y));
     let radius = Math.pow(ary.length * 100, 0.85);
 
-    return _.merge({}, nodes, ary.reduce((result, node, i) => {
+    return merge({}, nodes, ary.reduce((result, node, i) => {
       let angle = (2 * Math.PI) * (i / ary.length);
-      return _.merge({}, result, { 
+      return merge({}, result, { 
         [node.id]: { display: { 
           x: Math.cos(angle) * radius, 
           y: Math.sin(angle) * radius 
@@ -133,26 +134,26 @@ class Graph {
     xb = xb - xmb;
     yb = yb - ymb;
 
-    return _.merge({}, edge, { display: { x, y, cx, cy, is_reverse, xa, ya, xb, yb } });
+    return merge({}, edge, { display: { x, y, cx, cy, is_reverse, xa, ya, xb, yb } });
   }
 
   static moveNode(graph, nodeId, x, y) {
     // first update the node
-    graph = _.merge({}, graph, { nodes: { [nodeId]: { display: { x, y } } } });
+    graph = merge({}, graph, { nodes: { [nodeId]: { display: { x, y } } } });
 
     // then update the edges
-    return _.merge({}, graph, { edges: _.values(graph.edges).reduce((result, edge) => {
-      return _.merge({}, result, { [edge.id]: (edge.node1_id == nodeId || edge.node2_id == nodeId) ? this.updateEdgePosition(edge, graph) : edge });
+    return merge({}, graph, { edges: values(graph.edges).reduce((result, edge) => {
+      return merge({}, result, { [edge.id]: (edge.node1_id == nodeId || edge.node2_id == nodeId) ? this.updateEdgePosition(edge, graph) : edge });
     }, {}) });
 
   }
 
   static moveEdge(graph, edgeId, cx, cy) {
-    return _.merge({}, graph, { edges: { [edgeId]: this.updateEdgePosition(_.merge({}, graph.edges[edgeId], { display: { cx, cy } }), graph) } });
+    return merge({}, graph, { edges: { [edgeId]: this.updateEdgePosition(merge({}, graph.edges[edgeId], { display: { cx, cy } }), graph) } });
   }
 
   static edgesConnectedToNode(graph, nodeId) {
-    return _.values(graph.edges).filter((e) => e.node1_id == nodeId || e.node2_id == nodeId);
+    return values(graph.edges).filter((e) => e.node1_id == nodeId || e.node2_id == nodeId);
   }
 }
 

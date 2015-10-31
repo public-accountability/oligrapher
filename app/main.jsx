@@ -20,12 +20,6 @@ var main = {
       Oligrapher.rootElement
     );
 
-    if (module.hot) {
-      require('react-hot-loader/Injection').RootInstanceProvider.injectProvider({
-        getRootInstances: () => [this.providerInstance]
-      });
-    }
-
     return this.providerInstance;
   },
 

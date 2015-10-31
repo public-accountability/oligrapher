@@ -1,4 +1,4 @@
-const _ = require('lodash');
+import { merge } from 'lodash';
 
 export default class Edge {
   static defaults() {
@@ -14,6 +14,6 @@ export default class Edge {
   }
 
   static setDefaults(edge) {
-    return _.merge(this.defaults(), edge);
+    return merge(this.defaults(), edge);
   }
 }
