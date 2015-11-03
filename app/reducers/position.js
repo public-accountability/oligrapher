@@ -1,7 +1,8 @@
-import { SHOW_GRAPH } from '../actions';
+import { SHOW_GRAPH, LOAD_GRAPH } from '../actions';
 
 export default function position(state = { prevId: null, currentId: null }, action) {
   switch (action.type) {
+  case LOAD_GRAPH:
   case SHOW_GRAPH:
     return { prevId: state.currentId, currentId: action.id };
   default:

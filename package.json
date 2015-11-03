@@ -54,6 +54,7 @@
     "semver": "^5.0.3",
     "serve": "^1.4.0",
     "shortid": "^2.2.4",
+    "springy": "^2.7.1",
     "style-loader": "^0.12.2",
     "superagent": "^1.2.0",
     "superagent-jsonp": "0.0.2",

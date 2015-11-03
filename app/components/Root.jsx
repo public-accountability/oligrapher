@@ -4,6 +4,7 @@ import { loadGraph, showGraph, zoomIn, zoomOut, resetZoom, moveNode, moveEdge } 
 import Graph from './Graph';
 import GraphModel from '../models/Graph';
 import { HotKeys } from 'react-hotkeys';
+import ReactDOM from 'react-dom';
 
 class Root extends Component {
   render() {
@@ -18,12 +19,13 @@ class Root extends Component {
     };
 
     const { dispatch } = this.props;
+    const that = this;
 
     return this.props.graph ? (
       <div id="oligrapherContainer" style={{ height: '100%' }}>
         <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={keyHandlers}>
           <Graph 
-            ref={(g) => Oligrapher.graphInstance = g}
+            ref={(c) => this.graphInstance = c }
             graph={this.props.graph} 
             zoom={this.props.zoom} 
             prevGraph={this.props.prevGraph} 
@@ -36,23 +38,26 @@ class Root extends Component {
     ) : (<div></div>);
   }
 
-  componentDidMount(){
-    const { dispatch, data } = this.props;
-
-    if (data) {
-      // showGraph needs a graph id so it's set here
-      let graph = GraphModel.setDefaults(data);
-      dispatch(loadGraph(graph));
-      dispatch(showGraph(graph.id));
+  componentDidMount() {
+    if (this.props.data) {
+      this.loadData(this.props.data);
     }
+
+    this._setSVGHeight();
   }
 
-  zoomIn() {
-    console.log("zoom in");
+  loadData(data) {
+    // showGraph needs a graph id so it's set here
+    let graph = GraphModel.setDefaults(data);
+    this.props.dispatch(loadGraph(graph));
   }
 
-  zoomOut() {
-    console.log("zoom out");
+  _setSVGHeight() {
+    if (this.graphInstance) {
+      let container = ReactDOM.findDOMNode(this).parentElement;
+      let height = container.clientHeight; // - 120;
+      ReactDOM.findDOMNode(this.graphInstance).setAttribute("height", height);
+    }
   }
 }
 
@@ -60,8 +65,9 @@ function select(state) {
   return {
     graph: state.graphs[state.position.currentId],
     prevGraph: state.graphs[state.position.prevId],
+    loadedId: state.position.loadedId,
     zoom: state.zoom
   };
 }
 
-export default connect(select)(Root);
+export default connect(select, null, null, { withRef: true })(Root);

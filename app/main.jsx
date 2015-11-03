@@ -7,41 +7,40 @@ import reducers from './reducers';
 import { loadGraph, showGraph, zoomIn, zoomOut } from './actions';
 
 var main = {
-  run: function(elementId, graphData = null) {
-    let store = createStore(reducers);
-    Oligrapher.rootElement = document.getElementById(elementId);
+  run: function(element, graphData = null) {
+    this.rootElement = element;
+    this.store = createStore(reducers);
 
     this.providerInstance = render(
-      <Provider store={store}>
+      <Provider store={this.store}>
         <Root 
           data={graphData} 
-          ref={(c) => Oligrapher.rootInstance = c} />
+          ref={(c) => this.rootInstance = c} />
       </Provider>,
-      Oligrapher.rootElement
+      this.rootElement
     );
 
     return this.providerInstance;
   },
 
-  load: function(graphData) {
-    Oligrapher.rootInstance.dispatchProps.dispatch(loadGraph(graphData));
-    Oligrapher.rootInstance.dispatchProps.dispatch(showGraph(graphData.id));
+  import: function(graphData) {
+    this.rootInstance.dispatchProps.dispatch(loadGraph(graphData));
   },
 
   show: function(id) {
-    Oligrapher.rootInstance.dispatchProps.dispatch(showGraph(id));
+    this.rootInstance.dispatchProps.dispatch(showGraph(id));
   },
 
   zoomIn: function(id) {
-    Oligrapher.rootInstance.dispatchProps.dispatch(zoomIn());
+    this.rootInstance.dispatchProps.dispatch(zoomIn());
   },
 
   zoomOut: function(id) {
-    Oligrapher.rootInstance.dispatchProps.dispatch(zoomOut());
+    this.rootInstance.dispatchProps.dispatch(zoomOut());
   },
 
   export: function() {
-    return Oligrapher.graphInstance.props.graph;
+    return this.rootInstance.getWrappedInstance().props.graph;
   }
 }
 

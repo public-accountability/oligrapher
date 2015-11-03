@@ -15,7 +15,7 @@ export const MOVE_EDGE = 'MOVE_EDGE';
  */
 
 export function loadGraph(graph) {
-  return { type: LOAD_GRAPH, graph };
+  return { type: LOAD_GRAPH, graph, id: graph.id };
 }
 
 export function showGraph(id) {

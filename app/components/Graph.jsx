@@ -41,21 +41,11 @@ export default class Graph extends Component {
 
   componentDidMount() {
     document.getElementById("svg").setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
-    this._setSVGHeight();
     this._animateTransition();
   }
 
   componentDidUpdate() {
     this._animateTransition();    
-  }
-
-  _setSVGHeight() {
-    let container = Oligrapher.rootElement;
-
-    if (container) {
-      let height = container.clientHeight; // - 120;
-      ReactDOM.findDOMNode(this).setAttribute("height", height);
-    }
   }
 
   _animateTransition(duration = 0.7) {
@@ -108,7 +98,7 @@ export default class Graph extends Component {
     return {
       edges: values(graph.edges).map((e, i) =>  
         <Edge 
-          ref={(c) => this.edges[e.id] = c} 
+          ref={(c) => { this.edges[e.id] = c; if (c) { c.graphInstance = this; } }} 
           key={i} 
           edge={e} 
           graphId={this.props.graph.id} 
@@ -117,7 +107,7 @@ export default class Graph extends Component {
       ),
       nodes:  values(graph.nodes).map((n, i) => 
         <Node 
-          ref={(c) => this.nodes[n.id] = c} 
+          ref={(c) => { this.nodes[n.id] = c; if (c) { c.graphInstance = this; } }} 
           key={i} 
           node={n} 
           graph={this.props.graph} 

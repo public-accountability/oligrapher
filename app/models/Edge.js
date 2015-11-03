@@ -6,7 +6,7 @@ export default class Edge {
       display: { 
         label: "Edge",
         scale: 1,
-        is_directional: false,
+        arrow: false,
         status: "normal",
       }      
     };

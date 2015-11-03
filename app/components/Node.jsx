@@ -34,8 +34,8 @@ export default class Node extends BaseComponent {
     );
   }
 
-  componentWillReceiceProps(props) {
-    this.setState({ x: props.display.x, y: props.display.y });
+  componentWillReceiveProps(props) {
+    this.setState({ x: props.node.display.x, y: props.node.display.y });
   }
 
   _handleDragStart(e, ui) {
@@ -77,7 +77,7 @@ export default class Node extends BaseComponent {
       }
 
       let newEdge = Graph.calculateEdgePosition(edge, x1, y1, x2, y2, s1, s2);
-      Oligrapher.graphInstance.edges[edge.id].setState(newEdge.display);
+      this.graphInstance.edges[edge.id].setState(newEdge.display);
     });
   }
 

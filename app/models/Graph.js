@@ -2,8 +2,8 @@ import Node from './Node';
 import Edge from './Edge';
 import NodeDisplaySettings from '../NodeDisplaySettings';
 import helpers from './Helpers';
-import { merge } from 'lodash';
-import { values } from 'lodash';
+import { merge, values } from 'lodash';
+import Springy from 'springy';
 
 class Graph {
   static generateId() {
@@ -20,8 +20,8 @@ class Graph {
     return merge({}, this.defaults(), graph);
   }
 
-  static prepare(graph) {
-    return this.prepareEdges(this.prepareNodes(this.setDefaults(graph)));
+  static prepare(graph, layout = 'forceLayout') {
+    return this.prepareEdges(this.prepareLayout(this.prepareNodes(this.setDefaults(graph)), layout));
   }
 
   static prepareEdges(graph) {
@@ -36,16 +36,20 @@ class Graph {
     let nodes = values(graph.nodes).reduce((result, node) => {
       return merge({}, result, { [node.id]: Node.setDefaults(node) });
     }, {});
-    nodes = this.prepareNodePositions(nodes);
+
     return merge({}, graph, { nodes: nodes });
   }
 
-  static prepareNodePositions(nodes) {
+  static prepareLayout(graph, layout) {
+    return this[layout](graph);
+  }
+
+  static circleLayout(graph) {
     // arrange unpositioned nodes into a circle
-    let ary = values(nodes).filter(n => !(n.display.x && n.display.y));
+    let ary = values(graph.nodes).filter(n => !(n.display.x && n.display.y));
     let radius = Math.pow(ary.length * 100, 0.85);
 
-    return merge({}, nodes, ary.reduce((result, node, i) => {
+    return merge({}, { nodes: nodes }, { nodes: ary.reduce((result, node, i) => {
       let angle = (2 * Math.PI) * (i / ary.length);
       return merge({}, result, { 
         [node.id]: { display: { 
@@ -53,7 +57,51 @@ class Graph {
           y: Math.sin(angle) * radius 
         } } 
       });
-    }, {}));
+    }, {}) });    
+  }
+
+  static forceLayout(graph, steps = 500) {
+    // only use force layout if there are unpositioned nodes
+    let unpositioned = values(graph.nodes).find(n => !(n.display.x && n.display.y));
+
+    if (!unpositioned) {
+      return merge({}, graph);
+    }
+
+    let gr = new Springy.Graph();
+
+    let nodeIds = values(graph.nodes).map(n => n.id);
+    let edges = values(graph.edges).map(e => [e.node1_id, e.node2_id]);
+
+    gr.addNodes(...nodeIds);
+    gr.addEdges(...edges);
+
+    let stiffness = 200.0;
+    let repulsion = 300.0;
+    let damping = 0.5;
+    let minEnergyThreshold = 0.1;
+
+    let layout = new Springy.Layout.ForceDirected(gr, stiffness, repulsion, damping, minEnergyThreshold);
+    
+    steps = Math.round(steps / ((nodeIds.length + edges.length) / 50));
+
+    for (var i = 0; i < steps; i++) {
+      layout.tick(0.01);
+    }
+
+    let newGraph = merge({}, graph);
+
+    layout.eachNode((node, point) => {
+      newGraph.nodes[node.data.label].display.x = point.p.x * 100;
+      newGraph.nodes[node.data.label].display.y = point.p.y * 100;
+    });
+
+    values(newGraph.edges).forEach(e => {
+      newGraph.edges[e.id].display.cx = null;
+      newGraph.edges[e.id].display.cy = null;
+    });
+
+    return newGraph;
   }
 
   static updateEdgePosition(edge, graph) {

@@ -8,7 +8,7 @@ export default class Edge extends BaseComponent {
   constructor(props) {
     super(props);
     this.bindAll('_handleDragStart', '_handleDrag', '_handleTextClick');
-    this.state = merge({}, this.props.edge.display);
+    this.state = this.props.edge.display;
   }
 
   render() {
@@ -22,7 +22,8 @@ export default class Edge extends BaseComponent {
         handle=".handle"
         moveOnStartChange={false}
         onStart={this._handleDragStart}
-        onDrag={this._handleDrag}>      
+        onDrag={this._handleDrag}
+        onDragStop={this._handleDragStop}>
         <g id={sp.groupId} className="edge">
           <path 
             className="edge-background" 
@@ -61,18 +62,27 @@ export default class Edge extends BaseComponent {
   }
 
   componentWillReceiveProps(props) {
-    this.setState(merge({}, props.edge.display));
+    this.setState(props.edge.display);
   }
 
   _handleDragStart(event, ui) {
-    this._startPosition = ui.position;
-    this._startControlPoint = this.props.edge.display;
+    this._startDrag = ui.position;
+    this._startPosition = {
+      x: this.props.edge.display.x,
+      y: this.props.edge.display.y
+    }
   };
 
   _handleDrag(event, ui) {
-    let cx = (ui.position.lastX - this._startPosition.lastX) + this._startControlPoint.cx;
-    let cy = (ui.position.lastY - this._startPosition.lastY) + this._startControlPoint.cy;
-    this.props.moveEdge(this.props.graphId, this.props.edge.id, cx, cy);
+    let e = this.props.edge;
+    let x = (ui.position.clientX - this._startDrag.clientX) + this._startPosition.x;
+    let y = (ui.position.clientY - this._startDrag.clientY) + this._startPosition.y;
+
+    this.setState(merge({}, e.display, { x, y }));
+  }
+
+  _handleDragStop(e, ui) {
+    this.props.moveEdge(this.props.graph.id, this.props.edge.id, this.state.x, this.state.y);
   }
 
   _handleTextClick() {
