@@ -25,7 +25,7 @@ class Root extends Component {
       <div id="oligrapherContainer" style={{ height: '100%' }}>
         <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={keyHandlers}>
           <Graph 
-            ref={(c) => this.graphInstance = c }
+            ref="graph"
             graph={this.props.graph} 
             zoom={this.props.zoom} 
             prevGraph={this.props.prevGraph} 
@@ -46,6 +46,10 @@ class Root extends Component {
     this._setSVGHeight();
   }
 
+  componentDidUpdate() {
+    this._setSVGHeight();    
+  }
+
   loadData(data) {
     // showGraph needs a graph id so it's set here
     let graph = GraphModel.setDefaults(data);
@@ -53,10 +57,12 @@ class Root extends Component {
   }
 
   _setSVGHeight() {
-    if (this.graphInstance) {
-      let container = ReactDOM.findDOMNode(this).parentElement;
+    if (this.props.graph) {
+      let rootElement = ReactDOM.findDOMNode(this);
+      let container = rootElement.parentElement;
+      let svg = rootElement.querySelectorAll(":scope svg#svg")[0];
       let height = container.clientHeight; // - 120;
-      ReactDOM.findDOMNode(this.graphInstance).setAttribute("height", height);
+      svg.setAttribute("height", height);
     }
   }
 }
