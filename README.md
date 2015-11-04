@@ -1,5 +1,5 @@
 # Oligrapher 2
-Oligrapher is a JavaScript app for visualizing network graphs. Oligrapher accepts graph data of a specific format and outputs a nice-looking SVG rendering of the graph.
+Oligrapher is a JavaScript app for visualizing network graphs. Oligrapher accepts graph data of a specific format and allows a user to design a nice-looking SVG rendering of the graph.
 
 Oligrapher 1 was originally developed by [LittleSis](http://littlesis.org) before it was separated into a standalone library. LittleSis has a large collection of [maps created with Oligrapher](http://littlesis.org/oligrapher). 
 
@@ -39,7 +39,8 @@ Oligrapher is easy to embed in a web page. All you have to do is include the .js
     <div id="graph"></div>
     <script>
       var data = getDataFromSomewhere();
-      Oligrapher.run("graph", data);
+      var div = document.getElementById('#graph');
+      Oligrapher.run(div, data);
     </script>
   </body>
 </html>
@@ -51,7 +52,8 @@ Data Schema
 Graph data coming in (and out) of Oligrapher should conform to the following general structure.
 
 ```
-var data = {
+{
+  id: 'NkpdQPQfx',
   nodes: {
     1: { id: 1, display: { name: "Node 1" } },
     2: { id: 2, display: { name: "Node 2" } },
@@ -64,7 +66,7 @@ var data = {
 };
 ```
 
-Nodes only require an ```id``` and a ```name```; edges also require ```node1_id``` and ```node2_id```, which refer to the ```id```s of the two nodes they connect. A number of optional attributes control the layout and appearance of nodes and edges. All position coordinates are relative to the center of the display area, with the x-axis increasing righward and the y-axis increasing downward.
+The ```id``` of the graph itself is optional, but you'll need to supply one if you want Oligrapher to redisplay a previously imported graph. Nodes only require an ```id``` and a ```name```; edges also require ```node1_id``` and ```node2_id```, which refer to the ```id```s of the two nodes they connect. A number of optional attributes control the layout and appearance of nodes and edges. All position coordinates are relative to the center of the display area, with the x-axis increasing righward and the y-axis increasing downward.
 
 ### Node Attributes
 - ```id:``` **(required)** an integer or string uniquely identifying the node
