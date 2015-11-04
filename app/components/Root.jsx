@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { loadGraph, showGraph, zoomIn, zoomOut, resetZoom, moveNode, moveEdge } from '../actions';
+import { loadGraph, showGraph, 
+         zoomIn, zoomOut, resetZoom, 
+         moveNode, moveEdge, moveCaption } from '../actions';
 import Graph from './Graph';
 import GraphModel from '../models/Graph';
 import { HotKeys } from 'react-hotkeys';
@@ -32,7 +34,8 @@ class Root extends Component {
             resetZoom={() => dispatch(resetZoom())} 
             clickNode={() => null}
             moveNode={(graphId, nodeId, x, y) => dispatch(moveNode(graphId, nodeId, x, y))} 
-            moveEdge={(graphId, edgeId, x, y, cx, cy) => dispatch(moveEdge(graphId, edgeId, x, y, cx, cy))} />
+            moveEdge={(graphId, edgeId, x, y, cx, cy) => dispatch(moveEdge(graphId, edgeId, x, y, cx, cy))} 
+            moveCaption={(graphId, captionId, x, y) => dispatch(moveCaption(graphId, captionId, x, y))} />
         </HotKeys>
       </div>
     ) : (<div></div>);

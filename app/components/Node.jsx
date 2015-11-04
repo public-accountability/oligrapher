@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import BaseComponent from './BaseComponent';
 import ds from '../NodeDisplaySettings';
-import config from '../../config';
 import { DraggableCore } from 'react-draggable';
 import Graph from '../models/Graph';
 import { merge } from 'lodash';
@@ -10,7 +9,7 @@ export default class Node extends BaseComponent {
   constructor(props) {
     super(props);
     this.bindAll('_handleDragStart', '_handleDrag', '_handleDragStop');
-    this.state = this.props.node.display;
+    this.state = props.node.display;
   }
 
   render() {
@@ -35,15 +34,15 @@ export default class Node extends BaseComponent {
   }
 
   componentWillReceiveProps(props) {
-    this.setState({ x: props.node.display.x, y: props.node.display.y });
+    this.setState(props.node.display);
   }
 
   _handleDragStart(e, ui) {
     this._startDrag = ui.position;
     this._startPosition = {
-      x: this.props.node.display.x,
-      y: this.props.node.display.y
-    }
+      x: this.state.x,
+      y: this.state.y
+    };
   }
 
   _handleDrag(e, ui) {
@@ -51,7 +50,7 @@ export default class Node extends BaseComponent {
     let x = (ui.position.clientX - this._startDrag.clientX) + this._startPosition.x;
     let y = (ui.position.clientY - this._startDrag.clientY) + this._startPosition.y;
 
-    this.setState(merge({}, n.display, { x, y }));
+    this.setState({ x, y });
 
     // update state of connecting edges
     let edges = Graph.edgesConnectedToNode(this.props.graph, n.id);
@@ -83,8 +82,7 @@ export default class Node extends BaseComponent {
 
   _getSvgParams(node) {
     let n = node;
-    let { image, name, scale, url, status } = n.display;
-    let { x, y } = this.state;
+    let { x, y, image, name, scale, url, status } = this.state;
     let r = ds.circleRadius * scale;
     let textOffsetY = ds.textMarginTop + r;
     let textLines = this._textLines(name);

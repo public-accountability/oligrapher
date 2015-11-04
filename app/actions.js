@@ -9,6 +9,7 @@ export const ZOOM_OUT = 'ZOOM_OUT';
 export const RESET_ZOOM = 'RESET_ZOOM';
 export const MOVE_NODE = 'MOVE_NODE';
 export const MOVE_EDGE = 'MOVE_EDGE';
+export const MOVE_CAPTION = 'MOVE_CAPTION';
 
 /*
  * action creators
@@ -40,4 +41,8 @@ export function moveNode(graphId, nodeId, x, y) {
 
 export function moveEdge(graphId, edgeId, cx, cy) {
   return { type: MOVE_EDGE, graphId, edgeId, cx, cy };
+}
+
+export function moveCaption(graphId, captionId, x, y) {
+  return { type: MOVE_CAPTION, graphId, captionId, x, y };
 }

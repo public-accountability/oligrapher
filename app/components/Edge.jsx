@@ -9,8 +9,8 @@ import nds from '../NodeDisplaySettings';
 export default class Edge extends BaseComponent {
   constructor(props) {
     super(props);
-    this.bindAll('_handleDragStart', '_handleDrag', '_handleTextClick');
-    this.state = this.props.edge.display;
+    this.bindAll('_handleDragStart', '_handleDrag', '_handleDragStop', '_handleTextClick');
+    this.state = props.edge.display;
   }
 
   render() {

@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import Node from './Node';
 import Edge from './Edge';
+import Caption from './Caption';
 import Draggable from 'react-draggable';
 import { values, min, max }  from 'lodash';
 
@@ -46,23 +47,23 @@ export default class Graph extends Component {
   _animateTransition(duration = 0.7) {
     if (!this._isSmallDevice() && this.props.prevGraph) {
       this.props.resetZoom();
+
       let oldViewbox = this._computeViewbox(this.props.prevGraph, this.props.zoom).split(" ").map(function(part) { return parseInt(part); });
       let newViewbox = this._computeViewbox(this.props.graph, this.props.zoom).split(" ").map(function(part) { return parseInt(part); });
       let start = this._now();
       let that = this;
-
+      let domNode = ReactDOM.findDOMNode(that);
       let req;
 
       const draw = function() {
         req = requestAnimationFrame(draw);
 
         let time = (that._now() - start);
-        let fraction = time / duration;
         let viewbox = oldViewbox.map(function(part, i) {
-          return oldViewbox[i] + (newViewbox[i] - oldViewbox[i]) * that._linear(fraction);
+          return oldViewbox[i] + (newViewbox[i] - oldViewbox[i]) * that._linear(time / duration);
         }).join(" ");
 
-        ReactDOM.findDOMNode(that).setAttribute("viewBox", viewbox);
+        domNode.setAttribute("viewBox", viewbox);
 
         if (time > duration) {
           cancelAnimationFrame(req);
@@ -90,6 +91,7 @@ export default class Graph extends Component {
 
   _getSvgParams(graph) {
     let that = this;
+
     return {
       edges: values(graph.edges).map((e, i) =>  
         <Edge 
@@ -110,9 +112,15 @@ export default class Graph extends Component {
           clickNode={that.props.clickNode} 
           moveNode={that.props.moveNode} />
       ),
+      captions: values(graph.captions).map((c, i) => 
+        <Caption 
+          key={i} 
+          caption={c}
+          graphId={this.props.graph.id}
+          moveCaption={this.props.moveCaption} />
+      ),
       markers: `<marker id="marker1" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L10,0L0,5" fill="#999"></path></marker><marker id="marker2" viewBox="-10 -5 10 10" refX="-8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L-10,0L0,5" fill="#999"></path></marker><marker id="fadedmarker1" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L10,0L0,5"></path></marker>`,
-      viewBox: this._computeViewbox(graph, this.props.zoom),
-      captions: values(graph.captions).map((c, index) => <text key={index} x={c.display.x} y={c.display.y}>{c.display.text}</text>)
+      viewBox: this._computeViewbox(graph, this.props.zoom)
     };
   }
 
@@ -131,10 +139,7 @@ export default class Graph extends Component {
     const nodes = values(graph.nodes)
       .filter(n => !highlightedOnly || n.display.status != "faded")
       .map(n => n.display);
-    // const edges = values(graph.edges)
-    //   .filter(e => e.display.status != "faded")
-    //   .map(e => ({ x: e.display.cx, y: e.display.cy }));
-    const items = nodes;
+    const items = nodes.concat(...values(graph.captions).map(c => c.display));
 
     if (items.length > 0) {
       const padding = highlightedOnly ? 50 : 50;
@@ -154,6 +159,6 @@ export default class Graph extends Component {
 
 
   _isSmallDevice() {
-    return window.innerWidth < 990;
+    return window.innerWidth < 600;
   }
 }

@@ -26,3 +26,8 @@
 .edge:hover text.link {
   cursor: pointer;
 }
+
+.caption {
+  font-family: Helvetica, Arial, sans-serif;
+  cursor: default;
+}

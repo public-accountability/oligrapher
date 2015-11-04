@@ -20,7 +20,28 @@ class Graph {
   }
 
   static prepare(graph, layout = 'forceLayout') {
-    return this.prepareEdges(this.prepareLayout(this.prepareNodes(this.setDefaults(graph)), layout));
+    return this.prepareCaptions(
+      this.prepareEdges(
+        this.prepareLayout(
+          this.prepareNodes(
+            this.setDefaults(graph)
+          ), layout)
+      )
+    );
+  }
+
+  static prepareCaptions(graph) {
+    // list unpositioned captions on left side
+    let ary = values(graph.captions).filter(c => !(c.display.x && c.display.y));
+    let minX = Math.min(...values(graph.nodes).map(n => n.display.x));
+    let minY = Math.min(...values(graph.nodes).map(n => n.display.y));
+
+    let captions = ary.reduce((result, c, i) => {
+      result[c.id] = merge({}, c, { display: { x: minX - 200, y: minY + (i * 50) } });
+      return result;
+    }, {});
+
+    return merge({}, graph, { captions });
   }
 
   static prepareEdges(graph) {
@@ -135,6 +156,10 @@ class Graph {
     return merge({}, graph, { edges: { [edgeId]: this.updateEdgePosition(merge({}, graph.edges[edgeId], { display: { cx, cy } }), graph) } });
   }
 
+  static moveCaption(graph, captionId, x, y) {
+    return merge({}, graph, { captions: { [captionId]: { display: { x, y } } } });
+  }
+
   static edgesConnectedToNode(graph, nodeId) {
     return values(graph.edges).filter(edge => edge.node1_id == nodeId || edge.node2_id == nodeId);
   }
@@ -154,8 +179,6 @@ class Graph {
       return result;
     }, {});
 
-    console.log(graph.edges, values(edgeCount).length, edgeCount);
-
     let nodeIds = Object.keys(edgeCount).filter(nodeId => edgeCount[nodeId] >= num);
 
     return this.limitGraphToNodeIds(graph, nodeIds);
@@ -168,8 +191,6 @@ class Graph {
       result[edge.node2_id] = (result[edge.node2_id] || 0) + 1;
       return result;
     }, {});
-
-    console.log(graph.edges, values(edgeCount).length, edgeCount);
 
     // order node ids by descending number of edges and keep num
     let nodeIds = Object.keys(edgeCount).sort((a, b) => edgeCount[b] - edgeCount[a]).slice(0, num);
