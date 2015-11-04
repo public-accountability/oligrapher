@@ -55,29 +55,25 @@ export default class Node extends BaseComponent {
 
     // update state of connecting edges
     let edges = Graph.edgesConnectedToNode(this.props.graph, n.id);
+
     edges.forEach((edge) => {
       let thisNodeNum = edge.node1_id == n.id ? 1 : 2;
       let otherNode = this.props.graph.nodes[thisNodeNum == 1 ? edge.node2_id : edge.node1_id];
-      let x1, y1, x2, y2, s1, s2;
+      let x1, y1, x2, y2;
 
       if (thisNodeNum == 1) {
         x1 = x;
         y1 = y;
-        s1 = n.display.scale;
         x2 = otherNode.display.x;
         y2 = otherNode.display.y;
-        s2 = otherNode.display.scale;
       } else {
         x1 = otherNode.display.x;
         y1 = otherNode.display.y;
-        s1 = otherNode.display.scale;
         x2 = x;
         y2 = y;
-        s2 = n.display.scale;
       }
 
-      let newEdge = Graph.calculateEdgePosition(edge, x1, y1, x2, y2, s1, s2);
-      this.graphInstance.edges[edge.id].setState(newEdge.display);
+      this.graphInstance.edges[edge.id].setState({ x1, y1, x2, y2 });
     });
   }
 

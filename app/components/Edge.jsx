@@ -2,7 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import BaseComponent from './BaseComponent';
 import { DraggableCore } from 'react-draggable';
 import { merge } from 'lodash';
-const ds = require('../EdgeDisplaySettings');
+import eds from '../EdgeDisplaySettings';
+import nds from '../NodeDisplaySettings';
+
 
 export default class Edge extends BaseComponent {
   constructor(props) {
@@ -65,20 +67,84 @@ export default class Edge extends BaseComponent {
     this.setState(props.edge.display);
   }
 
+  _calculateGeometry() {
+    // let edge = this.props.edge;
+    let { cx, cy, x1, y1, x2, y2, s1, s2 } = this.state;
+    let r1 = s1 * nds.circleRadius;
+    let r2 = s2 * nds.circleRadius;
+
+    // set edge position at midpoint between nodes
+    let x = (x1 + x2) / 2;
+    let y = (y1 + y2) / 2;
+
+    // keep track of which node is on left and right ("a" is left, "b" is right)
+    let xa, ya, xb, yb, is_reverse;
+
+    if (x1 < x2) {
+      xa = x1;
+      ya = y1;
+      xb = x2;
+      yb = y2;
+      is_reverse = false;
+    } else {
+      xa = x2;
+      ya = y2;
+      xb = x1;
+      yb = y1;
+      is_reverse = true;
+    }
+
+    // generate curve offset if it doesn't exist
+    if (cx == null || cy == null) {
+      cx = -(ya - y) * eds.curveStrength;
+      cy = (xa - x) * eds.curveStrength;
+    }
+
+    // calculate absolute position of curve midpoint
+    let mx = cx + x;
+    let my = cy + y;
+
+    // curves should not reach the centers of nodes but rather stop at their edges, so we:
+
+    // calculate spacing between curve endpoint and node center
+    let sa = is_reverse ? s2 : s1;
+    let sb = is_reverse ? s1 : s2;
+    let ra = (is_reverse ? r2 : r1) + (sa * nds.circleSpacing);
+    let rb = (is_reverse ? r1 : r2) + (sb * nds.circleSpacing);
+
+    // calculate angle from curve midpoint to node center
+    let angleA = Math.atan2(ya - my, xa - mx);
+    let angleB = Math.atan2(yb - my, xb - mx);
+
+    // x and y offsets for curve endpoints are the above spacing times the cos and sin of the angle
+    let xma = ra * Math.cos(angleA);
+    let yma = ra * Math.sin(angleA);
+    let xmb = rb * Math.cos(angleB);
+    let ymb = rb * Math.sin(angleB);
+
+    // finally update edge with new curve endpoints
+    xa = xa - xma;
+    ya = ya - yma;
+    xb = xb - xmb;
+    yb = yb - ymb;
+
+    return { x, y, cx, cy, xa, ya, xb, yb, is_reverse };
+  }
+
   _handleDragStart(event, ui) {
     this._startDrag = ui.position;
     this._startPosition = {
-      x: this.props.edge.display.x,
-      y: this.props.edge.display.y
+      x: this.state.cx,
+      y: this.state.cy
     }
   };
 
   _handleDrag(event, ui) {
     let e = this.props.edge;
-    let x = (ui.position.clientX - this._startDrag.clientX) + this._startPosition.x;
-    let y = (ui.position.clientY - this._startDrag.clientY) + this._startPosition.y;
+    let cx = (ui.position.clientX - this._startDrag.clientX) + this._startPosition.x;
+    let cy = (ui.position.clientY - this._startDrag.clientY) + this._startPosition.y;
 
-    this.setState(merge({}, e.display, { x, y }));
+    this.setState({ cx, cy });
   }
 
   _handleDragStop(e, ui) {
@@ -95,8 +161,8 @@ export default class Edge extends BaseComponent {
   _getSvgParams(edge) {
     let e = edge;
 
-    let { label, scale, arrow, is_reverse, dash, status } = e.display;
-    let { x, y, xa, ya, xb, yb, cx, cy } = this.state;
+    let { label, scale, arrow, dash, status } = e.display;
+    let { x, y, cx, cy, xa, ya, xb, yb, is_reverse } = this._calculateGeometry();
 
     const pathId = `path-${e.id}`;
     const fontSize = 10 * Math.sqrt(scale);
@@ -111,10 +177,10 @@ export default class Edge extends BaseComponent {
       textPath: { __html: `<textPath class="labelpath" startOffset="50%" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#${pathId}" font-size="${fontSize}">${label}</textPath>` },
       markerStart: (arrow && is_reverse) ? "url(#marker2)" : "",
       markerEnd: (arrow && !is_reverse) ? "url(#marker1)" : "",
-      lineColor: ds.lineColor[status],
-      textColor: ds.textColor[status],
-      bgColor: ds.bgColor[status],
-      bgOpacity: ds.bgOpacity[status]
+      lineColor: eds.lineColor[status],
+      textColor: eds.textColor[status],
+      bgColor: eds.bgColor[status],
+      bgOpacity: eds.bgOpacity[status]
     };
   }
 }

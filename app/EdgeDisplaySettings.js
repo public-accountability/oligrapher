@@ -1,4 +1,5 @@
 module.exports = {
+  curveStrength: 0.1,
   lineColor: {
     normal: "#999",
     highlighted: "#444",

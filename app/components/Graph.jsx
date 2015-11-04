@@ -33,12 +33,7 @@ export default class Graph extends Component {
       </svg>
     );
   }
-
-  componentWillMount() {
-    this.nodes = {};
-    this.edges = {};
-  }
-
+  
   componentDidMount() {
     document.getElementById("svg").setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
     this._animateTransition();
