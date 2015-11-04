@@ -38,8 +38,8 @@ Oligrapher is easy to embed in a web page. All you have to do is include the .js
   <body>
     <div id="graph"></div>
     <script>
-      var data = getDataFromSomewhere();
       var div = document.getElementById('#graph');
+      var data = getDataFromSomewhere();
       Oligrapher.run(div, data);
     </script>
   </body>
@@ -69,7 +69,7 @@ Graph data coming in (and out) of Oligrapher should conform to the following gen
 };
 ```
 
-The ```id``` of the graph itself is optional, but you'll need to supply one if you want Oligrapher to redisplay a previously imported graph. Nodes only require an ```id``` and a ```name```; edges also require ```node1_id``` and ```node2_id```, which refer to the ```id```s of the two nodes they connect. A number of optional attributes control the layout and appearance of nodes and edges. All position coordinates are relative to the center of the display area, with the x-axis increasing righward and the y-axis increasing downward.
+The ```id``` of the graph itself is optional, Oligrapher will generate it if not provided. Nodes only require an ```id``` and a ```name```; edges also require ```node1_id``` and ```node2_id```, which refer to the ```id```s of the two nodes they connect. A number of optional attributes control the layout and appearance of nodes and edges. All position coordinates are relative to the center of the display area, with the x-axis increasing righward and the y-axis increasing downward.
 
 ### Node Attributes
 - ```id:``` **(required)** an integer or string uniquely identifying the node
@@ -99,3 +99,54 @@ The ```id``` of the graph itself is optional, but you'll need to supply one if y
   - ```text:``` **(required)** the caption's text content
   - ```x:``` x-coordinate of the caption's position
   - ```y:``` y-coordinate of the caption's position
+
+API
+---
+
+### ```run(DOMElement, data = null)```
+Starts Oligrapher within a given ```DOMElement``` and loads initial ```data``` if provided. Returns the top-level Redux [Provider](https://github.com/rackt/react-redux/blob/master/docs/api.md#provider-store) instance.
+```
+var div = document.getElementById('#graph');
+var data = getDataFromSomeWhere();
+Oligrapher.run(div, data);
+```
+
+### ```import(data)```
+Imports graph ```data``` into Oligrapher and displays it, returning the imported graph's ```id```.
+```
+var id1 = Oligrapher.load(data1);
+var id2 = Oligrapher.load(data2);
+```
+
+### ```export()```
+Returns a snapshot of the currently displayed graph data, including display attributes. This data can be ```import```ed later to display the identical graph.
+```
+var data = getGraphFromDatabase();
+Oligrapher.import(data);
+// ... user edits graph ...
+data = Oligrapher.export();   // get data snapshot
+// ... user edits graph some more ...
+Oligrapher.import(data);   // restore data snapshot
+// ... user edits graph some more ...
+data = Oligrapher.export();
+saveGraphToDatabase(data);
+```
+
+### ```show(id)```
+Displays the previously-imported graph with the given ```id```.
+```
+var id1 = Oligrapher.load(data1);
+var id2 = Oligrapher.load(data2);
+Oligrapher.show(id1);
+```
+
+### ```zoomIn()```
+Zooms in by 20%. This can be triggered with the keyboard shortcut ```ctrl+equals```.
+
+### ```zoomOut()```
+Zooms out by 20%. This can be triggered with the keyboard shortcut ```ctrl+minus```.
+```
+Oligrapher.load(data);
+Oligrapher.zoomIn();
+Oligrapher.zoomOut();   // back to normal
+```
