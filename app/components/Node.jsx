@@ -60,19 +60,8 @@ export default class Node extends BaseComponent {
       let otherNode = this.props.graph.nodes[thisNodeNum == 1 ? edge.node2_id : edge.node1_id];
       let x1, y1, x2, y2;
 
-      if (thisNodeNum == 1) {
-        x1 = x;
-        y1 = y;
-        x2 = otherNode.display.x;
-        y2 = otherNode.display.y;
-      } else {
-        x1 = otherNode.display.x;
-        y1 = otherNode.display.y;
-        x2 = x;
-        y2 = y;
-      }
-
-      this.graphInstance.edges[edge.id].setState({ x1, y1, x2, y2 });
+      let newState = (thisNodeNum == 1) ? { x1: x, y1: y } : { x2: x, y2: y };
+      this.graphInstance.edges[edge.id].setState(newState);
     });
   }
 

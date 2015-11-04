@@ -25,7 +25,7 @@ export default class Edge extends BaseComponent {
         moveOnStartChange={false}
         onStart={this._handleDragStart}
         onDrag={this._handleDrag}
-        onDragStop={this._handleDragStop}>
+        onStop={this._handleDragStop}>
         <g id={sp.groupId} className="edge">
           <path 
             className="edge-background" 
@@ -65,6 +65,58 @@ export default class Edge extends BaseComponent {
 
   componentWillReceiveProps(props) {
     this.setState(props.edge.display);
+  }
+
+  _handleDragStart(event, ui) {
+    this._startDrag = ui.position;
+    this._startPosition = {
+      x: this.state.cx,
+      y: this.state.cy
+    }
+  }
+
+  _handleDrag(event, ui) {
+    let e = this.props.edge;
+    let cx = (ui.position.clientX - this._startDrag.clientX) + this._startPosition.x;
+    let cy = (ui.position.clientY - this._startDrag.clientY) + this._startPosition.y;
+
+    this.setState({ cx, cy });
+  }
+
+  _handleDragStop(e, ui) {
+    this.props.moveEdge(this.props.graphId, this.props.edge.id, this.state.cx, this.state.cy);
+  }
+
+  _handleTextClick() {
+    if (this.props.edge.display.url) {
+      let tab = window.open(this.props.edge.display.url, '_blank');
+      tab.focus();
+    }
+  }
+
+  _getSvgParams(edge) {
+    let e = edge;
+    let { label, scale, arrow, dash, status } = this.state;
+    let { x, y, cx, cy, xa, ya, xb, yb, is_reverse } = this._calculateGeometry();
+
+    const pathId = `path-${e.id}`;
+    const fontSize = 10 * Math.sqrt(scale);
+
+    return {
+      curve: `M ${xa}, ${ya} Q ${x + cx}, ${y + cy}, ${xb}, ${yb}`,
+      groupId: `edge-${e.id}`,
+      pathId: pathId,
+      dash: dash ? dash : "",
+      fontSize: fontSize,
+      dy: -6 * Math.sqrt(scale),
+      textPath: { __html: `<textPath class="labelpath" startOffset="50%" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#${pathId}" font-size="${fontSize}">${label}</textPath>` },
+      markerStart: (arrow && is_reverse) ? "url(#marker2)" : "",
+      markerEnd: (arrow && !is_reverse) ? "url(#marker1)" : "",
+      lineColor: eds.lineColor[status],
+      textColor: eds.textColor[status],
+      bgColor: eds.bgColor[status],
+      bgOpacity: eds.bgOpacity[status]
+    };
   }
 
   _calculateGeometry() {
@@ -129,58 +181,5 @@ export default class Edge extends BaseComponent {
     yb = yb - ymb;
 
     return { x, y, cx, cy, xa, ya, xb, yb, is_reverse };
-  }
-
-  _handleDragStart(event, ui) {
-    this._startDrag = ui.position;
-    this._startPosition = {
-      x: this.state.cx,
-      y: this.state.cy
-    }
-  };
-
-  _handleDrag(event, ui) {
-    let e = this.props.edge;
-    let cx = (ui.position.clientX - this._startDrag.clientX) + this._startPosition.x;
-    let cy = (ui.position.clientY - this._startDrag.clientY) + this._startPosition.y;
-
-    this.setState({ cx, cy });
-  }
-
-  _handleDragStop(e, ui) {
-    this.props.moveEdge(this.props.graph.id, this.props.edge.id, this.state.x, this.state.y);
-  }
-
-  _handleTextClick() {
-    if (this.props.edge.display.url) {
-      let tab = window.open(this.props.edge.display.url, '_blank');
-      tab.focus();
-    }
-  }
-
-  _getSvgParams(edge) {
-    let e = edge;
-
-    let { label, scale, arrow, dash, status } = e.display;
-    let { x, y, cx, cy, xa, ya, xb, yb, is_reverse } = this._calculateGeometry();
-
-    const pathId = `path-${e.id}`;
-    const fontSize = 10 * Math.sqrt(scale);
-
-    return {
-      curve: `M ${xa}, ${ya} Q ${x + cx}, ${y + cy}, ${xb}, ${yb}`,
-      groupId: `edge-${e.id}`,
-      pathId: pathId,
-      dash: dash ? dash : "",
-      fontSize: fontSize,
-      dy: -6 * Math.sqrt(scale),
-      textPath: { __html: `<textPath class="labelpath" startOffset="50%" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#${pathId}" font-size="${fontSize}">${label}</textPath>` },
-      markerStart: (arrow && is_reverse) ? "url(#marker2)" : "",
-      markerEnd: (arrow && !is_reverse) ? "url(#marker1)" : "",
-      lineColor: eds.lineColor[status],
-      textColor: eds.textColor[status],
-      bgColor: eds.bgColor[status],
-      bgOpacity: eds.bgOpacity[status]
-    };
   }
 }

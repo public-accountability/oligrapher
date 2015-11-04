@@ -142,12 +142,11 @@ class Graph {
     // first update the node
     graph = merge({}, graph, { nodes: { [nodeId]: { display: { x, y } } } });
 
+    let edges = this.edgesConnectedToNode(graph, nodeId);
+
     // then update the edges
-    return merge({}, graph, { edges: values(graph.edges).reduce((result, edge) => {
-      return merge({}, result, { 
-        [edge.id]: (edge.node1_id == nodeId || edge.node2_id == nodeId) ? 
-                   this.updateEdgePosition(edge, graph) : edge 
-      });
+    return merge({}, graph, { edges: edges.reduce((result, edge) => {
+      return merge({}, result, { [edge.id]: this.updateEdgePosition(edge, graph) });
     }, {}) });
 
   }

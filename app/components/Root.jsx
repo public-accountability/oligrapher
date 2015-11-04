@@ -34,7 +34,7 @@ class Root extends Component {
             resetZoom={() => dispatch(resetZoom())} 
             clickNode={() => null}
             moveNode={(graphId, nodeId, x, y) => dispatch(moveNode(graphId, nodeId, x, y))} 
-            moveEdge={(graphId, edgeId, x, y, cx, cy) => dispatch(moveEdge(graphId, edgeId, x, y, cx, cy))} 
+            moveEdge={(graphId, edgeId, cx, cy) => dispatch(moveEdge(graphId, edgeId, cx, cy))} 
             moveCaption={(graphId, captionId, x, y) => dispatch(moveCaption(graphId, captionId, x, y))} />
         </HotKeys>
       </div>
