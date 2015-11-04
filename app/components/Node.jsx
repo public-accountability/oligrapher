@@ -106,7 +106,7 @@ export default class Node extends BaseComponent {
         { textLines.map(
            (line, i) => {
              let dy = (i == 0 ? textOffsetY : ds.lineHeight);
-             return <tspan className="node-text-line" x="0" dy={dy} fill={ds.textColor[status]}>{line}</tspan>;
+             return <tspan key={i} className="node-text-line" x="0" dy={dy} fill={ds.textColor[status]}>{line}</tspan>;
            }) }
       </text></a>);
 
@@ -115,7 +115,8 @@ export default class Node extends BaseComponent {
         let width = line.length * 8;
         let height = ds.lineHeight;
         let y = r + 5 + (i * ds.lineHeight);
-        return (<rect fill="#fff"
+        return (<rect key={i}
+                      fill="#fff"
                       opacity="0.8"
                       rx={ds.cornerRadius}
                       ry={ds.cornerRadius}
