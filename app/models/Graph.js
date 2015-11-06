@@ -60,7 +60,7 @@ class Graph {
     return merge({}, graph, { nodes: nodes });
   }
 
-  static prepareLayout(graph, layout) {
+  static prepareLayout(graph, layout = 'forceLayout') {
     return this[layout](graph);
   }
 

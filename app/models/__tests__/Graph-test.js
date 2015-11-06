@@ -2,6 +2,7 @@ jest.dontMock('../Graph');
 jest.dontMock('../Node'); 
 jest.dontMock('../Edge'); 
 jest.dontMock('../Helpers');
+jest.dontMock('springy');
 
 const Graph = require('../Graph'); 
 const Edge = require('../Edge'); 
@@ -24,6 +25,8 @@ describe("Graph", () => {
       1: { id: 1, display: { text: "Caption 1"} }
     }
   };
+
+  const preparedGraph = Graph.prepare(basicGraph);
 
   describe("setDefaults", () => {
 
@@ -63,21 +66,24 @@ describe("Graph", () => {
 
   describe("prepareLayout", () => {
 
-    const graph2 = Graph.prepareLayout(basicGraph, 'circleLayout');
-
     it("gives nodes x and y coordinates", () => {
+      let graph2 = Graph.prepareLayout(basicGraph);
       let xs = values(graph2.nodes).map(n => n.display.x);
       let ys = values(graph2.nodes).map(n => n.display.y);
 
       expect(xs).toBeArrayOfNumbers;
       expect(ys).toBeArrayOfNumbers;
     });
+  });
+
+  xdescribe("circleLayout", () => {
 
     it("doesn't arrange nodes with existing coordinates", () => {
+      let graph2 = Graph.prepareLayout(basicGraph, 'circleLayout');
       let x2s = values(graph2.nodes).map(n => n.display.x);
       let y2s = values(graph2.nodes).map(n => n.display.y);
 
-      let graph3 = Graph.prepareLayout(graph2, 'forceLayout');
+      let graph3 = Graph.prepareLayout(graph2, 'circleLayout');
       let x3s = values(graph3.nodes).map(n => n.display.x);
       let y3s = values(graph3.nodes).map(n => n.display.y);
 
@@ -90,7 +96,6 @@ describe("Graph", () => {
 
     const graph2 = Graph.prepareLayout(basicGraph, 'circleLayout');
     const edge = graph2.edges[1];
-    console.log(edge);
     const edge2 = Graph.updateEdgePosition(edge, graph2);
 
     it("gives an edge data about its nodes", () => {
@@ -135,6 +140,73 @@ describe("Graph", () => {
       let graph3 = Graph.prepareCaptions(Graph.prepareLayout(graph2, 'circleLayout'));
 
       expect(graph2.captions[1]).toEqual(graph3.captions[1]);
+    });
+  });
+
+  describe("moveNode", () => {
+
+    const nodeId = Object.keys(preparedGraph.nodes)[0];
+    const edges = Graph.edgesConnectedToNode(preparedGraph, nodeId);
+    const newX = 377;
+    const newY = 610;
+    const graph2 = Graph.moveNode(preparedGraph, nodeId, newX, newY);
+
+    it("moves a node to a specific position", () => {
+      expect(graph2.nodes[nodeId].display.x).toBe(newX);
+      expect(graph2.nodes[nodeId].display.y).toBe(newY);
+    });
+
+    it("doesn't move any other nodes", () => {
+      let xs = values(preparedGraph.nodes).map(n => n.display.x);
+      let ys = values(preparedGraph.nodes).map(n => n.display.y);
+      let x2s = values(graph2.nodes).map(n => n.display.x);
+      let y2s = values(graph2.nodes).map(n => n.display.y);
+
+      let deltaXs = xs.map((x, i) => x - x2s[i]);
+      let deltaYs = ys.map((y, i) => y - y2s[i]);
+
+      // only one deltaX and deltaY should be non-zero
+      expect(deltaXs.filter(x => x !== 0).length).toBe(1);
+      expect(deltaYs.filter(y => y !== 0).length).toBe(1);
+    });
+
+    it("moves all edges connected to the node", () => {
+      let node2 = graph2.nodes[nodeId];
+      let edges2 = Graph.edgesConnectedToNode(graph2, nodeId);
+
+      // count connected edges without an endpoint at the node's position
+      let count = edges2.filter(e => { 
+        return (e.display.x1 !== node2.display.x || e.display.y1 !== node2.display.y) && 
+               (e.display.x2 !== node2.display.x || e.display.y2 !== node2.display.y);
+      }).length;
+
+      expect(count).toBe(0);
+    });
+  });
+
+  describe("moveEdge", () => {
+
+    it("moves an edge's control point to a specific position", () => {
+      let edgeId = Object.keys(preparedGraph.edges)[0];
+      let newCx = 377;
+      let newCy = 610;
+      let graph2 = Graph.moveEdge(preparedGraph, edgeId, newCx, newCy);
+
+      expect(graph2.edges[edgeId].display.cx).toBe(newCx);
+      expect(graph2.edges[edgeId].display.cy).toBe(newCy);
+    });
+  });
+
+  describe("moveCaption", () => {
+
+    it("moves a caption to a specific position", () => {
+      let captionId = Object.keys(preparedGraph.captions)[0];
+      let newX = 377;
+      let newY = 610;
+      let graph2 = Graph.moveCaption(preparedGraph, captionId, newX, newY);
+
+      expect(graph2.captions[captionId].display.x).toBe(newX);
+      expect(graph2.captions[captionId].display.y).toBe(newY);
     });
   });
 });
