@@ -74,7 +74,6 @@ function select(state) {
   return {
     graph: state.graphs[state.position.currentId],
     prevGraph: state.graphs[state.position.prevId],
-    loadedId: state.position.loadedId,
     zoom: state.zoom
   };
 }

@@ -4,7 +4,6 @@ class Node {
   static defaults() {
     return {
       display: {
-        name: 'Node',
         scale: 1,
         status: "normal"
       }

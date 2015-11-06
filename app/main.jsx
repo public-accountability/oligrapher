@@ -25,22 +25,23 @@ var main = {
 
   import: function(graphData) {
     this.rootInstance.dispatchProps.dispatch(loadGraph(graphData));
+    return this.rootInstance.getWrappedInstance().props.graph.id;
+  },
+
+  export: function() {
+    return this.rootInstance.getWrappedInstance().props.graph;
   },
 
   show: function(id) {
     this.rootInstance.dispatchProps.dispatch(showGraph(id));
   },
 
-  zoomIn: function(id) {
+  zoomIn: function() {
     this.rootInstance.dispatchProps.dispatch(zoomIn());
   },
 
-  zoomOut: function(id) {
+  zoomOut: function() {
     this.rootInstance.dispatchProps.dispatch(zoomOut());
-  },
-
-  export: function() {
-    return this.rootInstance.getWrappedInstance().props.graph;
   }
 }
 

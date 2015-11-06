@@ -4,7 +4,6 @@ export default class Edge {
   static defaults() {
     return {
       display: { 
-        label: "Edge",
         scale: 1,
         arrow: false,
         status: "normal",
