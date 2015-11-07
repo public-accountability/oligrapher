@@ -30,7 +30,7 @@ class Root extends Component {
             ref="graph"
             graph={this.props.graph} 
             zoom={this.props.zoom} 
-            prevGraph={this.props.prevGraph} 
+            height={this.props.height}
             resetZoom={() => dispatch(resetZoom())} 
             clickNode={() => null}
             moveNode={(graphId, nodeId, x, y) => dispatch(moveNode(graphId, nodeId, x, y))} 
@@ -45,35 +45,20 @@ class Root extends Component {
     if (this.props.data) {
       this.loadData(this.props.data);
     }
-
-    this._setSVGHeight();
-  }
-
-  componentDidUpdate() {
-    this._setSVGHeight();    
   }
 
   loadData(data) {
     // showGraph needs a graph id so it's set here
     let graph = GraphModel.setDefaults(data);
     this.props.dispatch(loadGraph(graph));
-  }
-
-  _setSVGHeight() {
-    if (this.props.graph) {
-      let rootElement = ReactDOM.findDOMNode(this);
-      let container = rootElement.parentElement;
-      let svg = rootElement.querySelectorAll(":scope svg#svg")[0];
-      let height = container.clientHeight; // - 120;
-      svg.setAttribute("height", height);
-    }
+    this.props.dispatch(showGraph(graph.id));
   }
 }
 
 function select(state) {
   return {
     graph: state.graphs[state.position.currentId],
-    prevGraph: state.graphs[state.position.prevId],
+    loadedId: state.position.loadedId,
     zoom: state.zoom
   };
 }

@@ -15,33 +15,34 @@ var main = {
       <Provider store={this.store}>
         <Root 
           data={graphData} 
-          ref={(c) => this.rootInstance = c} />
+          height={this.rootElement.clientHeight}
+          ref={(c) => this.root = c} />
       </Provider>,
       this.rootElement
     );
 
-    return this.providerInstance;
+    return this;
   },
 
   import: function(graphData) {
-    this.rootInstance.dispatchProps.dispatch(loadGraph(graphData));
-    return this.rootInstance.getWrappedInstance().props.graph.id;
+    this.root.dispatchProps.dispatch(loadGraph(graphData));
+    return this.root.getWrappedInstance().props.loadedId;
   },
 
   export: function() {
-    return this.rootInstance.getWrappedInstance().props.graph;
+    return this.root.getWrappedInstance().props.graph;
   },
 
   show: function(id) {
-    this.rootInstance.dispatchProps.dispatch(showGraph(id));
+    this.root.dispatchProps.dispatch(showGraph(id));
   },
 
   zoomIn: function() {
-    this.rootInstance.dispatchProps.dispatch(zoomIn());
+    this.root.dispatchProps.dispatch(zoomIn());
   },
 
   zoomOut: function() {
-    this.rootInstance.dispatchProps.dispatch(zoomOut());
+    this.root.dispatchProps.dispatch(zoomOut());
   }
 }
 

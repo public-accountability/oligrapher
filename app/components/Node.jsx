@@ -55,8 +55,10 @@ export default class Node extends BaseComponent {
   // node position is updated only in state, not store
   _handleDrag(e, ui) {
     let n = this.props.node;
-    let x = (ui.position.clientX - this._startDrag.clientX) + this._startPosition.x;
-    let y = (ui.position.clientY - this._startDrag.clientY) + this._startPosition.y;
+    let deltaX = (ui.position.clientX - this._startDrag.clientX) / this.graphInstance.state.actualZoom;
+    let deltaY = (ui.position.clientY - this._startDrag.clientY) / this.graphInstance.state.actualZoom;
+    let x = this._startPosition.x + deltaX;
+    let y = this._startPosition.y + deltaY;
 
     this.setState({ x, y });
 

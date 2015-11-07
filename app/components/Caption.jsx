@@ -37,9 +37,10 @@ export default class Caption extends BaseComponent {
   }
 
   _handleDrag(e, ui) {
-    let c = this.props.caption;
-    let x = (ui.position.clientX - this._startDrag.clientX) + this._startPosition.x;
-    let y = (ui.position.clientY - this._startDrag.clientY) + this._startPosition.y;
+    let deltaX = (ui.position.clientX - this._startDrag.clientX) / this.graphInstance.state.actualZoom;
+    let deltaY = (ui.position.clientY - this._startDrag.clientY) / this.graphInstance.state.actualZoom;
+    let x = this._startPosition.x + deltaX;
+    let y = this._startPosition.y + deltaY;
 
     this.setState({ x, y });
   }

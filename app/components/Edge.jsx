@@ -81,8 +81,10 @@ export default class Edge extends BaseComponent {
 
   _handleDrag(event, ui) {
     let e = this.props.edge;
-    let cx = (ui.position.clientX - this._startDrag.clientX) + this._startPosition.x;
-    let cy = (ui.position.clientY - this._startDrag.clientY) + this._startPosition.y;
+    let deltaX = (ui.position.clientX - this._startDrag.clientX) / this.graphInstance.state.actualZoom;
+    let deltaY = (ui.position.clientY - this._startDrag.clientY) / this.graphInstance.state.actualZoom;
+    let cx = this._startPosition.x + deltaX;
+    let cy = this._startPosition.y + deltaY;
 
     this.setState({ cx, cy });
   }

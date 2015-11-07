@@ -14,17 +14,16 @@ export default class Graph extends BaseComponent {
     this.nodes = {};
     this.edges = {};
     this.state = { x: 0, y: 0 };
-    this.viewBox = null;
+    this.mounted = false;
   }
 
   render() {
-    const { x, y, prevGraph } = this.state;
+    const { x, y, prevGraph, viewBox } = this.state;
     const transform = `translate(${x}, ${y})`;
-    const viewBox =  prevGraph ? this._computeViewbox(prevGraph, this.props.zoom) : this.viewBox;
     const markers = `<marker id="marker1" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L10,0L0,5" fill="#999"></path></marker><marker id="marker2" viewBox="-10 -5 10 10" refX="-8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L-10,0L0,5" fill="#999"></path></marker><marker id="fadedmarker1" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L10,0L0,5"></path></marker>`;
 
     return (
-      <svg id="svg" version="1.1" xmlns="http://www.w3.org/2000/svg" className="Graph" width="100%" height="100%" viewBox={viewBox} preserveAspectRatio="xMidYMin">       
+      <svg id="svg" version="1.1" xmlns="http://www.w3.org/2000/svg" className="Graph" width="100%" height={this.props.height} viewBox={viewBox} preserveAspectRatio="xMidYMid">
         <DraggableCore
           handle="#zoom-handle"
           moveOnStartChange={false}
@@ -51,6 +50,7 @@ export default class Graph extends BaseComponent {
                 moveNode={this.props.moveNode} />) }
             { values(this.props.graph.captions).map((c, i) => 
               <Caption 
+                ref={(c) => { if (c) { c.graphInstance = this; } }}
                 key={i} 
                 caption={c}
                 graphId={this.props.graph.id}
@@ -63,37 +63,60 @@ export default class Graph extends BaseComponent {
   }
   
   componentWillMount() {
-    this.viewBox = this._computeViewbox(this.props.graph, this.props.zoom);    
+    this._updateViewbox(this.props.graph, this.props.zoom);
   }
 
   componentDidMount() {
     ReactDOM.findDOMNode(this).setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
     this._animateTransition();
+    this.mounted = true;
+    this._updateActualZoom(this.state.viewBox);
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ prevGraph: nextProps.prevGraph });
-    this.viewBox = this._computeViewbox(nextProps.graph, nextProps.zoom);        
+    if (nextProps.graph.id === this.props.graph.id) {
+      this._updateViewbox(nextProps.graph, nextProps.zoom);
+    } else {
+      this.setState({ prevGraph: this.props.graph });      
+    }
   }
 
   componentDidUpdate() {
     this._animateTransition();
   }
 
-  // keep initial position for comparison with drag position
+  _updateViewbox(graph, zoom) {
+    let viewBox = this._computeViewbox(graph, zoom);
+    this.setState({ viewBox });
+    this._updateActualZoom(viewBox);
+  }
+
+  _updateActualZoom(viewBox) {
+    if (this.mounted) {
+      let [x, y, w, h] = viewBox.split(" ").map(i => parseInt(i));
+      let domNode = ReactDOM.findDOMNode(this);
+      let svgWidth = domNode.offsetWidth;;
+      let svgHeight = domNode.offsetHeight;;
+      let xFactor = svgWidth / w;
+      let yFactor = svgHeight / h;
+      let actualZoom = Math.min(xFactor, yFactor);
+      this.setState({ actualZoom });
+    }
+  }
+
   _handleDragStart(e, ui) {
     this._startDrag = ui.position;
     this._startPosition = {
       x: this.state.x,
       y: this.state.y
     };
-    this.setState({ prevGraph: null })
   }
 
-  // node position is updated only in state, not store
   _handleDrag(e, ui) {
-    let x = (ui.position.clientX - this._startDrag.clientX) + this._startPosition.x;
-    let y = (ui.position.clientY - this._startDrag.clientY) + this._startPosition.y;
+    let deltaX = (ui.position.clientX - this._startDrag.clientX) / this.state.actualZoom;
+    let deltaY = (ui.position.clientY - this._startDrag.clientY) / this.state.actualZoom;
+    let x = deltaX + this._startPosition.x;
+    let y = deltaY + this._startPosition.y;
     this.setState({ x, y });
   }
 
@@ -129,7 +152,7 @@ export default class Graph extends BaseComponent {
       requestAnimationFrame(draw);
 
     } else {
-      ReactDOM.findDOMNode(this).setAttribute("viewBox", this.viewBox);
+      ReactDOM.findDOMNode(this).setAttribute("viewBox", this.state.viewBox);
     }
   }
 
@@ -148,8 +171,8 @@ export default class Graph extends BaseComponent {
   _computeViewbox(graph, zoom = 1.2) {
     let highlightedOnly = true;
     let rect = this._computeRect(graph, highlightedOnly);
-    let w = Math.max(rect.w / zoom, 600 / zoom);
-    let h = Math.max(rect.h / zoom, 400 / zoom);
+    let w = rect.w / zoom;
+    let h = rect.h / zoom;
     let x = rect.x + rect.w/2 - (w/2);
     let y = rect.y + rect.h/2 - (h/2);
 

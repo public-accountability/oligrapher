@@ -52,24 +52,24 @@
 
         $('#data').val(JSON.stringify(data));
 
-        Oligrapher.run(elem, data);
+        var oli = Oligrapher.run(elem, data);
 
         // buttons
         $('#zoomIn').on('click', function() {
-          Oligrapher.zoomIn();
+          oli.zoomIn();
         });
 
         $('#zoomOut').on('click', function() {
-          Oligrapher.zoomOut();
+          oli.zoomOut();
         });
 
         $('#import').on('click', function() {
           var data = JSON.parse($('#data').val());
-          Oligrapher.import(data);
+          oli.import(data);
         });
 
         $('#export').on('click', function() {
-          var data = Oligrapher.export();
+          var data = oli.export();
           $('#data').val(JSON.stringify(data));
         });
       });

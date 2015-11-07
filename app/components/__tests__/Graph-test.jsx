@@ -1,6 +1,7 @@
 jest.dontMock('../Graph');
 jest.dontMock('../Node');
 jest.dontMock('../Edge');
+jest.dontMock('../Caption');
 
 import React from 'react'; 
 import ReactDOM from 'react-dom'; 
@@ -28,5 +29,15 @@ describe("Graph Component",  () => {
     let edges = element.querySelectorAll(".edge");
 
     expect(edges.length).toBe(Object.keys(data.edges).length);
+  });  
+
+  it("sould render captions",  () => {
+    let graph = TestUtils.renderIntoDocument(
+      <Graph graph={data} />
+    );
+    let element = ReactDOM.findDOMNode(graph);
+    let captions = element.querySelectorAll(".caption");
+
+    expect(captions.length).toBe(Object.keys(data.captions).length);
   });  
 });
