@@ -42,28 +42,14 @@ export default class Graph extends BaseComponent {
 
   // COMPONENT LIFECYCLE
   
-  componentWillMount() {
-    this._updateViewbox(this.props.graph, this.props.zoom);
-  }
-
   componentDidMount() {
     ReactDOM.findDOMNode(this).setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
-    this._animateTransition();
     this.mounted = true;
     this._updateActualZoom(this.state.viewBox);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.graph.id === this.props.graph.id) {
-      this._updateViewbox(nextProps.graph, nextProps.zoom);
-      this.setState({ prevGraph: null });
-    } else {
-      this.setState({ prevGraph: this.props.graph });      
-    }
-  }
-
-  componentDidUpdate() {
-    this._animateTransition();
+    this._updateViewbox(nextProps.graph, nextProps.zoom);
   }
 
   // RENDERING
@@ -109,8 +95,14 @@ export default class Graph extends BaseComponent {
 
   _updateViewbox(graph, zoom) {
     let viewBox = this._computeViewbox(graph, zoom);
-    this.setState({ viewBox: viewBox });
+    let changed = (viewBox !== this.state.viewBox);
+    let oldViewBox = changed ? this.state.viewBox : null;
+    this.setState({ viewBox: viewBox, oldViewBox });
     this._updateActualZoom(viewBox);
+
+    if (changed) {
+      this._animateTransition(oldViewBox, viewBox);
+    }
   }
 
   _updateActualZoom(viewBox) {
@@ -190,29 +182,40 @@ export default class Graph extends BaseComponent {
 
   // TRANSITION ANIMATION
 
-  _animateTransition(duration = 0.7) {
-    let { graph, zoom } = this.props;
-    let { prevGraph } = this.state;
+  _animateTransition(oldViewBox, viewBox, duration) {
+    if (!this._isSmallDevice() && viewBox && oldViewBox && viewBox !== oldViewBox) {
 
-    if (!this._isSmallDevice() && prevGraph) {
-      this.props.resetZoom();
-
-      let oldViewbox = this._computeViewbox(prevGraph, zoom).split(" ").map(part => parseInt(part));
-      let newViewbox = this._computeViewbox(graph, zoom).split(" ").map(part => parseInt(part));
       let start = this._now();
       let that = this;
       let domNode = ReactDOM.findDOMNode(that);
       let req;
 
+      let oldVb = oldViewBox.split(" ").map(n => parseInt(n));
+      let newVb = viewBox.split(" ").map(n => parseInt(n));
+
+      // if duration not supplied, calculate based on change of size and center
+      if (!duration) {
+        let wRatio = newVb[2]/oldVb[2];
+        let hRatio = newVb[3]/oldVb[3];
+        let oldCenterX = oldVb[0] + oldVb[2]/2;
+        let oldCenterY = oldVb[1] + oldVb[3]/2;
+        let newCenterX = newVb[0] + newVb[2]/2;
+        let newCenterY = newVb[1] + newVb[3]/2;
+        let ratio = Math.max(wRatio, 1/wRatio, hRatio, 1/hRatio);
+        let dist = Math.floor(Math.sqrt(Math.pow(newCenterX - oldCenterX, 2) + Math.pow(newCenterY - oldCenterY, 2)));
+        duration = 1 - 1/(ratio + Math.log(dist + 1));
+        duration = Math.max(0.4, duration);
+      }
+    
       const draw = () => {
         req = requestAnimationFrame(draw);
 
         let time = (that._now() - start);
-        let viewbox = oldViewbox.map((part, i) => { 
-          return oldViewbox[i] + (newViewbox[i] - oldViewbox[i]) * that._linear(time / duration);
+        let vb = oldVb.map((part, i) => { 
+          return oldVb[i] + (newVb[i] - oldVb[i]) * that._linear(time / duration);
         }).join(" ");
 
-        domNode.setAttribute("viewBox", viewbox);
+        domNode.setAttribute("viewBox", vb);
 
         if (time > duration) {
           cancelAnimationFrame(req);
@@ -222,7 +225,7 @@ export default class Graph extends BaseComponent {
       requestAnimationFrame(draw);
 
     } else {
-      ReactDOM.findDOMNode(this).setAttribute("viewBox", this.state.viewBox);
+      ReactDOM.findDOMNode(this).setAttribute("viewBox", viewBox);
     }
   }
 
