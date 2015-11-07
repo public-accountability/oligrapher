@@ -1,3 +1,5 @@
+import Graph from './models/Graph';
+
 /*
  * action types
  */
@@ -16,7 +18,8 @@ export const MOVE_CAPTION = 'MOVE_CAPTION';
  */
 
 export function loadGraph(graph) {
-  return { type: LOAD_GRAPH, graph: graph, id: graph.id };
+  let graphWithId = Graph.setId(graph);
+  return { type: LOAD_GRAPH, graph: graphWithId, id: graphWithId.id };
 }
 
 export function showGraph(id) {

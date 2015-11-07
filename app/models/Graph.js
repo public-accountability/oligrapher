@@ -15,6 +15,10 @@ class Graph {
     };
   }
 
+  static setId(graph) {
+    return merge({}, { id: this.generateId() }, graph);
+  }
+
   static setDefaults(graph) {
     return merge({}, this.defaults(), graph);
   }
@@ -86,22 +90,11 @@ class Graph {
       return graph;
     }
 
-    let gr = new Springy.Graph();
+    let layout = this.buildForceLayout(graph);
+    let nodeCount = Object.keys(graph.nodes).length;
+    let edgeCount = Object.keys(graph.edges).length
 
-    let nodeIds = values(graph.nodes).map(n => n.id);
-    let edges = values(graph.edges).map(e => [e.node1_id, e.node2_id]);
-
-    gr.addNodes(...nodeIds);
-    gr.addEdges(...edges);
-
-    let stiffness = 200.0;
-    let repulsion = 300.0;
-    let damping = 0.5;
-    let minEnergyThreshold = 0.1;
-
-    let layout = new Springy.Layout.ForceDirected(gr, stiffness, repulsion, damping, minEnergyThreshold);
-    
-    steps = Math.round(steps / ((nodeIds.length + edges.length) / 50));
+    steps = Math.round(steps / ((nodeCount + edgeCount) / 50));
 
     for (var i = 0; i < steps; i++) {
       layout.tick(0.01);
@@ -115,12 +108,29 @@ class Graph {
     });
 
     // remove curve control points so that they're recalculated
-    values(newGraph.edges).forEach(e => {
-      newGraph.edges[e.id].display.cx = null;
-      newGraph.edges[e.id].display.cy = null;
+    Object.keys(newGraph.edges).forEach(id => {
+      newGraph.edges[id].display.cx = null;
+      newGraph.edges[id].display.cy = null;
     });
 
     return newGraph;
+  }
+
+  static buildForceLayout(graph) {
+    let gr = new Springy.Graph();
+
+    let nodeIds = Object.keys(graph.nodes);
+    let edges = values(graph.edges).map(e => [e.node1_id, e.node2_id]);
+
+    gr.addNodes(...nodeIds);
+    gr.addEdges(...edges);
+
+    let stiffness = 200.0;
+    let repulsion = 300.0;
+    let damping = 0.5;
+    let minEnergyThreshold = 0.1;
+
+    return new Springy.Layout.ForceDirected(gr, stiffness, repulsion, damping, minEnergyThreshold);    
   }
 
   static updateEdgePosition(edge, graph) {

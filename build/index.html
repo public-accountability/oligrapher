@@ -27,6 +27,8 @@
     <textarea id="data" rows="10" cols="80"></textarea>
 
     <script>
+      var oli;
+
       function getParam(name) {
           var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
           return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
@@ -52,7 +54,7 @@
 
         $('#data').val(JSON.stringify(data));
 
-        var oli = Oligrapher.run(elem, data);
+        oli = Oligrapher.run(elem, data);
 
         // buttons
         $('#zoomIn').on('click', function() {
@@ -65,7 +67,9 @@
 
         $('#import').on('click', function() {
           var data = JSON.parse($('#data').val());
-          oli.import(data);
+          var id = oli.import(data);
+          console.log(id);
+          oli.show(id);
         });
 
         $('#export').on('click', function() {

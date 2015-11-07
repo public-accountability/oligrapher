@@ -10,57 +10,37 @@ import { values, min, max }  from 'lodash';
 export default class Graph extends BaseComponent {
   constructor(props) {
     super(props);
-    this.bindAll('_handleDragStart', '_handleDrag');
+    this.bindAll('_handleDragStart', '_handleDrag', '_handleDragStop');
     this.nodes = {};
     this.edges = {};
-    this.state = { x: 0, y: 0 };
     this.mounted = false;
+    let viewBox = this._computeViewbox(props.graph, props.zoom);
+    this.state = { x: 0, y: 0, viewBox };
   }
 
   render() {
     const { x, y, prevGraph, viewBox } = this.state;
-    const transform = `translate(${x}, ${y})`;
-    const markers = `<marker id="marker1" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L10,0L0,5" fill="#999"></path></marker><marker id="marker2" viewBox="-10 -5 10 10" refX="-8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L-10,0L0,5" fill="#999"></path></marker><marker id="fadedmarker1" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L10,0L0,5"></path></marker>`;
-
     return (
       <svg id="svg" version="1.1" xmlns="http://www.w3.org/2000/svg" className="Graph" width="100%" height={this.props.height} viewBox={viewBox} preserveAspectRatio="xMidYMid">
         <DraggableCore
           handle="#zoom-handle"
           moveOnStartChange={false}
           onStart={this._handleDragStart}
-          onDrag={this._handleDrag}>
-          <g id="zoom" transform={transform}>
+          onDrag={this._handleDrag}
+          onStop={this._handleDragStop}>
+          <g id="zoom" transform={`translate(${x}, ${y})`}>
             <rect id="zoom-handle" x="-5000" y="-5000" width="10000" height="10000" fill="#fff" />
-            { values(this.props.graph.edges).map((e, i) =>  
-              <Edge 
-                ref={(c) => { this.edges[e.id] = c; if (c) { c.graphInstance = this; } }} 
-                key={i} 
-                edge={e} 
-                graphId={this.props.graph.id} 
-                zoom={this.props.zoom} 
-                moveEdge={this.props.moveEdge} />) }
-            { values(this.props.graph.nodes).map((n, i) => 
-              <Node 
-                ref={(c) => { this.nodes[n.id] = c; if (c) { c.graphInstance = this; } }} 
-                key={i} 
-                node={n} 
-                graph={this.props.graph} 
-                zoom={this.props.zoom} 
-                clickNode={this.props.clickNode} 
-                moveNode={this.props.moveNode} />) }
-            { values(this.props.graph.captions).map((c, i) => 
-              <Caption 
-                ref={(c) => { if (c) { c.graphInstance = this; } }}
-                key={i} 
-                caption={c}
-                graphId={this.props.graph.id}
-                moveCaption={this.props.moveCaption} />) }
+            { this._renderEdges() }
+            { this._renderNodes() }
+            { this._renderCaptions() }
           </g>
         </DraggableCore>
-        <defs dangerouslySetInnerHTML={ { __html: markers } }/>
+        <defs dangerouslySetInnerHTML={ { __html: this._renderMarkers() } }/>
       </svg>
     );
   }
+
+  // COMPONENT LIFECYCLE
   
   componentWillMount() {
     this._updateViewbox(this.props.graph, this.props.zoom);
@@ -76,6 +56,7 @@ export default class Graph extends BaseComponent {
   componentWillReceiveProps(nextProps) {
     if (nextProps.graph.id === this.props.graph.id) {
       this._updateViewbox(nextProps.graph, nextProps.zoom);
+      this.setState({ prevGraph: null });
     } else {
       this.setState({ prevGraph: this.props.graph });      
     }
@@ -85,9 +66,50 @@ export default class Graph extends BaseComponent {
     this._animateTransition();
   }
 
+  // RENDERING
+
+  _renderEdges() {
+    return values(this.props.graph.edges).map((e, i) =>  
+      <Edge 
+        ref={(c) => { this.edges[e.id] = c; if (c) { c.graphInstance = this; } }} 
+        key={i} 
+        edge={e} 
+        graphId={this.props.graph.id} 
+        zoom={this.props.zoom} 
+        moveEdge={this.props.moveEdge} />);
+  }
+
+  _renderNodes() {
+    return values(this.props.graph.nodes).map((n, i) => 
+      <Node 
+        ref={(c) => { this.nodes[n.id] = c; if (c) { c.graphInstance = this; } }} 
+        key={i} 
+        node={n} 
+        graph={this.props.graph} 
+        zoom={this.props.zoom} 
+        clickNode={this.props.clickNode} 
+        moveNode={this.props.moveNode} />);
+  }
+
+  _renderCaptions() {
+    return values(this.props.graph.captions).map((c, i) => 
+      <Caption 
+        ref={(c) => { if (c) { c.graphInstance = this; } }}
+        key={i} 
+        caption={c}
+        graphId={this.props.graph.id}
+        moveCaption={this.props.moveCaption} />);
+  }
+
+  _renderMarkers() {
+    return `<marker id="marker1" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L10,0L0,5" fill="#999"></path></marker><marker id="marker2" viewBox="-10 -5 10 10" refX="-8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L-10,0L0,5" fill="#999"></path></marker><marker id="fadedmarker1" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L10,0L0,5"></path></marker>`;
+  }
+
+  // VIEWBOX AND ZOOM
+
   _updateViewbox(graph, zoom) {
     let viewBox = this._computeViewbox(graph, zoom);
-    this.setState({ viewBox });
+    this.setState({ viewBox: viewBox });
     this._updateActualZoom(viewBox);
   }
 
@@ -104,6 +126,41 @@ export default class Graph extends BaseComponent {
     }
   }
 
+  _computeViewbox(graph, zoom = 1.2) {
+    let highlightedOnly = true;
+    let rect = this._computeRect(graph, highlightedOnly);
+    let w = rect.w / zoom;
+    let h = rect.h / zoom;
+    let x = rect.x + rect.w/2 - (w/2);
+    let y = rect.y + rect.h/2 - (h/2);
+
+    return `${x} ${y} ${w} ${h}`;
+  }
+
+  _computeRect(graph, highlightedOnly = true) {
+    const nodes = values(graph.nodes)
+      .filter(n => !highlightedOnly || n.display.status != "faded")
+      .map(n => n.display);
+    const items = nodes.concat(...values(graph.captions).map(c => c.display));
+
+    if (items.length > 0) {
+      const padding = highlightedOnly ? 50 : 50;
+      const xs = items.map(i => i.x);
+      const ys = items.map(i => i.y);
+      const textPadding = 100; // node text might extend below node
+      return { 
+        x: min(xs) - padding, 
+        y: min(ys) - padding, 
+        w: max(xs) - min(xs) + padding * 2, 
+        h: max(ys) - min(ys) + textPadding + padding
+      };
+    } else {
+      return { x: 0, y: 0, w: 0, h: 0 };
+    }
+  }
+
+  // GRAPH DRAGGING
+
   _handleDragStart(e, ui) {
     this._startDrag = ui.position;
     this._startPosition = {
@@ -113,12 +170,25 @@ export default class Graph extends BaseComponent {
   }
 
   _handleDrag(e, ui) {
+    let { x, y } = this._calculateDeltas(e, ui);
+    // in order to avoid rerendering state isn't updated until drag is finished
+    ReactDOM.findDOMNode(this).querySelector("#zoom").setAttribute("transform", `translate(${x}, ${y})`);
+  }
+
+  _handleDragStop(e, ui) {
+    let { x, y } = this._calculateDeltas(e, ui);
+    this.setState({ x, y });
+  }
+
+  _calculateDeltas(e, ui) {
     let deltaX = (ui.position.clientX - this._startDrag.clientX) / this.state.actualZoom;
     let deltaY = (ui.position.clientY - this._startDrag.clientY) / this.state.actualZoom;
     let x = deltaX + this._startPosition.x;
     let y = deltaY + this._startPosition.y;
-    this.setState({ x, y });
+    return { x, y };
   }
+
+  // TRANSITION ANIMATION
 
   _animateTransition(duration = 0.7) {
     let { graph, zoom } = this.props;
@@ -167,40 +237,6 @@ export default class Graph extends BaseComponent {
   _now() {
     return new Date().getTime() / 1000;
   }
-
-  _computeViewbox(graph, zoom = 1.2) {
-    let highlightedOnly = true;
-    let rect = this._computeRect(graph, highlightedOnly);
-    let w = rect.w / zoom;
-    let h = rect.h / zoom;
-    let x = rect.x + rect.w/2 - (w/2);
-    let y = rect.y + rect.h/2 - (h/2);
-
-    return `${x} ${y} ${w} ${h}`;
-  }
-
-  _computeRect(graph, highlightedOnly = true) {
-    const nodes = values(graph.nodes)
-      .filter(n => !highlightedOnly || n.display.status != "faded")
-      .map(n => n.display);
-    const items = nodes.concat(...values(graph.captions).map(c => c.display));
-
-    if (items.length > 0) {
-      const padding = highlightedOnly ? 50 : 50;
-      const xs = items.map(i => i.x);
-      const ys = items.map(i => i.y);
-      const textPadding = 100; // node text might extend below node
-      return { 
-        x: min(xs) - padding, 
-        y: min(ys) - padding, 
-        w: max(xs) - min(xs) + padding * 2, 
-        h: max(ys) - min(ys) + textPadding + padding
-      };
-    } else {
-      return { x: 0, y: 0, w: 0, h: 0 };
-    }
-  }
-
 
   _isSmallDevice() {
     return window.innerWidth < 600;
