@@ -24,6 +24,10 @@ export default class Caption extends BaseComponent {
     );
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return JSON.stringify(nextState) !== JSON.stringify(this.state);
+  }
+
   _handleDragStart(e, ui) {
     this._startDrag = ui.position;
     this._startPosition = {

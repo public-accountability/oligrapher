@@ -67,6 +67,10 @@ export default class Edge extends BaseComponent {
     this.setState(props.edge.display);
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return JSON.stringify(nextState) !== JSON.stringify(this.state);
+  }
+
   _handleDragStart(event, ui) {
     this._startDrag = ui.position;
     this._startPosition = {

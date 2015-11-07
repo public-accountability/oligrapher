@@ -27,7 +27,7 @@ export default class Node extends BaseComponent {
         onStart={this._handleDragStart}
         onDrag={this._handleDrag}
         onStop={this._handleDragStop}>
-        <g id={groupId} transform={transform}>
+        <g id={groupId} className="node" transform={transform}>
           <NodeCircle node={n} />
           <NodeLabel node={n} />
         </g>
@@ -37,6 +37,10 @@ export default class Node extends BaseComponent {
 
   componentWillReceiveProps(props) {
     this.setState(props.node.display);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return JSON.stringify(nextState) !== JSON.stringify(this.state);
   }
 
   // keep initial position for comparison with drag position
