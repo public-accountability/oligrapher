@@ -62,6 +62,7 @@ export default class Graph extends BaseComponent {
         edge={e} 
         graphId={this.props.graph.id} 
         zoom={this.props.zoom} 
+        highlightEdge={this.props.highlightEdge}
         moveEdge={this.props.moveEdge} />);
   }
 
@@ -73,7 +74,7 @@ export default class Graph extends BaseComponent {
         node={n} 
         graph={this.props.graph} 
         zoom={this.props.zoom} 
-        clickNode={this.props.clickNode} 
+        highlightNode={this.props.highlightNode} 
         moveNode={this.props.moveNode} />);
   }
 

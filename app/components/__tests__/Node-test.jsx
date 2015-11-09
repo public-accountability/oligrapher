@@ -1,3 +1,4 @@
+jest.dontMock('../BaseComponent');
 jest.dontMock('../Node');
 jest.dontMock('../NodeLabel');
 jest.dontMock('../NodeCircle');
@@ -52,19 +53,31 @@ describe("Node Component", () => {
     expect(image.getAttribute("xlink:href")).toBe(data.display.image);
   });
 
-  // NOT WORKING: EVENT HANDLERS ARENT TRIGGERED FOR SOME REASON
-  xit("can be dragged to a new position", () => {
-    let start = jest.genMockFunction();
-    let stop = jest.genMockFunction();
+  it("should swap selection if clicked", () => {
+    let clickNode = jest.genMockFunction();
     let node = TestUtils.renderIntoDocument(
-      <Node node={data} start={start} stop={stop}/>
+      <Node node={data} graph={{id: "someid"}} clickNode={clickNode} />
     );
     let element = ReactDOM.findDOMNode(node);
+    let select = element.querySelector(".nodeSelect");
 
-    TestUtils.Simulate.mouseDown(element);
-    TestUtils.Simulate.mouseUp(element);
+    TestUtils.Simulate.click(select);
+    expect(clickNode.mock.calls[0][0]).toBe("someid");
+    expect(clickNode.mock.calls[0][1]).toBe(data.id);
+  });
 
-    expect(start.mock.calls.length).toBe(1);
-    expect(stop.mock.calls.length).toBe(1);
+  // NOT WORKING: EVENT HANDLERS ARENT TRIGGERED FOR SOME REASON
+  xit("can be dragged to a new position", () => {
+    let moveNode = jest.genMockFunction();
+    let node = TestUtils.renderIntoDocument(
+      <Node node={data} moveNode={moveNode} />
+    );
+    let element = ReactDOM.findDOMNode(node);
+    let handle = element.querySelector(".handle");
+
+    TestUtils.Simulate.mouseDown(handle);
+    TestUtils.Simulate.mouseUp(handle);
+
+    expect(moveNode.mock.calls.length).toBe(1);
   });
 });

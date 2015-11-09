@@ -47,7 +47,8 @@ export default class NodeCircle extends BaseComponent {
 
     return image ? 
         <g dangerouslySetInnerHTML={innerHTML} /> :
-        <circle className="handle"
+        <circle 
+          className="handle" 
           r={r}
           fill={ds.circleColor[status]}
           opacity="1">

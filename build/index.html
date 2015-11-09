@@ -26,12 +26,48 @@
     <br>    
     <textarea id="data" rows="10" cols="80"></textarea>
 
+    <div id="addNode">
+      <h3>Add Node</h3>
+      Name: <input id="addNodeName" type="text" placeholder="name" /><br>
+      <button id="addNodeButton">Add</button>
+    </div>
+
+    <div id="addEdge">
+      <h3>Add Edge</h3>
+      Node 1: <select id="addEdgeNode1Id"></select><br>
+      Node 2: <select id="addEdgeNode2Id"></select><br>
+      Label: <input id="addEdgeLabel" type="text" placeholder="label" /><br>
+      <button id="addEdgeButton">Add</button>
+    </div>
+
     <script>
       var oli;
 
       function getParam(name) {
-          var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
-          return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+        var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+        return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+      }
+
+      function updateNodeSelects() {
+        var hash = oli.export().nodes;
+        var nodes = Object.keys(hash).map(function(key) { return hash[key]; })
+          .sort(function(a, b) { return a.display.name.localeCompare(b.display.name); });
+
+        var select1 = $('#addEdgeNode1Id');
+        var select2 = $('#addEdgeNode2Id');
+
+        select1.html("<option value=''></option>");
+        select2.html("<option value=''></option>");
+
+
+        nodes.forEach(function(node) {
+          var option = document.createElement("option");
+          option.setAttribute("value", node.id);
+          option.innerHTML = node.display.name;
+          clone = option.cloneNode(true);
+          select1[0].appendChild(option);
+          select2[0].appendChild(clone);
+        });
       }
 
       $(document).ready(function() { 
@@ -54,7 +90,9 @@
 
         $('#data').val(JSON.stringify(data));
 
-        oli = Oligrapher.run(elem, data);
+        oli = Oligrapher.run(elem, { data: data, isEditor: true });
+
+        updateNodeSelects();
 
         // buttons
         $('#zoomIn').on('click', function() {
@@ -75,6 +113,18 @@
         $('#export').on('click', function() {
           var data = oli.export();
           $('#data').val(JSON.stringify(data));
+        });
+
+        $('#addNodeButton').on('click', function() {
+          var name = $('#addNodeName').val();
+          oli.addNode({ display: { name: name } });
+        });
+
+        $('#addEdgeButton').on('click', function() {
+          var label = $('#addEdgeLabel').val();
+          var node1Id = $('#addEdgeNode1Id').val();
+          var node2Id = $('#addEdgeNode2Id').val();
+          oli.addEdge({ node1_id: node1Id, node2_id: node2Id, display: { label: label } });
         });
       });
     </script>    

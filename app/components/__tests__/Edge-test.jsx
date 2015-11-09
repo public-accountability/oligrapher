@@ -1,3 +1,4 @@
+jest.dontMock('../BaseComponent');
 jest.dontMock('../Edge');
 
 import React from 'react'; 
@@ -57,5 +58,18 @@ describe("Edge Component", () => {
     let hasMarker = curve.getAttribute("marker-start") || curve.getAttribute("marker-end");
 
     expect(hasMarker).toBeTruthy();
+  });
+
+  it("should swap selection if clicked", () => {
+    let clickEdge = jest.genMockFunction();
+    let edge = TestUtils.renderIntoDocument(
+      <Edge edge={data} graphId="someid" clickEdge={clickEdge} />
+    );
+    let element = ReactDOM.findDOMNode(edge);
+    let select = element.querySelector(".edgeSelect");
+
+    TestUtils.Simulate.click(select);
+    expect(clickEdge.mock.calls[0][0]).toBe("someid");
+    expect(clickEdge.mock.calls[0][1]).toBe(data.id);
   });
 });

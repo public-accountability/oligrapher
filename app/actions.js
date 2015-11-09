@@ -12,6 +12,10 @@ export const RESET_ZOOM = 'RESET_ZOOM';
 export const MOVE_NODE = 'MOVE_NODE';
 export const MOVE_EDGE = 'MOVE_EDGE';
 export const MOVE_CAPTION = 'MOVE_CAPTION';
+export const SWAP_NODE_HIGHLIGHT = 'SWAP_NODE_HIGHLIGHT';
+export const SWAP_EDGE_HIGHLIGHT = 'SWAP_EDGE_HIGHLIGHT';
+export const ADD_NODE = 'ADD_NODE';
+export const ADD_EDGE = 'ADD_EDGE';
 
 /*
  * action creators
@@ -48,4 +52,20 @@ export function moveEdge(graphId, edgeId, cx, cy) {
 
 export function moveCaption(graphId, captionId, x, y) {
   return { type: MOVE_CAPTION, graphId, captionId, x, y };
+}
+
+export function swapNodeHighlight(graphId, nodeId, singleSelect = false) {
+  return { type: SWAP_NODE_HIGHLIGHT, graphId, nodeId, singleSelect };
+}
+
+export function swapEdgeHighlight(graphId, edgeId, singleSelect = false) {
+  return { type: SWAP_EDGE_HIGHLIGHT, graphId, edgeId, singleSelect };
+}
+
+export function addNode(graphId, node) {
+  return { type: ADD_NODE, graphId, node };
+}
+
+export function addEdge(graphId, edge) {
+  return { type: ADD_EDGE, graphId, edge };
 }

@@ -10,7 +10,7 @@ import { merge } from 'lodash';
 export default class Node extends BaseComponent {
   constructor(props) {
     super(props);
-    this.bindAll('_handleDragStart', '_handleDrag', '_handleDragStop');
+    this.bindAll('_handleDragStart', '_handleDrag', '_handleDragStop', '_handleClick');
     this.state = props.node.display;
   }
 
@@ -27,7 +27,11 @@ export default class Node extends BaseComponent {
         onStart={this._handleDragStart}
         onDrag={this._handleDrag}
         onStop={this._handleDragStop}>
-        <g id={groupId} className="node" transform={transform}>
+        <g 
+          id={groupId} 
+          className="node" 
+          transform={transform}
+          onClick={this._handleClick}>
           <NodeCircle node={n} />
           <NodeLabel node={n} />
         </g>
@@ -54,6 +58,8 @@ export default class Node extends BaseComponent {
 
   // node position is updated only in state, not store
   _handleDrag(e, ui) {
+    this._dragging = true; // so that _handleClick knows it's not just a click
+
     let n = this.props.node;
     let deltaX = (ui.position.clientX - this._startDrag.clientX) / this.graphInstance.state.actualZoom;
     let deltaY = (ui.position.clientY - this._startDrag.clientY) / this.graphInstance.state.actualZoom;
@@ -78,5 +84,13 @@ export default class Node extends BaseComponent {
   // store updated once dragging is done
   _handleDragStop(e, ui) {
     this.props.moveNode(this.props.graph.id, this.props.node.id, this.state.x, this.state.y);
+  }
+
+  _handleClick() {
+    if (this._dragging) {
+      this._dragging = false;
+    } else {
+      this.props.highlightNode(this.props.graph.id, this.props.node.id);
+    }
   }
 }

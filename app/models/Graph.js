@@ -26,8 +26,8 @@ class Graph {
   static prepare(graph, layout = 'forceLayout') {
     return this.prepareCaptions(
       this.prepareEdges(
-        this.prepareLayout(
-          this.prepareNodes(
+        this.prepareNodes(
+          this.prepareLayout(
             this.setDefaults(graph)
           ), layout)
       )
@@ -109,8 +109,8 @@ class Graph {
 
     // remove curve control points so that they're recalculated
     Object.keys(newGraph.edges).forEach(id => {
-      newGraph.edges[id].display.cx = null;
-      newGraph.edges[id].display.cy = null;
+      delete newGraph.edges[id].display.cx;
+      delete newGraph.edges[id].display.cy;
     });
 
     return newGraph;
@@ -148,6 +148,8 @@ class Graph {
     } });
   }
 
+  // CONTENT UPDATING API
+
   static moveNode(graph, nodeId, x, y) {
     // first update the node
     graph = merge({}, graph, { nodes: { [nodeId]: { display: { x, y } } } });
@@ -162,11 +164,85 @@ class Graph {
   }
 
   static moveEdge(graph, edgeId, cx, cy) {
-    return merge({}, graph, { edges: { [edgeId]: this.updateEdgePosition(merge({}, graph.edges[edgeId], { display: { cx, cy } }), graph) } });
+    return this.updateEdge(graph, edgeId, { display: { cx, cy } });
   }
 
   static moveCaption(graph, captionId, x, y) {
-    return merge({}, graph, { captions: { [captionId]: { display: { x, y } } } });
+    return this.updateCaption(graph, captionId, { display: { x, y } });
+  }
+
+  static swapNodeHighlight(graph, nodeId, singleSelect = false) {
+    let oldStatus = graph.nodes[nodeId].display.status;
+    let status = (oldStatus == "highlighted" ? "normal" : "highlighted");
+    let newGraph = singleSelect ? this._deselectAll(graph) : graph;
+    return this.updateNode(newGraph, nodeId, { display: { status } });
+  }
+
+  static swapEdgeHighlight(graph, edgeId, singleSelect = false) {
+    let oldStatus = graph.edges[edgeId].display.status;
+    let status = (oldStatus == "highlighted" ? "normal" : "highlighted");
+    graph = singleSelect ? this._deselectAll(graph) : graph;
+    return this.updateEdge(graph, edgeId, { display: { status } });
+  }
+
+  static _deselectAll(graph) {
+    let nodes = values(graph.nodes).reduce((result, node) => {
+      result[node.id] = merge({}, node, { display: { status: "normal" } });
+      return result;
+    }, {});
+
+    let edges = values(graph.edges).reduce((result, edge) => {
+      result[edge.id] = merge({}, edge, { display: { status: "normal" } });
+      return result;
+    }, {});
+
+    return merge({}, graph, { nodes: nodes, edges: edges });
+  }
+
+  // CONTENT CREATION API
+
+  static addNode(graph, node) {
+    node = Node.setDefaults(node);
+    return merge({}, graph, { nodes: { [node.id]: node } });
+  }
+
+  static addEdge(graph, edge) {
+    edge = this.updateEdgePosition(Edge.setDefaults(edge), graph);
+    return merge({}, graph, { edges: { [edge.id]: edge } });
+  }
+
+  // BASIC UPDATERS
+
+  static updateNode(graph, nodeId, data) {
+    return merge({}, graph, { nodes: { [nodeId]: data } });
+  }
+
+  static updateEdge(graph, edgeId, data) {
+    return merge({}, graph, { edges: { [edgeId]: data } });
+  }
+
+  static updateCaption(graph, captionId, data) {
+    return merge({}, graph, { captions: { [captionId]: data } });
+  }
+
+  // GRAPH FILTERS
+
+  static highlightedOnly(graph) {
+    let nodes = values(graph.nodes)
+      .filter(node => node.display.status == "highlighted")
+      .reduce((result, node) => {
+        result[node.id] = node;
+        return result;
+      }, {});
+
+    let edges = values(graph.edges)
+      .filter(edge => edge.display.status == "highlighted")
+      .reduce((result, edge) => {
+        result[edge.id] = edge;
+        return result;
+      }, {});
+
+    return { nodes, edges };
   }
 
   static edgesConnectedToNode(graph, nodeId) {

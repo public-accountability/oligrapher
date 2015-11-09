@@ -2,7 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { loadGraph, showGraph, 
          zoomIn, zoomOut, resetZoom, 
-         moveNode, moveEdge, moveCaption } from '../actions';
+         moveNode, moveEdge, moveCaption,
+         swapNodeHighlight, swapEdgeHighlight } from '../actions';
 import Graph from './Graph';
 import GraphModel from '../models/Graph';
 import { HotKeys } from 'react-hotkeys';
@@ -22,6 +23,7 @@ class Root extends Component {
 
     const { dispatch } = this.props;
     const that = this;
+    const singleSelect = !!this.props.isEditor;
 
     return this.props.graph ? (
       <div id="oligrapherContainer" style={{ height: '100%' }}>
@@ -35,7 +37,9 @@ class Root extends Component {
             clickNode={() => null}
             moveNode={(graphId, nodeId, x, y) => dispatch(moveNode(graphId, nodeId, x, y))} 
             moveEdge={(graphId, edgeId, cx, cy) => dispatch(moveEdge(graphId, edgeId, cx, cy))} 
-            moveCaption={(graphId, captionId, x, y) => dispatch(moveCaption(graphId, captionId, x, y))} />
+            moveCaption={(graphId, captionId, x, y) => dispatch(moveCaption(graphId, captionId, x, y))} 
+            highlightNode={(graphId, nodeId) => this.props.isEditor ? dispatch(swapNodeHighlight(graphId, nodeId, singleSelect)): null}
+            highlightEdge={(graphId, edgeId) => this.props.isEditor ? dispatch(swapEdgeHighlight(graphId, edgeId, singleSelect)): null} />
         </HotKeys>
       </div>
     ) : (<div></div>);

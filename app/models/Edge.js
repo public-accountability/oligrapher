@@ -1,8 +1,10 @@
 import { merge } from 'lodash';
+import Helpers from './Helpers';
 
 export default class Edge {
   static defaults() {
     return {
+      id: Helpers.generateId(),
       display: { 
         scale: 1,
         arrow: false,

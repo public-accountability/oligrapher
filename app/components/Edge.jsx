@@ -9,8 +9,10 @@ import nds from '../NodeDisplaySettings';
 export default class Edge extends BaseComponent {
   constructor(props) {
     super(props);
-    this.bindAll('_handleDragStart', '_handleDrag', '_handleDragStop', '_handleTextClick');
-    this.state = props.edge.display;
+    this.bindAll('_handleDragStart', '_handleDrag', '_handleDragStop', '_handleClick', '_handleTextClick');
+    // need control point immediately for dragging
+    let { cx, cy } = this._calculateGeometry(props.edge.display);
+    this.state = merge({}, props.edge.display, { cx, cy });
   }
 
   render() {
@@ -52,12 +54,13 @@ export default class Edge extends BaseComponent {
             onClick={this._handleTextClick}
             dangerouslySetInnerHTML={sp.textPath}></text>
           <path 
-            className="handle edge-handle" 
+            className="handle edge-handle edgeSelect" 
             d={sp.curve} 
             stroke="#fff" 
             strokeOpacity="0"
             strokeWidth={scale + 20} 
-            fill="none"></path>
+            fill="none"
+            onClick={this._handleClick}></path>
         </g>
       </DraggableCore>
     );
@@ -80,6 +83,8 @@ export default class Edge extends BaseComponent {
   }
 
   _handleDrag(event, ui) {
+    this._dragging = true; // so that _handleClick knows it's not just a click
+
     let e = this.props.edge;
     let deltaX = (ui.position.clientX - this._startDrag.clientX) / this.graphInstance.state.actualZoom;
     let deltaY = (ui.position.clientY - this._startDrag.clientY) / this.graphInstance.state.actualZoom;
@@ -93,6 +98,14 @@ export default class Edge extends BaseComponent {
     this.props.moveEdge(this.props.graphId, this.props.edge.id, this.state.cx, this.state.cy);
   }
 
+  _handleClick() {
+    if (this._dragging) {
+      this._dragging = false;
+    } else {
+      this.props.highlightEdge(this.props.graphId, this.props.edge.id);
+    }
+  }
+
   _handleTextClick() {
     if (this.props.edge.display.url) {
       let tab = window.open(this.props.edge.display.url, '_blank');
@@ -103,7 +116,7 @@ export default class Edge extends BaseComponent {
   _getSvgParams(edge) {
     let e = edge;
     let { label, scale, arrow, dash, status } = this.state;
-    let { x, y, cx, cy, xa, ya, xb, yb, is_reverse } = this._calculateGeometry();
+    let { x, y, cx, cy, xa, ya, xb, yb, is_reverse } = this._calculateGeometry(this.state);
 
     const pathId = `path-${e.id}`;
     const fontSize = 10 * Math.sqrt(scale);
@@ -125,9 +138,9 @@ export default class Edge extends BaseComponent {
     };
   }
 
-  _calculateGeometry() {
+  _calculateGeometry(state) {
     // let edge = this.props.edge;
-    let { cx, cy, x1, y1, x2, y2, s1, s2 } = this.state;
+    let { cx, cy, x1, y1, x2, y2, s1, s2 } = state;
     let r1 = s1 * nds.circleRadius;
     let r2 = s2 * nds.circleRadius;
 
@@ -153,7 +166,7 @@ export default class Edge extends BaseComponent {
     }
 
     // generate curve offset if it doesn't exist
-    if (cx == null || cy == null) {
+    if (!cx || !cy) {
       cx = -(ya - y) * eds.curveStrength;
       cy = (xa - x) * eds.curveStrength;
     }
