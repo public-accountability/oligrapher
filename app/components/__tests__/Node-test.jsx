@@ -54,16 +54,15 @@ describe("Node Component", () => {
   });
 
   it("should swap selection if clicked", () => {
-    let clickNode = jest.genMockFunction();
+    let highlightNode = jest.genMockFunction();
     let node = TestUtils.renderIntoDocument(
-      <Node node={data} graph={{id: "someid"}} clickNode={clickNode} />
+      <Node node={data} graph={{id: "someid"}} highlightNode={highlightNode} />
     );
     let element = ReactDOM.findDOMNode(node);
-    let select = element.querySelector(".nodeSelect");
 
-    TestUtils.Simulate.click(select);
-    expect(clickNode.mock.calls[0][0]).toBe("someid");
-    expect(clickNode.mock.calls[0][1]).toBe(data.id);
+    TestUtils.Simulate.click(element);
+    expect(highlightNode.mock.calls[0][0]).toBe("someid");
+    expect(highlightNode.mock.calls[0][1]).toBe(data.id);
   });
 
   // NOT WORKING: EVENT HANDLERS ARENT TRIGGERED FOR SOME REASON

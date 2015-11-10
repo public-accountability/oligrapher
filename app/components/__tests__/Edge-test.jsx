@@ -61,15 +61,15 @@ describe("Edge Component", () => {
   });
 
   it("should swap selection if clicked", () => {
-    let clickEdge = jest.genMockFunction();
+    let highlightEdge = jest.genMockFunction();
     let edge = TestUtils.renderIntoDocument(
-      <Edge edge={data} graphId="someid" clickEdge={clickEdge} />
+      <Edge edge={data} graphId="someid" highlightEdge={highlightEdge} />
     );
     let element = ReactDOM.findDOMNode(edge);
     let select = element.querySelector(".edgeSelect");
 
     TestUtils.Simulate.click(select);
-    expect(clickEdge.mock.calls[0][0]).toBe("someid");
-    expect(clickEdge.mock.calls[0][1]).toBe(data.id);
+    expect(highlightEdge.mock.calls[0][0]).toBe("someid");
+    expect(highlightEdge.mock.calls[0][1]).toBe(data.id);
   });
 });
