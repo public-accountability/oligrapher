@@ -67,7 +67,7 @@
       }, {});
 
       var captions = data.texts.reduce(function(result, t, i) {
-        result[i] = that.convertText(t, i);
+        result[i+1] = that.convertText(t, i+1);
         return result;
       }, {});
 

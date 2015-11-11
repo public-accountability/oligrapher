@@ -1,12 +1,12 @@
 import Node from './Node';
 import Edge from './Edge';
-import helpers from './Helpers';
-import { merge, values, intersection, flatten } from 'lodash';
+import Helpers from './Helpers';
+import { merge, assign, values, intersection, flatten, cloneDeep, omit } from 'lodash';
 import Springy from 'springy';
 
 class Graph {
   static generateId() {
-    return helpers.generateId();
+    return Helpers.generateId();
   }
 
   static defaults() {
@@ -100,7 +100,7 @@ class Graph {
       layout.tick(0.01);
     }
 
-    let newGraph = merge({}, graph);
+    let newGraph = cloneDeep(graph);
 
     layout.eachNode((node, point) => {
       newGraph.nodes[node.data.label].display.x = point.p.x * 100;
@@ -211,6 +211,10 @@ class Graph {
     return merge({}, graph, { edges: { [edge.id]: edge } });
   }
 
+  static addCaption(graph, caption) {
+    return merge({}, graph, { captions: { [caption.id]: caption } });
+  }
+
   // CONTENT DELETION API
 
   static deleteNode(graph, nodeId) {
@@ -224,7 +228,7 @@ class Graph {
   }
 
   static deleteEdge(graph, edgeId) {
-    let newGraph = merge({}, graph);
+    let newGraph = cloneDeep(graph);
 
     delete newGraph.edges[edgeId];
 
@@ -232,7 +236,7 @@ class Graph {
   }
 
   static deleteCaption(graph, captionId) {
-    let newGraph = merge({}, graph);
+    let newGraph = cloneDeep(graph);
 
     delete newGraph.captions[captionId];
 
@@ -240,7 +244,7 @@ class Graph {
   }
 
   static deleteNodes(graph, nodeIds) {
-    let newGraph = merge({}, graph);
+    let newGraph = cloneDeep(graph);
     let edgeIds = flatten(nodeIds.map(id => this.edgesConnectedToNode(graph, id).map(edge => edge.id)));
 
     edgeIds.forEach(id => delete newGraph.edges[id]);
@@ -250,7 +254,7 @@ class Graph {
   }
 
   static deleteEdges(graph, edgeIds) {
-    let newGraph = merge({}, graph);
+    let newGraph = cloneDeep(graph);
 
     edgeIds.forEach(id => delete newGraph.edges[id]);
 
@@ -258,7 +262,7 @@ class Graph {
   }
 
   static deleteCaptions(graph, captionIds) {
-    let newGraph = merge({}, graph);
+    let newGraph = cloneDeep(graph);
 
     captionIds.forEach(id => delete newGraph.captions[id]);
 
@@ -268,11 +272,27 @@ class Graph {
   // BASIC UPDATERS
 
   static updateNode(graph, nodeId, data) {
-    return merge({}, graph, { nodes: { [nodeId]: data } });
+    let node = Node.setDefaults(
+      Helpers.compactObject(
+        merge({}, graph.nodes[nodeId], omit(data, "id"))
+      )
+    );
+
+    let nodes = assign({}, graph.nodes, { [nodeId]: node });
+
+    return assign({}, graph, { nodes });
   }
 
   static updateEdge(graph, edgeId, data) {
-    return merge({}, graph, { edges: { [edgeId]: data } });
+    let edge = Edge.setDefaults(
+      Helpers.compactObject(
+        merge({}, graph.edges[edgeId], omit(data, "id"))
+      )
+    );
+
+    let edges = assign({}, graph.edges, { [edgeId]: edge });
+
+    return assign({}, graph, { edges });
   }
 
   static updateCaption(graph, captionId, data) {
@@ -339,7 +359,7 @@ class Graph {
 
   // limits graph to set of nodes and the edges between them
   static limitGraphToNodeIds(graph, nodeIds) {
-    let filteredGraph = merge({}, graph);
+    let filteredGraph = cloneDeep(graph);
 
     filteredGraph.nodes = nodeIds.reduce((result, nodeId) => merge(result, { [nodeId]: graph.nodes[nodeId] }), {});
     filteredGraph.edges = this.edgesBetweenNodes(graph, nodeIds)
@@ -357,7 +377,7 @@ class Graph {
       return result;
     }, {});
 
-    let bundledGraph = merge({}, graph);
+    let bundledGraph = cloneDeep(graph);
     bundledGraph.edges = values(edges).reduce((result, edge) => merge(result, { [edge.id]: edge }), {});
 
     return bundledGraph;

@@ -19,9 +19,13 @@ export const SWAP_EDGE_SELECTION = 'SWAP_EDGE_SELECTION';
 export const SWAP_CAPTION_SELECTION = 'SWAP_CAPTION_SELECTION';
 export const ADD_NODE = 'ADD_NODE';
 export const ADD_EDGE = 'ADD_EDGE';
+export const ADD_CAPTION = 'ADD_CAPTION';
 export const DELETE_NODE = 'DELETE_NODE';
 export const DELETE_EDGE = 'DELETE_EDGE';
+export const DELETE_CAPTION = 'DELETE_CAPTION';
 export const DELETE_SELECTION = 'DELETE_SELECTION';
+export const UPDATE_NODE = 'UPDATE_NODE';
+export const UPDATE_EDGE = 'UPDATE_EDGE';
 
 /*
  * action creators
@@ -88,6 +92,10 @@ export function addEdge(graphId, edge) {
   return { type: ADD_EDGE, graphId, edge };
 }
 
+export function addCaption(graphId, caption) {
+  return { type: ADD_CAPTION, graphId, caption };
+}
+
 export function deleteNode(graphId, nodeId) {
   return { type: DELETE_NODE, graphId, nodeId };
 }
@@ -96,6 +104,18 @@ export function deleteEdge(graphId, edgeId) {
   return { type: DELETE_EDGE, graphId, edgeId };
 }
 
+export function deleteCaption(graphId, captionId) {
+  return { type: DELETE_CAPTION, graphId, captionId };
+}
+
 export function deleteSelection(graphId, selection) {
   return { type: DELETE_SELECTION, graphId, selection };
+}
+
+export function updateNode(graphId, nodeId, data) {
+  return { type: UPDATE_NODE, graphId, nodeId, data };
+}
+
+export function updateEdge(graphId, edgeId, data) {
+  return { type: UPDATE_EDGE, graphId, edgeId, data };
 }

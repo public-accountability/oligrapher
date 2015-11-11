@@ -2,12 +2,14 @@ jest.dontMock('../graphs');
 jest.dontMock('../../models/Graph');
 jest.dontMock('../../models/Node');
 jest.dontMock('../../models/Edge');
+jest.dontMock('../../models/Helpers');
 
 const reducer = require('../graphs');
 const Graph = require('../../models/Graph'); 
 const Node = require('../../models/Node'); 
 const Edge = require('../../models/Edge'); 
-const { merge, values, uniq, keys } = require('lodash');
+const Helpers = require('../../models/Helpers'); 
+const { merge, assign, values, uniq, keys } = require('lodash');
 
 describe("graph reducer", () => {
 
@@ -179,6 +181,114 @@ describe("graph reducer", () => {
       expect(keys(newGraph.nodes)).toEqual(['2', '3']);
       expect(keys(newGraph.edges)).toEqual([]);
       expect(keys(newGraph.captions)).toEqual([]);
+    });
+  });
+
+  describe("UPDATE_NODE", () => {
+
+    const nodeId = 1;
+    const update = { 
+      id: 100, 
+      display: { 
+        name: "Angela Merkel", 
+        image: "http://www.opinionspost.com/wp-content/uploads/2015/07/Angela_Merkel_1.jpg",
+        scale: 3
+      }
+    };
+    const action = {
+      type: 'UPDATE_NODE',
+      graphId: basicGraph.id,
+      nodeId: nodeId,
+      data: update
+    };
+    let newGraph;
+
+    beforeEach(() => {
+      newGraph = reducer(graphs, action)[basicGraph.id];
+    });
+
+    it("should update the node's display and data objects with new data", () => {
+      expect(newGraph.nodes[nodeId].display.name).toBe(update.display.name);
+      expect(newGraph.nodes[nodeId].display.image).toBe(update.display.image);
+      expect(newGraph.nodes[nodeId].display.scale).toBe(update.display.scale);
+    });
+
+    it("should not overwrite the node id", () => { 
+      expect(newGraph.nodes[nodeId].id).toBe(nodeId);
+    });
+
+    it("should remove data when provided null values", () => {
+      let update2 = { display: { image: null } };
+      let action2 = assign({}, action, { data: update2 });
+      let graphs2 = assign({}, graphs, { [basicGraph.id]: newGraph });
+      let newGraph2 = reducer(graphs2, action2)[basicGraph.id];
+
+      expect(newGraph2.nodes[nodeId].display.image).toBeUndefined();
+    })
+
+    it("should revert to default values when required fields are removed", () => {
+      let update2 = { display: { scale: null } };
+      let action2 = assign({}, action, { data: update2 });
+      let graphs2 = assign({}, graphs, { [basicGraph.id]: newGraph });
+      let newGraph2 = reducer(graphs2, action2)[basicGraph.id];
+      let defaults = Node.defaults();
+
+      expect(newGraph2.nodes[nodeId].display.scale).toBe(defaults.display.scale);
+    });
+  });
+
+  describe("UPDATE_EDGE", () => {
+
+    const edgeId = 1;
+    const update = { 
+      id: 125, 
+      display: { 
+        label: "CEO", 
+        scale: 2,
+        arrow: true,
+        url: "https://www.blackstone.com/the-firm/overview/our-people/stephen-a-schwarzman"
+      }
+    };
+    const action = {
+      type: 'UPDATE_EDGE',
+      graphId: basicGraph.id,
+      edgeId: edgeId,
+      data: update
+    };
+    let newGraph;
+
+    beforeEach(() => {
+      newGraph = reducer(graphs, action)[basicGraph.id];
+    });
+
+    it("should update the edge's display and data objects with new data", () => {
+      expect(newGraph.edges[edgeId].display.label).toBe(update.display.label);
+      expect(newGraph.edges[edgeId].display.scale).toBe(update.display.scale);
+      expect(newGraph.edges[edgeId].display.arrow).toBe(update.display.arrow);
+      expect(newGraph.edges[edgeId].display.url).toBe(update.display.url);
+    });
+
+    it("should not overwrite the edge id", () => { 
+      expect(newGraph.edges[edgeId].id).toBe(edgeId);
+    });
+
+    it("should remove data when provided null values", () => {
+      let update2 = { display: { url: null } };
+      let action2 = assign({}, action, { data: update2 });
+      let graphs2 = assign({}, graphs, { [basicGraph.id]: newGraph });
+      let newGraph2 = reducer(graphs2, action2)[basicGraph.id];
+
+      expect(newGraph2.edges[edgeId].display.url).toBeUndefined();
+    })
+
+    it("should revert to default values when required fields are removed", () => {
+      let update2 = { display: { scale: null } };
+      let action2 = assign({}, action, { data: update2 });
+      let graphs2 = assign({}, graphs, { [basicGraph.id]: newGraph });
+      let newGraph2 = reducer(graphs2, action2)[basicGraph.id];
+      let defaults = Edge.defaults();
+
+      expect(newGraph2.edges[edgeId].display.scale).toBe(defaults.display.scale);
     });
   });
 });

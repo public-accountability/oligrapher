@@ -4,9 +4,12 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import Root from './components/Root';
 import reducers from './reducers';
-import { loadGraph, showGraph, zoomIn, zoomOut, addNode, addEdge } from './actions';
+import { loadGraph, showGraph, 
+         zoomIn, zoomOut, 
+         addNode, addEdge, addCaption, 
+         deleteNode, deleteEdge, deleteCaption, deleteSelection } from './actions';
 import Graph from './models/Graph';
-import { merge } from 'lodash';
+import { merge, difference } from 'lodash';
 
 const defaultConfig = { highlighting: true, isEditor: false };
 
@@ -52,28 +55,53 @@ const main = {
     this.root.dispatchProps.dispatch(zoomOut());
   },
 
+  currentGraphId: function() {
+    return this.root.getWrappedInstance().props.graph.id;
+  },
+
   addNode: function(node) {
-    let graphId = this.root.getWrappedInstance().props.graph.id;
-    this.root.dispatchProps.dispatch(addNode(graphId, node));
+    let nodeIds = Object.keys(this.root.getWrappedInstance().props.graph.nodes);
+    this.root.dispatchProps.dispatch(addNode(this.currentGraphId(), node));
+    let newNodeIds = Object.keys(this.root.getWrappedInstance().props.graph.nodes);
+    return difference(newNodeIds, nodeIds);
   },
 
   addEdge: function(edge) {
-    let graphId = this.root.getWrappedInstance().props.graph.id;
-    this.root.dispatchProps.dispatch(addEdge(graphId, edge));
+    let edgeIds = Object.keys(this.root.getWrappedInstance().props.graph.edges);
+    this.root.dispatchProps.dispatch(addEdge(this.currentGraphId(), edge));
+    let newEdgeIds = Object.keys(this.root.getWrappedInstance().props.graph.edges);
+    return difference(newEdgeIds, edgeIds);
+  },
+
+  addCaption: function(caption) {
+    let captionIds = Object.keys(this.root.getWrappedInstance().props.graph.captions);
+    this.root.dispatchProps.dispatch(addCaption(this.currentGraphId(), caption));
+    let newCaptionIds = Object.keys(this.root.getWrappedInstance().props.graph.captions);
+    return difference(newCaptionIds, captionIds);
   },
 
   deleteNode: function(nodeId) {
-    let graphId = this.root.getWrappedInstance().props.graph.id;
-    this.root.dispatchProps.dispatch(deleteNode(graphId, nodeId));
+    this.root.dispatchProps.dispatch(deleteNode(this.currentGraphId(), nodeId));
   },
 
   deleteEdge: function(edgeId) {
-    let graphId = this.root.getWrappedInstance().props.graph.id;
-    this.root.dispatchProps.dispatch(addEdge(graphId, edgeId));
+    this.root.dispatchProps.dispatch(deleteEdge(this.currentGraphId(), edgeId));
   },
 
-  getHighlighted: function() {
+  deleteCaption: function(captionId) {
+    this.root.dispatchProps.dispatch(deleteCaption(this.currentGraphId(), captionId));
+  },
+
+  getHighlights: function() {
     return Graph.highlightedOnly(this.root.getWrappedInstance().props.graph);
+  },
+
+  getSelection: function() {
+    return this.root.getWrappedInstance().props.selection;
+  },
+
+  deleteSelection: function() {
+    this.root.disptchProps.dispatch(deleteSelection(this.currentGraphId(), this.getSelection()));
   },
 
   findNode: function(name) {

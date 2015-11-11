@@ -1,8 +1,9 @@
 import { LOAD_GRAPH, SHOW_GRAPH, 
          MOVE_NODE, MOVE_EDGE, MOVE_CAPTION, 
          SWAP_NODE_HIGHLIGHT, SWAP_EDGE_HIGHLIGHT,
-         ADD_NODE, ADD_EDGE, 
-         DELETE_NODE, DELETE_EDGE, DELETE_SELECTION } from '../actions';
+         ADD_NODE, ADD_EDGE, ADD_CAPTION,
+         DELETE_NODE, DELETE_EDGE, DELETE_CAPTION, DELETE_SELECTION,
+         UPDATE_NODE, UPDATE_EDGE } from '../actions';
 import Graph from '../models/Graph';
 import Edge from '../models/Edge';
 import { merge, assign } from 'lodash';
@@ -51,6 +52,11 @@ export default function graphs(state = {}, action) {
       [action.graphId]: Graph.addEdge(state[action.graphId], action.edge)
     });
 
+  case ADD_CAPTION:
+    return merge({}, state, { 
+      [action.graphId]: Graph.addCaption(state[action.graphId], action.caption)
+    });
+
   case DELETE_NODE:
     return assign({}, state, {
       [action.graphId]: Graph.deleteNode(state[action.graphId], action.nodeId)
@@ -59,6 +65,11 @@ export default function graphs(state = {}, action) {
   case DELETE_EDGE:
     return assign({}, state, { 
       [action.graphId]: Graph.deleteEdge(state[action.graphId], action.edgeId)
+    });
+
+  case DELETE_CAPTION:
+    return assign({}, state, { 
+      [action.graphId]: Graph.deleteCaption(state[action.graphId], action.captionId)
     });
 
   case DELETE_SELECTION:
@@ -75,6 +86,16 @@ export default function graphs(state = {}, action) {
 
     return assign({}, state, {
       [action.graphId]: graph
+    });
+
+  case UPDATE_NODE:
+    return assign({}, state, {
+      [action.graphId]: Graph.updateNode(state[action.graphId], action.nodeId, action.data)
+    });
+
+  case UPDATE_EDGE:
+    return assign({}, state, {
+      [action.graphId]: Graph.updateEdge(state[action.graphId], action.edgeId, action.data)
     });
 
   default:
