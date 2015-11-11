@@ -21,6 +21,7 @@ export const ADD_NODE = 'ADD_NODE';
 export const ADD_EDGE = 'ADD_EDGE';
 export const DELETE_NODE = 'DELETE_NODE';
 export const DELETE_EDGE = 'DELETE_EDGE';
+export const DELETE_SELECTION = 'DELETE_SELECTION';
 
 /*
  * action creators
@@ -93,4 +94,8 @@ export function deleteNode(graphId, nodeId) {
 
 export function deleteEdge(graphId, edgeId) {
   return { type: DELETE_EDGE, graphId, edgeId };
+}
+
+export function deleteSelection(graphId, selection) {
+  return { type: DELETE_SELECTION, graphId, selection };
 }

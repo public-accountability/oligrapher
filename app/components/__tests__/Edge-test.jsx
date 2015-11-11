@@ -85,4 +85,16 @@ describe("Edge Component", () => {
     TestUtils.Simulate.click(select);
     expect(selectEdge.mock.calls[0][0]).toBe(data.id);
   });
+
+  it("should not swap selection if clicked without alt key", () => {
+    let selectEdge = jest.genMockFunction();
+    let edge = TestUtils.renderIntoDocument(
+      <Edge edge={data} graphId="someid" selectEdge={selectEdge} selected={false} altKey={false} />
+    );
+    let element = ReactDOM.findDOMNode(edge);
+    let select = element.querySelector(".edgeSelect");
+
+    TestUtils.Simulate.click(select);
+    expect(selectEdge.mock.calls.length).toBe(0);
+  });
 });

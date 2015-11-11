@@ -4,7 +4,8 @@ import { loadGraph, showGraph,
          zoomIn, zoomOut, resetZoom, 
          moveNode, moveEdge, moveCaption,
          swapNodeHighlight, swapEdgeHighlight,
-         swapNodeSelection, swapEdgeSelection, swapCaptionSelection } from '../actions';
+         swapNodeSelection, swapEdgeSelection, swapCaptionSelection,
+         deleteSelection } from '../actions';
 import Graph from './Graph';
 import GraphModel from '../models/Graph';
 import { HotKeys } from 'react-hotkeys';
@@ -20,10 +21,23 @@ class Root extends Component {
     const keyMap = { 
       'zoomIn': 'ctrl+=',
       'zoomOut': 'ctrl+-',
-      'altDown': { sequence: 'alt', action: 'keydown' },
-      'altUp': { sequence: 'alt', action: 'keyup' },
-      'altShiftDown': { sequence: 'alt+shift', action: 'keydown' },
-      'altShiftUp': { sequence: 'shift', action: 'keyup' }
+      'altDown': [
+        { sequence: 'alt', action: 'keydown' }, 
+        { sequence: 'ctrl', action: 'keydown' },
+        { sequence: 'command', action: 'keydown' }
+      ],
+      'altUp': [
+        { sequence: 'alt', action: 'keyup' }, 
+        { sequence: 'ctrl', action: 'keyup' },
+        { sequence: 'command', action: 'keyup' }
+      ],
+      'altShiftDown': [
+        { sequence: 'alt+shift', action: 'keydown' }, 
+        { sequence: 'ctrl+shift', action: 'keydown' },
+        { sequence: 'command+shift', action: 'keydown' }
+      ],
+      'altShiftUp': { sequence: 'shift', action: 'keyup' },
+      'delSelected': ['alt+d', 'ctrl+d', 'command+d']
     };
 
     const keyHandlers = {
@@ -32,7 +46,8 @@ class Root extends Component {
       'altDown': () => this.setState({ altKey: true }),
       'altUp': () => this.setState({ altKey: false }),
       'altShiftDown': () => this.setState({ altShiftKey: true }),
-      'altShiftUp': () => this.setState({ altShiftKey: false })
+      'altShiftUp': () => this.setState({ altShiftKey: false }),
+      'delSelected': () => dispatch(deleteSelection(this.props.graph.id, this.props.selection))
     };
 
     const { dispatch, highlighting, isEditor } = this.props;
@@ -77,7 +92,6 @@ class Root extends Component {
 }
 
 function select(state) {
-  console.log(state.selection);
   return {
     graph: state.graphs[state.position.currentId],
     loadedId: state.position.loadedId,

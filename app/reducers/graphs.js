@@ -1,13 +1,14 @@
 import { LOAD_GRAPH, SHOW_GRAPH, 
          MOVE_NODE, MOVE_EDGE, MOVE_CAPTION, 
          SWAP_NODE_HIGHLIGHT, SWAP_EDGE_HIGHLIGHT,
-         ADD_NODE, ADD_EDGE, DELETE_NODE, DELETE_EDGE } from '../actions';
+         ADD_NODE, ADD_EDGE, 
+         DELETE_NODE, DELETE_EDGE, DELETE_SELECTION } from '../actions';
 import Graph from '../models/Graph';
 import Edge from '../models/Edge';
-import { merge } from 'lodash';
+import { merge, assign } from 'lodash';
 
 export default function graphs(state = {}, action) {
-  let newState;
+  let newState, graph;
 
   switch (action.type) {
 
@@ -51,16 +52,30 @@ export default function graphs(state = {}, action) {
     });
 
   case DELETE_NODE:
-    // simple merge won't work in this case because it doesn't remove objects
-    newState = merge({}, state);
-    newState[action.graphId] = Graph.deleteNode(state[action.graphId], action.nodeId);
-    return newState;
+    return assign({}, state, {
+      [action.graphId]: Graph.deleteNode(state[action.graphId], action.nodeId)
+    });
 
   case DELETE_EDGE:
-    // simple merge won't work in this case because it doesn't remove objects
-    newState = merge({}, state);
-    newState[action.graphId] = Graph.deleteEdge(state[action.graphId], action.edgeId);
-    return newState;
+    return assign({}, state, { 
+      [action.graphId]: Graph.deleteEdge(state[action.graphId], action.edgeId)
+    });
+
+  case DELETE_SELECTION:
+    graph = Graph.deleteCaptions(
+      Graph.deleteNodes(
+        Graph.deleteEdges(
+          state[action.graphId], 
+          action.selection.edgeIds
+        ),
+        action.selection.nodeIds
+      ),
+      action.selection.captionIds
+    );
+
+    return assign({}, state, {
+      [action.graphId]: graph
+    });
 
   default:
     return state;

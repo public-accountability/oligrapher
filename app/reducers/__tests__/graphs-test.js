@@ -7,7 +7,7 @@ const reducer = require('../graphs');
 const Graph = require('../../models/Graph'); 
 const Node = require('../../models/Node'); 
 const Edge = require('../../models/Edge'); 
-const { merge, values, uniq } = require('lodash');
+const { merge, values, uniq, keys } = require('lodash');
 
 describe("graph reducer", () => {
 
@@ -157,6 +157,28 @@ describe("graph reducer", () => {
       let newGraph = reducer(graphs, action)[basicGraph.id];
 
       expect(values(newGraph.nodes).length).toBe(values(basicGraph.nodes).length);
+    });
+  });
+
+  describe("DELETE_SELECTION", () => {
+
+    const selection = {
+      nodeIds: [1],
+      edgeIds: [2],
+      captionIds: [1]
+    };
+    const action = {
+      type: 'DELETE_SELECTION',
+      graphId: basicGraph.id,
+      selection: selection
+    };
+
+    it("should delete the selection and any edges connected to it", () => {
+      let newGraph = reducer(graphs, action)[basicGraph.id];
+
+      expect(keys(newGraph.nodes)).toEqual(['2', '3']);
+      expect(keys(newGraph.edges)).toEqual([]);
+      expect(keys(newGraph.captions)).toEqual([]);
     });
   });
 });

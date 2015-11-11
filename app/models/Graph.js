@@ -1,7 +1,7 @@
 import Node from './Node';
 import Edge from './Edge';
 import helpers from './Helpers';
-import { merge, values, intersection } from 'lodash';
+import { merge, values, intersection, flatten } from 'lodash';
 import Springy from 'springy';
 
 class Graph {
@@ -227,6 +227,40 @@ class Graph {
     let newGraph = merge({}, graph);
 
     delete newGraph.edges[edgeId];
+
+    return newGraph;
+  }
+
+  static deleteCaption(graph, captionId) {
+    let newGraph = merge({}, graph);
+
+    delete newGraph.captions[captionId];
+
+    return newGraph;
+  }
+
+  static deleteNodes(graph, nodeIds) {
+    let newGraph = merge({}, graph);
+    let edgeIds = flatten(nodeIds.map(id => this.edgesConnectedToNode(graph, id).map(edge => edge.id)));
+
+    edgeIds.forEach(id => delete newGraph.edges[id]);
+    nodeIds.forEach(id => delete newGraph.nodes[id]);
+
+    return newGraph;
+  }
+
+  static deleteEdges(graph, edgeIds) {
+    let newGraph = merge({}, graph);
+
+    edgeIds.forEach(id => delete newGraph.edges[id]);
+
+    return newGraph;
+  }
+
+  static deleteCaptions(graph, captionIds) {
+    let newGraph = merge({}, graph);
+
+    captionIds.forEach(id => delete newGraph.captions[id]);
 
     return newGraph;
   }
