@@ -41,7 +41,7 @@ Oligrapher is easy to embed in a web page. All you have to do is include the .js
       var div = document.getElementById('#graph');
       var data = getDataFromSomewhere();
       var config = { data: data };
-      Oligrapher.run(div, config);
+      var oli = Oligrapher.run(div, config);
     </script>
   </body>
 </html>
@@ -191,3 +191,25 @@ Adds given caption to graph. Caption must conform to data schema described above
 var oli = Oligrapher.run(element, { data: data });
 var captionId = oli.addCaption({ display: { text: "This is the most interesting thin you'll read today" } });
 ```
+
+### ```deleteNode(id)```
+Deletes the node with the given ```id``` and any edges connected to it from the current graph.
+
+### ```deleteEdge(id)```
+Deletes the edge with the given ```id``` from the current graph.
+
+### ```deleteCaption(id)```
+Deletes the caption with the given ```id``` from the current graph.
+
+### ```getSelection()```
+Returns an object with the ids of the currently selected nodes, edges, and captions.
+```
+var selection = oli.getSelection();
+// { nodeIds: [1, 2], edgeIds: [1], captionIds: [] }
+```
+
+### ```deleteSelection()```
+Deletes the currently selected nodes, edges, and captions, as well as any other edges connected to the deleted nodes.
+
+### ```getHighlights()```
+Returns the subgraph consisting of highlighted nodes and edges.
