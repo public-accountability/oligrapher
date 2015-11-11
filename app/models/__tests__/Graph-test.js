@@ -19,7 +19,7 @@ describe("Graph", () => {
     },
     edges: {
       1: { id: 1, node1_id: 1, node2_id: 2, display: { label: "Edge 1" } },
-      2: { id: 2, node1_id: 2, node2_id: 3, display: { label: "Edge 1" } }
+      2: { id: 2, node1_id: 2, node2_id: 3, display: { label: "Edge 2" } }
     },
     captions: {
       1: { id: 1, display: { text: "Caption 1"} }

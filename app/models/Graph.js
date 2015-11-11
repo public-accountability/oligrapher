@@ -211,6 +211,26 @@ class Graph {
     return merge({}, graph, { edges: { [edge.id]: edge } });
   }
 
+  // CONTENT DELETION API
+
+  static deleteNode(graph, nodeId) {
+    let newGraph = merge({}, graph);
+    let edges = this.edgesConnectedToNode(graph, nodeId);
+
+    delete newGraph.nodes[nodeId];
+    edges.forEach(edge => delete newGraph.edges[edge.id]);
+
+    return newGraph;
+  }
+
+  static deleteEdge(graph, edgeId) {
+    let newGraph = merge({}, graph);
+
+    delete newGraph.edges[edgeId];
+
+    return newGraph;
+  }
+
   // BASIC UPDATERS
 
   static updateNode(graph, nodeId, data) {

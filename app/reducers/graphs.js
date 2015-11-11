@@ -1,13 +1,14 @@
 import { LOAD_GRAPH, SHOW_GRAPH, 
          MOVE_NODE, MOVE_EDGE, MOVE_CAPTION, 
          SWAP_NODE_HIGHLIGHT, SWAP_EDGE_HIGHLIGHT,
-         ADD_NODE, ADD_EDGE } from '../actions';
+         ADD_NODE, ADD_EDGE, DELETE_NODE, DELETE_EDGE } from '../actions';
 import Graph from '../models/Graph';
 import Edge from '../models/Edge';
 import { merge } from 'lodash';
 
 export default function graphs(state = {}, action) {
-  
+  let newState;
+
   switch (action.type) {
 
   case LOAD_GRAPH:
@@ -48,6 +49,18 @@ export default function graphs(state = {}, action) {
     return merge({}, state, { 
       [action.graphId]: Graph.addEdge(state[action.graphId], action.edge)
     });
+
+  case DELETE_NODE:
+    // simple merge won't work in this case because it doesn't remove objects
+    newState = merge({}, state);
+    newState[action.graphId] = Graph.deleteNode(state[action.graphId], action.nodeId);
+    return newState;
+
+  case DELETE_EDGE:
+    // simple merge won't work in this case because it doesn't remove objects
+    newState = merge({}, state);
+    newState[action.graphId] = Graph.deleteEdge(state[action.graphId], action.edgeId);
+    return newState;
 
   default:
     return state;

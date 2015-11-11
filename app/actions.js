@@ -14,8 +14,13 @@ export const MOVE_EDGE = 'MOVE_EDGE';
 export const MOVE_CAPTION = 'MOVE_CAPTION';
 export const SWAP_NODE_HIGHLIGHT = 'SWAP_NODE_HIGHLIGHT';
 export const SWAP_EDGE_HIGHLIGHT = 'SWAP_EDGE_HIGHLIGHT';
+export const SWAP_NODE_SELECTION = 'SWAP_NODE_SELECTION';
+export const SWAP_EDGE_SELECTION = 'SWAP_EDGE_SELECTION';
+export const SWAP_CAPTION_SELECTION = 'SWAP_CAPTION_SELECTION';
 export const ADD_NODE = 'ADD_NODE';
 export const ADD_EDGE = 'ADD_EDGE';
+export const DELETE_NODE = 'DELETE_NODE';
+export const DELETE_EDGE = 'DELETE_EDGE';
 
 /*
  * action creators
@@ -54,12 +59,24 @@ export function moveCaption(graphId, captionId, x, y) {
   return { type: MOVE_CAPTION, graphId, captionId, x, y };
 }
 
-export function swapNodeHighlight(graphId, nodeId, singleSelect = false) {
-  return { type: SWAP_NODE_HIGHLIGHT, graphId, nodeId, singleSelect };
+export function swapNodeHighlight(graphId, nodeId) {
+  return { type: SWAP_NODE_HIGHLIGHT, graphId, nodeId };
 }
 
-export function swapEdgeHighlight(graphId, edgeId, singleSelect = false) {
-  return { type: SWAP_EDGE_HIGHLIGHT, graphId, edgeId, singleSelect };
+export function swapEdgeHighlight(graphId, edgeId) {
+  return { type: SWAP_EDGE_HIGHLIGHT, graphId, edgeId };
+}
+
+export function swapNodeSelection(nodeId, singleSelect = true) {
+  return { type: SWAP_NODE_SELECTION, nodeId, singleSelect };
+}
+
+export function swapEdgeSelection(edgeId, singleSelect = true) {
+  return { type: SWAP_EDGE_SELECTION, edgeId, singleSelect };
+}
+
+export function swapCaptionSelection(captionId, singleSelect = true) {
+  return { type: SWAP_CAPTION_SELECTION, captionId, singleSelect };
 }
 
 export function addNode(graphId, node) {
@@ -68,4 +85,12 @@ export function addNode(graphId, node) {
 
 export function addEdge(graphId, edge) {
   return { type: ADD_EDGE, graphId, edge };
+}
+
+export function deleteNode(graphId, nodeId) {
+  return { type: DELETE_NODE, graphId, nodeId };
+}
+
+export function deleteEdge(graphId, edgeId) {
+  return { type: DELETE_EDGE, graphId, edgeId };
 }

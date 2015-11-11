@@ -3,43 +3,60 @@ import { connect } from 'react-redux';
 import { loadGraph, showGraph, 
          zoomIn, zoomOut, resetZoom, 
          moveNode, moveEdge, moveCaption,
-         swapNodeHighlight, swapEdgeHighlight } from '../actions';
+         swapNodeHighlight, swapEdgeHighlight,
+         swapNodeSelection, swapEdgeSelection, swapCaptionSelection } from '../actions';
 import Graph from './Graph';
 import GraphModel from '../models/Graph';
 import { HotKeys } from 'react-hotkeys';
 import ReactDOM from 'react-dom';
 
 class Root extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { altKey: false, altShiftKey: false };
+  }
+
   render() {
     const keyMap = { 
       'zoomIn': 'ctrl+=',
-      'zoomOut': 'ctrl+-'
+      'zoomOut': 'ctrl+-',
+      'altDown': { sequence: 'alt', action: 'keydown' },
+      'altUp': { sequence: 'alt', action: 'keyup' },
+      'altShiftDown': { sequence: 'alt+shift', action: 'keydown' },
+      'altShiftUp': { sequence: 'shift', action: 'keyup' }
     };
 
     const keyHandlers = {
       'zoomIn': () => dispatch(zoomIn()),
-      'zoomOut': () => dispatch(zoomOut())
+      'zoomOut': () => dispatch(zoomOut()),
+      'altDown': () => this.setState({ altKey: true }),
+      'altUp': () => this.setState({ altKey: false }),
+      'altShiftDown': () => this.setState({ altShiftKey: true }),
+      'altShiftUp': () => this.setState({ altShiftKey: false })
     };
 
-    const { dispatch } = this.props;
+    const { dispatch, highlighting, isEditor } = this.props;
     const that = this;
-    const singleSelect = !!this.props.isEditor;
 
     return this.props.graph ? (
       <div id="oligrapherContainer" style={{ height: '100%' }}>
         <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={keyHandlers}>
           <Graph 
-            ref="graph"
+            ref={(c) => { this.graph = c; if (c) { c.root = this; } }}
             graph={this.props.graph} 
             zoom={this.props.zoom} 
             height={this.props.height}
+            selection={this.props.selection}
             resetZoom={() => dispatch(resetZoom())} 
-            clickNode={() => null}
+            altKey={this.state.altKey}
             moveNode={(graphId, nodeId, x, y) => dispatch(moveNode(graphId, nodeId, x, y))} 
             moveEdge={(graphId, edgeId, cx, cy) => dispatch(moveEdge(graphId, edgeId, cx, cy))} 
             moveCaption={(graphId, captionId, x, y) => dispatch(moveCaption(graphId, captionId, x, y))} 
-            highlightNode={(graphId, nodeId) => this.props.isEditor ? dispatch(swapNodeHighlight(graphId, nodeId, singleSelect)): null}
-            highlightEdge={(graphId, edgeId) => this.props.isEditor ? dispatch(swapEdgeHighlight(graphId, edgeId, singleSelect)): null} />
+            highlightNode={(graphId, nodeId) => highlighting ? dispatch(swapNodeHighlight(graphId, nodeId)) : null}
+            highlightEdge={(graphId, edgeId) => highlighting ? dispatch(swapEdgeHighlight(graphId, edgeId)) : null} 
+            selectNode={(nodeId) => isEditor ? dispatch(swapNodeSelection(nodeId, !that.state.altShiftKey)) : null}
+            selectEdge={(edgeId) => isEditor ? dispatch(swapEdgeSelection(edgeId, !that.state.altShiftKey)) : null}
+            selectCaption={(captionId) => isEditor ? dispatch(swapCaptionSelection(captionId, !that.altShiftKey)) : null} />
         </HotKeys>
       </div>
     ) : (<div></div>);
@@ -60,9 +77,11 @@ class Root extends Component {
 }
 
 function select(state) {
+  console.log(state.selection);
   return {
     graph: state.graphs[state.position.currentId],
     loadedId: state.position.loadedId,
+    selection: state.selection,
     zoom: state.zoom
   };
 }

@@ -7,7 +7,7 @@ module.exports = {
   cornerRadius: 5,
   circleColor: {
     normal: "#ccc",
-    highlighted: "#7bc7f2",
+    highlighted: "#ccc",
     faded: "#eee"
   },
   textColor: {
@@ -20,6 +20,7 @@ module.exports = {
     highlighted: "#ff0",
     faded: "#fff"
   },
+  selectColor: "#0f0",
   bgOpacity: {
     normal: 0,
     highlighted: 0.5,
@@ -30,5 +31,6 @@ module.exports = {
     highlighted: 1,
     faded: 0.2
   },
-  bgRadiusDiff: 4
+  bgRadiusDiff: 4,
+  selectionRadiusDiff: 10
 };

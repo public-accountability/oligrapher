@@ -34,6 +34,7 @@
     "bloodhound-js": "^1.2.0",
     "chai": "^2.3.0",
     "chai-as-promised": "^5.0.0",
+    "classnames": "^2.2.0",
     "css-loader": "^0.13.1",
     "ejs": "^2.3.4",
     "express": "^4.13.3",

@@ -5,7 +5,6 @@ import { merge } from 'lodash';
 import eds from '../EdgeDisplaySettings';
 import nds from '../NodeDisplaySettings';
 
-
 export default class Edge extends BaseComponent {
   constructor(props) {
     super(props);
@@ -19,6 +18,8 @@ export default class Edge extends BaseComponent {
     let e = this.props.edge;
     let sp = this._getSvgParams(e);
     let scale  = e.display.scale;
+    let selected = this.props.selected;
+    let highlighted = e.display.status == "highlighted";
 
     return (
       <DraggableCore
@@ -29,13 +30,20 @@ export default class Edge extends BaseComponent {
         onDrag={this._handleDrag}
         onStop={this._handleDragStop}>
         <g id={sp.groupId} className="edge">
-          <path 
+          { selected ? <path 
+            className="edge-selection" 
+            d={sp.curve} 
+            stroke={eds.selectColor} 
+            strokeOpacity={eds.selectOpacity} 
+            strokeWidth={scale + eds.selectWidthDiff} 
+            fill="none"></path> : null }
+          { highlighted ? <path 
             className="edge-background" 
             d={sp.curve} 
             stroke={sp.bgColor} 
-            strokeOpacity={sp.bgOpacity} 
-            strokeWidth={scale + 5} 
-            fill="none"></path>
+            strokeOpacity={sp.Opacity} 
+            strokeWidth={scale + eds.bgWidthDiff} 
+            fill="none"></path> : null }
           <path 
             id={sp.pathId} 
             className="edge-line" 
@@ -71,7 +79,8 @@ export default class Edge extends BaseComponent {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return JSON.stringify(nextState) !== JSON.stringify(this.state);
+    return nextProps.selected !== this.props.selected || 
+           JSON.stringify(nextState) !== JSON.stringify(this.state);
   }
 
   _handleDragStart(event, ui) {
@@ -86,8 +95,8 @@ export default class Edge extends BaseComponent {
     this._dragging = true; // so that _handleClick knows it's not just a click
 
     let e = this.props.edge;
-    let deltaX = (ui.position.clientX - this._startDrag.clientX) / this.graphInstance.state.actualZoom;
-    let deltaY = (ui.position.clientY - this._startDrag.clientY) / this.graphInstance.state.actualZoom;
+    let deltaX = (ui.position.clientX - this._startDrag.clientX) / this.graph.state.actualZoom;
+    let deltaY = (ui.position.clientY - this._startDrag.clientY) / this.graph.state.actualZoom;
     let cx = this._startPosition.x + deltaX;
     let cy = this._startPosition.y + deltaY;
 
@@ -95,14 +104,21 @@ export default class Edge extends BaseComponent {
   }
 
   _handleDragStop(e, ui) {
-    this.props.moveEdge(this.props.graphId, this.props.edge.id, this.state.cx, this.state.cy);
+    // event fires every mouseup so we check for actual drag before updating store
+    if (this._dragging) {
+      this.props.moveEdge(this.props.graphId, this.props.edge.id, this.state.cx, this.state.cy);
+    }
   }
 
   _handleClick() {
     if (this._dragging) {
       this._dragging = false;
     } else {
-      this.props.highlightEdge(this.props.graphId, this.props.edge.id);
+      if (this.props.altKey) {
+        this.props.selectEdge(this.props.edge.id);
+      } else {
+        this.props.highlightEdge(this.props.graphId, this.props.edge.id);
+      }
     }
   }
 

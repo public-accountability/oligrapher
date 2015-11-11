@@ -5,7 +5,7 @@ import Node from './Node';
 import Edge from './Edge';
 import Caption from './Caption';
 import { DraggableCore } from 'react-draggable';
-import { values, min, max }  from 'lodash';
+import { values, min, max, includes }  from 'lodash';
 
 export default class Graph extends BaseComponent {
   constructor(props) {
@@ -57,35 +57,44 @@ export default class Graph extends BaseComponent {
   _renderEdges() {
     return values(this.props.graph.edges).map((e, i) =>  
       <Edge 
-        ref={(c) => { this.edges[e.id] = c; if (c) { c.graphInstance = this; } }} 
+        ref={(c) => { this.edges[e.id] = c; if (c) { c.graph = this; } }} 
         key={i} 
         edge={e} 
         graphId={this.props.graph.id} 
-        zoom={this.props.zoom} 
+        zoom={this.props.zoom}
+        altKey={this.props.altKey}
+        selected={this.props.selection && includes(this.props.selection.edgeIds, e.id)}
         highlightEdge={this.props.highlightEdge}
-        moveEdge={this.props.moveEdge} />);
+        moveEdge={this.props.moveEdge} 
+        selectEdge={this.props.selectEdge} />);
   }
 
   _renderNodes() {
     return values(this.props.graph.nodes).map((n, i) => 
       <Node 
-        ref={(c) => { this.nodes[n.id] = c; if (c) { c.graphInstance = this; } }} 
+        ref={(c) => { this.nodes[n.id] = c; if (c) { c.graph = this; } }} 
         key={i} 
         node={n} 
         graph={this.props.graph} 
         zoom={this.props.zoom} 
+        altKey={this.props.altKey}
+        selected={this.props.selection && includes(this.props.selection.nodeIds, n.id)}
         highlightNode={this.props.highlightNode} 
-        moveNode={this.props.moveNode} />);
+        moveNode={this.props.moveNode} 
+        selectNode={this.props.selectNode} />);
   }
 
   _renderCaptions() {
     return values(this.props.graph.captions).map((c, i) => 
       <Caption 
-        ref={(c) => { if (c) { c.graphInstance = this; } }}
+        ref={(c) => { if (c) { c.graph = this; } }}
         key={i} 
         caption={c}
         graphId={this.props.graph.id}
-        moveCaption={this.props.moveCaption} />);
+        altKey={this.props.altKey}
+        selected={this.props.selection && includes(this.props.selection.captionIds, c.id)}
+        moveCaption={this.props.moveCaption} 
+        selectCaption={this.props.selectCaption} />);
   }
 
   _renderMarkers() {
@@ -163,14 +172,19 @@ export default class Graph extends BaseComponent {
   }
 
   _handleDrag(e, ui) {
+    this._dragging = true;
     let { x, y } = this._calculateDeltas(e, ui);
     // in order to avoid rerendering state isn't updated until drag is finished
     ReactDOM.findDOMNode(this).querySelector("#zoom").setAttribute("transform", `translate(${x}, ${y})`);
   }
 
   _handleDragStop(e, ui) {
-    let { x, y } = this._calculateDeltas(e, ui);
-    this.setState({ x, y });
+    // event fires every mouseup so we check for actual drag before updating state
+    if (this._dragging) {
+      let { x, y } = this._calculateDeltas(e, ui);
+      this.setState({ x, y });
+      this._dragging = false;
+    }
   }
 
   _calculateDeltas(e, ui) {

@@ -6,17 +6,22 @@ import Root from './components/Root';
 import reducers from './reducers';
 import { loadGraph, showGraph, zoomIn, zoomOut, addNode, addEdge } from './actions';
 import Graph from './models/Graph';
+import { merge } from 'lodash';
 
-var main = {
+const defaultConfig = { highlighting: true, isEditor: false };
+
+const main = {
   run: function(element, config = {}) {
     this.rootElement = element;
     this.store = createStore(reducers);
+    this.config = merge({}, defaultConfig, config);
 
     this.providerInstance = render(
       <Provider store={this.store}>
         <Root 
-          data={config.data} 
-          isEditor={!!config.isEditor}
+          data={this.config.data} 
+          isEditor={this.config.isEditor}
+          highlighting={this.config.highlighting}
           height={this.rootElement.clientHeight}
           ref={(c) => this.root = c} />
       </Provider>,
@@ -55,6 +60,16 @@ var main = {
   addEdge: function(edge) {
     let graphId = this.root.getWrappedInstance().props.graph.id;
     this.root.dispatchProps.dispatch(addEdge(graphId, edge));
+  },
+
+  deleteNode: function(nodeId) {
+    let graphId = this.root.getWrappedInstance().props.graph.id;
+    this.root.dispatchProps.dispatch(deleteNode(graphId, nodeId));
+  },
+
+  deleteEdge: function(edgeId) {
+    let graphId = this.root.getWrappedInstance().props.graph.id;
+    this.root.dispatchProps.dispatch(addEdge(graphId, edgeId));
   },
 
   getHighlighted: function() {

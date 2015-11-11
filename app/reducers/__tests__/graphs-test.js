@@ -7,7 +7,7 @@ const reducer = require('../graphs');
 const Graph = require('../../models/Graph'); 
 const Node = require('../../models/Node'); 
 const Edge = require('../../models/Edge'); 
-const { merge, values } = require('lodash');
+const { merge, values, uniq } = require('lodash');
 
 describe("graph reducer", () => {
 
@@ -20,7 +20,7 @@ describe("graph reducer", () => {
     },
     edges: {
       1: { id: 1, node1_id: 1, node2_id: 2, display: { label: "Edge 1" } },
-      2: { id: 2, node1_id: 2, node2_id: 3, display: { label: "Edge 1" } }
+      2: { id: 2, node1_id: 2, node2_id: 3, display: { label: "Edge 2" } }
     },
     captions: {
       1: { id: 1, display: { text: "Caption 1"} }
@@ -109,6 +109,54 @@ describe("graph reducer", () => {
       expect(newEdge.display.y1).toBe(node1.display.y);
       expect(newEdge.display.x2).toBe(node2.display.x);
       expect(newEdge.display.y2).toBe(node2.display.y);
+    });
+  });
+
+  describe("DELETE_NODE", () => {
+
+    const nodeId = 2;
+    const action = {
+      type: 'DELETE_NODE',
+      graphId: basicGraph.id,
+      nodeId: nodeId
+    };
+
+    it("should remove the node from the graph", () => {
+      let newGraph = reducer(graphs, action)[basicGraph.id];
+
+      expect(values(newGraph.nodes).length).toBe(values(basicGraph.nodes).length - 1);
+      expect(newGraph.nodes[nodeId]).toBeUndefined();
+    });
+
+    it("should remove all of the node's edges", () => {
+      let newGraph = reducer(graphs, action)[basicGraph.id];
+      let edges = Graph.edgesConnectedToNode(basicGraph, nodeId);
+      let newEdges = edges.map(edge => newGraph.edges[edge.id]);
+
+      expect(uniq(newEdges)).toEqual([undefined]);
+    });
+  });
+
+  describe("DELETE_EDGE", () => {
+
+    const edgeId = 2;
+    const action = {
+      type: 'DELETE_EDGE',
+      graphId: basicGraph.id,
+      edgeId: edgeId
+    };
+
+    it("should remove the edge from the graph", () => {
+      let newGraph = reducer(graphs, action)[basicGraph.id];
+
+      expect(values(newGraph.edges).length).toBe(values(basicGraph.edges).length - 1);
+      expect(newGraph.edges[edgeId]).toBeUndefined();
+    });
+
+    it("should not remove any nodes from the graph", () => {
+      let newGraph = reducer(graphs, action)[basicGraph.id];
+
+      expect(values(newGraph.nodes).length).toBe(values(basicGraph.nodes).length);
     });
   });
 });

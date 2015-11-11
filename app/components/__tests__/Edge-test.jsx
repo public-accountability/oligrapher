@@ -7,6 +7,7 @@ import TestUtils from 'react-addons-test-utils';
 const Edge = require('../Edge');
 
 describe("Edge Component", () => {
+
   const data = {
     id: 93362,
     node1_id: 34963,
@@ -60,7 +61,7 @@ describe("Edge Component", () => {
     expect(hasMarker).toBeTruthy();
   });
 
-  it("should swap selection if clicked", () => {
+  it("should swap highlight if clicked", () => {
     let highlightEdge = jest.genMockFunction();
     let edge = TestUtils.renderIntoDocument(
       <Edge edge={data} graphId="someid" highlightEdge={highlightEdge} />
@@ -71,5 +72,17 @@ describe("Edge Component", () => {
     TestUtils.Simulate.click(select);
     expect(highlightEdge.mock.calls[0][0]).toBe("someid");
     expect(highlightEdge.mock.calls[0][1]).toBe(data.id);
+  });
+
+  it("should swap selection if alt+clicked", () => {
+    let selectEdge = jest.genMockFunction();
+    let edge = TestUtils.renderIntoDocument(
+      <Edge edge={data} graphId="someid" selectEdge={selectEdge} selected={false} altKey={true} />
+    );
+    let element = ReactDOM.findDOMNode(edge);
+    let select = element.querySelector(".edgeSelect");
+
+    TestUtils.Simulate.click(select);
+    expect(selectEdge.mock.calls[0][0]).toBe(data.id);
   });
 });

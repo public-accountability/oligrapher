@@ -6,6 +6,7 @@ import ds from '../NodeDisplaySettings';
 import { DraggableCore } from 'react-draggable';
 import Graph from '../models/Graph';
 import { merge } from 'lodash';
+import classNames from 'classnames';
 
 export default class Node extends BaseComponent {
   constructor(props) {
@@ -32,7 +33,7 @@ export default class Node extends BaseComponent {
           className="node" 
           transform={transform}
           onClick={this._handleClick}>
-          <NodeCircle node={n} />
+          <NodeCircle node={n} selected={this.props.selected} />
           <NodeLabel node={n} />
         </g>
       </DraggableCore>
@@ -44,7 +45,8 @@ export default class Node extends BaseComponent {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return JSON.stringify(nextState) !== JSON.stringify(this.state);
+    return nextProps.selected !== this.props.selected || 
+           JSON.stringify(nextState) !== JSON.stringify(this.state);
   }
 
   // keep initial position for comparison with drag position
@@ -61,8 +63,8 @@ export default class Node extends BaseComponent {
     this._dragging = true; // so that _handleClick knows it's not just a click
 
     let n = this.props.node;
-    let deltaX = (ui.position.clientX - this._startDrag.clientX) / this.graphInstance.state.actualZoom;
-    let deltaY = (ui.position.clientY - this._startDrag.clientY) / this.graphInstance.state.actualZoom;
+    let deltaX = (ui.position.clientX - this._startDrag.clientX) / this.graph.state.actualZoom;
+    let deltaY = (ui.position.clientY - this._startDrag.clientY) / this.graph.state.actualZoom;
     let x = this._startPosition.x + deltaX;
     let y = this._startPosition.y + deltaY;
 
@@ -77,20 +79,32 @@ export default class Node extends BaseComponent {
       let x1, y1, x2, y2;
 
       let newState = (thisNodeNum == 1) ? { x1: x, y1: y } : { x2: x, y2: y };
-      this.graphInstance.edges[edge.id].setState(newState);
+      this.graph.edges[edge.id].setState(newState);
     });
   }
 
   // store updated once dragging is done
   _handleDragStop(e, ui) {
-    this.props.moveNode(this.props.graph.id, this.props.node.id, this.state.x, this.state.y);
+    // event fires every mouseup so we check for actual drag before updating store
+    if (this._dragging) {
+      this.props.moveNode(this.props.graph.id, this.props.node.id, this.state.x, this.state.y);
+    }
   }
 
   _handleClick() {
     if (this._dragging) {
       this._dragging = false;
     } else {
-      this.props.highlightNode(this.props.graph.id, this.props.node.id);
+      if (this.props.altKey) {
+        // multiple select only if shift key is pressed
+        if (this.props.selectNode) {
+          this.props.selectNode(this.props.node.id);
+        }
+      } else {
+        if (this.props.highlightNode) {
+          this.props.highlightNode(this.props.graph.id, this.props.node.id);
+        }
+      }
     }
   }
 }

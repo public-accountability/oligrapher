@@ -3,7 +3,9 @@ jest.dontMock('../Node');
 const Node = require('../Node');
 
 describe("Node", () => {
+
   describe("setDefaults", () => {
+
     it("gives a node a display scale and status if it doesn't have them", () => { 
       let basicNode = { id: 5, display: { name: "Bob" } };
       let nodeWithDefaults = Node.setDefaults(basicNode);

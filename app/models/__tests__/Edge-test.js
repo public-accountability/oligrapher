@@ -3,7 +3,9 @@ jest.dontMock('../Edge');
 const Edge = require('../Edge');
 
 describe("Edge", () => {
+
   describe("setDefaults", () => {
+
     it("gives an edge a display scale, arrow, and status if it doesn't have them", () => { 
       let basicEdge = { id: 5, node1_id: 32, node2_id: 128, display: { label: "Best Friend" } };
       let edgeWithDefaults = Edge.setDefaults(basicEdge);
