@@ -40,7 +40,8 @@ Oligrapher is easy to embed in a web page. All you have to do is include the .js
     <script>
       var div = document.getElementById('#graph');
       var data = getDataFromSomewhere();
-      Oligrapher.run(div, data);
+      var config = { data: data };
+      Oligrapher.run(div, config);
     </script>
   </body>
 </html>
@@ -61,7 +62,7 @@ Graph data coming in (and out) of Oligrapher should conform to the following gen
   },
   edges: {
     1: { id: 1, node1_id: 1, node2_id: 2, display: { label: "Edge 1" } },
-    2: { id: 2, node1_id: 2, node2_id: 3, display: { label: "Edge 1" } }
+    2: { id: 2, node1_id: 2, node2_id: 3, display: { label: "Edge 2" } }
   },
   captions: {
     1: { id: 1, display: { text: "Caption 1" } }
@@ -103,41 +104,49 @@ The ```id``` of the graph itself is optional, Oligrapher will generate it if not
 API
 ---
 
-### ```run(DOMElement, data = null)```
-Starts Oligrapher within a given ```DOMElement``` and loads initial ```data``` if provided. Returns the top-level Redux [Provider](https://github.com/rackt/react-redux/blob/master/docs/api.md#provider-store) instance.
+### ```run(DOMElement, config = {})```
+Starts Oligrapher within a given ```DOMElement``` and accepts a ```config``` object if provided. Returns an Oligrapher instance.
 ```
 var div = document.getElementById('#graph');
 var data = getDataFromSomeWhere();
-Oligrapher.run(div, data);
+var config = { 
+  data: data,   // initial graph data to load and display (null by default)
+  isEditor: true,   // whether content can be edited (false by default)
+  highlighting: false   // whether content can be highlighted (true by default)
+}
+var oli = Oligrapher.run(div, config);
 ```
 
 ### ```import(data)```
 Imports graph ```data``` into Oligrapher and displays it, returning the imported graph's ```id```.
 ```
-var id1 = Oligrapher.load(data1);
-var id2 = Oligrapher.load(data2);
+var oli = Oligrapher.run(element);
+var id1 = oli.load(data1);
+var id2 = oli.load(data2);
 ```
 
 ### ```export()```
 Returns a snapshot of the currently displayed graph data, including display attributes. This data can be ```import```ed later to display the identical graph.
 ```
+var oli = Oligrapher.run(element);
 var data = getGraphFromDatabase();
-Oligrapher.import(data);
+oli.import(data);
 // ... user edits graph ...
-data = Oligrapher.export();   // get data snapshot
+data = oli.export();   // get data snapshot
 // ... user edits graph some more ...
-Oligrapher.import(data);   // restore data snapshot
+oli.import(data);   // restore data snapshot
 // ... user edits graph some more ...
-data = Oligrapher.export();
+data = oli.export();
 saveGraphToDatabase(data);
 ```
 
 ### ```show(id)```
 Displays the previously-imported graph with the given ```id```.
 ```
+var oli = Oligrapher.run(element);
 var id1 = Oligrapher.load(data1);
 var id2 = Oligrapher.load(data2);
-Oligrapher.show(id1);
+oli.show(id1);
 ```
 
 ### ```zoomIn()```
@@ -146,7 +155,39 @@ Zooms in by 20%. This can be triggered with the keyboard shortcut ```ctrl+equals
 ### ```zoomOut()```
 Zooms out by 20%. This can be triggered with the keyboard shortcut ```ctrl+minus```.
 ```
-Oligrapher.load(data);
-Oligrapher.zoomIn();
-Oligrapher.zoomOut();   // back to normal
+var oli = Oligrapher.run(element);
+oli.load(data);
+oli.zoomIn();
+oli.zoomOut();   // back to normal
+```
+
+### ```currentGraphId()```
+Returns id of currently displayed graph.
+```
+var oli = Oligrapher.run(element);
+var id1 = oli.load(data1);
+var id2 = oli.load(data2);
+oli.show(id1);
+oli.getCurrentId() == id1;   // true
+```
+
+### ```addNode(node)```
+Adds given node to graph. Node must conform to data schema described above. Returns ```id``` of new node.
+```
+var oli = Oligrapher.run(element, { data: data });
+var nodeId = oli.addNode({ display: { name: "Kofi Annan" } });
+```
+
+### ```addEdge(edge)```
+Adds given edge to graph. Edge must conform to data schema described above. Returns ```id``` of new edge.
+```
+var oli = Oligrapher.run(element, { data: data });
+var edgeId = oli.addEdge({ display: { label: "sister" } });
+```
+
+### ```addCaption(caption)```
+Adds given caption to graph. Caption must conform to data schema described above. Returns ```id``` of new caption.
+```
+var oli = Oligrapher.run(element, { data: data });
+var captionId = oli.addCaption({ display: { text: "This is the most interesting thin you'll read today" } });
 ```
