@@ -209,7 +209,18 @@ var selection = oli.getSelection();
 ```
 
 ### ```deleteSelection()```
-Deletes the currently selected nodes, edges, and captions, as well as any other edges connected to the deleted nodes.
+Deletes the currently selected nodes, edges, and captions, as well as any other edges connected to the deleted nodes. This can be triggered with the keyboard shortcut ```ctrl+d```.
 
 ### ```getHighlights()```
 Returns the subgraph consisting of highlighted nodes and edges.
+
+User Guide
+----------
+
+### Keyboard Shortcuts
+
+ALT or COMMAND keys can be used instead of CONTROL in any of the below shortcuts.
+
+**CONTROL+EQUALS:** zoom in  
+**CONTROL+MINUS:** zoom out  
+**CONTROL+D:** delete selection  
