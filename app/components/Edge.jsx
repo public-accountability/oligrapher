@@ -17,7 +17,7 @@ export default class Edge extends BaseComponent {
   render() {
     let e = this.props.edge;
     let sp = this._getSvgParams(e);
-    let scale  = e.display.scale;
+    let width = 1 + (e.display.scale - 1) * 5;
     let selected = this.props.selected;
     let highlighted = e.display.status == "highlighted";
 
@@ -35,14 +35,14 @@ export default class Edge extends BaseComponent {
             d={sp.curve} 
             stroke={eds.selectColor} 
             strokeOpacity={eds.selectOpacity} 
-            strokeWidth={scale + eds.selectWidthDiff} 
+            strokeWidth={width + eds.selectWidthDiff} 
             fill="none"></path> : null }
           { highlighted ? <path 
             className="edge-background" 
             d={sp.curve} 
             stroke={sp.bgColor} 
             strokeOpacity={sp.Opacity} 
-            strokeWidth={scale + eds.bgWidthDiff} 
+            strokeWidth={width + eds.bgWidthDiff} 
             fill="none"></path> : null }
           <path 
             id={sp.pathId} 
@@ -50,7 +50,7 @@ export default class Edge extends BaseComponent {
             d={sp.curve} 
             stroke={sp.lineColor} 
             strokeDasharray={sp.dash} 
-            strokeWidth={scale} 
+            strokeWidth={width} 
             fill="none" 
             markerStart={sp.markerStart} 
             markerEnd={sp.markerEnd}></path>
@@ -66,7 +66,7 @@ export default class Edge extends BaseComponent {
             d={sp.curve} 
             stroke="#fff" 
             strokeOpacity="0"
-            strokeWidth={scale + 20} 
+            strokeWidth={width + 20} 
             fill="none"
             onClick={this._handleClick}></path>
         </g>
@@ -75,7 +75,8 @@ export default class Edge extends BaseComponent {
   }
 
   componentWillReceiveProps(props) {
-    this.setState(props.edge.display);
+    let newState = merge({ label: null, url: null }, props.edge.display);
+    this.setState(newState);
   }
 
   shouldComponentUpdate(nextProps, nextState) {

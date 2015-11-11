@@ -1,7 +1,6 @@
 var path = require('path');
 var node_modules = path.resolve(__dirname, 'node_modules');
 var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var config = {
   entry: [

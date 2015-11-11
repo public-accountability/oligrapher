@@ -5,7 +5,7 @@ import ds from '../NodeDisplaySettings';
 export default class NodeCircle extends BaseComponent {
   render() {
     return (
-      <g className="nodeCircle">    
+      <g className="nodeCircle">
         { this.props.selected ? this._selectionCirlce() : null }
         {this._bgCircle()}
         {this._circle()}
@@ -56,12 +56,12 @@ export default class NodeCircle extends BaseComponent {
     };
 
     return image ? 
-        <g dangerouslySetInnerHTML={innerHTML} /> :
-        <circle 
-          className="handle" 
-          r={r}
-          fill={ds.circleColor[status]}
-          opacity="1">
-        </circle>;
+      <g dangerouslySetInnerHTML={innerHTML} /> :
+      <circle 
+        className="handle" 
+        r={r}
+        fill={ds.circleColor[status]}
+        opacity="1">
+      </circle>;
   }
 }

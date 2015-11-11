@@ -26,6 +26,7 @@ export const DELETE_CAPTION = 'DELETE_CAPTION';
 export const DELETE_SELECTION = 'DELETE_SELECTION';
 export const UPDATE_NODE = 'UPDATE_NODE';
 export const UPDATE_EDGE = 'UPDATE_EDGE';
+export const UPDATE_CAPTION = 'UPDATE_CAPTION';
 
 /*
  * action creators
@@ -118,4 +119,8 @@ export function updateNode(graphId, nodeId, data) {
 
 export function updateEdge(graphId, edgeId, data) {
   return { type: UPDATE_EDGE, graphId, edgeId, data };
+}
+
+export function updateCaption(graphId, captionId, data) {
+  return { type: UPDATE_CAPTION, graphId, captionId, data };
 }

@@ -1,5 +1,6 @@
 import Node from './Node';
 import Edge from './Edge';
+import Caption from './Caption';
 import Helpers from './Helpers';
 import { merge, assign, values, intersection, flatten, cloneDeep, omit } from 'lodash';
 import Springy from 'springy';
@@ -212,6 +213,7 @@ class Graph {
   }
 
   static addCaption(graph, caption) {
+    caption = Caption.setDefaults(caption);
     return merge({}, graph, { captions: { [caption.id]: caption } });
   }
 
@@ -296,7 +298,15 @@ class Graph {
   }
 
   static updateCaption(graph, captionId, data) {
-    return merge({}, graph, { captions: { [captionId]: data } });
+    let caption = Caption.setDefaults(
+      Helpers.compactObject(
+        merge({}, graph.captions[captionId], omit(data, "id"))
+      )
+    );
+
+    let captions = assign({}, graph.captions, { [captionId]: caption });
+
+    return assign({}, graph, { captions });
   }
 
   // GRAPH FILTERS

@@ -3,7 +3,7 @@ import { LOAD_GRAPH, SHOW_GRAPH,
          SWAP_NODE_HIGHLIGHT, SWAP_EDGE_HIGHLIGHT,
          ADD_NODE, ADD_EDGE, ADD_CAPTION,
          DELETE_NODE, DELETE_EDGE, DELETE_CAPTION, DELETE_SELECTION,
-         UPDATE_NODE, UPDATE_EDGE } from '../actions';
+         UPDATE_NODE, UPDATE_EDGE, UPDATE_CAPTION } from '../actions';
 import Graph from '../models/Graph';
 import Edge from '../models/Edge';
 import { merge, assign } from 'lodash';
@@ -96,6 +96,11 @@ export default function graphs(state = {}, action) {
   case UPDATE_EDGE:
     return assign({}, state, {
       [action.graphId]: Graph.updateEdge(state[action.graphId], action.edgeId, action.data)
+    });
+
+  case UPDATE_CAPTION:
+    return assign({}, state, {
+      [action.graphId]: Graph.updateCaption(state[action.graphId], action.captionId, action.data)
     });
 
   default:

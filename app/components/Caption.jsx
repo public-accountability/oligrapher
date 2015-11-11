@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import BaseComponent from './BaseComponent';
 import { DraggableCore } from 'react-draggable';
 import ds from '../CaptionDisplaySettings';
+import { merge } from 'lodash';
 
 export default class Caption extends BaseComponent {
   constructor(props) {
@@ -27,6 +28,11 @@ export default class Caption extends BaseComponent {
         </g>
       </DraggableCore>
     );
+  }
+
+  componentWillReceiveProps(props) {
+    let newState = merge({ text: null }, props.caption.display);
+    this.setState(newState);
   }
 
   shouldComponentUpdate(nextProps, nextState) {

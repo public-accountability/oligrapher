@@ -35,7 +35,6 @@ export default function selection(state = initState, action) {
     return action.singleSelect ? merge({}, initState, { edgeIds }) : assign({}, state, { edgeIds });
 
   case SWAP_CAPTION_SELECTION:
-    console.log(state.captionIds, action.captionId, action.SingleSelect);
     captionIds = swapElement(state.captionIds, action.captionId, action.singleSelect);
     return action.singleSelect ? merge({}, initState, { captionIds }) : assign({}, state, { captionIds });
 

@@ -7,7 +7,8 @@ import reducers from './reducers';
 import { loadGraph, showGraph, 
          zoomIn, zoomOut, 
          addNode, addEdge, addCaption, 
-         deleteNode, deleteEdge, deleteCaption, deleteSelection } from './actions';
+         deleteNode, deleteEdge, deleteCaption, deleteSelection,
+         updateNode, updateEdge, updateCaption } from './actions';
 import Graph from './models/Graph';
 import { merge, difference } from 'lodash';
 
@@ -25,6 +26,9 @@ const main = {
           data={this.config.data} 
           isEditor={this.config.isEditor}
           highlighting={this.config.highlighting}
+          onNodeSelect={config.onNodeSelect}
+          onEdgeSelect={config.onEdgeSelect}
+          onCaptionSelect={config.onCaptionSelect}
           height={this.rootElement.clientHeight}
           ref={(c) => this.root = c} />
       </Provider>,
@@ -102,6 +106,21 @@ const main = {
 
   deleteSelection: function() {
     this.root.disptchProps.dispatch(deleteSelection(this.currentGraphId(), this.getSelection()));
+  },
+
+  updateNode: function(nodeId, data) {
+    this.root.dispatchProps.dispatch(updateNode(this.currentGraphId(), nodeId, data));
+    return this.root.getWrappedInstance().props.graph.nodes[nodeId];
+  },
+
+  updateEdge: function(edgeId, data) {
+    this.root.dispatchProps.dispatch(updateEdge(this.currentGraphId(), edgeId, data));
+    return this.root.getWrappedInstance().props.graph.edges[edgeId];
+  },
+
+  updateCaption: function(captionId, data) {
+    this.root.dispatchProps.dispatch(updateCaption(this.currentGraphId(), captionId, data));
+    return this.root.getWrappedInstance().props.graph.captions[captionId];
   },
 
   findNode: function(name) {

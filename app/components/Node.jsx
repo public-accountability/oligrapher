@@ -7,6 +7,7 @@ import { DraggableCore } from 'react-draggable';
 import Graph from '../models/Graph';
 import { merge } from 'lodash';
 import classNames from 'classnames';
+import Helpers from '../models/Helpers';
 
 export default class Node extends BaseComponent {
   constructor(props) {
@@ -17,7 +18,7 @@ export default class Node extends BaseComponent {
 
   render() {
     const n = this.props.node;
-    const { x, y } = this.state;
+    const { x, y, name } = this.state;
     const groupId = `node-${n.id}`;
     const transform = `translate(${x}, ${y})`;
 
@@ -34,14 +35,15 @@ export default class Node extends BaseComponent {
           transform={transform}
           onClick={this._handleClick}>
           <NodeCircle node={n} selected={this.props.selected} />
-          <NodeLabel node={n} />
+          { this.state.name ?  <NodeLabel node={n} /> : null }
         </g>
       </DraggableCore>
     );
   }
 
   componentWillReceiveProps(props) {
-    this.setState(props.node.display);
+    let newState = merge({ name: null, image: null, url: null }, props.node.display);
+    this.setState(newState);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
