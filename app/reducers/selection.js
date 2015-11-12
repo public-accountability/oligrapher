@@ -1,4 +1,4 @@
-import { SWAP_NODE_SELECTION, SWAP_EDGE_SELECTION, SWAP_CAPTION_SELECTION, 
+import { SWAP_NODE_SELECTION, SWAP_EDGE_SELECTION, SWAP_CAPTION_SELECTION, DELETE_SELECTION,
          SHOW_GRAPH } from '../actions';
 import { merge, assign } from 'lodash';
 
@@ -22,7 +22,8 @@ export default function selection(state = initState, action) {
 
   switch (action.type) {
 
-  // clear selection if graph is shown
+  // clear selection if graph is shown or selection deleted
+  case DELETE_SELECTION:
   case SHOW_GRAPH:
     return initState;
 

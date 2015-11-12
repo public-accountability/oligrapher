@@ -318,4 +318,8 @@ describe("graph reducer", () => {
       expect(graph3.nodes[2]).not.toBeUndefined();
     });
   });
+
+  describe("LAYOUT_CIRCLE", () => {
+
+  });
 });

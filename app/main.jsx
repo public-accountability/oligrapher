@@ -5,11 +5,11 @@ import { Provider } from 'react-redux';
 import Root from './components/Root';
 import reducers from './reducers';
 import { loadGraph, showGraph, 
-         zoomIn, zoomOut, 
+         zoomIn, zoomOut, resetZoom,
          addNode, addEdge, addCaption, 
          deleteNode, deleteEdge, deleteCaption, deleteSelection,
          updateNode, updateEdge, updateCaption,
-         pruneGraph } from './actions';
+         pruneGraph, layoutCircle } from './actions';
 import Graph from './models/Graph';
 import { merge, difference } from 'lodash';
 
@@ -27,9 +27,7 @@ const main = {
           data={this.config.data} 
           isEditor={this.config.isEditor}
           highlighting={this.config.highlighting}
-          onNodeSelect={config.onNodeSelect}
-          onEdgeSelect={config.onEdgeSelect}
-          onCaptionSelect={config.onCaptionSelect}
+          onSelection={config.onSelection}
           height={this.rootElement.clientHeight}
           ref={(c) => this.root = c} />
       </Provider>,
@@ -58,6 +56,10 @@ const main = {
 
   zoomOut: function() {
     this.root.dispatchProps.dispatch(zoomOut());
+  },
+
+  resetZoom: function() {
+    this.root.dispatchProps.dispatch(resetZoom())
   },
 
   currentGraphId: function() {
@@ -126,6 +128,10 @@ const main = {
 
   prune: function() {
     this.root.dispatchProps.dispatch(pruneGraph(this.currentGraphId()));
+  },
+
+  circleLayout: function() {
+    this.root.dispatchProps.dispatch(layoutCircle(this.currentGraphId()));
   },
 
   findNode: function(name) {

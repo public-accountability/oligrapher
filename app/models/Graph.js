@@ -71,13 +71,12 @@ class Graph {
     return this[layout](graph);
   }
 
-  static circleLayout(graph) {
-    // arrange unpositioned nodes into a circle
-    let ary = values(graph.nodes).filter(n => !(n.display.x && n.display.y));
-    let radius = Math.pow(ary.length * 100, 0.85);
+  static circleLayout(graph, allNodes = false) {
+    let nodes = allNodes ? values(graph.nodes) : values(graph.nodes).filter(n => !Node.hasPosition(n));
+    let radius = Math.pow(nodes.length * 70, 0.85);
 
-    return merge({}, graph, { nodes: ary.reduce((result, node, i) => {
-      let angle = (2 * Math.PI) * (i / ary.length);
+    return merge({}, graph, { nodes: nodes.reduce((result, node, i) => {
+      let angle = (2 * Math.PI) * (i / nodes.length);
       return merge({}, result, { 
         [node.id]: { display: { 
           x: Math.cos(angle) * radius, 
@@ -281,7 +280,7 @@ class Graph {
         merge({}, graph.nodes[nodeId], omit(data, "id"))
       )
     );
-
+    
     let nodes = assign({}, graph.nodes, { [nodeId]: node });
 
     return assign({}, graph, { nodes });

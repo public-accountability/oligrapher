@@ -34,8 +34,8 @@
           cx: r.x1,
           cy: r.y1,
           scale: r.scale ? r.scale : 1,
-          arrow: r.is_directional === true,
-          dash: r.is_current === true ? "5, 2": null,
+          arrow: r.is_directional,
+          dash: r.is_current,
           status: r.status ? r.status : "normal",
           url: this.convertUrl(r.url)
         }

@@ -4,7 +4,7 @@ import { LOAD_GRAPH, SHOW_GRAPH,
          ADD_NODE, ADD_EDGE, ADD_CAPTION,
          DELETE_NODE, DELETE_EDGE, DELETE_CAPTION, DELETE_SELECTION,
          UPDATE_NODE, UPDATE_EDGE, UPDATE_CAPTION,
-         PRUNE_GRAPH } from '../actions';
+         PRUNE_GRAPH, LAYOUT_CIRCLE } from '../actions';
 import Graph from '../models/Graph';
 import Edge from '../models/Edge';
 import { merge, assign } from 'lodash';
@@ -90,8 +90,11 @@ export default function graphs(state = {}, action) {
     });
 
   case UPDATE_NODE:
+    // update connected edges to ensure that endpoints are correct in case node scale changed
     return assign({}, state, {
-      [action.graphId]: Graph.updateNode(state[action.graphId], action.nodeId, action.data)
+      [action.graphId]: Graph.prepareEdges(
+        Graph.updateNode(state[action.graphId], action.nodeId, action.data)
+      )
     });
 
   case UPDATE_EDGE:
@@ -107,6 +110,11 @@ export default function graphs(state = {}, action) {
   case PRUNE_GRAPH:
     return assign({}, state, {
       [action.graphId]: Graph.prune(state[action.graphId])
+    });
+
+  case LAYOUT_CIRCLE:
+    return assign({}, state, {
+      [action.graphId]: Graph.prepareEdges(Graph.circleLayout(state[action.graphId], true))
     });
 
   default:

@@ -4,6 +4,7 @@ import { DraggableCore } from 'react-draggable';
 import { merge } from 'lodash';
 import eds from '../EdgeDisplaySettings';
 import nds from '../NodeDisplaySettings';
+import klassNames from 'classNames';
 
 export default class Edge extends BaseComponent {
   constructor(props) {
@@ -29,7 +30,7 @@ export default class Edge extends BaseComponent {
         onStart={this._handleDragStart}
         onDrag={this._handleDrag}
         onStop={this._handleDragStop}>
-        <g id={sp.groupId} className="edge">
+        <g id={sp.groupId} className={klassNames({ edge: true, selected, highlighted })}>
           { selected ? <path 
             className="edge-selection" 
             d={sp.curve} 
@@ -146,7 +147,7 @@ export default class Edge extends BaseComponent {
       curve: `M ${xa}, ${ya} Q ${x + cx}, ${y + cy}, ${xb}, ${yb}`,
       groupId: `edge-${e.id}`,
       pathId: pathId,
-      dash: dash ? dash : "",
+      dash: dash ? "5, 2" : "",
       fontSize: fontSize,
       dy: -6 * Math.sqrt(scale),
       textPath: { __html: `<textPath class="labelpath" startOffset="50%" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#${pathId}" font-size="${fontSize}">${label}</textPath>` },

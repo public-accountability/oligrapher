@@ -199,7 +199,11 @@
 
         $('#data').val(JSON.stringify(data));
 
-        oli = Oligrapher.run(elem, { data: data, isEditor: true });
+        oli = Oligrapher.run(elem, { 
+          data: data, 
+          isEditor: true ,
+          onSelection: function(selection) { console.log(selection); }
+        });
 
         updateNodeSelects();
 

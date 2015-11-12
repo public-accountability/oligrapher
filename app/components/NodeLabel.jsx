@@ -52,7 +52,7 @@ export default class NodeLabel extends BaseComponent {
   }
 
   _textLines(text){
-    const maxWidth = text.length > 40 ? 30 : 20;
+    const maxWidth = text.length > 40 ? 25 : 18;
     let words = text.trim().split(" "),
         word,
         lines = [],

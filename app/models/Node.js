@@ -1,4 +1,4 @@
-import { merge } from 'lodash';
+import { merge, isNumber } from 'lodash';
 import Helpers from './Helpers';
 
 class Node {
@@ -16,6 +16,10 @@ class Node {
 
   static setDefaults(node) {
     return merge({}, this.defaults(), node);
+  }
+
+  static hasPosition(node) {
+    return isNumber(node.display.x) && isNumber(node.display.y);
   }
 }
 

@@ -8,7 +8,7 @@ jest.dontMock('springy');
 const Graph = require('../Graph'); 
 const Edge = require('../Edge'); 
 const Caption = require('../Caption'); 
-const { merge, values } = require('lodash');
+const { merge, values, uniq } = require('lodash');
 
 describe("Graph", () => {
 
@@ -78,7 +78,16 @@ describe("Graph", () => {
     });
   });
 
-  xdescribe("circleLayout", () => {
+  describe("circleLayout", () => {
+
+    it("arranges nodes equidistant from the zero coordinates", () => {
+      let graph2 = Graph.circleLayout(basicGraph, true);
+      let roundedDists = values(graph2.nodes)
+        .map(n => Math.round(Math.sqrt(Math.pow(n.display.x, 2) + Math.pow(n.display.y, 2))));
+
+      expect(uniq(roundedDists)[0]).toBe(roundedDists[0]);
+      expect(uniq(roundedDists)[0]).toBe(roundedDists[roundedDists.length-1]);
+    });
 
     it("doesn't arrange nodes with existing coordinates", () => {
       let graph2 = Graph.prepareLayout(basicGraph, 'circleLayout');

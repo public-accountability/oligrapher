@@ -10,6 +10,7 @@ import Graph from './Graph';
 import GraphModel from '../models/Graph';
 import { HotKeys } from 'react-hotkeys';
 import ReactDOM from 'react-dom';
+import { pick } from 'lodash';
 
 class Root extends Component {
   constructor(props) {
@@ -21,6 +22,7 @@ class Root extends Component {
     const keyMap = { 
       'zoomIn': 'ctrl+=',
       'zoomOut': 'ctrl+-',
+      'resetZoom': 'ctrl+0',
       'altDown': [
         { sequence: 'alt', action: 'keydown' }, 
         { sequence: 'ctrl', action: 'keydown' },
@@ -43,6 +45,7 @@ class Root extends Component {
     const keyHandlers = {
       'zoomIn': () => dispatch(zoomIn()),
       'zoomOut': () => dispatch(zoomOut()),
+      'resetZoom': () => dispatch(resetZoom()),
       'altDown': () => this.setState({ altKey: true }),
       'altUp': () => this.setState({ altKey: false }),
       'altShiftDown': () => this.setState({ altShiftKey: true }),
@@ -71,7 +74,7 @@ class Root extends Component {
             highlightEdge={(graphId, edgeId) => highlighting ? dispatch(swapEdgeHighlight(graphId, edgeId)) : null} 
             selectNode={(nodeId) => isEditor ? dispatch(swapNodeSelection(nodeId, !that.state.altShiftKey)) : null}
             selectEdge={(edgeId) => isEditor ? dispatch(swapEdgeSelection(edgeId, !that.state.altShiftKey)) : null}
-            selectCaption={(captionId) => isEditor ? dispatch(swapCaptionSelection(captionId, !that.altShiftKey)) : null} />
+            selectCaption={(captionId) => isEditor ? dispatch(swapCaptionSelection(captionId, !that.state.altShiftKey)) : null} />
         </HotKeys>
       </div>
     ) : (<div></div>);
@@ -80,6 +83,23 @@ class Root extends Component {
   componentDidMount() {
     if (this.props.data) {
       this.loadData(this.props.data);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    // fire selection callback with glorified selection state if selection changed
+    if (this.props.onSelection) {
+      let { selection, graph } = this.props;
+
+      if (JSON.stringify(prevProps.selection) !== JSON.stringify(selection)) {
+        let data = {
+          nodes: pick(graph.nodes, selection.nodeIds),
+          edges: pick(graph.edges, selection.edgeIds),
+          captions: pick(graph.captions, selection.captionIds)
+        }
+
+        this.props.onSelection(data);
+      }
     }
   }
 

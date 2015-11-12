@@ -28,6 +28,7 @@ export const UPDATE_NODE = 'UPDATE_NODE';
 export const UPDATE_EDGE = 'UPDATE_EDGE';
 export const UPDATE_CAPTION = 'UPDATE_CAPTION';
 export const PRUNE_GRAPH = 'PRUNE_GRAPH';
+export const LAYOUT_CIRCLE = 'LAYOUT_CIRCLE';
 
 /*
  * action creators
@@ -128,4 +129,8 @@ export function updateCaption(graphId, captionId, data) {
 
 export function pruneGraph(graphId) {
   return { type: PRUNE_GRAPH, graphId };
+}
+
+export function layoutCircle(graphId) {
+  return { type: LAYOUT_CIRCLE, graphId };
 }

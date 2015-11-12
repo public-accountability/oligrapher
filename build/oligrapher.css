@@ -19,7 +19,7 @@ a.nodeLabel text tspan {
   font-family: Helvetica, Arial, sans-serif;
 }
 
-.edge:hover text {
+.edge:hover text, .edge.selected text, .edge.highlighted text {
   display: inline;
 }
 
