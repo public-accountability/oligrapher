@@ -87,6 +87,8 @@ The ```id``` of the graph itself is optional, Oligrapher will generate it if not
 - ```node2_id:``` **(required)** equal to the second node's id
 - ```display:``` **(required)** an object with attributes related to the edge's appearance
   - ```label:``` **(required)** label appearing above the edge
+  - ```image:``` optional image URL
+  - ```url:``` optional source URL
   - ```scale:``` relative thickness of edge (```1``` is default, ```2``` is twice as thick, etc)
   - ```status:```  default is ```normal```, can also be ```highlighted``` or ```faded```
   - ```arrow:``` whether the edge has an arrow indicating a direction (default is ```false```)
