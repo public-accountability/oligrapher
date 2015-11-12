@@ -291,4 +291,31 @@ describe("graph reducer", () => {
       expect(newGraph2.edges[edgeId].display.scale).toBe(defaults.display.scale);
     });
   });
+
+  describe("PRUNE_GRAPH", () => {
+
+    const deleteAction = {
+      type: 'DELETE_EDGE',
+      graphId: basicGraph.id,
+      edgeId: 1
+    };
+
+    const pruneAction = {
+      type: 'PRUNE_GRAPH',
+      graphId: basicGraph.id
+    };
+
+    let graphs2, graphs3, graph3;
+
+    beforeEach(() => {
+      graphs2 = reducer(graphs, deleteAction);
+      graphs3 = reducer(graphs2, pruneAction);
+      graph3 = graphs3[basicGraph.id];
+    });
+
+    it("should remove all unconnected nodes", () => {
+      expect(graph3.nodes[1]).toBeUndefined();
+      expect(graph3.nodes[2]).not.toBeUndefined();
+    });
+  });
 });

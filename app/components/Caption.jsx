@@ -12,7 +12,7 @@ export default class Caption extends BaseComponent {
   }
 
   render() {
-    let { x, y, text } = this.state;
+    let { x, y, text, scale } = this.state;
     let transform = `translate(${x}, ${y})`;
 
     return (
@@ -24,7 +24,7 @@ export default class Caption extends BaseComponent {
         onStop={this._handleDragStop}>
         <g className="caption" transform={transform} onClick={this._handleClick}>
           { this.props.selected ? this._selectionRect() : null }
-          <text className="handle">{text}</text>
+          <text className="handle" fontSize={scale * 15}>{text}</text>
         </g>
       </DraggableCore>
     );

@@ -1,11 +1,13 @@
 jest.dontMock('../Graph'); 
 jest.dontMock('../Node'); 
 jest.dontMock('../Edge'); 
+jest.dontMock('../Caption'); 
 jest.dontMock('../Helpers');
 jest.dontMock('springy');
 
 const Graph = require('../Graph'); 
 const Edge = require('../Edge'); 
+const Caption = require('../Caption'); 
 const { merge, values } = require('lodash');
 
 describe("Graph", () => {

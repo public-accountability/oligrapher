@@ -2,7 +2,7 @@ import Node from './Node';
 import Edge from './Edge';
 import Caption from './Caption';
 import Helpers from './Helpers';
-import { merge, assign, values, intersection, flatten, cloneDeep, omit } from 'lodash';
+import { merge, assign, values, intersection, flatten, cloneDeep, omit, difference } from 'lodash';
 import Springy from 'springy';
 
 class Graph {
@@ -23,6 +23,8 @@ class Graph {
   static setDefaults(graph) {
     return merge({}, this.defaults(), graph);
   }
+
+  // PREPARE DATA DURING LOAD
 
   static prepare(graph, layout = 'forceLayout') {
     return this.prepareCaptions(
@@ -310,6 +312,15 @@ class Graph {
   }
 
   // GRAPH FILTERS
+
+  // removes unconnected nodes
+  static prune(graph) {
+    let newGraph = cloneDeep(graph);
+    let connectedNodeIds = flatten(values(newGraph.edges).map(edge => [edge.node1_id, edge.node2_id]));
+    let orphanNodeIds = difference(Object.keys(newGraph.nodes).map(nodeId => parseInt(nodeId)), connectedNodeIds);
+    orphanNodeIds.forEach(nodeId => delete newGraph.nodes[nodeId]);
+    return newGraph;
+  }
 
   static highlightedOnly(graph) {
     let nodes = values(graph.nodes)

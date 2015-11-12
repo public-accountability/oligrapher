@@ -8,7 +8,8 @@ import { loadGraph, showGraph,
          zoomIn, zoomOut, 
          addNode, addEdge, addCaption, 
          deleteNode, deleteEdge, deleteCaption, deleteSelection,
-         updateNode, updateEdge, updateCaption } from './actions';
+         updateNode, updateEdge, updateCaption,
+         pruneGraph } from './actions';
 import Graph from './models/Graph';
 import { merge, difference } from 'lodash';
 
@@ -121,6 +122,10 @@ const main = {
   updateCaption: function(captionId, data) {
     this.root.dispatchProps.dispatch(updateCaption(this.currentGraphId(), captionId, data));
     return this.root.getWrappedInstance().props.graph.captions[captionId];
+  },
+
+  prune: function() {
+    this.root.dispatchProps.dispatch(pruneGraph(this.currentGraphId()));
   },
 
   findNode: function(name) {
