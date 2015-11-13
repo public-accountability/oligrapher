@@ -116,14 +116,12 @@ export default class Edge extends BaseComponent {
     if (this._dragging) {
       this._dragging = false;
     } else {
-      if (this.props.altKey) {
-        if (this.props.selectEdge) {
-          this.props.selectEdge(this.props.edge.id);
-        }
-      } else {
-        if (this.props.highlightEdge) {
-          this.props.highlightEdge(this.props.graphId, this.props.edge.id);
-        }
+      if (this.props.selectEdge) {
+        this.props.selectEdge(this.props.edge.id);
+      }
+
+      if (this.props.highlightEdge) {
+        this.props.highlightEdge(this.props.graphId, this.props.edge.id);
       }
     }
   }

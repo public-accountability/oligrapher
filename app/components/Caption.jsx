@@ -68,7 +68,7 @@ export default class Caption extends BaseComponent {
   _handleClick() {
     if (this._dragging) {
       this._dragging = false;
-    } else if (this.props.altKey && this.props.selectCaption) {
+    } else if (this.props.selectCaption) {
       this.props.selectCaption(this.props.caption.id);
     }
   }

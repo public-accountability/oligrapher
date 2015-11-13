@@ -97,15 +97,12 @@ export default class Node extends BaseComponent {
     if (this._dragging) {
       this._dragging = false;
     } else {
-      if (this.props.altKey) {
-        // multiple select only if shift key is pressed
-        if (this.props.selectNode) {
-          this.props.selectNode(this.props.node.id);
-        }
-      } else {
-        if (this.props.highlightNode) {
-          this.props.highlightNode(this.props.graph.id, this.props.node.id);
-        }
+      if (this.props.selectNode) {
+        this.props.selectNode(this.props.node.id);
+      }
+
+      if (this.props.highlightNode) {
+        this.props.highlightNode(this.props.graph.id, this.props.node.id);
       }
     }
   }

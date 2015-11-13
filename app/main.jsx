@@ -27,7 +27,6 @@ const main = {
         <Root 
           data={this.config.data} 
           isEditor={this.config.isEditor}
-          highlighting={this.config.highlighting}
           onSelection={config.onSelection}
           onUpdate={config.onUpdate}
           height={this.rootElement.clientHeight}

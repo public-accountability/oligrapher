@@ -64,7 +64,6 @@ export default class Graph extends BaseComponent {
         edge={e} 
         graphId={this.props.graph.id} 
         zoom={this.props.zoom}
-        altKey={this.props.altKey}
         selected={this.props.selection && includes(this.props.selection.edgeIds, e.id)}
         highlightEdge={this.props.highlightEdge}
         moveEdge={this.props.moveEdge} 
@@ -79,7 +78,6 @@ export default class Graph extends BaseComponent {
         node={n} 
         graph={this.props.graph} 
         zoom={this.props.zoom} 
-        altKey={this.props.altKey}
         selected={this.props.selection && includes(this.props.selection.nodeIds, n.id)}
         highlightNode={this.props.highlightNode} 
         moveNode={this.props.moveNode} 
@@ -93,7 +91,6 @@ export default class Graph extends BaseComponent {
         key={i} 
         caption={c}
         graphId={this.props.graph.id}
-        altKey={this.props.altKey}
         selected={this.props.selection && includes(this.props.selection.captionIds, c.id)}
         moveCaption={this.props.moveCaption} 
         selectCaption={this.props.selectCaption} />);

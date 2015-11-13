@@ -15,7 +15,7 @@ import { pick } from 'lodash';
 class Root extends Component {
   constructor(props) {
     super(props);
-    this.state = { altKey: false, altShiftKey: false };
+    this.state = { shiftKey: false, altKey: false, altShiftKey: false };
   }
 
   render() {
@@ -23,6 +23,8 @@ class Root extends Component {
       'zoomIn': 'ctrl+=',
       'zoomOut': 'ctrl+-',
       'resetZoom': 'ctrl+0',
+      'shiftDown': { sequence: 'shift', action: 'keydown' },
+      'shiftUp': { sequence: 'shift', action: 'keyup' },
       'altDown': [
         { sequence: 'alt', action: 'keydown' }, 
         { sequence: 'ctrl', action: 'keydown' },
@@ -33,12 +35,6 @@ class Root extends Component {
         { sequence: 'ctrl', action: 'keyup' },
         { sequence: 'command', action: 'keyup' }
       ],
-      'altShiftDown': [
-        { sequence: 'alt+shift', action: 'keydown' }, 
-        { sequence: 'ctrl+shift', action: 'keydown' },
-        { sequence: 'command+shift', action: 'keydown' }
-      ],
-      'altShiftUp': { sequence: 'shift', action: 'keyup' },
       'delSelected': ['alt+d', 'ctrl+d', 'command+d']
     };
 
@@ -46,14 +42,14 @@ class Root extends Component {
       'zoomIn': () => dispatch(zoomIn()),
       'zoomOut': () => dispatch(zoomOut()),
       'resetZoom': () => dispatch(resetZoom()),
+      'shiftDown': () => this.setState({ shiftKey: true }),
+      'shiftUp': () => this.setState({ shiftKey: false }),
       'altDown': () => this.setState({ altKey: true }),
       'altUp': () => this.setState({ altKey: false }),
-      'altShiftDown': () => this.setState({ altShiftKey: true }),
-      'altShiftUp': () => this.setState({ altShiftKey: false }),
       'delSelected': () => dispatch(deleteSelection(this.props.graph.id, this.props.selection))
     };
 
-    const { dispatch, highlighting, isEditor } = this.props;
+    const { dispatch, isEditor } = this.props;
     const that = this;
 
     return this.props.graph ? (
@@ -66,15 +62,14 @@ class Root extends Component {
             height={this.props.height}
             selection={this.props.selection}
             resetZoom={() => dispatch(resetZoom())} 
-            altKey={this.state.altKey}
             moveNode={(graphId, nodeId, x, y) => dispatch(moveNode(graphId, nodeId, x, y))} 
             moveEdge={(graphId, edgeId, cx, cy) => dispatch(moveEdge(graphId, edgeId, cx, cy))} 
             moveCaption={(graphId, captionId, x, y) => dispatch(moveCaption(graphId, captionId, x, y))} 
-            highlightNode={(graphId, nodeId) => highlighting ? dispatch(swapNodeHighlight(graphId, nodeId)) : null}
-            highlightEdge={(graphId, edgeId) => highlighting ? dispatch(swapEdgeHighlight(graphId, edgeId)) : null} 
-            selectNode={(nodeId) => isEditor ? dispatch(swapNodeSelection(nodeId, !that.state.altShiftKey)) : null}
-            selectEdge={(edgeId) => isEditor ? dispatch(swapEdgeSelection(edgeId, !that.state.altShiftKey)) : null}
-            selectCaption={(captionId) => isEditor ? dispatch(swapCaptionSelection(captionId, !that.state.altShiftKey)) : null} />
+            highlightNode={(graphId, nodeId) => !isEditor ? dispatch(swapNodeHighlight(graphId, nodeId)) : null}
+            highlightEdge={(graphId, edgeId) => !isEditor ? dispatch(swapEdgeHighlight(graphId, edgeId)) : null} 
+            selectNode={(nodeId) => isEditor ? dispatch(swapNodeSelection(nodeId, !that.state.shiftKey)) : null}
+            selectEdge={(edgeId) => isEditor ? dispatch(swapEdgeSelection(edgeId, !that.state.shiftKey)) : null}
+            selectCaption={(captionId) => isEditor ? dispatch(swapCaptionSelection(captionId, !that.state.shiftKey)) : null} />
         </HotKeys>
       </div>
     ) : (<div></div>);
