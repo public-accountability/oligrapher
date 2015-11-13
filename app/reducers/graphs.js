@@ -1,8 +1,8 @@
-import { LOAD_GRAPH, SHOW_GRAPH, 
+import { LOAD_GRAPH, SHOW_GRAPH, NEW_GRAPH,
          MOVE_NODE, MOVE_EDGE, MOVE_CAPTION, 
          SWAP_NODE_HIGHLIGHT, SWAP_EDGE_HIGHLIGHT,
          ADD_NODE, ADD_EDGE, ADD_CAPTION,
-         DELETE_NODE, DELETE_EDGE, DELETE_CAPTION, DELETE_SELECTION,
+         DELETE_NODE, DELETE_EDGE, DELETE_CAPTION, DELETE_SELECTION, DELETE_ALL,
          UPDATE_NODE, UPDATE_EDGE, UPDATE_CAPTION,
          PRUNE_GRAPH, LAYOUT_CIRCLE } from '../actions';
 import Graph from '../models/Graph';
@@ -14,13 +14,14 @@ export default function graphs(state = {}, action) {
 
   switch (action.type) {
 
+  case NEW_GRAPH:
   case LOAD_GRAPH:
     let graph = Graph.prepare(action.graph);
     return merge({}, state, { [graph.id]: graph });
 
   case MOVE_NODE:
     return merge({}, state, { 
-      [action.graphId]: Graph.moveNode(state[action.graphId], action.nodeId, action.x, action.y) 
+      [action.graphId]: Graph.moveNode(state[action.graphId], action.nodeId, action.x, action.y)
     });
 
   case MOVE_EDGE:
@@ -45,7 +46,7 @@ export default function graphs(state = {}, action) {
 
   case ADD_NODE:
     return merge({}, state, { 
-      [action.graphId]: Graph.addNode(state[action.graphId], action.node) 
+      [action.graphId]: Graph.addNode(state[action.graphId], action.node)
     });
 
   case ADD_EDGE:
@@ -89,6 +90,11 @@ export default function graphs(state = {}, action) {
       [action.graphId]: graph
     });
 
+  case DELETE_ALL:
+    return assign({}, state, {
+      [action.graphId]: assign({}, state[action.graphId], Graph.defaultContent())
+    });
+  
   case UPDATE_NODE:
     // update connected edges to ensure that endpoints are correct in case node scale changed
     return assign({}, state, {

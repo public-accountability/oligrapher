@@ -6,6 +6,7 @@ import Graph from './models/Graph';
 
 export const LOAD_GRAPH = 'LOAD_GRAPH';
 export const SHOW_GRAPH = 'SHOW_GRAPH';
+export const NEW_GRAPH = 'NEW_GRAPH';
 export const ZOOM_IN = 'ZOOM_IN';
 export const ZOOM_OUT = 'ZOOM_OUT';
 export const RESET_ZOOM = 'RESET_ZOOM';
@@ -17,6 +18,7 @@ export const SWAP_EDGE_HIGHLIGHT = 'SWAP_EDGE_HIGHLIGHT';
 export const SWAP_NODE_SELECTION = 'SWAP_NODE_SELECTION';
 export const SWAP_EDGE_SELECTION = 'SWAP_EDGE_SELECTION';
 export const SWAP_CAPTION_SELECTION = 'SWAP_CAPTION_SELECTION';
+export const DESELECT_ALL = 'DESELECT_ALL';
 export const ADD_NODE = 'ADD_NODE';
 export const ADD_EDGE = 'ADD_EDGE';
 export const ADD_CAPTION = 'ADD_CAPTION';
@@ -29,6 +31,7 @@ export const UPDATE_EDGE = 'UPDATE_EDGE';
 export const UPDATE_CAPTION = 'UPDATE_CAPTION';
 export const PRUNE_GRAPH = 'PRUNE_GRAPH';
 export const LAYOUT_CIRCLE = 'LAYOUT_CIRCLE';
+export const DELETE_ALL = 'DELETE_ALL';
 
 /*
  * action creators
@@ -41,6 +44,11 @@ export function loadGraph(graph) {
 
 export function showGraph(id) {
   return { type: SHOW_GRAPH, id };
+}
+
+export function newGraph() {
+  let graph = Graph.defaults();
+  return { type: NEW_GRAPH, graph };
 }
 
 export function zoomIn(factor = 1.2) {
@@ -87,6 +95,10 @@ export function swapCaptionSelection(captionId, singleSelect = true) {
   return { type: SWAP_CAPTION_SELECTION, captionId, singleSelect };
 }
 
+export function deselectAll(graphId) {
+  return { type: DESELECT_ALL, graphId };
+}
+
 export function addNode(graphId, node) {
   return { type: ADD_NODE, graphId, node };
 }
@@ -113,6 +125,10 @@ export function deleteCaption(graphId, captionId) {
 
 export function deleteSelection(graphId, selection) {
   return { type: DELETE_SELECTION, graphId, selection };
+}
+
+export function deleteAll(graphId) {
+  return { type: DELETE_ALL, graphId };
 }
 
 export function updateNode(graphId, nodeId, data) {

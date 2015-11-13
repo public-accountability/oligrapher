@@ -4,6 +4,7 @@ import BaseComponent from './BaseComponent';
 import Node from './Node';
 import Edge from './Edge';
 import Caption from './Caption';
+import GraphModel from '../models/Graph';
 import { DraggableCore } from 'react-draggable';
 import { values, min, max, includes }  from 'lodash';
 
@@ -20,6 +21,7 @@ export default class Graph extends BaseComponent {
 
   render() {
     const { x, y, prevGraph, viewBox } = this.state;
+
     return (
       <svg id="svg" version="1.1" xmlns="http://www.w3.org/2000/svg" className="Graph" width="100%" height={this.props.height} viewBox={viewBox} preserveAspectRatio="xMidYMid">
         <DraggableCore
@@ -110,7 +112,7 @@ export default class Graph extends BaseComponent {
     this.setState({ viewBox: viewBox, oldViewBox });
     this._updateActualZoom(viewBox);
 
-    if (changed) {
+    if (changed && GraphModel.hasContent(graph)) {
       this._animateTransition(oldViewBox, viewBox);
     }
   }
@@ -119,8 +121,8 @@ export default class Graph extends BaseComponent {
     if (this.mounted) {
       let [x, y, w, h] = viewBox.split(" ").map(i => parseInt(i));
       let domNode = ReactDOM.findDOMNode(this);
-      let svgWidth = domNode.offsetWidth;;
-      let svgHeight = domNode.offsetHeight;;
+      let svgWidth = domNode.getBoundingClientRect().width;
+      let svgHeight = domNode.getBoundingClientRect().height;
       let xFactor = svgWidth / w;
       let yFactor = svgHeight / h;
       let actualZoom = Math.min(xFactor, yFactor);

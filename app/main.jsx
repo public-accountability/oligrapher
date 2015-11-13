@@ -4,10 +4,11 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import Root from './components/Root';
 import reducers from './reducers';
-import { loadGraph, showGraph, 
+import { loadGraph, showGraph, newGraph, 
          zoomIn, zoomOut, resetZoom,
          addNode, addEdge, addCaption, 
-         deleteNode, deleteEdge, deleteCaption, deleteSelection,
+         deleteNode, deleteEdge, deleteCaption, deleteAll,
+         deselectAll, deleteSelection,
          updateNode, updateEdge, updateCaption,
          pruneGraph, layoutCircle } from './actions';
 import Graph from './models/Graph';
@@ -28,6 +29,7 @@ const main = {
           isEditor={this.config.isEditor}
           highlighting={this.config.highlighting}
           onSelection={config.onSelection}
+          onUpdate={config.onUpdate}
           height={this.rootElement.clientHeight}
           ref={(c) => this.root = c} />
       </Provider>,
@@ -44,6 +46,11 @@ const main = {
 
   export: function() {
     return this.root.getWrappedInstance().props.graph;
+  },
+
+  new: function() {
+    this.root.dispatchProps.dispatch(newGraph());
+    return this.currentGraphId();
   },
 
   show: function(id) {
@@ -99,6 +106,10 @@ const main = {
     this.root.dispatchProps.dispatch(deleteCaption(this.currentGraphId(), captionId));
   },
 
+  deleteAll: function() {
+    this.root.dispatchProps.dispatch(deleteAll(this.currentGraphId()));
+  },
+
   getHighlights: function() {
     return Graph.highlightedOnly(this.root.getWrappedInstance().props.graph);
   },
@@ -107,8 +118,12 @@ const main = {
     return this.root.getWrappedInstance().props.selection;
   },
 
+  deselectAll: function() {
+    this.root.dispatchProps.dispatch(deselectAll(this.currentGraphId()));
+  },
+
   deleteSelection: function() {
-    this.root.disptchProps.dispatch(deleteSelection(this.currentGraphId(), this.getSelection()));
+    this.root.dispatchProps.dispatch(deleteSelection(this.currentGraphId(), this.getSelection()));
   },
 
   updateNode: function(nodeId, data) {

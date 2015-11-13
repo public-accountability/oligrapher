@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import ReactDOM from 'react-dom';
 import BaseComponent from './BaseComponent';
 import ds from '../NodeDisplaySettings';
 
@@ -11,6 +12,15 @@ export default class NodeCircle extends BaseComponent {
         {this._circle()}
       </g>
     );
+  }
+
+  componentDidMount() {
+    let element = ReactDOM.findDOMNode(this);
+    let images = element.querySelectorAll("image");
+
+    for (var i = 0; i < images.length; ++i) {
+      images[i].ondragstart = (e) => { e.preventDefault(); return false; };
+    }
   }
 
   _selectionCirlce() {
@@ -45,6 +55,7 @@ export default class NodeCircle extends BaseComponent {
        </clipPath>
        <image
          class="handle"
+         draggable="false"
          x="${-imageWidth/2}"
          y="${-imageWidth/2}"
          xlink:href="${image}"

@@ -201,8 +201,7 @@
 
         oli = Oligrapher.run(elem, { 
           data: data, 
-          isEditor: true ,
-          onSelection: function(selection) { console.log(selection); }
+          isEditor: true
         });
 
         updateNodeSelects();
@@ -219,7 +218,6 @@
         $('#import').on('click', function() {
           var data = JSON.parse($('#data').val());
           var id = oli.import(data);
-          console.log(id);
           oli.show(id);
         });
 

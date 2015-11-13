@@ -82,7 +82,11 @@ class Root extends Component {
 
   componentDidMount() {
     if (this.props.data) {
+      // data provided from outside
       this.loadData(this.props.data);
+    } else {
+      // load empty graph
+      this.loadData(GraphModel.defaults());
     }
   }
 
@@ -99,6 +103,13 @@ class Root extends Component {
         }
 
         this.props.onSelection(data);
+      }
+    }
+
+    // fire update callback if graph changed
+    if (this.props.onUpdate) {
+      if (JSON.stringify(prevProps.graph) !== JSON.stringify(this.props.graph)) {
+        this.props.onUpdate(this.props.graph);
       }
     }
   }

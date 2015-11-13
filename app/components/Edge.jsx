@@ -4,7 +4,7 @@ import { DraggableCore } from 'react-draggable';
 import { merge } from 'lodash';
 import eds from '../EdgeDisplaySettings';
 import nds from '../NodeDisplaySettings';
-import klassNames from 'classNames';
+import classNames from 'classnames';
 
 export default class Edge extends BaseComponent {
   constructor(props) {
@@ -30,7 +30,7 @@ export default class Edge extends BaseComponent {
         onStart={this._handleDragStart}
         onDrag={this._handleDrag}
         onStop={this._handleDragStop}>
-        <g id={sp.groupId} className={klassNames({ edge: true, selected, highlighted })}>
+        <g id={sp.groupId} className={classNames({ edge: true, selected, highlighted })}>
           { selected ? <path 
             className="edge-selection" 
             d={sp.curve} 

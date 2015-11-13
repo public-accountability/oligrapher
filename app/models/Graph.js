@@ -2,7 +2,7 @@ import Node from './Node';
 import Edge from './Edge';
 import Caption from './Caption';
 import Helpers from './Helpers';
-import { merge, assign, values, intersection, flatten, cloneDeep, omit, difference } from 'lodash';
+import { merge, assign, values, intersection, flatten, cloneDeep, omit, difference, compact, size } from 'lodash';
 import Springy from 'springy';
 
 class Graph {
@@ -11,8 +11,14 @@ class Graph {
   }
 
   static defaults() {
+    return merge({ id: this.generateId() }, this.defaultContent());
+  }
+
+  static defaultContent() {
     return {
-      id: this.generateId()
+      nodes: {},
+      edges: {},
+      captions: {}
     };
   }
 
@@ -22,6 +28,10 @@ class Graph {
 
   static setDefaults(graph) {
     return merge({}, this.defaults(), graph);
+  }
+
+  static hasContent(graph) {
+    return (values(graph.nodes).length + values(graph.edges).length + values(graph.captions).length) > 0;
   }
 
   // PREPARE DATA DURING LOAD
@@ -204,7 +214,17 @@ class Graph {
   // CONTENT CREATION API
 
   static addNode(graph, node) {
+    if (!Node.hasPosition(node)) {
+      // position node randomly at perimeter of graph
+      let r = Graph.calculateMaxRadiusFromCenter(graph) + 80;
+      let angle = (Math.random() * 2 * Math.PI) - Math.PI;
+      let x = r * Math.cos(angle);
+      let y = r * Math.sin(angle);
+      node = merge({}, node, { display: { x, y } });
+    }
+
     node = Node.setDefaults(node);
+
     return merge({}, graph, { nodes: { [node.id]: node } });
   }
 
@@ -280,7 +300,7 @@ class Graph {
         merge({}, graph.nodes[nodeId], omit(data, "id"))
       )
     );
-    
+
     let nodes = assign({}, graph.nodes, { [nodeId]: node });
 
     return assign({}, graph, { nodes });
@@ -347,7 +367,6 @@ class Graph {
     return values(graph.edges).filter(edge => intersection([edge.node1_id, edge.node2_id], nodeIds).length == 2);
   }
 
-
   // FUNCTIONS FOR FILTERING LARGE GRAPHS
 
   static filterNodesByEdgeNum(graph, num = 2) {
@@ -388,6 +407,8 @@ class Graph {
     return filteredGraph;
   }
 
+  // ETC
+
   // groups multiple edges between the same nodes (regardless of direction) into one edge
   static bundleEdges(graph) {
     let edges = values(graph.edges).reduce((result, edge) => {
@@ -401,6 +422,52 @@ class Graph {
     bundledGraph.edges = values(edges).reduce((result, edge) => merge(result, { [edge.id]: edge }), {});
 
     return bundledGraph;
+  }
+
+  static calculateCenter(graph) {
+    if (size(graph.nodes) == 0) {
+      return { x: 0, y: 0 };
+    }
+
+    let nodes = values(graph.nodes);
+    let xs = compact(nodes.map(i => i.display.x));
+    let ys = compact(nodes.map(i => i.display.y));
+
+    return { x: xs.reduce((a, b) => a + b, 0)/xs.length, y: ys.reduce((a, b) => a + b, 0)/ys.length };
+  }
+
+  static recenter(graph) {
+    let center = this.calculateCenter(graph);
+
+    // don't recenter tiny amounts
+    if (center.x < 10 && center.y < 10) {
+      return graph;
+    }
+
+    let nodes = values(graph.nodes)
+      .map(node => merge({}, node, { display: { 
+        x: node.display.x - center.x,
+        y: node.display.y - center.y 
+      } })).reduce((result, node) => {
+        result[node.id] = node;
+        return result;
+      }, {});
+
+    return Graph.prepareEdges(merge({}, graph, { nodes }));
+  }
+
+  static calculateMaxRadiusFromCenter(graph) {
+    if (size(graph.nodes) == 0) {
+      return 0;
+    }
+
+    let center = this.calculateCenter(graph);
+    let nodes = values(graph.nodes).filter(n => Node.hasPosition(n));
+    let dists = nodes.map(i => 
+      Math.sqrt(Math.pow(i.display.x - center.x, 2) + Math.pow(i.display.y - center.y, 2))
+    );
+
+    return Math.max.apply(null, dists);
   }
 }
 

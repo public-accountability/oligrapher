@@ -1,5 +1,6 @@
-import { SWAP_NODE_SELECTION, SWAP_EDGE_SELECTION, SWAP_CAPTION_SELECTION, DELETE_SELECTION,
-         SHOW_GRAPH } from '../actions';
+import { SWAP_NODE_SELECTION, SWAP_EDGE_SELECTION, SWAP_CAPTION_SELECTION, 
+         DESELECT_ALL, DELETE_SELECTION, DELETE_ALL,
+         SHOW_GRAPH, NEW_GRAPH } from '../actions';
 import { merge, assign } from 'lodash';
 
 const initState = { nodeIds: [], edgeIds: [], captionIds: [] };
@@ -23,8 +24,11 @@ export default function selection(state = initState, action) {
   switch (action.type) {
 
   // clear selection if graph is shown or selection deleted
+  case DELETE_ALL:
   case DELETE_SELECTION:
   case SHOW_GRAPH:
+  case NEW_GRAPH:
+  case DESELECT_ALL:
     return initState;
 
   case SWAP_NODE_SELECTION:

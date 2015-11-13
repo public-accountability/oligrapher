@@ -2,6 +2,7 @@ jest.dontMock('../Graph');
 jest.dontMock('../Node');
 jest.dontMock('../Edge');
 jest.dontMock('../Caption');
+jest.dontMock('classnames');
 
 import React from 'react'; 
 import ReactDOM from 'react-dom'; 

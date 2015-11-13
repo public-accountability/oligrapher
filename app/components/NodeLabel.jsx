@@ -74,7 +74,7 @@ export default class NodeLabel extends BaseComponent {
     }
 
     if (line = lineWords.join(" ")) {
-      if (line.length < 4) {
+      if (line.length < 4 && lines.length > 0) {
         lines.push(lines.pop() + " " + line);
       } else {
         lines.push(line);
