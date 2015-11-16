@@ -21,7 +21,7 @@ Then visit ```http://localhost:8080/demo```.
 
 Embed
 -----
-Oligrapher is easy to embed in a web page. All you have to do is include the .js and .css files from the /build directory in your page header and mount it in an HTML element.
+Oligrapher is easy to embed in a web page. All you have to do is include the .js and .css files from the ```build``` directory in your page header and mount it in an HTML element.
 
 ```html
 <html>
@@ -114,8 +114,7 @@ var div = document.getElementById('#graph');
 var data = getDataFromSomeWhere();
 var config = { 
   data: data,   // initial graph data to load and display (null by default)
-  isEditor: true,   // whether content can be edited (false by default)
-  highlighting: false   // whether content can be highlighted (true by default)
+  isEditor: true,   // if true, clicking nodes or edges selects them; if false, clicking highlights (false by defaut)
 }
 var oli = Oligrapher.run(div, config);
 ```
