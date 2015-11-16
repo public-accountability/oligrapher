@@ -115,7 +115,16 @@ var data = getDataFromSomeWhere();
 var config = { 
   data: data,   // initial graph data to load and display (null by default)
   isEditor: true,   // if true, clicking nodes or edges selects them; if false, clicking highlights (false by defaut)
+  onSelect: function(selection) {
+    // executed every time the displayed graph's selected nodes, edges, or captions change
+    // selection argument has three array attributes: nodeIds, edgeIds, captionIds
+  }, 
+  onUpdate: function(graph) {
+    // executed every time the graph's content changes
+    // graph argument is the same object returned by Oligrapher's export() API method
+  }
 }
+
 var oli = Oligrapher.run(div, config);
 ```
 
