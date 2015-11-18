@@ -31,25 +31,15 @@ describe("Caption Component", () => {
     expect(text.textContent).toBe(data.display.text);
   });
 
-  it("should swap selection if alt+clicked", () => {
-    let selectCaption = jest.genMockFunction();
+  it("should call click callback if clicked", () => {
+    let clickCaption = jest.genMockFunction();
     let caption = TestUtils.renderIntoDocument(
-      <Caption caption={data} graph={{id: "someid"}} selectCaption={selectCaption} altKey={true} />
+      <Caption caption={data} graphId="someid" clickCaption={clickCaption} altKey={true} />
     );
     let element = ReactDOM.findDOMNode(caption);
 
     TestUtils.Simulate.click(element);
-    expect(selectCaption.mock.calls[0][0]).toBe(data.id);
-  });
-
-  it("should not swap selection if clicked without alt key", () => {
-    let selectCaption = jest.genMockFunction();
-    let caption = TestUtils.renderIntoDocument(
-      <Caption caption={data} graph={{id: "someid"}} selectCaption={selectCaption} altKey={false} />
-    );
-    let element = ReactDOM.findDOMNode(caption);
-
-    TestUtils.Simulate.click(element);
-    expect(selectCaption.mock.calls.length).toBe(0);
+    expect(clickCaption.mock.calls[0][0]).toBe("someid");
+    expect(clickCaption.mock.calls[0][1]).toBe(data.id);
   });
 });

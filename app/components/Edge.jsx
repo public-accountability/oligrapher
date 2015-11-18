@@ -94,6 +94,8 @@ export default class Edge extends BaseComponent {
   }
 
   _handleDrag(event, ui) {
+    if (this.props.isLocked) return;
+
     this._dragging = true; // so that _handleClick knows it's not just a click
 
     let e = this.props.edge;
@@ -115,14 +117,8 @@ export default class Edge extends BaseComponent {
   _handleClick() {
     if (this._dragging) {
       this._dragging = false;
-    } else {
-      if (this.props.selectEdge) {
-        this.props.selectEdge(this.props.edge.id);
-      }
-
-      if (this.props.highlightEdge) {
-        this.props.highlightEdge(this.props.graphId, this.props.edge.id);
-      }
+    } else if (this.props.clickEdge) {
+      this.props.clickEdge(this.props.graphId, this.props.edge.id);
     }
   }
 

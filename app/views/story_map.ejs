@@ -199,9 +199,11 @@
 
         $('#data').val(JSON.stringify(data));
 
-        oli = Oligrapher.run(elem, { 
+        oli = new Oligrapher({ 
+          root: elem,
           data: data, 
-          isEditor: false
+          isEditor: false,
+          isLocked: true
         });
 
         updateNodeSelects();

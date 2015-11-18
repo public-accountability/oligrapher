@@ -54,38 +54,16 @@ describe("Node Component", () => {
     expect(image.getAttribute("xlink:href")).toBe(data.display.image);
   });
 
-  it("should swap highlight if clicked", () => {
-    let highlightNode = jest.genMockFunction();
+  it("should call click callback if clicked", () => {
+    let clickNode = jest.genMockFunction();
     let node = TestUtils.renderIntoDocument(
-      <Node node={data} graph={{id: "someid"}} highlightNode={highlightNode} />
+      <Node node={data} graph={{id: "someid"}} clickNode={clickNode} />
     );
     let element = ReactDOM.findDOMNode(node);
 
     TestUtils.Simulate.click(element);
-    expect(highlightNode.mock.calls[0][0]).toBe("someid");
-    expect(highlightNode.mock.calls[0][1]).toBe(data.id);
-  });
-
-  it("should swap selection if alt+clicked", () => {
-    let selectNode = jest.genMockFunction();
-    let node = TestUtils.renderIntoDocument(
-      <Node node={data} graph={{id: "someid"}} selectNode={selectNode} altKey={true} />
-    );
-    let element = ReactDOM.findDOMNode(node);
-
-    TestUtils.Simulate.click(element);
-    expect(selectNode.mock.calls[0][0]).toBe(data.id);
-  });
-
-  it("should not swap selection if clicked without alt key", () => {
-    let selectNode = jest.genMockFunction();
-    let node = TestUtils.renderIntoDocument(
-      <Node node={data} graph={{id: "someid"}} selectNode={selectNode} altKey={false} />
-    );
-    let element = ReactDOM.findDOMNode(node);
-
-    TestUtils.Simulate.click(element);
-    expect(selectNode.mock.calls.length).toBe(0);
+    expect(clickNode.mock.calls[0][0]).toBe("someid");
+    expect(clickNode.mock.calls[0][1]).toBe(data.id);
   });
 
   // NOT WORKING: EVENT HANDLERS ARENT TRIGGERED FOR SOME REASON

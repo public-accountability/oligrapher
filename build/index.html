@@ -90,7 +90,12 @@
 
         $('#data').val(JSON.stringify(data));
 
-        oli = Oligrapher.run(elem, { data: data, isEditor: true });
+        oli = new Oligrapher({ 
+          root: elem,
+          data: data, 
+          isEditor: false,
+          isLocked: true
+        });
 
         updateNodeSelects();
 

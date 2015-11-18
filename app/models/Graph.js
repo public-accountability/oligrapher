@@ -2,7 +2,7 @@ import Node from './Node';
 import Edge from './Edge';
 import Caption from './Caption';
 import Helpers from './Helpers';
-import { merge, assign, values, intersection, flatten, cloneDeep, omit, difference, compact, size } from 'lodash';
+import { merge, assign, values, intersection, flatten, cloneDeep, omit, difference, compact, size, includes } from 'lodash';
 import Springy from 'springy';
 
 class Graph {
@@ -405,6 +405,41 @@ class Graph {
                               .reduce((result, edge) => merge(result, { [edge.id]: edge }), {});
 
     return filteredGraph;
+  }
+
+  // HIGHLIGHTING
+
+  static setHighlights(graph, highlights, otherwiseFaded = false) {
+    if (highlights.nodeIds.length + highlights.edgeIds.length + highlights.captionIds.length == 0) {
+      otherwiseFaded = false;
+    }
+
+    let { nodeIds, edgeIds, captionIds } = highlights;
+    let otherwise = otherwiseFaded ? "faded" : "normal";
+    let newGraph = cloneDeep(graph);
+
+    // cast all ids to strings
+    nodeIds = nodeIds.map(id => String(id));
+    edgeIds = edgeIds.map(id => String(id));
+    captionIds = captionIds.map(id => String(id));
+
+    values(newGraph.nodes).forEach(node => {
+      newGraph.nodes[node.id].display.status = includes(nodeIds, String(node.id)) ? "highlighted" : otherwise;
+    });
+
+    values(newGraph.edges).forEach(edge => {
+      newGraph.edges[edge.id].display.status = includes(edgeIds, String(edge.id)) ? "highlighted" : otherwise;
+    });
+
+    values(newGraph.captions).forEach(caption => {
+      newGraph.captions[caption.id].display.status = includes(captionIds, String(caption.id)) ? "highlighted" : otherwise;
+    });
+
+    return newGraph;
+  };
+
+  static clearHighlights(graph) {
+    return this.setHighlights(graph, { nodeIds: [], edgeIds: [], captionIds: [] });
   }
 
   // ETC

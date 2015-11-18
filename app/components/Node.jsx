@@ -62,6 +62,8 @@ export default class Node extends BaseComponent {
 
   // node position is updated only in state, not store
   _handleDrag(e, ui) {
+    if (this.props.isLocked) return;
+
     this._dragging = true; // so that _handleClick knows it's not just a click
 
     let n = this.props.node;
@@ -96,14 +98,8 @@ export default class Node extends BaseComponent {
   _handleClick() {
     if (this._dragging) {
       this._dragging = false;
-    } else {
-      if (this.props.selectNode) {
-        this.props.selectNode(this.props.node.id);
-      }
-
-      if (this.props.highlightNode) {
-        this.props.highlightNode(this.props.graph.id, this.props.node.id);
-      }
+    } else if (this.props.clickNode) {
+      this.props.clickNode(this.props.graph.id, this.props.node.id);
     }
   }
 }

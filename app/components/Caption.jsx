@@ -49,7 +49,10 @@ export default class Caption extends BaseComponent {
   }
 
   _handleDrag(e, ui) {
+    if (this.props.isLocked) return;
+
     this._dragging = true;
+
     let deltaX = (ui.position.clientX - this._startDrag.clientX) / this.graph.state.actualZoom;
     let deltaY = (ui.position.clientY - this._startDrag.clientY) / this.graph.state.actualZoom;
     let x = this._startPosition.x + deltaX;
@@ -68,8 +71,8 @@ export default class Caption extends BaseComponent {
   _handleClick() {
     if (this._dragging) {
       this._dragging = false;
-    } else if (this.props.selectCaption) {
-      this.props.selectCaption(this.props.caption.id);
+    } else if (this.props.clickCaption) {
+      this.props.clickCaption(this.props.graphId, this.props.caption.id);
     }
   }
 

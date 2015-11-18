@@ -4,7 +4,8 @@ import { LOAD_GRAPH, SHOW_GRAPH, NEW_GRAPH,
          ADD_NODE, ADD_EDGE, ADD_CAPTION,
          DELETE_NODE, DELETE_EDGE, DELETE_CAPTION, DELETE_SELECTION, DELETE_ALL,
          UPDATE_NODE, UPDATE_EDGE, UPDATE_CAPTION,
-         PRUNE_GRAPH, LAYOUT_CIRCLE } from '../actions';
+         PRUNE_GRAPH, LAYOUT_CIRCLE,
+         SET_HIGHLIGHTS } from '../actions';
 import Graph from '../models/Graph';
 import Edge from '../models/Edge';
 import { merge, assign } from 'lodash';
@@ -121,6 +122,11 @@ export default function graphs(state = {}, action) {
   case LAYOUT_CIRCLE:
     return assign({}, state, {
       [action.graphId]: Graph.prepareEdges(Graph.circleLayout(state[action.graphId], true))
+    });
+
+  case SET_HIGHLIGHTS:
+    return assign({}, state, {
+      [action.graphId]: Graph.setHighlights(state[action.graphId], action.highlights, action.otherwiseFaded)
     });
 
   default:

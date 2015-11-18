@@ -49,7 +49,7 @@ class Root extends Component {
       'delSelected': () => dispatch(deleteSelection(this.props.graph.id, this.props.selection))
     };
 
-    const { dispatch, isEditor } = this.props;
+    const { dispatch, isEditor, isLocked } = this.props;
     const that = this;
 
     return this.props.graph ? (
@@ -57,19 +57,31 @@ class Root extends Component {
         <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={keyHandlers}>
           <Graph 
             ref={(c) => { this.graph = c; if (c) { c.root = this; } }}
-            graph={this.props.graph} 
+            graph={this.props.graph}
             zoom={this.props.zoom} 
             height={this.props.height}
+            isEditor={isEditor}
+            isLocked={isLocked}
             selection={this.props.selection}
             resetZoom={() => dispatch(resetZoom())} 
             moveNode={(graphId, nodeId, x, y) => dispatch(moveNode(graphId, nodeId, x, y))} 
             moveEdge={(graphId, edgeId, cx, cy) => dispatch(moveEdge(graphId, edgeId, cx, cy))} 
             moveCaption={(graphId, captionId, x, y) => dispatch(moveCaption(graphId, captionId, x, y))} 
-            highlightNode={(graphId, nodeId) => !isEditor ? dispatch(swapNodeHighlight(graphId, nodeId)) : null}
-            highlightEdge={(graphId, edgeId) => !isEditor ? dispatch(swapEdgeHighlight(graphId, edgeId)) : null} 
-            selectNode={(nodeId) => isEditor ? dispatch(swapNodeSelection(nodeId, !that.state.shiftKey)) : null}
-            selectEdge={(edgeId) => isEditor ? dispatch(swapEdgeSelection(edgeId, !that.state.shiftKey)) : null}
-            selectCaption={(captionId) => isEditor ? dispatch(swapCaptionSelection(captionId, !that.state.shiftKey)) : null} />
+            clickNode={(graphId, nodeId) => { 
+              isEditor ? 
+              dispatch(swapNodeSelection(nodeId, !that.state.shiftKey)) : 
+              (isLocked ? null : dispatch(swapNodeHighlight(graphId, nodeId))) 
+            }}
+            clickEdge={(graphId, edgeId) => { 
+              isEditor ? 
+              dispatch(swapEdgeSelection(edgeId, !that.state.shiftKey)) : 
+              (isLocked ? null: dispatch(swapEdgeHighlight(graphId, edgeId)))
+            }}
+            clickCaption={(graphId, captionId) => { 
+              isEditor ? 
+              dispatch(swapCaptionSelection(captionId, !that.state.shiftKey)) : 
+              null 
+            }} />
         </HotKeys>
       </div>
     ) : (<div></div>);
@@ -91,13 +103,7 @@ class Root extends Component {
       let { selection, graph } = this.props;
 
       if (JSON.stringify(prevProps.selection) !== JSON.stringify(selection)) {
-        let data = {
-          nodes: pick(graph.nodes, selection.nodeIds),
-          edges: pick(graph.edges, selection.edgeIds),
-          captions: pick(graph.captions, selection.captionIds)
-        }
-
-        this.props.onSelection(data);
+        this.props.onSelection(selection);
       }
     }
 

@@ -61,40 +61,16 @@ describe("Edge Component", () => {
     expect(hasMarker).toBeTruthy();
   });
 
-  it("should swap highlight if clicked", () => {
-    let highlightEdge = jest.genMockFunction();
+  it("should call click callback if clicked", () => {
+    let clickEdge = jest.genMockFunction();
     let edge = TestUtils.renderIntoDocument(
-      <Edge edge={data} graphId="someid" highlightEdge={highlightEdge} />
+      <Edge edge={data} graphId="someid" clickEdge={clickEdge} />
     );
     let element = ReactDOM.findDOMNode(edge);
     let select = element.querySelector(".edgeSelect");
 
     TestUtils.Simulate.click(select);
-    expect(highlightEdge.mock.calls[0][0]).toBe("someid");
-    expect(highlightEdge.mock.calls[0][1]).toBe(data.id);
-  });
-
-  it("should swap selection if alt+clicked", () => {
-    let selectEdge = jest.genMockFunction();
-    let edge = TestUtils.renderIntoDocument(
-      <Edge edge={data} graphId="someid" selectEdge={selectEdge} selected={false} altKey={true} />
-    );
-    let element = ReactDOM.findDOMNode(edge);
-    let select = element.querySelector(".edgeSelect");
-
-    TestUtils.Simulate.click(select);
-    expect(selectEdge.mock.calls[0][0]).toBe(data.id);
-  });
-
-  it("should not swap selection if clicked without alt key", () => {
-    let selectEdge = jest.genMockFunction();
-    let edge = TestUtils.renderIntoDocument(
-      <Edge edge={data} graphId="someid" selectEdge={selectEdge} selected={false} altKey={false} />
-    );
-    let element = ReactDOM.findDOMNode(edge);
-    let select = element.querySelector(".edgeSelect");
-
-    TestUtils.Simulate.click(select);
-    expect(selectEdge.mock.calls.length).toBe(0);
+    expect(clickEdge.mock.calls[0][0]).toBe("someid");
+    expect(clickEdge.mock.calls[0][1]).toBe(data.id);
   });
 });

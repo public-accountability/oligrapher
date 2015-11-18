@@ -65,9 +65,9 @@ export default class Graph extends BaseComponent {
         graphId={this.props.graph.id} 
         zoom={this.props.zoom}
         selected={this.props.selection && includes(this.props.selection.edgeIds, e.id)}
-        highlightEdge={this.props.highlightEdge}
+        clickEdge={this.props.clickEdge}
         moveEdge={this.props.moveEdge} 
-        selectEdge={this.props.selectEdge} />);
+        isLocked={this.props.isLocked} />);
   }
 
   _renderNodes() {
@@ -79,9 +79,9 @@ export default class Graph extends BaseComponent {
         graph={this.props.graph} 
         zoom={this.props.zoom} 
         selected={this.props.selection && includes(this.props.selection.nodeIds, n.id)}
-        highlightNode={this.props.highlightNode} 
+        clickNode={this.props.clickNode} 
         moveNode={this.props.moveNode} 
-        selectNode={this.props.selectNode} />);
+        isLocked={this.props.isLocked} />);
   }
 
   _renderCaptions() {
@@ -93,7 +93,8 @@ export default class Graph extends BaseComponent {
         graphId={this.props.graph.id}
         selected={this.props.selection && includes(this.props.selection.captionIds, c.id)}
         moveCaption={this.props.moveCaption} 
-        selectCaption={this.props.selectCaption} />);
+        clickCaption={this.props.clickCaption} 
+        isLocked={this.props.isLocked} />);
   }
 
   _renderMarkers() {
@@ -106,7 +107,7 @@ export default class Graph extends BaseComponent {
     let viewBox = this._computeViewbox(graph, zoom);
     let changed = (viewBox !== this.state.viewBox);
     let oldViewBox = changed ? this.state.viewBox : null;
-    this.setState({ viewBox: viewBox, oldViewBox });
+    this.setState({ viewBox, oldViewBox });
     this._updateActualZoom(viewBox);
 
     if (changed && GraphModel.hasContent(graph)) {
@@ -145,7 +146,7 @@ export default class Graph extends BaseComponent {
     const items = nodes.concat(...values(graph.captions).map(c => c.display));
 
     if (items.length > 0) {
-      const padding = highlightedOnly ? 50 : 50;
+      const padding = highlightedOnly ? 100 : 100;
       const xs = items.map(i => i.x);
       const ys = items.map(i => i.y);
       const textPadding = 100; // node text might extend below node

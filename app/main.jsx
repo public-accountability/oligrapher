@@ -10,151 +10,157 @@ import { loadGraph, showGraph, newGraph,
          deleteNode, deleteEdge, deleteCaption, deleteAll,
          deselectAll, deleteSelection,
          updateNode, updateEdge, updateCaption,
-         pruneGraph, layoutCircle } from './actions';
+         pruneGraph, layoutCircle,
+         setHighlights } from './actions';
 import Graph from './models/Graph';
 import { merge, difference } from 'lodash';
 
-const defaultConfig = { highlighting: true, isEditor: false };
-
-const main = {
-  run: function(element, config = {}) {
-    this.rootElement = element;
+export default class Oligrapher {
+  constructor(config = {}) {
+    this.rootElement = config.root;
     this.store = createStore(reducers);
-    this.config = merge({}, defaultConfig, config);
+    this.config = merge({}, { isEditor: false }, config);
 
     this.providerInstance = render(
       <Provider store={this.store}>
         <Root 
           data={this.config.data} 
           isEditor={this.config.isEditor}
-          onSelection={config.onSelection}
-          onUpdate={config.onUpdate}
-          height={this.rootElement.clientHeight}
+          isLocked={this.config.isLocked}
+          onSelection={this.config.onSelection}
+          onUpdate={this.config.onUpdate}
+          height={this.config.root.offsetHeight}
           ref={(c) => this.root = c} />
       </Provider>,
       this.rootElement
     );
 
     return this;
-  },
+  }
 
-  import: function(graphData) {
+  import(graphData) {
     this.root.dispatchProps.dispatch(loadGraph(graphData));
     return this.root.getWrappedInstance().props.loadedId;
-  },
+  }
 
-  export: function() {
+  export() {
     return this.root.getWrappedInstance().props.graph;
-  },
+  }
 
-  new: function() {
+  new() {
     this.root.dispatchProps.dispatch(newGraph());
     return this.currentGraphId();
-  },
+  }
 
-  show: function(id) {
+  show(id) {
     this.root.dispatchProps.dispatch(showGraph(id));
-  },
+  }
 
-  zoomIn: function() {
+  zoomIn() {
     this.root.dispatchProps.dispatch(zoomIn());
-  },
+  }
 
-  zoomOut: function() {
+  zoomOut() {
     this.root.dispatchProps.dispatch(zoomOut());
-  },
+  }
 
-  resetZoom: function() {
+  resetZoom() {
     this.root.dispatchProps.dispatch(resetZoom())
-  },
+  }
 
-  currentGraphId: function() {
+  currentGraphId() {
     return this.root.getWrappedInstance().props.graph.id;
-  },
+  }
 
-  addNode: function(node) {
+  addNode(node) {
     let nodeIds = Object.keys(this.root.getWrappedInstance().props.graph.nodes);
     this.root.dispatchProps.dispatch(addNode(this.currentGraphId(), node));
     let newNodeIds = Object.keys(this.root.getWrappedInstance().props.graph.nodes);
     return difference(newNodeIds, nodeIds);
-  },
+  }
 
-  addEdge: function(edge) {
+  addEdge(edge) {
     let edgeIds = Object.keys(this.root.getWrappedInstance().props.graph.edges);
     this.root.dispatchProps.dispatch(addEdge(this.currentGraphId(), edge));
     let newEdgeIds = Object.keys(this.root.getWrappedInstance().props.graph.edges);
     return difference(newEdgeIds, edgeIds);
-  },
+  }
 
-  addCaption: function(caption) {
+  addCaption(caption) {
     let captionIds = Object.keys(this.root.getWrappedInstance().props.graph.captions);
     this.root.dispatchProps.dispatch(addCaption(this.currentGraphId(), caption));
     let newCaptionIds = Object.keys(this.root.getWrappedInstance().props.graph.captions);
     return difference(newCaptionIds, captionIds);
-  },
+  }
 
-  deleteNode: function(nodeId) {
+  deleteNode(nodeId) {
     this.root.dispatchProps.dispatch(deleteNode(this.currentGraphId(), nodeId));
-  },
+  }
 
-  deleteEdge: function(edgeId) {
+  deleteEdge(edgeId) {
     this.root.dispatchProps.dispatch(deleteEdge(this.currentGraphId(), edgeId));
-  },
+  }
 
-  deleteCaption: function(captionId) {
+  deleteCaption(captionId) {
     this.root.dispatchProps.dispatch(deleteCaption(this.currentGraphId(), captionId));
-  },
+  }
 
-  deleteAll: function() {
+  deleteAll() {
     this.root.dispatchProps.dispatch(deleteAll(this.currentGraphId()));
-  },
+  }
 
-  getHighlights: function() {
+  getHighlights() {
     return Graph.highlightedOnly(this.root.getWrappedInstance().props.graph);
-  },
+  }
 
-  getSelection: function() {
+  setHighlights(highlights, otherwiseFaded = false) {
+    this.root.dispatchProps.dispatch(setHighlights(this.currentGraphId(), highlights, otherwiseFaded));
+    return this.root.getWrappedInstance().props.graph;
+  }
+
+  getSelection() {
     return this.root.getWrappedInstance().props.selection;
-  },
+  }
 
-  deselectAll: function() {
+  deselectAll() {
     this.root.dispatchProps.dispatch(deselectAll(this.currentGraphId()));
-  },
+  }
 
-  deleteSelection: function() {
+  deleteSelection() {
     this.root.dispatchProps.dispatch(deleteSelection(this.currentGraphId(), this.getSelection()));
-  },
+  }
 
-  updateNode: function(nodeId, data) {
+  updateNode(nodeId, data) {
     this.root.dispatchProps.dispatch(updateNode(this.currentGraphId(), nodeId, data));
     return this.root.getWrappedInstance().props.graph.nodes[nodeId];
-  },
+  }
 
-  updateEdge: function(edgeId, data) {
+  updateEdge(edgeId, data) {
     this.root.dispatchProps.dispatch(updateEdge(this.currentGraphId(), edgeId, data));
     return this.root.getWrappedInstance().props.graph.edges[edgeId];
-  },
+  }
 
-  updateCaption: function(captionId, data) {
+  updateCaption(captionId, data) {
     this.root.dispatchProps.dispatch(updateCaption(this.currentGraphId(), captionId, data));
     return this.root.getWrappedInstance().props.graph.captions[captionId];
-  },
-
-  prune: function() {
-    this.root.dispatchProps.dispatch(pruneGraph(this.currentGraphId()));
-  },
-
-  circleLayout: function() {
-    this.root.dispatchProps.dispatch(layoutCircle(this.currentGraphId()));
-  },
-
-  findNode: function(name) {
-    //TODO
   }
+
+  prune() {
+    this.root.dispatchProps.dispatch(pruneGraph(this.currentGraphId()));
+  }
+
+  circleLayout() {
+    this.root.dispatchProps.dispatch(layoutCircle(this.currentGraphId()));
+  }
+};
+
+if (typeof exports !== 'undefined') {
+  if (typeof module !== 'undefined' && module.exports) {
+    exports = module.exports = Oligrapher;
+  }
+
+  exports.Oligrapher = Oligrapher;
 }
 
-window.Oligrapher = main;
-
-export default main;
-
+window.Oligrapher = Oligrapher;
 

@@ -32,6 +32,7 @@ export const UPDATE_CAPTION = 'UPDATE_CAPTION';
 export const PRUNE_GRAPH = 'PRUNE_GRAPH';
 export const LAYOUT_CIRCLE = 'LAYOUT_CIRCLE';
 export const DELETE_ALL = 'DELETE_ALL';
+export const SET_HIGHLIGHTS = 'SET_HIGHLIGHTS';
 
 /*
  * action creators
@@ -149,4 +150,8 @@ export function pruneGraph(graphId) {
 
 export function layoutCircle(graphId) {
   return { type: LAYOUT_CIRCLE, graphId };
+}
+
+export function setHighlights(graphId, highlights, otherwiseFaded = false) {
+  return { type: SET_HIGHLIGHTS, graphId, highlights, otherwiseFaded };
 }
