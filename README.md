@@ -21,7 +21,7 @@ Then visit ```http://localhost:8080/demo```.
 
 Embed
 -----
-Oligrapher is easy to embed in a web page. All you have to do is include the .js and .css files from the /build directory in your page header and mount it in an HTML element.
+Oligrapher is easy to embed in a web page. All you have to do is include the .js and .css files from the ```build``` directory in your page header and mount it in an HTML element.
 
 ```html
 <html>
@@ -107,31 +107,40 @@ The ```id``` of the graph itself is optional, Oligrapher will generate it if not
 API
 ---
 
-### ```run(DOMElement, config = {})```
-Starts Oligrapher within a given ```DOMElement``` and accepts a ```config``` object if provided. Returns an Oligrapher instance.
+### ```run(config)```
+Starts Oligrapher within a specified ```root``` DOM element and accepts other configuration options. Returns an Oligrapher instance.
 ```javascript
 var div = document.getElementById('#graph');
 var data = getDataFromSomeWhere();
 var config = { 
+  root: div
   data: data,   // initial graph data to load and display (null by default)
-  isEditor: true,   // whether content can be edited (false by default)
-  highlighting: false   // whether content can be highlighted (true by default)
+  isEditor: true,   // if true, clicking nodes or edges selects them; if false, clicking highlights (false by defaut)
+  onSelect: function(selection) {
+    // executed every time the displayed graph's selected nodes, edges, or captions change
+    // selection argument has three array attributes: nodeIds, edgeIds, captionIds
+  }, 
+  onUpdate: function(graph) {
+    // executed every time the graph's content changes
+    // graph argument is the same object returned by Oligrapher's export() API method
+  }
 }
-var oli = Oligrapher.run(div, config);
+
+var oli = Oligrapher.run(config);
 ```
 
 ### ```import(data)```
 Imports graph ```data``` into Oligrapher and displays it, returning the imported graph's ```id```.
 ```javascript
-var oli = Oligrapher.run(element);
-var id1 = oli.load(data1);
-var id2 = oli.load(data2);
+var oli = Oligrapher.run(config);
+var id1 = oli.import(data1);
+var id2 = oli.import(data2);
 ```
 
 ### ```export()```
 Returns a snapshot of the currently displayed graph data, including display attributes. This data can be ```import```ed later to display the identical graph.
 ```javascript
-var oli = Oligrapher.run(element);
+var oli = Oligrapher.run(config);
 var data = getGraphFromDatabase();
 oli.import(data);
 // ... user edits graph ...
@@ -143,12 +152,19 @@ data = oli.export();
 saveGraphToDatabase(data);
 ```
 
+### ```new```
+Creates and displays a blank graph.
+```javascript
+var oli = Oligrapher.run(config);
+oli.export();   // { nodeIds: [], edgeIds: [], captionIds: [] }
+```
+
 ### ```show(id)```
 Displays the previously-imported graph with the given ```id```.
 ```javascript
-var oli = Oligrapher.run(element);
-var id1 = Oligrapher.load(data1);
-var id2 = Oligrapher.load(data2);
+var oli = Oligrapher.run(config);
+var id1 = oli.import(data1);
+var id2 = oli.import(data2);
 oli.show(id1);
 ```
 
@@ -158,18 +174,21 @@ Zooms in by 20%. This can be triggered with the keyboard shortcut ```ctrl+equals
 ### ```zoomOut()```
 Zooms out by 20%. This can be triggered with the keyboard shortcut ```ctrl+minus```.
 ```javascript
-var oli = Oligrapher.run(element);
-oli.load(data);
+var oli = Oligrapher.run(config);
+oli.import(data);
 oli.zoomIn();
 oli.zoomOut();   // back to normal
 ```
 
+### ```resetZoom()```
+Resets the zoom to the default level (1.00). 
+
 ### ```currentGraphId()```
 Returns id of currently displayed graph.
 ```javascript
-var oli = Oligrapher.run(element);
-var id1 = oli.load(data1);
-var id2 = oli.load(data2);
+var oli = Oligrapher.run(config);
+var id1 = oli.import(data1);
+var id2 = oli.import(data2);
 oli.show(id1);
 oli.getCurrentId() == id1;   // true
 ```
@@ -177,21 +196,21 @@ oli.getCurrentId() == id1;   // true
 ### ```addNode(node)```
 Adds given node to graph. Node must conform to data schema described above. Returns ```id``` of new node.
 ```javascript
-var oli = Oligrapher.run(element, { data: data });
+var oli = Oligrapher.run({ root: element, data: data });
 var nodeId = oli.addNode({ display: { name: "Kofi Annan" } });
 ```
 
 ### ```addEdge(edge)```
 Adds given edge to graph. Edge must conform to data schema described above. Returns ```id``` of new edge.
 ```javascript
-var oli = Oligrapher.run(element, { data: data });
+var oli = Oligrapher.run({ root: element, data: data });
 var edgeId = oli.addEdge({ display: { label: "sister" } });
 ```
 
 ### ```addCaption(caption)```
 Adds given caption to graph. Caption must conform to data schema described above. Returns ```id``` of new caption.
 ```javascript
-var oli = Oligrapher.run(element, { data: data });
+var oli = Oligrapher.run({ root: element, data: data });
 var captionId = oli.addCaption({ display: { text: "This is the most interesting thin you'll read today" } });
 ```
 
@@ -204,18 +223,40 @@ Deletes the edge with the given ```id``` from the current graph.
 ### ```deleteCaption(id)```
 Deletes the caption with the given ```id``` from the current graph.
 
+### ```deleteAll()```
+Deletes all nodes, edges, and captions from the graph.
+```javascript
+oli = Oligrapher.run(config);
+oli.import(data);
+oli.deleteAll();
+oli.export();   // { nodeIds: [], edgeIds: [], captionIds: [] }
+```
+
+### ```getHighlights()```
+Returns the displayed graph filtered to only highlighted nodes, edges, and captions.
+
 ### ```getSelection()```
-Returns an object with the ids of the currently selected nodes, edges, and captions.
+Returns an object with the ids of the currently selected nodes, edges, and captions. NOTE: selection is only enabled when ```isEditor: true``` is present in the config object at initialization. Unlight highlighting, selection does not alter a graph's data; it is used only for editing purposes.
 ```javascript
 var selection = oli.getSelection();
 // { nodeIds: [1, 2], edgeIds: [1], captionIds: [] }
 ```
 
+### ```deselectAll()```
+Clears selection.
+
 ### ```deleteSelection()```
 Deletes the currently selected nodes, edges, and captions, as well as any other edges connected to the deleted nodes. This can be triggered with the keyboard shortcut ```ctrl+d```.
 
-### ```getHighlights()```
-Returns the subgraph consisting of highlighted nodes and edges.
+### ```updateNode(nodeId, data)```
+Merges the provided ```data``` into the node specified by ```nodeId```. Null ```data``` fields will erase those fields in the node.
+```javascript
+var oldNode = oli.export().nodeIds[nodeId]; 
+// { id: 64, display: { name: "James Houghton", url: "http://example.com", scale: 1 } }
+oli.update(nodeId, { display: { name: "James R Houghton",  url: null, scale: 2 } });
+var newNode = oli.export().nodeIds[nodeId];
+// { id: 64, display: { name: "James R Houghton", scale: 2 } }
+```
 
 React Component Tree
 --------------------
