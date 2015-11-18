@@ -6,7 +6,7 @@ import Root from './components/Root';
 import reducers from './reducers';
 import { loadGraph, showGraph, newGraph, 
          zoomIn, zoomOut, resetZoom,
-         addNode, addEdge, addCaption, 
+         addNode, addEdge, addCaption, addSurroundingNodes,
          deleteNode, deleteEdge, deleteCaption, deleteAll,
          deselectAll, deleteSelection,
          updateNode, updateEdge, updateCaption,
@@ -91,6 +91,13 @@ export default class Oligrapher {
     this.root.dispatchProps.dispatch(addCaption(this.currentGraphId(), caption));
     let newCaptionIds = Object.keys(this.root.getWrappedInstance().props.graph.captions);
     return difference(newCaptionIds, captionIds);
+  }
+
+  addSurroundingNodes(centerId, nodes) {
+    let nodeIds = Object.keys(this.root.getWrappedInstance().props.graph.nodes);
+    this.root.dispatchProps.dispatch(addSurroundingNodes(this.currentGraphId(), centerId, nodes));
+    let newNodeIds = Object.keys(this.root.getWrappedInstance().props.graph.nodes);
+    return difference(newNodeIds, nodeIds);    
   }
 
   deleteNode(nodeId) {

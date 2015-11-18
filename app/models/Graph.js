@@ -85,15 +85,19 @@ class Graph {
     let nodes = allNodes ? values(graph.nodes) : values(graph.nodes).filter(n => !Node.hasPosition(n));
     let radius = Math.pow(nodes.length * 70, 0.85);
 
-    return merge({}, graph, { nodes: nodes.reduce((result, node, i) => {
+    return merge({}, graph, { nodes: this.arrangeNodesInCircle(nodes, 0, 0, radius) });
+  }
+
+  static arrangeNodesInCircle(nodes, x, y, radius) {
+    return values(nodes).reduce((result, node, i) => {
       let angle = (2 * Math.PI) * (i / nodes.length);
       return merge({}, result, { 
-        [node.id]: { display: { 
-          x: Math.cos(angle) * radius, 
-          y: Math.sin(angle) * radius 
-        } } 
+        [node.id]: merge({}, node, { display: { 
+          x: x + Math.cos(angle) * radius, 
+          y: y + Math.sin(angle) * radius 
+        } }) 
       });
-    }, {}) });    
+    }, {});    
   }
 
   static forceLayout(graph, steps = 500) {
@@ -236,6 +240,16 @@ class Graph {
   static addCaption(graph, caption) {
     caption = Caption.setDefaults(caption);
     return merge({}, graph, { captions: { [caption.id]: caption } });
+  }
+
+  static addSurroundingNodes(graph, centerId, nodes) {
+    let preparedNodes = nodes.map(n => Node.setDefaults(n));
+    let centerNode = graph.nodes[centerId];
+    let x = centerNode.display.x ? centerNode.display.x : 0;
+    let y = centerNode.display.y ? centerNode.display.y : 0;
+    let radius = Math.max(100, (nodes.length * 100) / (2 * Math.PI));
+    let newNodes = this.arrangeNodesInCircle(preparedNodes, x, y, radius);
+    return merge({}, graph, { nodes: newNodes });
   }
 
   // CONTENT DELETION API

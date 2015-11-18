@@ -8,7 +8,7 @@ jest.dontMock('springy');
 const Graph = require('../Graph'); 
 const Edge = require('../Edge'); 
 const Caption = require('../Caption'); 
-const { merge, values, uniq } = require('lodash');
+const { merge, values, uniq, range, pick } = require('lodash');
 
 describe("Graph", () => {
 
@@ -218,6 +218,37 @@ describe("Graph", () => {
 
       expect(graph2.captions[captionId].display.x).toBe(newX);
       expect(graph2.captions[captionId].display.y).toBe(newY);
+    });
+  });
+
+  describe("addSurroundingNodes", () => {
+
+    let nodeIds, nodes, graph2, centerNode, x, y, graph3;
+
+    beforeEach(() => {
+      nodeIds = range(10, 20);
+      nodes = nodeIds.map(n => {
+        return { id: n, display: { name: `Node ${n}` } };
+      });
+      graph2 = Graph.circleLayout(basicGraph, true);
+      centerNode = values(graph2.nodes)[0];
+      ({ x, y } = centerNode.display);
+      graph3 = Graph.addSurroundingNodes(graph2, centerNode.id, nodes);      
+    });
+
+    it("arranges new nodes equidistant from the center coordinates", () => {
+      let roundedDists = values(pick(graph3.nodes, nodeIds))
+        .map(n => Math.round(Math.sqrt(Math.pow(n.display.x - x, 2) + Math.pow(n.display.y - y, 2))));
+
+      expect(uniq(roundedDists)[0]).toBe(roundedDists[0]);
+      expect(uniq(roundedDists)[0]).toBe(roundedDists[roundedDists.length-1]);
+    });
+
+    it("sets defaults for new nodes", () => {
+      let scales = values(pick(graph3.nodes), nodeIds)
+        .map(n => n.display.scale);
+
+      expect(scales).toBeArrayOfNumbers;
     });
   });
 });

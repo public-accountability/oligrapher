@@ -22,6 +22,7 @@ export const DESELECT_ALL = 'DESELECT_ALL';
 export const ADD_NODE = 'ADD_NODE';
 export const ADD_EDGE = 'ADD_EDGE';
 export const ADD_CAPTION = 'ADD_CAPTION';
+export const ADD_SURROUNDING_NODES = 'ADD_SURROUNDING_NODES';
 export const DELETE_NODE = 'DELETE_NODE';
 export const DELETE_EDGE = 'DELETE_EDGE';
 export const DELETE_CAPTION = 'DELETE_CAPTION';
@@ -110,6 +111,10 @@ export function addEdge(graphId, edge) {
 
 export function addCaption(graphId, caption) {
   return { type: ADD_CAPTION, graphId, caption };
+}
+
+export function addSurroundingNodes(graphId, centerId, nodes) {
+  return { type: ADD_SURROUNDING_NODES, graphId, centerId, nodes };
 }
 
 export function deleteNode(graphId, nodeId) {
