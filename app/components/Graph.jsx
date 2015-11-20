@@ -259,4 +259,8 @@ export default class Graph extends BaseComponent {
   _isSmallDevice() {
     return window.innerWidth < 600;
   }
+
+  recenter() {
+    this.setState({ x: 0, y: 0 });
+  }
 }

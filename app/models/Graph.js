@@ -247,7 +247,7 @@ class Graph {
     let centerNode = graph.nodes[centerId];
     let x = centerNode.display.x ? centerNode.display.x : 0;
     let y = centerNode.display.y ? centerNode.display.y : 0;
-    let radius = Math.max(100, (nodes.length * 100) / (2 * Math.PI));
+    let radius = Math.max(150, (nodes.length * 150) / (2 * Math.PI));
     let newNodes = this.arrangeNodesInCircle(preparedNodes, x, y, radius);
     return merge({}, graph, { nodes: newNodes });
   }

@@ -15,7 +15,13 @@ import { pick } from 'lodash';
 class Root extends Component {
   constructor(props) {
     super(props);
-    this.state = { shiftKey: false, altKey: false, altShiftKey: false };
+    this.state = { 
+      shiftKey: false, 
+      altKey: false, 
+      altShiftKey: false, 
+      isEditor: this.props.isEditor,
+      isLocked: this.props.isLocked 
+    };
   }
 
   render() {
@@ -49,7 +55,8 @@ class Root extends Component {
       'delSelected': () => dispatch(deleteSelection(this.props.graph.id, this.props.selection))
     };
 
-    const { dispatch, isEditor, isLocked } = this.props;
+    const { dispatch } = this.props;
+    const { isEditor, isLocked } = this.state;
     const that = this;
 
     return this.props.graph ? (
@@ -120,6 +127,14 @@ class Root extends Component {
     let graph = GraphModel.setDefaults(data);
     this.props.dispatch(loadGraph(graph));
     this.props.dispatch(showGraph(graph.id));
+  }
+
+  toggleEditor(value) {
+    this.setState({ isEditor: value });
+  }
+
+  toggleLocked(value) {
+    this.setState({ isLocked: value });
   }
 }
 

@@ -38,6 +38,14 @@ export default class Oligrapher {
     return this;
   }
 
+  toggleEditor(value) {
+    this.root.getWrappedInstance().toggleEditor(value);
+  }
+
+  toggleLocked(value) {
+    this.root.getWrappedInstance().toggleLocked(value);
+  }
+
   import(graphData) {
     this.root.dispatchProps.dispatch(loadGraph(graphData));
     return this.root.getWrappedInstance().props.loadedId;
@@ -114,6 +122,7 @@ export default class Oligrapher {
 
   deleteAll() {
     this.root.dispatchProps.dispatch(deleteAll(this.currentGraphId()));
+    this.root.getWrappedInstance().graph.recenter();
   }
 
   getHighlights() {
