@@ -39,8 +39,8 @@
     "jest-cli": "^0.7.1",
     "react-addons-test-utils": "^0.14.2",
     "react-hot-loader": "^1.2.7",
-    "webpack": "^1.9.10",
-    "webpack-dev-server": "^1.8.2"
+    "webpack": "^1",
+    "webpack-dev-server": "^1"
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
