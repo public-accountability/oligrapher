@@ -2,7 +2,7 @@
   "name": "oligrapher2",
   "version": "0.1.0",
   "description": "network graph visualizer",
-  "main": "build/oligrapher.min.js"
+  "main": "build/oligrapher.min.js",
   "scripts": {
     "dev-build": "webpack-dev-server --devtool eval --progress --history-api-fallback --colors --hot --content-base build --port 8090 --config webpack.dev.config",
     "prod-build": "NODE_ENV=production webpack -p --display-modules --config webpack.prod.config.js",
