@@ -5,7 +5,7 @@ import { loadGraph, showGraph,
          moveNode, moveEdge, moveCaption,
          swapNodeHighlight, swapEdgeHighlight,
          swapNodeSelection, swapEdgeSelection, swapCaptionSelection,
-         deleteSelection } from '../actions';
+         deleteSelection, deselectAll } from '../actions';
 import Graph from './Graph';
 import GraphModel from '../models/Graph';
 import { HotKeys } from 'react-hotkeys';
@@ -131,6 +131,7 @@ class Root extends Component {
 
   toggleEditor(value) {
     this.setState({ isEditor: value });
+    this.props.dispatch(deselectAll(this.props.graph.id));
   }
 
   toggleLocked(value) {
