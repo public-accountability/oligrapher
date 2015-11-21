@@ -177,3 +177,6 @@ if (typeof exports !== 'undefined') {
 
   exports.Oligrapher = Oligrapher;
 }
+
+window.Oligrapher = Oligrapher;
+
