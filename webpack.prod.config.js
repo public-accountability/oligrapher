@@ -8,7 +8,7 @@ var config = {
   ],
   output: {
     path: 'build',
-    filename: '/oligrapher2.js'
+    filename: '/oligrapher.min.js'
   },
   plugins: [
     new webpack.DefinePlugin({ "process.env": { 'NODE_ENV': JSON.stringify('production') } })
