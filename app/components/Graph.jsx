@@ -129,8 +129,8 @@ export default class Graph extends BaseComponent {
   }
 
   _computeViewbox(graph, zoom = 1.2) {
-    let highlightedOnly = true;
-    let rect = this._computeRect(graph, highlightedOnly);
+    let onlyHighlighted = this.props.viewOnlyHighlighted;
+    let rect = this._computeRect(graph, onlyHighlighted);
     let w = rect.w / zoom;
     let h = rect.h / zoom;
     let x = rect.x + rect.w/2 - (w/2);
@@ -139,25 +139,34 @@ export default class Graph extends BaseComponent {
     return `${x} ${y} ${w} ${h}`;
   }
 
-  _computeRect(graph, highlightedOnly = true) {
-    const nodes = values(graph.nodes)
-      .filter(n => !highlightedOnly || n.display.status != "faded")
+  _computeRect(graph, onlyHighlighted = true) {
+    let nodes = values(graph.nodes)
+      .filter(n => !onlyHighlighted || n.display.status === "highlighted")
       .map(n => n.display);
+    nodes = nodes.length == 0 ? values(graph.nodes).map(n => n.display) : nodes;
     const items = nodes.concat(...values(graph.captions).map(c => c.display));
 
     if (items.length > 0) {
-      const padding = highlightedOnly ? 100 : 100;
+      const padding = onlyHighlighted ? 100 : 100;
       const xs = items.map(i => i.x);
       const ys = items.map(i => i.y);
       const textPadding = 100; // node text might extend below node
-      return { 
-        x: min(xs) - padding, 
-        y: min(ys) - padding, 
-        w: max(xs) - min(xs) + padding * 2, 
-        h: max(ys) - min(ys) + textPadding + padding
-      };
+      let x = min(xs) - padding;
+      let y = min(ys) - padding;
+      let w = max(xs) - min(xs) + padding * 2;
+      let h = max(ys) - min(ys) + textPadding + padding;
+      let factor = Math.max(400/w, 400/h);
+
+      if (factor > 1) {
+        x = x - (w * (factor - 1) / 2);
+        y = y - (h * (factor - 1) / 2);
+        w = w * factor;
+        h = h * factor;
+      }
+
+      return { x, y, w, h };
     } else {
-      return { x: 0, y: 0, w: 0, h: 0 };
+      return { x: -200, y: -200, w: 400, h: 400 };
     }
   }
 

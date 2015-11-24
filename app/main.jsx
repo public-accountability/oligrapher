@@ -11,7 +11,7 @@ import { loadGraph, showGraph, newGraph,
          deselectAll, deleteSelection,
          updateNode, updateEdge, updateCaption,
          pruneGraph, layoutCircle,
-         setHighlights } from './actions';
+         setHighlights, clearHighlights } from './actions';
 import Graph from './models/Graph';
 import { merge, difference } from 'lodash';
 
@@ -19,7 +19,7 @@ export default class Oligrapher {
   constructor(config = {}) {
     this.rootElement = config.root;
     this.store = createStore(reducers);
-    this.config = merge({}, { isEditor: false }, config);
+    this.config = merge({ isEditor: false, viewOnlyHighlighted: true }, config);
 
     this.providerInstance = render(
       <Provider store={this.store}>
@@ -30,6 +30,7 @@ export default class Oligrapher {
           onSelection={this.config.onSelection}
           onUpdate={this.config.onUpdate}
           height={this.config.root.offsetHeight}
+          viewOnlyHighlighted={this.config.viewOnlyHighlighted}
           ref={(c) => this.root = c} />
       </Provider>,
       this.rootElement
@@ -132,6 +133,11 @@ export default class Oligrapher {
   setHighlights(highlights, otherwiseFaded = false) {
     this.root.dispatchProps.dispatch(setHighlights(this.currentGraphId(), highlights, otherwiseFaded));
     return this.root.getWrappedInstance().props.graph;
+  }
+
+  clearHighlights() {
+    this.root.dispatchProps.dispatch(clearHighlights(this.currentGraphId()));
+    return this.root.getWrappedInstance().props.graph;    
   }
 
   getSelection() {

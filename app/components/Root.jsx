@@ -69,6 +69,7 @@ class Root extends Component {
             height={this.props.height}
             isEditor={isEditor}
             isLocked={isLocked}
+            viewOnlyHighlighted={this.props.viewOnlyHighlighted}
             selection={this.props.selection}
             resetZoom={() => dispatch(resetZoom())} 
             moveNode={(graphId, nodeId, x, y) => dispatch(moveNode(graphId, nodeId, x, y))} 

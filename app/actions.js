@@ -160,3 +160,8 @@ export function layoutCircle(graphId) {
 export function setHighlights(graphId, highlights, otherwiseFaded = false) {
   return { type: SET_HIGHLIGHTS, graphId, highlights, otherwiseFaded };
 }
+
+export function clearHighlights(graphId) {
+  let highlights = { nodeIds: [], edgeIds: [], captionIds: [] };
+  return { type: SET_HIGHLIGHTS, graphId, highlights };
+}
