@@ -15,6 +15,7 @@ export const MOVE_EDGE = 'MOVE_EDGE';
 export const MOVE_CAPTION = 'MOVE_CAPTION';
 export const SWAP_NODE_HIGHLIGHT = 'SWAP_NODE_HIGHLIGHT';
 export const SWAP_EDGE_HIGHLIGHT = 'SWAP_EDGE_HIGHLIGHT';
+export const SWAP_CAPTION_HIGHLIGHT = 'SWAP_CAPTION_HIGHLIGHT';
 export const SWAP_NODE_SELECTION = 'SWAP_NODE_SELECTION';
 export const SWAP_EDGE_SELECTION = 'SWAP_EDGE_SELECTION';
 export const SWAP_CAPTION_SELECTION = 'SWAP_CAPTION_SELECTION';
@@ -83,6 +84,10 @@ export function swapNodeHighlight(graphId, nodeId) {
 
 export function swapEdgeHighlight(graphId, edgeId) {
   return { type: SWAP_EDGE_HIGHLIGHT, graphId, edgeId };
+}
+
+export function swapCaptionHighlight(graphId, captionId) {
+  return { type: SWAP_CAPTION_HIGHLIGHT, graphId, captionId };
 }
 
 export function swapNodeSelection(nodeId, singleSelect = true) {

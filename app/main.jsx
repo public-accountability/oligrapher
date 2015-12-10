@@ -20,6 +20,7 @@ export default class Oligrapher {
     this.rootElement = config.root;
     this.store = createStore(reducers);
     this.config = merge({ isEditor: false, viewOnlyHighlighted: true }, config);
+    let height = this.config.graphHeight || this.config.root.offsetHeight;
 
     this.providerInstance = render(
       <Provider store={this.store}>
@@ -29,7 +30,7 @@ export default class Oligrapher {
           isLocked={this.config.isLocked}
           onSelection={this.config.onSelection}
           onUpdate={this.config.onUpdate}
-          height={this.config.root.offsetHeight}
+          height={height}
           viewOnlyHighlighted={this.config.viewOnlyHighlighted}
           ref={(c) => this.root = c} />
       </Provider>,
@@ -173,6 +174,10 @@ export default class Oligrapher {
 
   circleLayout() {
     this.root.dispatchProps.dispatch(layoutCircle(this.currentGraphId()));
+  }
+
+  setGraphHeight(height) {
+    this.root.getWrappedInstance().graph.setHeight(height);
   }
 };
 

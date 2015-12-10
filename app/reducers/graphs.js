@@ -1,6 +1,6 @@
 import { LOAD_GRAPH, SHOW_GRAPH, NEW_GRAPH,
          MOVE_NODE, MOVE_EDGE, MOVE_CAPTION, 
-         SWAP_NODE_HIGHLIGHT, SWAP_EDGE_HIGHLIGHT,
+         SWAP_NODE_HIGHLIGHT, SWAP_EDGE_HIGHLIGHT, SWAP_CAPTION_HIGHLIGHT,
          ADD_NODE, ADD_EDGE, ADD_CAPTION, ADD_SURROUNDING_NODES,
          DELETE_NODE, DELETE_EDGE, DELETE_CAPTION, DELETE_SELECTION, DELETE_ALL,
          UPDATE_NODE, UPDATE_EDGE, UPDATE_CAPTION,
@@ -43,6 +43,11 @@ export default function graphs(state = {}, action) {
   case SWAP_EDGE_HIGHLIGHT:
     return merge({}, state, { 
       [action.graphId]: Graph.swapEdgeHighlight(state[action.graphId], action.edgeId, action.singleSelect) 
+    });
+
+  case SWAP_CAPTION_HIGHLIGHT:
+    return merge({}, state, { 
+      [action.graphId]: Graph.swapCaptionHighlight(state[action.graphId], action.captionId, action.singleSelect) 
     });
 
   case ADD_NODE:

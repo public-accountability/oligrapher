@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { loadGraph, showGraph, 
          zoomIn, zoomOut, resetZoom, 
          moveNode, moveEdge, moveCaption,
-         swapNodeHighlight, swapEdgeHighlight,
+         swapNodeHighlight, swapEdgeHighlight, swapCaptionHighlight,
          swapNodeSelection, swapEdgeSelection, swapCaptionSelection,
          deleteSelection, deselectAll } from '../actions';
 import Graph from './Graph';
@@ -83,12 +83,12 @@ class Root extends Component {
             clickEdge={(graphId, edgeId) => { 
               isEditor ? 
               dispatch(swapEdgeSelection(edgeId, !that.state.shiftKey)) : 
-              (isLocked ? null: dispatch(swapEdgeHighlight(graphId, edgeId)))
+              (isLocked ? null : dispatch(swapEdgeHighlight(graphId, edgeId)))
             }}
             clickCaption={(graphId, captionId) => { 
               isEditor ? 
               dispatch(swapCaptionSelection(captionId, !that.state.shiftKey)) : 
-              null 
+              (isLocked ? null : dispatch(swapCaptionHighlight(graphId, captionId)))
             }} />
         </HotKeys>
       </div>

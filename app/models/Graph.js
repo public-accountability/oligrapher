@@ -58,7 +58,14 @@ class Graph {
       return result;
     }, {});
 
-    return merge({}, graph, { captions });
+    // set defaults
+    let newGraph = merge({}, graph, { 
+      captions: values(graph.captions).reduce((result, caption) => {
+        return merge({}, result, { [caption.id]: Caption.setDefaults(caption) });
+      }, {})
+    });
+    
+    return merge({}, newGraph, { captions });
   }
 
   static prepareEdges(graph) {
@@ -199,6 +206,13 @@ class Graph {
     let status = (oldStatus == "highlighted" ? "normal" : "highlighted");
     graph = singleSelect ? this._deselectAll(graph) : graph;
     return this.updateEdge(graph, edgeId, { display: { status } });
+  }
+
+  static swapCaptionHighlight(graph, captionId, singleSelect = false) {
+    let oldStatus = graph.captions[captionId].display.status;
+    let status = (oldStatus == "highlighted" ? "normal" : "highlighted");
+    graph = singleSelect ? this._deselectAll(graph) : graph;
+    return this.updateCaption(graph, captionId, { display: { status } });
   }
 
   static _deselectAll(graph) {

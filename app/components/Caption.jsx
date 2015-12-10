@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import ReactDOM from 'react-dom';
 import BaseComponent from './BaseComponent';
 import { DraggableCore } from 'react-draggable';
 import ds from '../CaptionDisplaySettings';
@@ -12,8 +13,9 @@ export default class Caption extends BaseComponent {
   }
 
   render() {
-    let { x, y, text, scale } = this.state;
+    let { x, y, text, scale, status } = this.state;
     let transform = `translate(${x}, ${y})`;
+    let highlighted = status == "highlighted";
 
     return (
       <DraggableCore
@@ -23,11 +25,24 @@ export default class Caption extends BaseComponent {
         onDrag={this._handleDrag}
         onStop={this._handleDragStop}>
         <g className="caption" transform={transform} onClick={this._handleClick}>
+          { highlighted ? this._highlightRect() : null }
           { this.props.selected ? this._selectionRect() : null }
           <text className="handle" fontSize={scale * 15}>{text}</text>
         </g>
       </DraggableCore>
     );
+  }
+
+  componentDidMount() {
+    this._setRectWidths();
+  }
+
+  componentDidUpdate(prevProps) {
+    let prevDisplay = prevProps.caption.display;
+    let display = this.props.caption.display;
+    if (prevDisplay.text !== display.text || prevDisplay.status !== display.status) {
+      this._setRectWidths();    
+    }
   }
 
   componentWillReceiveProps(props) {
@@ -38,6 +53,23 @@ export default class Caption extends BaseComponent {
   shouldComponentUpdate(nextProps, nextState) {
     return nextProps.selected !== this.props.selected || 
            JSON.stringify(nextState) !== JSON.stringify(this.state);
+  }
+
+  _setRectWidths() {
+    let element = ReactDOM.findDOMNode(this);
+    let text = element.querySelector(".handle");
+    let highlightRect = this.refs.highlightRect;
+    let selectRect = this.refs.highlightRect;
+
+    if (highlightRect) {
+      highlightRect.setAttribute("width", text.offsetWidth + 10);
+      highlightRect.setAttribute("x", -5);      
+    }
+
+    if (selectRect) {
+      selectRect.setAttribute("width", text.offsetWidth + 10);
+      selectRect.setAttribute("x", -5); 
+    }
   }
 
   _handleDragStart(e, ui) {
@@ -79,8 +111,10 @@ export default class Caption extends BaseComponent {
   _selectionRect() {
     let width = this.state.text.length * 8;
     let height = ds.lineHeight;
+
     return (
       <rect
+        ref="selectRect"
         fill={ds.selectFillColor}
         opacity={ds.selectOpacity}
         rx={ds.cornerRadius}
@@ -89,6 +123,22 @@ export default class Caption extends BaseComponent {
         width={width}
         height={height} />
     );
+  }
 
+  _highlightRect() {
+    let width = this.state.text.length * 8;
+    let height = ds.lineHeight;
+
+    return (
+      <rect
+        ref="highlightRect"
+        fill={ds.highlightFillColor}
+        opacity={ds.highlightOpacity}
+        rx={ds.cornerRadius}
+        ry={ds.cornerRadius}
+        y={-height + 4}
+        width={width}
+        height={height} />
+    );
   }
 }

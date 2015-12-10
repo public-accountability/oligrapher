@@ -16,14 +16,14 @@ export default class Graph extends BaseComponent {
     this.edges = {};
     this.mounted = false;
     let viewBox = this._computeViewbox(props.graph, props.zoom);
-    this.state = { x: 0, y: 0, viewBox };
+    this.state = { x: 0, y: 0, viewBox, height: props.height };
   }
 
   render() {
-    const { x, y, prevGraph, viewBox } = this.state;
+    const { x, y, prevGraph, viewBox, height } = this.state;
 
     return (
-      <svg id="svg" version="1.1" xmlns="http://www.w3.org/2000/svg" className="Graph" width="100%" height={this.props.height} viewBox={viewBox} preserveAspectRatio="xMidYMid">
+      <svg id="svg" version="1.1" xmlns="http://www.w3.org/2000/svg" className="Graph" width="100%" height={height} viewBox={viewBox} preserveAspectRatio="xMidYMid">
         <DraggableCore
           handle="#zoom-handle"
           moveOnStartChange={false}
@@ -143,8 +143,17 @@ export default class Graph extends BaseComponent {
     let nodes = values(graph.nodes)
       .filter(n => !onlyHighlighted || n.display.status === "highlighted")
       .map(n => n.display);
-    nodes = nodes.length == 0 ? values(graph.nodes).map(n => n.display) : nodes;
-    const items = nodes.concat(...values(graph.captions).map(c => c.display));
+    let captions = values(graph.captions)
+      .filter(c => !onlyHighlighted || c.display.status === "highlighted")
+      .map(c => c.display);
+    let items = nodes.concat(captions);
+
+    // show all nodes and captions if none are highlighted
+    if (items.length == 0) {
+      nodes = values(graph.nodes).map(n => n.display);
+      captions = values(graph.captions).map(c => c.display);
+      items = nodes.concat(captions);
+    }
 
     if (items.length > 0) {
       const padding = onlyHighlighted ? 100 : 100;
@@ -155,7 +164,7 @@ export default class Graph extends BaseComponent {
       let y = min(ys) - padding;
       let w = max(xs) - min(xs) + padding * 2;
       let h = max(ys) - min(ys) + textPadding + padding;
-      let factor = Math.max(400/w, 400/h);
+      let factor = Math.min(400/w, 400/h);
 
       if (factor > 1) {
         x = x - (w * (factor - 1) / 2);
@@ -271,5 +280,9 @@ export default class Graph extends BaseComponent {
 
   recenter() {
     this.setState({ x: 0, y: 0 });
+  }
+
+  setHeight(height) {
+    this.setState({ height });
   }
 }
