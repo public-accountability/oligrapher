@@ -59,19 +59,22 @@ export default class Caption extends BaseComponent {
     let highlightRect = this.refs.highlightRect;
     let selectRect = this.refs.selectRect;
     let heightAdj = -6 + this.props.caption.display.scale * 3;
+    let textWidth = text.getComputedTextLength();
+    let textRect = text.getBoundingClientRect()
+    let textHeight = textRect.bottom - textRect.top;
 
     if (highlightRect) {
-      highlightRect.setAttribute("width", text.offsetWidth + 10);
+      highlightRect.setAttribute("width", textWidth + 10);
       highlightRect.setAttribute("x", -5);   
-      highlightRect.setAttribute("height", text.offsetHeight + 10);
-      highlightRect.setAttribute("y", -text.offsetHeight + heightAdj);
+      highlightRect.setAttribute("height", textHeight + 10);
+      highlightRect.setAttribute("y", -textHeight + heightAdj);
     }
 
     if (selectRect) {
-      selectRect.setAttribute("width", text.offsetWidth + 10);
+      selectRect.setAttribute("width", textWidth + 10);
       selectRect.setAttribute("x", -5); 
-      selectRect.setAttribute("height", text.offsetHeight + 10);
-      selectRect.setAttribute("y", - text.offsetHeight + heightAdj);
+      selectRect.setAttribute("height", textHeight + 10);
+      selectRect.setAttribute("y", - textHeight + heightAdj);
     }
   }
 

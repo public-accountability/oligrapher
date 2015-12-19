@@ -75,7 +75,8 @@ export default class NodeLabel extends BaseComponent {
     let rects = element.querySelectorAll(".nodeLabelRect");
 
     for (var i = 0; i < rects.length; i++) {
-      let width = texts[i].offsetWidth + 10;
+      let textWidth = texts[i].getComputedTextLength();
+      let width = textWidth + 10;
       rects[i].setAttribute("width", width);
       rects[i].setAttribute("x", -width/2);
     }
