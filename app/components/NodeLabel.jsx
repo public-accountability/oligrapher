@@ -16,7 +16,7 @@ export default class NodeLabel extends BaseComponent {
       <g dangerouslySetInnerHTML={ { __html: (`<a class="nodeLabel" ${linkAttributes}><text text-anchor="middle">` + 
           textLines.map((line, i) => {
              let dy = (i == 0 ? textOffsetY : ds.lineHeight);
-             return `<tspan class="nodeLabelText" x="0" dy="${dy}" fill="${ds.textColor[status]}">${line}</tspan>`;
+             return `<tspan class="nodeLabelText" x="0" dy="${dy}" fill="${ds.textColor[status]}" opacity="${ds.textOpacity[status]}">${line}</tspan>`;
            }).join("") + `</text></a>`)
       } } /> 
       : 
@@ -24,7 +24,12 @@ export default class NodeLabel extends BaseComponent {
         { textLines.map(
            (line, i) => {
              let dy = (i == 0 ? textOffsetY : ds.lineHeight);
-             return <tspan key={i} className="nodeLabelText" x="0" dy={dy} fill={ds.textColor[status]}>{line}</tspan>;
+             return <tspan 
+                      key={i} 
+                      className="nodeLabelText" 
+                      x="0" dy={dy} 
+                      fill={ds.textColor[status]} 
+                      opacity={ds.textOpacity[status]}>{line}</tspan>;
            }) }
       </text></a>);
 

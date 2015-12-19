@@ -72,7 +72,7 @@ export default class NodeCircle extends BaseComponent {
         className="handle" 
         r={r}
         fill={ds.circleColor[status]}
-        opacity="1">
+        opacity={ds.circleOpacity[status]}>
       </circle>;
   }
 }

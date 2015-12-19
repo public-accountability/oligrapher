@@ -2,7 +2,8 @@ import Node from './Node';
 import Edge from './Edge';
 import Caption from './Caption';
 import Helpers from './Helpers';
-import { merge, assign, values, intersection, flatten, cloneDeep, omit, difference, compact, size, includes } from 'lodash';
+import { merge, assign, values, intersection, flatten, cloneDeep, omit, difference, compact, 
+         size, includes, isNumber } from 'lodash';
 import Springy from 'springy';
 
 class Graph {
@@ -64,7 +65,7 @@ class Graph {
         return merge({}, result, { [caption.id]: Caption.setDefaults(caption) });
       }, {})
     });
-    
+
     return merge({}, newGraph, { captions });
   }
 
@@ -97,7 +98,7 @@ class Graph {
 
   static arrangeNodesInCircle(nodes, x, y, radius) {
     return values(nodes).reduce((result, node, i) => {
-      let angle = (2 * Math.PI) * (i / nodes.length);
+      let angle = (2 * Math.PI) * (i / values(nodes).length);
       return merge({}, result, { 
         [node.id]: merge({}, node, { display: { 
           x: x + Math.cos(angle) * radius, 
@@ -109,7 +110,7 @@ class Graph {
 
   static forceLayout(graph, steps = 500) {
     // only use force layout if there are unpositioned nodes
-    if (!values(graph.nodes).find(n => !(n.display.x && n.display.y))) {
+    if (!values(graph.nodes).find(n => !(isNumber(n.display.x) && isNumber(n.display.y)))) {
       return graph;
     }
 
@@ -232,17 +233,7 @@ class Graph {
   // CONTENT CREATION API
 
   static addNode(graph, node) {
-    if (!Node.hasPosition(node)) {
-      // position node randomly at perimeter of graph
-      let r = Graph.calculateMaxRadiusFromCenter(graph) + 80;
-      let angle = (Math.random() * 2 * Math.PI) - Math.PI;
-      let x = r * Math.cos(angle);
-      let y = r * Math.sin(angle);
-      node = merge({}, node, { display: { x, y } });
-    }
-
-    node = Node.setDefaults(node);
-
+    node = merge({}, Node.setDefaults(node), { display: { x: 0, y: 0 } });
     return merge({}, graph, { nodes: { [node.id]: node } });
   }
 
@@ -384,7 +375,14 @@ class Graph {
         return result;
       }, {});
 
-    return { nodes, edges };
+    let captions = values(graph.captions)
+      .filter(caption => caption.display.status == "highlighted")
+      .reduce((result, caption) => {
+        result[caption.id] = caption;
+        return result;
+      }, {});
+
+    return { nodes, edges, captions };
   }
 
   static edgesConnectedToNode(graph, nodeId) {

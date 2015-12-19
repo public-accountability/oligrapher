@@ -27,7 +27,7 @@ export default class Caption extends BaseComponent {
         <g className="caption" transform={transform} onClick={this._handleClick}>
           { highlighted ? this._highlightRect() : null }
           { this.props.selected ? this._selectionRect() : null }
-          <text className="handle" fontSize={scale * 15}>{text}</text>
+          <text className="handle" fontSize={scale * 15} opacity={ds.textOpacity[status]}>{text}</text>
         </g>
       </DraggableCore>
     );
@@ -40,9 +40,7 @@ export default class Caption extends BaseComponent {
   componentDidUpdate(prevProps) {
     let prevDisplay = prevProps.caption.display;
     let display = this.props.caption.display;
-    if (prevDisplay.text !== display.text || prevDisplay.status !== display.status) {
-      this._setRectWidths();    
-    }
+    this._setRectWidths();    
   }
 
   componentWillReceiveProps(props) {
@@ -59,16 +57,21 @@ export default class Caption extends BaseComponent {
     let element = ReactDOM.findDOMNode(this);
     let text = element.querySelector(".handle");
     let highlightRect = this.refs.highlightRect;
-    let selectRect = this.refs.highlightRect;
+    let selectRect = this.refs.selectRect;
+    let heightAdj = -6 + this.props.caption.display.scale * 3;
 
     if (highlightRect) {
       highlightRect.setAttribute("width", text.offsetWidth + 10);
-      highlightRect.setAttribute("x", -5);      
+      highlightRect.setAttribute("x", -5);   
+      highlightRect.setAttribute("height", text.offsetHeight + 10);
+      highlightRect.setAttribute("y", -text.offsetHeight + heightAdj);
     }
 
     if (selectRect) {
       selectRect.setAttribute("width", text.offsetWidth + 10);
       selectRect.setAttribute("x", -5); 
+      selectRect.setAttribute("height", text.offsetHeight + 10);
+      selectRect.setAttribute("y", - text.offsetHeight + heightAdj);
     }
   }
 

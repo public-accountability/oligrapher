@@ -19,8 +19,8 @@ class Root extends Component {
       shiftKey: false, 
       altKey: false, 
       altShiftKey: false, 
-      isEditor: this.props.isEditor,
-      isLocked: this.props.isLocked 
+      isEditor: props.isEditor,
+      isLocked: props.isLocked 
     };
   }
 

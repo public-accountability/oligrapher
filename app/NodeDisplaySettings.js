@@ -8,12 +8,17 @@ module.exports = {
   circleColor: {
     normal: "#ccc",
     highlighted: "#ccc",
-    faded: "#eee"
+    faded: "#ccc"
   },
   textColor: {
     normal: "#000",
     highlighted: "#000",
-    faded: "#ddd"
+    faded: "#000"
+  },
+  textOpacity: {
+    normal: 1,
+    highlighted: 1,
+    faded: 0.2
   },
   bgColor: {
     normal: "#fff",
@@ -28,6 +33,11 @@ module.exports = {
   },
   imageOpacity: {
     normal: 1, 
+    highlighted: 1,
+    faded: 0.2
+  },
+  circleOpacity: {
+    normal: 1,
     highlighted: 1,
     faded: 0.2
   },
