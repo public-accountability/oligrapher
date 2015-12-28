@@ -41,7 +41,7 @@ Oligrapher is easy to embed in a web page. All you have to do is include the .js
       var div = document.getElementById('#graph');
       var data = getDataFromSomewhere();
       var config = { data: data };
-      var oli = Oligrapher.run(div, config);
+      var oli = new Oligrapher(div, config);
     </script>
   </body>
 </html>
@@ -107,8 +107,8 @@ The ```id``` of the graph itself is optional, Oligrapher will generate it if not
 API
 ---
 
-### ```run(config)```
-Starts Oligrapher within a specified ```root``` DOM element and accepts other configuration options. Returns an Oligrapher instance.
+### ```constructor(config)```
+Returns an Oligrapher instance within a specified ```root``` DOM element and accepts other configuration options.
 ```javascript
 var div = document.getElementById('#graph');
 var data = getDataFromSomeWhere();
@@ -126,13 +126,13 @@ var config = {
   }
 }
 
-var oli = Oligrapher.run(config);
+var oli = new Oligrapher(config);
 ```
 
 ### ```import(data)```
 Imports graph ```data``` into Oligrapher and displays it, returning the imported graph's ```id```.
 ```javascript
-var oli = Oligrapher.run(config);
+var oli = new Oligrapher(config);
 var id1 = oli.import(data1);
 var id2 = oli.import(data2);
 ```
@@ -140,7 +140,7 @@ var id2 = oli.import(data2);
 ### ```export()```
 Returns a snapshot of the currently displayed graph data, including display attributes. This data can be ```import```ed later to display the identical graph.
 ```javascript
-var oli = Oligrapher.run(config);
+var oli = new Oligrapher(config);
 var data = getGraphFromDatabase();
 oli.import(data);
 // ... user edits graph ...
@@ -155,14 +155,14 @@ saveGraphToDatabase(data);
 ### ```new```
 Creates and displays a blank graph.
 ```javascript
-var oli = Oligrapher.run(config);
+var oli = new Oligrapher(config);
 oli.export();   // { nodeIds: [], edgeIds: [], captionIds: [] }
 ```
 
 ### ```show(id)```
 Displays the previously-imported graph with the given ```id```.
 ```javascript
-var oli = Oligrapher.run(config);
+var oli = new Oligrapher(config);
 var id1 = oli.import(data1);
 var id2 = oli.import(data2);
 oli.show(id1);
@@ -174,7 +174,7 @@ Zooms in by 20%. This can be triggered with the keyboard shortcut ```ctrl+equals
 ### ```zoomOut()```
 Zooms out by 20%. This can be triggered with the keyboard shortcut ```ctrl+minus```.
 ```javascript
-var oli = Oligrapher.run(config);
+var oli = new Oligrapher(config);
 oli.import(data);
 oli.zoomIn();
 oli.zoomOut();   // back to normal
@@ -186,7 +186,7 @@ Resets the zoom to the default level (1.00).
 ### ```currentGraphId()```
 Returns id of currently displayed graph.
 ```javascript
-var oli = Oligrapher.run(config);
+var oli = new Oligrapher(config);
 var id1 = oli.import(data1);
 var id2 = oli.import(data2);
 oli.show(id1);
@@ -196,21 +196,21 @@ oli.getCurrentId() == id1;   // true
 ### ```addNode(node)```
 Adds given node to graph. Node must conform to data schema described above. Returns ```id``` of new node.
 ```javascript
-var oli = Oligrapher.run({ root: element, data: data });
+var oli = new Oligrapher({ root: element, data: data });
 var nodeId = oli.addNode({ display: { name: "Kofi Annan" } });
 ```
 
 ### ```addEdge(edge)```
 Adds given edge to graph. Edge must conform to data schema described above. Returns ```id``` of new edge.
 ```javascript
-var oli = Oligrapher.run({ root: element, data: data });
+var oli = new Oligrapher({ root: element, data: data });
 var edgeId = oli.addEdge({ display: { label: "sister" } });
 ```
 
 ### ```addCaption(caption)```
 Adds given caption to graph. Caption must conform to data schema described above. Returns ```id``` of new caption.
 ```javascript
-var oli = Oligrapher.run({ root: element, data: data });
+var oli = new Oligrapher({ root: element, data: data });
 var captionId = oli.addCaption({ display: { text: "This is the most interesting thin you'll read today" } });
 ```
 
@@ -226,7 +226,7 @@ Deletes the caption with the given ```id``` from the current graph.
 ### ```deleteAll()```
 Deletes all nodes, edges, and captions from the graph.
 ```javascript
-oli = Oligrapher.run(config);
+oli = new Oligrapher(config);
 oli.import(data);
 oli.deleteAll();
 oli.export();   // { nodeIds: [], edgeIds: [], captionIds: [] }
