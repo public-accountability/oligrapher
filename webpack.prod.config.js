@@ -8,7 +8,9 @@ var config = {
   ],
   output: {
     path: 'build',
-    filename: '/oligrapher.min.js'
+    filename: '/oligrapher.min.js',
+    library: 'Oligrapher',
+    libraryTarget: 'umd'
   },
   plugins: [
     new webpack.DefinePlugin({ "process.env": { 'NODE_ENV': JSON.stringify('production') } })
@@ -17,7 +19,9 @@ var config = {
     loaders: [
       { test: /\.jsx?$/,
         exclude: [node_modules],
-        loader: 'babel' }
+        loader: 'babel' },
+      { test: /\.css$/, 
+        loader: "style-loader!css-loader" }
     ]
   },
   resolve: {

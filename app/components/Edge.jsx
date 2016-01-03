@@ -55,13 +55,13 @@ export default class Edge extends BaseComponent {
             fill="none" 
             markerStart={sp.markerStart} 
             markerEnd={sp.markerEnd}></path>
-          <text 
+          { this.state.label ? <text 
             className={e.display.url ? "link" : null}
             dy={sp.dy} 
             fill={sp.textColor} 
             textAnchor="middle" 
             onClick={this._handleTextClick}
-            dangerouslySetInnerHTML={sp.textPath}></text>
+            dangerouslySetInnerHTML={sp.textPath}></text> : null }
           <path 
             className="handle edge-handle edgeSelect" 
             d={sp.curve} 

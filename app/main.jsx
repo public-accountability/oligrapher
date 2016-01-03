@@ -14,8 +14,9 @@ import { loadGraph, showGraph, newGraph,
          setHighlights, clearHighlights } from './actions';
 import Graph from './models/Graph';
 import { merge, difference } from 'lodash';
+require ('./styles/oligrapher.css');
 
-export default class Oligrapher {
+class Oligrapher {
   constructor(config = {}) {
     this.rootElement = config.root;
     this.store = createStore(reducers);
@@ -181,13 +182,4 @@ export default class Oligrapher {
   }
 };
 
-if (typeof exports !== 'undefined') {
-  if (typeof module !== 'undefined' && module.exports) {
-    exports = module.exports = Oligrapher;
-  }
-
-  exports.Oligrapher = Oligrapher;
-}
-
-window.Oligrapher = Oligrapher;
-
+module.exports = Oligrapher;

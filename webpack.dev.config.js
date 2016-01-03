@@ -12,7 +12,9 @@ var config = {
   output: {
     path: path.resolve(__dirname, 'build'),
     filename: 'oligrapher.min.js',
-    publicPath: 'http://localhost:8090/build'
+    publicPath: 'http://localhost:8090/build',
+    library: 'Oligrapher',
+    libraryTarget: 'umd'
   },
   plugins: [
     new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js'),
@@ -22,7 +24,9 @@ var config = {
     loaders: [
       { test: /\.jsx?$/,
         exclude: [node_modules],
-        loaders: ['react-hot', 'babel'] }
+        loaders: ['react-hot', 'babel'] },
+      { test: /\.css$/, 
+        loader: "style-loader!css-loader" }
     ],
     noParse:[]
   },
