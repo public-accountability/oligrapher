@@ -55,13 +55,6 @@ export default class Edge extends BaseComponent {
             fill="none" 
             markerStart={sp.markerStart} 
             markerEnd={sp.markerEnd}></path>
-          { this.state.label ? <text 
-            className={e.display.url ? "link" : null}
-            dy={sp.dy} 
-            fill={sp.textColor} 
-            textAnchor="middle" 
-            onClick={this._handleTextClick}
-            dangerouslySetInnerHTML={sp.textPath}></text> : null }
           <path 
             className="handle edge-handle edgeSelect" 
             d={sp.curve} 
@@ -70,6 +63,13 @@ export default class Edge extends BaseComponent {
             strokeWidth={width + 20} 
             fill="none"
             onClick={this._handleClick}></path>
+          { this.state.label ? <text 
+            className={classNames({ link: e.display.url, handle: true })}
+            dy={-5 - width/2} 
+            fill={sp.textColor} 
+            textAnchor="middle" 
+            onClick={this._handleTextClick}
+            dangerouslySetInnerHTML={sp.textPath}></text> : null }
         </g>
       </DraggableCore>
     );

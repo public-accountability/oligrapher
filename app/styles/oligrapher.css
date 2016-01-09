@@ -18,7 +18,7 @@ a.nodeLabel text tspan {
   font-family: Helvetica, Arial, sans-serif;  
 }
 
-#oligrapherContainer:hover .edge text {
+#oligrapherContainer:hover .edge:not(.dragging) text {
   display: none;
 }
 
