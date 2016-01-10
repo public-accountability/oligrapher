@@ -21,19 +21,13 @@ class Oligrapher {
   constructor(config = {}) {
     this.rootElement = config.root;
     this.store = createStore(reducers);
-    this.config = merge({ isEditor: false, viewOnlyHighlighted: true }, config);
-    let height = this.config.graphHeight || this.config.root.offsetHeight;
+    config = merge({ isEditor: false, viewOnlyHighlighted: true }, config);
+    config.height = config.graphHeight || config.root.offsetHeight;
 
     this.providerInstance = render(
       <Provider store={this.store}>
         <Root 
-          data={this.config.data} 
-          isEditor={this.config.isEditor}
-          isLocked={this.config.isLocked}
-          onSelection={this.config.onSelection}
-          onUpdate={this.config.onUpdate}
-          height={height}
-          viewOnlyHighlighted={this.config.viewOnlyHighlighted}
+          {...config}
           ref={(c) => this.root = c} />
       </Provider>,
       this.rootElement

@@ -26,7 +26,8 @@ var config = {
         exclude: [node_modules],
         loaders: ['react-hot', 'babel'] },
       { test: /\.css$/, 
-        loader: "style-loader!css-loader" }
+        loader: "style-loader!css-loader" },
+      { test: /\.(woff2?|ttf|eot|svg)$/, loader: 'url?limit=30000' }
     ],
     noParse:[]
   },

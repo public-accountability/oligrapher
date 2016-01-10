@@ -5,12 +5,19 @@ import { loadGraph, showGraph,
          moveNode, moveEdge, moveCaption,
          swapNodeHighlight, swapEdgeHighlight, swapCaptionHighlight,
          swapNodeSelection, swapEdgeSelection, swapCaptionSelection,
-         deleteSelection, deselectAll } from '../actions';
+         deleteSelection, deselectAll,
+         pruneGraph, layoutCircle, 
+         addNode, addEdge, addCaption,
+         updateNode, updateEdge, updateCaption,
+         deleteAll, addSurroundingNodes,
+         toggleEditTools, toggleAddForm,
+         setNodeResults } from '../actions';
 import Graph from './Graph';
 import GraphModel from '../models/Graph';
 import { HotKeys } from 'react-hotkeys';
 import ReactDOM from 'react-dom';
 import pick from 'lodash/object/pick';
+import Editor from './Editor';
 
 class Root extends Component {
   constructor(props) {
@@ -55,9 +62,29 @@ class Root extends Component {
       'delSelected': () => dispatch(deleteSelection(this.props.graph.id, this.props.selection))
     };
 
-    const { dispatch } = this.props;
+    const { dispatch, graph } = this.props;
     const { isEditor, isLocked } = this.state;
     const that = this;
+
+    let graphApi = {
+      getGraph: () => this.props.graph,
+      zoomIn: () => dispatch(zoomIn()),
+      zoomOut: () => dispatch(zoomOut()),
+      resetZoom: () => dispatch(resetZoom()),
+      prune: () => dispatch(pruneGraph(graph.id)),
+      circleLayout: () => dispatch(layoutCircle(graph.id)),
+      addNode: (node) => dispatch(addNode(graph.id, node)),
+      addEdge: (edge) => dispatch(addEdge(graph.id, edge)),
+      addCaption: (caption) => dispatch(addCaption(graph.id, caption)),
+      updateNode: (nodeId, data) => dispatch(updateNode(graph.id, nodeId, data)),
+      updateEdge: (edgeId, data) => dispatch(updateEdge(graph.id, edgeId, data)),
+      updateCaption: (captionId, data) => dispatch(updateCaption(graph.id, captionId, data)),
+      deselectAll: () => dispatch(deselectAll(graph.id)),
+      deleteAll: () => dispatch(deleteAll(graph.id)),
+      addSurroundingNodes: (centerId, nodes) => dispatch(addSurroundingNodes(graph.id, centerId, nodes))
+    };
+
+    let _toggleEditTools = (value) => { dispatch(toggleEditTools(value)) };
 
     return this.props.graph ? (
       <div id="oligrapherContainer" style={{ height: '100%' }}>
@@ -90,6 +117,20 @@ class Root extends Component {
               dispatch(swapCaptionSelection(captionId, !that.state.shiftKey)) : 
               (isLocked ? null : dispatch(swapCaptionHighlight(graphId, captionId)))
             }} />
+          <Editor 
+            graph={this.props.graph}
+            graphApi={graphApi}
+            isEditor={isEditor} 
+            showEditTools={this.props.showEditTools} 
+            showEditButton={true} 
+            hideHelp={true} 
+            dataSource={this.props.dataSource} 
+            selection={this.props.selection} 
+            nodeResults={this.props.nodeResults}
+            setNodeResults={(nodes) => dispatch(setNodeResults(nodes))}
+            addForm={this.props.addForm}
+            toggleEditTools={_toggleEditTools}
+            toggleAddForm={(form) => dispatch(toggleAddForm(form))} />
         </HotKeys>
       </div>
     ) : (<div></div>);
@@ -145,7 +186,10 @@ function select(state) {
     graph: state.graphs[state.position.currentId],
     loadedId: state.position.loadedId,
     selection: state.selection,
-    zoom: state.zoom
+    zoom: state.zoom,
+    showEditTools: state.editTools.visible,
+    addForm: state.editTools.addForm,
+    nodeResults: state.editTools.nodeResults
   };
 }
 

@@ -20,7 +20,8 @@ var config = {
         exclude: [node_modules],
         loader: 'babel' },
       { test: /\.css$/, 
-        loader: "style-loader!css-loader" }
+        loader: "style-loader!css-loader" },
+      { test: /\.(woff2?|ttf|eot|svg)$/, loader: 'url?limit=30000' }
     ]
   },
   resolve: {

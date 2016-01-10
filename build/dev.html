@@ -7,6 +7,7 @@
     <script src="http://localhost:8090/build/vendors.js"></script>
     <script src="http://localhost:8090/build/oligrapher.min.js"></script>
     <script src="LsDataConverter.js"></script>
+    <script src="LsDataSource.js"></script>
     <script src="PopoloDataConverter.js"></script>
     <style>
       body {
@@ -27,9 +28,10 @@
       var oli = new Oligrapher({ 
         root: elem,
         data: data, 
-        isEditor: false,
+        isEditor: true,
         isLocked: false,
-        viewOnlyHighlighted: false
+        viewOnlyHighlighted: false,
+        dataSource: LsDataSource
       });
     </script>
   </body>

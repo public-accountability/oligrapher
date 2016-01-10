@@ -35,6 +35,9 @@ export const PRUNE_GRAPH = 'PRUNE_GRAPH';
 export const LAYOUT_CIRCLE = 'LAYOUT_CIRCLE';
 export const DELETE_ALL = 'DELETE_ALL';
 export const SET_HIGHLIGHTS = 'SET_HIGHLIGHTS';
+export const TOGGLE_EDIT_TOOLS = 'TOGGLE_EDIT_TOOLS';
+export const TOGGLE_ADD_FORM = 'TOGGLE_ADD_FORM';
+export const SET_NODE_RESULTS = 'SET_NODE_RESULTS';
 
 /*
  * action creators
@@ -169,4 +172,16 @@ export function setHighlights(graphId, highlights, otherwiseFaded = false) {
 export function clearHighlights(graphId) {
   let highlights = { nodeIds: [], edgeIds: [], captionIds: [] };
   return { type: SET_HIGHLIGHTS, graphId, highlights };
+}
+
+export function toggleEditTools(value) {
+  return { type: TOGGLE_EDIT_TOOLS, value };
+}
+
+export function toggleAddForm(form) {
+  return { type: TOGGLE_ADD_FORM, form: form };
+}
+
+export function setNodeResults(nodes) {
+  return { type: SET_NODE_RESULTS, nodes: nodes };
 }
