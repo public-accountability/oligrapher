@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import UndoButtons from './UndoButtons';
 import LayoutButtons from './LayoutButtons';
 import EditButtons from './EditButtons';
 import AddEdgeForm from './AddEdgeForm';
@@ -23,6 +24,11 @@ export default class EditTools extends Component {
     return (
       <div id="editTools">
         <div id="buttons">
+          <UndoButtons 
+            undo={this.props.undo}
+            redo={this.props.redo} 
+            canUndo={this.props.canUndo}
+            canRedo={this.props.canRedo} />
           <LayoutButtons 
             prune={prune} 
             circleLayout={circleLayout} 

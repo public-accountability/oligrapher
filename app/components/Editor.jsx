@@ -12,10 +12,6 @@ require('../styles/bootstrap-3.3.6.css');
 require('../styles/oligrapher.editor.css');
 
 export default class Editor extends BaseComponent {
-  constructor(props) {
-    super(props);
-    this.bindAll('_clearGraph', '_toggleAddEdgeForm', '_toggleHelpScreen');
-  }
 
   render() {
     let zoomIn, zoomOut, resetZoom;
@@ -71,9 +67,9 @@ export default class Editor extends BaseComponent {
               closeAddForm={_closeAddForm} 
               source={this.props.dataSource} 
               graph={this.props.graph}
-              toggleAddEdgeForm={this._toggleAddEdgeForm}
-              toggleHelpScreen={this._toggleHelpScreen}
-              clearGraph={this._clearGraph}
+              toggleAddEdgeForm={() => this._toggleAddEdgeForm()}
+              toggleHelpScreen={() => this._toggleHelpScreen()}
+              clearGraph={() => this._clearGraph()}
               data={formData}
               nodeResults={this.props.nodeResults}
               setNodeResults={this.props.setNodeResults}
@@ -81,7 +77,11 @@ export default class Editor extends BaseComponent {
               currentForm={currentForm} 
               helpScreen={this.props.helpScreen}
               hideHelp={this.props.hideHelp} 
-              graphApi={this.props.graphApi} /> : null }       
+              graphApi={this.props.graphApi} 
+              undo={this.props.undo}
+              redo={this.props.redo} 
+              canUndo={this.props.canUndo}
+              canRedo={this.props.canRedo}/> : null }       
         </HotKeys>
       </div>
     );

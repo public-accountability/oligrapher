@@ -5,13 +5,15 @@ import { LOAD_GRAPH, SHOW_GRAPH, NEW_GRAPH,
          DELETE_NODE, DELETE_EDGE, DELETE_CAPTION, DELETE_SELECTION, DELETE_ALL,
          UPDATE_NODE, UPDATE_EDGE, UPDATE_CAPTION,
          PRUNE_GRAPH, LAYOUT_CIRCLE,
-         SET_HIGHLIGHTS } from '../actions';
+         SET_HIGHLIGHTS, TOGGLE_EDIT_TOOLS } from '../actions';
 import Graph from '../models/Graph';
 import Edge from '../models/Edge';
 import merge from 'lodash/object/merge'; 
 import assign from 'lodash/object/assign';
+import shortid from 'shortid';
+import undoable, { excludeAction, distinctState } from 'redux-undo';
 
-export default function graphs(state = {}, action) {
+function graphs(state = {}, action) {
   let newState, graph;
 
   switch (action.type) {
@@ -144,3 +146,10 @@ export default function graphs(state = {}, action) {
     return state;
   }
 }
+
+// export default undoable(graphs, { filter: excludeAction([LOAD_GRAPH, SHOW_GRAPH, TOGGLE_EDIT_TOOLS]) });
+// export default undoable(graphs, { filter: distinctState() });
+export default undoable(graphs, { filter: function filterState(action, currentState, previousState) {
+  // only add to history if not initializing graph and state changed
+  return ([LOAD_GRAPH, SHOW_GRAPH].indexOf(action.type) === -1) && (currentState !== previousState);
+} });

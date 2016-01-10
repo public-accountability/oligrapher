@@ -1,7 +1,8 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
+import createLogger from 'redux-logger';
 import Root from './components/Root';
 import reducers from './reducers';
 import { loadGraph, showGraph, newGraph, 
@@ -19,10 +20,24 @@ require ('./styles/oligrapher.css');
 
 class Oligrapher {
   constructor(config = {}) {
-    this.rootElement = config.root;
-    this.store = createStore(reducers);
-    config = merge({ isEditor: false, viewOnlyHighlighted: true }, config);
+
+    config = merge({ 
+      isEditor: false, 
+      isLocked: true, 
+      logActions: false, 
+      viewOnlyHighlighted: true 
+    }, config);
     config.height = config.graphHeight || config.root.offsetHeight;
+
+    this.rootElement = config.root;
+
+    if (config.logActions) {
+      const logger = createLogger();
+      const createStoreWithMiddleware = applyMiddleware(logger)(createStore);
+      this.store = createStoreWithMiddleware(reducers);      
+    } else {
+      this.store = createStore(reducers);
+    }
 
     this.providerInstance = render(
       <Provider store={this.store}>

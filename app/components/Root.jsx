@@ -18,21 +18,14 @@ import { HotKeys } from 'react-hotkeys';
 import ReactDOM from 'react-dom';
 import pick from 'lodash/object/pick';
 import Editor from './Editor';
+import { ActionCreators } from 'redux-undo';
 
 class Root extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { 
-      shiftKey: false, 
-      altKey: false, 
-      altShiftKey: false, 
-      isEditor: props.isEditor,
-      isLocked: props.isLocked 
-    };
-  }
 
   render() {
     const keyMap = { 
+      'undo': 'ctrl+,',
+      'redo': 'ctrl+.',
       'zoomIn': 'ctrl+=',
       'zoomOut': 'ctrl+-',
       'resetZoom': 'ctrl+0',
@@ -44,7 +37,7 @@ class Root extends Component {
         { sequence: 'command', action: 'keydown' }
       ],
       'altUp': [
-        { sequence: 'alt', action: 'keyup' }, 
+        { sequence: 'alt', action: 'keyup' },
         { sequence: 'ctrl', action: 'keyup' },
         { sequence: 'command', action: 'keyup' }
       ],
@@ -52,6 +45,8 @@ class Root extends Component {
     };
 
     const keyHandlers = {
+      'undo': () => { console.log("undo"); dispatch(ActionCreators.undo()) },
+      'redo': () => { console.log("redo"); dispatch(ActionCreators.redo()) },
       'zoomIn': () => dispatch(zoomIn()),
       'zoomOut': () => dispatch(zoomOut()),
       'resetZoom': () => dispatch(resetZoom()),
@@ -62,8 +57,7 @@ class Root extends Component {
       'delSelected': () => dispatch(deleteSelection(this.props.graph.id, this.props.selection))
     };
 
-    const { dispatch, graph } = this.props;
-    const { isEditor, isLocked } = this.state;
+    const { dispatch, graph, isEditor, isLocked } = this.props;
     const that = this;
 
     let graphApi = {
@@ -86,10 +80,10 @@ class Root extends Component {
 
     let _toggleEditTools = (value) => { dispatch(toggleEditTools(value)) };
 
-    return this.props.graph ? (
+    return (
       <div id="oligrapherContainer" style={{ height: '100%' }}>
         <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={keyHandlers}>
-          <Graph 
+          { this.props.graph ? <Graph 
             ref={(c) => { this.graph = c; if (c) { c.root = this; } }}
             graph={this.props.graph}
             zoom={this.props.zoom} 
@@ -116,8 +110,8 @@ class Root extends Component {
               isEditor ? 
               dispatch(swapCaptionSelection(captionId, !that.state.shiftKey)) : 
               (isLocked ? null : dispatch(swapCaptionHighlight(graphId, captionId)))
-            }} />
-          <Editor 
+            }} /> : null }
+          { this.props.graph ? <Editor 
             graph={this.props.graph}
             graphApi={graphApi}
             isEditor={isEditor} 
@@ -130,17 +124,21 @@ class Root extends Component {
             setNodeResults={(nodes) => dispatch(setNodeResults(nodes))}
             addForm={this.props.addForm}
             toggleEditTools={_toggleEditTools}
-            toggleAddForm={(form) => dispatch(toggleAddForm(form))} />
+            toggleAddForm={(form) => dispatch(toggleAddForm(form))}
+            undo={() => dispatch(ActionCreators.undo())}
+            redo={() => dispatch(ActionCreators.redo())} 
+            canUndo={(this.props.canUndo)}
+            canRedo={this.props.canRedo} /> : null }
         </HotKeys>
       </div>
-    ) : (<div></div>);
+    );
   }
 
   componentDidMount() {
     if (this.props.data) {
       // data provided from outside
       this.loadData(this.props.data);
-    } else {
+    } else if (!this.props.graph) {
       // load empty graph
       this.loadData(GraphModel.defaults());
     }
@@ -183,7 +181,9 @@ class Root extends Component {
 
 function select(state) {
   return {
-    graph: state.graphs[state.position.currentId],
+    graph: state.graphs.present[state.position.currentId],
+    canUndo: state.graphs.past.length > 0,
+    canRedo: state.graphs.future.length > 0,
     loadedId: state.position.loadedId,
     selection: state.selection,
     zoom: state.zoom,
