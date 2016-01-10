@@ -1,5 +1,5 @@
 import { SHOW_GRAPH, LOAD_GRAPH, NEW_GRAPH } from '../actions';
-import { merge } from 'lodash';
+import merge from 'lodash/object/merge';
 
 export default function position(state = { currentId: null }, action) {
   switch (action.type) {

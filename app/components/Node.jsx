@@ -5,7 +5,7 @@ import NodeCircle from './NodeCircle';
 import ds from '../NodeDisplaySettings';
 import { DraggableCore } from 'react-draggable';
 import Graph from '../models/Graph';
-import { merge } from 'lodash';
+import merge from 'lodash/object/merge';
 import classNames from 'classnames';
 import Helpers from '../models/Helpers';
 

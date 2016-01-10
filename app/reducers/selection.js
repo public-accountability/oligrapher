@@ -1,7 +1,8 @@
 import { SWAP_NODE_SELECTION, SWAP_EDGE_SELECTION, SWAP_CAPTION_SELECTION, 
          DESELECT_ALL, DELETE_SELECTION, DELETE_ALL,
          SHOW_GRAPH, NEW_GRAPH } from '../actions';
-import { merge, assign } from 'lodash';
+import merge from 'lodash/object/merge'; 
+import assign from 'lodash/object/assign';
 
 const initState = { nodeIds: [], edgeIds: [], captionIds: [] };
 

@@ -2,9 +2,18 @@ import Node from './Node';
 import Edge from './Edge';
 import Caption from './Caption';
 import Helpers from './Helpers';
-import { merge, assign, values, intersection, flatten, cloneDeep, omit, difference, compact, 
-         size, includes, isNumber } from 'lodash';
-import Springy from 'springy';
+import merge from 'lodash/object/merge';
+import assign from 'lodash/object/assign';
+import values from 'lodash/object/values';
+import intersection from 'lodash/array/intersection';
+import flatten from 'lodash/array/flatten';
+import cloneDeep from 'lodash/lang/cloneDeep';
+import omit from 'lodash/object/omit';
+import difference from 'lodash/array/difference';
+import compact from 'lodash/array/compact';
+import size from 'lodash/collection/size';
+import includes from 'lodash/collection/includes';
+import isNumber from 'lodash/lang/isNumber';
 
 class Graph {
   static generateId() {
@@ -141,20 +150,22 @@ class Graph {
   }
 
   static buildForceLayout(graph) {
-    let gr = new Springy.Graph();
+    return graph;
+    
+    // let gr = new Springy.Graph();
 
-    let nodeIds = Object.keys(graph.nodes);
-    let edges = values(graph.edges).map(e => [e.node1_id, e.node2_id]);
+    // let nodeIds = Object.keys(graph.nodes);
+    // let edges = values(graph.edges).map(e => [e.node1_id, e.node2_id]);
 
-    gr.addNodes(...nodeIds);
-    gr.addEdges(...edges);
+    // gr.addNodes(...nodeIds);
+    // gr.addEdges(...edges);
 
-    let stiffness = 200.0;
-    let repulsion = 300.0;
-    let damping = 0.5;
-    let minEnergyThreshold = 0.1;
+    // let stiffness = 200.0;
+    // let repulsion = 300.0;
+    // let damping = 0.5;
+    // let minEnergyThreshold = 0.1;
 
-    return new Springy.Layout.ForceDirected(gr, stiffness, repulsion, damping, minEnergyThreshold);    
+    // return new Springy.Layout.ForceDirected(gr, stiffness, repulsion, damping, minEnergyThreshold);    
   }
 
   static updateEdgePosition(edge, graph) {

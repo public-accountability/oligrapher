@@ -10,7 +10,7 @@ import Graph from './Graph';
 import GraphModel from '../models/Graph';
 import { HotKeys } from 'react-hotkeys';
 import ReactDOM from 'react-dom';
-import { pick } from 'lodash';
+import pick from 'lodash/object/pick';
 
 class Root extends Component {
   constructor(props) {

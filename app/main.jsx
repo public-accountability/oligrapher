@@ -13,7 +13,8 @@ import { loadGraph, showGraph, newGraph,
          pruneGraph, layoutCircle,
          setHighlights, clearHighlights } from './actions';
 import Graph from './models/Graph';
-import { merge, difference } from 'lodash';
+import merge from 'lodash/object/merge';
+import difference from 'lodash/array/difference';
 require ('./styles/oligrapher.css');
 
 class Oligrapher {
@@ -37,6 +38,8 @@ class Oligrapher {
       </Provider>,
       this.rootElement
     );
+
+    this.Root = Root;
 
     return this;
   }

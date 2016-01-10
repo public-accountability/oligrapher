@@ -1,12 +1,12 @@
 {
   "name": "oligrapher2",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "network graph visualizer",
-  "main": "build/oligrapher.js",
+  "main": "app/main.jsx",
   "scripts": {
     "dev-build": "webpack-dev-server --devtool eval --progress --history-api-fallback --colors --hot --content-base build --port 8090 --config webpack.dev.config",
-    "prod-build": "webpack --display-modules --config webpack.prod.config.js --output-filename=oligrapher.js",
-    "min-build": "webpack -p --display-modules --config webpack.prod.config.js --output-filename=oligrapher.min.js",
+    "prod-build": "NODE_ENV=production webpack --display-modules --config webpack.prod.config.js --output-filename=oligrapher.js",
+    "min-build": "NODE_ENV=production webpack -p --optimize-dedupe --display-modules --config webpack.prod.config.js --output-filename=oligrapher.min.js",
     "build-all": "npm run prod-build && npm run min-build",
     "test": "jest"
   },

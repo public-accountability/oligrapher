@@ -8,7 +8,8 @@ import { LOAD_GRAPH, SHOW_GRAPH, NEW_GRAPH,
          SET_HIGHLIGHTS } from '../actions';
 import Graph from '../models/Graph';
 import Edge from '../models/Edge';
-import { merge, assign } from 'lodash';
+import merge from 'lodash/object/merge'; 
+import assign from 'lodash/object/assign';
 
 export default function graphs(state = {}, action) {
   let newState, graph;
