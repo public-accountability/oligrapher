@@ -96,7 +96,7 @@ button#toggleEditTools {
 }
 
 #addConnectedNodes {
-  margin-top: 40px;
+  margin-top: 80px;
 }
 
 #addConnectedNodesNum {
@@ -142,4 +142,16 @@ button#toggleEditTools {
 
 #helpScreen h3 {
   margin-top: 0;
+}
+
+.updateForm div {
+  margin-bottom: 10px;
+}
+
+#nodeUrlInput {
+  width: 363px;
+}
+
+#edgeUrlInput {
+  width: 337px;
 }

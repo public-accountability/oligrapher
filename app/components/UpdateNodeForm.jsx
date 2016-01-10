@@ -4,10 +4,6 @@ import { HotKeys } from 'react-hotkeys';
 import merge from 'lodash/object/merge';
 
 export default class UpdateNodeForm extends BaseComponent {
-  constructor(props) {
-    super(props);
-    this.bindAll('_apply', '_handleNameChange', '_handleImageChange');
-  }
 
   render() {
     let { display } = this.props.data;
@@ -28,50 +24,55 @@ export default class UpdateNodeForm extends BaseComponent {
     ];
 
     return (
-      <div className="editForm form-inline">
+      <div className="editForm updateForm form-inline">
         <HotKeys keyMap={keyMap} handlers={keyHandlers}>
-          <input 
-            type="text" 
-            className="form-control input-sm"
-            placeholder="name" 
-            ref="name" 
-            value={display.name}
-            onChange={this._handleNameChange} />
-          &nbsp;<input 
-            type="text" 
-            className="form-control input-sm"
-            placeholder="image URL" 
-            ref="image" 
-            value={display.image}
-            onChange={this._handleImageChange} />
-          &nbsp;<select value={display.scale} className="form-control input-sm" ref="scale" onChange={this._apply}>
-            { scales.map((scale, i) =>
-              <option key={i} value={scale[0]}>{scale[1]}</option>
-            ) }
-          </select>
+          <div>
+            <input 
+              type="text" 
+              className="form-control input-sm"
+              placeholder="name" 
+              ref="name" 
+              value={display.name}
+              onChange={() => this.apply()} />
+            &nbsp;<input 
+              type="text" 
+              className="form-control input-sm"
+              placeholder="image URL" 
+              ref="image" 
+              value={display.image}
+              onChange={() => this.apply()} />
+            &nbsp;<select 
+              value={display.scale} 
+              className="form-control input-sm" 
+              ref="scale" 
+              onChange={() => this.apply()}>
+              { scales.map((scale, i) =>
+                <option key={i} value={scale[0]}>{scale[1]}</option>
+              ) }
+            </select>
+          </div>
+          <div>
+            <input
+              id="nodeUrlInput"
+              type="text"
+              className="form-control input-sm"
+              placeholder="link URL"
+              ref="url"
+              value={display.url}
+              onChange={() => this.apply()} />
+          </div>
         </HotKeys>
       </div>
     );
   }
 
-  _handleNameChange(event) {
-    this._handleChange(event, 'name');
-  }
-
-  _handleImageChange(event) {
-    this._handleChange(event, 'image');
-  }
-
-  _handleChange(event, field) {
-    this._apply();
-  }
-
-  _apply() {
+  apply() {
     if (this.props.data) {
       let name = this.refs.name.value.trim();
       let image = this.refs.image.value.trim();
       let scale = parseFloat(this.refs.scale.value);
-      this.props.updateNode(this.props.data.id, { display: { name, image, scale } });      
+      let url = this.refs.url.value.trim();
+      this.props.updateNode(this.props.data.id, { display: { name, image, scale, url } });      
     }
   }
 }
