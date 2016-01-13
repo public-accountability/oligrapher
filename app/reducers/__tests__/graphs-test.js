@@ -9,7 +9,11 @@ const Graph = require('../../models/Graph');
 const Node = require('../../models/Node'); 
 const Edge = require('../../models/Edge'); 
 const Helpers = require('../../models/Helpers'); 
-const { merge, assign, values, uniq, keys } = require('lodash');
+const merge = require('lodash/object/merge');
+const assign = require('lodash/object/assign');
+const values = require('lodash/object/values'); 
+const uniq = require('lodash/array/uniq'); 
+const keys = require('lodash/object/keys');
 
 describe("graph reducer", () => {
 

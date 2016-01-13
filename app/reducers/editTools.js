@@ -1,4 +1,5 @@
-import { TOGGLE_EDIT_TOOLS, TOGGLE_ADD_FORM, SET_NODE_RESULTS } from '../actions';
+import { TOGGLE_EDIT_TOOLS, TOGGLE_ADD_FORM, SET_NODE_RESULTS, 
+         CREATE_ANNOTATION } from '../actions';
 
 const initState = { 
   visible: false,
@@ -19,6 +20,9 @@ export default function editTools(state = initState, action) {
 
   case SET_NODE_RESULTS:
     return Object.assign({}, state, { nodeResults: action.nodes });
+
+  case CREATE_ANNOTATION:
+    return Object.assign({}, state, { visible: false });
 
   default:
     return state;

@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { ActionCreators } from 'redux-undo';
 import { loadGraph, showGraph, 
          zoomIn, zoomOut, resetZoom, 
          moveNode, moveEdge, moveCaption,
@@ -11,16 +12,35 @@ import { loadGraph, showGraph,
          updateNode, updateEdge, updateCaption,
          deleteAll, addSurroundingNodes,
          toggleEditTools, toggleAddForm,
-         setNodeResults } from '../actions';
+         setNodeResults, setTitle,
+         loadAnnotations, showAnnotation, createAnnotation,
+         toggleAnnotations, updateAnnotation,
+         deleteAnnotation, moveAnnotation,
+         toggleHelpScreen, setSettings, toggleSettings } from '../actions';
 import Graph from './Graph';
 import GraphModel from '../models/Graph';
 import { HotKeys } from 'react-hotkeys';
 import ReactDOM from 'react-dom';
 import pick from 'lodash/object/pick';
+import merge from 'lodash/object/merge';
+import cloneDeep from 'lodash/lang/cloneDeep';
+import isNumber from 'lodash/lang/isNumber';
+import keys from 'lodash/object/keys';
 import Editor from './Editor';
-import { ActionCreators } from 'redux-undo';
+import GraphHeader from './GraphHeader';
+import GraphAnnotations from './GraphAnnotations';
+import EditButton from './EditButton';
+import HelpButton from './HelpButton';
+import HelpScreen from './HelpScreen';
+import SettingsButton from './SettingsButton';
+import GraphSettingsForm from './GraphSettingsForm';
+import SaveButton from './SaveButton';
 
 class Root extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { shiftKey: false };
+  }
 
   render() {
     const keyMap = { 
@@ -45,8 +65,8 @@ class Root extends Component {
     };
 
     const keyHandlers = {
-      'undo': () => { console.log("undo"); dispatch(ActionCreators.undo()) },
-      'redo': () => { console.log("redo"); dispatch(ActionCreators.redo()) },
+      'undo': () => { dispatch(ActionCreators.undo()) },
+      'redo': () => { dispatch(ActionCreators.redo()) },
       'zoomIn': () => dispatch(zoomIn()),
       'zoomOut': () => dispatch(zoomOut()),
       'resetZoom': () => dispatch(resetZoom()),
@@ -57,8 +77,11 @@ class Root extends Component {
       'delSelected': () => dispatch(deleteSelection(this.props.graph.id, this.props.selection))
     };
 
-    const { dispatch, graph, isEditor, isLocked } = this.props;
-    const that = this;
+    let { dispatch, graph, isEditor, isLocked, graphTitle,
+          showEditTools, showSaveButton, showHelpScreen, 
+          hasSettings, graphSettings, showSettings, onSave,
+          currentIndex, annotation, annotations, showAnnotations } = this.props;
+    let that = this;
 
     let graphApi = {
       getGraph: () => this.props.graph,
@@ -80,67 +103,162 @@ class Root extends Component {
 
     let _toggleEditTools = (value) => { dispatch(toggleEditTools(value)) };
 
+
+    // annotations stuff
+
+    let prevIndex = this.prevIndex();
+    let nextIndex = this.nextIndex();
+
+    let prevClick = () => dispatch(showAnnotation(prevIndex));
+    let nextClick = () => dispatch(showAnnotation(nextIndex));
+    let update = (index, data) => dispatch(updateAnnotation(index, data));
+    let remove = (index) => dispatch(deleteAnnotation(index));
+    let show = (index) => dispatch(showAnnotation(index));
+    let create = () => { 
+      dispatch(createAnnotation(this.props.annotations.length)); 
+    };
+    let move = (from, to) => dispatch(moveAnnotation(from, to));
+    let swapAnnotations = (value) => dispatch(toggleAnnotations(value));
+    let updateTitle = (title) => dispatch(setTitle(title));
+    let updateSettings = (settings) => dispatch(setSettings(settings));
+
+    let hasAnnotations = this.props.numAnnotations > 0;
+
     return (
       <div id="oligrapherContainer" style={{ height: '100%' }}>
         <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={keyHandlers}>
-          { this.props.graph ? <Graph 
-            ref={(c) => { this.graph = c; if (c) { c.root = this; } }}
-            graph={this.props.graph}
-            zoom={this.props.zoom} 
-            height={this.props.height}
-            isEditor={isEditor}
-            isLocked={isLocked}
-            viewOnlyHighlighted={this.props.viewOnlyHighlighted}
-            selection={this.props.selection}
-            resetZoom={() => dispatch(resetZoom())} 
-            moveNode={(graphId, nodeId, x, y) => dispatch(moveNode(graphId, nodeId, x, y))} 
-            moveEdge={(graphId, edgeId, cx, cy) => dispatch(moveEdge(graphId, edgeId, cx, cy))} 
-            moveCaption={(graphId, captionId, x, y) => dispatch(moveCaption(graphId, captionId, x, y))} 
-            clickNode={(graphId, nodeId) => { 
-              isEditor ? 
-              dispatch(swapNodeSelection(nodeId, !that.state.shiftKey)) : 
-              (isLocked ? null : dispatch(swapNodeHighlight(graphId, nodeId))) 
-            }}
-            clickEdge={(graphId, edgeId) => { 
-              isEditor ? 
-              dispatch(swapEdgeSelection(edgeId, !that.state.shiftKey)) : 
-              (isLocked ? null : dispatch(swapEdgeHighlight(graphId, edgeId)))
-            }}
-            clickCaption={(graphId, captionId) => { 
-              isEditor ? 
-              dispatch(swapCaptionSelection(captionId, !that.state.shiftKey)) : 
-              (isLocked ? null : dispatch(swapCaptionHighlight(graphId, captionId)))
-            }} /> : null }
-          { this.props.graph ? <Editor 
-            graph={this.props.graph}
-            graphApi={graphApi}
-            isEditor={isEditor} 
-            showEditTools={this.props.showEditTools} 
-            showEditButton={true} 
-            hideHelp={true} 
-            dataSource={this.props.dataSource} 
-            selection={this.props.selection} 
-            nodeResults={this.props.nodeResults}
-            setNodeResults={(nodes) => dispatch(setNodeResults(nodes))}
-            addForm={this.props.addForm}
-            toggleEditTools={_toggleEditTools}
-            toggleAddForm={(form) => dispatch(toggleAddForm(form))}
-            undo={() => dispatch(ActionCreators.undo())}
-            redo={() => dispatch(ActionCreators.redo())} 
-            canUndo={(this.props.canUndo)}
-            canRedo={this.props.canRedo} /> : null }
+          <div className="row">
+            <div className={showAnnotations && hasAnnotations ? "col-md-8" : "col-md-12"}>
+              { isEditor || graphTitle ? 
+                <GraphHeader
+                  graph={this.props.graph}
+                  title={this.props.graphTitle}
+                  url={this.props.url}
+                  updateTitle={updateTitle}
+                  user={this.props.user}
+                  date={this.props.date}
+                  links={this.props.links}
+                  isEditor={isEditor} /> : null }
+
+              <div id="oligrapherGraphContainer">
+                { this.props.graph ? <Graph 
+                  ref={(c) => { this.graph = c; if (c) { c.root = this; } }}
+                  graph={this.props.graph}
+                  zoom={this.props.zoom} 
+                  height={this.props.height}
+                  isEditor={isEditor}
+                  isLocked={isLocked}
+                  viewOnlyHighlighted={this.props.viewOnlyHighlighted}
+                  selection={this.props.selection}
+                  resetZoom={() => dispatch(resetZoom())} 
+                  moveNode={(graphId, nodeId, x, y) => dispatch(moveNode(graphId, nodeId, x, y))} 
+                  moveEdge={(graphId, edgeId, cx, cy) => dispatch(moveEdge(graphId, edgeId, cx, cy))} 
+                  moveCaption={(graphId, captionId, x, y) => dispatch(moveCaption(graphId, captionId, x, y))} 
+                  clickNode={(graphId, nodeId) => { 
+                    isEditor && showEditTools ? 
+                    dispatch(swapNodeSelection(nodeId, !that.state.shiftKey)) : 
+                    (isLocked ? null : dispatch(swapNodeHighlight(graphId, nodeId))) 
+                  }}
+                  clickEdge={(graphId, edgeId) => { 
+                    isEditor && showEditTools ? 
+                    dispatch(swapEdgeSelection(edgeId, !that.state.shiftKey)) : 
+                    (isLocked ? null : dispatch(swapEdgeHighlight(graphId, edgeId)))
+                  }}
+                  clickCaption={(graphId, captionId) => { 
+                    isEditor && showEditTools ? 
+                    dispatch(swapCaptionSelection(captionId, !that.state.shiftKey)) : 
+                    (isLocked ? null : dispatch(swapCaptionHighlight(graphId, captionId)))
+                  }} /> : null }
+
+                { this.props.graph ? <Editor 
+                  graph={this.props.graph}
+                  graphApi={graphApi}
+                  isEditor={isEditor} 
+                  showEditTools={this.props.showEditTools} 
+                  showEditButton={false} 
+                  hideHelp={true} 
+                  dataSource={this.props.dataSource} 
+                  selection={this.props.selection} 
+                  nodeResults={this.props.nodeResults}
+                  setNodeResults={(nodes) => dispatch(setNodeResults(nodes))}
+                  addForm={this.props.addForm}
+                  toggleEditTools={_toggleEditTools}
+                  toggleAddForm={(form) => dispatch(toggleAddForm(form))}
+                  undo={() => dispatch(ActionCreators.undo())}
+                  redo={() => dispatch(ActionCreators.redo())} 
+                  canUndo={(this.props.canUndo)}
+                  canRedo={this.props.canRedo} /> : null }
+
+                <div id="oligrapherMetaButtons">
+                  { isEditor ? 
+                    <EditButton toggle={() => dispatch(toggleEditTools())} showEditTools={showEditTools} /> : null }
+                  { isEditor && hasSettings ? 
+                    <SettingsButton toggleSettings={(value) => dispatch(toggleSettings(value))} /> : null }
+                  { isEditor ? 
+                    <HelpButton toggleHelpScreen={() => dispatch(toggleHelpScreen())} /> : null }
+                </div>
+
+                { showSettings && hasSettings ? <GraphSettingsForm settings={graphSettings} updateSettings={updateSettings} /> : null }
+              </div>
+            </div>
+            { showAnnotations && hasAnnotations ?
+              <GraphAnnotations 
+                isEditor={isEditor}
+                navList={this.props.isEditor}
+                prevClick={prevClick}
+                nextClick={nextClick}
+                swapAnnotations={swapAnnotations}
+                annotation={annotation}
+                annotations={annotations}
+                currentIndex={currentIndex}
+                show={show}
+                create={create}
+                update={update}
+                move={move}
+                remove={remove}
+                editForm={true}
+                hideEditTools={() => dispatch(toggleEditTools(false))} /> : null }
+          </div>
+          { !showAnnotations && hasAnnotations ? 
+            <div id="oligrapherShowAnnotations">
+              <button onClick={() => swapAnnotations()} className="btn btn-lg btn-default">
+                <span className="glyphicon glyphicon-font"></span>
+              </button>
+            </div> : null }          
+          { showSaveButton && isEditor && onSave ? <SaveButton save={() => this.handleSave()} /> : null }
+          { showHelpScreen ? <HelpScreen source={this.props.dataSource} close={() => dispatch(toggleHelpScreen(false))} /> : null }
         </HotKeys>
       </div>
     );
   }
 
   componentDidMount() {
-    if (this.props.data) {
+    let { dispatch, title, graph, graphData, annotationsData, startIndex, settings, onSave } = this.props;
+
+    if (graphData) {
       // data provided from outside
-      this.loadData(this.props.data);
-    } else if (!this.props.graph) {
+      this.loadData(graphData);
+    } else if (!graph) {
       // load empty graph
       this.loadData(GraphModel.defaults());
+    }
+
+    if (title) {
+      dispatch(setTitle(title));
+    }
+
+    if (annotationsData) {
+      dispatch(loadAnnotations(annotationsData));
+    }
+
+    startIndex = (annotationsData[startIndex] ? startIndex : 0);
+
+    if (startIndex) {
+      dispatch(showAnnotation(startIndex));
+    }
+
+    if (settings) {
+      dispatch(setSettings(settings));
     }
   }
 
@@ -177,6 +295,38 @@ class Root extends Component {
   toggleLocked(value) {
     this.setState({ isLocked: value });
   }
+
+  prevIndex() {
+    let { currentIndex, numAnnotations } = this.props;
+    return currentIndex - 1 < 0 ? null : currentIndex - 1;
+  }
+
+  nextIndex() {
+    let { currentIndex, numAnnotations } = this.props;
+    return currentIndex + 1 > numAnnotations - 1 ? null : currentIndex + 1;
+  }
+
+  visibleAnnotations() {
+    return this.props.showAnnotations && this.props.numAnnotations > 0;
+  }
+
+  graphWithoutHighlights() {
+    return pick(
+      GraphModel.clearHighlights(this.props.graph),
+      ['nodes', 'edges', 'captions']
+    );
+  }
+
+  handleSave() {
+    if (this.props.onSave) {
+      this.props.onSave({
+        title: this.props.graphTitle,
+        graph: this.graphWithoutHighlights(),
+        annotations: this.props.annotations,
+        settings: this.props.graphSettings
+      });
+    }
+  }
 }
 
 function select(state) {
@@ -189,7 +339,17 @@ function select(state) {
     zoom: state.zoom,
     showEditTools: state.editTools.visible,
     addForm: state.editTools.addForm,
-    nodeResults: state.editTools.nodeResults
+    nodeResults: state.editTools.nodeResults,
+    graphTitle: state.title,
+    currentIndex: state.position.currentIndex,
+    numAnnotations: state.annotations.list.length,
+    annotation: state.annotations.list[state.position.currentIndex],
+    annotations: state.annotations.list,
+    showAnnotations: state.annotations.visible,
+    graphSettings: state.settings,
+    hasSettings: Object.keys(state.settings).length > 0,
+    showHelpScreen: state.showHelpScreen,
+    showSettings: state.showSettings
   };
 }
 

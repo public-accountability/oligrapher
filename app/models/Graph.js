@@ -151,7 +151,7 @@ class Graph {
 
   static buildForceLayout(graph) {
     return graph;
-    
+
     // let gr = new Springy.Graph();
 
     // let nodeIds = Object.keys(graph.nodes);
@@ -476,7 +476,21 @@ class Graph {
   };
 
   static clearHighlights(graph) {
-    return this.setHighlights(graph, { nodeIds: [], edgeIds: [], captionIds: [] });
+    let newGraph = cloneDeep(graph);
+
+    values(newGraph.nodes).forEach(node => {
+      delete newGraph.nodes[node.id].display.status;
+    });
+
+    values(newGraph.edges).forEach(edge => {
+      delete newGraph.edges[edge.id].display.status;
+    });
+
+    values(newGraph.captions).forEach(caption => {
+      delete newGraph.captions[caption.id].display.status;
+    });    
+
+    return newGraph;
   }
 
   // ETC

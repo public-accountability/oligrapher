@@ -9,9 +9,10 @@
     <script src="LsDataConverter.js"></script>
     <script src="LsDataSource.js"></script>
     <script src="PopoloDataConverter.js"></script>
+    <script src="oligrapher-annotations-example-data.js"></script>
     <style>
       body {
-        margin: 0;
+        margin: 10px;
       }
     </style>
   </head>
@@ -32,7 +33,26 @@
         isLocked: false,
         logActions: false,
         viewOnlyHighlighted: false,
-        dataSource: LsDataSource
+        dataSource: LsDataSource,
+        title: oligrapherAnnotationsData.title,
+        graphData: oligrapherAnnotationsData.graph, 
+        annotationsData: oligrapherAnnotationsData.annotations,
+        user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },
+        date: "August 30, 2015",
+        startIndex: 0,
+        showSaveButton: true,
+        onSave: function(data) { console.log(data); },
+        onNav: function(index) { console.log("navigating to annotation " + String(index)); },
+        links: [
+          { text: "some", url: "http://some.net" },
+          { id: "exampleLink", text: "example", url: "http://example.com" },
+          { method: "POST", text: "clone", url: "http://lilsis.local/maps/118-satoshi/clone" }
+        ],
+        settings: {
+          is_private: false,
+          is_featured: false,
+          list_sources: false
+        }
       });
     </script>
   </body>

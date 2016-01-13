@@ -24,13 +24,16 @@
     "classnames": "^2.2.0",
     "lodash": "^3.10.1",
     "react": "^0.14",
+    "react-anything-sortable": "^1.1.0",
     "react-draggable": "^1.0.1",
     "react-hotkeys": "^0.6.0",
+    "react-medium-editor": "^1.6.1",
     "react-redux": "^4.0.0",
     "redux": "^3.0.4",
     "redux-undo": "^0.6.0",
     "shortid": "^2.2.4",
-    "springy": "^2.7.1"
+    "springy": "^2.7.1",
+    "titleize": "^1.0.0"
   },
   "devDependencies": {
     "babel": "^5.4.7",

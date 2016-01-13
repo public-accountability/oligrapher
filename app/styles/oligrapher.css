@@ -34,3 +34,63 @@ a.nodeLabel text tspan {
   font-family: Helvetica, Arial, sans-serif;
   cursor: default;
 }
+
+/* from annotations app */
+
+#oligrapherContainer {
+  position: relative;
+}
+
+#oligrapherGraphContainer {
+  position: relative;
+  border: 1px solid #f8f8f8;
+}
+
+#oligrapherHeader {
+  margin-bottom: 10px;  
+}
+
+#oligrapherTitle {
+  font-size: 50px;
+  font-weight: 300;
+  margin-top: 3px;
+  margin-bottom: 5px;
+}
+
+#oligrapherTitle.oligrapherTitleInput {
+  margin-top: 0;
+  margin-bottom: 1px;
+}
+
+#oligrapherTitle a {
+  text-decoration: none;
+}
+
+#oligrapherTitleInput {
+  border: 1px solid #ccc;
+  padding: 0;
+  width: 100%;
+}
+
+#oligrapherByLine {
+  margin-right: 18px;
+}
+
+#oligrapherDate {
+  color: #888;
+}
+
+#oligrapherGraphLinks {
+  margin-left: 2px;
+}
+
+#oligrapherGraphLinks a {
+  display: inline-block;
+  margin-right: 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+#oligrapherGraphLinks form {
+  display: inline-block;
+}

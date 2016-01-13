@@ -38,6 +38,17 @@ export const SET_HIGHLIGHTS = 'SET_HIGHLIGHTS';
 export const TOGGLE_EDIT_TOOLS = 'TOGGLE_EDIT_TOOLS';
 export const TOGGLE_ADD_FORM = 'TOGGLE_ADD_FORM';
 export const SET_NODE_RESULTS = 'SET_NODE_RESULTS';
+export const LOAD_ANNOTATIONS = 'LOAD_ANNOTATIONS';
+export const SHOW_ANNOTATION = 'SHOW_ANNOTATION';
+export const UPDATE_ANNOTATION = 'UPDATE_ANNOTATION';
+export const DELETE_ANNOTATION = 'DELETE_ANNOTATION';
+export const CREATE_ANNOTATION = 'CREATE_ANNOTATION';
+export const TOGGLE_ANNOTATIONS = 'TOGGLE_ANNOTATIONS';
+export const MOVE_ANNOTATION = 'MOVE_ANNOTATION';
+export const SET_TITLE = 'SET_TITLE';
+export const SET_SETTINGS = 'SET_SETTINGS';
+export const TOGGLE_HELP_SCREEN = 'TOGGLE_HELP_SCREEN';
+export const TOGGLE_SETTINGS = 'TOGGLE_SETTINGS';
 
 /*
  * action creators
@@ -184,4 +195,48 @@ export function toggleAddForm(form) {
 
 export function setNodeResults(nodes) {
   return { type: SET_NODE_RESULTS, nodes: nodes };
+}
+
+export function loadAnnotations(annotations) {
+  return { type: LOAD_ANNOTATIONS, annotations };
+}
+
+export function showAnnotation(id) {
+  return { type: SHOW_ANNOTATION, id };
+}
+
+export function updateAnnotation(id, data) {
+  return { type: UPDATE_ANNOTATION, id, data };
+}
+
+export function deleteAnnotation(id) {
+  return { type: DELETE_ANNOTATION, id };
+}
+
+export function createAnnotation(newIndex) {
+  return { type: CREATE_ANNOTATION, newIndex };
+}
+
+export function moveAnnotation(fromIndex, toIndex) {
+  return { type: MOVE_ANNOTATION, fromIndex, toIndex };
+}
+
+export function toggleAnnotations(value) {
+  return { type: TOGGLE_ANNOTATIONS, value };
+}
+
+export function setTitle(title) {
+  return { type: SET_TITLE, title };
+}
+
+export function setSettings(settings) {
+  return { type: SET_SETTINGS, settings };
+}
+
+export function toggleHelpScreen(value) {
+  return { type: TOGGLE_HELP_SCREEN, value };
+}
+
+export function toggleSettings(value) {
+  return { type: TOGGLE_SETTINGS, value };
 }

@@ -8,7 +8,11 @@ jest.dontMock('springy');
 const Graph = require('../Graph'); 
 const Edge = require('../Edge'); 
 const Caption = require('../Caption'); 
-const { merge, values, uniq, range, pick } = require('lodash');
+const merge = require('lodash/object/merge');
+const values = require('lodash/object/values'); 
+const uniq = require('lodash/array/uniq'); 
+const range = require('lodash/utility/range');
+const pick = require('lodash/object/pick'); 
 
 describe("Graph", () => {
 

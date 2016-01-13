@@ -81,29 +81,33 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reactRedux = __webpack_require__(164);
 
-	var _componentsRoot = __webpack_require__(173);
+	var _reduxLogger = __webpack_require__(173);
+
+	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
+
+	var _componentsRoot = __webpack_require__(174);
 
 	var _componentsRoot2 = _interopRequireDefault(_componentsRoot);
 
-	var _reducers = __webpack_require__(382);
+	var _reducers = __webpack_require__(408);
 
 	var _reducers2 = _interopRequireDefault(_reducers);
 
-	var _actions = __webpack_require__(174);
+	var _actions = __webpack_require__(176);
 
-	var _modelsGraph = __webpack_require__(175);
+	var _modelsGraph = __webpack_require__(177);
 
 	var _modelsGraph2 = _interopRequireDefault(_modelsGraph);
 
-	var _lodashObjectMerge = __webpack_require__(177);
+	var _lodashObjectMerge = __webpack_require__(179);
 
 	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
 
-	var _lodashArrayDifference = __webpack_require__(259);
+	var _lodashArrayDifference = __webpack_require__(261);
 
 	var _lodashArrayDifference2 = _interopRequireDefault(_lodashArrayDifference);
 
-	__webpack_require__(388);
+	__webpack_require__(421);
 
 	var Oligrapher = (function () {
 	  function Oligrapher() {
@@ -113,10 +117,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    _classCallCheck(this, Oligrapher);
 
-	    this.rootElement = config.root;
-	    this.store = (0, _redux.createStore)(_reducers2['default']);
-	    config = (0, _lodashObjectMerge2['default'])({ isEditor: false, viewOnlyHighlighted: true }, config);
+	    config = (0, _lodashObjectMerge2['default'])({
+	      isEditor: false,
+	      isLocked: true,
+	      logActions: false,
+	      viewOnlyHighlighted: true
+	    }, config);
 	    config.height = config.graphHeight || config.root.offsetHeight;
+
+	    this.rootElement = config.root;
+
+	    if (config.logActions) {
+	      var logger = (0, _reduxLogger2['default'])();
+	      var createStoreWithMiddleware = (0, _redux.applyMiddleware)(logger)(_redux.createStore);
+	      this.store = createStoreWithMiddleware(_reducers2['default']);
+	    } else {
+	      this.store = (0, _redux.createStore)(_reducers2['default']);
+	    }
 
 	    this.providerInstance = (0, _reactDom.render)(_react2['default'].createElement(
 	      _reactRedux.Provider,
@@ -298,11 +315,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'circleLayout',
 	    value: function circleLayout() {
 	      this.root.dispatchProps.dispatch((0, _actions.layoutCircle)(this.currentGraphId()));
-	    }
-	  }, {
-	    key: 'setGraphHeight',
-	    value: function setGraphHeight(height) {
-	      this.root.getWrappedInstance().graph.setHeight(height);
 	    }
 	  }]);
 
@@ -20379,6 +20391,177 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 173 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var repeat = function repeat(str, times) {
+	  return new Array(times + 1).join(str);
+	};
+	var pad = function pad(num, maxLength) {
+	  return repeat("0", maxLength - num.toString().length) + num;
+	};
+	var formatTime = function formatTime(time) {
+	  return " @ " + pad(time.getHours(), 2) + ":" + pad(time.getMinutes(), 2) + ":" + pad(time.getSeconds(), 2) + "." + pad(time.getMilliseconds(), 3);
+	};
+
+	// Use the new performance api to get better precision if available
+	var timer = typeof performance !== "undefined" && typeof performance.now === "function" ? performance : Date;
+
+	/**
+	 * Creates logger with followed options
+	 *
+	 * @namespace
+	 * @property {object} options - options for logger
+	 * @property {string} options.level - console[level]
+	 * @property {boolean} options.duration - print duration of each action?
+	 * @property {boolean} options.timestamp - print timestamp with each action?
+	 * @property {object} options.colors - custom colors
+	 * @property {object} options.logger - implementation of the `console` API
+	 * @property {boolean} options.logErrors - should errors in action execution be caught, logged, and re-thrown?
+	 * @property {boolean} options.collapsed - is group collapsed?
+	 * @property {boolean} options.predicate - condition which resolves logger behavior
+	 * @property {function} options.stateTransformer - transform state before print
+	 * @property {function} options.actionTransformer - transform action before print
+	 * @property {function} options.errorTransformer - transform error before print
+	 */
+
+	function createLogger() {
+	  var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+	  return function (_ref) {
+	    var getState = _ref.getState;
+	    return function (next) {
+	      return function (action) {
+	        var _options$level = options.level;
+	        var level = _options$level === undefined ? "log" : _options$level;
+	        var _options$logger = options.logger;
+	        var logger = _options$logger === undefined ? window.console : _options$logger;
+	        var _options$logErrors = options.logErrors;
+	        var logErrors = _options$logErrors === undefined ? true : _options$logErrors;
+	        var collapsed = options.collapsed;
+	        var predicate = options.predicate;
+	        var _options$duration = options.duration;
+	        var duration = _options$duration === undefined ? false : _options$duration;
+	        var _options$timestamp = options.timestamp;
+	        var timestamp = _options$timestamp === undefined ? true : _options$timestamp;
+	        var transformer = options.transformer;
+	        var _options$stateTransfo = options.stateTransformer;
+	        var // deprecated
+	        stateTransformer = _options$stateTransfo === undefined ? function (state) {
+	          return state;
+	        } : _options$stateTransfo;
+	        var _options$actionTransf = options.actionTransformer;
+	        var actionTransformer = _options$actionTransf === undefined ? function (actn) {
+	          return actn;
+	        } : _options$actionTransf;
+	        var _options$errorTransfo = options.errorTransformer;
+	        var errorTransformer = _options$errorTransfo === undefined ? function (error) {
+	          return error;
+	        } : _options$errorTransfo;
+	        var _options$colors = options.colors;
+	        var colors = _options$colors === undefined ? {
+	          title: function title() {
+	            return "#000000";
+	          },
+	          prevState: function prevState() {
+	            return "#9E9E9E";
+	          },
+	          action: function action() {
+	            return "#03A9F4";
+	          },
+	          nextState: function nextState() {
+	            return "#4CAF50";
+	          },
+	          error: function error() {
+	            return "#F20404";
+	          }
+	        } : _options$colors;
+
+	        // exit if console undefined
+
+	        if (typeof logger === "undefined") {
+	          return next(action);
+	        }
+
+	        // exit early if predicate function returns false
+	        if (typeof predicate === "function" && !predicate(getState, action)) {
+	          return next(action);
+	        }
+
+	        if (transformer) {
+	          console.error("Option 'transformer' is deprecated, use stateTransformer instead");
+	        }
+
+	        var started = timer.now();
+	        var prevState = stateTransformer(getState());
+
+	        var formattedAction = actionTransformer(action);
+	        var returnedValue = undefined;
+	        var error = undefined;
+	        if (logErrors) {
+	          try {
+	            returnedValue = next(action);
+	          } catch (e) {
+	            error = errorTransformer(e);
+	          }
+	        } else {
+	          returnedValue = next(action);
+	        }
+
+	        var took = timer.now() - started;
+	        var nextState = stateTransformer(getState());
+
+	        // message
+	        var time = new Date();
+	        var isCollapsed = typeof collapsed === "function" ? collapsed(getState, action) : collapsed;
+
+	        var formattedTime = formatTime(time);
+	        var titleCSS = colors.title ? "color: " + colors.title(formattedAction) + ";" : null;
+	        var title = "action " + formattedAction.type + (timestamp ? formattedTime : "") + (duration ? " in " + took.toFixed(2) + " ms" : "");
+
+	        // render
+	        try {
+	          if (isCollapsed) {
+	            if (colors.title) logger.groupCollapsed("%c " + title, titleCSS);else logger.groupCollapsed(title);
+	          } else {
+	            if (colors.title) logger.group("%c " + title, titleCSS);else logger.group(title);
+	          }
+	        } catch (e) {
+	          logger.log(title);
+	        }
+
+	        if (colors.prevState) logger[level]("%c prev state", "color: " + colors.prevState(prevState) + "; font-weight: bold", prevState);else logger[level]("prev state", prevState);
+
+	        if (colors.action) logger[level]("%c action", "color: " + colors.action(formattedAction) + "; font-weight: bold", formattedAction);else logger[level]("action", formattedAction);
+
+	        if (error) {
+	          if (colors.error) logger[level]("%c error", "color: " + colors.error(error, prevState) + "; font-weight: bold", error);else logger[level]("error", error);
+	        } else {
+	          if (colors.nextState) logger[level]("%c next state", "color: " + colors.nextState(nextState) + "; font-weight: bold", nextState);else logger[level]("next state", nextState);
+	        }
+
+	        try {
+	          logger.groupEnd();
+	        } catch (e) {
+	          logger.log("—— log end ——");
+	        }
+
+	        if (error) throw error;
+	        return returnedValue;
+	      };
+	    };
+	  };
+	}
+
+	exports.default = createLogger;
+	module.exports = exports['default'];
+
+/***/ },
+/* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20403,29 +20586,79 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reactRedux = __webpack_require__(164);
 
-	var _actions = __webpack_require__(174);
+	var _reduxUndo = __webpack_require__(175);
 
-	var _Graph = __webpack_require__(263);
+	var _actions = __webpack_require__(176);
+
+	var _Graph = __webpack_require__(265);
 
 	var _Graph2 = _interopRequireDefault(_Graph);
 
-	var _modelsGraph = __webpack_require__(175);
+	var _modelsGraph = __webpack_require__(177);
 
 	var _modelsGraph2 = _interopRequireDefault(_modelsGraph);
 
-	var _reactHotkeys = __webpack_require__(306);
+	var _reactHotkeys = __webpack_require__(308);
 
 	var _reactDom = __webpack_require__(154);
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _lodashObjectPick = __webpack_require__(353);
+	var _lodashObjectPick = __webpack_require__(355);
 
 	var _lodashObjectPick2 = _interopRequireDefault(_lodashObjectPick);
 
-	var _Editor = __webpack_require__(354);
+	var _lodashObjectMerge = __webpack_require__(179);
+
+	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
+
+	var _lodashLangCloneDeep = __webpack_require__(255);
+
+	var _lodashLangCloneDeep2 = _interopRequireDefault(_lodashLangCloneDeep);
+
+	var _lodashLangIsNumber = __webpack_require__(212);
+
+	var _lodashLangIsNumber2 = _interopRequireDefault(_lodashLangIsNumber);
+
+	var _lodashObjectKeys = __webpack_require__(205);
+
+	var _lodashObjectKeys2 = _interopRequireDefault(_lodashObjectKeys);
+
+	var _Editor = __webpack_require__(356);
 
 	var _Editor2 = _interopRequireDefault(_Editor);
+
+	var _GraphHeader = __webpack_require__(385);
+
+	var _GraphHeader2 = _interopRequireDefault(_GraphHeader);
+
+	var _GraphAnnotations = __webpack_require__(390);
+
+	var _GraphAnnotations2 = _interopRequireDefault(_GraphAnnotations);
+
+	var _EditButton = __webpack_require__(402);
+
+	var _EditButton2 = _interopRequireDefault(_EditButton);
+
+	var _HelpButton = __webpack_require__(403);
+
+	var _HelpButton2 = _interopRequireDefault(_HelpButton);
+
+	var _HelpScreen = __webpack_require__(377);
+
+	var _HelpScreen2 = _interopRequireDefault(_HelpScreen);
+
+	var _SettingsButton = __webpack_require__(404);
+
+	var _SettingsButton2 = _interopRequireDefault(_SettingsButton);
+
+	var _GraphSettingsForm = __webpack_require__(405);
+
+	var _GraphSettingsForm2 = _interopRequireDefault(_GraphSettingsForm);
+
+	var _SaveButton = __webpack_require__(407);
+
+	var _SaveButton2 = _interopRequireDefault(_SaveButton);
 
 	var Root = (function (_Component) {
 	  _inherits(Root, _Component);
@@ -20434,13 +20667,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _classCallCheck(this, Root);
 
 	    _get(Object.getPrototypeOf(Root.prototype), 'constructor', this).call(this, props);
-	    this.state = {
-	      shiftKey: false,
-	      altKey: false,
-	      altShiftKey: false,
-	      isEditor: props.isEditor,
-	      isLocked: props.isLocked
-	    };
+	    this.state = { shiftKey: false };
 	  }
 
 	  _createClass(Root, [{
@@ -20449,6 +20676,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var _this = this;
 
 	      var keyMap = {
+	        'undo': 'ctrl+,',
+	        'redo': 'ctrl+.',
 	        'zoomIn': 'ctrl+=',
 	        'zoomOut': 'ctrl+-',
 	        'resetZoom': 'ctrl+0',
@@ -20460,6 +20689,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      };
 
 	      var keyHandlers = {
+	        'undo': function undo() {
+	          dispatch(_reduxUndo.ActionCreators.undo());
+	        },
+	        'redo': function redo() {
+	          dispatch(_reduxUndo.ActionCreators.redo());
+	        },
 	        'zoomIn': function zoomIn() {
 	          return dispatch((0, _actions.zoomIn)());
 	        },
@@ -20489,9 +20724,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var _props = this.props;
 	      var dispatch = _props.dispatch;
 	      var graph = _props.graph;
-	      var _state = this.state;
-	      var isEditor = _state.isEditor;
-	      var isLocked = _state.isLocked;
+	      var isEditor = _props.isEditor;
+	      var isLocked = _props.isLocked;
+	      var graphTitle = _props.graphTitle;
+	      var showEditTools = _props.showEditTools;
+	      var showSaveButton = _props.showSaveButton;
+	      var showHelpScreen = _props.showHelpScreen;
+	      var hasSettings = _props.hasSettings;
+	      var graphSettings = _props.graphSettings;
+	      var showSettings = _props.showSettings;
+	      var onSave = _props.onSave;
+	      var currentIndex = _props.currentIndex;
+	      var annotation = _props.annotation;
+	      var annotations = _props.annotations;
+	      var showAnnotations = _props.showAnnotations;
 
 	      var that = this;
 
@@ -20547,76 +20793,220 @@ return /******/ (function(modules) { // webpackBootstrap
 	        dispatch((0, _actions.toggleEditTools)(value));
 	      };
 
-	      return this.props.graph ? _react2['default'].createElement(
+	      // annotations stuff
+
+	      var prevIndex = this.prevIndex();
+	      var nextIndex = this.nextIndex();
+
+	      var prevClick = function prevClick() {
+	        return dispatch((0, _actions.showAnnotation)(prevIndex));
+	      };
+	      var nextClick = function nextClick() {
+	        return dispatch((0, _actions.showAnnotation)(nextIndex));
+	      };
+	      var update = function update(index, data) {
+	        return dispatch((0, _actions.updateAnnotation)(index, data));
+	      };
+	      var remove = function remove(index) {
+	        return dispatch((0, _actions.deleteAnnotation)(index));
+	      };
+	      var show = function show(index) {
+	        return dispatch((0, _actions.showAnnotation)(index));
+	      };
+	      var create = function create() {
+	        dispatch((0, _actions.createAnnotation)(_this.props.annotations.length));
+	      };
+	      var move = function move(from, to) {
+	        return dispatch((0, _actions.moveAnnotation)(from, to));
+	      };
+	      var swapAnnotations = function swapAnnotations(value) {
+	        return dispatch((0, _actions.toggleAnnotations)(value));
+	      };
+	      var updateTitle = function updateTitle(title) {
+	        return dispatch((0, _actions.setTitle)(title));
+	      };
+	      var updateSettings = function updateSettings(settings) {
+	        return dispatch((0, _actions.setSettings)(settings));
+	      };
+
+	      var hasAnnotations = this.props.numAnnotations > 0;
+
+	      return _react2['default'].createElement(
 	        'div',
 	        { id: 'oligrapherContainer', style: { height: '100%' } },
 	        _react2['default'].createElement(
 	          _reactHotkeys.HotKeys,
 	          { focused: true, attach: window, keyMap: keyMap, handlers: keyHandlers },
-	          _react2['default'].createElement(_Graph2['default'], {
-	            ref: function (c) {
-	              _this.graph = c;if (c) {
-	                c.root = _this;
-	              }
-	            },
-	            graph: this.props.graph,
-	            zoom: this.props.zoom,
-	            height: this.props.height,
-	            isEditor: isEditor,
-	            isLocked: isLocked,
-	            viewOnlyHighlighted: this.props.viewOnlyHighlighted,
-	            selection: this.props.selection,
-	            resetZoom: function () {
-	              return dispatch((0, _actions.resetZoom)());
-	            },
-	            moveNode: function (graphId, nodeId, x, y) {
-	              return dispatch((0, _actions.moveNode)(graphId, nodeId, x, y));
-	            },
-	            moveEdge: function (graphId, edgeId, cx, cy) {
-	              return dispatch((0, _actions.moveEdge)(graphId, edgeId, cx, cy));
-	            },
-	            moveCaption: function (graphId, captionId, x, y) {
-	              return dispatch((0, _actions.moveCaption)(graphId, captionId, x, y));
-	            },
-	            clickNode: function (graphId, nodeId) {
-	              isEditor ? dispatch((0, _actions.swapNodeSelection)(nodeId, !that.state.shiftKey)) : isLocked ? null : dispatch((0, _actions.swapNodeHighlight)(graphId, nodeId));
-	            },
-	            clickEdge: function (graphId, edgeId) {
-	              isEditor ? dispatch((0, _actions.swapEdgeSelection)(edgeId, !that.state.shiftKey)) : isLocked ? null : dispatch((0, _actions.swapEdgeHighlight)(graphId, edgeId));
-	            },
-	            clickCaption: function (graphId, captionId) {
-	              isEditor ? dispatch((0, _actions.swapCaptionSelection)(captionId, !that.state.shiftKey)) : isLocked ? null : dispatch((0, _actions.swapCaptionHighlight)(graphId, captionId));
-	            } }),
-	          _react2['default'].createElement(_Editor2['default'], {
-	            graph: this.props.graph,
-	            graphApi: graphApi,
-	            isEditor: isEditor,
-	            showEditTools: this.props.showEditTools,
-	            showEditButton: true,
-	            hideHelp: true,
-	            dataSource: this.props.dataSource,
-	            selection: this.props.selection,
-	            nodeResults: this.props.nodeResults,
-	            setNodeResults: function (nodes) {
-	              return dispatch((0, _actions.setNodeResults)(nodes));
-	            },
-	            addForm: this.props.addForm,
-	            toggleEditTools: _toggleEditTools,
-	            toggleAddForm: function (form) {
-	              return dispatch((0, _actions.toggleAddForm)(form));
-	            } })
+	          _react2['default'].createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2['default'].createElement(
+	              'div',
+	              { className: showAnnotations && hasAnnotations ? "col-md-8" : "col-md-12" },
+	              isEditor || graphTitle ? _react2['default'].createElement(_GraphHeader2['default'], {
+	                graph: this.props.graph,
+	                title: this.props.graphTitle,
+	                url: this.props.url,
+	                updateTitle: updateTitle,
+	                user: this.props.user,
+	                date: this.props.date,
+	                links: this.props.links,
+	                isEditor: isEditor }) : null,
+	              _react2['default'].createElement(
+	                'div',
+	                { id: 'oligrapherGraphContainer' },
+	                this.props.graph ? _react2['default'].createElement(_Graph2['default'], {
+	                  ref: function (c) {
+	                    _this.graph = c;if (c) {
+	                      c.root = _this;
+	                    }
+	                  },
+	                  graph: this.props.graph,
+	                  zoom: this.props.zoom,
+	                  height: this.props.height,
+	                  isEditor: isEditor,
+	                  isLocked: isLocked,
+	                  viewOnlyHighlighted: this.props.viewOnlyHighlighted,
+	                  selection: this.props.selection,
+	                  resetZoom: function () {
+	                    return dispatch((0, _actions.resetZoom)());
+	                  },
+	                  moveNode: function (graphId, nodeId, x, y) {
+	                    return dispatch((0, _actions.moveNode)(graphId, nodeId, x, y));
+	                  },
+	                  moveEdge: function (graphId, edgeId, cx, cy) {
+	                    return dispatch((0, _actions.moveEdge)(graphId, edgeId, cx, cy));
+	                  },
+	                  moveCaption: function (graphId, captionId, x, y) {
+	                    return dispatch((0, _actions.moveCaption)(graphId, captionId, x, y));
+	                  },
+	                  clickNode: function (graphId, nodeId) {
+	                    isEditor && showEditTools ? dispatch((0, _actions.swapNodeSelection)(nodeId, !that.state.shiftKey)) : isLocked ? null : dispatch((0, _actions.swapNodeHighlight)(graphId, nodeId));
+	                  },
+	                  clickEdge: function (graphId, edgeId) {
+	                    isEditor && showEditTools ? dispatch((0, _actions.swapEdgeSelection)(edgeId, !that.state.shiftKey)) : isLocked ? null : dispatch((0, _actions.swapEdgeHighlight)(graphId, edgeId));
+	                  },
+	                  clickCaption: function (graphId, captionId) {
+	                    isEditor && showEditTools ? dispatch((0, _actions.swapCaptionSelection)(captionId, !that.state.shiftKey)) : isLocked ? null : dispatch((0, _actions.swapCaptionHighlight)(graphId, captionId));
+	                  } }) : null,
+	                this.props.graph ? _react2['default'].createElement(_Editor2['default'], {
+	                  graph: this.props.graph,
+	                  graphApi: graphApi,
+	                  isEditor: isEditor,
+	                  showEditTools: this.props.showEditTools,
+	                  showEditButton: false,
+	                  hideHelp: true,
+	                  dataSource: this.props.dataSource,
+	                  selection: this.props.selection,
+	                  nodeResults: this.props.nodeResults,
+	                  setNodeResults: function (nodes) {
+	                    return dispatch((0, _actions.setNodeResults)(nodes));
+	                  },
+	                  addForm: this.props.addForm,
+	                  toggleEditTools: _toggleEditTools,
+	                  toggleAddForm: function (form) {
+	                    return dispatch((0, _actions.toggleAddForm)(form));
+	                  },
+	                  undo: function () {
+	                    return dispatch(_reduxUndo.ActionCreators.undo());
+	                  },
+	                  redo: function () {
+	                    return dispatch(_reduxUndo.ActionCreators.redo());
+	                  },
+	                  canUndo: this.props.canUndo,
+	                  canRedo: this.props.canRedo }) : null,
+	                _react2['default'].createElement(
+	                  'div',
+	                  { id: 'oligrapherMetaButtons' },
+	                  isEditor ? _react2['default'].createElement(_EditButton2['default'], { toggle: function () {
+	                      return dispatch((0, _actions.toggleEditTools)());
+	                    }, showEditTools: showEditTools }) : null,
+	                  isEditor && hasSettings ? _react2['default'].createElement(_SettingsButton2['default'], { toggleSettings: function (value) {
+	                      return dispatch((0, _actions.toggleSettings)(value));
+	                    } }) : null,
+	                  isEditor ? _react2['default'].createElement(_HelpButton2['default'], { toggleHelpScreen: function () {
+	                      return dispatch((0, _actions.toggleHelpScreen)());
+	                    } }) : null
+	                ),
+	                showSettings && hasSettings ? _react2['default'].createElement(_GraphSettingsForm2['default'], { settings: graphSettings, updateSettings: updateSettings }) : null
+	              )
+	            ),
+	            showAnnotations && hasAnnotations ? _react2['default'].createElement(_GraphAnnotations2['default'], {
+	              isEditor: isEditor,
+	              navList: this.props.isEditor,
+	              prevClick: prevClick,
+	              nextClick: nextClick,
+	              swapAnnotations: swapAnnotations,
+	              annotation: annotation,
+	              annotations: annotations,
+	              currentIndex: currentIndex,
+	              show: show,
+	              create: create,
+	              update: update,
+	              move: move,
+	              remove: remove,
+	              editForm: true,
+	              hideEditTools: function () {
+	                return dispatch((0, _actions.toggleEditTools)(false));
+	              } }) : null
+	          ),
+	          !showAnnotations && hasAnnotations ? _react2['default'].createElement(
+	            'div',
+	            { id: 'oligrapherShowAnnotations' },
+	            _react2['default'].createElement(
+	              'button',
+	              { onClick: function () {
+	                  return swapAnnotations();
+	                }, className: 'btn btn-lg btn-default' },
+	              _react2['default'].createElement('span', { className: 'glyphicon glyphicon-font' })
+	            )
+	          ) : null,
+	          showSaveButton && isEditor && onSave ? _react2['default'].createElement(_SaveButton2['default'], { save: function () {
+	              return _this.handleSave();
+	            } }) : null,
+	          showHelpScreen ? _react2['default'].createElement(_HelpScreen2['default'], { source: this.props.dataSource, close: function () {
+	              return dispatch((0, _actions.toggleHelpScreen)(false));
+	            } }) : null
 	        )
-	      ) : _react2['default'].createElement('div', null);
+	      );
 	    }
 	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
-	      if (this.props.data) {
+	      var _props2 = this.props;
+	      var dispatch = _props2.dispatch;
+	      var title = _props2.title;
+	      var graph = _props2.graph;
+	      var graphData = _props2.graphData;
+	      var annotationsData = _props2.annotationsData;
+	      var startIndex = _props2.startIndex;
+	      var settings = _props2.settings;
+	      var onSave = _props2.onSave;
+
+	      if (graphData) {
 	        // data provided from outside
-	        this.loadData(this.props.data);
-	      } else {
+	        this.loadData(graphData);
+	      } else if (!graph) {
 	        // load empty graph
 	        this.loadData(_modelsGraph2['default'].defaults());
+	      }
+
+	      if (title) {
+	        dispatch((0, _actions.setTitle)(title));
+	      }
+
+	      if (annotationsData) {
+	        dispatch((0, _actions.loadAnnotations)(annotationsData));
+	      }
+
+	      startIndex = annotationsData[startIndex] ? startIndex : 0;
+
+	      if (startIndex) {
+	        dispatch((0, _actions.showAnnotation)(startIndex));
+	      }
+
+	      if (settings) {
+	        dispatch((0, _actions.setSettings)(settings));
 	      }
 	    }
 	  }, {
@@ -20624,9 +21014,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function componentDidUpdate(prevProps) {
 	      // fire selection callback with glorified selection state if selection changed
 	      if (this.props.onSelection) {
-	        var _props2 = this.props;
-	        var selection = _props2.selection;
-	        var graph = _props2.graph;
+	        var _props3 = this.props;
+	        var selection = _props3.selection;
+	        var graph = _props3.graph;
 
 	        if (JSON.stringify(prevProps.selection) !== JSON.stringify(selection)) {
 	          this.props.onSelection(selection);
@@ -20659,6 +21049,46 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function toggleLocked(value) {
 	      this.setState({ isLocked: value });
 	    }
+	  }, {
+	    key: 'prevIndex',
+	    value: function prevIndex() {
+	      var _props4 = this.props;
+	      var currentIndex = _props4.currentIndex;
+	      var numAnnotations = _props4.numAnnotations;
+
+	      return currentIndex - 1 < 0 ? null : currentIndex - 1;
+	    }
+	  }, {
+	    key: 'nextIndex',
+	    value: function nextIndex() {
+	      var _props5 = this.props;
+	      var currentIndex = _props5.currentIndex;
+	      var numAnnotations = _props5.numAnnotations;
+
+	      return currentIndex + 1 > numAnnotations - 1 ? null : currentIndex + 1;
+	    }
+	  }, {
+	    key: 'visibleAnnotations',
+	    value: function visibleAnnotations() {
+	      return this.props.showAnnotations && this.props.numAnnotations > 0;
+	    }
+	  }, {
+	    key: 'graphWithoutHighlights',
+	    value: function graphWithoutHighlights() {
+	      return (0, _lodashObjectPick2['default'])(_modelsGraph2['default'].clearHighlights(this.props.graph), ['nodes', 'edges', 'captions']);
+	    }
+	  }, {
+	    key: 'handleSave',
+	    value: function handleSave() {
+	      if (this.props.onSave) {
+	        this.props.onSave({
+	          title: this.props.graphTitle,
+	          graph: this.graphWithoutHighlights(),
+	          annotations: this.props.annotations,
+	          settings: this.props.graphSettings
+	        });
+	      }
+	    }
 	  }]);
 
 	  return Root;
@@ -20666,13 +21096,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function select(state) {
 	  return {
-	    graph: state.graphs[state.position.currentId],
+	    graph: state.graphs.present[state.position.currentId],
+	    canUndo: state.graphs.past.length > 0,
+	    canRedo: state.graphs.future.length > 0,
 	    loadedId: state.position.loadedId,
 	    selection: state.selection,
 	    zoom: state.zoom,
 	    showEditTools: state.editTools.visible,
 	    addForm: state.editTools.addForm,
-	    nodeResults: state.editTools.nodeResults
+	    nodeResults: state.editTools.nodeResults,
+	    graphTitle: state.title,
+	    currentIndex: state.position.currentIndex,
+	    numAnnotations: state.annotations.list.length,
+	    annotation: state.annotations.list[state.position.currentIndex],
+	    annotations: state.annotations.list,
+	    showAnnotations: state.annotations.visible,
+	    graphSettings: state.settings,
+	    hasSettings: Object.keys(state.settings).length > 0,
+	    showHelpScreen: state.showHelpScreen,
+	    showSettings: state.showSettings
 	  };
 	}
 
@@ -20680,7 +21122,359 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 174 */
+/* 175 */
+/***/ function(module, exports) {
+
+	// debug output
+	'use strict';
+
+	exports.__esModule = true;
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	exports.parseActions = parseActions;
+	exports['default'] = undoable;
+	exports.distinctState = distinctState;
+	exports.includeAction = includeAction;
+	exports.ifAction = ifAction;
+	exports.excludeAction = excludeAction;
+	var __DEBUG__ = undefined;
+	function debug() {
+	  if (__DEBUG__) {
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    if (!console.group) {
+	      args.unshift('%credux-undo', 'font-style: italic');
+	    }
+	    console.log.apply(console, args);
+	  }
+	}
+	function debugStart(action, state) {
+	  if (__DEBUG__) {
+	    var args = ['action', action.type];
+	    if (console.group) {
+	      args.unshift('%credux-undo', 'font-style: italic');
+	      console.groupCollapsed.apply(console, args);
+	      console.log('received', { state: state, action: action });
+	    } else {
+	      debug.apply(undefined, args);
+	    }
+	  }
+	}
+	function debugEnd() {
+	  if (__DEBUG__) {
+	    return console.groupEnd && console.groupEnd();
+	  }
+	}
+	// /debug output
+
+	// action types
+	var ActionTypes = {
+	  UNDO: '@@redux-undo/UNDO',
+	  REDO: '@@redux-undo/REDO',
+	  JUMP_TO_FUTURE: '@@redux-undo/JUMP_TO_FUTURE',
+	  JUMP_TO_PAST: '@@redux-undo/JUMP_TO_PAST'
+	};
+	exports.ActionTypes = ActionTypes;
+	// /action types
+
+	// action creators to change the state
+	var ActionCreators = {
+	  undo: function undo() {
+	    return { type: ActionTypes.UNDO };
+	  },
+	  redo: function redo() {
+	    return { type: ActionTypes.REDO };
+	  },
+	  jumpToFuture: function jumpToFuture(index) {
+	    return { type: ActionTypes.JUMP_TO_FUTURE, index: index };
+	  },
+	  jumpToPast: function jumpToPast(index) {
+	    return { type: ActionTypes.JUMP_TO_PAST, index: index };
+	  }
+	};
+	exports.ActionCreators = ActionCreators;
+	// /action creators
+
+	// length: get length of history
+	function length(history) {
+	  var past = history.past;
+	  var future = history.future;
+
+	  return past.length + 1 + future.length;
+	}
+	// /length
+
+	// insert: insert `state` into history, which means adding the current state
+	//         into `past`, setting the new `state` as `present` and erasing
+	//         the `future`.
+	function insert(history, state, limit) {
+	  debug('insert', { state: state, history: history, free: limit - length(history) });
+
+	  var past = history.past;
+	  var present = history.present;
+
+	  var historyOverflow = limit && length(history) >= limit;
+
+	  if (present === undefined) {
+	    // init history
+	    return {
+	      past: [],
+	      present: state,
+	      future: []
+	    };
+	  }
+
+	  return {
+	    past: [].concat(past.slice(historyOverflow ? 1 : 0), [present]),
+	    present: state,
+	    future: []
+	  };
+	}
+	// /insert
+
+	// undo: go back to the previous point in history
+	function undo(history) {
+	  debug('undo', { history: history });
+
+	  var past = history.past;
+	  var present = history.present;
+	  var future = history.future;
+
+	  if (past.length <= 0) return history;
+
+	  return {
+	    past: past.slice(0, past.length - 1), // remove last element from past
+	    present: past[past.length - 1], // set element as new present
+	    future: [present].concat(future)
+	  };
+	}
+	// /undo
+
+	// redo: go to the next point in history
+	function redo(history) {
+	  debug('redo', { history: history });
+
+	  var past = history.past;
+	  var present = history.present;
+	  var future = history.future;
+
+	  if (future.length <= 0) return history;
+
+	  return {
+	    future: future.slice(1, future.length), // remove element from future
+	    present: future[0], // set element as new present
+	    past: [].concat(past, [present // old present state is in the past now
+	    ])
+	  };
+	}
+	// /redo
+
+	// jumpToFuture: jump to requested index in future history
+	function jumpToFuture(history, index) {
+	  if (index === 0) return redo(history);
+
+	  var past = history.past;
+	  var present = history.present;
+	  var future = history.future;
+
+	  return {
+	    future: future.slice(index + 1),
+	    present: future[index],
+	    past: past.concat([present]).concat(future.slice(0, index))
+	  };
+	}
+	// /jumpToFuture
+
+	// jumpToPast: jump to requested index in past history
+	function jumpToPast(history, index) {
+	  if (index === history.past.length - 1) return undo(history);
+
+	  var past = history.past;
+	  var present = history.present;
+	  var future = history.future;
+
+	  return {
+	    future: past.slice(index + 1).concat([present]).concat(future),
+	    present: past[index],
+	    past: past.slice(0, index)
+	  };
+	}
+	// /jumpToPast
+
+	// wrapState: for backwards compatibility to 0.4
+	function wrapState(state) {
+	  return _extends({}, state, {
+	    history: state
+	  });
+	}
+	// /wrapState
+
+	// updateState
+	function updateState(state, history) {
+	  return wrapState(_extends({}, state, history));
+	}
+	// /updateState
+
+	// createHistory
+	function createHistory(state) {
+	  return {
+	    past: [],
+	    present: state,
+	    future: []
+	  };
+	}
+	// /createHistory
+
+	// parseActions
+
+	function parseActions(rawActions) {
+	  var defaultValue = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
+
+	  if (Array.isArray(rawActions)) {
+	    return rawActions;
+	  } else if (typeof rawActions === 'string') {
+	    return [rawActions];
+	  }
+	  return defaultValue;
+	}
+
+	// /parseActions
+
+	// redux-undo higher order reducer
+
+	function undoable(reducer) {
+	  var rawConfig = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+	  __DEBUG__ = rawConfig.debug;
+
+	  var config = {
+	    initialState: rawConfig.initialState,
+	    initTypes: parseActions(rawConfig.initTypes, ['@@redux/INIT', '@@INIT']),
+	    limit: rawConfig.limit,
+	    filter: rawConfig.filter || function () {
+	      return true;
+	    },
+	    undoType: rawConfig.undoType || ActionTypes.UNDO,
+	    redoType: rawConfig.redoType || ActionTypes.REDO,
+	    jumpToPastType: rawConfig.jumpToPastType || ActionTypes.JUMP_TO_PAST,
+	    jumpToFutureType: rawConfig.jumpToFutureType || ActionTypes.JUMP_TO_FUTURE
+	  };
+	  config.history = rawConfig.initialHistory || createHistory(config.initialState);
+
+	  if (config.initTypes.length === 0) {
+	    console.warn('redux-undo: supply at least one action type in initTypes to ensure initial state');
+	  }
+
+	  return function (state, action) {
+	    debugStart(action, state);
+	    var res = undefined;
+	    switch (action.type) {
+	      case config.undoType:
+	        res = undo(state);
+	        debug('after undo', res);
+	        debugEnd();
+	        return res ? updateState(state, res) : state;
+
+	      case config.redoType:
+	        res = redo(state);
+	        debug('after redo', res);
+	        debugEnd();
+	        return res ? updateState(state, res) : state;
+
+	      case config.jumpToPastType:
+	        res = jumpToPast(state, action.index);
+	        debug('after jumpToPast', res);
+	        debugEnd();
+	        return res ? updateState(state, res) : state;
+
+	      case config.jumpToFutureType:
+	        res = jumpToFuture(state, action.index);
+	        debug('after jumpToFuture', res);
+	        debugEnd();
+	        return res ? updateState(state, res) : state;
+
+	      default:
+	        res = reducer(state && state.present, action);
+
+	        if (config.initTypes.some(function (actionType) {
+	          return actionType === action.type;
+	        })) {
+	          debug('reset history due to init action');
+	          debugEnd();
+	          return wrapState(_extends({}, state, createHistory(res)));
+	        }
+
+	        if (config.filter && typeof config.filter === 'function') {
+	          if (!config.filter(action, res, state && state.present)) {
+	            debug('filter prevented action, not storing it');
+	            debugEnd();
+	            return wrapState(_extends({}, state, {
+	              present: res
+	            }));
+	          }
+	        }
+
+	        var history = state && state.present !== undefined ? state : config.history;
+	        var updatedHistory = insert(history, res, config.limit);
+	        debug('after insert', { history: updatedHistory, free: config.limit - length(updatedHistory) });
+	        debugEnd();
+
+	        return wrapState(_extends({}, state, updatedHistory));
+	    }
+	  };
+	}
+
+	// /redux-undo
+
+	// distinctState helper
+
+	function distinctState() {
+	  return function (action, currentState, previousState) {
+	    return currentState !== previousState;
+	  };
+	}
+
+	// /distinctState
+
+	// includeAction helper
+
+	function includeAction(rawActions) {
+	  var actions = parseActions(rawActions);
+	  return function (action) {
+	    return actions.indexOf(action.type) >= 0;
+	  };
+	}
+
+	// /includeAction
+
+	// deprecated ifAction helper
+
+	function ifAction(rawActions) {
+	  console.error('Deprecation Warning: Please change `ifAction` to `includeAction`');
+	  return includeAction(rawActions);
+	}
+
+	// /ifAction
+
+	// excludeAction helper
+
+	function excludeAction() {
+	  var rawActions = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+
+	  var actions = parseActions(rawActions);
+	  return function (action) {
+	    return actions.indexOf(action.type) < 0;
+	  };
+	}
+
+	// /excludeAction
+	// old present state is in the future now
+
+/***/ },
+/* 176 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20723,10 +21517,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.toggleEditTools = toggleEditTools;
 	exports.toggleAddForm = toggleAddForm;
 	exports.setNodeResults = setNodeResults;
+	exports.loadAnnotations = loadAnnotations;
+	exports.showAnnotation = showAnnotation;
+	exports.updateAnnotation = updateAnnotation;
+	exports.deleteAnnotation = deleteAnnotation;
+	exports.createAnnotation = createAnnotation;
+	exports.moveAnnotation = moveAnnotation;
+	exports.toggleAnnotations = toggleAnnotations;
+	exports.setTitle = setTitle;
+	exports.setSettings = setSettings;
+	exports.toggleHelpScreen = toggleHelpScreen;
+	exports.toggleSettings = toggleSettings;
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _modelsGraph = __webpack_require__(175);
+	var _modelsGraph = __webpack_require__(177);
 
 	var _modelsGraph2 = _interopRequireDefault(_modelsGraph);
 
@@ -20801,8 +21606,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	var TOGGLE_ADD_FORM = 'TOGGLE_ADD_FORM';
 	exports.TOGGLE_ADD_FORM = TOGGLE_ADD_FORM;
 	var SET_NODE_RESULTS = 'SET_NODE_RESULTS';
-
 	exports.SET_NODE_RESULTS = SET_NODE_RESULTS;
+	var LOAD_ANNOTATIONS = 'LOAD_ANNOTATIONS';
+	exports.LOAD_ANNOTATIONS = LOAD_ANNOTATIONS;
+	var SHOW_ANNOTATION = 'SHOW_ANNOTATION';
+	exports.SHOW_ANNOTATION = SHOW_ANNOTATION;
+	var UPDATE_ANNOTATION = 'UPDATE_ANNOTATION';
+	exports.UPDATE_ANNOTATION = UPDATE_ANNOTATION;
+	var DELETE_ANNOTATION = 'DELETE_ANNOTATION';
+	exports.DELETE_ANNOTATION = DELETE_ANNOTATION;
+	var CREATE_ANNOTATION = 'CREATE_ANNOTATION';
+	exports.CREATE_ANNOTATION = CREATE_ANNOTATION;
+	var TOGGLE_ANNOTATIONS = 'TOGGLE_ANNOTATIONS';
+	exports.TOGGLE_ANNOTATIONS = TOGGLE_ANNOTATIONS;
+	var MOVE_ANNOTATION = 'MOVE_ANNOTATION';
+	exports.MOVE_ANNOTATION = MOVE_ANNOTATION;
+	var SET_TITLE = 'SET_TITLE';
+	exports.SET_TITLE = SET_TITLE;
+	var SET_SETTINGS = 'SET_SETTINGS';
+	exports.SET_SETTINGS = SET_SETTINGS;
+	var TOGGLE_HELP_SCREEN = 'TOGGLE_HELP_SCREEN';
+	exports.TOGGLE_HELP_SCREEN = TOGGLE_HELP_SCREEN;
+	var TOGGLE_SETTINGS = 'TOGGLE_SETTINGS';
+
+	exports.TOGGLE_SETTINGS = TOGGLE_SETTINGS;
 	/*
 	 * action creators
 	 */
@@ -20962,8 +21789,52 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return { type: SET_NODE_RESULTS, nodes: nodes };
 	}
 
+	function loadAnnotations(annotations) {
+	  return { type: LOAD_ANNOTATIONS, annotations: annotations };
+	}
+
+	function showAnnotation(id) {
+	  return { type: SHOW_ANNOTATION, id: id };
+	}
+
+	function updateAnnotation(id, data) {
+	  return { type: UPDATE_ANNOTATION, id: id, data: data };
+	}
+
+	function deleteAnnotation(id) {
+	  return { type: DELETE_ANNOTATION, id: id };
+	}
+
+	function createAnnotation(newIndex) {
+	  return { type: CREATE_ANNOTATION, newIndex: newIndex };
+	}
+
+	function moveAnnotation(fromIndex, toIndex) {
+	  return { type: MOVE_ANNOTATION, fromIndex: fromIndex, toIndex: toIndex };
+	}
+
+	function toggleAnnotations(value) {
+	  return { type: TOGGLE_ANNOTATIONS, value: value };
+	}
+
+	function setTitle(title) {
+	  return { type: SET_TITLE, title: title };
+	}
+
+	function setSettings(settings) {
+	  return { type: SET_SETTINGS, settings: settings };
+	}
+
+	function toggleHelpScreen(value) {
+	  return { type: TOGGLE_HELP_SCREEN, value: value };
+	}
+
+	function toggleSettings(value) {
+	  return { type: TOGGLE_SETTINGS, value: value };
+	}
+
 /***/ },
-/* 175 */
+/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20978,67 +21849,67 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _Node = __webpack_require__(176);
+	var _Node = __webpack_require__(178);
 
 	var _Node2 = _interopRequireDefault(_Node);
 
-	var _Edge = __webpack_require__(237);
+	var _Edge = __webpack_require__(239);
 
 	var _Edge2 = _interopRequireDefault(_Edge);
 
-	var _Caption = __webpack_require__(238);
+	var _Caption = __webpack_require__(240);
 
 	var _Caption2 = _interopRequireDefault(_Caption);
 
-	var _Helpers = __webpack_require__(211);
+	var _Helpers = __webpack_require__(213);
 
 	var _Helpers2 = _interopRequireDefault(_Helpers);
 
-	var _lodashObjectMerge = __webpack_require__(177);
+	var _lodashObjectMerge = __webpack_require__(179);
 
 	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
 
-	var _lodashObjectAssign = __webpack_require__(239);
+	var _lodashObjectAssign = __webpack_require__(241);
 
 	var _lodashObjectAssign2 = _interopRequireDefault(_lodashObjectAssign);
 
-	var _lodashObjectValues = __webpack_require__(241);
+	var _lodashObjectValues = __webpack_require__(243);
 
 	var _lodashObjectValues2 = _interopRequireDefault(_lodashObjectValues);
 
-	var _lodashArrayIntersection = __webpack_require__(243);
+	var _lodashArrayIntersection = __webpack_require__(245);
 
 	var _lodashArrayIntersection2 = _interopRequireDefault(_lodashArrayIntersection);
 
-	var _lodashArrayFlatten = __webpack_require__(250);
+	var _lodashArrayFlatten = __webpack_require__(252);
 
 	var _lodashArrayFlatten2 = _interopRequireDefault(_lodashArrayFlatten);
 
-	var _lodashLangCloneDeep = __webpack_require__(253);
+	var _lodashLangCloneDeep = __webpack_require__(255);
 
 	var _lodashLangCloneDeep2 = _interopRequireDefault(_lodashLangCloneDeep);
 
-	var _lodashObjectOmit = __webpack_require__(254);
+	var _lodashObjectOmit = __webpack_require__(256);
 
 	var _lodashObjectOmit2 = _interopRequireDefault(_lodashObjectOmit);
 
-	var _lodashArrayDifference = __webpack_require__(259);
+	var _lodashArrayDifference = __webpack_require__(261);
 
 	var _lodashArrayDifference2 = _interopRequireDefault(_lodashArrayDifference);
 
-	var _lodashArrayCompact = __webpack_require__(260);
+	var _lodashArrayCompact = __webpack_require__(262);
 
 	var _lodashArrayCompact2 = _interopRequireDefault(_lodashArrayCompact);
 
-	var _lodashCollectionSize = __webpack_require__(261);
+	var _lodashCollectionSize = __webpack_require__(263);
 
 	var _lodashCollectionSize2 = _interopRequireDefault(_lodashCollectionSize);
 
-	var _lodashCollectionIncludes = __webpack_require__(262);
+	var _lodashCollectionIncludes = __webpack_require__(264);
 
 	var _lodashCollectionIncludes2 = _interopRequireDefault(_lodashCollectionIncludes);
 
-	var _lodashLangIsNumber = __webpack_require__(210);
+	var _lodashLangIsNumber = __webpack_require__(212);
 
 	var _lodashLangIsNumber2 = _interopRequireDefault(_lodashLangIsNumber);
 
@@ -21618,7 +22489,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'clearHighlights',
 	    value: function clearHighlights(graph) {
-	      return this.setHighlights(graph, { nodeIds: [], edgeIds: [], captionIds: [] });
+	      var newGraph = (0, _lodashLangCloneDeep2['default'])(graph);
+
+	      (0, _lodashObjectValues2['default'])(newGraph.nodes).forEach(function (node) {
+	        delete newGraph.nodes[node.id].display.status;
+	      });
+
+	      (0, _lodashObjectValues2['default'])(newGraph.edges).forEach(function (edge) {
+	        delete newGraph.edges[edge.id].display.status;
+	      });
+
+	      (0, _lodashObjectValues2['default'])(newGraph.captions).forEach(function (caption) {
+	        delete newGraph.captions[caption.id].display.status;
+	      });
+
+	      return newGraph;
 	    }
 
 	    // ETC
@@ -21708,7 +22593,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Graph;
 
 /***/ },
-/* 176 */
+/* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21719,15 +22604,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _lodashObjectMerge = __webpack_require__(177);
+	var _lodashObjectMerge = __webpack_require__(179);
 
 	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
 
-	var _lodashLangIsNumber = __webpack_require__(210);
+	var _lodashLangIsNumber = __webpack_require__(212);
 
 	var _lodashLangIsNumber2 = _interopRequireDefault(_lodashLangIsNumber);
 
-	var _Helpers = __webpack_require__(211);
+	var _Helpers = __webpack_require__(213);
 
 	var _Helpers2 = _interopRequireDefault(_Helpers);
 
@@ -21767,11 +22652,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Node;
 
 /***/ },
-/* 177 */
+/* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseMerge = __webpack_require__(178),
-	    createAssigner = __webpack_require__(205);
+	var baseMerge = __webpack_require__(180),
+	    createAssigner = __webpack_require__(207);
 
 	/**
 	 * Recursively merges own enumerable properties of the source object(s), that
@@ -21827,17 +22712,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 178 */
+/* 180 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayEach = __webpack_require__(179),
-	    baseMergeDeep = __webpack_require__(180),
-	    isArray = __webpack_require__(188),
-	    isArrayLike = __webpack_require__(183),
-	    isObject = __webpack_require__(192),
-	    isObjectLike = __webpack_require__(187),
-	    isTypedArray = __webpack_require__(200),
-	    keys = __webpack_require__(203);
+	var arrayEach = __webpack_require__(181),
+	    baseMergeDeep = __webpack_require__(182),
+	    isArray = __webpack_require__(190),
+	    isArrayLike = __webpack_require__(185),
+	    isObject = __webpack_require__(194),
+	    isObjectLike = __webpack_require__(189),
+	    isTypedArray = __webpack_require__(202),
+	    keys = __webpack_require__(205);
 
 	/**
 	 * The base implementation of `_.merge` without support for argument juggling,
@@ -21889,7 +22774,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 179 */
+/* 181 */
 /***/ function(module, exports) {
 
 	/**
@@ -21917,16 +22802,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 180 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayCopy = __webpack_require__(181),
-	    isArguments = __webpack_require__(182),
-	    isArray = __webpack_require__(188),
-	    isArrayLike = __webpack_require__(183),
-	    isPlainObject = __webpack_require__(193),
-	    isTypedArray = __webpack_require__(200),
-	    toPlainObject = __webpack_require__(201);
+	var arrayCopy = __webpack_require__(183),
+	    isArguments = __webpack_require__(184),
+	    isArray = __webpack_require__(190),
+	    isArrayLike = __webpack_require__(185),
+	    isPlainObject = __webpack_require__(195),
+	    isTypedArray = __webpack_require__(202),
+	    toPlainObject = __webpack_require__(203);
 
 	/**
 	 * A specialized version of `baseMerge` for arrays and objects which performs
@@ -21990,7 +22875,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 181 */
+/* 183 */
 /***/ function(module, exports) {
 
 	/**
@@ -22016,11 +22901,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 182 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(183),
-	    isObjectLike = __webpack_require__(187);
+	var isArrayLike = __webpack_require__(185),
+	    isObjectLike = __webpack_require__(189);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -22056,11 +22941,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 183 */
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(184),
-	    isLength = __webpack_require__(186);
+	var getLength = __webpack_require__(186),
+	    isLength = __webpack_require__(188);
 
 	/**
 	 * Checks if `value` is array-like.
@@ -22077,10 +22962,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 184 */
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseProperty = __webpack_require__(185);
+	var baseProperty = __webpack_require__(187);
 
 	/**
 	 * Gets the "length" property value of `object`.
@@ -22098,7 +22983,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 185 */
+/* 187 */
 /***/ function(module, exports) {
 
 	/**
@@ -22118,7 +23003,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 186 */
+/* 188 */
 /***/ function(module, exports) {
 
 	/**
@@ -22144,7 +23029,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 187 */
+/* 189 */
 /***/ function(module, exports) {
 
 	/**
@@ -22162,12 +23047,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 188 */
+/* 190 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(189),
-	    isLength = __webpack_require__(186),
-	    isObjectLike = __webpack_require__(187);
+	var getNative = __webpack_require__(191),
+	    isLength = __webpack_require__(188),
+	    isObjectLike = __webpack_require__(189);
 
 	/** `Object#toString` result references. */
 	var arrayTag = '[object Array]';
@@ -22208,10 +23093,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 189 */
+/* 191 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isNative = __webpack_require__(190);
+	var isNative = __webpack_require__(192);
 
 	/**
 	 * Gets the native function at `key` of `object`.
@@ -22230,11 +23115,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 190 */
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isFunction = __webpack_require__(191),
-	    isObjectLike = __webpack_require__(187);
+	var isFunction = __webpack_require__(193),
+	    isObjectLike = __webpack_require__(189);
 
 	/** Used to detect host constructors (Safari > 5). */
 	var reIsHostCtor = /^\[object .+?Constructor\]$/;
@@ -22284,10 +23169,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 191 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(192);
+	var isObject = __webpack_require__(194);
 
 	/** `Object#toString` result references. */
 	var funcTag = '[object Function]';
@@ -22328,7 +23213,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 192 */
+/* 194 */
 /***/ function(module, exports) {
 
 	/**
@@ -22362,12 +23247,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 193 */
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForIn = __webpack_require__(194),
-	    isArguments = __webpack_require__(182),
-	    isObjectLike = __webpack_require__(187);
+	var baseForIn = __webpack_require__(196),
+	    isArguments = __webpack_require__(184),
+	    isObjectLike = __webpack_require__(189);
 
 	/** `Object#toString` result references. */
 	var objectTag = '[object Object]';
@@ -22439,11 +23324,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 194 */
+/* 196 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFor = __webpack_require__(195),
-	    keysIn = __webpack_require__(198);
+	var baseFor = __webpack_require__(197),
+	    keysIn = __webpack_require__(200);
 
 	/**
 	 * The base implementation of `_.forIn` without support for callback
@@ -22462,10 +23347,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 195 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createBaseFor = __webpack_require__(196);
+	var createBaseFor = __webpack_require__(198);
 
 	/**
 	 * The base implementation of `baseForIn` and `baseForOwn` which iterates
@@ -22485,10 +23370,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 196 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(197);
+	var toObject = __webpack_require__(199);
 
 	/**
 	 * Creates a base function for `_.forIn` or `_.forInRight`.
@@ -22518,10 +23403,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 197 */
+/* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(192);
+	var isObject = __webpack_require__(194);
 
 	/**
 	 * Converts `value` to an object if it's not one.
@@ -22538,14 +23423,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 198 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArguments = __webpack_require__(182),
-	    isArray = __webpack_require__(188),
-	    isIndex = __webpack_require__(199),
-	    isLength = __webpack_require__(186),
-	    isObject = __webpack_require__(192);
+	var isArguments = __webpack_require__(184),
+	    isArray = __webpack_require__(190),
+	    isIndex = __webpack_require__(201),
+	    isLength = __webpack_require__(188),
+	    isObject = __webpack_require__(194);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -22608,7 +23493,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 199 */
+/* 201 */
 /***/ function(module, exports) {
 
 	/** Used to detect unsigned integer values. */
@@ -22638,11 +23523,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 200 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isLength = __webpack_require__(186),
-	    isObjectLike = __webpack_require__(187);
+	var isLength = __webpack_require__(188),
+	    isObjectLike = __webpack_require__(189);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -22718,11 +23603,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 201 */
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCopy = __webpack_require__(202),
-	    keysIn = __webpack_require__(198);
+	var baseCopy = __webpack_require__(204),
+	    keysIn = __webpack_require__(200);
 
 	/**
 	 * Converts `value` to a plain object flattening inherited enumerable
@@ -22755,7 +23640,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 202 */
+/* 204 */
 /***/ function(module, exports) {
 
 	/**
@@ -22784,13 +23669,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 203 */
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(189),
-	    isArrayLike = __webpack_require__(183),
-	    isObject = __webpack_require__(192),
-	    shimKeys = __webpack_require__(204);
+	var getNative = __webpack_require__(191),
+	    isArrayLike = __webpack_require__(185),
+	    isObject = __webpack_require__(194),
+	    shimKeys = __webpack_require__(206);
 
 	/* Native method references for those with the same name as other `lodash` methods. */
 	var nativeKeys = getNative(Object, 'keys');
@@ -22835,14 +23720,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 204 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArguments = __webpack_require__(182),
-	    isArray = __webpack_require__(188),
-	    isIndex = __webpack_require__(199),
-	    isLength = __webpack_require__(186),
-	    keysIn = __webpack_require__(198);
+	var isArguments = __webpack_require__(184),
+	    isArray = __webpack_require__(190),
+	    isIndex = __webpack_require__(201),
+	    isLength = __webpack_require__(188),
+	    keysIn = __webpack_require__(200);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -22882,12 +23767,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 205 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bindCallback = __webpack_require__(206),
-	    isIterateeCall = __webpack_require__(208),
-	    restParam = __webpack_require__(209);
+	var bindCallback = __webpack_require__(208),
+	    isIterateeCall = __webpack_require__(210),
+	    restParam = __webpack_require__(211);
 
 	/**
 	 * Creates a `_.assign`, `_.defaults`, or `_.merge` function.
@@ -22929,10 +23814,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 206 */
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var identity = __webpack_require__(207);
+	var identity = __webpack_require__(209);
 
 	/**
 	 * A specialized version of `baseCallback` which only supports `this` binding
@@ -22974,7 +23859,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 207 */
+/* 209 */
 /***/ function(module, exports) {
 
 	/**
@@ -23000,12 +23885,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 208 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(183),
-	    isIndex = __webpack_require__(199),
-	    isObject = __webpack_require__(192);
+	var isArrayLike = __webpack_require__(185),
+	    isIndex = __webpack_require__(201),
+	    isObject = __webpack_require__(194);
 
 	/**
 	 * Checks if the provided arguments are from an iteratee call.
@@ -23034,7 +23919,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 209 */
+/* 211 */
 /***/ function(module, exports) {
 
 	/** Used as the `TypeError` message for "Functions" methods. */
@@ -23098,10 +23983,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 210 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObjectLike = __webpack_require__(187);
+	var isObjectLike = __webpack_require__(189);
 
 	/** `Object#toString` result references. */
 	var numberTag = '[object Number]';
@@ -23145,7 +24030,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 211 */
+/* 213 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23156,35 +24041,35 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _shortid = __webpack_require__(212);
+	var _shortid = __webpack_require__(214);
 
 	var _shortid2 = _interopRequireDefault(_shortid);
 
-	var _lodashLangClone = __webpack_require__(221);
+	var _lodashLangClone = __webpack_require__(223);
 
 	var _lodashLangClone2 = _interopRequireDefault(_lodashLangClone);
 
-	var _lodashCollectionEach = __webpack_require__(229);
+	var _lodashCollectionEach = __webpack_require__(231);
 
 	var _lodashCollectionEach2 = _interopRequireDefault(_lodashCollectionEach);
 
-	var _lodashLangIsEmpty = __webpack_require__(234);
+	var _lodashLangIsEmpty = __webpack_require__(236);
 
 	var _lodashLangIsEmpty2 = _interopRequireDefault(_lodashLangIsEmpty);
 
-	var _lodashLangIsNumber = __webpack_require__(210);
+	var _lodashLangIsNumber = __webpack_require__(212);
 
 	var _lodashLangIsNumber2 = _interopRequireDefault(_lodashLangIsNumber);
 
-	var _lodashLangIsBoolean = __webpack_require__(236);
+	var _lodashLangIsBoolean = __webpack_require__(238);
 
 	var _lodashLangIsBoolean2 = _interopRequireDefault(_lodashLangIsBoolean);
 
-	var _lodashLangIsArray = __webpack_require__(188);
+	var _lodashLangIsArray = __webpack_require__(190);
 
 	var _lodashLangIsArray2 = _interopRequireDefault(_lodashLangIsArray);
 
-	var _lodashLangIsPlainObject = __webpack_require__(193);
+	var _lodashLangIsPlainObject = __webpack_require__(195);
 
 	var _lodashLangIsPlainObject2 = _interopRequireDefault(_lodashLangIsPlainObject);
 
@@ -23215,23 +24100,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 212 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	module.exports = __webpack_require__(213);
+	module.exports = __webpack_require__(215);
 
 
 /***/ },
-/* 213 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var alphabet = __webpack_require__(214);
-	var encode = __webpack_require__(216);
-	var decode = __webpack_require__(218);
-	var isValid = __webpack_require__(219);
+	var alphabet = __webpack_require__(216);
+	var encode = __webpack_require__(218);
+	var decode = __webpack_require__(220);
+	var isValid = __webpack_require__(221);
 
 	// Ignore all milliseconds before a certain time to reduce the size of the date entropy without sacrificing uniqueness.
 	// This number should be updated every year or so to keep the generated id short.
@@ -23246,7 +24131,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// has a unique value for worker
 	// Note: I don't know if this is automatically set when using third
 	// party cluster solutions such as pm2.
-	var clusterWorkerId = __webpack_require__(220) || 0;
+	var clusterWorkerId = __webpack_require__(222) || 0;
 
 	// Counter is used when shortid is called multiple times in one second.
 	var counter;
@@ -23329,12 +24214,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 214 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var randomFromSeed = __webpack_require__(215);
+	var randomFromSeed = __webpack_require__(217);
 
 	var ORIGINAL = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-';
 	var alphabet;
@@ -23433,7 +24318,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 215 */
+/* 217 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23464,12 +24349,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 216 */
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var randomByte = __webpack_require__(217);
+	var randomByte = __webpack_require__(219);
 
 	function encode(lookup, number) {
 	    var loopCounter = 0;
@@ -23489,7 +24374,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 217 */
+/* 219 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23509,11 +24394,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 218 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var alphabet = __webpack_require__(214);
+	var alphabet = __webpack_require__(216);
 
 	/**
 	 * Decode the id to get the version and worker
@@ -23532,11 +24417,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 219 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var alphabet = __webpack_require__(214);
+	var alphabet = __webpack_require__(216);
 
 	function isShortId(id) {
 	    if (!id || typeof id !== 'string' || id.length < 6 ) {
@@ -23557,7 +24442,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 220 */
+/* 222 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23566,12 +24451,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 221 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseClone = __webpack_require__(222),
-	    bindCallback = __webpack_require__(206),
-	    isIterateeCall = __webpack_require__(208);
+	var baseClone = __webpack_require__(224),
+	    bindCallback = __webpack_require__(208),
+	    isIterateeCall = __webpack_require__(210);
 
 	/**
 	 * Creates a clone of `value`. If `isDeep` is `true` nested objects are cloned,
@@ -23642,18 +24527,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 222 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayCopy = __webpack_require__(181),
-	    arrayEach = __webpack_require__(179),
-	    baseAssign = __webpack_require__(223),
-	    baseForOwn = __webpack_require__(224),
-	    initCloneArray = __webpack_require__(225),
-	    initCloneByTag = __webpack_require__(226),
-	    initCloneObject = __webpack_require__(228),
-	    isArray = __webpack_require__(188),
-	    isObject = __webpack_require__(192);
+	var arrayCopy = __webpack_require__(183),
+	    arrayEach = __webpack_require__(181),
+	    baseAssign = __webpack_require__(225),
+	    baseForOwn = __webpack_require__(226),
+	    initCloneArray = __webpack_require__(227),
+	    initCloneByTag = __webpack_require__(228),
+	    initCloneObject = __webpack_require__(230),
+	    isArray = __webpack_require__(190),
+	    isObject = __webpack_require__(194);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -23776,11 +24661,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 223 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCopy = __webpack_require__(202),
-	    keys = __webpack_require__(203);
+	var baseCopy = __webpack_require__(204),
+	    keys = __webpack_require__(205);
 
 	/**
 	 * The base implementation of `_.assign` without support for argument juggling,
@@ -23801,11 +24686,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 224 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFor = __webpack_require__(195),
-	    keys = __webpack_require__(203);
+	var baseFor = __webpack_require__(197),
+	    keys = __webpack_require__(205);
 
 	/**
 	 * The base implementation of `_.forOwn` without support for callback
@@ -23824,7 +24709,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 225 */
+/* 227 */
 /***/ function(module, exports) {
 
 	/** Used for native method references. */
@@ -23856,10 +24741,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 226 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bufferClone = __webpack_require__(227);
+	var bufferClone = __webpack_require__(229);
 
 	/** `Object#toString` result references. */
 	var boolTag = '[object Boolean]',
@@ -23925,7 +24810,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 227 */
+/* 229 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/** Native method references. */
@@ -23952,7 +24837,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 228 */
+/* 230 */
 /***/ function(module, exports) {
 
 	/**
@@ -23974,19 +24859,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 229 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(230);
+	module.exports = __webpack_require__(232);
 
 
 /***/ },
-/* 230 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayEach = __webpack_require__(179),
-	    baseEach = __webpack_require__(231),
-	    createForEach = __webpack_require__(233);
+	var arrayEach = __webpack_require__(181),
+	    baseEach = __webpack_require__(233),
+	    createForEach = __webpack_require__(235);
 
 	/**
 	 * Iterates over elements of `collection` invoking `iteratee` for each element.
@@ -24024,11 +24909,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 231 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForOwn = __webpack_require__(224),
-	    createBaseEach = __webpack_require__(232);
+	var baseForOwn = __webpack_require__(226),
+	    createBaseEach = __webpack_require__(234);
 
 	/**
 	 * The base implementation of `_.forEach` without support for callback
@@ -24045,12 +24930,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 232 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(184),
-	    isLength = __webpack_require__(186),
-	    toObject = __webpack_require__(197);
+	var getLength = __webpack_require__(186),
+	    isLength = __webpack_require__(188),
+	    toObject = __webpack_require__(199);
 
 	/**
 	 * Creates a `baseEach` or `baseEachRight` function.
@@ -24082,11 +24967,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 233 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bindCallback = __webpack_require__(206),
-	    isArray = __webpack_require__(188);
+	var bindCallback = __webpack_require__(208),
+	    isArray = __webpack_require__(190);
 
 	/**
 	 * Creates a function for `_.forEach` or `_.forEachRight`.
@@ -24108,16 +24993,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 234 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArguments = __webpack_require__(182),
-	    isArray = __webpack_require__(188),
-	    isArrayLike = __webpack_require__(183),
-	    isFunction = __webpack_require__(191),
-	    isObjectLike = __webpack_require__(187),
-	    isString = __webpack_require__(235),
-	    keys = __webpack_require__(203);
+	var isArguments = __webpack_require__(184),
+	    isArray = __webpack_require__(190),
+	    isArrayLike = __webpack_require__(185),
+	    isFunction = __webpack_require__(193),
+	    isObjectLike = __webpack_require__(189),
+	    isString = __webpack_require__(237),
+	    keys = __webpack_require__(205);
 
 	/**
 	 * Checks if `value` is empty. A value is considered empty unless it's an
@@ -24161,10 +25046,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 235 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObjectLike = __webpack_require__(187);
+	var isObjectLike = __webpack_require__(189);
 
 	/** `Object#toString` result references. */
 	var stringTag = '[object String]';
@@ -24202,10 +25087,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 236 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObjectLike = __webpack_require__(187);
+	var isObjectLike = __webpack_require__(189);
 
 	/** `Object#toString` result references. */
 	var boolTag = '[object Boolean]';
@@ -24243,7 +25128,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 237 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24258,11 +25143,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _lodashObjectMerge = __webpack_require__(177);
+	var _lodashObjectMerge = __webpack_require__(179);
 
 	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
 
-	var _Helpers = __webpack_require__(211);
+	var _Helpers = __webpack_require__(213);
 
 	var _Helpers2 = _interopRequireDefault(_Helpers);
 
@@ -24326,7 +25211,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 238 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24337,11 +25222,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _lodashObjectMerge = __webpack_require__(177);
+	var _lodashObjectMerge = __webpack_require__(179);
 
 	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
 
-	var _Helpers = __webpack_require__(211);
+	var _Helpers = __webpack_require__(213);
 
 	var _Helpers2 = _interopRequireDefault(_Helpers);
 
@@ -24377,12 +25262,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Caption;
 
 /***/ },
-/* 239 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assignWith = __webpack_require__(240),
-	    baseAssign = __webpack_require__(223),
-	    createAssigner = __webpack_require__(205);
+	var assignWith = __webpack_require__(242),
+	    baseAssign = __webpack_require__(225),
+	    createAssigner = __webpack_require__(207);
 
 	/**
 	 * Assigns own enumerable properties of source object(s) to the destination
@@ -24426,10 +25311,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 240 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(203);
+	var keys = __webpack_require__(205);
 
 	/**
 	 * A specialized version of `_.assign` for customizing assigned values without
@@ -24464,11 +25349,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 241 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseValues = __webpack_require__(242),
-	    keys = __webpack_require__(203);
+	var baseValues = __webpack_require__(244),
+	    keys = __webpack_require__(205);
 
 	/**
 	 * Creates an array of the own enumerable property values of `object`.
@@ -24503,7 +25388,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 242 */
+/* 244 */
 /***/ function(module, exports) {
 
 	/**
@@ -24531,14 +25416,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 243 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIndexOf = __webpack_require__(244),
-	    cacheIndexOf = __webpack_require__(246),
-	    createCache = __webpack_require__(247),
-	    isArrayLike = __webpack_require__(183),
-	    restParam = __webpack_require__(209);
+	var baseIndexOf = __webpack_require__(246),
+	    cacheIndexOf = __webpack_require__(248),
+	    createCache = __webpack_require__(249),
+	    isArrayLike = __webpack_require__(185),
+	    restParam = __webpack_require__(211);
 
 	/**
 	 * Creates an array of unique values that are included in all of the provided
@@ -24595,10 +25480,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 244 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var indexOfNaN = __webpack_require__(245);
+	var indexOfNaN = __webpack_require__(247);
 
 	/**
 	 * The base implementation of `_.indexOf` without support for binary searches.
@@ -24628,7 +25513,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 245 */
+/* 247 */
 /***/ function(module, exports) {
 
 	/**
@@ -24657,10 +25542,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 246 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(192);
+	var isObject = __webpack_require__(194);
 
 	/**
 	 * Checks if `value` is in `cache` mimicking the return signature of
@@ -24682,11 +25567,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 247 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var SetCache = __webpack_require__(248),
-	    getNative = __webpack_require__(189);
+	/* WEBPACK VAR INJECTION */(function(global) {var SetCache = __webpack_require__(250),
+	    getNative = __webpack_require__(191);
 
 	/** Native method references. */
 	var Set = getNative(global, 'Set');
@@ -24710,11 +25595,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 248 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var cachePush = __webpack_require__(249),
-	    getNative = __webpack_require__(189);
+	/* WEBPACK VAR INJECTION */(function(global) {var cachePush = __webpack_require__(251),
+	    getNative = __webpack_require__(191);
 
 	/** Native method references. */
 	var Set = getNative(global, 'Set');
@@ -24746,10 +25631,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 249 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(192);
+	var isObject = __webpack_require__(194);
 
 	/**
 	 * Adds `value` to the cache.
@@ -24772,11 +25657,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 250 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFlatten = __webpack_require__(251),
-	    isIterateeCall = __webpack_require__(208);
+	var baseFlatten = __webpack_require__(253),
+	    isIterateeCall = __webpack_require__(210);
 
 	/**
 	 * Flattens a nested array. If `isDeep` is `true` the array is recursively
@@ -24810,14 +25695,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 251 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayPush = __webpack_require__(252),
-	    isArguments = __webpack_require__(182),
-	    isArray = __webpack_require__(188),
-	    isArrayLike = __webpack_require__(183),
-	    isObjectLike = __webpack_require__(187);
+	var arrayPush = __webpack_require__(254),
+	    isArguments = __webpack_require__(184),
+	    isArray = __webpack_require__(190),
+	    isArrayLike = __webpack_require__(185),
+	    isObjectLike = __webpack_require__(189);
 
 	/**
 	 * The base implementation of `_.flatten` with added support for restricting
@@ -24857,7 +25742,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 252 */
+/* 254 */
 /***/ function(module, exports) {
 
 	/**
@@ -24883,11 +25768,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 253 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseClone = __webpack_require__(222),
-	    bindCallback = __webpack_require__(206);
+	var baseClone = __webpack_require__(224),
+	    bindCallback = __webpack_require__(208);
 
 	/**
 	 * Creates a deep clone of `value`. If `customizer` is provided it's invoked
@@ -24944,17 +25829,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 254 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayMap = __webpack_require__(255),
-	    baseDifference = __webpack_require__(256),
-	    baseFlatten = __webpack_require__(251),
-	    bindCallback = __webpack_require__(206),
-	    keysIn = __webpack_require__(198),
-	    pickByArray = __webpack_require__(257),
-	    pickByCallback = __webpack_require__(258),
-	    restParam = __webpack_require__(209);
+	var arrayMap = __webpack_require__(257),
+	    baseDifference = __webpack_require__(258),
+	    baseFlatten = __webpack_require__(253),
+	    bindCallback = __webpack_require__(208),
+	    keysIn = __webpack_require__(200),
+	    pickByArray = __webpack_require__(259),
+	    pickByCallback = __webpack_require__(260),
+	    restParam = __webpack_require__(211);
 
 	/**
 	 * The opposite of `_.pick`; this method creates an object composed of the
@@ -24997,7 +25882,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 255 */
+/* 257 */
 /***/ function(module, exports) {
 
 	/**
@@ -25024,12 +25909,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 256 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIndexOf = __webpack_require__(244),
-	    cacheIndexOf = __webpack_require__(246),
-	    createCache = __webpack_require__(247);
+	var baseIndexOf = __webpack_require__(246),
+	    cacheIndexOf = __webpack_require__(248),
+	    createCache = __webpack_require__(249);
 
 	/** Used as the size to enable large array optimizations. */
 	var LARGE_ARRAY_SIZE = 200;
@@ -25085,10 +25970,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 257 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(197);
+	var toObject = __webpack_require__(199);
 
 	/**
 	 * A specialized version of `_.pick` which picks `object` properties specified
@@ -25119,10 +26004,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 258 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForIn = __webpack_require__(194);
+	var baseForIn = __webpack_require__(196);
 
 	/**
 	 * A specialized version of `_.pick` which picks `object` properties `predicate`
@@ -25147,14 +26032,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 259 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseDifference = __webpack_require__(256),
-	    baseFlatten = __webpack_require__(251),
-	    isArrayLike = __webpack_require__(183),
-	    isObjectLike = __webpack_require__(187),
-	    restParam = __webpack_require__(209);
+	var baseDifference = __webpack_require__(258),
+	    baseFlatten = __webpack_require__(253),
+	    isArrayLike = __webpack_require__(185),
+	    isObjectLike = __webpack_require__(189),
+	    restParam = __webpack_require__(211);
 
 	/**
 	 * Creates an array of unique `array` values not included in the other
@@ -25182,7 +26067,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 260 */
+/* 262 */
 /***/ function(module, exports) {
 
 	/**
@@ -25218,12 +26103,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 261 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(184),
-	    isLength = __webpack_require__(186),
-	    keys = __webpack_require__(203);
+	var getLength = __webpack_require__(186),
+	    isLength = __webpack_require__(188),
+	    keys = __webpack_require__(205);
 
 	/**
 	 * Gets the size of `collection` by returning its length for array-like
@@ -25254,16 +26139,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 262 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIndexOf = __webpack_require__(244),
-	    getLength = __webpack_require__(184),
-	    isArray = __webpack_require__(188),
-	    isIterateeCall = __webpack_require__(208),
-	    isLength = __webpack_require__(186),
-	    isString = __webpack_require__(235),
-	    values = __webpack_require__(241);
+	var baseIndexOf = __webpack_require__(246),
+	    getLength = __webpack_require__(186),
+	    isArray = __webpack_require__(190),
+	    isIterateeCall = __webpack_require__(210),
+	    isLength = __webpack_require__(188),
+	    isString = __webpack_require__(237),
+	    values = __webpack_require__(243);
 
 	/* Native method references for those with the same name as other `lodash` methods. */
 	var nativeMax = Math.max;
@@ -25317,7 +26202,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 263 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25346,41 +26231,41 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _BaseComponent2 = __webpack_require__(264);
+	var _BaseComponent2 = __webpack_require__(266);
 
 	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
 
-	var _Node = __webpack_require__(265);
+	var _Node = __webpack_require__(267);
 
 	var _Node2 = _interopRequireDefault(_Node);
 
-	var _Edge = __webpack_require__(271);
+	var _Edge = __webpack_require__(273);
 
 	var _Edge2 = _interopRequireDefault(_Edge);
 
-	var _Caption = __webpack_require__(273);
+	var _Caption = __webpack_require__(275);
 
 	var _Caption2 = _interopRequireDefault(_Caption);
 
-	var _modelsGraph = __webpack_require__(175);
+	var _modelsGraph = __webpack_require__(177);
 
 	var _modelsGraph2 = _interopRequireDefault(_modelsGraph);
 
-	var _reactDraggable = __webpack_require__(269);
+	var _reactDraggable = __webpack_require__(271);
 
-	var _lodashObjectValues = __webpack_require__(241);
+	var _lodashObjectValues = __webpack_require__(243);
 
 	var _lodashObjectValues2 = _interopRequireDefault(_lodashObjectValues);
 
-	var _lodashCollectionMin = __webpack_require__(275);
+	var _lodashCollectionMin = __webpack_require__(277);
 
 	var _lodashCollectionMin2 = _interopRequireDefault(_lodashCollectionMin);
 
-	var _lodashCollectionMax = __webpack_require__(303);
+	var _lodashCollectionMax = __webpack_require__(305);
 
 	var _lodashCollectionMax2 = _interopRequireDefault(_lodashCollectionMax);
 
-	var _lodashCollectionIncludes = __webpack_require__(262);
+	var _lodashCollectionIncludes = __webpack_require__(264);
 
 	var _lodashCollectionIncludes2 = _interopRequireDefault(_lodashCollectionIncludes);
 
@@ -25760,11 +26645,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function recenter() {
 	      this.setState({ x: 0, y: 0 });
 	    }
-	  }, {
-	    key: 'setHeight',
-	    value: function setHeight(height) {
-	      this.setState({ height: height });
-	    }
 	  }]);
 
 	  return Graph;
@@ -25774,7 +26654,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 264 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25819,7 +26699,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = BaseComponent;
 
 /***/ },
-/* 265 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25842,37 +26722,37 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _BaseComponent2 = __webpack_require__(264);
+	var _BaseComponent2 = __webpack_require__(266);
 
 	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
 
-	var _NodeLabel = __webpack_require__(266);
+	var _NodeLabel = __webpack_require__(268);
 
 	var _NodeLabel2 = _interopRequireDefault(_NodeLabel);
 
-	var _NodeCircle = __webpack_require__(268);
+	var _NodeCircle = __webpack_require__(270);
 
 	var _NodeCircle2 = _interopRequireDefault(_NodeCircle);
 
-	var _NodeDisplaySettings = __webpack_require__(267);
+	var _NodeDisplaySettings = __webpack_require__(269);
 
 	var _NodeDisplaySettings2 = _interopRequireDefault(_NodeDisplaySettings);
 
-	var _reactDraggable = __webpack_require__(269);
+	var _reactDraggable = __webpack_require__(271);
 
-	var _modelsGraph = __webpack_require__(175);
+	var _modelsGraph = __webpack_require__(177);
 
 	var _modelsGraph2 = _interopRequireDefault(_modelsGraph);
 
-	var _lodashObjectMerge = __webpack_require__(177);
+	var _lodashObjectMerge = __webpack_require__(179);
 
 	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
 
-	var _classnames = __webpack_require__(270);
+	var _classnames = __webpack_require__(272);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _modelsHelpers = __webpack_require__(211);
+	var _modelsHelpers = __webpack_require__(213);
 
 	var _modelsHelpers2 = _interopRequireDefault(_modelsHelpers);
 
@@ -26003,7 +26883,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 266 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26030,11 +26910,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _BaseComponent2 = __webpack_require__(264);
+	var _BaseComponent2 = __webpack_require__(266);
 
 	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
 
-	var _NodeDisplaySettings = __webpack_require__(267);
+	var _NodeDisplaySettings = __webpack_require__(269);
 
 	var _NodeDisplaySettings2 = _interopRequireDefault(_NodeDisplaySettings);
 
@@ -26181,7 +27061,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 267 */
+/* 269 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -26234,7 +27114,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 268 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -26261,11 +27141,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _BaseComponent2 = __webpack_require__(264);
+	var _BaseComponent2 = __webpack_require__(266);
 
 	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
 
-	var _NodeDisplaySettings = __webpack_require__(267);
+	var _NodeDisplaySettings = __webpack_require__(269);
 
 	var _NodeDisplaySettings2 = _interopRequireDefault(_NodeDisplaySettings);
 
@@ -26357,7 +27237,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 269 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function webpackUniversalModuleDefinition(root, factory) {
@@ -27704,7 +28584,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=react-draggable.js.map
 
 /***/ },
-/* 270 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -27758,7 +28638,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 271 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27781,25 +28661,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _BaseComponent2 = __webpack_require__(264);
+	var _BaseComponent2 = __webpack_require__(266);
 
 	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
 
-	var _reactDraggable = __webpack_require__(269);
+	var _reactDraggable = __webpack_require__(271);
 
-	var _lodashObjectMerge = __webpack_require__(177);
+	var _lodashObjectMerge = __webpack_require__(179);
 
 	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
 
-	var _EdgeDisplaySettings = __webpack_require__(272);
+	var _EdgeDisplaySettings = __webpack_require__(274);
 
 	var _EdgeDisplaySettings2 = _interopRequireDefault(_EdgeDisplaySettings);
 
-	var _NodeDisplaySettings = __webpack_require__(267);
+	var _NodeDisplaySettings = __webpack_require__(269);
 
 	var _NodeDisplaySettings2 = _interopRequireDefault(_NodeDisplaySettings);
 
-	var _classnames = __webpack_require__(270);
+	var _classnames = __webpack_require__(272);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -28076,7 +28956,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 272 */
+/* 274 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -28110,7 +28990,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 273 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28137,17 +29017,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _BaseComponent2 = __webpack_require__(264);
+	var _BaseComponent2 = __webpack_require__(266);
 
 	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
 
-	var _reactDraggable = __webpack_require__(269);
+	var _reactDraggable = __webpack_require__(271);
 
-	var _CaptionDisplaySettings = __webpack_require__(274);
+	var _CaptionDisplaySettings = __webpack_require__(276);
 
 	var _CaptionDisplaySettings2 = _interopRequireDefault(_CaptionDisplaySettings);
 
-	var _lodashObjectMerge = __webpack_require__(177);
+	var _lodashObjectMerge = __webpack_require__(179);
 
 	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
 
@@ -28326,7 +29206,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 274 */
+/* 276 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -28346,18 +29226,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 275 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(276);
+	module.exports = __webpack_require__(278);
 
 
 /***/ },
-/* 276 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createExtremum = __webpack_require__(277),
-	    lt = __webpack_require__(302);
+	var createExtremum = __webpack_require__(279),
+	    lt = __webpack_require__(304);
 
 	/** Used as references for `-Infinity` and `Infinity`. */
 	var POSITIVE_INFINITY = Number.POSITIVE_INFINITY;
@@ -28415,15 +29295,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 277 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayExtremum = __webpack_require__(278),
-	    baseCallback = __webpack_require__(279),
-	    baseExtremum = __webpack_require__(300),
-	    isArray = __webpack_require__(188),
-	    isIterateeCall = __webpack_require__(208),
-	    toIterable = __webpack_require__(301);
+	var arrayExtremum = __webpack_require__(280),
+	    baseCallback = __webpack_require__(281),
+	    baseExtremum = __webpack_require__(302),
+	    isArray = __webpack_require__(190),
+	    isIterateeCall = __webpack_require__(210),
+	    toIterable = __webpack_require__(303);
 
 	/**
 	 * Creates a `_.max` or `_.min` function.
@@ -28454,7 +29334,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 278 */
+/* 280 */
 /***/ function(module, exports) {
 
 	/**
@@ -28490,14 +29370,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 279 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseMatches = __webpack_require__(280),
-	    baseMatchesProperty = __webpack_require__(291),
-	    bindCallback = __webpack_require__(206),
-	    identity = __webpack_require__(207),
-	    property = __webpack_require__(298);
+	var baseMatches = __webpack_require__(282),
+	    baseMatchesProperty = __webpack_require__(293),
+	    bindCallback = __webpack_require__(208),
+	    identity = __webpack_require__(209),
+	    property = __webpack_require__(300);
 
 	/**
 	 * The base implementation of `_.callback` which supports specifying the
@@ -28531,12 +29411,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 280 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsMatch = __webpack_require__(281),
-	    getMatchData = __webpack_require__(288),
-	    toObject = __webpack_require__(197);
+	var baseIsMatch = __webpack_require__(283),
+	    getMatchData = __webpack_require__(290),
+	    toObject = __webpack_require__(199);
 
 	/**
 	 * The base implementation of `_.matches` which does not clone `source`.
@@ -28567,11 +29447,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 281 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqual = __webpack_require__(282),
-	    toObject = __webpack_require__(197);
+	var baseIsEqual = __webpack_require__(284),
+	    toObject = __webpack_require__(199);
 
 	/**
 	 * The base implementation of `_.isMatch` without support for callback
@@ -28625,12 +29505,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 282 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqualDeep = __webpack_require__(283),
-	    isObject = __webpack_require__(192),
-	    isObjectLike = __webpack_require__(187);
+	var baseIsEqualDeep = __webpack_require__(285),
+	    isObject = __webpack_require__(194),
+	    isObjectLike = __webpack_require__(189);
 
 	/**
 	 * The base implementation of `_.isEqual` without support for `this` binding
@@ -28659,14 +29539,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 283 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var equalArrays = __webpack_require__(284),
-	    equalByTag = __webpack_require__(286),
-	    equalObjects = __webpack_require__(287),
-	    isArray = __webpack_require__(188),
-	    isTypedArray = __webpack_require__(200);
+	var equalArrays = __webpack_require__(286),
+	    equalByTag = __webpack_require__(288),
+	    equalObjects = __webpack_require__(289),
+	    isArray = __webpack_require__(190),
+	    isTypedArray = __webpack_require__(202);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -28767,10 +29647,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 284 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arraySome = __webpack_require__(285);
+	var arraySome = __webpack_require__(287);
 
 	/**
 	 * A specialized version of `baseIsEqualDeep` for arrays with support for
@@ -28824,7 +29704,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 285 */
+/* 287 */
 /***/ function(module, exports) {
 
 	/**
@@ -28853,7 +29733,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 286 */
+/* 288 */
 /***/ function(module, exports) {
 
 	/** `Object#toString` result references. */
@@ -28907,10 +29787,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 287 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(203);
+	var keys = __webpack_require__(205);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -28980,11 +29860,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 288 */
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isStrictComparable = __webpack_require__(289),
-	    pairs = __webpack_require__(290);
+	var isStrictComparable = __webpack_require__(291),
+	    pairs = __webpack_require__(292);
 
 	/**
 	 * Gets the propery names, values, and compare flags of `object`.
@@ -29007,10 +29887,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 289 */
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(192);
+	var isObject = __webpack_require__(194);
 
 	/**
 	 * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
@@ -29028,11 +29908,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 290 */
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(203),
-	    toObject = __webpack_require__(197);
+	var keys = __webpack_require__(205),
+	    toObject = __webpack_require__(199);
 
 	/**
 	 * Creates a two dimensional array of the key-value pairs for `object`,
@@ -29067,18 +29947,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 291 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGet = __webpack_require__(292),
-	    baseIsEqual = __webpack_require__(282),
-	    baseSlice = __webpack_require__(293),
-	    isArray = __webpack_require__(188),
-	    isKey = __webpack_require__(294),
-	    isStrictComparable = __webpack_require__(289),
-	    last = __webpack_require__(295),
-	    toObject = __webpack_require__(197),
-	    toPath = __webpack_require__(296);
+	var baseGet = __webpack_require__(294),
+	    baseIsEqual = __webpack_require__(284),
+	    baseSlice = __webpack_require__(295),
+	    isArray = __webpack_require__(190),
+	    isKey = __webpack_require__(296),
+	    isStrictComparable = __webpack_require__(291),
+	    last = __webpack_require__(297),
+	    toObject = __webpack_require__(199),
+	    toPath = __webpack_require__(298);
 
 	/**
 	 * The base implementation of `_.matchesProperty` which does not clone `srcValue`.
@@ -29118,10 +29998,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 292 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(197);
+	var toObject = __webpack_require__(199);
 
 	/**
 	 * The base implementation of `get` without support for string paths
@@ -29153,7 +30033,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 293 */
+/* 295 */
 /***/ function(module, exports) {
 
 	/**
@@ -29191,11 +30071,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 294 */
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArray = __webpack_require__(188),
-	    toObject = __webpack_require__(197);
+	var isArray = __webpack_require__(190),
+	    toObject = __webpack_require__(199);
 
 	/** Used to match property names within property paths. */
 	var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\n\\]|\\.)*?\1)\]/,
@@ -29225,7 +30105,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 295 */
+/* 297 */
 /***/ function(module, exports) {
 
 	/**
@@ -29250,11 +30130,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 296 */
+/* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseToString = __webpack_require__(297),
-	    isArray = __webpack_require__(188);
+	var baseToString = __webpack_require__(299),
+	    isArray = __webpack_require__(190);
 
 	/** Used to match property names within property paths. */
 	var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\n\\]|\\.)*?)\2)\]/g;
@@ -29284,7 +30164,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 297 */
+/* 299 */
 /***/ function(module, exports) {
 
 	/**
@@ -29303,12 +30183,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 298 */
+/* 300 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseProperty = __webpack_require__(185),
-	    basePropertyDeep = __webpack_require__(299),
-	    isKey = __webpack_require__(294);
+	var baseProperty = __webpack_require__(187),
+	    basePropertyDeep = __webpack_require__(301),
+	    isKey = __webpack_require__(296);
 
 	/**
 	 * Creates a function that returns the property value at `path` on a
@@ -29340,11 +30220,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 299 */
+/* 301 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseGet = __webpack_require__(292),
-	    toPath = __webpack_require__(296);
+	var baseGet = __webpack_require__(294),
+	    toPath = __webpack_require__(298);
 
 	/**
 	 * A specialized version of `baseProperty` which supports deep paths.
@@ -29365,10 +30245,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 300 */
+/* 302 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(231);
+	var baseEach = __webpack_require__(233);
 
 	/**
 	 * Gets the extremum value of `collection` invoking `iteratee` for each value
@@ -29400,12 +30280,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 301 */
+/* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(183),
-	    isObject = __webpack_require__(192),
-	    values = __webpack_require__(241);
+	var isArrayLike = __webpack_require__(185),
+	    isObject = __webpack_require__(194),
+	    values = __webpack_require__(243);
 
 	/**
 	 * Converts `value` to an array-like object if it's not one.
@@ -29428,7 +30308,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 302 */
+/* 304 */
 /***/ function(module, exports) {
 
 	/**
@@ -29459,18 +30339,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 303 */
+/* 305 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(304);
+	module.exports = __webpack_require__(306);
 
 
 /***/ },
-/* 304 */
+/* 306 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createExtremum = __webpack_require__(277),
-	    gt = __webpack_require__(305);
+	var createExtremum = __webpack_require__(279),
+	    gt = __webpack_require__(307);
 
 	/** Used as references for `-Infinity` and `Infinity`. */
 	var NEGATIVE_INFINITY = Number.NEGATIVE_INFINITY;
@@ -29528,7 +30408,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 305 */
+/* 307 */
 /***/ function(module, exports) {
 
 	/**
@@ -29559,7 +30439,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 306 */
+/* 308 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29570,20 +30450,20 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequire(obj) { return obj && obj.__esModule ? obj['default'] : obj; }
 
-	var _HotKeys = __webpack_require__(307);
+	var _HotKeys = __webpack_require__(309);
 
 	exports.HotKeys = _interopRequire(_HotKeys);
 
-	var _FocusTrap = __webpack_require__(308);
+	var _FocusTrap = __webpack_require__(310);
 
 	exports.FocusTrap = _interopRequire(_FocusTrap);
 
-	var _HotKeyMapMixin = __webpack_require__(309);
+	var _HotKeyMapMixin = __webpack_require__(311);
 
 	exports.HotKeyMapMixin = _interopRequire(_HotKeyMapMixin);
 
 /***/ },
-/* 307 */
+/* 309 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29604,31 +30484,31 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _FocusTrap = __webpack_require__(308);
+	var _FocusTrap = __webpack_require__(310);
 
 	var _FocusTrap2 = _interopRequireDefault(_FocusTrap);
 
-	var _HotKeyMapMixin = __webpack_require__(309);
+	var _HotKeyMapMixin = __webpack_require__(311);
 
 	var _HotKeyMapMixin2 = _interopRequireDefault(_HotKeyMapMixin);
 
-	var _lodashLangIsBoolean = __webpack_require__(342);
+	var _lodashLangIsBoolean = __webpack_require__(344);
 
 	var _lodashLangIsBoolean2 = _interopRequireDefault(_lodashLangIsBoolean);
 
-	var _lodashLangIsArray = __webpack_require__(324);
+	var _lodashLangIsArray = __webpack_require__(326);
 
 	var _lodashLangIsArray2 = _interopRequireDefault(_lodashLangIsArray);
 
-	var _lodashLangIsObject = __webpack_require__(316);
+	var _lodashLangIsObject = __webpack_require__(318);
 
 	var _lodashLangIsObject2 = _interopRequireDefault(_lodashLangIsObject);
 
-	var _lodashCollectionForEach = __webpack_require__(343);
+	var _lodashCollectionForEach = __webpack_require__(345);
 
 	var _lodashCollectionForEach2 = _interopRequireDefault(_lodashCollectionForEach);
 
-	var _lodashLangIsEqual = __webpack_require__(334);
+	var _lodashLangIsEqual = __webpack_require__(336);
 
 	var _lodashLangIsEqual2 = _interopRequireDefault(_lodashLangIsEqual);
 
@@ -29679,7 +30559,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  componentDidMount: function componentDidMount() {
 	    // import is here to support React's server rendering as Mousetrap immediately
 	    // calls itself with window and it fails in Node environment
-	    var Mousetrap = __webpack_require__(352);
+	    var Mousetrap = __webpack_require__(354);
 	    // Not optimal - imagine hundreds of this component. We need a top level
 	    // delegation point for mousetrap
 	    this.__mousetrap__ = new Mousetrap(this.props.attach || _reactDom2['default'].findDOMNode(this));
@@ -29802,7 +30682,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 308 */
+/* 310 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29851,7 +30731,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 309 */
+/* 311 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29867,11 +30747,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _lodashObjectAssign = __webpack_require__(310);
+	var _lodashObjectAssign = __webpack_require__(312);
 
 	var _lodashObjectAssign2 = _interopRequireDefault(_lodashObjectAssign);
 
-	var _lodashLangIsEqual = __webpack_require__(334);
+	var _lodashLangIsEqual = __webpack_require__(336);
 
 	var _lodashLangIsEqual2 = _interopRequireDefault(_lodashLangIsEqual);
 
@@ -29927,12 +30807,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 310 */
+/* 312 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assignWith = __webpack_require__(311),
-	    baseAssign = __webpack_require__(327),
-	    createAssigner = __webpack_require__(329);
+	var assignWith = __webpack_require__(313),
+	    baseAssign = __webpack_require__(329),
+	    createAssigner = __webpack_require__(331);
 
 	/**
 	 * Assigns own enumerable properties of source object(s) to the destination
@@ -29976,10 +30856,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 311 */
+/* 313 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(312);
+	var keys = __webpack_require__(314);
 
 	/**
 	 * A specialized version of `_.assign` for customizing assigned values without
@@ -30014,13 +30894,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 312 */
+/* 314 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(313),
-	    isArrayLike = __webpack_require__(318),
-	    isObject = __webpack_require__(316),
-	    shimKeys = __webpack_require__(322);
+	var getNative = __webpack_require__(315),
+	    isArrayLike = __webpack_require__(320),
+	    isObject = __webpack_require__(318),
+	    shimKeys = __webpack_require__(324);
 
 	/* Native method references for those with the same name as other `lodash` methods. */
 	var nativeKeys = getNative(Object, 'keys');
@@ -30065,10 +30945,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 313 */
+/* 315 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isNative = __webpack_require__(314);
+	var isNative = __webpack_require__(316);
 
 	/**
 	 * Gets the native function at `key` of `object`.
@@ -30087,11 +30967,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 314 */
+/* 316 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isFunction = __webpack_require__(315),
-	    isObjectLike = __webpack_require__(317);
+	var isFunction = __webpack_require__(317),
+	    isObjectLike = __webpack_require__(319);
 
 	/** Used to detect host constructors (Safari > 5). */
 	var reIsHostCtor = /^\[object .+?Constructor\]$/;
@@ -30141,10 +31021,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 315 */
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(316);
+	var isObject = __webpack_require__(318);
 
 	/** `Object#toString` result references. */
 	var funcTag = '[object Function]';
@@ -30185,7 +31065,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 316 */
+/* 318 */
 /***/ function(module, exports) {
 
 	/**
@@ -30219,7 +31099,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 317 */
+/* 319 */
 /***/ function(module, exports) {
 
 	/**
@@ -30237,11 +31117,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 318 */
+/* 320 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(319),
-	    isLength = __webpack_require__(321);
+	var getLength = __webpack_require__(321),
+	    isLength = __webpack_require__(323);
 
 	/**
 	 * Checks if `value` is array-like.
@@ -30258,10 +31138,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 319 */
+/* 321 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseProperty = __webpack_require__(320);
+	var baseProperty = __webpack_require__(322);
 
 	/**
 	 * Gets the "length" property value of `object`.
@@ -30279,7 +31159,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 320 */
+/* 322 */
 /***/ function(module, exports) {
 
 	/**
@@ -30299,7 +31179,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 321 */
+/* 323 */
 /***/ function(module, exports) {
 
 	/**
@@ -30325,14 +31205,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 322 */
+/* 324 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArguments = __webpack_require__(323),
-	    isArray = __webpack_require__(324),
-	    isIndex = __webpack_require__(325),
-	    isLength = __webpack_require__(321),
-	    keysIn = __webpack_require__(326);
+	var isArguments = __webpack_require__(325),
+	    isArray = __webpack_require__(326),
+	    isIndex = __webpack_require__(327),
+	    isLength = __webpack_require__(323),
+	    keysIn = __webpack_require__(328);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -30372,11 +31252,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 323 */
+/* 325 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(318),
-	    isObjectLike = __webpack_require__(317);
+	var isArrayLike = __webpack_require__(320),
+	    isObjectLike = __webpack_require__(319);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -30412,12 +31292,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 324 */
+/* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(313),
-	    isLength = __webpack_require__(321),
-	    isObjectLike = __webpack_require__(317);
+	var getNative = __webpack_require__(315),
+	    isLength = __webpack_require__(323),
+	    isObjectLike = __webpack_require__(319);
 
 	/** `Object#toString` result references. */
 	var arrayTag = '[object Array]';
@@ -30458,7 +31338,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 325 */
+/* 327 */
 /***/ function(module, exports) {
 
 	/** Used to detect unsigned integer values. */
@@ -30488,14 +31368,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 326 */
+/* 328 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArguments = __webpack_require__(323),
-	    isArray = __webpack_require__(324),
-	    isIndex = __webpack_require__(325),
-	    isLength = __webpack_require__(321),
-	    isObject = __webpack_require__(316);
+	var isArguments = __webpack_require__(325),
+	    isArray = __webpack_require__(326),
+	    isIndex = __webpack_require__(327),
+	    isLength = __webpack_require__(323),
+	    isObject = __webpack_require__(318);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -30558,11 +31438,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 327 */
+/* 329 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCopy = __webpack_require__(328),
-	    keys = __webpack_require__(312);
+	var baseCopy = __webpack_require__(330),
+	    keys = __webpack_require__(314);
 
 	/**
 	 * The base implementation of `_.assign` without support for argument juggling,
@@ -30583,7 +31463,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 328 */
+/* 330 */
 /***/ function(module, exports) {
 
 	/**
@@ -30612,12 +31492,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 329 */
+/* 331 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bindCallback = __webpack_require__(330),
-	    isIterateeCall = __webpack_require__(332),
-	    restParam = __webpack_require__(333);
+	var bindCallback = __webpack_require__(332),
+	    isIterateeCall = __webpack_require__(334),
+	    restParam = __webpack_require__(335);
 
 	/**
 	 * Creates a `_.assign`, `_.defaults`, or `_.merge` function.
@@ -30659,10 +31539,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 330 */
+/* 332 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var identity = __webpack_require__(331);
+	var identity = __webpack_require__(333);
 
 	/**
 	 * A specialized version of `baseCallback` which only supports `this` binding
@@ -30704,7 +31584,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 331 */
+/* 333 */
 /***/ function(module, exports) {
 
 	/**
@@ -30730,12 +31610,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 332 */
+/* 334 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(318),
-	    isIndex = __webpack_require__(325),
-	    isObject = __webpack_require__(316);
+	var isArrayLike = __webpack_require__(320),
+	    isIndex = __webpack_require__(327),
+	    isObject = __webpack_require__(318);
 
 	/**
 	 * Checks if the provided arguments are from an iteratee call.
@@ -30764,7 +31644,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 333 */
+/* 335 */
 /***/ function(module, exports) {
 
 	/** Used as the `TypeError` message for "Functions" methods. */
@@ -30828,11 +31708,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 334 */
+/* 336 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqual = __webpack_require__(335),
-	    bindCallback = __webpack_require__(330);
+	var baseIsEqual = __webpack_require__(337),
+	    bindCallback = __webpack_require__(332);
 
 	/**
 	 * Performs a deep comparison between two values to determine if they are
@@ -30888,12 +31768,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 335 */
+/* 337 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqualDeep = __webpack_require__(336),
-	    isObject = __webpack_require__(316),
-	    isObjectLike = __webpack_require__(317);
+	var baseIsEqualDeep = __webpack_require__(338),
+	    isObject = __webpack_require__(318),
+	    isObjectLike = __webpack_require__(319);
 
 	/**
 	 * The base implementation of `_.isEqual` without support for `this` binding
@@ -30922,14 +31802,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 336 */
+/* 338 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var equalArrays = __webpack_require__(337),
-	    equalByTag = __webpack_require__(339),
-	    equalObjects = __webpack_require__(340),
-	    isArray = __webpack_require__(324),
-	    isTypedArray = __webpack_require__(341);
+	var equalArrays = __webpack_require__(339),
+	    equalByTag = __webpack_require__(341),
+	    equalObjects = __webpack_require__(342),
+	    isArray = __webpack_require__(326),
+	    isTypedArray = __webpack_require__(343);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -31030,10 +31910,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 337 */
+/* 339 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arraySome = __webpack_require__(338);
+	var arraySome = __webpack_require__(340);
 
 	/**
 	 * A specialized version of `baseIsEqualDeep` for arrays with support for
@@ -31087,7 +31967,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 338 */
+/* 340 */
 /***/ function(module, exports) {
 
 	/**
@@ -31116,7 +31996,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 339 */
+/* 341 */
 /***/ function(module, exports) {
 
 	/** `Object#toString` result references. */
@@ -31170,10 +32050,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 340 */
+/* 342 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(312);
+	var keys = __webpack_require__(314);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -31243,11 +32123,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 341 */
+/* 343 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isLength = __webpack_require__(321),
-	    isObjectLike = __webpack_require__(317);
+	var isLength = __webpack_require__(323),
+	    isObjectLike = __webpack_require__(319);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -31323,10 +32203,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 342 */
+/* 344 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObjectLike = __webpack_require__(317);
+	var isObjectLike = __webpack_require__(319);
 
 	/** `Object#toString` result references. */
 	var boolTag = '[object Boolean]';
@@ -31364,12 +32244,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 343 */
+/* 345 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayEach = __webpack_require__(344),
-	    baseEach = __webpack_require__(345),
-	    createForEach = __webpack_require__(351);
+	var arrayEach = __webpack_require__(346),
+	    baseEach = __webpack_require__(347),
+	    createForEach = __webpack_require__(353);
 
 	/**
 	 * Iterates over elements of `collection` invoking `iteratee` for each element.
@@ -31407,7 +32287,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 344 */
+/* 346 */
 /***/ function(module, exports) {
 
 	/**
@@ -31435,11 +32315,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 345 */
+/* 347 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForOwn = __webpack_require__(346),
-	    createBaseEach = __webpack_require__(350);
+	var baseForOwn = __webpack_require__(348),
+	    createBaseEach = __webpack_require__(352);
 
 	/**
 	 * The base implementation of `_.forEach` without support for callback
@@ -31456,11 +32336,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 346 */
+/* 348 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFor = __webpack_require__(347),
-	    keys = __webpack_require__(312);
+	var baseFor = __webpack_require__(349),
+	    keys = __webpack_require__(314);
 
 	/**
 	 * The base implementation of `_.forOwn` without support for callback
@@ -31479,10 +32359,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 347 */
+/* 349 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createBaseFor = __webpack_require__(348);
+	var createBaseFor = __webpack_require__(350);
 
 	/**
 	 * The base implementation of `baseForIn` and `baseForOwn` which iterates
@@ -31502,10 +32382,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 348 */
+/* 350 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(349);
+	var toObject = __webpack_require__(351);
 
 	/**
 	 * Creates a base function for `_.forIn` or `_.forInRight`.
@@ -31535,10 +32415,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 349 */
+/* 351 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(316);
+	var isObject = __webpack_require__(318);
 
 	/**
 	 * Converts `value` to an object if it's not one.
@@ -31555,12 +32435,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 350 */
+/* 352 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(319),
-	    isLength = __webpack_require__(321),
-	    toObject = __webpack_require__(349);
+	var getLength = __webpack_require__(321),
+	    isLength = __webpack_require__(323),
+	    toObject = __webpack_require__(351);
 
 	/**
 	 * Creates a `baseEach` or `baseEachRight` function.
@@ -31592,11 +32472,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 351 */
+/* 353 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bindCallback = __webpack_require__(330),
-	    isArray = __webpack_require__(324);
+	var bindCallback = __webpack_require__(332),
+	    isArray = __webpack_require__(326);
 
 	/**
 	 * Creates a function for `_.forEach` or `_.forEachRight`.
@@ -31618,7 +32498,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 352 */
+/* 354 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*global define:false */
@@ -32645,14 +33525,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 353 */
+/* 355 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFlatten = __webpack_require__(251),
-	    bindCallback = __webpack_require__(206),
-	    pickByArray = __webpack_require__(257),
-	    pickByCallback = __webpack_require__(258),
-	    restParam = __webpack_require__(209);
+	var baseFlatten = __webpack_require__(253),
+	    bindCallback = __webpack_require__(208),
+	    pickByArray = __webpack_require__(259),
+	    pickByCallback = __webpack_require__(260),
+	    restParam = __webpack_require__(211);
 
 	/**
 	 * Creates an object composed of the picked `object` properties. Property
@@ -32693,7 +33573,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 354 */
+/* 356 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32720,47 +33600,46 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _reactHotkeys = __webpack_require__(306);
+	var _reactHotkeys = __webpack_require__(308);
 
-	var _BaseComponent2 = __webpack_require__(264);
+	var _BaseComponent2 = __webpack_require__(266);
 
 	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
 
-	var _ZoomButtons = __webpack_require__(355);
+	var _ZoomButtons = __webpack_require__(357);
 
 	var _ZoomButtons2 = _interopRequireDefault(_ZoomButtons);
 
-	var _EditTools = __webpack_require__(356);
+	var _EditTools = __webpack_require__(358);
 
 	var _EditTools2 = _interopRequireDefault(_EditTools);
 
-	var _lodashObjectMerge = __webpack_require__(177);
+	var _lodashObjectMerge = __webpack_require__(179);
 
 	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
 
-	var _lodashObjectValues = __webpack_require__(241);
+	var _lodashObjectValues = __webpack_require__(243);
 
 	var _lodashObjectValues2 = _interopRequireDefault(_lodashObjectValues);
 
-	var _lodashLangCloneDeep = __webpack_require__(253);
+	var _lodashLangCloneDeep = __webpack_require__(255);
 
 	var _lodashLangCloneDeep2 = _interopRequireDefault(_lodashLangCloneDeep);
 
-	var _lodashObjectPick = __webpack_require__(353);
+	var _lodashObjectPick = __webpack_require__(355);
 
 	var _lodashObjectPick2 = _interopRequireDefault(_lodashObjectPick);
 
-	__webpack_require__(375);
-	__webpack_require__(380);
+	__webpack_require__(378);
+	__webpack_require__(383);
 
 	var Editor = (function (_BaseComponent) {
 	  _inherits(Editor, _BaseComponent);
 
-	  function Editor(props) {
+	  function Editor() {
 	    _classCallCheck(this, Editor);
 
-	    _get(Object.getPrototypeOf(Editor.prototype), 'constructor', this).call(this, props);
-	    this.bindAll('_clearGraph', '_toggleAddEdgeForm', '_toggleHelpScreen');
+	    _get(Object.getPrototypeOf(Editor.prototype), 'constructor', this).apply(this, arguments);
 	  }
 
 	  _createClass(Editor, [{
@@ -32858,9 +33737,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	            closeAddForm: _closeAddForm,
 	            source: this.props.dataSource,
 	            graph: this.props.graph,
-	            toggleAddEdgeForm: this._toggleAddEdgeForm,
-	            toggleHelpScreen: this._toggleHelpScreen,
-	            clearGraph: this._clearGraph,
+	            toggleAddEdgeForm: function () {
+	              return _this._toggleAddEdgeForm();
+	            },
+	            toggleHelpScreen: function () {
+	              return _this._toggleHelpScreen();
+	            },
+	            clearGraph: function () {
+	              return _this._clearGraph();
+	            },
 	            data: formData,
 	            nodeResults: this.props.nodeResults,
 	            setNodeResults: this.props.setNodeResults,
@@ -32868,7 +33753,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            currentForm: currentForm,
 	            helpScreen: this.props.helpScreen,
 	            hideHelp: this.props.hideHelp,
-	            graphApi: this.props.graphApi }) : null
+	            graphApi: this.props.graphApi,
+	            undo: this.props.undo,
+	            redo: this.props.redo,
+	            canUndo: this.props.canUndo,
+	            canRedo: this.props.canRedo }) : null
 	        )
 	      );
 	    }
@@ -32965,7 +33854,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 355 */
+/* 357 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33024,7 +33913,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 356 */
+/* 358 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33047,39 +33936,43 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _LayoutButtons = __webpack_require__(357);
+	var _UndoButtons = __webpack_require__(359);
+
+	var _UndoButtons2 = _interopRequireDefault(_UndoButtons);
+
+	var _LayoutButtons = __webpack_require__(360);
 
 	var _LayoutButtons2 = _interopRequireDefault(_LayoutButtons);
 
-	var _EditButtons = __webpack_require__(358);
+	var _EditButtons = __webpack_require__(361);
 
 	var _EditButtons2 = _interopRequireDefault(_EditButtons);
 
-	var _AddEdgeForm = __webpack_require__(361);
+	var _AddEdgeForm = __webpack_require__(364);
 
 	var _AddEdgeForm2 = _interopRequireDefault(_AddEdgeForm);
 
-	var _AddCaptionForm = __webpack_require__(367);
+	var _AddCaptionForm = __webpack_require__(370);
 
 	var _AddCaptionForm2 = _interopRequireDefault(_AddCaptionForm);
 
-	var _AddConnectedNodesForm = __webpack_require__(368);
+	var _AddConnectedNodesForm = __webpack_require__(371);
 
 	var _AddConnectedNodesForm2 = _interopRequireDefault(_AddConnectedNodesForm);
 
-	var _UpdateNodeForm = __webpack_require__(371);
+	var _UpdateNodeForm = __webpack_require__(374);
 
 	var _UpdateNodeForm2 = _interopRequireDefault(_UpdateNodeForm);
 
-	var _UpdateEdgeForm = __webpack_require__(372);
+	var _UpdateEdgeForm = __webpack_require__(375);
 
 	var _UpdateEdgeForm2 = _interopRequireDefault(_UpdateEdgeForm);
 
-	var _UpdateCaptionForm = __webpack_require__(373);
+	var _UpdateCaptionForm = __webpack_require__(376);
 
 	var _UpdateCaptionForm2 = _interopRequireDefault(_UpdateCaptionForm);
 
-	var _HelpScreen = __webpack_require__(374);
+	var _HelpScreen = __webpack_require__(377);
 
 	var _HelpScreen2 = _interopRequireDefault(_HelpScreen);
 
@@ -33129,6 +34022,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _react2['default'].createElement(
 	          'div',
 	          { id: 'buttons' },
+	          _react2['default'].createElement(_UndoButtons2['default'], {
+	            undo: this.props.undo,
+	            redo: this.props.redo,
+	            canUndo: this.props.canUndo,
+	            canRedo: this.props.canRedo }),
 	          _react2['default'].createElement(_LayoutButtons2['default'], {
 	            prune: prune,
 	            circleLayout: circleLayout,
@@ -33189,7 +34087,66 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 357 */
+/* 359 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var UndoButtons = (function (_Component) {
+	  _inherits(UndoButtons, _Component);
+
+	  function UndoButtons() {
+	    _classCallCheck(this, UndoButtons);
+
+	    _get(Object.getPrototypeOf(UndoButtons.prototype), "constructor", this).apply(this, arguments);
+	  }
+
+	  _createClass(UndoButtons, [{
+	    key: "render",
+	    value: function render() {
+	      return _react2["default"].createElement(
+	        "div",
+	        { id: "undobuttons", className: "btn-group buttonGroup" },
+	        _react2["default"].createElement(
+	          "button",
+	          { className: "btn btn-sm btn-default", onClick: this.props.undo, disabled: !this.props.canUndo },
+	          "undo"
+	        ),
+	        _react2["default"].createElement(
+	          "button",
+	          { className: "btn btn-sm btn-default", onClick: this.props.redo, disabled: !this.props.canRedo },
+	          "redo"
+	        )
+	      );
+	    }
+	  }]);
+
+	  return UndoButtons;
+	})(_react.Component);
+
+	exports["default"] = UndoButtons;
+	module.exports = exports["default"];
+
+/***/ },
+/* 360 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33253,7 +34210,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 358 */
+/* 361 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33276,7 +34233,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _AddNodeInput = __webpack_require__(359);
+	var _AddNodeInput = __webpack_require__(362);
 
 	var _AddNodeInput2 = _interopRequireDefault(_AddNodeInput);
 
@@ -33321,7 +34278,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 359 */
+/* 362 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33348,15 +34305,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _BaseComponent2 = __webpack_require__(264);
+	var _BaseComponent2 = __webpack_require__(266);
 
 	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
 
-	var _AddNodeResult = __webpack_require__(360);
+	var _AddNodeResult = __webpack_require__(363);
 
 	var _AddNodeResult2 = _interopRequireDefault(_AddNodeResult);
 
-	var _reactHotkeys = __webpack_require__(306);
+	var _reactHotkeys = __webpack_require__(308);
 
 	var AddNodeInput = (function (_BaseComponent) {
 	  _inherits(AddNodeInput, _BaseComponent);
@@ -33481,7 +34438,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 360 */
+/* 363 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33504,7 +34461,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _BaseComponent2 = __webpack_require__(264);
+	var _BaseComponent2 = __webpack_require__(266);
 
 	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
 
@@ -33564,7 +34521,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 361 */
+/* 364 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33587,19 +34544,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _BaseComponent2 = __webpack_require__(264);
+	var _BaseComponent2 = __webpack_require__(266);
 
 	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
 
-	var _lodashObjectValues = __webpack_require__(241);
+	var _lodashObjectValues = __webpack_require__(243);
 
 	var _lodashObjectValues2 = _interopRequireDefault(_lodashObjectValues);
 
-	var _lodashCollectionSortBy = __webpack_require__(362);
+	var _lodashCollectionSortBy = __webpack_require__(365);
 
 	var _lodashCollectionSortBy2 = _interopRequireDefault(_lodashCollectionSortBy);
 
-	var _reactHotkeys = __webpack_require__(306);
+	var _reactHotkeys = __webpack_require__(308);
 
 	var AddEdgeForm = (function (_BaseComponent) {
 	  _inherits(AddEdgeForm, _BaseComponent);
@@ -33722,14 +34679,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 362 */
+/* 365 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCallback = __webpack_require__(279),
-	    baseMap = __webpack_require__(363),
-	    baseSortBy = __webpack_require__(364),
-	    compareAscending = __webpack_require__(365),
-	    isIterateeCall = __webpack_require__(208);
+	var baseCallback = __webpack_require__(281),
+	    baseMap = __webpack_require__(366),
+	    baseSortBy = __webpack_require__(367),
+	    compareAscending = __webpack_require__(368),
+	    isIterateeCall = __webpack_require__(210);
 
 	/**
 	 * Creates an array of elements, sorted in ascending order by the results of
@@ -33799,11 +34756,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 363 */
+/* 366 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseEach = __webpack_require__(231),
-	    isArrayLike = __webpack_require__(183);
+	var baseEach = __webpack_require__(233),
+	    isArrayLike = __webpack_require__(185);
 
 	/**
 	 * The base implementation of `_.map` without support for callback shorthands
@@ -33828,7 +34785,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 364 */
+/* 367 */
 /***/ function(module, exports) {
 
 	/**
@@ -33855,10 +34812,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 365 */
+/* 368 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCompareAscending = __webpack_require__(366);
+	var baseCompareAscending = __webpack_require__(369);
 
 	/**
 	 * Used by `_.sortBy` to compare transformed elements of a collection and stable
@@ -33877,7 +34834,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 366 */
+/* 369 */
 /***/ function(module, exports) {
 
 	/**
@@ -33917,7 +34874,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 367 */
+/* 370 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33940,11 +34897,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _BaseComponent2 = __webpack_require__(264);
+	var _BaseComponent2 = __webpack_require__(266);
 
 	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
 
-	var _reactHotkeys = __webpack_require__(306);
+	var _reactHotkeys = __webpack_require__(308);
 
 	var AddCaptionForm = (function (_BaseComponent) {
 	  _inherits(AddCaptionForm, _BaseComponent);
@@ -34018,7 +34975,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 368 */
+/* 371 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34041,13 +34998,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _BaseComponent2 = __webpack_require__(264);
+	var _BaseComponent2 = __webpack_require__(266);
 
 	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
 
-	var _reactHotkeys = __webpack_require__(306);
+	var _reactHotkeys = __webpack_require__(308);
 
-	var _lodashObjectMapKeys = __webpack_require__(369);
+	var _lodashObjectMapKeys = __webpack_require__(372);
 
 	var _lodashObjectMapKeys2 = _interopRequireDefault(_lodashObjectMapKeys);
 
@@ -34167,10 +35124,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 369 */
+/* 372 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createObjectMapper = __webpack_require__(370);
+	var createObjectMapper = __webpack_require__(373);
 
 	/**
 	 * The opposite of `_.mapValues`; this method creates an object with the
@@ -34198,11 +35155,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 370 */
+/* 373 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCallback = __webpack_require__(279),
-	    baseForOwn = __webpack_require__(224);
+	var baseCallback = __webpack_require__(281),
+	    baseForOwn = __webpack_require__(226);
 
 	/**
 	 * Creates a function for `_.mapKeys` or `_.mapValues`.
@@ -34230,7 +35187,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 371 */
+/* 374 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34253,13 +35210,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _BaseComponent2 = __webpack_require__(264);
+	var _BaseComponent2 = __webpack_require__(266);
 
 	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
 
-	var _reactHotkeys = __webpack_require__(306);
+	var _reactHotkeys = __webpack_require__(308);
 
-	var _lodashObjectMerge = __webpack_require__(177);
+	var _lodashObjectMerge = __webpack_require__(179);
 
 	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
 
@@ -34375,7 +35332,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 372 */
+/* 375 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34398,21 +35355,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _BaseComponent2 = __webpack_require__(264);
+	var _BaseComponent2 = __webpack_require__(266);
 
 	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
 
-	var _reactHotkeys = __webpack_require__(306);
+	var _reactHotkeys = __webpack_require__(308);
 
-	var _lodashObjectValues = __webpack_require__(241);
+	var _lodashObjectValues = __webpack_require__(243);
 
 	var _lodashObjectValues2 = _interopRequireDefault(_lodashObjectValues);
 
-	var _lodashCollectionSortBy = __webpack_require__(362);
+	var _lodashCollectionSortBy = __webpack_require__(365);
 
 	var _lodashCollectionSortBy2 = _interopRequireDefault(_lodashCollectionSortBy);
 
-	var _lodashObjectMerge = __webpack_require__(177);
+	var _lodashObjectMerge = __webpack_require__(179);
 
 	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
 
@@ -34535,7 +35492,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 373 */
+/* 376 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34558,13 +35515,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _BaseComponent2 = __webpack_require__(264);
+	var _BaseComponent2 = __webpack_require__(266);
 
 	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
 
-	var _reactHotkeys = __webpack_require__(306);
+	var _reactHotkeys = __webpack_require__(308);
 
-	var _lodashObjectMerge = __webpack_require__(177);
+	var _lodashObjectMerge = __webpack_require__(179);
 
 	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
 
@@ -34650,7 +35607,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 374 */
+/* 377 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -34687,36 +35644,45 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function render() {
 	      return _react2["default"].createElement(
 	        "div",
-	        { id: "helpScreen" },
+	        { id: "oligrapherHelpScreen" },
+	        _react2["default"].createElement(
+	          "div",
+	          { id: "oligrapherHelpScreenCloseButton" },
+	          _react2["default"].createElement("span", { className: "glyphicon glyphicon-remove", onClick: this.props.close })
+	        ),
 	        _react2["default"].createElement(
 	          "h3",
 	          null,
 	          "User Guide"
 	        ),
+	        "Use this editor to create a network graph along with an optional series of annotations overlaying the graph. Annotations consists of a title, a text body, and a highlighted section of the graph.",
+	        _react2["default"].createElement("br", null),
+	        _react2["default"].createElement("br", null),
+	        "The pencil button swaps between graph editing mode and annotation editing mode. It will appear green when editing the graph and yellow when editing annotations. You can edit the graph title at the top of the screen.",
+	        _react2["default"].createElement("br", null),
+	        _react2["default"].createElement("br", null),
+	        "When you are finished editing, click the SAVE button to save your changes.",
+	        _react2["default"].createElement("br", null),
+	        _react2["default"].createElement("br", null),
+	        _react2["default"].createElement(
+	          "strong",
+	          null,
+	          "Graph Editing Mode"
+	        ),
+	        _react2["default"].createElement("br", null),
+	        _react2["default"].createElement("br", null),
 	        "Type a name in the \"add node\" box and press enter to add the node to the graph.",
 	        this.props.source ? " Nodes from " + this.props.source.name + " matching the name you type will appear below; click on them to add them to the graph." : "",
 	        _react2["default"].createElement("br", null),
-	        _react2["default"].createElement("br", null),
-	        _react2["default"].createElement(
-	          "strong",
-	          null,
-	          "Editing Nodes and Edges"
-	        ),
+	        "ALT+C opens a form for adding a new caption in the top right of the graph.",
 	        _react2["default"].createElement("br", null),
 	        _react2["default"].createElement("br", null),
-	        "CLICK a node or edge to select or deselect it.",
+	        "CLICK a node, edge, or caption to select or deselect it.",
 	        _react2["default"].createElement("br", null),
-	        "SHIFT+CLICK to select mutiple nodes and edges.",
-	        _react2["default"].createElement("br", null),
-	        _react2["default"].createElement("br", null),
-	        "Select a node or edge to view an editing form in the top-right corner of the map. Changes you make in the form will upate the node or edge immediately.",
+	        "SHIFT+CLICK to select mutiple nodes, edges, or captions.",
 	        _react2["default"].createElement("br", null),
 	        _react2["default"].createElement("br", null),
-	        _react2["default"].createElement(
-	          "strong",
-	          null,
-	          "Buttons"
-	        ),
+	        "Select a single node, edge, or caption to view an editing form in the top-right corner of the map. Changes you make in the form will upate the item immediately.",
 	        _react2["default"].createElement("br", null),
 	        _react2["default"].createElement("br", null),
 	        "The CIRCLE button arranges nodes in a circle.",
@@ -34731,11 +35697,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _react2["default"].createElement(
 	          "strong",
 	          null,
+	          "Annotation Editing Mode"
+	        ),
+	        _react2["default"].createElement("br", null),
+	        _react2["default"].createElement("br", null),
+	        "Annotations are edited using the sidebar on the right. Click the big \"A\" button to hide or show the sidebar.",
+	        _react2["default"].createElement("br", null),
+	        _react2["default"].createElement("br", null),
+	        "Click the NEW ANNOTATION button create a new annotation and display a form for editing it. Click on any annotation title in the list to edit it. A REMOVE button at the bottom of the edit form will delete the annotation. When editing an annotation, click on nodes, edges, or captions from the graph to highlight them in that annotation. Drag annotaions up and down the list to reorder them.",
+	        _react2["default"].createElement("br", null),
+	        _react2["default"].createElement("br", null),
+	        _react2["default"].createElement(
+	          "strong",
+	          null,
 	          "Shortcut Keys"
 	        ),
 	        _react2["default"].createElement("br", null),
 	        _react2["default"].createElement("br", null),
+	        "LEFT & RIGHT ARROWS navigate to the previous and next annotations.",
+	        _react2["default"].createElement("br", null),
 	        "ALT+H toggles this user guide.",
+	        _react2["default"].createElement("br", null),
+	        "ALT+H swaps the editing mode between graph editing and annotations.",
 	        _react2["default"].createElement("br", null),
 	        "ALT+D deletes selected nodes and edges.",
 	        _react2["default"].createElement("br", null),
@@ -34744,7 +35727,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        "ALT+C adds a caption.",
 	        _react2["default"].createElement("br", null),
 	        _react2["default"].createElement("br", null),
-	        "If ALT keys interfere with your browser or operating system shortcuts, all of the above shortcuts will work with CTRL instead of ALT",
+	        "If ALT keys interfere with your browser or operating system shortcuts, all of the above shortcuts will work with CTRL instead of ALT.",
 	        _react2["default"].createElement("br", null),
 	        _react2["default"].createElement("br", null),
 	        "CTRL+\"=\" zooms in.",
@@ -34767,16 +35750,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 375 */
+/* 378 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(376);
+	var content = __webpack_require__(379);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(379)(content, {});
+	var update = __webpack_require__(382)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -34793,21 +35776,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 376 */
+/* 379 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(377)();
+	exports = module.exports = __webpack_require__(380)();
 	// imports
 
 
 	// module
-	exports.push([module.id, "/*!\n * Bootstrap v3.3.6 (http://getbootstrap.com)\n * Copyright 2011-2015 Twitter, Inc.\n * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)\n */\n/*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */\nhtml {\n  font-family: sans-serif;\n  -webkit-text-size-adjust: 100%;\n      -ms-text-size-adjust: 100%;\n}\nbody {\n  margin: 0;\n}\narticle,\naside,\ndetails,\nfigcaption,\nfigure,\nfooter,\nheader,\nhgroup,\nmain,\nmenu,\nnav,\nsection,\nsummary {\n  display: block;\n}\naudio,\ncanvas,\nprogress,\nvideo {\n  display: inline-block;\n  vertical-align: baseline;\n}\naudio:not([controls]) {\n  display: none;\n  height: 0;\n}\n[hidden],\ntemplate {\n  display: none;\n}\na {\n  background-color: transparent;\n}\na:active,\na:hover {\n  outline: 0;\n}\nabbr[title] {\n  border-bottom: 1px dotted;\n}\nb,\nstrong {\n  font-weight: bold;\n}\ndfn {\n  font-style: italic;\n}\nh1 {\n  margin: .67em 0;\n  font-size: 2em;\n}\nmark {\n  color: #000;\n  background: #ff0;\n}\nsmall {\n  font-size: 80%;\n}\nsub,\nsup {\n  position: relative;\n  font-size: 75%;\n  line-height: 0;\n  vertical-align: baseline;\n}\nsup {\n  top: -.5em;\n}\nsub {\n  bottom: -.25em;\n}\nimg {\n  border: 0;\n}\nsvg:not(:root) {\n  overflow: hidden;\n}\nfigure {\n  margin: 1em 40px;\n}\nhr {\n  height: 0;\n  -webkit-box-sizing: content-box;\n     -moz-box-sizing: content-box;\n          box-sizing: content-box;\n}\npre {\n  overflow: auto;\n}\ncode,\nkbd,\npre,\nsamp {\n  font-family: monospace, monospace;\n  font-size: 1em;\n}\nbutton,\ninput,\noptgroup,\nselect,\ntextarea {\n  margin: 0;\n  font: inherit;\n  color: inherit;\n}\nbutton {\n  overflow: visible;\n}\nbutton,\nselect {\n  text-transform: none;\n}\nbutton,\nhtml input[type=\"button\"],\ninput[type=\"reset\"],\ninput[type=\"submit\"] {\n  -webkit-appearance: button;\n  cursor: pointer;\n}\nbutton[disabled],\nhtml input[disabled] {\n  cursor: default;\n}\nbutton::-moz-focus-inner,\ninput::-moz-focus-inner {\n  padding: 0;\n  border: 0;\n}\ninput {\n  line-height: normal;\n}\ninput[type=\"checkbox\"],\ninput[type=\"radio\"] {\n  -webkit-box-sizing: border-box;\n     -moz-box-sizing: border-box;\n          box-sizing: border-box;\n  padding: 0;\n}\ninput[type=\"number\"]::-webkit-inner-spin-button,\ninput[type=\"number\"]::-webkit-outer-spin-button {\n  height: auto;\n}\ninput[type=\"search\"] {\n  -webkit-box-sizing: content-box;\n     -moz-box-sizing: content-box;\n          box-sizing: content-box;\n  -webkit-appearance: textfield;\n}\ninput[type=\"search\"]::-webkit-search-cancel-button,\ninput[type=\"search\"]::-webkit-search-decoration {\n  -webkit-appearance: none;\n}\nfieldset {\n  padding: .35em .625em .75em;\n  margin: 0 2px;\n  border: 1px solid #c0c0c0;\n}\nlegend {\n  padding: 0;\n  border: 0;\n}\ntextarea {\n  overflow: auto;\n}\noptgroup {\n  font-weight: bold;\n}\ntable {\n  border-spacing: 0;\n  border-collapse: collapse;\n}\ntd,\nth {\n  padding: 0;\n}\n/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src/css/main.css */\n@media print {\n  *,\n  *:before,\n  *:after {\n    color: #000 !important;\n    text-shadow: none !important;\n    background: transparent !important;\n    -webkit-box-shadow: none !important;\n            box-shadow: none !important;\n  }\n  a,\n  a:visited {\n    text-decoration: underline;\n  }\n  a[href]:after {\n    content: \" (\" attr(href) \")\";\n  }\n  abbr[title]:after {\n    content: \" (\" attr(title) \")\";\n  }\n  a[href^=\"#\"]:after,\n  a[href^=\"javascript:\"]:after {\n    content: \"\";\n  }\n  pre,\n  blockquote {\n    border: 1px solid #999;\n\n    page-break-inside: avoid;\n  }\n  thead {\n    display: table-header-group;\n  }\n  tr,\n  img {\n    page-break-inside: avoid;\n  }\n  img {\n    max-width: 100% !important;\n  }\n  p,\n  h2,\n  h3 {\n    orphans: 3;\n    widows: 3;\n  }\n  h2,\n  h3 {\n    page-break-after: avoid;\n  }\n  .navbar {\n    display: none;\n  }\n  .btn > .caret,\n  .dropup > .btn > .caret {\n    border-top-color: #000 !important;\n  }\n  .label {\n    border: 1px solid #000;\n  }\n  .table {\n    border-collapse: collapse !important;\n  }\n  .table td,\n  .table th {\n    background-color: #fff !important;\n  }\n  .table-bordered th,\n  .table-bordered td {\n    border: 1px solid #ddd !important;\n  }\n}\n@font-face {\n  font-family: 'Glyphicons Halflings';\n  src: url(" + __webpack_require__(378) + ") format('woff');\n}\n.glyphicon {\n  position: relative;\n  top: 1px;\n  display: inline-block;\n  font-family: 'Glyphicons Halflings';\n  font-style: normal;\n  font-weight: normal;\n  line-height: 1;\n\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n}\n.glyphicon-asterisk:before {\n  content: \"*\";\n}\n.glyphicon-plus:before {\n  content: \"+\";\n}\n.glyphicon-euro:before,\n.glyphicon-eur:before {\n  content: \"\\20AC\";\n}\n.glyphicon-minus:before {\n  content: \"\\2212\";\n}\n.glyphicon-cloud:before {\n  content: \"\\2601\";\n}\n.glyphicon-envelope:before {\n  content: \"\\2709\";\n}\n.glyphicon-pencil:before {\n  content: \"\\270F\";\n}\n.glyphicon-glass:before {\n  content: \"\\E001\";\n}\n.glyphicon-music:before {\n  content: \"\\E002\";\n}\n.glyphicon-search:before {\n  content: \"\\E003\";\n}\n.glyphicon-heart:before {\n  content: \"\\E005\";\n}\n.glyphicon-star:before {\n  content: \"\\E006\";\n}\n.glyphicon-star-empty:before {\n  content: \"\\E007\";\n}\n.glyphicon-user:before {\n  content: \"\\E008\";\n}\n.glyphicon-film:before {\n  content: \"\\E009\";\n}\n.glyphicon-th-large:before {\n  content: \"\\E010\";\n}\n.glyphicon-th:before {\n  content: \"\\E011\";\n}\n.glyphicon-th-list:before {\n  content: \"\\E012\";\n}\n.glyphicon-ok:before {\n  content: \"\\E013\";\n}\n.glyphicon-remove:before {\n  content: \"\\E014\";\n}\n.glyphicon-zoom-in:before {\n  content: \"\\E015\";\n}\n.glyphicon-zoom-out:before {\n  content: \"\\E016\";\n}\n.glyphicon-off:before {\n  content: \"\\E017\";\n}\n.glyphicon-signal:before {\n  content: \"\\E018\";\n}\n.glyphicon-cog:before {\n  content: \"\\E019\";\n}\n.glyphicon-trash:before {\n  content: \"\\E020\";\n}\n.glyphicon-home:before {\n  content: \"\\E021\";\n}\n.glyphicon-file:before {\n  content: \"\\E022\";\n}\n.glyphicon-time:before {\n  content: \"\\E023\";\n}\n.glyphicon-road:before {\n  content: \"\\E024\";\n}\n.glyphicon-download-alt:before {\n  content: \"\\E025\";\n}\n.glyphicon-download:before {\n  content: \"\\E026\";\n}\n.glyphicon-upload:before {\n  content: \"\\E027\";\n}\n.glyphicon-inbox:before {\n  content: \"\\E028\";\n}\n.glyphicon-play-circle:before {\n  content: \"\\E029\";\n}\n.glyphicon-repeat:before {\n  content: \"\\E030\";\n}\n.glyphicon-refresh:before {\n  content: \"\\E031\";\n}\n.glyphicon-list-alt:before {\n  content: \"\\E032\";\n}\n.glyphicon-lock:before {\n  content: \"\\E033\";\n}\n.glyphicon-flag:before {\n  content: \"\\E034\";\n}\n.glyphicon-headphones:before {\n  content: \"\\E035\";\n}\n.glyphicon-volume-off:before {\n  content: \"\\E036\";\n}\n.glyphicon-volume-down:before {\n  content: \"\\E037\";\n}\n.glyphicon-volume-up:before {\n  content: \"\\E038\";\n}\n.glyphicon-qrcode:before {\n  content: \"\\E039\";\n}\n.glyphicon-barcode:before {\n  content: \"\\E040\";\n}\n.glyphicon-tag:before {\n  content: \"\\E041\";\n}\n.glyphicon-tags:before {\n  content: \"\\E042\";\n}\n.glyphicon-book:before {\n  content: \"\\E043\";\n}\n.glyphicon-bookmark:before {\n  content: \"\\E044\";\n}\n.glyphicon-print:before {\n  content: \"\\E045\";\n}\n.glyphicon-camera:before {\n  content: \"\\E046\";\n}\n.glyphicon-font:before {\n  content: \"\\E047\";\n}\n.glyphicon-bold:before {\n  content: \"\\E048\";\n}\n.glyphicon-italic:before {\n  content: \"\\E049\";\n}\n.glyphicon-text-height:before {\n  content: \"\\E050\";\n}\n.glyphicon-text-width:before {\n  content: \"\\E051\";\n}\n.glyphicon-align-left:before {\n  content: \"\\E052\";\n}\n.glyphicon-align-center:before {\n  content: \"\\E053\";\n}\n.glyphicon-align-right:before {\n  content: \"\\E054\";\n}\n.glyphicon-align-justify:before {\n  content: \"\\E055\";\n}\n.glyphicon-list:before {\n  content: \"\\E056\";\n}\n.glyphicon-indent-left:before {\n  content: \"\\E057\";\n}\n.glyphicon-indent-right:before {\n  content: \"\\E058\";\n}\n.glyphicon-facetime-video:before {\n  content: \"\\E059\";\n}\n.glyphicon-picture:before {\n  content: \"\\E060\";\n}\n.glyphicon-map-marker:before {\n  content: \"\\E062\";\n}\n.glyphicon-adjust:before {\n  content: \"\\E063\";\n}\n.glyphicon-tint:before {\n  content: \"\\E064\";\n}\n.glyphicon-edit:before {\n  content: \"\\E065\";\n}\n.glyphicon-share:before {\n  content: \"\\E066\";\n}\n.glyphicon-check:before {\n  content: \"\\E067\";\n}\n.glyphicon-move:before {\n  content: \"\\E068\";\n}\n.glyphicon-step-backward:before {\n  content: \"\\E069\";\n}\n.glyphicon-fast-backward:before {\n  content: \"\\E070\";\n}\n.glyphicon-backward:before {\n  content: \"\\E071\";\n}\n.glyphicon-play:before {\n  content: \"\\E072\";\n}\n.glyphicon-pause:before {\n  content: \"\\E073\";\n}\n.glyphicon-stop:before {\n  content: \"\\E074\";\n}\n.glyphicon-forward:before {\n  content: \"\\E075\";\n}\n.glyphicon-fast-forward:before {\n  content: \"\\E076\";\n}\n.glyphicon-step-forward:before {\n  content: \"\\E077\";\n}\n.glyphicon-eject:before {\n  content: \"\\E078\";\n}\n.glyphicon-chevron-left:before {\n  content: \"\\E079\";\n}\n.glyphicon-chevron-right:before {\n  content: \"\\E080\";\n}\n.glyphicon-plus-sign:before {\n  content: \"\\E081\";\n}\n.glyphicon-minus-sign:before {\n  content: \"\\E082\";\n}\n.glyphicon-remove-sign:before {\n  content: \"\\E083\";\n}\n.glyphicon-ok-sign:before {\n  content: \"\\E084\";\n}\n.glyphicon-question-sign:before {\n  content: \"\\E085\";\n}\n.glyphicon-info-sign:before {\n  content: \"\\E086\";\n}\n.glyphicon-screenshot:before {\n  content: \"\\E087\";\n}\n.glyphicon-remove-circle:before {\n  content: \"\\E088\";\n}\n.glyphicon-ok-circle:before {\n  content: \"\\E089\";\n}\n.glyphicon-ban-circle:before {\n  content: \"\\E090\";\n}\n.glyphicon-arrow-left:before {\n  content: \"\\E091\";\n}\n.glyphicon-arrow-right:before {\n  content: \"\\E092\";\n}\n.glyphicon-arrow-up:before {\n  content: \"\\E093\";\n}\n.glyphicon-arrow-down:before {\n  content: \"\\E094\";\n}\n.glyphicon-share-alt:before {\n  content: \"\\E095\";\n}\n.glyphicon-resize-full:before {\n  content: \"\\E096\";\n}\n.glyphicon-resize-small:before {\n  content: \"\\E097\";\n}\n.glyphicon-exclamation-sign:before {\n  content: \"\\E101\";\n}\n.glyphicon-gift:before {\n  content: \"\\E102\";\n}\n.glyphicon-leaf:before {\n  content: \"\\E103\";\n}\n.glyphicon-fire:before {\n  content: \"\\E104\";\n}\n.glyphicon-eye-open:before {\n  content: \"\\E105\";\n}\n.glyphicon-eye-close:before {\n  content: \"\\E106\";\n}\n.glyphicon-warning-sign:before {\n  content: \"\\E107\";\n}\n.glyphicon-plane:before {\n  content: \"\\E108\";\n}\n.glyphicon-calendar:before {\n  content: \"\\E109\";\n}\n.glyphicon-random:before {\n  content: \"\\E110\";\n}\n.glyphicon-comment:before {\n  content: \"\\E111\";\n}\n.glyphicon-magnet:before {\n  content: \"\\E112\";\n}\n.glyphicon-chevron-up:before {\n  content: \"\\E113\";\n}\n.glyphicon-chevron-down:before {\n  content: \"\\E114\";\n}\n.glyphicon-retweet:before {\n  content: \"\\E115\";\n}\n.glyphicon-shopping-cart:before {\n  content: \"\\E116\";\n}\n.glyphicon-folder-close:before {\n  content: \"\\E117\";\n}\n.glyphicon-folder-open:before {\n  content: \"\\E118\";\n}\n.glyphicon-resize-vertical:before {\n  content: \"\\E119\";\n}\n.glyphicon-resize-horizontal:before {\n  content: \"\\E120\";\n}\n.glyphicon-hdd:before {\n  content: \"\\E121\";\n}\n.glyphicon-bullhorn:before {\n  content: \"\\E122\";\n}\n.glyphicon-bell:before {\n  content: \"\\E123\";\n}\n.glyphicon-certificate:before {\n  content: \"\\E124\";\n}\n.glyphicon-thumbs-up:before {\n  content: \"\\E125\";\n}\n.glyphicon-thumbs-down:before {\n  content: \"\\E126\";\n}\n.glyphicon-hand-right:before {\n  content: \"\\E127\";\n}\n.glyphicon-hand-left:before {\n  content: \"\\E128\";\n}\n.glyphicon-hand-up:before {\n  content: \"\\E129\";\n}\n.glyphicon-hand-down:before {\n  content: \"\\E130\";\n}\n.glyphicon-circle-arrow-right:before {\n  content: \"\\E131\";\n}\n.glyphicon-circle-arrow-left:before {\n  content: \"\\E132\";\n}\n.glyphicon-circle-arrow-up:before {\n  content: \"\\E133\";\n}\n.glyphicon-circle-arrow-down:before {\n  content: \"\\E134\";\n}\n.glyphicon-globe:before {\n  content: \"\\E135\";\n}\n.glyphicon-wrench:before {\n  content: \"\\E136\";\n}\n.glyphicon-tasks:before {\n  content: \"\\E137\";\n}\n.glyphicon-filter:before {\n  content: \"\\E138\";\n}\n.glyphicon-briefcase:before {\n  content: \"\\E139\";\n}\n.glyphicon-fullscreen:before {\n  content: \"\\E140\";\n}\n.glyphicon-dashboard:before {\n  content: \"\\E141\";\n}\n.glyphicon-paperclip:before {\n  content: \"\\E142\";\n}\n.glyphicon-heart-empty:before {\n  content: \"\\E143\";\n}\n.glyphicon-link:before {\n  content: \"\\E144\";\n}\n.glyphicon-phone:before {\n  content: \"\\E145\";\n}\n.glyphicon-pushpin:before {\n  content: \"\\E146\";\n}\n.glyphicon-usd:before {\n  content: \"\\E148\";\n}\n.glyphicon-gbp:before {\n  content: \"\\E149\";\n}\n.glyphicon-sort:before {\n  content: \"\\E150\";\n}\n.glyphicon-sort-by-alphabet:before {\n  content: \"\\E151\";\n}\n.glyphicon-sort-by-alphabet-alt:before {\n  content: \"\\E152\";\n}\n.glyphicon-sort-by-order:before {\n  content: \"\\E153\";\n}\n.glyphicon-sort-by-order-alt:before {\n  content: \"\\E154\";\n}\n.glyphicon-sort-by-attributes:before {\n  content: \"\\E155\";\n}\n.glyphicon-sort-by-attributes-alt:before {\n  content: \"\\E156\";\n}\n.glyphicon-unchecked:before {\n  content: \"\\E157\";\n}\n.glyphicon-expand:before {\n  content: \"\\E158\";\n}\n.glyphicon-collapse-down:before {\n  content: \"\\E159\";\n}\n.glyphicon-collapse-up:before {\n  content: \"\\E160\";\n}\n.glyphicon-log-in:before {\n  content: \"\\E161\";\n}\n.glyphicon-flash:before {\n  content: \"\\E162\";\n}\n.glyphicon-log-out:before {\n  content: \"\\E163\";\n}\n.glyphicon-new-window:before {\n  content: \"\\E164\";\n}\n.glyphicon-record:before {\n  content: \"\\E165\";\n}\n.glyphicon-save:before {\n  content: \"\\E166\";\n}\n.glyphicon-open:before {\n  content: \"\\E167\";\n}\n.glyphicon-saved:before {\n  content: \"\\E168\";\n}\n.glyphicon-import:before {\n  content: \"\\E169\";\n}\n.glyphicon-export:before {\n  content: \"\\E170\";\n}\n.glyphicon-send:before {\n  content: \"\\E171\";\n}\n.glyphicon-floppy-disk:before {\n  content: \"\\E172\";\n}\n.glyphicon-floppy-saved:before {\n  content: \"\\E173\";\n}\n.glyphicon-floppy-remove:before {\n  content: \"\\E174\";\n}\n.glyphicon-floppy-save:before {\n  content: \"\\E175\";\n}\n.glyphicon-floppy-open:before {\n  content: \"\\E176\";\n}\n.glyphicon-credit-card:before {\n  content: \"\\E177\";\n}\n.glyphicon-transfer:before {\n  content: \"\\E178\";\n}\n.glyphicon-cutlery:before {\n  content: \"\\E179\";\n}\n.glyphicon-header:before {\n  content: \"\\E180\";\n}\n.glyphicon-compressed:before {\n  content: \"\\E181\";\n}\n.glyphicon-earphone:before {\n  content: \"\\E182\";\n}\n.glyphicon-phone-alt:before {\n  content: \"\\E183\";\n}\n.glyphicon-tower:before {\n  content: \"\\E184\";\n}\n.glyphicon-stats:before {\n  content: \"\\E185\";\n}\n.glyphicon-sd-video:before {\n  content: \"\\E186\";\n}\n.glyphicon-hd-video:before {\n  content: \"\\E187\";\n}\n.glyphicon-subtitles:before {\n  content: \"\\E188\";\n}\n.glyphicon-sound-stereo:before {\n  content: \"\\E189\";\n}\n.glyphicon-sound-dolby:before {\n  content: \"\\E190\";\n}\n.glyphicon-sound-5-1:before {\n  content: \"\\E191\";\n}\n.glyphicon-sound-6-1:before {\n  content: \"\\E192\";\n}\n.glyphicon-sound-7-1:before {\n  content: \"\\E193\";\n}\n.glyphicon-copyright-mark:before {\n  content: \"\\E194\";\n}\n.glyphicon-registration-mark:before {\n  content: \"\\E195\";\n}\n.glyphicon-cloud-download:before {\n  content: \"\\E197\";\n}\n.glyphicon-cloud-upload:before {\n  content: \"\\E198\";\n}\n.glyphicon-tree-conifer:before {\n  content: \"\\E199\";\n}\n.glyphicon-tree-deciduous:before {\n  content: \"\\E200\";\n}\n.glyphicon-cd:before {\n  content: \"\\E201\";\n}\n.glyphicon-save-file:before {\n  content: \"\\E202\";\n}\n.glyphicon-open-file:before {\n  content: \"\\E203\";\n}\n.glyphicon-level-up:before {\n  content: \"\\E204\";\n}\n.glyphicon-copy:before {\n  content: \"\\E205\";\n}\n.glyphicon-paste:before {\n  content: \"\\E206\";\n}\n.glyphicon-alert:before {\n  content: \"\\E209\";\n}\n.glyphicon-equalizer:before {\n  content: \"\\E210\";\n}\n.glyphicon-king:before {\n  content: \"\\E211\";\n}\n.glyphicon-queen:before {\n  content: \"\\E212\";\n}\n.glyphicon-pawn:before {\n  content: \"\\E213\";\n}\n.glyphicon-bishop:before {\n  content: \"\\E214\";\n}\n.glyphicon-knight:before {\n  content: \"\\E215\";\n}\n.glyphicon-baby-formula:before {\n  content: \"\\E216\";\n}\n.glyphicon-tent:before {\n  content: \"\\26FA\";\n}\n.glyphicon-blackboard:before {\n  content: \"\\E218\";\n}\n.glyphicon-bed:before {\n  content: \"\\E219\";\n}\n.glyphicon-apple:before {\n  content: \"\\F8FF\";\n}\n.glyphicon-erase:before {\n  content: \"\\E221\";\n}\n.glyphicon-hourglass:before {\n  content: \"\\231B\";\n}\n.glyphicon-lamp:before {\n  content: \"\\E223\";\n}\n.glyphicon-duplicate:before {\n  content: \"\\E224\";\n}\n.glyphicon-piggy-bank:before {\n  content: \"\\E225\";\n}\n.glyphicon-scissors:before {\n  content: \"\\E226\";\n}\n.glyphicon-bitcoin:before {\n  content: \"\\E227\";\n}\n.glyphicon-btc:before {\n  content: \"\\E227\";\n}\n.glyphicon-xbt:before {\n  content: \"\\E227\";\n}\n.glyphicon-yen:before {\n  content: \"\\A5\";\n}\n.glyphicon-jpy:before {\n  content: \"\\A5\";\n}\n.glyphicon-ruble:before {\n  content: \"\\20BD\";\n}\n.glyphicon-rub:before {\n  content: \"\\20BD\";\n}\n.glyphicon-scale:before {\n  content: \"\\E230\";\n}\n.glyphicon-ice-lolly:before {\n  content: \"\\E231\";\n}\n.glyphicon-ice-lolly-tasted:before {\n  content: \"\\E232\";\n}\n.glyphicon-education:before {\n  content: \"\\E233\";\n}\n.glyphicon-option-horizontal:before {\n  content: \"\\E234\";\n}\n.glyphicon-option-vertical:before {\n  content: \"\\E235\";\n}\n.glyphicon-menu-hamburger:before {\n  content: \"\\E236\";\n}\n.glyphicon-modal-window:before {\n  content: \"\\E237\";\n}\n.glyphicon-oil:before {\n  content: \"\\E238\";\n}\n.glyphicon-grain:before {\n  content: \"\\E239\";\n}\n.glyphicon-sunglasses:before {\n  content: \"\\E240\";\n}\n.glyphicon-text-size:before {\n  content: \"\\E241\";\n}\n.glyphicon-text-color:before {\n  content: \"\\E242\";\n}\n.glyphicon-text-background:before {\n  content: \"\\E243\";\n}\n.glyphicon-object-align-top:before {\n  content: \"\\E244\";\n}\n.glyphicon-object-align-bottom:before {\n  content: \"\\E245\";\n}\n.glyphicon-object-align-horizontal:before {\n  content: \"\\E246\";\n}\n.glyphicon-object-align-left:before {\n  content: \"\\E247\";\n}\n.glyphicon-object-align-vertical:before {\n  content: \"\\E248\";\n}\n.glyphicon-object-align-right:before {\n  content: \"\\E249\";\n}\n.glyphicon-triangle-right:before {\n  content: \"\\E250\";\n}\n.glyphicon-triangle-left:before {\n  content: \"\\E251\";\n}\n.glyphicon-triangle-bottom:before {\n  content: \"\\E252\";\n}\n.glyphicon-triangle-top:before {\n  content: \"\\E253\";\n}\n.glyphicon-console:before {\n  content: \"\\E254\";\n}\n.glyphicon-superscript:before {\n  content: \"\\E255\";\n}\n.glyphicon-subscript:before {\n  content: \"\\E256\";\n}\n.glyphicon-menu-left:before {\n  content: \"\\E257\";\n}\n.glyphicon-menu-right:before {\n  content: \"\\E258\";\n}\n.glyphicon-menu-down:before {\n  content: \"\\E259\";\n}\n.glyphicon-menu-up:before {\n  content: \"\\E260\";\n}\n* {\n  -webkit-box-sizing: border-box;\n     -moz-box-sizing: border-box;\n          box-sizing: border-box;\n}\n*:before,\n*:after {\n  -webkit-box-sizing: border-box;\n     -moz-box-sizing: border-box;\n          box-sizing: border-box;\n}\nhtml {\n  font-size: 10px;\n\n  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);\n}\nbody {\n  font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n  font-size: 14px;\n  line-height: 1.42857143;\n  color: #333;\n  background-color: #fff;\n}\ninput,\nbutton,\nselect,\ntextarea {\n  font-family: inherit;\n  font-size: inherit;\n  line-height: inherit;\n}\na {\n  color: #337ab7;\n  text-decoration: none;\n}\na:hover,\na:focus {\n  color: #23527c;\n  text-decoration: underline;\n}\na:focus {\n  outline: thin dotted;\n  outline: 5px auto -webkit-focus-ring-color;\n  outline-offset: -2px;\n}\nfigure {\n  margin: 0;\n}\nimg {\n  vertical-align: middle;\n}\n.img-responsive,\n.thumbnail > img,\n.thumbnail a > img,\n.carousel-inner > .item > img,\n.carousel-inner > .item > a > img {\n  display: block;\n  max-width: 100%;\n  height: auto;\n}\n.img-rounded {\n  border-radius: 6px;\n}\n.img-thumbnail {\n  display: inline-block;\n  max-width: 100%;\n  height: auto;\n  padding: 4px;\n  line-height: 1.42857143;\n  background-color: #fff;\n  border: 1px solid #ddd;\n  border-radius: 4px;\n  -webkit-transition: all .2s ease-in-out;\n       -o-transition: all .2s ease-in-out;\n          transition: all .2s ease-in-out;\n}\n.img-circle {\n  border-radius: 50%;\n}\nhr {\n  margin-top: 20px;\n  margin-bottom: 20px;\n  border: 0;\n  border-top: 1px solid #eee;\n}\n.sr-only {\n  position: absolute;\n  width: 1px;\n  height: 1px;\n  padding: 0;\n  margin: -1px;\n  overflow: hidden;\n  clip: rect(0, 0, 0, 0);\n  border: 0;\n}\n.sr-only-focusable:active,\n.sr-only-focusable:focus {\n  position: static;\n  width: auto;\n  height: auto;\n  margin: 0;\n  overflow: visible;\n  clip: auto;\n}\n[role=\"button\"] {\n  cursor: pointer;\n}\nh1,\nh2,\nh3,\nh4,\nh5,\nh6,\n.h1,\n.h2,\n.h3,\n.h4,\n.h5,\n.h6 {\n  font-family: inherit;\n  font-weight: 500;\n  line-height: 1.1;\n  color: inherit;\n}\nh1 small,\nh2 small,\nh3 small,\nh4 small,\nh5 small,\nh6 small,\n.h1 small,\n.h2 small,\n.h3 small,\n.h4 small,\n.h5 small,\n.h6 small,\nh1 .small,\nh2 .small,\nh3 .small,\nh4 .small,\nh5 .small,\nh6 .small,\n.h1 .small,\n.h2 .small,\n.h3 .small,\n.h4 .small,\n.h5 .small,\n.h6 .small {\n  font-weight: normal;\n  line-height: 1;\n  color: #777;\n}\nh1,\n.h1,\nh2,\n.h2,\nh3,\n.h3 {\n  margin-top: 20px;\n  margin-bottom: 10px;\n}\nh1 small,\n.h1 small,\nh2 small,\n.h2 small,\nh3 small,\n.h3 small,\nh1 .small,\n.h1 .small,\nh2 .small,\n.h2 .small,\nh3 .small,\n.h3 .small {\n  font-size: 65%;\n}\nh4,\n.h4,\nh5,\n.h5,\nh6,\n.h6 {\n  margin-top: 10px;\n  margin-bottom: 10px;\n}\nh4 small,\n.h4 small,\nh5 small,\n.h5 small,\nh6 small,\n.h6 small,\nh4 .small,\n.h4 .small,\nh5 .small,\n.h5 .small,\nh6 .small,\n.h6 .small {\n  font-size: 75%;\n}\nh1,\n.h1 {\n  font-size: 36px;\n}\nh2,\n.h2 {\n  font-size: 30px;\n}\nh3,\n.h3 {\n  font-size: 24px;\n}\nh4,\n.h4 {\n  font-size: 18px;\n}\nh5,\n.h5 {\n  font-size: 14px;\n}\nh6,\n.h6 {\n  font-size: 12px;\n}\np {\n  margin: 0 0 10px;\n}\n.lead {\n  margin-bottom: 20px;\n  font-size: 16px;\n  font-weight: 300;\n  line-height: 1.4;\n}\n@media (min-width: 768px) {\n  .lead {\n    font-size: 21px;\n  }\n}\nsmall,\n.small {\n  font-size: 85%;\n}\nmark,\n.mark {\n  padding: .2em;\n  background-color: #fcf8e3;\n}\n.text-left {\n  text-align: left;\n}\n.text-right {\n  text-align: right;\n}\n.text-center {\n  text-align: center;\n}\n.text-justify {\n  text-align: justify;\n}\n.text-nowrap {\n  white-space: nowrap;\n}\n.text-lowercase {\n  text-transform: lowercase;\n}\n.text-uppercase {\n  text-transform: uppercase;\n}\n.text-capitalize {\n  text-transform: capitalize;\n}\n.text-muted {\n  color: #777;\n}\n.text-primary {\n  color: #337ab7;\n}\na.text-primary:hover,\na.text-primary:focus {\n  color: #286090;\n}\n.text-success {\n  color: #3c763d;\n}\na.text-success:hover,\na.text-success:focus {\n  color: #2b542c;\n}\n.text-info {\n  color: #31708f;\n}\na.text-info:hover,\na.text-info:focus {\n  color: #245269;\n}\n.text-warning {\n  color: #8a6d3b;\n}\na.text-warning:hover,\na.text-warning:focus {\n  color: #66512c;\n}\n.text-danger {\n  color: #a94442;\n}\na.text-danger:hover,\na.text-danger:focus {\n  color: #843534;\n}\n.bg-primary {\n  color: #fff;\n  background-color: #337ab7;\n}\na.bg-primary:hover,\na.bg-primary:focus {\n  background-color: #286090;\n}\n.bg-success {\n  background-color: #dff0d8;\n}\na.bg-success:hover,\na.bg-success:focus {\n  background-color: #c1e2b3;\n}\n.bg-info {\n  background-color: #d9edf7;\n}\na.bg-info:hover,\na.bg-info:focus {\n  background-color: #afd9ee;\n}\n.bg-warning {\n  background-color: #fcf8e3;\n}\na.bg-warning:hover,\na.bg-warning:focus {\n  background-color: #f7ecb5;\n}\n.bg-danger {\n  background-color: #f2dede;\n}\na.bg-danger:hover,\na.bg-danger:focus {\n  background-color: #e4b9b9;\n}\n.page-header {\n  padding-bottom: 9px;\n  margin: 40px 0 20px;\n  border-bottom: 1px solid #eee;\n}\nul,\nol {\n  margin-top: 0;\n  margin-bottom: 10px;\n}\nul ul,\nol ul,\nul ol,\nol ol {\n  margin-bottom: 0;\n}\n.list-unstyled {\n  padding-left: 0;\n  list-style: none;\n}\n.list-inline {\n  padding-left: 0;\n  margin-left: -5px;\n  list-style: none;\n}\n.list-inline > li {\n  display: inline-block;\n  padding-right: 5px;\n  padding-left: 5px;\n}\ndl {\n  margin-top: 0;\n  margin-bottom: 20px;\n}\ndt,\ndd {\n  line-height: 1.42857143;\n}\ndt {\n  font-weight: bold;\n}\ndd {\n  margin-left: 0;\n}\n@media (min-width: 768px) {\n  .dl-horizontal dt {\n    float: left;\n    width: 160px;\n    overflow: hidden;\n    clear: left;\n    text-align: right;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n  }\n  .dl-horizontal dd {\n    margin-left: 180px;\n  }\n}\nabbr[title],\nabbr[data-original-title] {\n  cursor: help;\n  border-bottom: 1px dotted #777;\n}\n.initialism {\n  font-size: 90%;\n  text-transform: uppercase;\n}\nblockquote {\n  padding: 10px 20px;\n  margin: 0 0 20px;\n  font-size: 17.5px;\n  border-left: 5px solid #eee;\n}\nblockquote p:last-child,\nblockquote ul:last-child,\nblockquote ol:last-child {\n  margin-bottom: 0;\n}\nblockquote footer,\nblockquote small,\nblockquote .small {\n  display: block;\n  font-size: 80%;\n  line-height: 1.42857143;\n  color: #777;\n}\nblockquote footer:before,\nblockquote small:before,\nblockquote .small:before {\n  content: '\\2014   \\A0';\n}\n.blockquote-reverse,\nblockquote.pull-right {\n  padding-right: 15px;\n  padding-left: 0;\n  text-align: right;\n  border-right: 5px solid #eee;\n  border-left: 0;\n}\n.blockquote-reverse footer:before,\nblockquote.pull-right footer:before,\n.blockquote-reverse small:before,\nblockquote.pull-right small:before,\n.blockquote-reverse .small:before,\nblockquote.pull-right .small:before {\n  content: '';\n}\n.blockquote-reverse footer:after,\nblockquote.pull-right footer:after,\n.blockquote-reverse small:after,\nblockquote.pull-right small:after,\n.blockquote-reverse .small:after,\nblockquote.pull-right .small:after {\n  content: '\\A0   \\2014';\n}\naddress {\n  margin-bottom: 20px;\n  font-style: normal;\n  line-height: 1.42857143;\n}\ncode,\nkbd,\npre,\nsamp {\n  font-family: Menlo, Monaco, Consolas, \"Courier New\", monospace;\n}\ncode {\n  padding: 2px 4px;\n  font-size: 90%;\n  color: #c7254e;\n  background-color: #f9f2f4;\n  border-radius: 4px;\n}\nkbd {\n  padding: 2px 4px;\n  font-size: 90%;\n  color: #fff;\n  background-color: #333;\n  border-radius: 3px;\n  -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .25);\n          box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .25);\n}\nkbd kbd {\n  padding: 0;\n  font-size: 100%;\n  font-weight: bold;\n  -webkit-box-shadow: none;\n          box-shadow: none;\n}\npre {\n  display: block;\n  padding: 9.5px;\n  margin: 0 0 10px;\n  font-size: 13px;\n  line-height: 1.42857143;\n  color: #333;\n  word-break: break-all;\n  word-wrap: break-word;\n  background-color: #f5f5f5;\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\npre code {\n  padding: 0;\n  font-size: inherit;\n  color: inherit;\n  white-space: pre-wrap;\n  background-color: transparent;\n  border-radius: 0;\n}\n.pre-scrollable {\n  max-height: 340px;\n  overflow-y: scroll;\n}\n.container {\n  padding-right: 15px;\n  padding-left: 15px;\n  margin-right: auto;\n  margin-left: auto;\n}\n@media (min-width: 768px) {\n  .container {\n    width: 750px;\n  }\n}\n@media (min-width: 992px) {\n  .container {\n    width: 970px;\n  }\n}\n@media (min-width: 1200px) {\n  .container {\n    width: 1170px;\n  }\n}\n.container-fluid {\n  padding-right: 15px;\n  padding-left: 15px;\n  margin-right: auto;\n  margin-left: auto;\n}\n.row {\n  margin-right: -15px;\n  margin-left: -15px;\n}\n.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {\n  position: relative;\n  min-height: 1px;\n  padding-right: 15px;\n  padding-left: 15px;\n}\n.col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12 {\n  float: left;\n}\n.col-xs-12 {\n  width: 100%;\n}\n.col-xs-11 {\n  width: 91.66666667%;\n}\n.col-xs-10 {\n  width: 83.33333333%;\n}\n.col-xs-9 {\n  width: 75%;\n}\n.col-xs-8 {\n  width: 66.66666667%;\n}\n.col-xs-7 {\n  width: 58.33333333%;\n}\n.col-xs-6 {\n  width: 50%;\n}\n.col-xs-5 {\n  width: 41.66666667%;\n}\n.col-xs-4 {\n  width: 33.33333333%;\n}\n.col-xs-3 {\n  width: 25%;\n}\n.col-xs-2 {\n  width: 16.66666667%;\n}\n.col-xs-1 {\n  width: 8.33333333%;\n}\n.col-xs-pull-12 {\n  right: 100%;\n}\n.col-xs-pull-11 {\n  right: 91.66666667%;\n}\n.col-xs-pull-10 {\n  right: 83.33333333%;\n}\n.col-xs-pull-9 {\n  right: 75%;\n}\n.col-xs-pull-8 {\n  right: 66.66666667%;\n}\n.col-xs-pull-7 {\n  right: 58.33333333%;\n}\n.col-xs-pull-6 {\n  right: 50%;\n}\n.col-xs-pull-5 {\n  right: 41.66666667%;\n}\n.col-xs-pull-4 {\n  right: 33.33333333%;\n}\n.col-xs-pull-3 {\n  right: 25%;\n}\n.col-xs-pull-2 {\n  right: 16.66666667%;\n}\n.col-xs-pull-1 {\n  right: 8.33333333%;\n}\n.col-xs-pull-0 {\n  right: auto;\n}\n.col-xs-push-12 {\n  left: 100%;\n}\n.col-xs-push-11 {\n  left: 91.66666667%;\n}\n.col-xs-push-10 {\n  left: 83.33333333%;\n}\n.col-xs-push-9 {\n  left: 75%;\n}\n.col-xs-push-8 {\n  left: 66.66666667%;\n}\n.col-xs-push-7 {\n  left: 58.33333333%;\n}\n.col-xs-push-6 {\n  left: 50%;\n}\n.col-xs-push-5 {\n  left: 41.66666667%;\n}\n.col-xs-push-4 {\n  left: 33.33333333%;\n}\n.col-xs-push-3 {\n  left: 25%;\n}\n.col-xs-push-2 {\n  left: 16.66666667%;\n}\n.col-xs-push-1 {\n  left: 8.33333333%;\n}\n.col-xs-push-0 {\n  left: auto;\n}\n.col-xs-offset-12 {\n  margin-left: 100%;\n}\n.col-xs-offset-11 {\n  margin-left: 91.66666667%;\n}\n.col-xs-offset-10 {\n  margin-left: 83.33333333%;\n}\n.col-xs-offset-9 {\n  margin-left: 75%;\n}\n.col-xs-offset-8 {\n  margin-left: 66.66666667%;\n}\n.col-xs-offset-7 {\n  margin-left: 58.33333333%;\n}\n.col-xs-offset-6 {\n  margin-left: 50%;\n}\n.col-xs-offset-5 {\n  margin-left: 41.66666667%;\n}\n.col-xs-offset-4 {\n  margin-left: 33.33333333%;\n}\n.col-xs-offset-3 {\n  margin-left: 25%;\n}\n.col-xs-offset-2 {\n  margin-left: 16.66666667%;\n}\n.col-xs-offset-1 {\n  margin-left: 8.33333333%;\n}\n.col-xs-offset-0 {\n  margin-left: 0;\n}\n@media (min-width: 768px) {\n  .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12 {\n    float: left;\n  }\n  .col-sm-12 {\n    width: 100%;\n  }\n  .col-sm-11 {\n    width: 91.66666667%;\n  }\n  .col-sm-10 {\n    width: 83.33333333%;\n  }\n  .col-sm-9 {\n    width: 75%;\n  }\n  .col-sm-8 {\n    width: 66.66666667%;\n  }\n  .col-sm-7 {\n    width: 58.33333333%;\n  }\n  .col-sm-6 {\n    width: 50%;\n  }\n  .col-sm-5 {\n    width: 41.66666667%;\n  }\n  .col-sm-4 {\n    width: 33.33333333%;\n  }\n  .col-sm-3 {\n    width: 25%;\n  }\n  .col-sm-2 {\n    width: 16.66666667%;\n  }\n  .col-sm-1 {\n    width: 8.33333333%;\n  }\n  .col-sm-pull-12 {\n    right: 100%;\n  }\n  .col-sm-pull-11 {\n    right: 91.66666667%;\n  }\n  .col-sm-pull-10 {\n    right: 83.33333333%;\n  }\n  .col-sm-pull-9 {\n    right: 75%;\n  }\n  .col-sm-pull-8 {\n    right: 66.66666667%;\n  }\n  .col-sm-pull-7 {\n    right: 58.33333333%;\n  }\n  .col-sm-pull-6 {\n    right: 50%;\n  }\n  .col-sm-pull-5 {\n    right: 41.66666667%;\n  }\n  .col-sm-pull-4 {\n    right: 33.33333333%;\n  }\n  .col-sm-pull-3 {\n    right: 25%;\n  }\n  .col-sm-pull-2 {\n    right: 16.66666667%;\n  }\n  .col-sm-pull-1 {\n    right: 8.33333333%;\n  }\n  .col-sm-pull-0 {\n    right: auto;\n  }\n  .col-sm-push-12 {\n    left: 100%;\n  }\n  .col-sm-push-11 {\n    left: 91.66666667%;\n  }\n  .col-sm-push-10 {\n    left: 83.33333333%;\n  }\n  .col-sm-push-9 {\n    left: 75%;\n  }\n  .col-sm-push-8 {\n    left: 66.66666667%;\n  }\n  .col-sm-push-7 {\n    left: 58.33333333%;\n  }\n  .col-sm-push-6 {\n    left: 50%;\n  }\n  .col-sm-push-5 {\n    left: 41.66666667%;\n  }\n  .col-sm-push-4 {\n    left: 33.33333333%;\n  }\n  .col-sm-push-3 {\n    left: 25%;\n  }\n  .col-sm-push-2 {\n    left: 16.66666667%;\n  }\n  .col-sm-push-1 {\n    left: 8.33333333%;\n  }\n  .col-sm-push-0 {\n    left: auto;\n  }\n  .col-sm-offset-12 {\n    margin-left: 100%;\n  }\n  .col-sm-offset-11 {\n    margin-left: 91.66666667%;\n  }\n  .col-sm-offset-10 {\n    margin-left: 83.33333333%;\n  }\n  .col-sm-offset-9 {\n    margin-left: 75%;\n  }\n  .col-sm-offset-8 {\n    margin-left: 66.66666667%;\n  }\n  .col-sm-offset-7 {\n    margin-left: 58.33333333%;\n  }\n  .col-sm-offset-6 {\n    margin-left: 50%;\n  }\n  .col-sm-offset-5 {\n    margin-left: 41.66666667%;\n  }\n  .col-sm-offset-4 {\n    margin-left: 33.33333333%;\n  }\n  .col-sm-offset-3 {\n    margin-left: 25%;\n  }\n  .col-sm-offset-2 {\n    margin-left: 16.66666667%;\n  }\n  .col-sm-offset-1 {\n    margin-left: 8.33333333%;\n  }\n  .col-sm-offset-0 {\n    margin-left: 0;\n  }\n}\n@media (min-width: 992px) {\n  .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12 {\n    float: left;\n  }\n  .col-md-12 {\n    width: 100%;\n  }\n  .col-md-11 {\n    width: 91.66666667%;\n  }\n  .col-md-10 {\n    width: 83.33333333%;\n  }\n  .col-md-9 {\n    width: 75%;\n  }\n  .col-md-8 {\n    width: 66.66666667%;\n  }\n  .col-md-7 {\n    width: 58.33333333%;\n  }\n  .col-md-6 {\n    width: 50%;\n  }\n  .col-md-5 {\n    width: 41.66666667%;\n  }\n  .col-md-4 {\n    width: 33.33333333%;\n  }\n  .col-md-3 {\n    width: 25%;\n  }\n  .col-md-2 {\n    width: 16.66666667%;\n  }\n  .col-md-1 {\n    width: 8.33333333%;\n  }\n  .col-md-pull-12 {\n    right: 100%;\n  }\n  .col-md-pull-11 {\n    right: 91.66666667%;\n  }\n  .col-md-pull-10 {\n    right: 83.33333333%;\n  }\n  .col-md-pull-9 {\n    right: 75%;\n  }\n  .col-md-pull-8 {\n    right: 66.66666667%;\n  }\n  .col-md-pull-7 {\n    right: 58.33333333%;\n  }\n  .col-md-pull-6 {\n    right: 50%;\n  }\n  .col-md-pull-5 {\n    right: 41.66666667%;\n  }\n  .col-md-pull-4 {\n    right: 33.33333333%;\n  }\n  .col-md-pull-3 {\n    right: 25%;\n  }\n  .col-md-pull-2 {\n    right: 16.66666667%;\n  }\n  .col-md-pull-1 {\n    right: 8.33333333%;\n  }\n  .col-md-pull-0 {\n    right: auto;\n  }\n  .col-md-push-12 {\n    left: 100%;\n  }\n  .col-md-push-11 {\n    left: 91.66666667%;\n  }\n  .col-md-push-10 {\n    left: 83.33333333%;\n  }\n  .col-md-push-9 {\n    left: 75%;\n  }\n  .col-md-push-8 {\n    left: 66.66666667%;\n  }\n  .col-md-push-7 {\n    left: 58.33333333%;\n  }\n  .col-md-push-6 {\n    left: 50%;\n  }\n  .col-md-push-5 {\n    left: 41.66666667%;\n  }\n  .col-md-push-4 {\n    left: 33.33333333%;\n  }\n  .col-md-push-3 {\n    left: 25%;\n  }\n  .col-md-push-2 {\n    left: 16.66666667%;\n  }\n  .col-md-push-1 {\n    left: 8.33333333%;\n  }\n  .col-md-push-0 {\n    left: auto;\n  }\n  .col-md-offset-12 {\n    margin-left: 100%;\n  }\n  .col-md-offset-11 {\n    margin-left: 91.66666667%;\n  }\n  .col-md-offset-10 {\n    margin-left: 83.33333333%;\n  }\n  .col-md-offset-9 {\n    margin-left: 75%;\n  }\n  .col-md-offset-8 {\n    margin-left: 66.66666667%;\n  }\n  .col-md-offset-7 {\n    margin-left: 58.33333333%;\n  }\n  .col-md-offset-6 {\n    margin-left: 50%;\n  }\n  .col-md-offset-5 {\n    margin-left: 41.66666667%;\n  }\n  .col-md-offset-4 {\n    margin-left: 33.33333333%;\n  }\n  .col-md-offset-3 {\n    margin-left: 25%;\n  }\n  .col-md-offset-2 {\n    margin-left: 16.66666667%;\n  }\n  .col-md-offset-1 {\n    margin-left: 8.33333333%;\n  }\n  .col-md-offset-0 {\n    margin-left: 0;\n  }\n}\n@media (min-width: 1200px) {\n  .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12 {\n    float: left;\n  }\n  .col-lg-12 {\n    width: 100%;\n  }\n  .col-lg-11 {\n    width: 91.66666667%;\n  }\n  .col-lg-10 {\n    width: 83.33333333%;\n  }\n  .col-lg-9 {\n    width: 75%;\n  }\n  .col-lg-8 {\n    width: 66.66666667%;\n  }\n  .col-lg-7 {\n    width: 58.33333333%;\n  }\n  .col-lg-6 {\n    width: 50%;\n  }\n  .col-lg-5 {\n    width: 41.66666667%;\n  }\n  .col-lg-4 {\n    width: 33.33333333%;\n  }\n  .col-lg-3 {\n    width: 25%;\n  }\n  .col-lg-2 {\n    width: 16.66666667%;\n  }\n  .col-lg-1 {\n    width: 8.33333333%;\n  }\n  .col-lg-pull-12 {\n    right: 100%;\n  }\n  .col-lg-pull-11 {\n    right: 91.66666667%;\n  }\n  .col-lg-pull-10 {\n    right: 83.33333333%;\n  }\n  .col-lg-pull-9 {\n    right: 75%;\n  }\n  .col-lg-pull-8 {\n    right: 66.66666667%;\n  }\n  .col-lg-pull-7 {\n    right: 58.33333333%;\n  }\n  .col-lg-pull-6 {\n    right: 50%;\n  }\n  .col-lg-pull-5 {\n    right: 41.66666667%;\n  }\n  .col-lg-pull-4 {\n    right: 33.33333333%;\n  }\n  .col-lg-pull-3 {\n    right: 25%;\n  }\n  .col-lg-pull-2 {\n    right: 16.66666667%;\n  }\n  .col-lg-pull-1 {\n    right: 8.33333333%;\n  }\n  .col-lg-pull-0 {\n    right: auto;\n  }\n  .col-lg-push-12 {\n    left: 100%;\n  }\n  .col-lg-push-11 {\n    left: 91.66666667%;\n  }\n  .col-lg-push-10 {\n    left: 83.33333333%;\n  }\n  .col-lg-push-9 {\n    left: 75%;\n  }\n  .col-lg-push-8 {\n    left: 66.66666667%;\n  }\n  .col-lg-push-7 {\n    left: 58.33333333%;\n  }\n  .col-lg-push-6 {\n    left: 50%;\n  }\n  .col-lg-push-5 {\n    left: 41.66666667%;\n  }\n  .col-lg-push-4 {\n    left: 33.33333333%;\n  }\n  .col-lg-push-3 {\n    left: 25%;\n  }\n  .col-lg-push-2 {\n    left: 16.66666667%;\n  }\n  .col-lg-push-1 {\n    left: 8.33333333%;\n  }\n  .col-lg-push-0 {\n    left: auto;\n  }\n  .col-lg-offset-12 {\n    margin-left: 100%;\n  }\n  .col-lg-offset-11 {\n    margin-left: 91.66666667%;\n  }\n  .col-lg-offset-10 {\n    margin-left: 83.33333333%;\n  }\n  .col-lg-offset-9 {\n    margin-left: 75%;\n  }\n  .col-lg-offset-8 {\n    margin-left: 66.66666667%;\n  }\n  .col-lg-offset-7 {\n    margin-left: 58.33333333%;\n  }\n  .col-lg-offset-6 {\n    margin-left: 50%;\n  }\n  .col-lg-offset-5 {\n    margin-left: 41.66666667%;\n  }\n  .col-lg-offset-4 {\n    margin-left: 33.33333333%;\n  }\n  .col-lg-offset-3 {\n    margin-left: 25%;\n  }\n  .col-lg-offset-2 {\n    margin-left: 16.66666667%;\n  }\n  .col-lg-offset-1 {\n    margin-left: 8.33333333%;\n  }\n  .col-lg-offset-0 {\n    margin-left: 0;\n  }\n}\ntable {\n  background-color: transparent;\n}\ncaption {\n  padding-top: 8px;\n  padding-bottom: 8px;\n  color: #777;\n  text-align: left;\n}\nth {\n  text-align: left;\n}\n.table {\n  width: 100%;\n  max-width: 100%;\n  margin-bottom: 20px;\n}\n.table > thead > tr > th,\n.table > tbody > tr > th,\n.table > tfoot > tr > th,\n.table > thead > tr > td,\n.table > tbody > tr > td,\n.table > tfoot > tr > td {\n  padding: 8px;\n  line-height: 1.42857143;\n  vertical-align: top;\n  border-top: 1px solid #ddd;\n}\n.table > thead > tr > th {\n  vertical-align: bottom;\n  border-bottom: 2px solid #ddd;\n}\n.table > caption + thead > tr:first-child > th,\n.table > colgroup + thead > tr:first-child > th,\n.table > thead:first-child > tr:first-child > th,\n.table > caption + thead > tr:first-child > td,\n.table > colgroup + thead > tr:first-child > td,\n.table > thead:first-child > tr:first-child > td {\n  border-top: 0;\n}\n.table > tbody + tbody {\n  border-top: 2px solid #ddd;\n}\n.table .table {\n  background-color: #fff;\n}\n.table-condensed > thead > tr > th,\n.table-condensed > tbody > tr > th,\n.table-condensed > tfoot > tr > th,\n.table-condensed > thead > tr > td,\n.table-condensed > tbody > tr > td,\n.table-condensed > tfoot > tr > td {\n  padding: 5px;\n}\n.table-bordered {\n  border: 1px solid #ddd;\n}\n.table-bordered > thead > tr > th,\n.table-bordered > tbody > tr > th,\n.table-bordered > tfoot > tr > th,\n.table-bordered > thead > tr > td,\n.table-bordered > tbody > tr > td,\n.table-bordered > tfoot > tr > td {\n  border: 1px solid #ddd;\n}\n.table-bordered > thead > tr > th,\n.table-bordered > thead > tr > td {\n  border-bottom-width: 2px;\n}\n.table-striped > tbody > tr:nth-of-type(odd) {\n  background-color: #f9f9f9;\n}\n.table-hover > tbody > tr:hover {\n  background-color: #f5f5f5;\n}\ntable col[class*=\"col-\"] {\n  position: static;\n  display: table-column;\n  float: none;\n}\ntable td[class*=\"col-\"],\ntable th[class*=\"col-\"] {\n  position: static;\n  display: table-cell;\n  float: none;\n}\n.table > thead > tr > td.active,\n.table > tbody > tr > td.active,\n.table > tfoot > tr > td.active,\n.table > thead > tr > th.active,\n.table > tbody > tr > th.active,\n.table > tfoot > tr > th.active,\n.table > thead > tr.active > td,\n.table > tbody > tr.active > td,\n.table > tfoot > tr.active > td,\n.table > thead > tr.active > th,\n.table > tbody > tr.active > th,\n.table > tfoot > tr.active > th {\n  background-color: #f5f5f5;\n}\n.table-hover > tbody > tr > td.active:hover,\n.table-hover > tbody > tr > th.active:hover,\n.table-hover > tbody > tr.active:hover > td,\n.table-hover > tbody > tr:hover > .active,\n.table-hover > tbody > tr.active:hover > th {\n  background-color: #e8e8e8;\n}\n.table > thead > tr > td.success,\n.table > tbody > tr > td.success,\n.table > tfoot > tr > td.success,\n.table > thead > tr > th.success,\n.table > tbody > tr > th.success,\n.table > tfoot > tr > th.success,\n.table > thead > tr.success > td,\n.table > tbody > tr.success > td,\n.table > tfoot > tr.success > td,\n.table > thead > tr.success > th,\n.table > tbody > tr.success > th,\n.table > tfoot > tr.success > th {\n  background-color: #dff0d8;\n}\n.table-hover > tbody > tr > td.success:hover,\n.table-hover > tbody > tr > th.success:hover,\n.table-hover > tbody > tr.success:hover > td,\n.table-hover > tbody > tr:hover > .success,\n.table-hover > tbody > tr.success:hover > th {\n  background-color: #d0e9c6;\n}\n.table > thead > tr > td.info,\n.table > tbody > tr > td.info,\n.table > tfoot > tr > td.info,\n.table > thead > tr > th.info,\n.table > tbody > tr > th.info,\n.table > tfoot > tr > th.info,\n.table > thead > tr.info > td,\n.table > tbody > tr.info > td,\n.table > tfoot > tr.info > td,\n.table > thead > tr.info > th,\n.table > tbody > tr.info > th,\n.table > tfoot > tr.info > th {\n  background-color: #d9edf7;\n}\n.table-hover > tbody > tr > td.info:hover,\n.table-hover > tbody > tr > th.info:hover,\n.table-hover > tbody > tr.info:hover > td,\n.table-hover > tbody > tr:hover > .info,\n.table-hover > tbody > tr.info:hover > th {\n  background-color: #c4e3f3;\n}\n.table > thead > tr > td.warning,\n.table > tbody > tr > td.warning,\n.table > tfoot > tr > td.warning,\n.table > thead > tr > th.warning,\n.table > tbody > tr > th.warning,\n.table > tfoot > tr > th.warning,\n.table > thead > tr.warning > td,\n.table > tbody > tr.warning > td,\n.table > tfoot > tr.warning > td,\n.table > thead > tr.warning > th,\n.table > tbody > tr.warning > th,\n.table > tfoot > tr.warning > th {\n  background-color: #fcf8e3;\n}\n.table-hover > tbody > tr > td.warning:hover,\n.table-hover > tbody > tr > th.warning:hover,\n.table-hover > tbody > tr.warning:hover > td,\n.table-hover > tbody > tr:hover > .warning,\n.table-hover > tbody > tr.warning:hover > th {\n  background-color: #faf2cc;\n}\n.table > thead > tr > td.danger,\n.table > tbody > tr > td.danger,\n.table > tfoot > tr > td.danger,\n.table > thead > tr > th.danger,\n.table > tbody > tr > th.danger,\n.table > tfoot > tr > th.danger,\n.table > thead > tr.danger > td,\n.table > tbody > tr.danger > td,\n.table > tfoot > tr.danger > td,\n.table > thead > tr.danger > th,\n.table > tbody > tr.danger > th,\n.table > tfoot > tr.danger > th {\n  background-color: #f2dede;\n}\n.table-hover > tbody > tr > td.danger:hover,\n.table-hover > tbody > tr > th.danger:hover,\n.table-hover > tbody > tr.danger:hover > td,\n.table-hover > tbody > tr:hover > .danger,\n.table-hover > tbody > tr.danger:hover > th {\n  background-color: #ebcccc;\n}\n.table-responsive {\n  min-height: .01%;\n  overflow-x: auto;\n}\n@media screen and (max-width: 767px) {\n  .table-responsive {\n    width: 100%;\n    margin-bottom: 15px;\n    overflow-y: hidden;\n    -ms-overflow-style: -ms-autohiding-scrollbar;\n    border: 1px solid #ddd;\n  }\n  .table-responsive > .table {\n    margin-bottom: 0;\n  }\n  .table-responsive > .table > thead > tr > th,\n  .table-responsive > .table > tbody > tr > th,\n  .table-responsive > .table > tfoot > tr > th,\n  .table-responsive > .table > thead > tr > td,\n  .table-responsive > .table > tbody > tr > td,\n  .table-responsive > .table > tfoot > tr > td {\n    white-space: nowrap;\n  }\n  .table-responsive > .table-bordered {\n    border: 0;\n  }\n  .table-responsive > .table-bordered > thead > tr > th:first-child,\n  .table-responsive > .table-bordered > tbody > tr > th:first-child,\n  .table-responsive > .table-bordered > tfoot > tr > th:first-child,\n  .table-responsive > .table-bordered > thead > tr > td:first-child,\n  .table-responsive > .table-bordered > tbody > tr > td:first-child,\n  .table-responsive > .table-bordered > tfoot > tr > td:first-child {\n    border-left: 0;\n  }\n  .table-responsive > .table-bordered > thead > tr > th:last-child,\n  .table-responsive > .table-bordered > tbody > tr > th:last-child,\n  .table-responsive > .table-bordered > tfoot > tr > th:last-child,\n  .table-responsive > .table-bordered > thead > tr > td:last-child,\n  .table-responsive > .table-bordered > tbody > tr > td:last-child,\n  .table-responsive > .table-bordered > tfoot > tr > td:last-child {\n    border-right: 0;\n  }\n  .table-responsive > .table-bordered > tbody > tr:last-child > th,\n  .table-responsive > .table-bordered > tfoot > tr:last-child > th,\n  .table-responsive > .table-bordered > tbody > tr:last-child > td,\n  .table-responsive > .table-bordered > tfoot > tr:last-child > td {\n    border-bottom: 0;\n  }\n}\nfieldset {\n  min-width: 0;\n  padding: 0;\n  margin: 0;\n  border: 0;\n}\nlegend {\n  display: block;\n  width: 100%;\n  padding: 0;\n  margin-bottom: 20px;\n  font-size: 21px;\n  line-height: inherit;\n  color: #333;\n  border: 0;\n  border-bottom: 1px solid #e5e5e5;\n}\nlabel {\n  display: inline-block;\n  max-width: 100%;\n  margin-bottom: 5px;\n  font-weight: bold;\n}\ninput[type=\"search\"] {\n  -webkit-box-sizing: border-box;\n     -moz-box-sizing: border-box;\n          box-sizing: border-box;\n}\ninput[type=\"radio\"],\ninput[type=\"checkbox\"] {\n  margin: 4px 0 0;\n  margin-top: 1px \\9;\n  line-height: normal;\n}\ninput[type=\"file\"] {\n  display: block;\n}\ninput[type=\"range\"] {\n  display: block;\n  width: 100%;\n}\nselect[multiple],\nselect[size] {\n  height: auto;\n}\ninput[type=\"file\"]:focus,\ninput[type=\"radio\"]:focus,\ninput[type=\"checkbox\"]:focus {\n  outline: thin dotted;\n  outline: 5px auto -webkit-focus-ring-color;\n  outline-offset: -2px;\n}\noutput {\n  display: block;\n  padding-top: 7px;\n  font-size: 14px;\n  line-height: 1.42857143;\n  color: #555;\n}\n.form-control {\n  display: block;\n  width: 100%;\n  height: 34px;\n  padding: 6px 12px;\n  font-size: 14px;\n  line-height: 1.42857143;\n  color: #555;\n  background-color: #fff;\n  background-image: none;\n  border: 1px solid #ccc;\n  border-radius: 4px;\n  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);\n          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);\n  -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;\n       -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;\n          transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;\n}\n.form-control:focus {\n  border-color: #66afe9;\n  outline: 0;\n  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);\n          box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);\n}\n.form-control::-moz-placeholder {\n  color: #999;\n  opacity: 1;\n}\n.form-control:-ms-input-placeholder {\n  color: #999;\n}\n.form-control::-webkit-input-placeholder {\n  color: #999;\n}\n.form-control::-ms-expand {\n  background-color: transparent;\n  border: 0;\n}\n.form-control[disabled],\n.form-control[readonly],\nfieldset[disabled] .form-control {\n  background-color: #eee;\n  opacity: 1;\n}\n.form-control[disabled],\nfieldset[disabled] .form-control {\n  cursor: not-allowed;\n}\ntextarea.form-control {\n  height: auto;\n}\ninput[type=\"search\"] {\n  -webkit-appearance: none;\n}\n@media screen and (-webkit-min-device-pixel-ratio: 0) {\n  input[type=\"date\"].form-control,\n  input[type=\"time\"].form-control,\n  input[type=\"datetime-local\"].form-control,\n  input[type=\"month\"].form-control {\n    line-height: 34px;\n  }\n  input[type=\"date\"].input-sm,\n  input[type=\"time\"].input-sm,\n  input[type=\"datetime-local\"].input-sm,\n  input[type=\"month\"].input-sm,\n  .input-group-sm input[type=\"date\"],\n  .input-group-sm input[type=\"time\"],\n  .input-group-sm input[type=\"datetime-local\"],\n  .input-group-sm input[type=\"month\"] {\n    line-height: 30px;\n  }\n  input[type=\"date\"].input-lg,\n  input[type=\"time\"].input-lg,\n  input[type=\"datetime-local\"].input-lg,\n  input[type=\"month\"].input-lg,\n  .input-group-lg input[type=\"date\"],\n  .input-group-lg input[type=\"time\"],\n  .input-group-lg input[type=\"datetime-local\"],\n  .input-group-lg input[type=\"month\"] {\n    line-height: 46px;\n  }\n}\n.form-group {\n  margin-bottom: 15px;\n}\n.radio,\n.checkbox {\n  position: relative;\n  display: block;\n  margin-top: 10px;\n  margin-bottom: 10px;\n}\n.radio label,\n.checkbox label {\n  min-height: 20px;\n  padding-left: 20px;\n  margin-bottom: 0;\n  font-weight: normal;\n  cursor: pointer;\n}\n.radio input[type=\"radio\"],\n.radio-inline input[type=\"radio\"],\n.checkbox input[type=\"checkbox\"],\n.checkbox-inline input[type=\"checkbox\"] {\n  position: absolute;\n  margin-top: 4px \\9;\n  margin-left: -20px;\n}\n.radio + .radio,\n.checkbox + .checkbox {\n  margin-top: -5px;\n}\n.radio-inline,\n.checkbox-inline {\n  position: relative;\n  display: inline-block;\n  padding-left: 20px;\n  margin-bottom: 0;\n  font-weight: normal;\n  vertical-align: middle;\n  cursor: pointer;\n}\n.radio-inline + .radio-inline,\n.checkbox-inline + .checkbox-inline {\n  margin-top: 0;\n  margin-left: 10px;\n}\ninput[type=\"radio\"][disabled],\ninput[type=\"checkbox\"][disabled],\ninput[type=\"radio\"].disabled,\ninput[type=\"checkbox\"].disabled,\nfieldset[disabled] input[type=\"radio\"],\nfieldset[disabled] input[type=\"checkbox\"] {\n  cursor: not-allowed;\n}\n.radio-inline.disabled,\n.checkbox-inline.disabled,\nfieldset[disabled] .radio-inline,\nfieldset[disabled] .checkbox-inline {\n  cursor: not-allowed;\n}\n.radio.disabled label,\n.checkbox.disabled label,\nfieldset[disabled] .radio label,\nfieldset[disabled] .checkbox label {\n  cursor: not-allowed;\n}\n.form-control-static {\n  min-height: 34px;\n  padding-top: 7px;\n  padding-bottom: 7px;\n  margin-bottom: 0;\n}\n.form-control-static.input-lg,\n.form-control-static.input-sm {\n  padding-right: 0;\n  padding-left: 0;\n}\n.input-sm {\n  height: 30px;\n  padding: 5px 10px;\n  font-size: 12px;\n  line-height: 1.5;\n  border-radius: 3px;\n}\nselect.input-sm {\n  height: 30px;\n  line-height: 30px;\n}\ntextarea.input-sm,\nselect[multiple].input-sm {\n  height: auto;\n}\n.form-group-sm .form-control {\n  height: 30px;\n  padding: 5px 10px;\n  font-size: 12px;\n  line-height: 1.5;\n  border-radius: 3px;\n}\n.form-group-sm select.form-control {\n  height: 30px;\n  line-height: 30px;\n}\n.form-group-sm textarea.form-control,\n.form-group-sm select[multiple].form-control {\n  height: auto;\n}\n.form-group-sm .form-control-static {\n  height: 30px;\n  min-height: 32px;\n  padding: 6px 10px;\n  font-size: 12px;\n  line-height: 1.5;\n}\n.input-lg {\n  height: 46px;\n  padding: 10px 16px;\n  font-size: 18px;\n  line-height: 1.3333333;\n  border-radius: 6px;\n}\nselect.input-lg {\n  height: 46px;\n  line-height: 46px;\n}\ntextarea.input-lg,\nselect[multiple].input-lg {\n  height: auto;\n}\n.form-group-lg .form-control {\n  height: 46px;\n  padding: 10px 16px;\n  font-size: 18px;\n  line-height: 1.3333333;\n  border-radius: 6px;\n}\n.form-group-lg select.form-control {\n  height: 46px;\n  line-height: 46px;\n}\n.form-group-lg textarea.form-control,\n.form-group-lg select[multiple].form-control {\n  height: auto;\n}\n.form-group-lg .form-control-static {\n  height: 46px;\n  min-height: 38px;\n  padding: 11px 16px;\n  font-size: 18px;\n  line-height: 1.3333333;\n}\n.has-feedback {\n  position: relative;\n}\n.has-feedback .form-control {\n  padding-right: 42.5px;\n}\n.form-control-feedback {\n  position: absolute;\n  top: 0;\n  right: 0;\n  z-index: 2;\n  display: block;\n  width: 34px;\n  height: 34px;\n  line-height: 34px;\n  text-align: center;\n  pointer-events: none;\n}\n.input-lg + .form-control-feedback,\n.input-group-lg + .form-control-feedback,\n.form-group-lg .form-control + .form-control-feedback {\n  width: 46px;\n  height: 46px;\n  line-height: 46px;\n}\n.input-sm + .form-control-feedback,\n.input-group-sm + .form-control-feedback,\n.form-group-sm .form-control + .form-control-feedback {\n  width: 30px;\n  height: 30px;\n  line-height: 30px;\n}\n.has-success .help-block,\n.has-success .control-label,\n.has-success .radio,\n.has-success .checkbox,\n.has-success .radio-inline,\n.has-success .checkbox-inline,\n.has-success.radio label,\n.has-success.checkbox label,\n.has-success.radio-inline label,\n.has-success.checkbox-inline label {\n  color: #3c763d;\n}\n.has-success .form-control {\n  border-color: #3c763d;\n  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);\n          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);\n}\n.has-success .form-control:focus {\n  border-color: #2b542c;\n  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #67b168;\n          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #67b168;\n}\n.has-success .input-group-addon {\n  color: #3c763d;\n  background-color: #dff0d8;\n  border-color: #3c763d;\n}\n.has-success .form-control-feedback {\n  color: #3c763d;\n}\n.has-warning .help-block,\n.has-warning .control-label,\n.has-warning .radio,\n.has-warning .checkbox,\n.has-warning .radio-inline,\n.has-warning .checkbox-inline,\n.has-warning.radio label,\n.has-warning.checkbox label,\n.has-warning.radio-inline label,\n.has-warning.checkbox-inline label {\n  color: #8a6d3b;\n}\n.has-warning .form-control {\n  border-color: #8a6d3b;\n  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);\n          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);\n}\n.has-warning .form-control:focus {\n  border-color: #66512c;\n  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #c0a16b;\n          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #c0a16b;\n}\n.has-warning .input-group-addon {\n  color: #8a6d3b;\n  background-color: #fcf8e3;\n  border-color: #8a6d3b;\n}\n.has-warning .form-control-feedback {\n  color: #8a6d3b;\n}\n.has-error .help-block,\n.has-error .control-label,\n.has-error .radio,\n.has-error .checkbox,\n.has-error .radio-inline,\n.has-error .checkbox-inline,\n.has-error.radio label,\n.has-error.checkbox label,\n.has-error.radio-inline label,\n.has-error.checkbox-inline label {\n  color: #a94442;\n}\n.has-error .form-control {\n  border-color: #a94442;\n  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);\n          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);\n}\n.has-error .form-control:focus {\n  border-color: #843534;\n  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;\n          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;\n}\n.has-error .input-group-addon {\n  color: #a94442;\n  background-color: #f2dede;\n  border-color: #a94442;\n}\n.has-error .form-control-feedback {\n  color: #a94442;\n}\n.has-feedback label ~ .form-control-feedback {\n  top: 25px;\n}\n.has-feedback label.sr-only ~ .form-control-feedback {\n  top: 0;\n}\n.help-block {\n  display: block;\n  margin-top: 5px;\n  margin-bottom: 10px;\n  color: #737373;\n}\n@media (min-width: 768px) {\n  .form-inline .form-group {\n    display: inline-block;\n    margin-bottom: 0;\n    vertical-align: middle;\n  }\n  .form-inline .form-control {\n    display: inline-block;\n    width: auto;\n    vertical-align: middle;\n  }\n  .form-inline .form-control-static {\n    display: inline-block;\n  }\n  .form-inline .input-group {\n    display: inline-table;\n    vertical-align: middle;\n  }\n  .form-inline .input-group .input-group-addon,\n  .form-inline .input-group .input-group-btn,\n  .form-inline .input-group .form-control {\n    width: auto;\n  }\n  .form-inline .input-group > .form-control {\n    width: 100%;\n  }\n  .form-inline .control-label {\n    margin-bottom: 0;\n    vertical-align: middle;\n  }\n  .form-inline .radio,\n  .form-inline .checkbox {\n    display: inline-block;\n    margin-top: 0;\n    margin-bottom: 0;\n    vertical-align: middle;\n  }\n  .form-inline .radio label,\n  .form-inline .checkbox label {\n    padding-left: 0;\n  }\n  .form-inline .radio input[type=\"radio\"],\n  .form-inline .checkbox input[type=\"checkbox\"] {\n    position: relative;\n    margin-left: 0;\n  }\n  .form-inline .has-feedback .form-control-feedback {\n    top: 0;\n  }\n}\n.form-horizontal .radio,\n.form-horizontal .checkbox,\n.form-horizontal .radio-inline,\n.form-horizontal .checkbox-inline {\n  padding-top: 7px;\n  margin-top: 0;\n  margin-bottom: 0;\n}\n.form-horizontal .radio,\n.form-horizontal .checkbox {\n  min-height: 27px;\n}\n.form-horizontal .form-group {\n  margin-right: -15px;\n  margin-left: -15px;\n}\n@media (min-width: 768px) {\n  .form-horizontal .control-label {\n    padding-top: 7px;\n    margin-bottom: 0;\n    text-align: right;\n  }\n}\n.form-horizontal .has-feedback .form-control-feedback {\n  right: 15px;\n}\n@media (min-width: 768px) {\n  .form-horizontal .form-group-lg .control-label {\n    padding-top: 11px;\n    font-size: 18px;\n  }\n}\n@media (min-width: 768px) {\n  .form-horizontal .form-group-sm .control-label {\n    padding-top: 6px;\n    font-size: 12px;\n  }\n}\n.btn {\n  display: inline-block;\n  padding: 6px 12px;\n  margin-bottom: 0;\n  font-size: 14px;\n  font-weight: normal;\n  line-height: 1.42857143;\n  text-align: center;\n  white-space: nowrap;\n  vertical-align: middle;\n  -ms-touch-action: manipulation;\n      touch-action: manipulation;\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  background-image: none;\n  border: 1px solid transparent;\n  border-radius: 4px;\n}\n.btn:focus,\n.btn:active:focus,\n.btn.active:focus,\n.btn.focus,\n.btn:active.focus,\n.btn.active.focus {\n  outline: thin dotted;\n  outline: 5px auto -webkit-focus-ring-color;\n  outline-offset: -2px;\n}\n.btn:hover,\n.btn:focus,\n.btn.focus {\n  color: #333;\n  text-decoration: none;\n}\n.btn:active,\n.btn.active {\n  background-image: none;\n  outline: 0;\n  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);\n          box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);\n}\n.btn.disabled,\n.btn[disabled],\nfieldset[disabled] .btn {\n  cursor: not-allowed;\n  filter: alpha(opacity=65);\n  -webkit-box-shadow: none;\n          box-shadow: none;\n  opacity: .65;\n}\na.btn.disabled,\nfieldset[disabled] a.btn {\n  pointer-events: none;\n}\n.btn-default {\n  color: #333;\n  background-color: #fff;\n  border-color: #ccc;\n}\n.btn-default:focus,\n.btn-default.focus {\n  color: #333;\n  background-color: #e6e6e6;\n  border-color: #8c8c8c;\n}\n.btn-default:hover {\n  color: #333;\n  background-color: #e6e6e6;\n  border-color: #adadad;\n}\n.btn-default:active,\n.btn-default.active,\n.open > .dropdown-toggle.btn-default {\n  color: #333;\n  background-color: #e6e6e6;\n  border-color: #adadad;\n}\n.btn-default:active:hover,\n.btn-default.active:hover,\n.open > .dropdown-toggle.btn-default:hover,\n.btn-default:active:focus,\n.btn-default.active:focus,\n.open > .dropdown-toggle.btn-default:focus,\n.btn-default:active.focus,\n.btn-default.active.focus,\n.open > .dropdown-toggle.btn-default.focus {\n  color: #333;\n  background-color: #d4d4d4;\n  border-color: #8c8c8c;\n}\n.btn-default:active,\n.btn-default.active,\n.open > .dropdown-toggle.btn-default {\n  background-image: none;\n}\n.btn-default.disabled:hover,\n.btn-default[disabled]:hover,\nfieldset[disabled] .btn-default:hover,\n.btn-default.disabled:focus,\n.btn-default[disabled]:focus,\nfieldset[disabled] .btn-default:focus,\n.btn-default.disabled.focus,\n.btn-default[disabled].focus,\nfieldset[disabled] .btn-default.focus {\n  background-color: #fff;\n  border-color: #ccc;\n}\n.btn-default .badge {\n  color: #fff;\n  background-color: #333;\n}\n.btn-primary {\n  color: #fff;\n  background-color: #337ab7;\n  border-color: #2e6da4;\n}\n.btn-primary:focus,\n.btn-primary.focus {\n  color: #fff;\n  background-color: #286090;\n  border-color: #122b40;\n}\n.btn-primary:hover {\n  color: #fff;\n  background-color: #286090;\n  border-color: #204d74;\n}\n.btn-primary:active,\n.btn-primary.active,\n.open > .dropdown-toggle.btn-primary {\n  color: #fff;\n  background-color: #286090;\n  border-color: #204d74;\n}\n.btn-primary:active:hover,\n.btn-primary.active:hover,\n.open > .dropdown-toggle.btn-primary:hover,\n.btn-primary:active:focus,\n.btn-primary.active:focus,\n.open > .dropdown-toggle.btn-primary:focus,\n.btn-primary:active.focus,\n.btn-primary.active.focus,\n.open > .dropdown-toggle.btn-primary.focus {\n  color: #fff;\n  background-color: #204d74;\n  border-color: #122b40;\n}\n.btn-primary:active,\n.btn-primary.active,\n.open > .dropdown-toggle.btn-primary {\n  background-image: none;\n}\n.btn-primary.disabled:hover,\n.btn-primary[disabled]:hover,\nfieldset[disabled] .btn-primary:hover,\n.btn-primary.disabled:focus,\n.btn-primary[disabled]:focus,\nfieldset[disabled] .btn-primary:focus,\n.btn-primary.disabled.focus,\n.btn-primary[disabled].focus,\nfieldset[disabled] .btn-primary.focus {\n  background-color: #337ab7;\n  border-color: #2e6da4;\n}\n.btn-primary .badge {\n  color: #337ab7;\n  background-color: #fff;\n}\n.btn-success {\n  color: #fff;\n  background-color: #5cb85c;\n  border-color: #4cae4c;\n}\n.btn-success:focus,\n.btn-success.focus {\n  color: #fff;\n  background-color: #449d44;\n  border-color: #255625;\n}\n.btn-success:hover {\n  color: #fff;\n  background-color: #449d44;\n  border-color: #398439;\n}\n.btn-success:active,\n.btn-success.active,\n.open > .dropdown-toggle.btn-success {\n  color: #fff;\n  background-color: #449d44;\n  border-color: #398439;\n}\n.btn-success:active:hover,\n.btn-success.active:hover,\n.open > .dropdown-toggle.btn-success:hover,\n.btn-success:active:focus,\n.btn-success.active:focus,\n.open > .dropdown-toggle.btn-success:focus,\n.btn-success:active.focus,\n.btn-success.active.focus,\n.open > .dropdown-toggle.btn-success.focus {\n  color: #fff;\n  background-color: #398439;\n  border-color: #255625;\n}\n.btn-success:active,\n.btn-success.active,\n.open > .dropdown-toggle.btn-success {\n  background-image: none;\n}\n.btn-success.disabled:hover,\n.btn-success[disabled]:hover,\nfieldset[disabled] .btn-success:hover,\n.btn-success.disabled:focus,\n.btn-success[disabled]:focus,\nfieldset[disabled] .btn-success:focus,\n.btn-success.disabled.focus,\n.btn-success[disabled].focus,\nfieldset[disabled] .btn-success.focus {\n  background-color: #5cb85c;\n  border-color: #4cae4c;\n}\n.btn-success .badge {\n  color: #5cb85c;\n  background-color: #fff;\n}\n.btn-info {\n  color: #fff;\n  background-color: #5bc0de;\n  border-color: #46b8da;\n}\n.btn-info:focus,\n.btn-info.focus {\n  color: #fff;\n  background-color: #31b0d5;\n  border-color: #1b6d85;\n}\n.btn-info:hover {\n  color: #fff;\n  background-color: #31b0d5;\n  border-color: #269abc;\n}\n.btn-info:active,\n.btn-info.active,\n.open > .dropdown-toggle.btn-info {\n  color: #fff;\n  background-color: #31b0d5;\n  border-color: #269abc;\n}\n.btn-info:active:hover,\n.btn-info.active:hover,\n.open > .dropdown-toggle.btn-info:hover,\n.btn-info:active:focus,\n.btn-info.active:focus,\n.open > .dropdown-toggle.btn-info:focus,\n.btn-info:active.focus,\n.btn-info.active.focus,\n.open > .dropdown-toggle.btn-info.focus {\n  color: #fff;\n  background-color: #269abc;\n  border-color: #1b6d85;\n}\n.btn-info:active,\n.btn-info.active,\n.open > .dropdown-toggle.btn-info {\n  background-image: none;\n}\n.btn-info.disabled:hover,\n.btn-info[disabled]:hover,\nfieldset[disabled] .btn-info:hover,\n.btn-info.disabled:focus,\n.btn-info[disabled]:focus,\nfieldset[disabled] .btn-info:focus,\n.btn-info.disabled.focus,\n.btn-info[disabled].focus,\nfieldset[disabled] .btn-info.focus {\n  background-color: #5bc0de;\n  border-color: #46b8da;\n}\n.btn-info .badge {\n  color: #5bc0de;\n  background-color: #fff;\n}\n.btn-warning {\n  color: #fff;\n  background-color: #f0ad4e;\n  border-color: #eea236;\n}\n.btn-warning:focus,\n.btn-warning.focus {\n  color: #fff;\n  background-color: #ec971f;\n  border-color: #985f0d;\n}\n.btn-warning:hover {\n  color: #fff;\n  background-color: #ec971f;\n  border-color: #d58512;\n}\n.btn-warning:active,\n.btn-warning.active,\n.open > .dropdown-toggle.btn-warning {\n  color: #fff;\n  background-color: #ec971f;\n  border-color: #d58512;\n}\n.btn-warning:active:hover,\n.btn-warning.active:hover,\n.open > .dropdown-toggle.btn-warning:hover,\n.btn-warning:active:focus,\n.btn-warning.active:focus,\n.open > .dropdown-toggle.btn-warning:focus,\n.btn-warning:active.focus,\n.btn-warning.active.focus,\n.open > .dropdown-toggle.btn-warning.focus {\n  color: #fff;\n  background-color: #d58512;\n  border-color: #985f0d;\n}\n.btn-warning:active,\n.btn-warning.active,\n.open > .dropdown-toggle.btn-warning {\n  background-image: none;\n}\n.btn-warning.disabled:hover,\n.btn-warning[disabled]:hover,\nfieldset[disabled] .btn-warning:hover,\n.btn-warning.disabled:focus,\n.btn-warning[disabled]:focus,\nfieldset[disabled] .btn-warning:focus,\n.btn-warning.disabled.focus,\n.btn-warning[disabled].focus,\nfieldset[disabled] .btn-warning.focus {\n  background-color: #f0ad4e;\n  border-color: #eea236;\n}\n.btn-warning .badge {\n  color: #f0ad4e;\n  background-color: #fff;\n}\n.btn-danger {\n  color: #fff;\n  background-color: #d9534f;\n  border-color: #d43f3a;\n}\n.btn-danger:focus,\n.btn-danger.focus {\n  color: #fff;\n  background-color: #c9302c;\n  border-color: #761c19;\n}\n.btn-danger:hover {\n  color: #fff;\n  background-color: #c9302c;\n  border-color: #ac2925;\n}\n.btn-danger:active,\n.btn-danger.active,\n.open > .dropdown-toggle.btn-danger {\n  color: #fff;\n  background-color: #c9302c;\n  border-color: #ac2925;\n}\n.btn-danger:active:hover,\n.btn-danger.active:hover,\n.open > .dropdown-toggle.btn-danger:hover,\n.btn-danger:active:focus,\n.btn-danger.active:focus,\n.open > .dropdown-toggle.btn-danger:focus,\n.btn-danger:active.focus,\n.btn-danger.active.focus,\n.open > .dropdown-toggle.btn-danger.focus {\n  color: #fff;\n  background-color: #ac2925;\n  border-color: #761c19;\n}\n.btn-danger:active,\n.btn-danger.active,\n.open > .dropdown-toggle.btn-danger {\n  background-image: none;\n}\n.btn-danger.disabled:hover,\n.btn-danger[disabled]:hover,\nfieldset[disabled] .btn-danger:hover,\n.btn-danger.disabled:focus,\n.btn-danger[disabled]:focus,\nfieldset[disabled] .btn-danger:focus,\n.btn-danger.disabled.focus,\n.btn-danger[disabled].focus,\nfieldset[disabled] .btn-danger.focus {\n  background-color: #d9534f;\n  border-color: #d43f3a;\n}\n.btn-danger .badge {\n  color: #d9534f;\n  background-color: #fff;\n}\n.btn-link {\n  font-weight: normal;\n  color: #337ab7;\n  border-radius: 0;\n}\n.btn-link,\n.btn-link:active,\n.btn-link.active,\n.btn-link[disabled],\nfieldset[disabled] .btn-link {\n  background-color: transparent;\n  -webkit-box-shadow: none;\n          box-shadow: none;\n}\n.btn-link,\n.btn-link:hover,\n.btn-link:focus,\n.btn-link:active {\n  border-color: transparent;\n}\n.btn-link:hover,\n.btn-link:focus {\n  color: #23527c;\n  text-decoration: underline;\n  background-color: transparent;\n}\n.btn-link[disabled]:hover,\nfieldset[disabled] .btn-link:hover,\n.btn-link[disabled]:focus,\nfieldset[disabled] .btn-link:focus {\n  color: #777;\n  text-decoration: none;\n}\n.btn-lg,\n.btn-group-lg > .btn {\n  padding: 10px 16px;\n  font-size: 18px;\n  line-height: 1.3333333;\n  border-radius: 6px;\n}\n.btn-sm,\n.btn-group-sm > .btn {\n  padding: 5px 10px;\n  font-size: 12px;\n  line-height: 1.5;\n  border-radius: 3px;\n}\n.btn-xs,\n.btn-group-xs > .btn {\n  padding: 1px 5px;\n  font-size: 12px;\n  line-height: 1.5;\n  border-radius: 3px;\n}\n.btn-block {\n  display: block;\n  width: 100%;\n}\n.btn-block + .btn-block {\n  margin-top: 5px;\n}\ninput[type=\"submit\"].btn-block,\ninput[type=\"reset\"].btn-block,\ninput[type=\"button\"].btn-block {\n  width: 100%;\n}\n.fade {\n  opacity: 0;\n  -webkit-transition: opacity .15s linear;\n       -o-transition: opacity .15s linear;\n          transition: opacity .15s linear;\n}\n.fade.in {\n  opacity: 1;\n}\n.collapse {\n  display: none;\n}\n.collapse.in {\n  display: block;\n}\ntr.collapse.in {\n  display: table-row;\n}\ntbody.collapse.in {\n  display: table-row-group;\n}\n.collapsing {\n  position: relative;\n  height: 0;\n  overflow: hidden;\n  -webkit-transition-timing-function: ease;\n       -o-transition-timing-function: ease;\n          transition-timing-function: ease;\n  -webkit-transition-duration: .35s;\n       -o-transition-duration: .35s;\n          transition-duration: .35s;\n  -webkit-transition-property: height, visibility;\n       -o-transition-property: height, visibility;\n          transition-property: height, visibility;\n}\n.caret {\n  display: inline-block;\n  width: 0;\n  height: 0;\n  margin-left: 2px;\n  vertical-align: middle;\n  border-top: 4px dashed;\n  border-top: 4px solid \\9;\n  border-right: 4px solid transparent;\n  border-left: 4px solid transparent;\n}\n.dropup,\n.dropdown {\n  position: relative;\n}\n.dropdown-toggle:focus {\n  outline: 0;\n}\n.dropdown-menu {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  z-index: 1000;\n  display: none;\n  float: left;\n  min-width: 160px;\n  padding: 5px 0;\n  margin: 2px 0 0;\n  font-size: 14px;\n  text-align: left;\n  list-style: none;\n  background-color: #fff;\n  -webkit-background-clip: padding-box;\n          background-clip: padding-box;\n  border: 1px solid #ccc;\n  border: 1px solid rgba(0, 0, 0, .15);\n  border-radius: 4px;\n  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);\n          box-shadow: 0 6px 12px rgba(0, 0, 0, .175);\n}\n.dropdown-menu.pull-right {\n  right: 0;\n  left: auto;\n}\n.dropdown-menu .divider {\n  height: 1px;\n  margin: 9px 0;\n  overflow: hidden;\n  background-color: #e5e5e5;\n}\n.dropdown-menu > li > a {\n  display: block;\n  padding: 3px 20px;\n  clear: both;\n  font-weight: normal;\n  line-height: 1.42857143;\n  color: #333;\n  white-space: nowrap;\n}\n.dropdown-menu > li > a:hover,\n.dropdown-menu > li > a:focus {\n  color: #262626;\n  text-decoration: none;\n  background-color: #f5f5f5;\n}\n.dropdown-menu > .active > a,\n.dropdown-menu > .active > a:hover,\n.dropdown-menu > .active > a:focus {\n  color: #fff;\n  text-decoration: none;\n  background-color: #337ab7;\n  outline: 0;\n}\n.dropdown-menu > .disabled > a,\n.dropdown-menu > .disabled > a:hover,\n.dropdown-menu > .disabled > a:focus {\n  color: #777;\n}\n.dropdown-menu > .disabled > a:hover,\n.dropdown-menu > .disabled > a:focus {\n  text-decoration: none;\n  cursor: not-allowed;\n  background-color: transparent;\n  background-image: none;\n  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);\n}\n.open > .dropdown-menu {\n  display: block;\n}\n.open > a {\n  outline: 0;\n}\n.dropdown-menu-right {\n  right: 0;\n  left: auto;\n}\n.dropdown-menu-left {\n  right: auto;\n  left: 0;\n}\n.dropdown-header {\n  display: block;\n  padding: 3px 20px;\n  font-size: 12px;\n  line-height: 1.42857143;\n  color: #777;\n  white-space: nowrap;\n}\n.dropdown-backdrop {\n  position: fixed;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  z-index: 990;\n}\n.pull-right > .dropdown-menu {\n  right: 0;\n  left: auto;\n}\n.dropup .caret,\n.navbar-fixed-bottom .dropdown .caret {\n  content: \"\";\n  border-top: 0;\n  border-bottom: 4px dashed;\n  border-bottom: 4px solid \\9;\n}\n.dropup .dropdown-menu,\n.navbar-fixed-bottom .dropdown .dropdown-menu {\n  top: auto;\n  bottom: 100%;\n  margin-bottom: 2px;\n}\n@media (min-width: 768px) {\n  .navbar-right .dropdown-menu {\n    right: 0;\n    left: auto;\n  }\n  .navbar-right .dropdown-menu-left {\n    right: auto;\n    left: 0;\n  }\n}\n.btn-group,\n.btn-group-vertical {\n  position: relative;\n  display: inline-block;\n  vertical-align: middle;\n}\n.btn-group > .btn,\n.btn-group-vertical > .btn {\n  position: relative;\n  float: left;\n}\n.btn-group > .btn:hover,\n.btn-group-vertical > .btn:hover,\n.btn-group > .btn:focus,\n.btn-group-vertical > .btn:focus,\n.btn-group > .btn:active,\n.btn-group-vertical > .btn:active,\n.btn-group > .btn.active,\n.btn-group-vertical > .btn.active {\n  z-index: 2;\n}\n.btn-group .btn + .btn,\n.btn-group .btn + .btn-group,\n.btn-group .btn-group + .btn,\n.btn-group .btn-group + .btn-group {\n  margin-left: -1px;\n}\n.btn-toolbar {\n  margin-left: -5px;\n}\n.btn-toolbar .btn,\n.btn-toolbar .btn-group,\n.btn-toolbar .input-group {\n  float: left;\n}\n.btn-toolbar > .btn,\n.btn-toolbar > .btn-group,\n.btn-toolbar > .input-group {\n  margin-left: 5px;\n}\n.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {\n  border-radius: 0;\n}\n.btn-group > .btn:first-child {\n  margin-left: 0;\n}\n.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {\n  border-top-right-radius: 0;\n  border-bottom-right-radius: 0;\n}\n.btn-group > .btn:last-child:not(:first-child),\n.btn-group > .dropdown-toggle:not(:first-child) {\n  border-top-left-radius: 0;\n  border-bottom-left-radius: 0;\n}\n.btn-group > .btn-group {\n  float: left;\n}\n.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn {\n  border-radius: 0;\n}\n.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child,\n.btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle {\n  border-top-right-radius: 0;\n  border-bottom-right-radius: 0;\n}\n.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {\n  border-top-left-radius: 0;\n  border-bottom-left-radius: 0;\n}\n.btn-group .dropdown-toggle:active,\n.btn-group.open .dropdown-toggle {\n  outline: 0;\n}\n.btn-group > .btn + .dropdown-toggle {\n  padding-right: 8px;\n  padding-left: 8px;\n}\n.btn-group > .btn-lg + .dropdown-toggle {\n  padding-right: 12px;\n  padding-left: 12px;\n}\n.btn-group.open .dropdown-toggle {\n  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);\n          box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);\n}\n.btn-group.open .dropdown-toggle.btn-link {\n  -webkit-box-shadow: none;\n          box-shadow: none;\n}\n.btn .caret {\n  margin-left: 0;\n}\n.btn-lg .caret {\n  border-width: 5px 5px 0;\n  border-bottom-width: 0;\n}\n.dropup .btn-lg .caret {\n  border-width: 0 5px 5px;\n}\n.btn-group-vertical > .btn,\n.btn-group-vertical > .btn-group,\n.btn-group-vertical > .btn-group > .btn {\n  display: block;\n  float: none;\n  width: 100%;\n  max-width: 100%;\n}\n.btn-group-vertical > .btn-group > .btn {\n  float: none;\n}\n.btn-group-vertical > .btn + .btn,\n.btn-group-vertical > .btn + .btn-group,\n.btn-group-vertical > .btn-group + .btn,\n.btn-group-vertical > .btn-group + .btn-group {\n  margin-top: -1px;\n  margin-left: 0;\n}\n.btn-group-vertical > .btn:not(:first-child):not(:last-child) {\n  border-radius: 0;\n}\n.btn-group-vertical > .btn:first-child:not(:last-child) {\n  border-top-left-radius: 4px;\n  border-top-right-radius: 4px;\n  border-bottom-right-radius: 0;\n  border-bottom-left-radius: 0;\n}\n.btn-group-vertical > .btn:last-child:not(:first-child) {\n  border-top-left-radius: 0;\n  border-top-right-radius: 0;\n  border-bottom-right-radius: 4px;\n  border-bottom-left-radius: 4px;\n}\n.btn-group-vertical > .btn-group:not(:first-child):not(:last-child) > .btn {\n  border-radius: 0;\n}\n.btn-group-vertical > .btn-group:first-child:not(:last-child) > .btn:last-child,\n.btn-group-vertical > .btn-group:first-child:not(:last-child) > .dropdown-toggle {\n  border-bottom-right-radius: 0;\n  border-bottom-left-radius: 0;\n}\n.btn-group-vertical > .btn-group:last-child:not(:first-child) > .btn:first-child {\n  border-top-left-radius: 0;\n  border-top-right-radius: 0;\n}\n.btn-group-justified {\n  display: table;\n  width: 100%;\n  table-layout: fixed;\n  border-collapse: separate;\n}\n.btn-group-justified > .btn,\n.btn-group-justified > .btn-group {\n  display: table-cell;\n  float: none;\n  width: 1%;\n}\n.btn-group-justified > .btn-group .btn {\n  width: 100%;\n}\n.btn-group-justified > .btn-group .dropdown-menu {\n  left: auto;\n}\n[data-toggle=\"buttons\"] > .btn input[type=\"radio\"],\n[data-toggle=\"buttons\"] > .btn-group > .btn input[type=\"radio\"],\n[data-toggle=\"buttons\"] > .btn input[type=\"checkbox\"],\n[data-toggle=\"buttons\"] > .btn-group > .btn input[type=\"checkbox\"] {\n  position: absolute;\n  clip: rect(0, 0, 0, 0);\n  pointer-events: none;\n}\n.input-group {\n  position: relative;\n  display: table;\n  border-collapse: separate;\n}\n.input-group[class*=\"col-\"] {\n  float: none;\n  padding-right: 0;\n  padding-left: 0;\n}\n.input-group .form-control {\n  position: relative;\n  z-index: 2;\n  float: left;\n  width: 100%;\n  margin-bottom: 0;\n}\n.input-group .form-control:focus {\n  z-index: 3;\n}\n.input-group-lg > .form-control,\n.input-group-lg > .input-group-addon,\n.input-group-lg > .input-group-btn > .btn {\n  height: 46px;\n  padding: 10px 16px;\n  font-size: 18px;\n  line-height: 1.3333333;\n  border-radius: 6px;\n}\nselect.input-group-lg > .form-control,\nselect.input-group-lg > .input-group-addon,\nselect.input-group-lg > .input-group-btn > .btn {\n  height: 46px;\n  line-height: 46px;\n}\ntextarea.input-group-lg > .form-control,\ntextarea.input-group-lg > .input-group-addon,\ntextarea.input-group-lg > .input-group-btn > .btn,\nselect[multiple].input-group-lg > .form-control,\nselect[multiple].input-group-lg > .input-group-addon,\nselect[multiple].input-group-lg > .input-group-btn > .btn {\n  height: auto;\n}\n.input-group-sm > .form-control,\n.input-group-sm > .input-group-addon,\n.input-group-sm > .input-group-btn > .btn {\n  height: 30px;\n  padding: 5px 10px;\n  font-size: 12px;\n  line-height: 1.5;\n  border-radius: 3px;\n}\nselect.input-group-sm > .form-control,\nselect.input-group-sm > .input-group-addon,\nselect.input-group-sm > .input-group-btn > .btn {\n  height: 30px;\n  line-height: 30px;\n}\ntextarea.input-group-sm > .form-control,\ntextarea.input-group-sm > .input-group-addon,\ntextarea.input-group-sm > .input-group-btn > .btn,\nselect[multiple].input-group-sm > .form-control,\nselect[multiple].input-group-sm > .input-group-addon,\nselect[multiple].input-group-sm > .input-group-btn > .btn {\n  height: auto;\n}\n.input-group-addon,\n.input-group-btn,\n.input-group .form-control {\n  display: table-cell;\n}\n.input-group-addon:not(:first-child):not(:last-child),\n.input-group-btn:not(:first-child):not(:last-child),\n.input-group .form-control:not(:first-child):not(:last-child) {\n  border-radius: 0;\n}\n.input-group-addon,\n.input-group-btn {\n  width: 1%;\n  white-space: nowrap;\n  vertical-align: middle;\n}\n.input-group-addon {\n  padding: 6px 12px;\n  font-size: 14px;\n  font-weight: normal;\n  line-height: 1;\n  color: #555;\n  text-align: center;\n  background-color: #eee;\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n.input-group-addon.input-sm {\n  padding: 5px 10px;\n  font-size: 12px;\n  border-radius: 3px;\n}\n.input-group-addon.input-lg {\n  padding: 10px 16px;\n  font-size: 18px;\n  border-radius: 6px;\n}\n.input-group-addon input[type=\"radio\"],\n.input-group-addon input[type=\"checkbox\"] {\n  margin-top: 0;\n}\n.input-group .form-control:first-child,\n.input-group-addon:first-child,\n.input-group-btn:first-child > .btn,\n.input-group-btn:first-child > .btn-group > .btn,\n.input-group-btn:first-child > .dropdown-toggle,\n.input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle),\n.input-group-btn:last-child > .btn-group:not(:last-child) > .btn {\n  border-top-right-radius: 0;\n  border-bottom-right-radius: 0;\n}\n.input-group-addon:first-child {\n  border-right: 0;\n}\n.input-group .form-control:last-child,\n.input-group-addon:last-child,\n.input-group-btn:last-child > .btn,\n.input-group-btn:last-child > .btn-group > .btn,\n.input-group-btn:last-child > .dropdown-toggle,\n.input-group-btn:first-child > .btn:not(:first-child),\n.input-group-btn:first-child > .btn-group:not(:first-child) > .btn {\n  border-top-left-radius: 0;\n  border-bottom-left-radius: 0;\n}\n.input-group-addon:last-child {\n  border-left: 0;\n}\n.input-group-btn {\n  position: relative;\n  font-size: 0;\n  white-space: nowrap;\n}\n.input-group-btn > .btn {\n  position: relative;\n}\n.input-group-btn > .btn + .btn {\n  margin-left: -1px;\n}\n.input-group-btn > .btn:hover,\n.input-group-btn > .btn:focus,\n.input-group-btn > .btn:active {\n  z-index: 2;\n}\n.input-group-btn:first-child > .btn,\n.input-group-btn:first-child > .btn-group {\n  margin-right: -1px;\n}\n.input-group-btn:last-child > .btn,\n.input-group-btn:last-child > .btn-group {\n  z-index: 2;\n  margin-left: -1px;\n}\n.nav {\n  padding-left: 0;\n  margin-bottom: 0;\n  list-style: none;\n}\n.nav > li {\n  position: relative;\n  display: block;\n}\n.nav > li > a {\n  position: relative;\n  display: block;\n  padding: 10px 15px;\n}\n.nav > li > a:hover,\n.nav > li > a:focus {\n  text-decoration: none;\n  background-color: #eee;\n}\n.nav > li.disabled > a {\n  color: #777;\n}\n.nav > li.disabled > a:hover,\n.nav > li.disabled > a:focus {\n  color: #777;\n  text-decoration: none;\n  cursor: not-allowed;\n  background-color: transparent;\n}\n.nav .open > a,\n.nav .open > a:hover,\n.nav .open > a:focus {\n  background-color: #eee;\n  border-color: #337ab7;\n}\n.nav .nav-divider {\n  height: 1px;\n  margin: 9px 0;\n  overflow: hidden;\n  background-color: #e5e5e5;\n}\n.nav > li > a > img {\n  max-width: none;\n}\n.nav-tabs {\n  border-bottom: 1px solid #ddd;\n}\n.nav-tabs > li {\n  float: left;\n  margin-bottom: -1px;\n}\n.nav-tabs > li > a {\n  margin-right: 2px;\n  line-height: 1.42857143;\n  border: 1px solid transparent;\n  border-radius: 4px 4px 0 0;\n}\n.nav-tabs > li > a:hover {\n  border-color: #eee #eee #ddd;\n}\n.nav-tabs > li.active > a,\n.nav-tabs > li.active > a:hover,\n.nav-tabs > li.active > a:focus {\n  color: #555;\n  cursor: default;\n  background-color: #fff;\n  border: 1px solid #ddd;\n  border-bottom-color: transparent;\n}\n.nav-tabs.nav-justified {\n  width: 100%;\n  border-bottom: 0;\n}\n.nav-tabs.nav-justified > li {\n  float: none;\n}\n.nav-tabs.nav-justified > li > a {\n  margin-bottom: 5px;\n  text-align: center;\n}\n.nav-tabs.nav-justified > .dropdown .dropdown-menu {\n  top: auto;\n  left: auto;\n}\n@media (min-width: 768px) {\n  .nav-tabs.nav-justified > li {\n    display: table-cell;\n    width: 1%;\n  }\n  .nav-tabs.nav-justified > li > a {\n    margin-bottom: 0;\n  }\n}\n.nav-tabs.nav-justified > li > a {\n  margin-right: 0;\n  border-radius: 4px;\n}\n.nav-tabs.nav-justified > .active > a,\n.nav-tabs.nav-justified > .active > a:hover,\n.nav-tabs.nav-justified > .active > a:focus {\n  border: 1px solid #ddd;\n}\n@media (min-width: 768px) {\n  .nav-tabs.nav-justified > li > a {\n    border-bottom: 1px solid #ddd;\n    border-radius: 4px 4px 0 0;\n  }\n  .nav-tabs.nav-justified > .active > a,\n  .nav-tabs.nav-justified > .active > a:hover,\n  .nav-tabs.nav-justified > .active > a:focus {\n    border-bottom-color: #fff;\n  }\n}\n.nav-pills > li {\n  float: left;\n}\n.nav-pills > li > a {\n  border-radius: 4px;\n}\n.nav-pills > li + li {\n  margin-left: 2px;\n}\n.nav-pills > li.active > a,\n.nav-pills > li.active > a:hover,\n.nav-pills > li.active > a:focus {\n  color: #fff;\n  background-color: #337ab7;\n}\n.nav-stacked > li {\n  float: none;\n}\n.nav-stacked > li + li {\n  margin-top: 2px;\n  margin-left: 0;\n}\n.nav-justified {\n  width: 100%;\n}\n.nav-justified > li {\n  float: none;\n}\n.nav-justified > li > a {\n  margin-bottom: 5px;\n  text-align: center;\n}\n.nav-justified > .dropdown .dropdown-menu {\n  top: auto;\n  left: auto;\n}\n@media (min-width: 768px) {\n  .nav-justified > li {\n    display: table-cell;\n    width: 1%;\n  }\n  .nav-justified > li > a {\n    margin-bottom: 0;\n  }\n}\n.nav-tabs-justified {\n  border-bottom: 0;\n}\n.nav-tabs-justified > li > a {\n  margin-right: 0;\n  border-radius: 4px;\n}\n.nav-tabs-justified > .active > a,\n.nav-tabs-justified > .active > a:hover,\n.nav-tabs-justified > .active > a:focus {\n  border: 1px solid #ddd;\n}\n@media (min-width: 768px) {\n  .nav-tabs-justified > li > a {\n    border-bottom: 1px solid #ddd;\n    border-radius: 4px 4px 0 0;\n  }\n  .nav-tabs-justified > .active > a,\n  .nav-tabs-justified > .active > a:hover,\n  .nav-tabs-justified > .active > a:focus {\n    border-bottom-color: #fff;\n  }\n}\n.tab-content > .tab-pane {\n  display: none;\n}\n.tab-content > .active {\n  display: block;\n}\n.nav-tabs .dropdown-menu {\n  margin-top: -1px;\n  border-top-left-radius: 0;\n  border-top-right-radius: 0;\n}\n.navbar {\n  position: relative;\n  min-height: 50px;\n  margin-bottom: 20px;\n  border: 1px solid transparent;\n}\n@media (min-width: 768px) {\n  .navbar {\n    border-radius: 4px;\n  }\n}\n@media (min-width: 768px) {\n  .navbar-header {\n    float: left;\n  }\n}\n.navbar-collapse {\n  padding-right: 15px;\n  padding-left: 15px;\n  overflow-x: visible;\n  -webkit-overflow-scrolling: touch;\n  border-top: 1px solid transparent;\n  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1);\n          box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1);\n}\n.navbar-collapse.in {\n  overflow-y: auto;\n}\n@media (min-width: 768px) {\n  .navbar-collapse {\n    width: auto;\n    border-top: 0;\n    -webkit-box-shadow: none;\n            box-shadow: none;\n  }\n  .navbar-collapse.collapse {\n    display: block !important;\n    height: auto !important;\n    padding-bottom: 0;\n    overflow: visible !important;\n  }\n  .navbar-collapse.in {\n    overflow-y: visible;\n  }\n  .navbar-fixed-top .navbar-collapse,\n  .navbar-static-top .navbar-collapse,\n  .navbar-fixed-bottom .navbar-collapse {\n    padding-right: 0;\n    padding-left: 0;\n  }\n}\n.navbar-fixed-top .navbar-collapse,\n.navbar-fixed-bottom .navbar-collapse {\n  max-height: 340px;\n}\n@media (max-device-width: 480px) and (orientation: landscape) {\n  .navbar-fixed-top .navbar-collapse,\n  .navbar-fixed-bottom .navbar-collapse {\n    max-height: 200px;\n  }\n}\n.container > .navbar-header,\n.container-fluid > .navbar-header,\n.container > .navbar-collapse,\n.container-fluid > .navbar-collapse {\n  margin-right: -15px;\n  margin-left: -15px;\n}\n@media (min-width: 768px) {\n  .container > .navbar-header,\n  .container-fluid > .navbar-header,\n  .container > .navbar-collapse,\n  .container-fluid > .navbar-collapse {\n    margin-right: 0;\n    margin-left: 0;\n  }\n}\n.navbar-static-top {\n  z-index: 1000;\n  border-width: 0 0 1px;\n}\n@media (min-width: 768px) {\n  .navbar-static-top {\n    border-radius: 0;\n  }\n}\n.navbar-fixed-top,\n.navbar-fixed-bottom {\n  position: fixed;\n  right: 0;\n  left: 0;\n  z-index: 1030;\n}\n@media (min-width: 768px) {\n  .navbar-fixed-top,\n  .navbar-fixed-bottom {\n    border-radius: 0;\n  }\n}\n.navbar-fixed-top {\n  top: 0;\n  border-width: 0 0 1px;\n}\n.navbar-fixed-bottom {\n  bottom: 0;\n  margin-bottom: 0;\n  border-width: 1px 0 0;\n}\n.navbar-brand {\n  float: left;\n  height: 50px;\n  padding: 15px 15px;\n  font-size: 18px;\n  line-height: 20px;\n}\n.navbar-brand:hover,\n.navbar-brand:focus {\n  text-decoration: none;\n}\n.navbar-brand > img {\n  display: block;\n}\n@media (min-width: 768px) {\n  .navbar > .container .navbar-brand,\n  .navbar > .container-fluid .navbar-brand {\n    margin-left: -15px;\n  }\n}\n.navbar-toggle {\n  position: relative;\n  float: right;\n  padding: 9px 10px;\n  margin-top: 8px;\n  margin-right: 15px;\n  margin-bottom: 8px;\n  background-color: transparent;\n  background-image: none;\n  border: 1px solid transparent;\n  border-radius: 4px;\n}\n.navbar-toggle:focus {\n  outline: 0;\n}\n.navbar-toggle .icon-bar {\n  display: block;\n  width: 22px;\n  height: 2px;\n  border-radius: 1px;\n}\n.navbar-toggle .icon-bar + .icon-bar {\n  margin-top: 4px;\n}\n@media (min-width: 768px) {\n  .navbar-toggle {\n    display: none;\n  }\n}\n.navbar-nav {\n  margin: 7.5px -15px;\n}\n.navbar-nav > li > a {\n  padding-top: 10px;\n  padding-bottom: 10px;\n  line-height: 20px;\n}\n@media (max-width: 767px) {\n  .navbar-nav .open .dropdown-menu {\n    position: static;\n    float: none;\n    width: auto;\n    margin-top: 0;\n    background-color: transparent;\n    border: 0;\n    -webkit-box-shadow: none;\n            box-shadow: none;\n  }\n  .navbar-nav .open .dropdown-menu > li > a,\n  .navbar-nav .open .dropdown-menu .dropdown-header {\n    padding: 5px 15px 5px 25px;\n  }\n  .navbar-nav .open .dropdown-menu > li > a {\n    line-height: 20px;\n  }\n  .navbar-nav .open .dropdown-menu > li > a:hover,\n  .navbar-nav .open .dropdown-menu > li > a:focus {\n    background-image: none;\n  }\n}\n@media (min-width: 768px) {\n  .navbar-nav {\n    float: left;\n    margin: 0;\n  }\n  .navbar-nav > li {\n    float: left;\n  }\n  .navbar-nav > li > a {\n    padding-top: 15px;\n    padding-bottom: 15px;\n  }\n}\n.navbar-form {\n  padding: 10px 15px;\n  margin-top: 8px;\n  margin-right: -15px;\n  margin-bottom: 8px;\n  margin-left: -15px;\n  border-top: 1px solid transparent;\n  border-bottom: 1px solid transparent;\n  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1), 0 1px 0 rgba(255, 255, 255, .1);\n          box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1), 0 1px 0 rgba(255, 255, 255, .1);\n}\n@media (min-width: 768px) {\n  .navbar-form .form-group {\n    display: inline-block;\n    margin-bottom: 0;\n    vertical-align: middle;\n  }\n  .navbar-form .form-control {\n    display: inline-block;\n    width: auto;\n    vertical-align: middle;\n  }\n  .navbar-form .form-control-static {\n    display: inline-block;\n  }\n  .navbar-form .input-group {\n    display: inline-table;\n    vertical-align: middle;\n  }\n  .navbar-form .input-group .input-group-addon,\n  .navbar-form .input-group .input-group-btn,\n  .navbar-form .input-group .form-control {\n    width: auto;\n  }\n  .navbar-form .input-group > .form-control {\n    width: 100%;\n  }\n  .navbar-form .control-label {\n    margin-bottom: 0;\n    vertical-align: middle;\n  }\n  .navbar-form .radio,\n  .navbar-form .checkbox {\n    display: inline-block;\n    margin-top: 0;\n    margin-bottom: 0;\n    vertical-align: middle;\n  }\n  .navbar-form .radio label,\n  .navbar-form .checkbox label {\n    padding-left: 0;\n  }\n  .navbar-form .radio input[type=\"radio\"],\n  .navbar-form .checkbox input[type=\"checkbox\"] {\n    position: relative;\n    margin-left: 0;\n  }\n  .navbar-form .has-feedback .form-control-feedback {\n    top: 0;\n  }\n}\n@media (max-width: 767px) {\n  .navbar-form .form-group {\n    margin-bottom: 5px;\n  }\n  .navbar-form .form-group:last-child {\n    margin-bottom: 0;\n  }\n}\n@media (min-width: 768px) {\n  .navbar-form {\n    width: auto;\n    padding-top: 0;\n    padding-bottom: 0;\n    margin-right: 0;\n    margin-left: 0;\n    border: 0;\n    -webkit-box-shadow: none;\n            box-shadow: none;\n  }\n}\n.navbar-nav > li > .dropdown-menu {\n  margin-top: 0;\n  border-top-left-radius: 0;\n  border-top-right-radius: 0;\n}\n.navbar-fixed-bottom .navbar-nav > li > .dropdown-menu {\n  margin-bottom: 0;\n  border-top-left-radius: 4px;\n  border-top-right-radius: 4px;\n  border-bottom-right-radius: 0;\n  border-bottom-left-radius: 0;\n}\n.navbar-btn {\n  margin-top: 8px;\n  margin-bottom: 8px;\n}\n.navbar-btn.btn-sm {\n  margin-top: 10px;\n  margin-bottom: 10px;\n}\n.navbar-btn.btn-xs {\n  margin-top: 14px;\n  margin-bottom: 14px;\n}\n.navbar-text {\n  margin-top: 15px;\n  margin-bottom: 15px;\n}\n@media (min-width: 768px) {\n  .navbar-text {\n    float: left;\n    margin-right: 15px;\n    margin-left: 15px;\n  }\n}\n@media (min-width: 768px) {\n  .navbar-left {\n    float: left !important;\n  }\n  .navbar-right {\n    float: right !important;\n    margin-right: -15px;\n  }\n  .navbar-right ~ .navbar-right {\n    margin-right: 0;\n  }\n}\n.navbar-default {\n  background-color: #f8f8f8;\n  border-color: #e7e7e7;\n}\n.navbar-default .navbar-brand {\n  color: #777;\n}\n.navbar-default .navbar-brand:hover,\n.navbar-default .navbar-brand:focus {\n  color: #5e5e5e;\n  background-color: transparent;\n}\n.navbar-default .navbar-text {\n  color: #777;\n}\n.navbar-default .navbar-nav > li > a {\n  color: #777;\n}\n.navbar-default .navbar-nav > li > a:hover,\n.navbar-default .navbar-nav > li > a:focus {\n  color: #333;\n  background-color: transparent;\n}\n.navbar-default .navbar-nav > .active > a,\n.navbar-default .navbar-nav > .active > a:hover,\n.navbar-default .navbar-nav > .active > a:focus {\n  color: #555;\n  background-color: #e7e7e7;\n}\n.navbar-default .navbar-nav > .disabled > a,\n.navbar-default .navbar-nav > .disabled > a:hover,\n.navbar-default .navbar-nav > .disabled > a:focus {\n  color: #ccc;\n  background-color: transparent;\n}\n.navbar-default .navbar-toggle {\n  border-color: #ddd;\n}\n.navbar-default .navbar-toggle:hover,\n.navbar-default .navbar-toggle:focus {\n  background-color: #ddd;\n}\n.navbar-default .navbar-toggle .icon-bar {\n  background-color: #888;\n}\n.navbar-default .navbar-collapse,\n.navbar-default .navbar-form {\n  border-color: #e7e7e7;\n}\n.navbar-default .navbar-nav > .open > a,\n.navbar-default .navbar-nav > .open > a:hover,\n.navbar-default .navbar-nav > .open > a:focus {\n  color: #555;\n  background-color: #e7e7e7;\n}\n@media (max-width: 767px) {\n  .navbar-default .navbar-nav .open .dropdown-menu > li > a {\n    color: #777;\n  }\n  .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,\n  .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {\n    color: #333;\n    background-color: transparent;\n  }\n  .navbar-default .navbar-nav .open .dropdown-menu > .active > a,\n  .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,\n  .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {\n    color: #555;\n    background-color: #e7e7e7;\n  }\n  .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a,\n  .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a:hover,\n  .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a:focus {\n    color: #ccc;\n    background-color: transparent;\n  }\n}\n.navbar-default .navbar-link {\n  color: #777;\n}\n.navbar-default .navbar-link:hover {\n  color: #333;\n}\n.navbar-default .btn-link {\n  color: #777;\n}\n.navbar-default .btn-link:hover,\n.navbar-default .btn-link:focus {\n  color: #333;\n}\n.navbar-default .btn-link[disabled]:hover,\nfieldset[disabled] .navbar-default .btn-link:hover,\n.navbar-default .btn-link[disabled]:focus,\nfieldset[disabled] .navbar-default .btn-link:focus {\n  color: #ccc;\n}\n.navbar-inverse {\n  background-color: #222;\n  border-color: #080808;\n}\n.navbar-inverse .navbar-brand {\n  color: #9d9d9d;\n}\n.navbar-inverse .navbar-brand:hover,\n.navbar-inverse .navbar-brand:focus {\n  color: #fff;\n  background-color: transparent;\n}\n.navbar-inverse .navbar-text {\n  color: #9d9d9d;\n}\n.navbar-inverse .navbar-nav > li > a {\n  color: #9d9d9d;\n}\n.navbar-inverse .navbar-nav > li > a:hover,\n.navbar-inverse .navbar-nav > li > a:focus {\n  color: #fff;\n  background-color: transparent;\n}\n.navbar-inverse .navbar-nav > .active > a,\n.navbar-inverse .navbar-nav > .active > a:hover,\n.navbar-inverse .navbar-nav > .active > a:focus {\n  color: #fff;\n  background-color: #080808;\n}\n.navbar-inverse .navbar-nav > .disabled > a,\n.navbar-inverse .navbar-nav > .disabled > a:hover,\n.navbar-inverse .navbar-nav > .disabled > a:focus {\n  color: #444;\n  background-color: transparent;\n}\n.navbar-inverse .navbar-toggle {\n  border-color: #333;\n}\n.navbar-inverse .navbar-toggle:hover,\n.navbar-inverse .navbar-toggle:focus {\n  background-color: #333;\n}\n.navbar-inverse .navbar-toggle .icon-bar {\n  background-color: #fff;\n}\n.navbar-inverse .navbar-collapse,\n.navbar-inverse .navbar-form {\n  border-color: #101010;\n}\n.navbar-inverse .navbar-nav > .open > a,\n.navbar-inverse .navbar-nav > .open > a:hover,\n.navbar-inverse .navbar-nav > .open > a:focus {\n  color: #fff;\n  background-color: #080808;\n}\n@media (max-width: 767px) {\n  .navbar-inverse .navbar-nav .open .dropdown-menu > .dropdown-header {\n    border-color: #080808;\n  }\n  .navbar-inverse .navbar-nav .open .dropdown-menu .divider {\n    background-color: #080808;\n  }\n  .navbar-inverse .navbar-nav .open .dropdown-menu > li > a {\n    color: #9d9d9d;\n  }\n  .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:hover,\n  .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:focus {\n    color: #fff;\n    background-color: transparent;\n  }\n  .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a,\n  .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:hover,\n  .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:focus {\n    color: #fff;\n    background-color: #080808;\n  }\n  .navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a,\n  .navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a:hover,\n  .navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a:focus {\n    color: #444;\n    background-color: transparent;\n  }\n}\n.navbar-inverse .navbar-link {\n  color: #9d9d9d;\n}\n.navbar-inverse .navbar-link:hover {\n  color: #fff;\n}\n.navbar-inverse .btn-link {\n  color: #9d9d9d;\n}\n.navbar-inverse .btn-link:hover,\n.navbar-inverse .btn-link:focus {\n  color: #fff;\n}\n.navbar-inverse .btn-link[disabled]:hover,\nfieldset[disabled] .navbar-inverse .btn-link:hover,\n.navbar-inverse .btn-link[disabled]:focus,\nfieldset[disabled] .navbar-inverse .btn-link:focus {\n  color: #444;\n}\n.breadcrumb {\n  padding: 8px 15px;\n  margin-bottom: 20px;\n  list-style: none;\n  background-color: #f5f5f5;\n  border-radius: 4px;\n}\n.breadcrumb > li {\n  display: inline-block;\n}\n.breadcrumb > li + li:before {\n  padding: 0 5px;\n  color: #ccc;\n  content: \"/\\A0\";\n}\n.breadcrumb > .active {\n  color: #777;\n}\n.pagination {\n  display: inline-block;\n  padding-left: 0;\n  margin: 20px 0;\n  border-radius: 4px;\n}\n.pagination > li {\n  display: inline;\n}\n.pagination > li > a,\n.pagination > li > span {\n  position: relative;\n  float: left;\n  padding: 6px 12px;\n  margin-left: -1px;\n  line-height: 1.42857143;\n  color: #337ab7;\n  text-decoration: none;\n  background-color: #fff;\n  border: 1px solid #ddd;\n}\n.pagination > li:first-child > a,\n.pagination > li:first-child > span {\n  margin-left: 0;\n  border-top-left-radius: 4px;\n  border-bottom-left-radius: 4px;\n}\n.pagination > li:last-child > a,\n.pagination > li:last-child > span {\n  border-top-right-radius: 4px;\n  border-bottom-right-radius: 4px;\n}\n.pagination > li > a:hover,\n.pagination > li > span:hover,\n.pagination > li > a:focus,\n.pagination > li > span:focus {\n  z-index: 2;\n  color: #23527c;\n  background-color: #eee;\n  border-color: #ddd;\n}\n.pagination > .active > a,\n.pagination > .active > span,\n.pagination > .active > a:hover,\n.pagination > .active > span:hover,\n.pagination > .active > a:focus,\n.pagination > .active > span:focus {\n  z-index: 3;\n  color: #fff;\n  cursor: default;\n  background-color: #337ab7;\n  border-color: #337ab7;\n}\n.pagination > .disabled > span,\n.pagination > .disabled > span:hover,\n.pagination > .disabled > span:focus,\n.pagination > .disabled > a,\n.pagination > .disabled > a:hover,\n.pagination > .disabled > a:focus {\n  color: #777;\n  cursor: not-allowed;\n  background-color: #fff;\n  border-color: #ddd;\n}\n.pagination-lg > li > a,\n.pagination-lg > li > span {\n  padding: 10px 16px;\n  font-size: 18px;\n  line-height: 1.3333333;\n}\n.pagination-lg > li:first-child > a,\n.pagination-lg > li:first-child > span {\n  border-top-left-radius: 6px;\n  border-bottom-left-radius: 6px;\n}\n.pagination-lg > li:last-child > a,\n.pagination-lg > li:last-child > span {\n  border-top-right-radius: 6px;\n  border-bottom-right-radius: 6px;\n}\n.pagination-sm > li > a,\n.pagination-sm > li > span {\n  padding: 5px 10px;\n  font-size: 12px;\n  line-height: 1.5;\n}\n.pagination-sm > li:first-child > a,\n.pagination-sm > li:first-child > span {\n  border-top-left-radius: 3px;\n  border-bottom-left-radius: 3px;\n}\n.pagination-sm > li:last-child > a,\n.pagination-sm > li:last-child > span {\n  border-top-right-radius: 3px;\n  border-bottom-right-radius: 3px;\n}\n.pager {\n  padding-left: 0;\n  margin: 20px 0;\n  text-align: center;\n  list-style: none;\n}\n.pager li {\n  display: inline;\n}\n.pager li > a,\n.pager li > span {\n  display: inline-block;\n  padding: 5px 14px;\n  background-color: #fff;\n  border: 1px solid #ddd;\n  border-radius: 15px;\n}\n.pager li > a:hover,\n.pager li > a:focus {\n  text-decoration: none;\n  background-color: #eee;\n}\n.pager .next > a,\n.pager .next > span {\n  float: right;\n}\n.pager .previous > a,\n.pager .previous > span {\n  float: left;\n}\n.pager .disabled > a,\n.pager .disabled > a:hover,\n.pager .disabled > a:focus,\n.pager .disabled > span {\n  color: #777;\n  cursor: not-allowed;\n  background-color: #fff;\n}\n.label {\n  display: inline;\n  padding: .2em .6em .3em;\n  font-size: 75%;\n  font-weight: bold;\n  line-height: 1;\n  color: #fff;\n  text-align: center;\n  white-space: nowrap;\n  vertical-align: baseline;\n  border-radius: .25em;\n}\na.label:hover,\na.label:focus {\n  color: #fff;\n  text-decoration: none;\n  cursor: pointer;\n}\n.label:empty {\n  display: none;\n}\n.btn .label {\n  position: relative;\n  top: -1px;\n}\n.label-default {\n  background-color: #777;\n}\n.label-default[href]:hover,\n.label-default[href]:focus {\n  background-color: #5e5e5e;\n}\n.label-primary {\n  background-color: #337ab7;\n}\n.label-primary[href]:hover,\n.label-primary[href]:focus {\n  background-color: #286090;\n}\n.label-success {\n  background-color: #5cb85c;\n}\n.label-success[href]:hover,\n.label-success[href]:focus {\n  background-color: #449d44;\n}\n.label-info {\n  background-color: #5bc0de;\n}\n.label-info[href]:hover,\n.label-info[href]:focus {\n  background-color: #31b0d5;\n}\n.label-warning {\n  background-color: #f0ad4e;\n}\n.label-warning[href]:hover,\n.label-warning[href]:focus {\n  background-color: #ec971f;\n}\n.label-danger {\n  background-color: #d9534f;\n}\n.label-danger[href]:hover,\n.label-danger[href]:focus {\n  background-color: #c9302c;\n}\n.badge {\n  display: inline-block;\n  min-width: 10px;\n  padding: 3px 7px;\n  font-size: 12px;\n  font-weight: bold;\n  line-height: 1;\n  color: #fff;\n  text-align: center;\n  white-space: nowrap;\n  vertical-align: middle;\n  background-color: #777;\n  border-radius: 10px;\n}\n.badge:empty {\n  display: none;\n}\n.btn .badge {\n  position: relative;\n  top: -1px;\n}\n.btn-xs .badge,\n.btn-group-xs > .btn .badge {\n  top: 0;\n  padding: 1px 5px;\n}\na.badge:hover,\na.badge:focus {\n  color: #fff;\n  text-decoration: none;\n  cursor: pointer;\n}\n.list-group-item.active > .badge,\n.nav-pills > .active > a > .badge {\n  color: #337ab7;\n  background-color: #fff;\n}\n.list-group-item > .badge {\n  float: right;\n}\n.list-group-item > .badge + .badge {\n  margin-right: 5px;\n}\n.nav-pills > li > a > .badge {\n  margin-left: 3px;\n}\n.jumbotron {\n  padding-top: 30px;\n  padding-bottom: 30px;\n  margin-bottom: 30px;\n  color: inherit;\n  background-color: #eee;\n}\n.jumbotron h1,\n.jumbotron .h1 {\n  color: inherit;\n}\n.jumbotron p {\n  margin-bottom: 15px;\n  font-size: 21px;\n  font-weight: 200;\n}\n.jumbotron > hr {\n  border-top-color: #d5d5d5;\n}\n.container .jumbotron,\n.container-fluid .jumbotron {\n  padding-right: 15px;\n  padding-left: 15px;\n  border-radius: 6px;\n}\n.jumbotron .container {\n  max-width: 100%;\n}\n@media screen and (min-width: 768px) {\n  .jumbotron {\n    padding-top: 48px;\n    padding-bottom: 48px;\n  }\n  .container .jumbotron,\n  .container-fluid .jumbotron {\n    padding-right: 60px;\n    padding-left: 60px;\n  }\n  .jumbotron h1,\n  .jumbotron .h1 {\n    font-size: 63px;\n  }\n}\n.thumbnail {\n  display: block;\n  padding: 4px;\n  margin-bottom: 20px;\n  line-height: 1.42857143;\n  background-color: #fff;\n  border: 1px solid #ddd;\n  border-radius: 4px;\n  -webkit-transition: border .2s ease-in-out;\n       -o-transition: border .2s ease-in-out;\n          transition: border .2s ease-in-out;\n}\n.thumbnail > img,\n.thumbnail a > img {\n  margin-right: auto;\n  margin-left: auto;\n}\na.thumbnail:hover,\na.thumbnail:focus,\na.thumbnail.active {\n  border-color: #337ab7;\n}\n.thumbnail .caption {\n  padding: 9px;\n  color: #333;\n}\n.alert {\n  padding: 15px;\n  margin-bottom: 20px;\n  border: 1px solid transparent;\n  border-radius: 4px;\n}\n.alert h4 {\n  margin-top: 0;\n  color: inherit;\n}\n.alert .alert-link {\n  font-weight: bold;\n}\n.alert > p,\n.alert > ul {\n  margin-bottom: 0;\n}\n.alert > p + p {\n  margin-top: 5px;\n}\n.alert-dismissable,\n.alert-dismissible {\n  padding-right: 35px;\n}\n.alert-dismissable .close,\n.alert-dismissible .close {\n  position: relative;\n  top: -2px;\n  right: -21px;\n  color: inherit;\n}\n.alert-success {\n  color: #3c763d;\n  background-color: #dff0d8;\n  border-color: #d6e9c6;\n}\n.alert-success hr {\n  border-top-color: #c9e2b3;\n}\n.alert-success .alert-link {\n  color: #2b542c;\n}\n.alert-info {\n  color: #31708f;\n  background-color: #d9edf7;\n  border-color: #bce8f1;\n}\n.alert-info hr {\n  border-top-color: #a6e1ec;\n}\n.alert-info .alert-link {\n  color: #245269;\n}\n.alert-warning {\n  color: #8a6d3b;\n  background-color: #fcf8e3;\n  border-color: #faebcc;\n}\n.alert-warning hr {\n  border-top-color: #f7e1b5;\n}\n.alert-warning .alert-link {\n  color: #66512c;\n}\n.alert-danger {\n  color: #a94442;\n  background-color: #f2dede;\n  border-color: #ebccd1;\n}\n.alert-danger hr {\n  border-top-color: #e4b9c0;\n}\n.alert-danger .alert-link {\n  color: #843534;\n}\n@-webkit-keyframes progress-bar-stripes {\n  from {\n    background-position: 40px 0;\n  }\n  to {\n    background-position: 0 0;\n  }\n}\n@-o-keyframes progress-bar-stripes {\n  from {\n    background-position: 40px 0;\n  }\n  to {\n    background-position: 0 0;\n  }\n}\n@keyframes progress-bar-stripes {\n  from {\n    background-position: 40px 0;\n  }\n  to {\n    background-position: 0 0;\n  }\n}\n.progress {\n  height: 20px;\n  margin-bottom: 20px;\n  overflow: hidden;\n  background-color: #f5f5f5;\n  border-radius: 4px;\n  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);\n          box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);\n}\n.progress-bar {\n  float: left;\n  width: 0;\n  height: 100%;\n  font-size: 12px;\n  line-height: 20px;\n  color: #fff;\n  text-align: center;\n  background-color: #337ab7;\n  -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);\n          box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);\n  -webkit-transition: width .6s ease;\n       -o-transition: width .6s ease;\n          transition: width .6s ease;\n}\n.progress-striped .progress-bar,\n.progress-bar-striped {\n  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n  background-image:      -o-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n  background-image:         linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n  -webkit-background-size: 40px 40px;\n          background-size: 40px 40px;\n}\n.progress.active .progress-bar,\n.progress-bar.active {\n  -webkit-animation: progress-bar-stripes 2s linear infinite;\n       -o-animation: progress-bar-stripes 2s linear infinite;\n          animation: progress-bar-stripes 2s linear infinite;\n}\n.progress-bar-success {\n  background-color: #5cb85c;\n}\n.progress-striped .progress-bar-success {\n  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n  background-image:      -o-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n  background-image:         linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n}\n.progress-bar-info {\n  background-color: #5bc0de;\n}\n.progress-striped .progress-bar-info {\n  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n  background-image:      -o-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n  background-image:         linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n}\n.progress-bar-warning {\n  background-color: #f0ad4e;\n}\n.progress-striped .progress-bar-warning {\n  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n  background-image:      -o-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n  background-image:         linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n}\n.progress-bar-danger {\n  background-color: #d9534f;\n}\n.progress-striped .progress-bar-danger {\n  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n  background-image:      -o-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n  background-image:         linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n}\n.media {\n  margin-top: 15px;\n}\n.media:first-child {\n  margin-top: 0;\n}\n.media,\n.media-body {\n  overflow: hidden;\n  zoom: 1;\n}\n.media-body {\n  width: 10000px;\n}\n.media-object {\n  display: block;\n}\n.media-object.img-thumbnail {\n  max-width: none;\n}\n.media-right,\n.media > .pull-right {\n  padding-left: 10px;\n}\n.media-left,\n.media > .pull-left {\n  padding-right: 10px;\n}\n.media-left,\n.media-right,\n.media-body {\n  display: table-cell;\n  vertical-align: top;\n}\n.media-middle {\n  vertical-align: middle;\n}\n.media-bottom {\n  vertical-align: bottom;\n}\n.media-heading {\n  margin-top: 0;\n  margin-bottom: 5px;\n}\n.media-list {\n  padding-left: 0;\n  list-style: none;\n}\n.list-group {\n  padding-left: 0;\n  margin-bottom: 20px;\n}\n.list-group-item {\n  position: relative;\n  display: block;\n  padding: 10px 15px;\n  margin-bottom: -1px;\n  background-color: #fff;\n  border: 1px solid #ddd;\n}\n.list-group-item:first-child {\n  border-top-left-radius: 4px;\n  border-top-right-radius: 4px;\n}\n.list-group-item:last-child {\n  margin-bottom: 0;\n  border-bottom-right-radius: 4px;\n  border-bottom-left-radius: 4px;\n}\na.list-group-item,\nbutton.list-group-item {\n  color: #555;\n}\na.list-group-item .list-group-item-heading,\nbutton.list-group-item .list-group-item-heading {\n  color: #333;\n}\na.list-group-item:hover,\nbutton.list-group-item:hover,\na.list-group-item:focus,\nbutton.list-group-item:focus {\n  color: #555;\n  text-decoration: none;\n  background-color: #f5f5f5;\n}\nbutton.list-group-item {\n  width: 100%;\n  text-align: left;\n}\n.list-group-item.disabled,\n.list-group-item.disabled:hover,\n.list-group-item.disabled:focus {\n  color: #777;\n  cursor: not-allowed;\n  background-color: #eee;\n}\n.list-group-item.disabled .list-group-item-heading,\n.list-group-item.disabled:hover .list-group-item-heading,\n.list-group-item.disabled:focus .list-group-item-heading {\n  color: inherit;\n}\n.list-group-item.disabled .list-group-item-text,\n.list-group-item.disabled:hover .list-group-item-text,\n.list-group-item.disabled:focus .list-group-item-text {\n  color: #777;\n}\n.list-group-item.active,\n.list-group-item.active:hover,\n.list-group-item.active:focus {\n  z-index: 2;\n  color: #fff;\n  background-color: #337ab7;\n  border-color: #337ab7;\n}\n.list-group-item.active .list-group-item-heading,\n.list-group-item.active:hover .list-group-item-heading,\n.list-group-item.active:focus .list-group-item-heading,\n.list-group-item.active .list-group-item-heading > small,\n.list-group-item.active:hover .list-group-item-heading > small,\n.list-group-item.active:focus .list-group-item-heading > small,\n.list-group-item.active .list-group-item-heading > .small,\n.list-group-item.active:hover .list-group-item-heading > .small,\n.list-group-item.active:focus .list-group-item-heading > .small {\n  color: inherit;\n}\n.list-group-item.active .list-group-item-text,\n.list-group-item.active:hover .list-group-item-text,\n.list-group-item.active:focus .list-group-item-text {\n  color: #c7ddef;\n}\n.list-group-item-success {\n  color: #3c763d;\n  background-color: #dff0d8;\n}\na.list-group-item-success,\nbutton.list-group-item-success {\n  color: #3c763d;\n}\na.list-group-item-success .list-group-item-heading,\nbutton.list-group-item-success .list-group-item-heading {\n  color: inherit;\n}\na.list-group-item-success:hover,\nbutton.list-group-item-success:hover,\na.list-group-item-success:focus,\nbutton.list-group-item-success:focus {\n  color: #3c763d;\n  background-color: #d0e9c6;\n}\na.list-group-item-success.active,\nbutton.list-group-item-success.active,\na.list-group-item-success.active:hover,\nbutton.list-group-item-success.active:hover,\na.list-group-item-success.active:focus,\nbutton.list-group-item-success.active:focus {\n  color: #fff;\n  background-color: #3c763d;\n  border-color: #3c763d;\n}\n.list-group-item-info {\n  color: #31708f;\n  background-color: #d9edf7;\n}\na.list-group-item-info,\nbutton.list-group-item-info {\n  color: #31708f;\n}\na.list-group-item-info .list-group-item-heading,\nbutton.list-group-item-info .list-group-item-heading {\n  color: inherit;\n}\na.list-group-item-info:hover,\nbutton.list-group-item-info:hover,\na.list-group-item-info:focus,\nbutton.list-group-item-info:focus {\n  color: #31708f;\n  background-color: #c4e3f3;\n}\na.list-group-item-info.active,\nbutton.list-group-item-info.active,\na.list-group-item-info.active:hover,\nbutton.list-group-item-info.active:hover,\na.list-group-item-info.active:focus,\nbutton.list-group-item-info.active:focus {\n  color: #fff;\n  background-color: #31708f;\n  border-color: #31708f;\n}\n.list-group-item-warning {\n  color: #8a6d3b;\n  background-color: #fcf8e3;\n}\na.list-group-item-warning,\nbutton.list-group-item-warning {\n  color: #8a6d3b;\n}\na.list-group-item-warning .list-group-item-heading,\nbutton.list-group-item-warning .list-group-item-heading {\n  color: inherit;\n}\na.list-group-item-warning:hover,\nbutton.list-group-item-warning:hover,\na.list-group-item-warning:focus,\nbutton.list-group-item-warning:focus {\n  color: #8a6d3b;\n  background-color: #faf2cc;\n}\na.list-group-item-warning.active,\nbutton.list-group-item-warning.active,\na.list-group-item-warning.active:hover,\nbutton.list-group-item-warning.active:hover,\na.list-group-item-warning.active:focus,\nbutton.list-group-item-warning.active:focus {\n  color: #fff;\n  background-color: #8a6d3b;\n  border-color: #8a6d3b;\n}\n.list-group-item-danger {\n  color: #a94442;\n  background-color: #f2dede;\n}\na.list-group-item-danger,\nbutton.list-group-item-danger {\n  color: #a94442;\n}\na.list-group-item-danger .list-group-item-heading,\nbutton.list-group-item-danger .list-group-item-heading {\n  color: inherit;\n}\na.list-group-item-danger:hover,\nbutton.list-group-item-danger:hover,\na.list-group-item-danger:focus,\nbutton.list-group-item-danger:focus {\n  color: #a94442;\n  background-color: #ebcccc;\n}\na.list-group-item-danger.active,\nbutton.list-group-item-danger.active,\na.list-group-item-danger.active:hover,\nbutton.list-group-item-danger.active:hover,\na.list-group-item-danger.active:focus,\nbutton.list-group-item-danger.active:focus {\n  color: #fff;\n  background-color: #a94442;\n  border-color: #a94442;\n}\n.list-group-item-heading {\n  margin-top: 0;\n  margin-bottom: 5px;\n}\n.list-group-item-text {\n  margin-bottom: 0;\n  line-height: 1.3;\n}\n.panel {\n  margin-bottom: 20px;\n  background-color: #fff;\n  border: 1px solid transparent;\n  border-radius: 4px;\n  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);\n          box-shadow: 0 1px 1px rgba(0, 0, 0, .05);\n}\n.panel-body {\n  padding: 15px;\n}\n.panel-heading {\n  padding: 10px 15px;\n  border-bottom: 1px solid transparent;\n  border-top-left-radius: 3px;\n  border-top-right-radius: 3px;\n}\n.panel-heading > .dropdown .dropdown-toggle {\n  color: inherit;\n}\n.panel-title {\n  margin-top: 0;\n  margin-bottom: 0;\n  font-size: 16px;\n  color: inherit;\n}\n.panel-title > a,\n.panel-title > small,\n.panel-title > .small,\n.panel-title > small > a,\n.panel-title > .small > a {\n  color: inherit;\n}\n.panel-footer {\n  padding: 10px 15px;\n  background-color: #f5f5f5;\n  border-top: 1px solid #ddd;\n  border-bottom-right-radius: 3px;\n  border-bottom-left-radius: 3px;\n}\n.panel > .list-group,\n.panel > .panel-collapse > .list-group {\n  margin-bottom: 0;\n}\n.panel > .list-group .list-group-item,\n.panel > .panel-collapse > .list-group .list-group-item {\n  border-width: 1px 0;\n  border-radius: 0;\n}\n.panel > .list-group:first-child .list-group-item:first-child,\n.panel > .panel-collapse > .list-group:first-child .list-group-item:first-child {\n  border-top: 0;\n  border-top-left-radius: 3px;\n  border-top-right-radius: 3px;\n}\n.panel > .list-group:last-child .list-group-item:last-child,\n.panel > .panel-collapse > .list-group:last-child .list-group-item:last-child {\n  border-bottom: 0;\n  border-bottom-right-radius: 3px;\n  border-bottom-left-radius: 3px;\n}\n.panel > .panel-heading + .panel-collapse > .list-group .list-group-item:first-child {\n  border-top-left-radius: 0;\n  border-top-right-radius: 0;\n}\n.panel-heading + .list-group .list-group-item:first-child {\n  border-top-width: 0;\n}\n.list-group + .panel-footer {\n  border-top-width: 0;\n}\n.panel > .table,\n.panel > .table-responsive > .table,\n.panel > .panel-collapse > .table {\n  margin-bottom: 0;\n}\n.panel > .table caption,\n.panel > .table-responsive > .table caption,\n.panel > .panel-collapse > .table caption {\n  padding-right: 15px;\n  padding-left: 15px;\n}\n.panel > .table:first-child,\n.panel > .table-responsive:first-child > .table:first-child {\n  border-top-left-radius: 3px;\n  border-top-right-radius: 3px;\n}\n.panel > .table:first-child > thead:first-child > tr:first-child,\n.panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child,\n.panel > .table:first-child > tbody:first-child > tr:first-child,\n.panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child {\n  border-top-left-radius: 3px;\n  border-top-right-radius: 3px;\n}\n.panel > .table:first-child > thead:first-child > tr:first-child td:first-child,\n.panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child td:first-child,\n.panel > .table:first-child > tbody:first-child > tr:first-child td:first-child,\n.panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child td:first-child,\n.panel > .table:first-child > thead:first-child > tr:first-child th:first-child,\n.panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child th:first-child,\n.panel > .table:first-child > tbody:first-child > tr:first-child th:first-child,\n.panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child th:first-child {\n  border-top-left-radius: 3px;\n}\n.panel > .table:first-child > thead:first-child > tr:first-child td:last-child,\n.panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child td:last-child,\n.panel > .table:first-child > tbody:first-child > tr:first-child td:last-child,\n.panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child td:last-child,\n.panel > .table:first-child > thead:first-child > tr:first-child th:last-child,\n.panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child th:last-child,\n.panel > .table:first-child > tbody:first-child > tr:first-child th:last-child,\n.panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child th:last-child {\n  border-top-right-radius: 3px;\n}\n.panel > .table:last-child,\n.panel > .table-responsive:last-child > .table:last-child {\n  border-bottom-right-radius: 3px;\n  border-bottom-left-radius: 3px;\n}\n.panel > .table:last-child > tbody:last-child > tr:last-child,\n.panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child,\n.panel > .table:last-child > tfoot:last-child > tr:last-child,\n.panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child {\n  border-bottom-right-radius: 3px;\n  border-bottom-left-radius: 3px;\n}\n.panel > .table:last-child > tbody:last-child > tr:last-child td:first-child,\n.panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child td:first-child,\n.panel > .table:last-child > tfoot:last-child > tr:last-child td:first-child,\n.panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child td:first-child,\n.panel > .table:last-child > tbody:last-child > tr:last-child th:first-child,\n.panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child th:first-child,\n.panel > .table:last-child > tfoot:last-child > tr:last-child th:first-child,\n.panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child th:first-child {\n  border-bottom-left-radius: 3px;\n}\n.panel > .table:last-child > tbody:last-child > tr:last-child td:last-child,\n.panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child td:last-child,\n.panel > .table:last-child > tfoot:last-child > tr:last-child td:last-child,\n.panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child td:last-child,\n.panel > .table:last-child > tbody:last-child > tr:last-child th:last-child,\n.panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child th:last-child,\n.panel > .table:last-child > tfoot:last-child > tr:last-child th:last-child,\n.panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child th:last-child {\n  border-bottom-right-radius: 3px;\n}\n.panel > .panel-body + .table,\n.panel > .panel-body + .table-responsive,\n.panel > .table + .panel-body,\n.panel > .table-responsive + .panel-body {\n  border-top: 1px solid #ddd;\n}\n.panel > .table > tbody:first-child > tr:first-child th,\n.panel > .table > tbody:first-child > tr:first-child td {\n  border-top: 0;\n}\n.panel > .table-bordered,\n.panel > .table-responsive > .table-bordered {\n  border: 0;\n}\n.panel > .table-bordered > thead > tr > th:first-child,\n.panel > .table-responsive > .table-bordered > thead > tr > th:first-child,\n.panel > .table-bordered > tbody > tr > th:first-child,\n.panel > .table-responsive > .table-bordered > tbody > tr > th:first-child,\n.panel > .table-bordered > tfoot > tr > th:first-child,\n.panel > .table-responsive > .table-bordered > tfoot > tr > th:first-child,\n.panel > .table-bordered > thead > tr > td:first-child,\n.panel > .table-responsive > .table-bordered > thead > tr > td:first-child,\n.panel > .table-bordered > tbody > tr > td:first-child,\n.panel > .table-responsive > .table-bordered > tbody > tr > td:first-child,\n.panel > .table-bordered > tfoot > tr > td:first-child,\n.panel > .table-responsive > .table-bordered > tfoot > tr > td:first-child {\n  border-left: 0;\n}\n.panel > .table-bordered > thead > tr > th:last-child,\n.panel > .table-responsive > .table-bordered > thead > tr > th:last-child,\n.panel > .table-bordered > tbody > tr > th:last-child,\n.panel > .table-responsive > .table-bordered > tbody > tr > th:last-child,\n.panel > .table-bordered > tfoot > tr > th:last-child,\n.panel > .table-responsive > .table-bordered > tfoot > tr > th:last-child,\n.panel > .table-bordered > thead > tr > td:last-child,\n.panel > .table-responsive > .table-bordered > thead > tr > td:last-child,\n.panel > .table-bordered > tbody > tr > td:last-child,\n.panel > .table-responsive > .table-bordered > tbody > tr > td:last-child,\n.panel > .table-bordered > tfoot > tr > td:last-child,\n.panel > .table-responsive > .table-bordered > tfoot > tr > td:last-child {\n  border-right: 0;\n}\n.panel > .table-bordered > thead > tr:first-child > td,\n.panel > .table-responsive > .table-bordered > thead > tr:first-child > td,\n.panel > .table-bordered > tbody > tr:first-child > td,\n.panel > .table-responsive > .table-bordered > tbody > tr:first-child > td,\n.panel > .table-bordered > thead > tr:first-child > th,\n.panel > .table-responsive > .table-bordered > thead > tr:first-child > th,\n.panel > .table-bordered > tbody > tr:first-child > th,\n.panel > .table-responsive > .table-bordered > tbody > tr:first-child > th {\n  border-bottom: 0;\n}\n.panel > .table-bordered > tbody > tr:last-child > td,\n.panel > .table-responsive > .table-bordered > tbody > tr:last-child > td,\n.panel > .table-bordered > tfoot > tr:last-child > td,\n.panel > .table-responsive > .table-bordered > tfoot > tr:last-child > td,\n.panel > .table-bordered > tbody > tr:last-child > th,\n.panel > .table-responsive > .table-bordered > tbody > tr:last-child > th,\n.panel > .table-bordered > tfoot > tr:last-child > th,\n.panel > .table-responsive > .table-bordered > tfoot > tr:last-child > th {\n  border-bottom: 0;\n}\n.panel > .table-responsive {\n  margin-bottom: 0;\n  border: 0;\n}\n.panel-group {\n  margin-bottom: 20px;\n}\n.panel-group .panel {\n  margin-bottom: 0;\n  border-radius: 4px;\n}\n.panel-group .panel + .panel {\n  margin-top: 5px;\n}\n.panel-group .panel-heading {\n  border-bottom: 0;\n}\n.panel-group .panel-heading + .panel-collapse > .panel-body,\n.panel-group .panel-heading + .panel-collapse > .list-group {\n  border-top: 1px solid #ddd;\n}\n.panel-group .panel-footer {\n  border-top: 0;\n}\n.panel-group .panel-footer + .panel-collapse .panel-body {\n  border-bottom: 1px solid #ddd;\n}\n.panel-default {\n  border-color: #ddd;\n}\n.panel-default > .panel-heading {\n  color: #333;\n  background-color: #f5f5f5;\n  border-color: #ddd;\n}\n.panel-default > .panel-heading + .panel-collapse > .panel-body {\n  border-top-color: #ddd;\n}\n.panel-default > .panel-heading .badge {\n  color: #f5f5f5;\n  background-color: #333;\n}\n.panel-default > .panel-footer + .panel-collapse > .panel-body {\n  border-bottom-color: #ddd;\n}\n.panel-primary {\n  border-color: #337ab7;\n}\n.panel-primary > .panel-heading {\n  color: #fff;\n  background-color: #337ab7;\n  border-color: #337ab7;\n}\n.panel-primary > .panel-heading + .panel-collapse > .panel-body {\n  border-top-color: #337ab7;\n}\n.panel-primary > .panel-heading .badge {\n  color: #337ab7;\n  background-color: #fff;\n}\n.panel-primary > .panel-footer + .panel-collapse > .panel-body {\n  border-bottom-color: #337ab7;\n}\n.panel-success {\n  border-color: #d6e9c6;\n}\n.panel-success > .panel-heading {\n  color: #3c763d;\n  background-color: #dff0d8;\n  border-color: #d6e9c6;\n}\n.panel-success > .panel-heading + .panel-collapse > .panel-body {\n  border-top-color: #d6e9c6;\n}\n.panel-success > .panel-heading .badge {\n  color: #dff0d8;\n  background-color: #3c763d;\n}\n.panel-success > .panel-footer + .panel-collapse > .panel-body {\n  border-bottom-color: #d6e9c6;\n}\n.panel-info {\n  border-color: #bce8f1;\n}\n.panel-info > .panel-heading {\n  color: #31708f;\n  background-color: #d9edf7;\n  border-color: #bce8f1;\n}\n.panel-info > .panel-heading + .panel-collapse > .panel-body {\n  border-top-color: #bce8f1;\n}\n.panel-info > .panel-heading .badge {\n  color: #d9edf7;\n  background-color: #31708f;\n}\n.panel-info > .panel-footer + .panel-collapse > .panel-body {\n  border-bottom-color: #bce8f1;\n}\n.panel-warning {\n  border-color: #faebcc;\n}\n.panel-warning > .panel-heading {\n  color: #8a6d3b;\n  background-color: #fcf8e3;\n  border-color: #faebcc;\n}\n.panel-warning > .panel-heading + .panel-collapse > .panel-body {\n  border-top-color: #faebcc;\n}\n.panel-warning > .panel-heading .badge {\n  color: #fcf8e3;\n  background-color: #8a6d3b;\n}\n.panel-warning > .panel-footer + .panel-collapse > .panel-body {\n  border-bottom-color: #faebcc;\n}\n.panel-danger {\n  border-color: #ebccd1;\n}\n.panel-danger > .panel-heading {\n  color: #a94442;\n  background-color: #f2dede;\n  border-color: #ebccd1;\n}\n.panel-danger > .panel-heading + .panel-collapse > .panel-body {\n  border-top-color: #ebccd1;\n}\n.panel-danger > .panel-heading .badge {\n  color: #f2dede;\n  background-color: #a94442;\n}\n.panel-danger > .panel-footer + .panel-collapse > .panel-body {\n  border-bottom-color: #ebccd1;\n}\n.embed-responsive {\n  position: relative;\n  display: block;\n  height: 0;\n  padding: 0;\n  overflow: hidden;\n}\n.embed-responsive .embed-responsive-item,\n.embed-responsive iframe,\n.embed-responsive embed,\n.embed-responsive object,\n.embed-responsive video {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  border: 0;\n}\n.embed-responsive-16by9 {\n  padding-bottom: 56.25%;\n}\n.embed-responsive-4by3 {\n  padding-bottom: 75%;\n}\n.well {\n  min-height: 20px;\n  padding: 19px;\n  margin-bottom: 20px;\n  background-color: #f5f5f5;\n  border: 1px solid #e3e3e3;\n  border-radius: 4px;\n  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);\n          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);\n}\n.well blockquote {\n  border-color: #ddd;\n  border-color: rgba(0, 0, 0, .15);\n}\n.well-lg {\n  padding: 24px;\n  border-radius: 6px;\n}\n.well-sm {\n  padding: 9px;\n  border-radius: 3px;\n}\n.close {\n  float: right;\n  font-size: 21px;\n  font-weight: bold;\n  line-height: 1;\n  color: #000;\n  text-shadow: 0 1px 0 #fff;\n  filter: alpha(opacity=20);\n  opacity: .2;\n}\n.close:hover,\n.close:focus {\n  color: #000;\n  text-decoration: none;\n  cursor: pointer;\n  filter: alpha(opacity=50);\n  opacity: .5;\n}\nbutton.close {\n  -webkit-appearance: none;\n  padding: 0;\n  cursor: pointer;\n  background: transparent;\n  border: 0;\n}\n.modal-open {\n  overflow: hidden;\n}\n.modal {\n  position: fixed;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  z-index: 1050;\n  display: none;\n  overflow: hidden;\n  -webkit-overflow-scrolling: touch;\n  outline: 0;\n}\n.modal.fade .modal-dialog {\n  -webkit-transition: -webkit-transform .3s ease-out;\n       -o-transition:      -o-transform .3s ease-out;\n          transition:         transform .3s ease-out;\n  -webkit-transform: translate(0, -25%);\n      -ms-transform: translate(0, -25%);\n       -o-transform: translate(0, -25%);\n          transform: translate(0, -25%);\n}\n.modal.in .modal-dialog {\n  -webkit-transform: translate(0, 0);\n      -ms-transform: translate(0, 0);\n       -o-transform: translate(0, 0);\n          transform: translate(0, 0);\n}\n.modal-open .modal {\n  overflow-x: hidden;\n  overflow-y: auto;\n}\n.modal-dialog {\n  position: relative;\n  width: auto;\n  margin: 10px;\n}\n.modal-content {\n  position: relative;\n  background-color: #fff;\n  -webkit-background-clip: padding-box;\n          background-clip: padding-box;\n  border: 1px solid #999;\n  border: 1px solid rgba(0, 0, 0, .2);\n  border-radius: 6px;\n  outline: 0;\n  -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, .5);\n          box-shadow: 0 3px 9px rgba(0, 0, 0, .5);\n}\n.modal-backdrop {\n  position: fixed;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  z-index: 1040;\n  background-color: #000;\n}\n.modal-backdrop.fade {\n  filter: alpha(opacity=0);\n  opacity: 0;\n}\n.modal-backdrop.in {\n  filter: alpha(opacity=50);\n  opacity: .5;\n}\n.modal-header {\n  padding: 15px;\n  border-bottom: 1px solid #e5e5e5;\n}\n.modal-header .close {\n  margin-top: -2px;\n}\n.modal-title {\n  margin: 0;\n  line-height: 1.42857143;\n}\n.modal-body {\n  position: relative;\n  padding: 15px;\n}\n.modal-footer {\n  padding: 15px;\n  text-align: right;\n  border-top: 1px solid #e5e5e5;\n}\n.modal-footer .btn + .btn {\n  margin-bottom: 0;\n  margin-left: 5px;\n}\n.modal-footer .btn-group .btn + .btn {\n  margin-left: -1px;\n}\n.modal-footer .btn-block + .btn-block {\n  margin-left: 0;\n}\n.modal-scrollbar-measure {\n  position: absolute;\n  top: -9999px;\n  width: 50px;\n  height: 50px;\n  overflow: scroll;\n}\n@media (min-width: 768px) {\n  .modal-dialog {\n    width: 600px;\n    margin: 30px auto;\n  }\n  .modal-content {\n    -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, .5);\n            box-shadow: 0 5px 15px rgba(0, 0, 0, .5);\n  }\n  .modal-sm {\n    width: 300px;\n  }\n}\n@media (min-width: 992px) {\n  .modal-lg {\n    width: 900px;\n  }\n}\n.tooltip {\n  position: absolute;\n  z-index: 1070;\n  display: block;\n  font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n  font-size: 12px;\n  font-style: normal;\n  font-weight: normal;\n  line-height: 1.42857143;\n  text-align: left;\n  text-align: start;\n  text-decoration: none;\n  text-shadow: none;\n  text-transform: none;\n  letter-spacing: normal;\n  word-break: normal;\n  word-spacing: normal;\n  word-wrap: normal;\n  white-space: normal;\n  filter: alpha(opacity=0);\n  opacity: 0;\n\n  line-break: auto;\n}\n.tooltip.in {\n  filter: alpha(opacity=90);\n  opacity: .9;\n}\n.tooltip.top {\n  padding: 5px 0;\n  margin-top: -3px;\n}\n.tooltip.right {\n  padding: 0 5px;\n  margin-left: 3px;\n}\n.tooltip.bottom {\n  padding: 5px 0;\n  margin-top: 3px;\n}\n.tooltip.left {\n  padding: 0 5px;\n  margin-left: -3px;\n}\n.tooltip-inner {\n  max-width: 200px;\n  padding: 3px 8px;\n  color: #fff;\n  text-align: center;\n  background-color: #000;\n  border-radius: 4px;\n}\n.tooltip-arrow {\n  position: absolute;\n  width: 0;\n  height: 0;\n  border-color: transparent;\n  border-style: solid;\n}\n.tooltip.top .tooltip-arrow {\n  bottom: 0;\n  left: 50%;\n  margin-left: -5px;\n  border-width: 5px 5px 0;\n  border-top-color: #000;\n}\n.tooltip.top-left .tooltip-arrow {\n  right: 5px;\n  bottom: 0;\n  margin-bottom: -5px;\n  border-width: 5px 5px 0;\n  border-top-color: #000;\n}\n.tooltip.top-right .tooltip-arrow {\n  bottom: 0;\n  left: 5px;\n  margin-bottom: -5px;\n  border-width: 5px 5px 0;\n  border-top-color: #000;\n}\n.tooltip.right .tooltip-arrow {\n  top: 50%;\n  left: 0;\n  margin-top: -5px;\n  border-width: 5px 5px 5px 0;\n  border-right-color: #000;\n}\n.tooltip.left .tooltip-arrow {\n  top: 50%;\n  right: 0;\n  margin-top: -5px;\n  border-width: 5px 0 5px 5px;\n  border-left-color: #000;\n}\n.tooltip.bottom .tooltip-arrow {\n  top: 0;\n  left: 50%;\n  margin-left: -5px;\n  border-width: 0 5px 5px;\n  border-bottom-color: #000;\n}\n.tooltip.bottom-left .tooltip-arrow {\n  top: 0;\n  right: 5px;\n  margin-top: -5px;\n  border-width: 0 5px 5px;\n  border-bottom-color: #000;\n}\n.tooltip.bottom-right .tooltip-arrow {\n  top: 0;\n  left: 5px;\n  margin-top: -5px;\n  border-width: 0 5px 5px;\n  border-bottom-color: #000;\n}\n.popover {\n  position: absolute;\n  top: 0;\n  left: 0;\n  z-index: 1060;\n  display: none;\n  max-width: 276px;\n  padding: 1px;\n  font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n  font-size: 14px;\n  font-style: normal;\n  font-weight: normal;\n  line-height: 1.42857143;\n  text-align: left;\n  text-align: start;\n  text-decoration: none;\n  text-shadow: none;\n  text-transform: none;\n  letter-spacing: normal;\n  word-break: normal;\n  word-spacing: normal;\n  word-wrap: normal;\n  white-space: normal;\n  background-color: #fff;\n  -webkit-background-clip: padding-box;\n          background-clip: padding-box;\n  border: 1px solid #ccc;\n  border: 1px solid rgba(0, 0, 0, .2);\n  border-radius: 6px;\n  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);\n          box-shadow: 0 5px 10px rgba(0, 0, 0, .2);\n\n  line-break: auto;\n}\n.popover.top {\n  margin-top: -10px;\n}\n.popover.right {\n  margin-left: 10px;\n}\n.popover.bottom {\n  margin-top: 10px;\n}\n.popover.left {\n  margin-left: -10px;\n}\n.popover-title {\n  padding: 8px 14px;\n  margin: 0;\n  font-size: 14px;\n  background-color: #f7f7f7;\n  border-bottom: 1px solid #ebebeb;\n  border-radius: 5px 5px 0 0;\n}\n.popover-content {\n  padding: 9px 14px;\n}\n.popover > .arrow,\n.popover > .arrow:after {\n  position: absolute;\n  display: block;\n  width: 0;\n  height: 0;\n  border-color: transparent;\n  border-style: solid;\n}\n.popover > .arrow {\n  border-width: 11px;\n}\n.popover > .arrow:after {\n  content: \"\";\n  border-width: 10px;\n}\n.popover.top > .arrow {\n  bottom: -11px;\n  left: 50%;\n  margin-left: -11px;\n  border-top-color: #999;\n  border-top-color: rgba(0, 0, 0, .25);\n  border-bottom-width: 0;\n}\n.popover.top > .arrow:after {\n  bottom: 1px;\n  margin-left: -10px;\n  content: \" \";\n  border-top-color: #fff;\n  border-bottom-width: 0;\n}\n.popover.right > .arrow {\n  top: 50%;\n  left: -11px;\n  margin-top: -11px;\n  border-right-color: #999;\n  border-right-color: rgba(0, 0, 0, .25);\n  border-left-width: 0;\n}\n.popover.right > .arrow:after {\n  bottom: -10px;\n  left: 1px;\n  content: \" \";\n  border-right-color: #fff;\n  border-left-width: 0;\n}\n.popover.bottom > .arrow {\n  top: -11px;\n  left: 50%;\n  margin-left: -11px;\n  border-top-width: 0;\n  border-bottom-color: #999;\n  border-bottom-color: rgba(0, 0, 0, .25);\n}\n.popover.bottom > .arrow:after {\n  top: 1px;\n  margin-left: -10px;\n  content: \" \";\n  border-top-width: 0;\n  border-bottom-color: #fff;\n}\n.popover.left > .arrow {\n  top: 50%;\n  right: -11px;\n  margin-top: -11px;\n  border-right-width: 0;\n  border-left-color: #999;\n  border-left-color: rgba(0, 0, 0, .25);\n}\n.popover.left > .arrow:after {\n  right: 1px;\n  bottom: -10px;\n  content: \" \";\n  border-right-width: 0;\n  border-left-color: #fff;\n}\n.carousel {\n  position: relative;\n}\n.carousel-inner {\n  position: relative;\n  width: 100%;\n  overflow: hidden;\n}\n.carousel-inner > .item {\n  position: relative;\n  display: none;\n  -webkit-transition: .6s ease-in-out left;\n       -o-transition: .6s ease-in-out left;\n          transition: .6s ease-in-out left;\n}\n.carousel-inner > .item > img,\n.carousel-inner > .item > a > img {\n  line-height: 1;\n}\n@media all and (transform-3d), (-webkit-transform-3d) {\n  .carousel-inner > .item {\n    -webkit-transition: -webkit-transform .6s ease-in-out;\n         -o-transition:      -o-transform .6s ease-in-out;\n            transition:         transform .6s ease-in-out;\n\n    -webkit-backface-visibility: hidden;\n            backface-visibility: hidden;\n    -webkit-perspective: 1000px;\n            perspective: 1000px;\n  }\n  .carousel-inner > .item.next,\n  .carousel-inner > .item.active.right {\n    left: 0;\n    -webkit-transform: translate3d(100%, 0, 0);\n            transform: translate3d(100%, 0, 0);\n  }\n  .carousel-inner > .item.prev,\n  .carousel-inner > .item.active.left {\n    left: 0;\n    -webkit-transform: translate3d(-100%, 0, 0);\n            transform: translate3d(-100%, 0, 0);\n  }\n  .carousel-inner > .item.next.left,\n  .carousel-inner > .item.prev.right,\n  .carousel-inner > .item.active {\n    left: 0;\n    -webkit-transform: translate3d(0, 0, 0);\n            transform: translate3d(0, 0, 0);\n  }\n}\n.carousel-inner > .active,\n.carousel-inner > .next,\n.carousel-inner > .prev {\n  display: block;\n}\n.carousel-inner > .active {\n  left: 0;\n}\n.carousel-inner > .next,\n.carousel-inner > .prev {\n  position: absolute;\n  top: 0;\n  width: 100%;\n}\n.carousel-inner > .next {\n  left: 100%;\n}\n.carousel-inner > .prev {\n  left: -100%;\n}\n.carousel-inner > .next.left,\n.carousel-inner > .prev.right {\n  left: 0;\n}\n.carousel-inner > .active.left {\n  left: -100%;\n}\n.carousel-inner > .active.right {\n  left: 100%;\n}\n.carousel-control {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  width: 15%;\n  font-size: 20px;\n  color: #fff;\n  text-align: center;\n  text-shadow: 0 1px 2px rgba(0, 0, 0, .6);\n  background-color: rgba(0, 0, 0, 0);\n  filter: alpha(opacity=50);\n  opacity: .5;\n}\n.carousel-control.left {\n  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, .5) 0%, rgba(0, 0, 0, .0001) 100%);\n  background-image:      -o-linear-gradient(left, rgba(0, 0, 0, .5) 0%, rgba(0, 0, 0, .0001) 100%);\n  background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, .5)), to(rgba(0, 0, 0, .0001)));\n  background-image:         linear-gradient(to right, rgba(0, 0, 0, .5) 0%, rgba(0, 0, 0, .0001) 100%);\n  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#80000000', endColorstr='#00000000', GradientType=1);\n  background-repeat: repeat-x;\n}\n.carousel-control.right {\n  right: 0;\n  left: auto;\n  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, .0001) 0%, rgba(0, 0, 0, .5) 100%);\n  background-image:      -o-linear-gradient(left, rgba(0, 0, 0, .0001) 0%, rgba(0, 0, 0, .5) 100%);\n  background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, .0001)), to(rgba(0, 0, 0, .5)));\n  background-image:         linear-gradient(to right, rgba(0, 0, 0, .0001) 0%, rgba(0, 0, 0, .5) 100%);\n  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#80000000', GradientType=1);\n  background-repeat: repeat-x;\n}\n.carousel-control:hover,\n.carousel-control:focus {\n  color: #fff;\n  text-decoration: none;\n  filter: alpha(opacity=90);\n  outline: 0;\n  opacity: .9;\n}\n.carousel-control .icon-prev,\n.carousel-control .icon-next,\n.carousel-control .glyphicon-chevron-left,\n.carousel-control .glyphicon-chevron-right {\n  position: absolute;\n  top: 50%;\n  z-index: 5;\n  display: inline-block;\n  margin-top: -10px;\n}\n.carousel-control .icon-prev,\n.carousel-control .glyphicon-chevron-left {\n  left: 50%;\n  margin-left: -10px;\n}\n.carousel-control .icon-next,\n.carousel-control .glyphicon-chevron-right {\n  right: 50%;\n  margin-right: -10px;\n}\n.carousel-control .icon-prev,\n.carousel-control .icon-next {\n  width: 20px;\n  height: 20px;\n  font-family: serif;\n  line-height: 1;\n}\n.carousel-control .icon-prev:before {\n  content: '\\2039';\n}\n.carousel-control .icon-next:before {\n  content: '\\203A';\n}\n.carousel-indicators {\n  position: absolute;\n  bottom: 10px;\n  left: 50%;\n  z-index: 15;\n  width: 60%;\n  padding-left: 0;\n  margin-left: -30%;\n  text-align: center;\n  list-style: none;\n}\n.carousel-indicators li {\n  display: inline-block;\n  width: 10px;\n  height: 10px;\n  margin: 1px;\n  text-indent: -999px;\n  cursor: pointer;\n  background-color: #000 \\9;\n  background-color: rgba(0, 0, 0, 0);\n  border: 1px solid #fff;\n  border-radius: 10px;\n}\n.carousel-indicators .active {\n  width: 12px;\n  height: 12px;\n  margin: 0;\n  background-color: #fff;\n}\n.carousel-caption {\n  position: absolute;\n  right: 15%;\n  bottom: 20px;\n  left: 15%;\n  z-index: 10;\n  padding-top: 20px;\n  padding-bottom: 20px;\n  color: #fff;\n  text-align: center;\n  text-shadow: 0 1px 2px rgba(0, 0, 0, .6);\n}\n.carousel-caption .btn {\n  text-shadow: none;\n}\n@media screen and (min-width: 768px) {\n  .carousel-control .glyphicon-chevron-left,\n  .carousel-control .glyphicon-chevron-right,\n  .carousel-control .icon-prev,\n  .carousel-control .icon-next {\n    width: 30px;\n    height: 30px;\n    margin-top: -10px;\n    font-size: 30px;\n  }\n  .carousel-control .glyphicon-chevron-left,\n  .carousel-control .icon-prev {\n    margin-left: -10px;\n  }\n  .carousel-control .glyphicon-chevron-right,\n  .carousel-control .icon-next {\n    margin-right: -10px;\n  }\n  .carousel-caption {\n    right: 20%;\n    left: 20%;\n    padding-bottom: 30px;\n  }\n  .carousel-indicators {\n    bottom: 20px;\n  }\n}\n.clearfix:before,\n.clearfix:after,\n.dl-horizontal dd:before,\n.dl-horizontal dd:after,\n.container:before,\n.container:after,\n.container-fluid:before,\n.container-fluid:after,\n.row:before,\n.row:after,\n.form-horizontal .form-group:before,\n.form-horizontal .form-group:after,\n.btn-toolbar:before,\n.btn-toolbar:after,\n.btn-group-vertical > .btn-group:before,\n.btn-group-vertical > .btn-group:after,\n.nav:before,\n.nav:after,\n.navbar:before,\n.navbar:after,\n.navbar-header:before,\n.navbar-header:after,\n.navbar-collapse:before,\n.navbar-collapse:after,\n.pager:before,\n.pager:after,\n.panel-body:before,\n.panel-body:after,\n.modal-header:before,\n.modal-header:after,\n.modal-footer:before,\n.modal-footer:after {\n  display: table;\n  content: \" \";\n}\n.clearfix:after,\n.dl-horizontal dd:after,\n.container:after,\n.container-fluid:after,\n.row:after,\n.form-horizontal .form-group:after,\n.btn-toolbar:after,\n.btn-group-vertical > .btn-group:after,\n.nav:after,\n.navbar:after,\n.navbar-header:after,\n.navbar-collapse:after,\n.pager:after,\n.panel-body:after,\n.modal-header:after,\n.modal-footer:after {\n  clear: both;\n}\n.center-block {\n  display: block;\n  margin-right: auto;\n  margin-left: auto;\n}\n.pull-right {\n  float: right !important;\n}\n.pull-left {\n  float: left !important;\n}\n.hide {\n  display: none !important;\n}\n.show {\n  display: block !important;\n}\n.invisible {\n  visibility: hidden;\n}\n.text-hide {\n  font: 0/0 a;\n  color: transparent;\n  text-shadow: none;\n  background-color: transparent;\n  border: 0;\n}\n.hidden {\n  display: none !important;\n}\n.affix {\n  position: fixed;\n}\n@-ms-viewport {\n  width: device-width;\n}\n.visible-xs,\n.visible-sm,\n.visible-md,\n.visible-lg {\n  display: none !important;\n}\n.visible-xs-block,\n.visible-xs-inline,\n.visible-xs-inline-block,\n.visible-sm-block,\n.visible-sm-inline,\n.visible-sm-inline-block,\n.visible-md-block,\n.visible-md-inline,\n.visible-md-inline-block,\n.visible-lg-block,\n.visible-lg-inline,\n.visible-lg-inline-block {\n  display: none !important;\n}\n@media (max-width: 767px) {\n  .visible-xs {\n    display: block !important;\n  }\n  table.visible-xs {\n    display: table !important;\n  }\n  tr.visible-xs {\n    display: table-row !important;\n  }\n  th.visible-xs,\n  td.visible-xs {\n    display: table-cell !important;\n  }\n}\n@media (max-width: 767px) {\n  .visible-xs-block {\n    display: block !important;\n  }\n}\n@media (max-width: 767px) {\n  .visible-xs-inline {\n    display: inline !important;\n  }\n}\n@media (max-width: 767px) {\n  .visible-xs-inline-block {\n    display: inline-block !important;\n  }\n}\n@media (min-width: 768px) and (max-width: 991px) {\n  .visible-sm {\n    display: block !important;\n  }\n  table.visible-sm {\n    display: table !important;\n  }\n  tr.visible-sm {\n    display: table-row !important;\n  }\n  th.visible-sm,\n  td.visible-sm {\n    display: table-cell !important;\n  }\n}\n@media (min-width: 768px) and (max-width: 991px) {\n  .visible-sm-block {\n    display: block !important;\n  }\n}\n@media (min-width: 768px) and (max-width: 991px) {\n  .visible-sm-inline {\n    display: inline !important;\n  }\n}\n@media (min-width: 768px) and (max-width: 991px) {\n  .visible-sm-inline-block {\n    display: inline-block !important;\n  }\n}\n@media (min-width: 992px) and (max-width: 1199px) {\n  .visible-md {\n    display: block !important;\n  }\n  table.visible-md {\n    display: table !important;\n  }\n  tr.visible-md {\n    display: table-row !important;\n  }\n  th.visible-md,\n  td.visible-md {\n    display: table-cell !important;\n  }\n}\n@media (min-width: 992px) and (max-width: 1199px) {\n  .visible-md-block {\n    display: block !important;\n  }\n}\n@media (min-width: 992px) and (max-width: 1199px) {\n  .visible-md-inline {\n    display: inline !important;\n  }\n}\n@media (min-width: 992px) and (max-width: 1199px) {\n  .visible-md-inline-block {\n    display: inline-block !important;\n  }\n}\n@media (min-width: 1200px) {\n  .visible-lg {\n    display: block !important;\n  }\n  table.visible-lg {\n    display: table !important;\n  }\n  tr.visible-lg {\n    display: table-row !important;\n  }\n  th.visible-lg,\n  td.visible-lg {\n    display: table-cell !important;\n  }\n}\n@media (min-width: 1200px) {\n  .visible-lg-block {\n    display: block !important;\n  }\n}\n@media (min-width: 1200px) {\n  .visible-lg-inline {\n    display: inline !important;\n  }\n}\n@media (min-width: 1200px) {\n  .visible-lg-inline-block {\n    display: inline-block !important;\n  }\n}\n@media (max-width: 767px) {\n  .hidden-xs {\n    display: none !important;\n  }\n}\n@media (min-width: 768px) and (max-width: 991px) {\n  .hidden-sm {\n    display: none !important;\n  }\n}\n@media (min-width: 992px) and (max-width: 1199px) {\n  .hidden-md {\n    display: none !important;\n  }\n}\n@media (min-width: 1200px) {\n  .hidden-lg {\n    display: none !important;\n  }\n}\n.visible-print {\n  display: none !important;\n}\n@media print {\n  .visible-print {\n    display: block !important;\n  }\n  table.visible-print {\n    display: table !important;\n  }\n  tr.visible-print {\n    display: table-row !important;\n  }\n  th.visible-print,\n  td.visible-print {\n    display: table-cell !important;\n  }\n}\n.visible-print-block {\n  display: none !important;\n}\n@media print {\n  .visible-print-block {\n    display: block !important;\n  }\n}\n.visible-print-inline {\n  display: none !important;\n}\n@media print {\n  .visible-print-inline {\n    display: inline !important;\n  }\n}\n.visible-print-inline-block {\n  display: none !important;\n}\n@media print {\n  .visible-print-inline-block {\n    display: inline-block !important;\n  }\n}\n@media print {\n  .hidden-print {\n    display: none !important;\n  }\n}\n/*# sourceMappingURL=bootstrap.css.map */\n", ""]);
+	exports.push([module.id, "/*!\n * Bootstrap v3.3.6 (http://getbootstrap.com)\n * Copyright 2011-2015 Twitter, Inc.\n * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)\n */\n/*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */\nhtml {\n  font-family: sans-serif;\n  -webkit-text-size-adjust: 100%;\n      -ms-text-size-adjust: 100%;\n}\nbody {\n  margin: 0;\n}\narticle,\naside,\ndetails,\nfigcaption,\nfigure,\nfooter,\nheader,\nhgroup,\nmain,\nmenu,\nnav,\nsection,\nsummary {\n  display: block;\n}\naudio,\ncanvas,\nprogress,\nvideo {\n  display: inline-block;\n  vertical-align: baseline;\n}\naudio:not([controls]) {\n  display: none;\n  height: 0;\n}\n[hidden],\ntemplate {\n  display: none;\n}\na {\n  background-color: transparent;\n}\na:active,\na:hover {\n  outline: 0;\n}\nabbr[title] {\n  border-bottom: 1px dotted;\n}\nb,\nstrong {\n  font-weight: bold;\n}\ndfn {\n  font-style: italic;\n}\nh1 {\n  margin: .67em 0;\n  font-size: 2em;\n}\nmark {\n  color: #000;\n  background: #ff0;\n}\nsmall {\n  font-size: 80%;\n}\nsub,\nsup {\n  position: relative;\n  font-size: 75%;\n  line-height: 0;\n  vertical-align: baseline;\n}\nsup {\n  top: -.5em;\n}\nsub {\n  bottom: -.25em;\n}\nimg {\n  border: 0;\n}\nsvg:not(:root) {\n  overflow: hidden;\n}\nfigure {\n  margin: 1em 40px;\n}\nhr {\n  height: 0;\n  -webkit-box-sizing: content-box;\n     -moz-box-sizing: content-box;\n          box-sizing: content-box;\n}\npre {\n  overflow: auto;\n}\ncode,\nkbd,\npre,\nsamp {\n  font-family: monospace, monospace;\n  font-size: 1em;\n}\nbutton,\ninput,\noptgroup,\nselect,\ntextarea {\n  margin: 0;\n  font: inherit;\n  color: inherit;\n}\nbutton {\n  overflow: visible;\n}\nbutton,\nselect {\n  text-transform: none;\n}\nbutton,\nhtml input[type=\"button\"],\ninput[type=\"reset\"],\ninput[type=\"submit\"] {\n  -webkit-appearance: button;\n  cursor: pointer;\n}\nbutton[disabled],\nhtml input[disabled] {\n  cursor: default;\n}\nbutton::-moz-focus-inner,\ninput::-moz-focus-inner {\n  padding: 0;\n  border: 0;\n}\ninput {\n  line-height: normal;\n}\ninput[type=\"checkbox\"],\ninput[type=\"radio\"] {\n  -webkit-box-sizing: border-box;\n     -moz-box-sizing: border-box;\n          box-sizing: border-box;\n  padding: 0;\n}\ninput[type=\"number\"]::-webkit-inner-spin-button,\ninput[type=\"number\"]::-webkit-outer-spin-button {\n  height: auto;\n}\ninput[type=\"search\"] {\n  -webkit-box-sizing: content-box;\n     -moz-box-sizing: content-box;\n          box-sizing: content-box;\n  -webkit-appearance: textfield;\n}\ninput[type=\"search\"]::-webkit-search-cancel-button,\ninput[type=\"search\"]::-webkit-search-decoration {\n  -webkit-appearance: none;\n}\nfieldset {\n  padding: .35em .625em .75em;\n  margin: 0 2px;\n  border: 1px solid #c0c0c0;\n}\nlegend {\n  padding: 0;\n  border: 0;\n}\ntextarea {\n  overflow: auto;\n}\noptgroup {\n  font-weight: bold;\n}\ntable {\n  border-spacing: 0;\n  border-collapse: collapse;\n}\ntd,\nth {\n  padding: 0;\n}\n/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src/css/main.css */\n@media print {\n  *,\n  *:before,\n  *:after {\n    color: #000 !important;\n    text-shadow: none !important;\n    background: transparent !important;\n    -webkit-box-shadow: none !important;\n            box-shadow: none !important;\n  }\n  a,\n  a:visited {\n    text-decoration: underline;\n  }\n  a[href]:after {\n    content: \" (\" attr(href) \")\";\n  }\n  abbr[title]:after {\n    content: \" (\" attr(title) \")\";\n  }\n  a[href^=\"#\"]:after,\n  a[href^=\"javascript:\"]:after {\n    content: \"\";\n  }\n  pre,\n  blockquote {\n    border: 1px solid #999;\n\n    page-break-inside: avoid;\n  }\n  thead {\n    display: table-header-group;\n  }\n  tr,\n  img {\n    page-break-inside: avoid;\n  }\n  img {\n    max-width: 100% !important;\n  }\n  p,\n  h2,\n  h3 {\n    orphans: 3;\n    widows: 3;\n  }\n  h2,\n  h3 {\n    page-break-after: avoid;\n  }\n  .navbar {\n    display: none;\n  }\n  .btn > .caret,\n  .dropup > .btn > .caret {\n    border-top-color: #000 !important;\n  }\n  .label {\n    border: 1px solid #000;\n  }\n  .table {\n    border-collapse: collapse !important;\n  }\n  .table td,\n  .table th {\n    background-color: #fff !important;\n  }\n  .table-bordered th,\n  .table-bordered td {\n    border: 1px solid #ddd !important;\n  }\n}\n@font-face {\n  font-family: 'Glyphicons Halflings';\n  src: url(" + __webpack_require__(381) + ") format('woff');\n}\n.glyphicon {\n  position: relative;\n  top: 1px;\n  display: inline-block;\n  font-family: 'Glyphicons Halflings';\n  font-style: normal;\n  font-weight: normal;\n  line-height: 1;\n\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n}\n.glyphicon-asterisk:before {\n  content: \"*\";\n}\n.glyphicon-plus:before {\n  content: \"+\";\n}\n.glyphicon-euro:before,\n.glyphicon-eur:before {\n  content: \"\\20AC\";\n}\n.glyphicon-minus:before {\n  content: \"\\2212\";\n}\n.glyphicon-cloud:before {\n  content: \"\\2601\";\n}\n.glyphicon-envelope:before {\n  content: \"\\2709\";\n}\n.glyphicon-pencil:before {\n  content: \"\\270F\";\n}\n.glyphicon-glass:before {\n  content: \"\\E001\";\n}\n.glyphicon-music:before {\n  content: \"\\E002\";\n}\n.glyphicon-search:before {\n  content: \"\\E003\";\n}\n.glyphicon-heart:before {\n  content: \"\\E005\";\n}\n.glyphicon-star:before {\n  content: \"\\E006\";\n}\n.glyphicon-star-empty:before {\n  content: \"\\E007\";\n}\n.glyphicon-user:before {\n  content: \"\\E008\";\n}\n.glyphicon-film:before {\n  content: \"\\E009\";\n}\n.glyphicon-th-large:before {\n  content: \"\\E010\";\n}\n.glyphicon-th:before {\n  content: \"\\E011\";\n}\n.glyphicon-th-list:before {\n  content: \"\\E012\";\n}\n.glyphicon-ok:before {\n  content: \"\\E013\";\n}\n.glyphicon-remove:before {\n  content: \"\\E014\";\n}\n.glyphicon-zoom-in:before {\n  content: \"\\E015\";\n}\n.glyphicon-zoom-out:before {\n  content: \"\\E016\";\n}\n.glyphicon-off:before {\n  content: \"\\E017\";\n}\n.glyphicon-signal:before {\n  content: \"\\E018\";\n}\n.glyphicon-cog:before {\n  content: \"\\E019\";\n}\n.glyphicon-trash:before {\n  content: \"\\E020\";\n}\n.glyphicon-home:before {\n  content: \"\\E021\";\n}\n.glyphicon-file:before {\n  content: \"\\E022\";\n}\n.glyphicon-time:before {\n  content: \"\\E023\";\n}\n.glyphicon-road:before {\n  content: \"\\E024\";\n}\n.glyphicon-download-alt:before {\n  content: \"\\E025\";\n}\n.glyphicon-download:before {\n  content: \"\\E026\";\n}\n.glyphicon-upload:before {\n  content: \"\\E027\";\n}\n.glyphicon-inbox:before {\n  content: \"\\E028\";\n}\n.glyphicon-play-circle:before {\n  content: \"\\E029\";\n}\n.glyphicon-repeat:before {\n  content: \"\\E030\";\n}\n.glyphicon-refresh:before {\n  content: \"\\E031\";\n}\n.glyphicon-list-alt:before {\n  content: \"\\E032\";\n}\n.glyphicon-lock:before {\n  content: \"\\E033\";\n}\n.glyphicon-flag:before {\n  content: \"\\E034\";\n}\n.glyphicon-headphones:before {\n  content: \"\\E035\";\n}\n.glyphicon-volume-off:before {\n  content: \"\\E036\";\n}\n.glyphicon-volume-down:before {\n  content: \"\\E037\";\n}\n.glyphicon-volume-up:before {\n  content: \"\\E038\";\n}\n.glyphicon-qrcode:before {\n  content: \"\\E039\";\n}\n.glyphicon-barcode:before {\n  content: \"\\E040\";\n}\n.glyphicon-tag:before {\n  content: \"\\E041\";\n}\n.glyphicon-tags:before {\n  content: \"\\E042\";\n}\n.glyphicon-book:before {\n  content: \"\\E043\";\n}\n.glyphicon-bookmark:before {\n  content: \"\\E044\";\n}\n.glyphicon-print:before {\n  content: \"\\E045\";\n}\n.glyphicon-camera:before {\n  content: \"\\E046\";\n}\n.glyphicon-font:before {\n  content: \"\\E047\";\n}\n.glyphicon-bold:before {\n  content: \"\\E048\";\n}\n.glyphicon-italic:before {\n  content: \"\\E049\";\n}\n.glyphicon-text-height:before {\n  content: \"\\E050\";\n}\n.glyphicon-text-width:before {\n  content: \"\\E051\";\n}\n.glyphicon-align-left:before {\n  content: \"\\E052\";\n}\n.glyphicon-align-center:before {\n  content: \"\\E053\";\n}\n.glyphicon-align-right:before {\n  content: \"\\E054\";\n}\n.glyphicon-align-justify:before {\n  content: \"\\E055\";\n}\n.glyphicon-list:before {\n  content: \"\\E056\";\n}\n.glyphicon-indent-left:before {\n  content: \"\\E057\";\n}\n.glyphicon-indent-right:before {\n  content: \"\\E058\";\n}\n.glyphicon-facetime-video:before {\n  content: \"\\E059\";\n}\n.glyphicon-picture:before {\n  content: \"\\E060\";\n}\n.glyphicon-map-marker:before {\n  content: \"\\E062\";\n}\n.glyphicon-adjust:before {\n  content: \"\\E063\";\n}\n.glyphicon-tint:before {\n  content: \"\\E064\";\n}\n.glyphicon-edit:before {\n  content: \"\\E065\";\n}\n.glyphicon-share:before {\n  content: \"\\E066\";\n}\n.glyphicon-check:before {\n  content: \"\\E067\";\n}\n.glyphicon-move:before {\n  content: \"\\E068\";\n}\n.glyphicon-step-backward:before {\n  content: \"\\E069\";\n}\n.glyphicon-fast-backward:before {\n  content: \"\\E070\";\n}\n.glyphicon-backward:before {\n  content: \"\\E071\";\n}\n.glyphicon-play:before {\n  content: \"\\E072\";\n}\n.glyphicon-pause:before {\n  content: \"\\E073\";\n}\n.glyphicon-stop:before {\n  content: \"\\E074\";\n}\n.glyphicon-forward:before {\n  content: \"\\E075\";\n}\n.glyphicon-fast-forward:before {\n  content: \"\\E076\";\n}\n.glyphicon-step-forward:before {\n  content: \"\\E077\";\n}\n.glyphicon-eject:before {\n  content: \"\\E078\";\n}\n.glyphicon-chevron-left:before {\n  content: \"\\E079\";\n}\n.glyphicon-chevron-right:before {\n  content: \"\\E080\";\n}\n.glyphicon-plus-sign:before {\n  content: \"\\E081\";\n}\n.glyphicon-minus-sign:before {\n  content: \"\\E082\";\n}\n.glyphicon-remove-sign:before {\n  content: \"\\E083\";\n}\n.glyphicon-ok-sign:before {\n  content: \"\\E084\";\n}\n.glyphicon-question-sign:before {\n  content: \"\\E085\";\n}\n.glyphicon-info-sign:before {\n  content: \"\\E086\";\n}\n.glyphicon-screenshot:before {\n  content: \"\\E087\";\n}\n.glyphicon-remove-circle:before {\n  content: \"\\E088\";\n}\n.glyphicon-ok-circle:before {\n  content: \"\\E089\";\n}\n.glyphicon-ban-circle:before {\n  content: \"\\E090\";\n}\n.glyphicon-arrow-left:before {\n  content: \"\\E091\";\n}\n.glyphicon-arrow-right:before {\n  content: \"\\E092\";\n}\n.glyphicon-arrow-up:before {\n  content: \"\\E093\";\n}\n.glyphicon-arrow-down:before {\n  content: \"\\E094\";\n}\n.glyphicon-share-alt:before {\n  content: \"\\E095\";\n}\n.glyphicon-resize-full:before {\n  content: \"\\E096\";\n}\n.glyphicon-resize-small:before {\n  content: \"\\E097\";\n}\n.glyphicon-exclamation-sign:before {\n  content: \"\\E101\";\n}\n.glyphicon-gift:before {\n  content: \"\\E102\";\n}\n.glyphicon-leaf:before {\n  content: \"\\E103\";\n}\n.glyphicon-fire:before {\n  content: \"\\E104\";\n}\n.glyphicon-eye-open:before {\n  content: \"\\E105\";\n}\n.glyphicon-eye-close:before {\n  content: \"\\E106\";\n}\n.glyphicon-warning-sign:before {\n  content: \"\\E107\";\n}\n.glyphicon-plane:before {\n  content: \"\\E108\";\n}\n.glyphicon-calendar:before {\n  content: \"\\E109\";\n}\n.glyphicon-random:before {\n  content: \"\\E110\";\n}\n.glyphicon-comment:before {\n  content: \"\\E111\";\n}\n.glyphicon-magnet:before {\n  content: \"\\E112\";\n}\n.glyphicon-chevron-up:before {\n  content: \"\\E113\";\n}\n.glyphicon-chevron-down:before {\n  content: \"\\E114\";\n}\n.glyphicon-retweet:before {\n  content: \"\\E115\";\n}\n.glyphicon-shopping-cart:before {\n  content: \"\\E116\";\n}\n.glyphicon-folder-close:before {\n  content: \"\\E117\";\n}\n.glyphicon-folder-open:before {\n  content: \"\\E118\";\n}\n.glyphicon-resize-vertical:before {\n  content: \"\\E119\";\n}\n.glyphicon-resize-horizontal:before {\n  content: \"\\E120\";\n}\n.glyphicon-hdd:before {\n  content: \"\\E121\";\n}\n.glyphicon-bullhorn:before {\n  content: \"\\E122\";\n}\n.glyphicon-bell:before {\n  content: \"\\E123\";\n}\n.glyphicon-certificate:before {\n  content: \"\\E124\";\n}\n.glyphicon-thumbs-up:before {\n  content: \"\\E125\";\n}\n.glyphicon-thumbs-down:before {\n  content: \"\\E126\";\n}\n.glyphicon-hand-right:before {\n  content: \"\\E127\";\n}\n.glyphicon-hand-left:before {\n  content: \"\\E128\";\n}\n.glyphicon-hand-up:before {\n  content: \"\\E129\";\n}\n.glyphicon-hand-down:before {\n  content: \"\\E130\";\n}\n.glyphicon-circle-arrow-right:before {\n  content: \"\\E131\";\n}\n.glyphicon-circle-arrow-left:before {\n  content: \"\\E132\";\n}\n.glyphicon-circle-arrow-up:before {\n  content: \"\\E133\";\n}\n.glyphicon-circle-arrow-down:before {\n  content: \"\\E134\";\n}\n.glyphicon-globe:before {\n  content: \"\\E135\";\n}\n.glyphicon-wrench:before {\n  content: \"\\E136\";\n}\n.glyphicon-tasks:before {\n  content: \"\\E137\";\n}\n.glyphicon-filter:before {\n  content: \"\\E138\";\n}\n.glyphicon-briefcase:before {\n  content: \"\\E139\";\n}\n.glyphicon-fullscreen:before {\n  content: \"\\E140\";\n}\n.glyphicon-dashboard:before {\n  content: \"\\E141\";\n}\n.glyphicon-paperclip:before {\n  content: \"\\E142\";\n}\n.glyphicon-heart-empty:before {\n  content: \"\\E143\";\n}\n.glyphicon-link:before {\n  content: \"\\E144\";\n}\n.glyphicon-phone:before {\n  content: \"\\E145\";\n}\n.glyphicon-pushpin:before {\n  content: \"\\E146\";\n}\n.glyphicon-usd:before {\n  content: \"\\E148\";\n}\n.glyphicon-gbp:before {\n  content: \"\\E149\";\n}\n.glyphicon-sort:before {\n  content: \"\\E150\";\n}\n.glyphicon-sort-by-alphabet:before {\n  content: \"\\E151\";\n}\n.glyphicon-sort-by-alphabet-alt:before {\n  content: \"\\E152\";\n}\n.glyphicon-sort-by-order:before {\n  content: \"\\E153\";\n}\n.glyphicon-sort-by-order-alt:before {\n  content: \"\\E154\";\n}\n.glyphicon-sort-by-attributes:before {\n  content: \"\\E155\";\n}\n.glyphicon-sort-by-attributes-alt:before {\n  content: \"\\E156\";\n}\n.glyphicon-unchecked:before {\n  content: \"\\E157\";\n}\n.glyphicon-expand:before {\n  content: \"\\E158\";\n}\n.glyphicon-collapse-down:before {\n  content: \"\\E159\";\n}\n.glyphicon-collapse-up:before {\n  content: \"\\E160\";\n}\n.glyphicon-log-in:before {\n  content: \"\\E161\";\n}\n.glyphicon-flash:before {\n  content: \"\\E162\";\n}\n.glyphicon-log-out:before {\n  content: \"\\E163\";\n}\n.glyphicon-new-window:before {\n  content: \"\\E164\";\n}\n.glyphicon-record:before {\n  content: \"\\E165\";\n}\n.glyphicon-save:before {\n  content: \"\\E166\";\n}\n.glyphicon-open:before {\n  content: \"\\E167\";\n}\n.glyphicon-saved:before {\n  content: \"\\E168\";\n}\n.glyphicon-import:before {\n  content: \"\\E169\";\n}\n.glyphicon-export:before {\n  content: \"\\E170\";\n}\n.glyphicon-send:before {\n  content: \"\\E171\";\n}\n.glyphicon-floppy-disk:before {\n  content: \"\\E172\";\n}\n.glyphicon-floppy-saved:before {\n  content: \"\\E173\";\n}\n.glyphicon-floppy-remove:before {\n  content: \"\\E174\";\n}\n.glyphicon-floppy-save:before {\n  content: \"\\E175\";\n}\n.glyphicon-floppy-open:before {\n  content: \"\\E176\";\n}\n.glyphicon-credit-card:before {\n  content: \"\\E177\";\n}\n.glyphicon-transfer:before {\n  content: \"\\E178\";\n}\n.glyphicon-cutlery:before {\n  content: \"\\E179\";\n}\n.glyphicon-header:before {\n  content: \"\\E180\";\n}\n.glyphicon-compressed:before {\n  content: \"\\E181\";\n}\n.glyphicon-earphone:before {\n  content: \"\\E182\";\n}\n.glyphicon-phone-alt:before {\n  content: \"\\E183\";\n}\n.glyphicon-tower:before {\n  content: \"\\E184\";\n}\n.glyphicon-stats:before {\n  content: \"\\E185\";\n}\n.glyphicon-sd-video:before {\n  content: \"\\E186\";\n}\n.glyphicon-hd-video:before {\n  content: \"\\E187\";\n}\n.glyphicon-subtitles:before {\n  content: \"\\E188\";\n}\n.glyphicon-sound-stereo:before {\n  content: \"\\E189\";\n}\n.glyphicon-sound-dolby:before {\n  content: \"\\E190\";\n}\n.glyphicon-sound-5-1:before {\n  content: \"\\E191\";\n}\n.glyphicon-sound-6-1:before {\n  content: \"\\E192\";\n}\n.glyphicon-sound-7-1:before {\n  content: \"\\E193\";\n}\n.glyphicon-copyright-mark:before {\n  content: \"\\E194\";\n}\n.glyphicon-registration-mark:before {\n  content: \"\\E195\";\n}\n.glyphicon-cloud-download:before {\n  content: \"\\E197\";\n}\n.glyphicon-cloud-upload:before {\n  content: \"\\E198\";\n}\n.glyphicon-tree-conifer:before {\n  content: \"\\E199\";\n}\n.glyphicon-tree-deciduous:before {\n  content: \"\\E200\";\n}\n.glyphicon-cd:before {\n  content: \"\\E201\";\n}\n.glyphicon-save-file:before {\n  content: \"\\E202\";\n}\n.glyphicon-open-file:before {\n  content: \"\\E203\";\n}\n.glyphicon-level-up:before {\n  content: \"\\E204\";\n}\n.glyphicon-copy:before {\n  content: \"\\E205\";\n}\n.glyphicon-paste:before {\n  content: \"\\E206\";\n}\n.glyphicon-alert:before {\n  content: \"\\E209\";\n}\n.glyphicon-equalizer:before {\n  content: \"\\E210\";\n}\n.glyphicon-king:before {\n  content: \"\\E211\";\n}\n.glyphicon-queen:before {\n  content: \"\\E212\";\n}\n.glyphicon-pawn:before {\n  content: \"\\E213\";\n}\n.glyphicon-bishop:before {\n  content: \"\\E214\";\n}\n.glyphicon-knight:before {\n  content: \"\\E215\";\n}\n.glyphicon-baby-formula:before {\n  content: \"\\E216\";\n}\n.glyphicon-tent:before {\n  content: \"\\26FA\";\n}\n.glyphicon-blackboard:before {\n  content: \"\\E218\";\n}\n.glyphicon-bed:before {\n  content: \"\\E219\";\n}\n.glyphicon-apple:before {\n  content: \"\\F8FF\";\n}\n.glyphicon-erase:before {\n  content: \"\\E221\";\n}\n.glyphicon-hourglass:before {\n  content: \"\\231B\";\n}\n.glyphicon-lamp:before {\n  content: \"\\E223\";\n}\n.glyphicon-duplicate:before {\n  content: \"\\E224\";\n}\n.glyphicon-piggy-bank:before {\n  content: \"\\E225\";\n}\n.glyphicon-scissors:before {\n  content: \"\\E226\";\n}\n.glyphicon-bitcoin:before {\n  content: \"\\E227\";\n}\n.glyphicon-btc:before {\n  content: \"\\E227\";\n}\n.glyphicon-xbt:before {\n  content: \"\\E227\";\n}\n.glyphicon-yen:before {\n  content: \"\\A5\";\n}\n.glyphicon-jpy:before {\n  content: \"\\A5\";\n}\n.glyphicon-ruble:before {\n  content: \"\\20BD\";\n}\n.glyphicon-rub:before {\n  content: \"\\20BD\";\n}\n.glyphicon-scale:before {\n  content: \"\\E230\";\n}\n.glyphicon-ice-lolly:before {\n  content: \"\\E231\";\n}\n.glyphicon-ice-lolly-tasted:before {\n  content: \"\\E232\";\n}\n.glyphicon-education:before {\n  content: \"\\E233\";\n}\n.glyphicon-option-horizontal:before {\n  content: \"\\E234\";\n}\n.glyphicon-option-vertical:before {\n  content: \"\\E235\";\n}\n.glyphicon-menu-hamburger:before {\n  content: \"\\E236\";\n}\n.glyphicon-modal-window:before {\n  content: \"\\E237\";\n}\n.glyphicon-oil:before {\n  content: \"\\E238\";\n}\n.glyphicon-grain:before {\n  content: \"\\E239\";\n}\n.glyphicon-sunglasses:before {\n  content: \"\\E240\";\n}\n.glyphicon-text-size:before {\n  content: \"\\E241\";\n}\n.glyphicon-text-color:before {\n  content: \"\\E242\";\n}\n.glyphicon-text-background:before {\n  content: \"\\E243\";\n}\n.glyphicon-object-align-top:before {\n  content: \"\\E244\";\n}\n.glyphicon-object-align-bottom:before {\n  content: \"\\E245\";\n}\n.glyphicon-object-align-horizontal:before {\n  content: \"\\E246\";\n}\n.glyphicon-object-align-left:before {\n  content: \"\\E247\";\n}\n.glyphicon-object-align-vertical:before {\n  content: \"\\E248\";\n}\n.glyphicon-object-align-right:before {\n  content: \"\\E249\";\n}\n.glyphicon-triangle-right:before {\n  content: \"\\E250\";\n}\n.glyphicon-triangle-left:before {\n  content: \"\\E251\";\n}\n.glyphicon-triangle-bottom:before {\n  content: \"\\E252\";\n}\n.glyphicon-triangle-top:before {\n  content: \"\\E253\";\n}\n.glyphicon-console:before {\n  content: \"\\E254\";\n}\n.glyphicon-superscript:before {\n  content: \"\\E255\";\n}\n.glyphicon-subscript:before {\n  content: \"\\E256\";\n}\n.glyphicon-menu-left:before {\n  content: \"\\E257\";\n}\n.glyphicon-menu-right:before {\n  content: \"\\E258\";\n}\n.glyphicon-menu-down:before {\n  content: \"\\E259\";\n}\n.glyphicon-menu-up:before {\n  content: \"\\E260\";\n}\n* {\n  -webkit-box-sizing: border-box;\n     -moz-box-sizing: border-box;\n          box-sizing: border-box;\n}\n*:before,\n*:after {\n  -webkit-box-sizing: border-box;\n     -moz-box-sizing: border-box;\n          box-sizing: border-box;\n}\nhtml {\n  font-size: 10px;\n\n  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);\n}\nbody {\n  font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n  font-size: 14px;\n  line-height: 1.42857143;\n  color: #333;\n  background-color: #fff;\n}\ninput,\nbutton,\nselect,\ntextarea {\n  font-family: inherit;\n  font-size: inherit;\n  line-height: inherit;\n}\na {\n  color: #337ab7;\n  text-decoration: none;\n}\na:hover,\na:focus {\n  color: #23527c;\n  text-decoration: underline;\n}\na:focus {\n  outline: thin dotted;\n  outline: 5px auto -webkit-focus-ring-color;\n  outline-offset: -2px;\n}\nfigure {\n  margin: 0;\n}\nimg {\n  vertical-align: middle;\n}\n.img-responsive,\n.thumbnail > img,\n.thumbnail a > img,\n.carousel-inner > .item > img,\n.carousel-inner > .item > a > img {\n  display: block;\n  max-width: 100%;\n  height: auto;\n}\n.img-rounded {\n  border-radius: 6px;\n}\n.img-thumbnail {\n  display: inline-block;\n  max-width: 100%;\n  height: auto;\n  padding: 4px;\n  line-height: 1.42857143;\n  background-color: #fff;\n  border: 1px solid #ddd;\n  border-radius: 4px;\n  -webkit-transition: all .2s ease-in-out;\n       -o-transition: all .2s ease-in-out;\n          transition: all .2s ease-in-out;\n}\n.img-circle {\n  border-radius: 50%;\n}\nhr {\n  margin-top: 20px;\n  margin-bottom: 20px;\n  border: 0;\n  border-top: 1px solid #eee;\n}\n.sr-only {\n  position: absolute;\n  width: 1px;\n  height: 1px;\n  padding: 0;\n  margin: -1px;\n  overflow: hidden;\n  clip: rect(0, 0, 0, 0);\n  border: 0;\n}\n.sr-only-focusable:active,\n.sr-only-focusable:focus {\n  position: static;\n  width: auto;\n  height: auto;\n  margin: 0;\n  overflow: visible;\n  clip: auto;\n}\n[role=\"button\"] {\n  cursor: pointer;\n}\nh1,\nh2,\nh3,\nh4,\nh5,\nh6,\n.h1,\n.h2,\n.h3,\n.h4,\n.h5,\n.h6 {\n  font-family: inherit;\n  font-weight: 500;\n  line-height: 1.1;\n  color: inherit;\n}\nh1 small,\nh2 small,\nh3 small,\nh4 small,\nh5 small,\nh6 small,\n.h1 small,\n.h2 small,\n.h3 small,\n.h4 small,\n.h5 small,\n.h6 small,\nh1 .small,\nh2 .small,\nh3 .small,\nh4 .small,\nh5 .small,\nh6 .small,\n.h1 .small,\n.h2 .small,\n.h3 .small,\n.h4 .small,\n.h5 .small,\n.h6 .small {\n  font-weight: normal;\n  line-height: 1;\n  color: #777;\n}\nh1,\n.h1,\nh2,\n.h2,\nh3,\n.h3 {\n  margin-top: 20px;\n  margin-bottom: 10px;\n}\nh1 small,\n.h1 small,\nh2 small,\n.h2 small,\nh3 small,\n.h3 small,\nh1 .small,\n.h1 .small,\nh2 .small,\n.h2 .small,\nh3 .small,\n.h3 .small {\n  font-size: 65%;\n}\nh4,\n.h4,\nh5,\n.h5,\nh6,\n.h6 {\n  margin-top: 10px;\n  margin-bottom: 10px;\n}\nh4 small,\n.h4 small,\nh5 small,\n.h5 small,\nh6 small,\n.h6 small,\nh4 .small,\n.h4 .small,\nh5 .small,\n.h5 .small,\nh6 .small,\n.h6 .small {\n  font-size: 75%;\n}\nh1,\n.h1 {\n  font-size: 36px;\n}\nh2,\n.h2 {\n  font-size: 30px;\n}\nh3,\n.h3 {\n  font-size: 24px;\n}\nh4,\n.h4 {\n  font-size: 18px;\n}\nh5,\n.h5 {\n  font-size: 14px;\n}\nh6,\n.h6 {\n  font-size: 12px;\n}\np {\n  margin: 0 0 10px;\n}\n.lead {\n  margin-bottom: 20px;\n  font-size: 16px;\n  font-weight: 300;\n  line-height: 1.4;\n}\n@media (min-width: 768px) {\n  .lead {\n    font-size: 21px;\n  }\n}\nsmall,\n.small {\n  font-size: 85%;\n}\nmark,\n.mark {\n  padding: .2em;\n  background-color: #fcf8e3;\n}\n.text-left {\n  text-align: left;\n}\n.text-right {\n  text-align: right;\n}\n.text-center {\n  text-align: center;\n}\n.text-justify {\n  text-align: justify;\n}\n.text-nowrap {\n  white-space: nowrap;\n}\n.text-lowercase {\n  text-transform: lowercase;\n}\n.text-uppercase {\n  text-transform: uppercase;\n}\n.text-capitalize {\n  text-transform: capitalize;\n}\n.text-muted {\n  color: #777;\n}\n.text-primary {\n  color: #337ab7;\n}\na.text-primary:hover,\na.text-primary:focus {\n  color: #286090;\n}\n.text-success {\n  color: #3c763d;\n}\na.text-success:hover,\na.text-success:focus {\n  color: #2b542c;\n}\n.text-info {\n  color: #31708f;\n}\na.text-info:hover,\na.text-info:focus {\n  color: #245269;\n}\n.text-warning {\n  color: #8a6d3b;\n}\na.text-warning:hover,\na.text-warning:focus {\n  color: #66512c;\n}\n.text-danger {\n  color: #a94442;\n}\na.text-danger:hover,\na.text-danger:focus {\n  color: #843534;\n}\n.bg-primary {\n  color: #fff;\n  background-color: #337ab7;\n}\na.bg-primary:hover,\na.bg-primary:focus {\n  background-color: #286090;\n}\n.bg-success {\n  background-color: #dff0d8;\n}\na.bg-success:hover,\na.bg-success:focus {\n  background-color: #c1e2b3;\n}\n.bg-info {\n  background-color: #d9edf7;\n}\na.bg-info:hover,\na.bg-info:focus {\n  background-color: #afd9ee;\n}\n.bg-warning {\n  background-color: #fcf8e3;\n}\na.bg-warning:hover,\na.bg-warning:focus {\n  background-color: #f7ecb5;\n}\n.bg-danger {\n  background-color: #f2dede;\n}\na.bg-danger:hover,\na.bg-danger:focus {\n  background-color: #e4b9b9;\n}\n.page-header {\n  padding-bottom: 9px;\n  margin: 40px 0 20px;\n  border-bottom: 1px solid #eee;\n}\nul,\nol {\n  margin-top: 0;\n  margin-bottom: 10px;\n}\nul ul,\nol ul,\nul ol,\nol ol {\n  margin-bottom: 0;\n}\n.list-unstyled {\n  padding-left: 0;\n  list-style: none;\n}\n.list-inline {\n  padding-left: 0;\n  margin-left: -5px;\n  list-style: none;\n}\n.list-inline > li {\n  display: inline-block;\n  padding-right: 5px;\n  padding-left: 5px;\n}\ndl {\n  margin-top: 0;\n  margin-bottom: 20px;\n}\ndt,\ndd {\n  line-height: 1.42857143;\n}\ndt {\n  font-weight: bold;\n}\ndd {\n  margin-left: 0;\n}\n@media (min-width: 768px) {\n  .dl-horizontal dt {\n    float: left;\n    width: 160px;\n    overflow: hidden;\n    clear: left;\n    text-align: right;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n  }\n  .dl-horizontal dd {\n    margin-left: 180px;\n  }\n}\nabbr[title],\nabbr[data-original-title] {\n  cursor: help;\n  border-bottom: 1px dotted #777;\n}\n.initialism {\n  font-size: 90%;\n  text-transform: uppercase;\n}\nblockquote {\n  padding: 10px 20px;\n  margin: 0 0 20px;\n  font-size: 17.5px;\n  border-left: 5px solid #eee;\n}\nblockquote p:last-child,\nblockquote ul:last-child,\nblockquote ol:last-child {\n  margin-bottom: 0;\n}\nblockquote footer,\nblockquote small,\nblockquote .small {\n  display: block;\n  font-size: 80%;\n  line-height: 1.42857143;\n  color: #777;\n}\nblockquote footer:before,\nblockquote small:before,\nblockquote .small:before {\n  content: '\\2014   \\A0';\n}\n.blockquote-reverse,\nblockquote.pull-right {\n  padding-right: 15px;\n  padding-left: 0;\n  text-align: right;\n  border-right: 5px solid #eee;\n  border-left: 0;\n}\n.blockquote-reverse footer:before,\nblockquote.pull-right footer:before,\n.blockquote-reverse small:before,\nblockquote.pull-right small:before,\n.blockquote-reverse .small:before,\nblockquote.pull-right .small:before {\n  content: '';\n}\n.blockquote-reverse footer:after,\nblockquote.pull-right footer:after,\n.blockquote-reverse small:after,\nblockquote.pull-right small:after,\n.blockquote-reverse .small:after,\nblockquote.pull-right .small:after {\n  content: '\\A0   \\2014';\n}\naddress {\n  margin-bottom: 20px;\n  font-style: normal;\n  line-height: 1.42857143;\n}\ncode,\nkbd,\npre,\nsamp {\n  font-family: Menlo, Monaco, Consolas, \"Courier New\", monospace;\n}\ncode {\n  padding: 2px 4px;\n  font-size: 90%;\n  color: #c7254e;\n  background-color: #f9f2f4;\n  border-radius: 4px;\n}\nkbd {\n  padding: 2px 4px;\n  font-size: 90%;\n  color: #fff;\n  background-color: #333;\n  border-radius: 3px;\n  -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .25);\n          box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .25);\n}\nkbd kbd {\n  padding: 0;\n  font-size: 100%;\n  font-weight: bold;\n  -webkit-box-shadow: none;\n          box-shadow: none;\n}\npre {\n  display: block;\n  padding: 9.5px;\n  margin: 0 0 10px;\n  font-size: 13px;\n  line-height: 1.42857143;\n  color: #333;\n  word-break: break-all;\n  word-wrap: break-word;\n  background-color: #f5f5f5;\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\npre code {\n  padding: 0;\n  font-size: inherit;\n  color: inherit;\n  white-space: pre-wrap;\n  background-color: transparent;\n  border-radius: 0;\n}\n.pre-scrollable {\n  max-height: 340px;\n  overflow-y: scroll;\n}\n.container {\n  padding-right: 15px;\n  padding-left: 15px;\n  margin-right: auto;\n  margin-left: auto;\n}\n@media (min-width: 768px) {\n  .container {\n    width: 750px;\n  }\n}\n@media (min-width: 992px) {\n  .container {\n    width: 970px;\n  }\n}\n@media (min-width: 1200px) {\n  .container {\n    width: 1170px;\n  }\n}\n.container-fluid {\n  padding-right: 15px;\n  padding-left: 15px;\n  margin-right: auto;\n  margin-left: auto;\n}\n.row {\n  margin-right: -15px;\n  margin-left: -15px;\n}\n.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {\n  position: relative;\n  min-height: 1px;\n  padding-right: 15px;\n  padding-left: 15px;\n}\n.col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12 {\n  float: left;\n}\n.col-xs-12 {\n  width: 100%;\n}\n.col-xs-11 {\n  width: 91.66666667%;\n}\n.col-xs-10 {\n  width: 83.33333333%;\n}\n.col-xs-9 {\n  width: 75%;\n}\n.col-xs-8 {\n  width: 66.66666667%;\n}\n.col-xs-7 {\n  width: 58.33333333%;\n}\n.col-xs-6 {\n  width: 50%;\n}\n.col-xs-5 {\n  width: 41.66666667%;\n}\n.col-xs-4 {\n  width: 33.33333333%;\n}\n.col-xs-3 {\n  width: 25%;\n}\n.col-xs-2 {\n  width: 16.66666667%;\n}\n.col-xs-1 {\n  width: 8.33333333%;\n}\n.col-xs-pull-12 {\n  right: 100%;\n}\n.col-xs-pull-11 {\n  right: 91.66666667%;\n}\n.col-xs-pull-10 {\n  right: 83.33333333%;\n}\n.col-xs-pull-9 {\n  right: 75%;\n}\n.col-xs-pull-8 {\n  right: 66.66666667%;\n}\n.col-xs-pull-7 {\n  right: 58.33333333%;\n}\n.col-xs-pull-6 {\n  right: 50%;\n}\n.col-xs-pull-5 {\n  right: 41.66666667%;\n}\n.col-xs-pull-4 {\n  right: 33.33333333%;\n}\n.col-xs-pull-3 {\n  right: 25%;\n}\n.col-xs-pull-2 {\n  right: 16.66666667%;\n}\n.col-xs-pull-1 {\n  right: 8.33333333%;\n}\n.col-xs-pull-0 {\n  right: auto;\n}\n.col-xs-push-12 {\n  left: 100%;\n}\n.col-xs-push-11 {\n  left: 91.66666667%;\n}\n.col-xs-push-10 {\n  left: 83.33333333%;\n}\n.col-xs-push-9 {\n  left: 75%;\n}\n.col-xs-push-8 {\n  left: 66.66666667%;\n}\n.col-xs-push-7 {\n  left: 58.33333333%;\n}\n.col-xs-push-6 {\n  left: 50%;\n}\n.col-xs-push-5 {\n  left: 41.66666667%;\n}\n.col-xs-push-4 {\n  left: 33.33333333%;\n}\n.col-xs-push-3 {\n  left: 25%;\n}\n.col-xs-push-2 {\n  left: 16.66666667%;\n}\n.col-xs-push-1 {\n  left: 8.33333333%;\n}\n.col-xs-push-0 {\n  left: auto;\n}\n.col-xs-offset-12 {\n  margin-left: 100%;\n}\n.col-xs-offset-11 {\n  margin-left: 91.66666667%;\n}\n.col-xs-offset-10 {\n  margin-left: 83.33333333%;\n}\n.col-xs-offset-9 {\n  margin-left: 75%;\n}\n.col-xs-offset-8 {\n  margin-left: 66.66666667%;\n}\n.col-xs-offset-7 {\n  margin-left: 58.33333333%;\n}\n.col-xs-offset-6 {\n  margin-left: 50%;\n}\n.col-xs-offset-5 {\n  margin-left: 41.66666667%;\n}\n.col-xs-offset-4 {\n  margin-left: 33.33333333%;\n}\n.col-xs-offset-3 {\n  margin-left: 25%;\n}\n.col-xs-offset-2 {\n  margin-left: 16.66666667%;\n}\n.col-xs-offset-1 {\n  margin-left: 8.33333333%;\n}\n.col-xs-offset-0 {\n  margin-left: 0;\n}\n@media (min-width: 768px) {\n  .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12 {\n    float: left;\n  }\n  .col-sm-12 {\n    width: 100%;\n  }\n  .col-sm-11 {\n    width: 91.66666667%;\n  }\n  .col-sm-10 {\n    width: 83.33333333%;\n  }\n  .col-sm-9 {\n    width: 75%;\n  }\n  .col-sm-8 {\n    width: 66.66666667%;\n  }\n  .col-sm-7 {\n    width: 58.33333333%;\n  }\n  .col-sm-6 {\n    width: 50%;\n  }\n  .col-sm-5 {\n    width: 41.66666667%;\n  }\n  .col-sm-4 {\n    width: 33.33333333%;\n  }\n  .col-sm-3 {\n    width: 25%;\n  }\n  .col-sm-2 {\n    width: 16.66666667%;\n  }\n  .col-sm-1 {\n    width: 8.33333333%;\n  }\n  .col-sm-pull-12 {\n    right: 100%;\n  }\n  .col-sm-pull-11 {\n    right: 91.66666667%;\n  }\n  .col-sm-pull-10 {\n    right: 83.33333333%;\n  }\n  .col-sm-pull-9 {\n    right: 75%;\n  }\n  .col-sm-pull-8 {\n    right: 66.66666667%;\n  }\n  .col-sm-pull-7 {\n    right: 58.33333333%;\n  }\n  .col-sm-pull-6 {\n    right: 50%;\n  }\n  .col-sm-pull-5 {\n    right: 41.66666667%;\n  }\n  .col-sm-pull-4 {\n    right: 33.33333333%;\n  }\n  .col-sm-pull-3 {\n    right: 25%;\n  }\n  .col-sm-pull-2 {\n    right: 16.66666667%;\n  }\n  .col-sm-pull-1 {\n    right: 8.33333333%;\n  }\n  .col-sm-pull-0 {\n    right: auto;\n  }\n  .col-sm-push-12 {\n    left: 100%;\n  }\n  .col-sm-push-11 {\n    left: 91.66666667%;\n  }\n  .col-sm-push-10 {\n    left: 83.33333333%;\n  }\n  .col-sm-push-9 {\n    left: 75%;\n  }\n  .col-sm-push-8 {\n    left: 66.66666667%;\n  }\n  .col-sm-push-7 {\n    left: 58.33333333%;\n  }\n  .col-sm-push-6 {\n    left: 50%;\n  }\n  .col-sm-push-5 {\n    left: 41.66666667%;\n  }\n  .col-sm-push-4 {\n    left: 33.33333333%;\n  }\n  .col-sm-push-3 {\n    left: 25%;\n  }\n  .col-sm-push-2 {\n    left: 16.66666667%;\n  }\n  .col-sm-push-1 {\n    left: 8.33333333%;\n  }\n  .col-sm-push-0 {\n    left: auto;\n  }\n  .col-sm-offset-12 {\n    margin-left: 100%;\n  }\n  .col-sm-offset-11 {\n    margin-left: 91.66666667%;\n  }\n  .col-sm-offset-10 {\n    margin-left: 83.33333333%;\n  }\n  .col-sm-offset-9 {\n    margin-left: 75%;\n  }\n  .col-sm-offset-8 {\n    margin-left: 66.66666667%;\n  }\n  .col-sm-offset-7 {\n    margin-left: 58.33333333%;\n  }\n  .col-sm-offset-6 {\n    margin-left: 50%;\n  }\n  .col-sm-offset-5 {\n    margin-left: 41.66666667%;\n  }\n  .col-sm-offset-4 {\n    margin-left: 33.33333333%;\n  }\n  .col-sm-offset-3 {\n    margin-left: 25%;\n  }\n  .col-sm-offset-2 {\n    margin-left: 16.66666667%;\n  }\n  .col-sm-offset-1 {\n    margin-left: 8.33333333%;\n  }\n  .col-sm-offset-0 {\n    margin-left: 0;\n  }\n}\n@media (min-width: 992px) {\n  .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12 {\n    float: left;\n  }\n  .col-md-12 {\n    width: 100%;\n  }\n  .col-md-11 {\n    width: 91.66666667%;\n  }\n  .col-md-10 {\n    width: 83.33333333%;\n  }\n  .col-md-9 {\n    width: 75%;\n  }\n  .col-md-8 {\n    width: 66.66666667%;\n  }\n  .col-md-7 {\n    width: 58.33333333%;\n  }\n  .col-md-6 {\n    width: 50%;\n  }\n  .col-md-5 {\n    width: 41.66666667%;\n  }\n  .col-md-4 {\n    width: 33.33333333%;\n  }\n  .col-md-3 {\n    width: 25%;\n  }\n  .col-md-2 {\n    width: 16.66666667%;\n  }\n  .col-md-1 {\n    width: 8.33333333%;\n  }\n  .col-md-pull-12 {\n    right: 100%;\n  }\n  .col-md-pull-11 {\n    right: 91.66666667%;\n  }\n  .col-md-pull-10 {\n    right: 83.33333333%;\n  }\n  .col-md-pull-9 {\n    right: 75%;\n  }\n  .col-md-pull-8 {\n    right: 66.66666667%;\n  }\n  .col-md-pull-7 {\n    right: 58.33333333%;\n  }\n  .col-md-pull-6 {\n    right: 50%;\n  }\n  .col-md-pull-5 {\n    right: 41.66666667%;\n  }\n  .col-md-pull-4 {\n    right: 33.33333333%;\n  }\n  .col-md-pull-3 {\n    right: 25%;\n  }\n  .col-md-pull-2 {\n    right: 16.66666667%;\n  }\n  .col-md-pull-1 {\n    right: 8.33333333%;\n  }\n  .col-md-pull-0 {\n    right: auto;\n  }\n  .col-md-push-12 {\n    left: 100%;\n  }\n  .col-md-push-11 {\n    left: 91.66666667%;\n  }\n  .col-md-push-10 {\n    left: 83.33333333%;\n  }\n  .col-md-push-9 {\n    left: 75%;\n  }\n  .col-md-push-8 {\n    left: 66.66666667%;\n  }\n  .col-md-push-7 {\n    left: 58.33333333%;\n  }\n  .col-md-push-6 {\n    left: 50%;\n  }\n  .col-md-push-5 {\n    left: 41.66666667%;\n  }\n  .col-md-push-4 {\n    left: 33.33333333%;\n  }\n  .col-md-push-3 {\n    left: 25%;\n  }\n  .col-md-push-2 {\n    left: 16.66666667%;\n  }\n  .col-md-push-1 {\n    left: 8.33333333%;\n  }\n  .col-md-push-0 {\n    left: auto;\n  }\n  .col-md-offset-12 {\n    margin-left: 100%;\n  }\n  .col-md-offset-11 {\n    margin-left: 91.66666667%;\n  }\n  .col-md-offset-10 {\n    margin-left: 83.33333333%;\n  }\n  .col-md-offset-9 {\n    margin-left: 75%;\n  }\n  .col-md-offset-8 {\n    margin-left: 66.66666667%;\n  }\n  .col-md-offset-7 {\n    margin-left: 58.33333333%;\n  }\n  .col-md-offset-6 {\n    margin-left: 50%;\n  }\n  .col-md-offset-5 {\n    margin-left: 41.66666667%;\n  }\n  .col-md-offset-4 {\n    margin-left: 33.33333333%;\n  }\n  .col-md-offset-3 {\n    margin-left: 25%;\n  }\n  .col-md-offset-2 {\n    margin-left: 16.66666667%;\n  }\n  .col-md-offset-1 {\n    margin-left: 8.33333333%;\n  }\n  .col-md-offset-0 {\n    margin-left: 0;\n  }\n}\n@media (min-width: 1200px) {\n  .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12 {\n    float: left;\n  }\n  .col-lg-12 {\n    width: 100%;\n  }\n  .col-lg-11 {\n    width: 91.66666667%;\n  }\n  .col-lg-10 {\n    width: 83.33333333%;\n  }\n  .col-lg-9 {\n    width: 75%;\n  }\n  .col-lg-8 {\n    width: 66.66666667%;\n  }\n  .col-lg-7 {\n    width: 58.33333333%;\n  }\n  .col-lg-6 {\n    width: 50%;\n  }\n  .col-lg-5 {\n    width: 41.66666667%;\n  }\n  .col-lg-4 {\n    width: 33.33333333%;\n  }\n  .col-lg-3 {\n    width: 25%;\n  }\n  .col-lg-2 {\n    width: 16.66666667%;\n  }\n  .col-lg-1 {\n    width: 8.33333333%;\n  }\n  .col-lg-pull-12 {\n    right: 100%;\n  }\n  .col-lg-pull-11 {\n    right: 91.66666667%;\n  }\n  .col-lg-pull-10 {\n    right: 83.33333333%;\n  }\n  .col-lg-pull-9 {\n    right: 75%;\n  }\n  .col-lg-pull-8 {\n    right: 66.66666667%;\n  }\n  .col-lg-pull-7 {\n    right: 58.33333333%;\n  }\n  .col-lg-pull-6 {\n    right: 50%;\n  }\n  .col-lg-pull-5 {\n    right: 41.66666667%;\n  }\n  .col-lg-pull-4 {\n    right: 33.33333333%;\n  }\n  .col-lg-pull-3 {\n    right: 25%;\n  }\n  .col-lg-pull-2 {\n    right: 16.66666667%;\n  }\n  .col-lg-pull-1 {\n    right: 8.33333333%;\n  }\n  .col-lg-pull-0 {\n    right: auto;\n  }\n  .col-lg-push-12 {\n    left: 100%;\n  }\n  .col-lg-push-11 {\n    left: 91.66666667%;\n  }\n  .col-lg-push-10 {\n    left: 83.33333333%;\n  }\n  .col-lg-push-9 {\n    left: 75%;\n  }\n  .col-lg-push-8 {\n    left: 66.66666667%;\n  }\n  .col-lg-push-7 {\n    left: 58.33333333%;\n  }\n  .col-lg-push-6 {\n    left: 50%;\n  }\n  .col-lg-push-5 {\n    left: 41.66666667%;\n  }\n  .col-lg-push-4 {\n    left: 33.33333333%;\n  }\n  .col-lg-push-3 {\n    left: 25%;\n  }\n  .col-lg-push-2 {\n    left: 16.66666667%;\n  }\n  .col-lg-push-1 {\n    left: 8.33333333%;\n  }\n  .col-lg-push-0 {\n    left: auto;\n  }\n  .col-lg-offset-12 {\n    margin-left: 100%;\n  }\n  .col-lg-offset-11 {\n    margin-left: 91.66666667%;\n  }\n  .col-lg-offset-10 {\n    margin-left: 83.33333333%;\n  }\n  .col-lg-offset-9 {\n    margin-left: 75%;\n  }\n  .col-lg-offset-8 {\n    margin-left: 66.66666667%;\n  }\n  .col-lg-offset-7 {\n    margin-left: 58.33333333%;\n  }\n  .col-lg-offset-6 {\n    margin-left: 50%;\n  }\n  .col-lg-offset-5 {\n    margin-left: 41.66666667%;\n  }\n  .col-lg-offset-4 {\n    margin-left: 33.33333333%;\n  }\n  .col-lg-offset-3 {\n    margin-left: 25%;\n  }\n  .col-lg-offset-2 {\n    margin-left: 16.66666667%;\n  }\n  .col-lg-offset-1 {\n    margin-left: 8.33333333%;\n  }\n  .col-lg-offset-0 {\n    margin-left: 0;\n  }\n}\ntable {\n  background-color: transparent;\n}\ncaption {\n  padding-top: 8px;\n  padding-bottom: 8px;\n  color: #777;\n  text-align: left;\n}\nth {\n  text-align: left;\n}\n.table {\n  width: 100%;\n  max-width: 100%;\n  margin-bottom: 20px;\n}\n.table > thead > tr > th,\n.table > tbody > tr > th,\n.table > tfoot > tr > th,\n.table > thead > tr > td,\n.table > tbody > tr > td,\n.table > tfoot > tr > td {\n  padding: 8px;\n  line-height: 1.42857143;\n  vertical-align: top;\n  border-top: 1px solid #ddd;\n}\n.table > thead > tr > th {\n  vertical-align: bottom;\n  border-bottom: 2px solid #ddd;\n}\n.table > caption + thead > tr:first-child > th,\n.table > colgroup + thead > tr:first-child > th,\n.table > thead:first-child > tr:first-child > th,\n.table > caption + thead > tr:first-child > td,\n.table > colgroup + thead > tr:first-child > td,\n.table > thead:first-child > tr:first-child > td {\n  border-top: 0;\n}\n.table > tbody + tbody {\n  border-top: 2px solid #ddd;\n}\n.table .table {\n  background-color: #fff;\n}\n.table-condensed > thead > tr > th,\n.table-condensed > tbody > tr > th,\n.table-condensed > tfoot > tr > th,\n.table-condensed > thead > tr > td,\n.table-condensed > tbody > tr > td,\n.table-condensed > tfoot > tr > td {\n  padding: 5px;\n}\n.table-bordered {\n  border: 1px solid #ddd;\n}\n.table-bordered > thead > tr > th,\n.table-bordered > tbody > tr > th,\n.table-bordered > tfoot > tr > th,\n.table-bordered > thead > tr > td,\n.table-bordered > tbody > tr > td,\n.table-bordered > tfoot > tr > td {\n  border: 1px solid #ddd;\n}\n.table-bordered > thead > tr > th,\n.table-bordered > thead > tr > td {\n  border-bottom-width: 2px;\n}\n.table-striped > tbody > tr:nth-of-type(odd) {\n  background-color: #f9f9f9;\n}\n.table-hover > tbody > tr:hover {\n  background-color: #f5f5f5;\n}\ntable col[class*=\"col-\"] {\n  position: static;\n  display: table-column;\n  float: none;\n}\ntable td[class*=\"col-\"],\ntable th[class*=\"col-\"] {\n  position: static;\n  display: table-cell;\n  float: none;\n}\n.table > thead > tr > td.active,\n.table > tbody > tr > td.active,\n.table > tfoot > tr > td.active,\n.table > thead > tr > th.active,\n.table > tbody > tr > th.active,\n.table > tfoot > tr > th.active,\n.table > thead > tr.active > td,\n.table > tbody > tr.active > td,\n.table > tfoot > tr.active > td,\n.table > thead > tr.active > th,\n.table > tbody > tr.active > th,\n.table > tfoot > tr.active > th {\n  background-color: #f5f5f5;\n}\n.table-hover > tbody > tr > td.active:hover,\n.table-hover > tbody > tr > th.active:hover,\n.table-hover > tbody > tr.active:hover > td,\n.table-hover > tbody > tr:hover > .active,\n.table-hover > tbody > tr.active:hover > th {\n  background-color: #e8e8e8;\n}\n.table > thead > tr > td.success,\n.table > tbody > tr > td.success,\n.table > tfoot > tr > td.success,\n.table > thead > tr > th.success,\n.table > tbody > tr > th.success,\n.table > tfoot > tr > th.success,\n.table > thead > tr.success > td,\n.table > tbody > tr.success > td,\n.table > tfoot > tr.success > td,\n.table > thead > tr.success > th,\n.table > tbody > tr.success > th,\n.table > tfoot > tr.success > th {\n  background-color: #dff0d8;\n}\n.table-hover > tbody > tr > td.success:hover,\n.table-hover > tbody > tr > th.success:hover,\n.table-hover > tbody > tr.success:hover > td,\n.table-hover > tbody > tr:hover > .success,\n.table-hover > tbody > tr.success:hover > th {\n  background-color: #d0e9c6;\n}\n.table > thead > tr > td.info,\n.table > tbody > tr > td.info,\n.table > tfoot > tr > td.info,\n.table > thead > tr > th.info,\n.table > tbody > tr > th.info,\n.table > tfoot > tr > th.info,\n.table > thead > tr.info > td,\n.table > tbody > tr.info > td,\n.table > tfoot > tr.info > td,\n.table > thead > tr.info > th,\n.table > tbody > tr.info > th,\n.table > tfoot > tr.info > th {\n  background-color: #d9edf7;\n}\n.table-hover > tbody > tr > td.info:hover,\n.table-hover > tbody > tr > th.info:hover,\n.table-hover > tbody > tr.info:hover > td,\n.table-hover > tbody > tr:hover > .info,\n.table-hover > tbody > tr.info:hover > th {\n  background-color: #c4e3f3;\n}\n.table > thead > tr > td.warning,\n.table > tbody > tr > td.warning,\n.table > tfoot > tr > td.warning,\n.table > thead > tr > th.warning,\n.table > tbody > tr > th.warning,\n.table > tfoot > tr > th.warning,\n.table > thead > tr.warning > td,\n.table > tbody > tr.warning > td,\n.table > tfoot > tr.warning > td,\n.table > thead > tr.warning > th,\n.table > tbody > tr.warning > th,\n.table > tfoot > tr.warning > th {\n  background-color: #fcf8e3;\n}\n.table-hover > tbody > tr > td.warning:hover,\n.table-hover > tbody > tr > th.warning:hover,\n.table-hover > tbody > tr.warning:hover > td,\n.table-hover > tbody > tr:hover > .warning,\n.table-hover > tbody > tr.warning:hover > th {\n  background-color: #faf2cc;\n}\n.table > thead > tr > td.danger,\n.table > tbody > tr > td.danger,\n.table > tfoot > tr > td.danger,\n.table > thead > tr > th.danger,\n.table > tbody > tr > th.danger,\n.table > tfoot > tr > th.danger,\n.table > thead > tr.danger > td,\n.table > tbody > tr.danger > td,\n.table > tfoot > tr.danger > td,\n.table > thead > tr.danger > th,\n.table > tbody > tr.danger > th,\n.table > tfoot > tr.danger > th {\n  background-color: #f2dede;\n}\n.table-hover > tbody > tr > td.danger:hover,\n.table-hover > tbody > tr > th.danger:hover,\n.table-hover > tbody > tr.danger:hover > td,\n.table-hover > tbody > tr:hover > .danger,\n.table-hover > tbody > tr.danger:hover > th {\n  background-color: #ebcccc;\n}\n.table-responsive {\n  min-height: .01%;\n  overflow-x: auto;\n}\n@media screen and (max-width: 767px) {\n  .table-responsive {\n    width: 100%;\n    margin-bottom: 15px;\n    overflow-y: hidden;\n    -ms-overflow-style: -ms-autohiding-scrollbar;\n    border: 1px solid #ddd;\n  }\n  .table-responsive > .table {\n    margin-bottom: 0;\n  }\n  .table-responsive > .table > thead > tr > th,\n  .table-responsive > .table > tbody > tr > th,\n  .table-responsive > .table > tfoot > tr > th,\n  .table-responsive > .table > thead > tr > td,\n  .table-responsive > .table > tbody > tr > td,\n  .table-responsive > .table > tfoot > tr > td {\n    white-space: nowrap;\n  }\n  .table-responsive > .table-bordered {\n    border: 0;\n  }\n  .table-responsive > .table-bordered > thead > tr > th:first-child,\n  .table-responsive > .table-bordered > tbody > tr > th:first-child,\n  .table-responsive > .table-bordered > tfoot > tr > th:first-child,\n  .table-responsive > .table-bordered > thead > tr > td:first-child,\n  .table-responsive > .table-bordered > tbody > tr > td:first-child,\n  .table-responsive > .table-bordered > tfoot > tr > td:first-child {\n    border-left: 0;\n  }\n  .table-responsive > .table-bordered > thead > tr > th:last-child,\n  .table-responsive > .table-bordered > tbody > tr > th:last-child,\n  .table-responsive > .table-bordered > tfoot > tr > th:last-child,\n  .table-responsive > .table-bordered > thead > tr > td:last-child,\n  .table-responsive > .table-bordered > tbody > tr > td:last-child,\n  .table-responsive > .table-bordered > tfoot > tr > td:last-child {\n    border-right: 0;\n  }\n  .table-responsive > .table-bordered > tbody > tr:last-child > th,\n  .table-responsive > .table-bordered > tfoot > tr:last-child > th,\n  .table-responsive > .table-bordered > tbody > tr:last-child > td,\n  .table-responsive > .table-bordered > tfoot > tr:last-child > td {\n    border-bottom: 0;\n  }\n}\nfieldset {\n  min-width: 0;\n  padding: 0;\n  margin: 0;\n  border: 0;\n}\nlegend {\n  display: block;\n  width: 100%;\n  padding: 0;\n  margin-bottom: 20px;\n  font-size: 21px;\n  line-height: inherit;\n  color: #333;\n  border: 0;\n  border-bottom: 1px solid #e5e5e5;\n}\nlabel {\n  display: inline-block;\n  max-width: 100%;\n  margin-bottom: 5px;\n  font-weight: bold;\n}\ninput[type=\"search\"] {\n  -webkit-box-sizing: border-box;\n     -moz-box-sizing: border-box;\n          box-sizing: border-box;\n}\ninput[type=\"radio\"],\ninput[type=\"checkbox\"] {\n  margin: 4px 0 0;\n  margin-top: 1px \\9;\n  line-height: normal;\n}\ninput[type=\"file\"] {\n  display: block;\n}\ninput[type=\"range\"] {\n  display: block;\n  width: 100%;\n}\nselect[multiple],\nselect[size] {\n  height: auto;\n}\ninput[type=\"file\"]:focus,\ninput[type=\"radio\"]:focus,\ninput[type=\"checkbox\"]:focus {\n  outline: thin dotted;\n  outline: 5px auto -webkit-focus-ring-color;\n  outline-offset: -2px;\n}\noutput {\n  display: block;\n  padding-top: 7px;\n  font-size: 14px;\n  line-height: 1.42857143;\n  color: #555;\n}\n.form-control {\n  display: block;\n  width: 100%;\n  height: 34px;\n  padding: 6px 12px;\n  font-size: 14px;\n  line-height: 1.42857143;\n  color: #555;\n  background-color: #fff;\n  background-image: none;\n  border: 1px solid #ccc;\n  border-radius: 4px;\n  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);\n          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);\n  -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;\n       -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;\n          transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;\n}\n.form-control:focus {\n  border-color: #66afe9;\n  outline: 0;\n  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);\n          box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);\n}\n.form-control::-moz-placeholder {\n  color: #999;\n  opacity: 1;\n}\n.form-control:-ms-input-placeholder {\n  color: #999;\n}\n.form-control::-webkit-input-placeholder {\n  color: #999;\n}\n.form-control::-ms-expand {\n  background-color: transparent;\n  border: 0;\n}\n.form-control[disabled],\n.form-control[readonly],\nfieldset[disabled] .form-control {\n  background-color: #eee;\n  opacity: 1;\n}\n.form-control[disabled],\nfieldset[disabled] .form-control {\n  cursor: not-allowed;\n}\ntextarea.form-control {\n  height: auto;\n}\ninput[type=\"search\"] {\n  -webkit-appearance: none;\n}\n@media screen and (-webkit-min-device-pixel-ratio: 0) {\n  input[type=\"date\"].form-control,\n  input[type=\"time\"].form-control,\n  input[type=\"datetime-local\"].form-control,\n  input[type=\"month\"].form-control {\n    line-height: 34px;\n  }\n  input[type=\"date\"].input-sm,\n  input[type=\"time\"].input-sm,\n  input[type=\"datetime-local\"].input-sm,\n  input[type=\"month\"].input-sm,\n  .input-group-sm input[type=\"date\"],\n  .input-group-sm input[type=\"time\"],\n  .input-group-sm input[type=\"datetime-local\"],\n  .input-group-sm input[type=\"month\"] {\n    line-height: 30px;\n  }\n  input[type=\"date\"].input-lg,\n  input[type=\"time\"].input-lg,\n  input[type=\"datetime-local\"].input-lg,\n  input[type=\"month\"].input-lg,\n  .input-group-lg input[type=\"date\"],\n  .input-group-lg input[type=\"time\"],\n  .input-group-lg input[type=\"datetime-local\"],\n  .input-group-lg input[type=\"month\"] {\n    line-height: 46px;\n  }\n}\n.form-group {\n  margin-bottom: 15px;\n}\n.radio,\n.checkbox {\n  position: relative;\n  display: block;\n  margin-top: 10px;\n  margin-bottom: 10px;\n}\n.radio label,\n.checkbox label {\n  min-height: 20px;\n  padding-left: 20px;\n  margin-bottom: 0;\n  font-weight: normal;\n  cursor: pointer;\n}\n.radio input[type=\"radio\"],\n.radio-inline input[type=\"radio\"],\n.checkbox input[type=\"checkbox\"],\n.checkbox-inline input[type=\"checkbox\"] {\n  position: absolute;\n  margin-top: 4px \\9;\n  margin-left: -20px;\n}\n.radio + .radio,\n.checkbox + .checkbox {\n  margin-top: -5px;\n}\n.radio-inline,\n.checkbox-inline {\n  position: relative;\n  display: inline-block;\n  padding-left: 20px;\n  margin-bottom: 0;\n  font-weight: normal;\n  vertical-align: middle;\n  cursor: pointer;\n}\n.radio-inline + .radio-inline,\n.checkbox-inline + .checkbox-inline {\n  margin-top: 0;\n  margin-left: 10px;\n}\ninput[type=\"radio\"][disabled],\ninput[type=\"checkbox\"][disabled],\ninput[type=\"radio\"].disabled,\ninput[type=\"checkbox\"].disabled,\nfieldset[disabled] input[type=\"radio\"],\nfieldset[disabled] input[type=\"checkbox\"] {\n  cursor: not-allowed;\n}\n.radio-inline.disabled,\n.checkbox-inline.disabled,\nfieldset[disabled] .radio-inline,\nfieldset[disabled] .checkbox-inline {\n  cursor: not-allowed;\n}\n.radio.disabled label,\n.checkbox.disabled label,\nfieldset[disabled] .radio label,\nfieldset[disabled] .checkbox label {\n  cursor: not-allowed;\n}\n.form-control-static {\n  min-height: 34px;\n  padding-top: 7px;\n  padding-bottom: 7px;\n  margin-bottom: 0;\n}\n.form-control-static.input-lg,\n.form-control-static.input-sm {\n  padding-right: 0;\n  padding-left: 0;\n}\n.input-sm {\n  height: 30px;\n  padding: 5px 10px;\n  font-size: 12px;\n  line-height: 1.5;\n  border-radius: 3px;\n}\nselect.input-sm {\n  height: 30px;\n  line-height: 30px;\n}\ntextarea.input-sm,\nselect[multiple].input-sm {\n  height: auto;\n}\n.form-group-sm .form-control {\n  height: 30px;\n  padding: 5px 10px;\n  font-size: 12px;\n  line-height: 1.5;\n  border-radius: 3px;\n}\n.form-group-sm select.form-control {\n  height: 30px;\n  line-height: 30px;\n}\n.form-group-sm textarea.form-control,\n.form-group-sm select[multiple].form-control {\n  height: auto;\n}\n.form-group-sm .form-control-static {\n  height: 30px;\n  min-height: 32px;\n  padding: 6px 10px;\n  font-size: 12px;\n  line-height: 1.5;\n}\n.input-lg {\n  height: 46px;\n  padding: 10px 16px;\n  font-size: 18px;\n  line-height: 1.3333333;\n  border-radius: 6px;\n}\nselect.input-lg {\n  height: 46px;\n  line-height: 46px;\n}\ntextarea.input-lg,\nselect[multiple].input-lg {\n  height: auto;\n}\n.form-group-lg .form-control {\n  height: 46px;\n  padding: 10px 16px;\n  font-size: 18px;\n  line-height: 1.3333333;\n  border-radius: 6px;\n}\n.form-group-lg select.form-control {\n  height: 46px;\n  line-height: 46px;\n}\n.form-group-lg textarea.form-control,\n.form-group-lg select[multiple].form-control {\n  height: auto;\n}\n.form-group-lg .form-control-static {\n  height: 46px;\n  min-height: 38px;\n  padding: 11px 16px;\n  font-size: 18px;\n  line-height: 1.3333333;\n}\n.has-feedback {\n  position: relative;\n}\n.has-feedback .form-control {\n  padding-right: 42.5px;\n}\n.form-control-feedback {\n  position: absolute;\n  top: 0;\n  right: 0;\n  z-index: 2;\n  display: block;\n  width: 34px;\n  height: 34px;\n  line-height: 34px;\n  text-align: center;\n  pointer-events: none;\n}\n.input-lg + .form-control-feedback,\n.input-group-lg + .form-control-feedback,\n.form-group-lg .form-control + .form-control-feedback {\n  width: 46px;\n  height: 46px;\n  line-height: 46px;\n}\n.input-sm + .form-control-feedback,\n.input-group-sm + .form-control-feedback,\n.form-group-sm .form-control + .form-control-feedback {\n  width: 30px;\n  height: 30px;\n  line-height: 30px;\n}\n.has-success .help-block,\n.has-success .control-label,\n.has-success .radio,\n.has-success .checkbox,\n.has-success .radio-inline,\n.has-success .checkbox-inline,\n.has-success.radio label,\n.has-success.checkbox label,\n.has-success.radio-inline label,\n.has-success.checkbox-inline label {\n  color: #3c763d;\n}\n.has-success .form-control {\n  border-color: #3c763d;\n  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);\n          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);\n}\n.has-success .form-control:focus {\n  border-color: #2b542c;\n  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #67b168;\n          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #67b168;\n}\n.has-success .input-group-addon {\n  color: #3c763d;\n  background-color: #dff0d8;\n  border-color: #3c763d;\n}\n.has-success .form-control-feedback {\n  color: #3c763d;\n}\n.has-warning .help-block,\n.has-warning .control-label,\n.has-warning .radio,\n.has-warning .checkbox,\n.has-warning .radio-inline,\n.has-warning .checkbox-inline,\n.has-warning.radio label,\n.has-warning.checkbox label,\n.has-warning.radio-inline label,\n.has-warning.checkbox-inline label {\n  color: #8a6d3b;\n}\n.has-warning .form-control {\n  border-color: #8a6d3b;\n  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);\n          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);\n}\n.has-warning .form-control:focus {\n  border-color: #66512c;\n  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #c0a16b;\n          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #c0a16b;\n}\n.has-warning .input-group-addon {\n  color: #8a6d3b;\n  background-color: #fcf8e3;\n  border-color: #8a6d3b;\n}\n.has-warning .form-control-feedback {\n  color: #8a6d3b;\n}\n.has-error .help-block,\n.has-error .control-label,\n.has-error .radio,\n.has-error .checkbox,\n.has-error .radio-inline,\n.has-error .checkbox-inline,\n.has-error.radio label,\n.has-error.checkbox label,\n.has-error.radio-inline label,\n.has-error.checkbox-inline label {\n  color: #a94442;\n}\n.has-error .form-control {\n  border-color: #a94442;\n  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);\n          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);\n}\n.has-error .form-control:focus {\n  border-color: #843534;\n  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;\n          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;\n}\n.has-error .input-group-addon {\n  color: #a94442;\n  background-color: #f2dede;\n  border-color: #a94442;\n}\n.has-error .form-control-feedback {\n  color: #a94442;\n}\n.has-feedback label ~ .form-control-feedback {\n  top: 25px;\n}\n.has-feedback label.sr-only ~ .form-control-feedback {\n  top: 0;\n}\n.help-block {\n  display: block;\n  margin-top: 5px;\n  margin-bottom: 10px;\n  color: #737373;\n}\n@media (min-width: 768px) {\n  .form-inline .form-group {\n    display: inline-block;\n    margin-bottom: 0;\n    vertical-align: middle;\n  }\n  .form-inline .form-control {\n    display: inline-block;\n    width: auto;\n    vertical-align: middle;\n  }\n  .form-inline .form-control-static {\n    display: inline-block;\n  }\n  .form-inline .input-group {\n    display: inline-table;\n    vertical-align: middle;\n  }\n  .form-inline .input-group .input-group-addon,\n  .form-inline .input-group .input-group-btn,\n  .form-inline .input-group .form-control {\n    width: auto;\n  }\n  .form-inline .input-group > .form-control {\n    width: 100%;\n  }\n  .form-inline .control-label {\n    margin-bottom: 0;\n    vertical-align: middle;\n  }\n  .form-inline .radio,\n  .form-inline .checkbox {\n    display: inline-block;\n    margin-top: 0;\n    margin-bottom: 0;\n    vertical-align: middle;\n  }\n  .form-inline .radio label,\n  .form-inline .checkbox label {\n    padding-left: 0;\n  }\n  .form-inline .radio input[type=\"radio\"],\n  .form-inline .checkbox input[type=\"checkbox\"] {\n    position: relative;\n    margin-left: 0;\n  }\n  .form-inline .has-feedback .form-control-feedback {\n    top: 0;\n  }\n}\n.form-horizontal .radio,\n.form-horizontal .checkbox,\n.form-horizontal .radio-inline,\n.form-horizontal .checkbox-inline {\n  padding-top: 7px;\n  margin-top: 0;\n  margin-bottom: 0;\n}\n.form-horizontal .radio,\n.form-horizontal .checkbox {\n  min-height: 27px;\n}\n.form-horizontal .form-group {\n  margin-right: -15px;\n  margin-left: -15px;\n}\n@media (min-width: 768px) {\n  .form-horizontal .control-label {\n    padding-top: 7px;\n    margin-bottom: 0;\n    text-align: right;\n  }\n}\n.form-horizontal .has-feedback .form-control-feedback {\n  right: 15px;\n}\n@media (min-width: 768px) {\n  .form-horizontal .form-group-lg .control-label {\n    padding-top: 11px;\n    font-size: 18px;\n  }\n}\n@media (min-width: 768px) {\n  .form-horizontal .form-group-sm .control-label {\n    padding-top: 6px;\n    font-size: 12px;\n  }\n}\n.btn {\n  display: inline-block;\n  padding: 6px 12px;\n  margin-bottom: 0;\n  font-size: 14px;\n  font-weight: normal;\n  line-height: 1.42857143;\n  text-align: center;\n  white-space: nowrap;\n  vertical-align: middle;\n  -ms-touch-action: manipulation;\n      touch-action: manipulation;\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  background-image: none;\n  border: 1px solid transparent;\n  border-radius: 4px;\n}\n.btn:focus,\n.btn:active:focus,\n.btn.active:focus,\n.btn.focus,\n.btn:active.focus,\n.btn.active.focus {\n  outline: thin dotted;\n  outline: 5px auto -webkit-focus-ring-color;\n  outline-offset: -2px;\n}\n.btn:hover,\n.btn:focus,\n.btn.focus {\n  color: #333;\n  text-decoration: none;\n}\n.btn:active,\n.btn.active {\n  background-image: none;\n  outline: 0;\n  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);\n          box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);\n}\n.btn.disabled,\n.btn[disabled],\nfieldset[disabled] .btn {\n  cursor: not-allowed;\n  filter: alpha(opacity=65);\n  -webkit-box-shadow: none;\n          box-shadow: none;\n  opacity: .65;\n}\na.btn.disabled,\nfieldset[disabled] a.btn {\n  pointer-events: none;\n}\n.btn-default {\n  color: #333;\n  background-color: #fff;\n  border-color: #ccc;\n}\n.btn-default:focus,\n.btn-default.focus {\n  color: #333;\n  background-color: #e6e6e6;\n  border-color: #8c8c8c;\n}\n.btn-default:hover {\n  color: #333;\n  background-color: #e6e6e6;\n  border-color: #adadad;\n}\n.btn-default:active,\n.btn-default.active,\n.open > .dropdown-toggle.btn-default {\n  color: #333;\n  background-color: #e6e6e6;\n  border-color: #adadad;\n}\n.btn-default:active:hover,\n.btn-default.active:hover,\n.open > .dropdown-toggle.btn-default:hover,\n.btn-default:active:focus,\n.btn-default.active:focus,\n.open > .dropdown-toggle.btn-default:focus,\n.btn-default:active.focus,\n.btn-default.active.focus,\n.open > .dropdown-toggle.btn-default.focus {\n  color: #333;\n  background-color: #d4d4d4;\n  border-color: #8c8c8c;\n}\n.btn-default:active,\n.btn-default.active,\n.open > .dropdown-toggle.btn-default {\n  background-image: none;\n}\n.btn-default.disabled:hover,\n.btn-default[disabled]:hover,\nfieldset[disabled] .btn-default:hover,\n.btn-default.disabled:focus,\n.btn-default[disabled]:focus,\nfieldset[disabled] .btn-default:focus,\n.btn-default.disabled.focus,\n.btn-default[disabled].focus,\nfieldset[disabled] .btn-default.focus {\n  background-color: #fff;\n  border-color: #ccc;\n}\n.btn-default .badge {\n  color: #fff;\n  background-color: #333;\n}\n.btn-primary {\n  color: #fff;\n  background-color: #337ab7;\n  border-color: #2e6da4;\n}\n.btn-primary:focus,\n.btn-primary.focus {\n  color: #fff;\n  background-color: #286090;\n  border-color: #122b40;\n}\n.btn-primary:hover {\n  color: #fff;\n  background-color: #286090;\n  border-color: #204d74;\n}\n.btn-primary:active,\n.btn-primary.active,\n.open > .dropdown-toggle.btn-primary {\n  color: #fff;\n  background-color: #286090;\n  border-color: #204d74;\n}\n.btn-primary:active:hover,\n.btn-primary.active:hover,\n.open > .dropdown-toggle.btn-primary:hover,\n.btn-primary:active:focus,\n.btn-primary.active:focus,\n.open > .dropdown-toggle.btn-primary:focus,\n.btn-primary:active.focus,\n.btn-primary.active.focus,\n.open > .dropdown-toggle.btn-primary.focus {\n  color: #fff;\n  background-color: #204d74;\n  border-color: #122b40;\n}\n.btn-primary:active,\n.btn-primary.active,\n.open > .dropdown-toggle.btn-primary {\n  background-image: none;\n}\n.btn-primary.disabled:hover,\n.btn-primary[disabled]:hover,\nfieldset[disabled] .btn-primary:hover,\n.btn-primary.disabled:focus,\n.btn-primary[disabled]:focus,\nfieldset[disabled] .btn-primary:focus,\n.btn-primary.disabled.focus,\n.btn-primary[disabled].focus,\nfieldset[disabled] .btn-primary.focus {\n  background-color: #337ab7;\n  border-color: #2e6da4;\n}\n.btn-primary .badge {\n  color: #337ab7;\n  background-color: #fff;\n}\n.btn-success {\n  color: #fff;\n  background-color: #5cb85c;\n  border-color: #4cae4c;\n}\n.btn-success:focus,\n.btn-success.focus {\n  color: #fff;\n  background-color: #449d44;\n  border-color: #255625;\n}\n.btn-success:hover {\n  color: #fff;\n  background-color: #449d44;\n  border-color: #398439;\n}\n.btn-success:active,\n.btn-success.active,\n.open > .dropdown-toggle.btn-success {\n  color: #fff;\n  background-color: #449d44;\n  border-color: #398439;\n}\n.btn-success:active:hover,\n.btn-success.active:hover,\n.open > .dropdown-toggle.btn-success:hover,\n.btn-success:active:focus,\n.btn-success.active:focus,\n.open > .dropdown-toggle.btn-success:focus,\n.btn-success:active.focus,\n.btn-success.active.focus,\n.open > .dropdown-toggle.btn-success.focus {\n  color: #fff;\n  background-color: #398439;\n  border-color: #255625;\n}\n.btn-success:active,\n.btn-success.active,\n.open > .dropdown-toggle.btn-success {\n  background-image: none;\n}\n.btn-success.disabled:hover,\n.btn-success[disabled]:hover,\nfieldset[disabled] .btn-success:hover,\n.btn-success.disabled:focus,\n.btn-success[disabled]:focus,\nfieldset[disabled] .btn-success:focus,\n.btn-success.disabled.focus,\n.btn-success[disabled].focus,\nfieldset[disabled] .btn-success.focus {\n  background-color: #5cb85c;\n  border-color: #4cae4c;\n}\n.btn-success .badge {\n  color: #5cb85c;\n  background-color: #fff;\n}\n.btn-info {\n  color: #fff;\n  background-color: #5bc0de;\n  border-color: #46b8da;\n}\n.btn-info:focus,\n.btn-info.focus {\n  color: #fff;\n  background-color: #31b0d5;\n  border-color: #1b6d85;\n}\n.btn-info:hover {\n  color: #fff;\n  background-color: #31b0d5;\n  border-color: #269abc;\n}\n.btn-info:active,\n.btn-info.active,\n.open > .dropdown-toggle.btn-info {\n  color: #fff;\n  background-color: #31b0d5;\n  border-color: #269abc;\n}\n.btn-info:active:hover,\n.btn-info.active:hover,\n.open > .dropdown-toggle.btn-info:hover,\n.btn-info:active:focus,\n.btn-info.active:focus,\n.open > .dropdown-toggle.btn-info:focus,\n.btn-info:active.focus,\n.btn-info.active.focus,\n.open > .dropdown-toggle.btn-info.focus {\n  color: #fff;\n  background-color: #269abc;\n  border-color: #1b6d85;\n}\n.btn-info:active,\n.btn-info.active,\n.open > .dropdown-toggle.btn-info {\n  background-image: none;\n}\n.btn-info.disabled:hover,\n.btn-info[disabled]:hover,\nfieldset[disabled] .btn-info:hover,\n.btn-info.disabled:focus,\n.btn-info[disabled]:focus,\nfieldset[disabled] .btn-info:focus,\n.btn-info.disabled.focus,\n.btn-info[disabled].focus,\nfieldset[disabled] .btn-info.focus {\n  background-color: #5bc0de;\n  border-color: #46b8da;\n}\n.btn-info .badge {\n  color: #5bc0de;\n  background-color: #fff;\n}\n.btn-warning {\n  color: #fff;\n  background-color: #f0ad4e;\n  border-color: #eea236;\n}\n.btn-warning:focus,\n.btn-warning.focus {\n  color: #fff;\n  background-color: #ec971f;\n  border-color: #985f0d;\n}\n.btn-warning:hover {\n  color: #fff;\n  background-color: #ec971f;\n  border-color: #d58512;\n}\n.btn-warning:active,\n.btn-warning.active,\n.open > .dropdown-toggle.btn-warning {\n  color: #fff;\n  background-color: #ec971f;\n  border-color: #d58512;\n}\n.btn-warning:active:hover,\n.btn-warning.active:hover,\n.open > .dropdown-toggle.btn-warning:hover,\n.btn-warning:active:focus,\n.btn-warning.active:focus,\n.open > .dropdown-toggle.btn-warning:focus,\n.btn-warning:active.focus,\n.btn-warning.active.focus,\n.open > .dropdown-toggle.btn-warning.focus {\n  color: #fff;\n  background-color: #d58512;\n  border-color: #985f0d;\n}\n.btn-warning:active,\n.btn-warning.active,\n.open > .dropdown-toggle.btn-warning {\n  background-image: none;\n}\n.btn-warning.disabled:hover,\n.btn-warning[disabled]:hover,\nfieldset[disabled] .btn-warning:hover,\n.btn-warning.disabled:focus,\n.btn-warning[disabled]:focus,\nfieldset[disabled] .btn-warning:focus,\n.btn-warning.disabled.focus,\n.btn-warning[disabled].focus,\nfieldset[disabled] .btn-warning.focus {\n  background-color: #f0ad4e;\n  border-color: #eea236;\n}\n.btn-warning .badge {\n  color: #f0ad4e;\n  background-color: #fff;\n}\n.btn-danger {\n  color: #fff;\n  background-color: #d9534f;\n  border-color: #d43f3a;\n}\n.btn-danger:focus,\n.btn-danger.focus {\n  color: #fff;\n  background-color: #c9302c;\n  border-color: #761c19;\n}\n.btn-danger:hover {\n  color: #fff;\n  background-color: #c9302c;\n  border-color: #ac2925;\n}\n.btn-danger:active,\n.btn-danger.active,\n.open > .dropdown-toggle.btn-danger {\n  color: #fff;\n  background-color: #c9302c;\n  border-color: #ac2925;\n}\n.btn-danger:active:hover,\n.btn-danger.active:hover,\n.open > .dropdown-toggle.btn-danger:hover,\n.btn-danger:active:focus,\n.btn-danger.active:focus,\n.open > .dropdown-toggle.btn-danger:focus,\n.btn-danger:active.focus,\n.btn-danger.active.focus,\n.open > .dropdown-toggle.btn-danger.focus {\n  color: #fff;\n  background-color: #ac2925;\n  border-color: #761c19;\n}\n.btn-danger:active,\n.btn-danger.active,\n.open > .dropdown-toggle.btn-danger {\n  background-image: none;\n}\n.btn-danger.disabled:hover,\n.btn-danger[disabled]:hover,\nfieldset[disabled] .btn-danger:hover,\n.btn-danger.disabled:focus,\n.btn-danger[disabled]:focus,\nfieldset[disabled] .btn-danger:focus,\n.btn-danger.disabled.focus,\n.btn-danger[disabled].focus,\nfieldset[disabled] .btn-danger.focus {\n  background-color: #d9534f;\n  border-color: #d43f3a;\n}\n.btn-danger .badge {\n  color: #d9534f;\n  background-color: #fff;\n}\n.btn-link {\n  font-weight: normal;\n  color: #337ab7;\n  border-radius: 0;\n}\n.btn-link,\n.btn-link:active,\n.btn-link.active,\n.btn-link[disabled],\nfieldset[disabled] .btn-link {\n  background-color: transparent;\n  -webkit-box-shadow: none;\n          box-shadow: none;\n}\n.btn-link,\n.btn-link:hover,\n.btn-link:focus,\n.btn-link:active {\n  border-color: transparent;\n}\n.btn-link:hover,\n.btn-link:focus {\n  color: #23527c;\n  text-decoration: underline;\n  background-color: transparent;\n}\n.btn-link[disabled]:hover,\nfieldset[disabled] .btn-link:hover,\n.btn-link[disabled]:focus,\nfieldset[disabled] .btn-link:focus {\n  color: #777;\n  text-decoration: none;\n}\n.btn-lg,\n.btn-group-lg > .btn {\n  padding: 10px 16px;\n  font-size: 18px;\n  line-height: 1.3333333;\n  border-radius: 6px;\n}\n.btn-sm,\n.btn-group-sm > .btn {\n  padding: 5px 10px;\n  font-size: 12px;\n  line-height: 1.5;\n  border-radius: 3px;\n}\n.btn-xs,\n.btn-group-xs > .btn {\n  padding: 1px 5px;\n  font-size: 12px;\n  line-height: 1.5;\n  border-radius: 3px;\n}\n.btn-block {\n  display: block;\n  width: 100%;\n}\n.btn-block + .btn-block {\n  margin-top: 5px;\n}\ninput[type=\"submit\"].btn-block,\ninput[type=\"reset\"].btn-block,\ninput[type=\"button\"].btn-block {\n  width: 100%;\n}\n.fade {\n  opacity: 0;\n  -webkit-transition: opacity .15s linear;\n       -o-transition: opacity .15s linear;\n          transition: opacity .15s linear;\n}\n.fade.in {\n  opacity: 1;\n}\n.collapse {\n  display: none;\n}\n.collapse.in {\n  display: block;\n}\ntr.collapse.in {\n  display: table-row;\n}\ntbody.collapse.in {\n  display: table-row-group;\n}\n.collapsing {\n  position: relative;\n  height: 0;\n  overflow: hidden;\n  -webkit-transition-timing-function: ease;\n       -o-transition-timing-function: ease;\n          transition-timing-function: ease;\n  -webkit-transition-duration: .35s;\n       -o-transition-duration: .35s;\n          transition-duration: .35s;\n  -webkit-transition-property: height, visibility;\n       -o-transition-property: height, visibility;\n          transition-property: height, visibility;\n}\n.caret {\n  display: inline-block;\n  width: 0;\n  height: 0;\n  margin-left: 2px;\n  vertical-align: middle;\n  border-top: 4px dashed;\n  border-top: 4px solid \\9;\n  border-right: 4px solid transparent;\n  border-left: 4px solid transparent;\n}\n.dropup,\n.dropdown {\n  position: relative;\n}\n.dropdown-toggle:focus {\n  outline: 0;\n}\n.dropdown-menu {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  z-index: 1000;\n  display: none;\n  float: left;\n  min-width: 160px;\n  padding: 5px 0;\n  margin: 2px 0 0;\n  font-size: 14px;\n  text-align: left;\n  list-style: none;\n  background-color: #fff;\n  -webkit-background-clip: padding-box;\n          background-clip: padding-box;\n  border: 1px solid #ccc;\n  border: 1px solid rgba(0, 0, 0, .15);\n  border-radius: 4px;\n  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);\n          box-shadow: 0 6px 12px rgba(0, 0, 0, .175);\n}\n.dropdown-menu.pull-right {\n  right: 0;\n  left: auto;\n}\n.dropdown-menu .divider {\n  height: 1px;\n  margin: 9px 0;\n  overflow: hidden;\n  background-color: #e5e5e5;\n}\n.dropdown-menu > li > a {\n  display: block;\n  padding: 3px 20px;\n  clear: both;\n  font-weight: normal;\n  line-height: 1.42857143;\n  color: #333;\n  white-space: nowrap;\n}\n.dropdown-menu > li > a:hover,\n.dropdown-menu > li > a:focus {\n  color: #262626;\n  text-decoration: none;\n  background-color: #f5f5f5;\n}\n.dropdown-menu > .active > a,\n.dropdown-menu > .active > a:hover,\n.dropdown-menu > .active > a:focus {\n  color: #fff;\n  text-decoration: none;\n  background-color: #337ab7;\n  outline: 0;\n}\n.dropdown-menu > .disabled > a,\n.dropdown-menu > .disabled > a:hover,\n.dropdown-menu > .disabled > a:focus {\n  color: #777;\n}\n.dropdown-menu > .disabled > a:hover,\n.dropdown-menu > .disabled > a:focus {\n  text-decoration: none;\n  cursor: not-allowed;\n  background-color: transparent;\n  background-image: none;\n  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);\n}\n.open > .dropdown-menu {\n  display: block;\n}\n.open > a {\n  outline: 0;\n}\n.dropdown-menu-right {\n  right: 0;\n  left: auto;\n}\n.dropdown-menu-left {\n  right: auto;\n  left: 0;\n}\n.dropdown-header {\n  display: block;\n  padding: 3px 20px;\n  font-size: 12px;\n  line-height: 1.42857143;\n  color: #777;\n  white-space: nowrap;\n}\n.dropdown-backdrop {\n  position: fixed;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  z-index: 990;\n}\n.pull-right > .dropdown-menu {\n  right: 0;\n  left: auto;\n}\n.dropup .caret,\n.navbar-fixed-bottom .dropdown .caret {\n  content: \"\";\n  border-top: 0;\n  border-bottom: 4px dashed;\n  border-bottom: 4px solid \\9;\n}\n.dropup .dropdown-menu,\n.navbar-fixed-bottom .dropdown .dropdown-menu {\n  top: auto;\n  bottom: 100%;\n  margin-bottom: 2px;\n}\n@media (min-width: 768px) {\n  .navbar-right .dropdown-menu {\n    right: 0;\n    left: auto;\n  }\n  .navbar-right .dropdown-menu-left {\n    right: auto;\n    left: 0;\n  }\n}\n.btn-group,\n.btn-group-vertical {\n  position: relative;\n  display: inline-block;\n  vertical-align: middle;\n}\n.btn-group > .btn,\n.btn-group-vertical > .btn {\n  position: relative;\n  float: left;\n}\n.btn-group > .btn:hover,\n.btn-group-vertical > .btn:hover,\n.btn-group > .btn:focus,\n.btn-group-vertical > .btn:focus,\n.btn-group > .btn:active,\n.btn-group-vertical > .btn:active,\n.btn-group > .btn.active,\n.btn-group-vertical > .btn.active {\n  z-index: 2;\n}\n.btn-group .btn + .btn,\n.btn-group .btn + .btn-group,\n.btn-group .btn-group + .btn,\n.btn-group .btn-group + .btn-group {\n  margin-left: -1px;\n}\n.btn-toolbar {\n  margin-left: -5px;\n}\n.btn-toolbar .btn,\n.btn-toolbar .btn-group,\n.btn-toolbar .input-group {\n  float: left;\n}\n.btn-toolbar > .btn,\n.btn-toolbar > .btn-group,\n.btn-toolbar > .input-group {\n  margin-left: 5px;\n}\n.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {\n  border-radius: 0;\n}\n.btn-group > .btn:first-child {\n  margin-left: 0;\n}\n.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {\n  border-top-right-radius: 0;\n  border-bottom-right-radius: 0;\n}\n.btn-group > .btn:last-child:not(:first-child),\n.btn-group > .dropdown-toggle:not(:first-child) {\n  border-top-left-radius: 0;\n  border-bottom-left-radius: 0;\n}\n.btn-group > .btn-group {\n  float: left;\n}\n.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn {\n  border-radius: 0;\n}\n.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child,\n.btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle {\n  border-top-right-radius: 0;\n  border-bottom-right-radius: 0;\n}\n.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {\n  border-top-left-radius: 0;\n  border-bottom-left-radius: 0;\n}\n.btn-group .dropdown-toggle:active,\n.btn-group.open .dropdown-toggle {\n  outline: 0;\n}\n.btn-group > .btn + .dropdown-toggle {\n  padding-right: 8px;\n  padding-left: 8px;\n}\n.btn-group > .btn-lg + .dropdown-toggle {\n  padding-right: 12px;\n  padding-left: 12px;\n}\n.btn-group.open .dropdown-toggle {\n  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);\n          box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);\n}\n.btn-group.open .dropdown-toggle.btn-link {\n  -webkit-box-shadow: none;\n          box-shadow: none;\n}\n.btn .caret {\n  margin-left: 0;\n}\n.btn-lg .caret {\n  border-width: 5px 5px 0;\n  border-bottom-width: 0;\n}\n.dropup .btn-lg .caret {\n  border-width: 0 5px 5px;\n}\n.btn-group-vertical > .btn,\n.btn-group-vertical > .btn-group,\n.btn-group-vertical > .btn-group > .btn {\n  display: block;\n  float: none;\n  width: 100%;\n  max-width: 100%;\n}\n.btn-group-vertical > .btn-group > .btn {\n  float: none;\n}\n.btn-group-vertical > .btn + .btn,\n.btn-group-vertical > .btn + .btn-group,\n.btn-group-vertical > .btn-group + .btn,\n.btn-group-vertical > .btn-group + .btn-group {\n  margin-top: -1px;\n  margin-left: 0;\n}\n.btn-group-vertical > .btn:not(:first-child):not(:last-child) {\n  border-radius: 0;\n}\n.btn-group-vertical > .btn:first-child:not(:last-child) {\n  border-top-left-radius: 4px;\n  border-top-right-radius: 4px;\n  border-bottom-right-radius: 0;\n  border-bottom-left-radius: 0;\n}\n.btn-group-vertical > .btn:last-child:not(:first-child) {\n  border-top-left-radius: 0;\n  border-top-right-radius: 0;\n  border-bottom-right-radius: 4px;\n  border-bottom-left-radius: 4px;\n}\n.btn-group-vertical > .btn-group:not(:first-child):not(:last-child) > .btn {\n  border-radius: 0;\n}\n.btn-group-vertical > .btn-group:first-child:not(:last-child) > .btn:last-child,\n.btn-group-vertical > .btn-group:first-child:not(:last-child) > .dropdown-toggle {\n  border-bottom-right-radius: 0;\n  border-bottom-left-radius: 0;\n}\n.btn-group-vertical > .btn-group:last-child:not(:first-child) > .btn:first-child {\n  border-top-left-radius: 0;\n  border-top-right-radius: 0;\n}\n.btn-group-justified {\n  display: table;\n  width: 100%;\n  table-layout: fixed;\n  border-collapse: separate;\n}\n.btn-group-justified > .btn,\n.btn-group-justified > .btn-group {\n  display: table-cell;\n  float: none;\n  width: 1%;\n}\n.btn-group-justified > .btn-group .btn {\n  width: 100%;\n}\n.btn-group-justified > .btn-group .dropdown-menu {\n  left: auto;\n}\n[data-toggle=\"buttons\"] > .btn input[type=\"radio\"],\n[data-toggle=\"buttons\"] > .btn-group > .btn input[type=\"radio\"],\n[data-toggle=\"buttons\"] > .btn input[type=\"checkbox\"],\n[data-toggle=\"buttons\"] > .btn-group > .btn input[type=\"checkbox\"] {\n  position: absolute;\n  clip: rect(0, 0, 0, 0);\n  pointer-events: none;\n}\n.input-group {\n  position: relative;\n  display: table;\n  border-collapse: separate;\n}\n.input-group[class*=\"col-\"] {\n  float: none;\n  padding-right: 0;\n  padding-left: 0;\n}\n.input-group .form-control {\n  position: relative;\n  z-index: 2;\n  float: left;\n  width: 100%;\n  margin-bottom: 0;\n}\n.input-group .form-control:focus {\n  z-index: 3;\n}\n.input-group-lg > .form-control,\n.input-group-lg > .input-group-addon,\n.input-group-lg > .input-group-btn > .btn {\n  height: 46px;\n  padding: 10px 16px;\n  font-size: 18px;\n  line-height: 1.3333333;\n  border-radius: 6px;\n}\nselect.input-group-lg > .form-control,\nselect.input-group-lg > .input-group-addon,\nselect.input-group-lg > .input-group-btn > .btn {\n  height: 46px;\n  line-height: 46px;\n}\ntextarea.input-group-lg > .form-control,\ntextarea.input-group-lg > .input-group-addon,\ntextarea.input-group-lg > .input-group-btn > .btn,\nselect[multiple].input-group-lg > .form-control,\nselect[multiple].input-group-lg > .input-group-addon,\nselect[multiple].input-group-lg > .input-group-btn > .btn {\n  height: auto;\n}\n.input-group-sm > .form-control,\n.input-group-sm > .input-group-addon,\n.input-group-sm > .input-group-btn > .btn {\n  height: 30px;\n  padding: 5px 10px;\n  font-size: 12px;\n  line-height: 1.5;\n  border-radius: 3px;\n}\nselect.input-group-sm > .form-control,\nselect.input-group-sm > .input-group-addon,\nselect.input-group-sm > .input-group-btn > .btn {\n  height: 30px;\n  line-height: 30px;\n}\ntextarea.input-group-sm > .form-control,\ntextarea.input-group-sm > .input-group-addon,\ntextarea.input-group-sm > .input-group-btn > .btn,\nselect[multiple].input-group-sm > .form-control,\nselect[multiple].input-group-sm > .input-group-addon,\nselect[multiple].input-group-sm > .input-group-btn > .btn {\n  height: auto;\n}\n.input-group-addon,\n.input-group-btn,\n.input-group .form-control {\n  display: table-cell;\n}\n.input-group-addon:not(:first-child):not(:last-child),\n.input-group-btn:not(:first-child):not(:last-child),\n.input-group .form-control:not(:first-child):not(:last-child) {\n  border-radius: 0;\n}\n.input-group-addon,\n.input-group-btn {\n  width: 1%;\n  white-space: nowrap;\n  vertical-align: middle;\n}\n.input-group-addon {\n  padding: 6px 12px;\n  font-size: 14px;\n  font-weight: normal;\n  line-height: 1;\n  color: #555;\n  text-align: center;\n  background-color: #eee;\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n.input-group-addon.input-sm {\n  padding: 5px 10px;\n  font-size: 12px;\n  border-radius: 3px;\n}\n.input-group-addon.input-lg {\n  padding: 10px 16px;\n  font-size: 18px;\n  border-radius: 6px;\n}\n.input-group-addon input[type=\"radio\"],\n.input-group-addon input[type=\"checkbox\"] {\n  margin-top: 0;\n}\n.input-group .form-control:first-child,\n.input-group-addon:first-child,\n.input-group-btn:first-child > .btn,\n.input-group-btn:first-child > .btn-group > .btn,\n.input-group-btn:first-child > .dropdown-toggle,\n.input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle),\n.input-group-btn:last-child > .btn-group:not(:last-child) > .btn {\n  border-top-right-radius: 0;\n  border-bottom-right-radius: 0;\n}\n.input-group-addon:first-child {\n  border-right: 0;\n}\n.input-group .form-control:last-child,\n.input-group-addon:last-child,\n.input-group-btn:last-child > .btn,\n.input-group-btn:last-child > .btn-group > .btn,\n.input-group-btn:last-child > .dropdown-toggle,\n.input-group-btn:first-child > .btn:not(:first-child),\n.input-group-btn:first-child > .btn-group:not(:first-child) > .btn {\n  border-top-left-radius: 0;\n  border-bottom-left-radius: 0;\n}\n.input-group-addon:last-child {\n  border-left: 0;\n}\n.input-group-btn {\n  position: relative;\n  font-size: 0;\n  white-space: nowrap;\n}\n.input-group-btn > .btn {\n  position: relative;\n}\n.input-group-btn > .btn + .btn {\n  margin-left: -1px;\n}\n.input-group-btn > .btn:hover,\n.input-group-btn > .btn:focus,\n.input-group-btn > .btn:active {\n  z-index: 2;\n}\n.input-group-btn:first-child > .btn,\n.input-group-btn:first-child > .btn-group {\n  margin-right: -1px;\n}\n.input-group-btn:last-child > .btn,\n.input-group-btn:last-child > .btn-group {\n  z-index: 2;\n  margin-left: -1px;\n}\n.nav {\n  padding-left: 0;\n  margin-bottom: 0;\n  list-style: none;\n}\n.nav > li {\n  position: relative;\n  display: block;\n}\n.nav > li > a {\n  position: relative;\n  display: block;\n  padding: 10px 15px;\n}\n.nav > li > a:hover,\n.nav > li > a:focus {\n  text-decoration: none;\n  background-color: #eee;\n}\n.nav > li.disabled > a {\n  color: #777;\n}\n.nav > li.disabled > a:hover,\n.nav > li.disabled > a:focus {\n  color: #777;\n  text-decoration: none;\n  cursor: not-allowed;\n  background-color: transparent;\n}\n.nav .open > a,\n.nav .open > a:hover,\n.nav .open > a:focus {\n  background-color: #eee;\n  border-color: #337ab7;\n}\n.nav .nav-divider {\n  height: 1px;\n  margin: 9px 0;\n  overflow: hidden;\n  background-color: #e5e5e5;\n}\n.nav > li > a > img {\n  max-width: none;\n}\n.nav-tabs {\n  border-bottom: 1px solid #ddd;\n}\n.nav-tabs > li {\n  float: left;\n  margin-bottom: -1px;\n}\n.nav-tabs > li > a {\n  margin-right: 2px;\n  line-height: 1.42857143;\n  border: 1px solid transparent;\n  border-radius: 4px 4px 0 0;\n}\n.nav-tabs > li > a:hover {\n  border-color: #eee #eee #ddd;\n}\n.nav-tabs > li.active > a,\n.nav-tabs > li.active > a:hover,\n.nav-tabs > li.active > a:focus {\n  color: #555;\n  cursor: default;\n  background-color: #fff;\n  border: 1px solid #ddd;\n  border-bottom-color: transparent;\n}\n.nav-tabs.nav-justified {\n  width: 100%;\n  border-bottom: 0;\n}\n.nav-tabs.nav-justified > li {\n  float: none;\n}\n.nav-tabs.nav-justified > li > a {\n  margin-bottom: 5px;\n  text-align: center;\n}\n.nav-tabs.nav-justified > .dropdown .dropdown-menu {\n  top: auto;\n  left: auto;\n}\n@media (min-width: 768px) {\n  .nav-tabs.nav-justified > li {\n    display: table-cell;\n    width: 1%;\n  }\n  .nav-tabs.nav-justified > li > a {\n    margin-bottom: 0;\n  }\n}\n.nav-tabs.nav-justified > li > a {\n  margin-right: 0;\n  border-radius: 4px;\n}\n.nav-tabs.nav-justified > .active > a,\n.nav-tabs.nav-justified > .active > a:hover,\n.nav-tabs.nav-justified > .active > a:focus {\n  border: 1px solid #ddd;\n}\n@media (min-width: 768px) {\n  .nav-tabs.nav-justified > li > a {\n    border-bottom: 1px solid #ddd;\n    border-radius: 4px 4px 0 0;\n  }\n  .nav-tabs.nav-justified > .active > a,\n  .nav-tabs.nav-justified > .active > a:hover,\n  .nav-tabs.nav-justified > .active > a:focus {\n    border-bottom-color: #fff;\n  }\n}\n.nav-pills > li {\n  float: left;\n}\n.nav-pills > li > a {\n  border-radius: 4px;\n}\n.nav-pills > li + li {\n  margin-left: 2px;\n}\n.nav-pills > li.active > a,\n.nav-pills > li.active > a:hover,\n.nav-pills > li.active > a:focus {\n  color: #fff;\n  background-color: #337ab7;\n}\n.nav-stacked > li {\n  float: none;\n}\n.nav-stacked > li + li {\n  margin-top: 2px;\n  margin-left: 0;\n}\n.nav-justified {\n  width: 100%;\n}\n.nav-justified > li {\n  float: none;\n}\n.nav-justified > li > a {\n  margin-bottom: 5px;\n  text-align: center;\n}\n.nav-justified > .dropdown .dropdown-menu {\n  top: auto;\n  left: auto;\n}\n@media (min-width: 768px) {\n  .nav-justified > li {\n    display: table-cell;\n    width: 1%;\n  }\n  .nav-justified > li > a {\n    margin-bottom: 0;\n  }\n}\n.nav-tabs-justified {\n  border-bottom: 0;\n}\n.nav-tabs-justified > li > a {\n  margin-right: 0;\n  border-radius: 4px;\n}\n.nav-tabs-justified > .active > a,\n.nav-tabs-justified > .active > a:hover,\n.nav-tabs-justified > .active > a:focus {\n  border: 1px solid #ddd;\n}\n@media (min-width: 768px) {\n  .nav-tabs-justified > li > a {\n    border-bottom: 1px solid #ddd;\n    border-radius: 4px 4px 0 0;\n  }\n  .nav-tabs-justified > .active > a,\n  .nav-tabs-justified > .active > a:hover,\n  .nav-tabs-justified > .active > a:focus {\n    border-bottom-color: #fff;\n  }\n}\n.tab-content > .tab-pane {\n  display: none;\n}\n.tab-content > .active {\n  display: block;\n}\n.nav-tabs .dropdown-menu {\n  margin-top: -1px;\n  border-top-left-radius: 0;\n  border-top-right-radius: 0;\n}\n.navbar {\n  position: relative;\n  min-height: 50px;\n  margin-bottom: 20px;\n  border: 1px solid transparent;\n}\n@media (min-width: 768px) {\n  .navbar {\n    border-radius: 4px;\n  }\n}\n@media (min-width: 768px) {\n  .navbar-header {\n    float: left;\n  }\n}\n.navbar-collapse {\n  padding-right: 15px;\n  padding-left: 15px;\n  overflow-x: visible;\n  -webkit-overflow-scrolling: touch;\n  border-top: 1px solid transparent;\n  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1);\n          box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1);\n}\n.navbar-collapse.in {\n  overflow-y: auto;\n}\n@media (min-width: 768px) {\n  .navbar-collapse {\n    width: auto;\n    border-top: 0;\n    -webkit-box-shadow: none;\n            box-shadow: none;\n  }\n  .navbar-collapse.collapse {\n    display: block !important;\n    height: auto !important;\n    padding-bottom: 0;\n    overflow: visible !important;\n  }\n  .navbar-collapse.in {\n    overflow-y: visible;\n  }\n  .navbar-fixed-top .navbar-collapse,\n  .navbar-static-top .navbar-collapse,\n  .navbar-fixed-bottom .navbar-collapse {\n    padding-right: 0;\n    padding-left: 0;\n  }\n}\n.navbar-fixed-top .navbar-collapse,\n.navbar-fixed-bottom .navbar-collapse {\n  max-height: 340px;\n}\n@media (max-device-width: 480px) and (orientation: landscape) {\n  .navbar-fixed-top .navbar-collapse,\n  .navbar-fixed-bottom .navbar-collapse {\n    max-height: 200px;\n  }\n}\n.container > .navbar-header,\n.container-fluid > .navbar-header,\n.container > .navbar-collapse,\n.container-fluid > .navbar-collapse {\n  margin-right: -15px;\n  margin-left: -15px;\n}\n@media (min-width: 768px) {\n  .container > .navbar-header,\n  .container-fluid > .navbar-header,\n  .container > .navbar-collapse,\n  .container-fluid > .navbar-collapse {\n    margin-right: 0;\n    margin-left: 0;\n  }\n}\n.navbar-static-top {\n  z-index: 1000;\n  border-width: 0 0 1px;\n}\n@media (min-width: 768px) {\n  .navbar-static-top {\n    border-radius: 0;\n  }\n}\n.navbar-fixed-top,\n.navbar-fixed-bottom {\n  position: fixed;\n  right: 0;\n  left: 0;\n  z-index: 1030;\n}\n@media (min-width: 768px) {\n  .navbar-fixed-top,\n  .navbar-fixed-bottom {\n    border-radius: 0;\n  }\n}\n.navbar-fixed-top {\n  top: 0;\n  border-width: 0 0 1px;\n}\n.navbar-fixed-bottom {\n  bottom: 0;\n  margin-bottom: 0;\n  border-width: 1px 0 0;\n}\n.navbar-brand {\n  float: left;\n  height: 50px;\n  padding: 15px 15px;\n  font-size: 18px;\n  line-height: 20px;\n}\n.navbar-brand:hover,\n.navbar-brand:focus {\n  text-decoration: none;\n}\n.navbar-brand > img {\n  display: block;\n}\n@media (min-width: 768px) {\n  .navbar > .container .navbar-brand,\n  .navbar > .container-fluid .navbar-brand {\n    margin-left: -15px;\n  }\n}\n.navbar-toggle {\n  position: relative;\n  float: right;\n  padding: 9px 10px;\n  margin-top: 8px;\n  margin-right: 15px;\n  margin-bottom: 8px;\n  background-color: transparent;\n  background-image: none;\n  border: 1px solid transparent;\n  border-radius: 4px;\n}\n.navbar-toggle:focus {\n  outline: 0;\n}\n.navbar-toggle .icon-bar {\n  display: block;\n  width: 22px;\n  height: 2px;\n  border-radius: 1px;\n}\n.navbar-toggle .icon-bar + .icon-bar {\n  margin-top: 4px;\n}\n@media (min-width: 768px) {\n  .navbar-toggle {\n    display: none;\n  }\n}\n.navbar-nav {\n  margin: 7.5px -15px;\n}\n.navbar-nav > li > a {\n  padding-top: 10px;\n  padding-bottom: 10px;\n  line-height: 20px;\n}\n@media (max-width: 767px) {\n  .navbar-nav .open .dropdown-menu {\n    position: static;\n    float: none;\n    width: auto;\n    margin-top: 0;\n    background-color: transparent;\n    border: 0;\n    -webkit-box-shadow: none;\n            box-shadow: none;\n  }\n  .navbar-nav .open .dropdown-menu > li > a,\n  .navbar-nav .open .dropdown-menu .dropdown-header {\n    padding: 5px 15px 5px 25px;\n  }\n  .navbar-nav .open .dropdown-menu > li > a {\n    line-height: 20px;\n  }\n  .navbar-nav .open .dropdown-menu > li > a:hover,\n  .navbar-nav .open .dropdown-menu > li > a:focus {\n    background-image: none;\n  }\n}\n@media (min-width: 768px) {\n  .navbar-nav {\n    float: left;\n    margin: 0;\n  }\n  .navbar-nav > li {\n    float: left;\n  }\n  .navbar-nav > li > a {\n    padding-top: 15px;\n    padding-bottom: 15px;\n  }\n}\n.navbar-form {\n  padding: 10px 15px;\n  margin-top: 8px;\n  margin-right: -15px;\n  margin-bottom: 8px;\n  margin-left: -15px;\n  border-top: 1px solid transparent;\n  border-bottom: 1px solid transparent;\n  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1), 0 1px 0 rgba(255, 255, 255, .1);\n          box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1), 0 1px 0 rgba(255, 255, 255, .1);\n}\n@media (min-width: 768px) {\n  .navbar-form .form-group {\n    display: inline-block;\n    margin-bottom: 0;\n    vertical-align: middle;\n  }\n  .navbar-form .form-control {\n    display: inline-block;\n    width: auto;\n    vertical-align: middle;\n  }\n  .navbar-form .form-control-static {\n    display: inline-block;\n  }\n  .navbar-form .input-group {\n    display: inline-table;\n    vertical-align: middle;\n  }\n  .navbar-form .input-group .input-group-addon,\n  .navbar-form .input-group .input-group-btn,\n  .navbar-form .input-group .form-control {\n    width: auto;\n  }\n  .navbar-form .input-group > .form-control {\n    width: 100%;\n  }\n  .navbar-form .control-label {\n    margin-bottom: 0;\n    vertical-align: middle;\n  }\n  .navbar-form .radio,\n  .navbar-form .checkbox {\n    display: inline-block;\n    margin-top: 0;\n    margin-bottom: 0;\n    vertical-align: middle;\n  }\n  .navbar-form .radio label,\n  .navbar-form .checkbox label {\n    padding-left: 0;\n  }\n  .navbar-form .radio input[type=\"radio\"],\n  .navbar-form .checkbox input[type=\"checkbox\"] {\n    position: relative;\n    margin-left: 0;\n  }\n  .navbar-form .has-feedback .form-control-feedback {\n    top: 0;\n  }\n}\n@media (max-width: 767px) {\n  .navbar-form .form-group {\n    margin-bottom: 5px;\n  }\n  .navbar-form .form-group:last-child {\n    margin-bottom: 0;\n  }\n}\n@media (min-width: 768px) {\n  .navbar-form {\n    width: auto;\n    padding-top: 0;\n    padding-bottom: 0;\n    margin-right: 0;\n    margin-left: 0;\n    border: 0;\n    -webkit-box-shadow: none;\n            box-shadow: none;\n  }\n}\n.navbar-nav > li > .dropdown-menu {\n  margin-top: 0;\n  border-top-left-radius: 0;\n  border-top-right-radius: 0;\n}\n.navbar-fixed-bottom .navbar-nav > li > .dropdown-menu {\n  margin-bottom: 0;\n  border-top-left-radius: 4px;\n  border-top-right-radius: 4px;\n  border-bottom-right-radius: 0;\n  border-bottom-left-radius: 0;\n}\n.navbar-btn {\n  margin-top: 8px;\n  margin-bottom: 8px;\n}\n.navbar-btn.btn-sm {\n  margin-top: 10px;\n  margin-bottom: 10px;\n}\n.navbar-btn.btn-xs {\n  margin-top: 14px;\n  margin-bottom: 14px;\n}\n.navbar-text {\n  margin-top: 15px;\n  margin-bottom: 15px;\n}\n@media (min-width: 768px) {\n  .navbar-text {\n    float: left;\n    margin-right: 15px;\n    margin-left: 15px;\n  }\n}\n@media (min-width: 768px) {\n  .navbar-left {\n    float: left !important;\n  }\n  .navbar-right {\n    float: right !important;\n    margin-right: -15px;\n  }\n  .navbar-right ~ .navbar-right {\n    margin-right: 0;\n  }\n}\n.navbar-default {\n  background-color: #f8f8f8;\n  border-color: #e7e7e7;\n}\n.navbar-default .navbar-brand {\n  color: #777;\n}\n.navbar-default .navbar-brand:hover,\n.navbar-default .navbar-brand:focus {\n  color: #5e5e5e;\n  background-color: transparent;\n}\n.navbar-default .navbar-text {\n  color: #777;\n}\n.navbar-default .navbar-nav > li > a {\n  color: #777;\n}\n.navbar-default .navbar-nav > li > a:hover,\n.navbar-default .navbar-nav > li > a:focus {\n  color: #333;\n  background-color: transparent;\n}\n.navbar-default .navbar-nav > .active > a,\n.navbar-default .navbar-nav > .active > a:hover,\n.navbar-default .navbar-nav > .active > a:focus {\n  color: #555;\n  background-color: #e7e7e7;\n}\n.navbar-default .navbar-nav > .disabled > a,\n.navbar-default .navbar-nav > .disabled > a:hover,\n.navbar-default .navbar-nav > .disabled > a:focus {\n  color: #ccc;\n  background-color: transparent;\n}\n.navbar-default .navbar-toggle {\n  border-color: #ddd;\n}\n.navbar-default .navbar-toggle:hover,\n.navbar-default .navbar-toggle:focus {\n  background-color: #ddd;\n}\n.navbar-default .navbar-toggle .icon-bar {\n  background-color: #888;\n}\n.navbar-default .navbar-collapse,\n.navbar-default .navbar-form {\n  border-color: #e7e7e7;\n}\n.navbar-default .navbar-nav > .open > a,\n.navbar-default .navbar-nav > .open > a:hover,\n.navbar-default .navbar-nav > .open > a:focus {\n  color: #555;\n  background-color: #e7e7e7;\n}\n@media (max-width: 767px) {\n  .navbar-default .navbar-nav .open .dropdown-menu > li > a {\n    color: #777;\n  }\n  .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,\n  .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {\n    color: #333;\n    background-color: transparent;\n  }\n  .navbar-default .navbar-nav .open .dropdown-menu > .active > a,\n  .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,\n  .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {\n    color: #555;\n    background-color: #e7e7e7;\n  }\n  .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a,\n  .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a:hover,\n  .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a:focus {\n    color: #ccc;\n    background-color: transparent;\n  }\n}\n.navbar-default .navbar-link {\n  color: #777;\n}\n.navbar-default .navbar-link:hover {\n  color: #333;\n}\n.navbar-default .btn-link {\n  color: #777;\n}\n.navbar-default .btn-link:hover,\n.navbar-default .btn-link:focus {\n  color: #333;\n}\n.navbar-default .btn-link[disabled]:hover,\nfieldset[disabled] .navbar-default .btn-link:hover,\n.navbar-default .btn-link[disabled]:focus,\nfieldset[disabled] .navbar-default .btn-link:focus {\n  color: #ccc;\n}\n.navbar-inverse {\n  background-color: #222;\n  border-color: #080808;\n}\n.navbar-inverse .navbar-brand {\n  color: #9d9d9d;\n}\n.navbar-inverse .navbar-brand:hover,\n.navbar-inverse .navbar-brand:focus {\n  color: #fff;\n  background-color: transparent;\n}\n.navbar-inverse .navbar-text {\n  color: #9d9d9d;\n}\n.navbar-inverse .navbar-nav > li > a {\n  color: #9d9d9d;\n}\n.navbar-inverse .navbar-nav > li > a:hover,\n.navbar-inverse .navbar-nav > li > a:focus {\n  color: #fff;\n  background-color: transparent;\n}\n.navbar-inverse .navbar-nav > .active > a,\n.navbar-inverse .navbar-nav > .active > a:hover,\n.navbar-inverse .navbar-nav > .active > a:focus {\n  color: #fff;\n  background-color: #080808;\n}\n.navbar-inverse .navbar-nav > .disabled > a,\n.navbar-inverse .navbar-nav > .disabled > a:hover,\n.navbar-inverse .navbar-nav > .disabled > a:focus {\n  color: #444;\n  background-color: transparent;\n}\n.navbar-inverse .navbar-toggle {\n  border-color: #333;\n}\n.navbar-inverse .navbar-toggle:hover,\n.navbar-inverse .navbar-toggle:focus {\n  background-color: #333;\n}\n.navbar-inverse .navbar-toggle .icon-bar {\n  background-color: #fff;\n}\n.navbar-inverse .navbar-collapse,\n.navbar-inverse .navbar-form {\n  border-color: #101010;\n}\n.navbar-inverse .navbar-nav > .open > a,\n.navbar-inverse .navbar-nav > .open > a:hover,\n.navbar-inverse .navbar-nav > .open > a:focus {\n  color: #fff;\n  background-color: #080808;\n}\n@media (max-width: 767px) {\n  .navbar-inverse .navbar-nav .open .dropdown-menu > .dropdown-header {\n    border-color: #080808;\n  }\n  .navbar-inverse .navbar-nav .open .dropdown-menu .divider {\n    background-color: #080808;\n  }\n  .navbar-inverse .navbar-nav .open .dropdown-menu > li > a {\n    color: #9d9d9d;\n  }\n  .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:hover,\n  .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:focus {\n    color: #fff;\n    background-color: transparent;\n  }\n  .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a,\n  .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:hover,\n  .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:focus {\n    color: #fff;\n    background-color: #080808;\n  }\n  .navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a,\n  .navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a:hover,\n  .navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a:focus {\n    color: #444;\n    background-color: transparent;\n  }\n}\n.navbar-inverse .navbar-link {\n  color: #9d9d9d;\n}\n.navbar-inverse .navbar-link:hover {\n  color: #fff;\n}\n.navbar-inverse .btn-link {\n  color: #9d9d9d;\n}\n.navbar-inverse .btn-link:hover,\n.navbar-inverse .btn-link:focus {\n  color: #fff;\n}\n.navbar-inverse .btn-link[disabled]:hover,\nfieldset[disabled] .navbar-inverse .btn-link:hover,\n.navbar-inverse .btn-link[disabled]:focus,\nfieldset[disabled] .navbar-inverse .btn-link:focus {\n  color: #444;\n}\n.breadcrumb {\n  padding: 8px 15px;\n  margin-bottom: 20px;\n  list-style: none;\n  background-color: #f5f5f5;\n  border-radius: 4px;\n}\n.breadcrumb > li {\n  display: inline-block;\n}\n.breadcrumb > li + li:before {\n  padding: 0 5px;\n  color: #ccc;\n  content: \"/\\A0\";\n}\n.breadcrumb > .active {\n  color: #777;\n}\n.pagination {\n  display: inline-block;\n  padding-left: 0;\n  margin: 20px 0;\n  border-radius: 4px;\n}\n.pagination > li {\n  display: inline;\n}\n.pagination > li > a,\n.pagination > li > span {\n  position: relative;\n  float: left;\n  padding: 6px 12px;\n  margin-left: -1px;\n  line-height: 1.42857143;\n  color: #337ab7;\n  text-decoration: none;\n  background-color: #fff;\n  border: 1px solid #ddd;\n}\n.pagination > li:first-child > a,\n.pagination > li:first-child > span {\n  margin-left: 0;\n  border-top-left-radius: 4px;\n  border-bottom-left-radius: 4px;\n}\n.pagination > li:last-child > a,\n.pagination > li:last-child > span {\n  border-top-right-radius: 4px;\n  border-bottom-right-radius: 4px;\n}\n.pagination > li > a:hover,\n.pagination > li > span:hover,\n.pagination > li > a:focus,\n.pagination > li > span:focus {\n  z-index: 2;\n  color: #23527c;\n  background-color: #eee;\n  border-color: #ddd;\n}\n.pagination > .active > a,\n.pagination > .active > span,\n.pagination > .active > a:hover,\n.pagination > .active > span:hover,\n.pagination > .active > a:focus,\n.pagination > .active > span:focus {\n  z-index: 3;\n  color: #fff;\n  cursor: default;\n  background-color: #337ab7;\n  border-color: #337ab7;\n}\n.pagination > .disabled > span,\n.pagination > .disabled > span:hover,\n.pagination > .disabled > span:focus,\n.pagination > .disabled > a,\n.pagination > .disabled > a:hover,\n.pagination > .disabled > a:focus {\n  color: #777;\n  cursor: not-allowed;\n  background-color: #fff;\n  border-color: #ddd;\n}\n.pagination-lg > li > a,\n.pagination-lg > li > span {\n  padding: 10px 16px;\n  font-size: 18px;\n  line-height: 1.3333333;\n}\n.pagination-lg > li:first-child > a,\n.pagination-lg > li:first-child > span {\n  border-top-left-radius: 6px;\n  border-bottom-left-radius: 6px;\n}\n.pagination-lg > li:last-child > a,\n.pagination-lg > li:last-child > span {\n  border-top-right-radius: 6px;\n  border-bottom-right-radius: 6px;\n}\n.pagination-sm > li > a,\n.pagination-sm > li > span {\n  padding: 5px 10px;\n  font-size: 12px;\n  line-height: 1.5;\n}\n.pagination-sm > li:first-child > a,\n.pagination-sm > li:first-child > span {\n  border-top-left-radius: 3px;\n  border-bottom-left-radius: 3px;\n}\n.pagination-sm > li:last-child > a,\n.pagination-sm > li:last-child > span {\n  border-top-right-radius: 3px;\n  border-bottom-right-radius: 3px;\n}\n.pager {\n  padding-left: 0;\n  margin: 20px 0;\n  text-align: center;\n  list-style: none;\n}\n.pager li {\n  display: inline;\n}\n.pager li > a,\n.pager li > span {\n  display: inline-block;\n  padding: 5px 14px;\n  background-color: #fff;\n  border: 1px solid #ddd;\n  border-radius: 15px;\n}\n.pager li > a:hover,\n.pager li > a:focus {\n  text-decoration: none;\n  background-color: #eee;\n}\n.pager .next > a,\n.pager .next > span {\n  float: right;\n}\n.pager .previous > a,\n.pager .previous > span {\n  float: left;\n}\n.pager .disabled > a,\n.pager .disabled > a:hover,\n.pager .disabled > a:focus,\n.pager .disabled > span {\n  color: #777;\n  cursor: not-allowed;\n  background-color: #fff;\n}\n.label {\n  display: inline;\n  padding: .2em .6em .3em;\n  font-size: 75%;\n  font-weight: bold;\n  line-height: 1;\n  color: #fff;\n  text-align: center;\n  white-space: nowrap;\n  vertical-align: baseline;\n  border-radius: .25em;\n}\na.label:hover,\na.label:focus {\n  color: #fff;\n  text-decoration: none;\n  cursor: pointer;\n}\n.label:empty {\n  display: none;\n}\n.btn .label {\n  position: relative;\n  top: -1px;\n}\n.label-default {\n  background-color: #777;\n}\n.label-default[href]:hover,\n.label-default[href]:focus {\n  background-color: #5e5e5e;\n}\n.label-primary {\n  background-color: #337ab7;\n}\n.label-primary[href]:hover,\n.label-primary[href]:focus {\n  background-color: #286090;\n}\n.label-success {\n  background-color: #5cb85c;\n}\n.label-success[href]:hover,\n.label-success[href]:focus {\n  background-color: #449d44;\n}\n.label-info {\n  background-color: #5bc0de;\n}\n.label-info[href]:hover,\n.label-info[href]:focus {\n  background-color: #31b0d5;\n}\n.label-warning {\n  background-color: #f0ad4e;\n}\n.label-warning[href]:hover,\n.label-warning[href]:focus {\n  background-color: #ec971f;\n}\n.label-danger {\n  background-color: #d9534f;\n}\n.label-danger[href]:hover,\n.label-danger[href]:focus {\n  background-color: #c9302c;\n}\n.badge {\n  display: inline-block;\n  min-width: 10px;\n  padding: 3px 7px;\n  font-size: 12px;\n  font-weight: bold;\n  line-height: 1;\n  color: #fff;\n  text-align: center;\n  white-space: nowrap;\n  vertical-align: middle;\n  background-color: #777;\n  border-radius: 10px;\n}\n.badge:empty {\n  display: none;\n}\n.btn .badge {\n  position: relative;\n  top: -1px;\n}\n.btn-xs .badge,\n.btn-group-xs > .btn .badge {\n  top: 0;\n  padding: 1px 5px;\n}\na.badge:hover,\na.badge:focus {\n  color: #fff;\n  text-decoration: none;\n  cursor: pointer;\n}\n.list-group-item.active > .badge,\n.nav-pills > .active > a > .badge {\n  color: #337ab7;\n  background-color: #fff;\n}\n.list-group-item > .badge {\n  float: right;\n}\n.list-group-item > .badge + .badge {\n  margin-right: 5px;\n}\n.nav-pills > li > a > .badge {\n  margin-left: 3px;\n}\n.jumbotron {\n  padding-top: 30px;\n  padding-bottom: 30px;\n  margin-bottom: 30px;\n  color: inherit;\n  background-color: #eee;\n}\n.jumbotron h1,\n.jumbotron .h1 {\n  color: inherit;\n}\n.jumbotron p {\n  margin-bottom: 15px;\n  font-size: 21px;\n  font-weight: 200;\n}\n.jumbotron > hr {\n  border-top-color: #d5d5d5;\n}\n.container .jumbotron,\n.container-fluid .jumbotron {\n  padding-right: 15px;\n  padding-left: 15px;\n  border-radius: 6px;\n}\n.jumbotron .container {\n  max-width: 100%;\n}\n@media screen and (min-width: 768px) {\n  .jumbotron {\n    padding-top: 48px;\n    padding-bottom: 48px;\n  }\n  .container .jumbotron,\n  .container-fluid .jumbotron {\n    padding-right: 60px;\n    padding-left: 60px;\n  }\n  .jumbotron h1,\n  .jumbotron .h1 {\n    font-size: 63px;\n  }\n}\n.thumbnail {\n  display: block;\n  padding: 4px;\n  margin-bottom: 20px;\n  line-height: 1.42857143;\n  background-color: #fff;\n  border: 1px solid #ddd;\n  border-radius: 4px;\n  -webkit-transition: border .2s ease-in-out;\n       -o-transition: border .2s ease-in-out;\n          transition: border .2s ease-in-out;\n}\n.thumbnail > img,\n.thumbnail a > img {\n  margin-right: auto;\n  margin-left: auto;\n}\na.thumbnail:hover,\na.thumbnail:focus,\na.thumbnail.active {\n  border-color: #337ab7;\n}\n.thumbnail .caption {\n  padding: 9px;\n  color: #333;\n}\n.alert {\n  padding: 15px;\n  margin-bottom: 20px;\n  border: 1px solid transparent;\n  border-radius: 4px;\n}\n.alert h4 {\n  margin-top: 0;\n  color: inherit;\n}\n.alert .alert-link {\n  font-weight: bold;\n}\n.alert > p,\n.alert > ul {\n  margin-bottom: 0;\n}\n.alert > p + p {\n  margin-top: 5px;\n}\n.alert-dismissable,\n.alert-dismissible {\n  padding-right: 35px;\n}\n.alert-dismissable .close,\n.alert-dismissible .close {\n  position: relative;\n  top: -2px;\n  right: -21px;\n  color: inherit;\n}\n.alert-success {\n  color: #3c763d;\n  background-color: #dff0d8;\n  border-color: #d6e9c6;\n}\n.alert-success hr {\n  border-top-color: #c9e2b3;\n}\n.alert-success .alert-link {\n  color: #2b542c;\n}\n.alert-info {\n  color: #31708f;\n  background-color: #d9edf7;\n  border-color: #bce8f1;\n}\n.alert-info hr {\n  border-top-color: #a6e1ec;\n}\n.alert-info .alert-link {\n  color: #245269;\n}\n.alert-warning {\n  color: #8a6d3b;\n  background-color: #fcf8e3;\n  border-color: #faebcc;\n}\n.alert-warning hr {\n  border-top-color: #f7e1b5;\n}\n.alert-warning .alert-link {\n  color: #66512c;\n}\n.alert-danger {\n  color: #a94442;\n  background-color: #f2dede;\n  border-color: #ebccd1;\n}\n.alert-danger hr {\n  border-top-color: #e4b9c0;\n}\n.alert-danger .alert-link {\n  color: #843534;\n}\n@-webkit-keyframes progress-bar-stripes {\n  from {\n    background-position: 40px 0;\n  }\n  to {\n    background-position: 0 0;\n  }\n}\n@-o-keyframes progress-bar-stripes {\n  from {\n    background-position: 40px 0;\n  }\n  to {\n    background-position: 0 0;\n  }\n}\n@keyframes progress-bar-stripes {\n  from {\n    background-position: 40px 0;\n  }\n  to {\n    background-position: 0 0;\n  }\n}\n.progress {\n  height: 20px;\n  margin-bottom: 20px;\n  overflow: hidden;\n  background-color: #f5f5f5;\n  border-radius: 4px;\n  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);\n          box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);\n}\n.progress-bar {\n  float: left;\n  width: 0;\n  height: 100%;\n  font-size: 12px;\n  line-height: 20px;\n  color: #fff;\n  text-align: center;\n  background-color: #337ab7;\n  -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);\n          box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);\n  -webkit-transition: width .6s ease;\n       -o-transition: width .6s ease;\n          transition: width .6s ease;\n}\n.progress-striped .progress-bar,\n.progress-bar-striped {\n  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n  background-image:      -o-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n  background-image:         linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n  -webkit-background-size: 40px 40px;\n          background-size: 40px 40px;\n}\n.progress.active .progress-bar,\n.progress-bar.active {\n  -webkit-animation: progress-bar-stripes 2s linear infinite;\n       -o-animation: progress-bar-stripes 2s linear infinite;\n          animation: progress-bar-stripes 2s linear infinite;\n}\n.progress-bar-success {\n  background-color: #5cb85c;\n}\n.progress-striped .progress-bar-success {\n  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n  background-image:      -o-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n  background-image:         linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n}\n.progress-bar-info {\n  background-color: #5bc0de;\n}\n.progress-striped .progress-bar-info {\n  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n  background-image:      -o-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n  background-image:         linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n}\n.progress-bar-warning {\n  background-color: #f0ad4e;\n}\n.progress-striped .progress-bar-warning {\n  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n  background-image:      -o-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n  background-image:         linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n}\n.progress-bar-danger {\n  background-color: #d9534f;\n}\n.progress-striped .progress-bar-danger {\n  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n  background-image:      -o-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n  background-image:         linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);\n}\n.media {\n  margin-top: 15px;\n}\n.media:first-child {\n  margin-top: 0;\n}\n.media,\n.media-body {\n  overflow: hidden;\n  zoom: 1;\n}\n.media-body {\n  width: 10000px;\n}\n.media-object {\n  display: block;\n}\n.media-object.img-thumbnail {\n  max-width: none;\n}\n.media-right,\n.media > .pull-right {\n  padding-left: 10px;\n}\n.media-left,\n.media > .pull-left {\n  padding-right: 10px;\n}\n.media-left,\n.media-right,\n.media-body {\n  display: table-cell;\n  vertical-align: top;\n}\n.media-middle {\n  vertical-align: middle;\n}\n.media-bottom {\n  vertical-align: bottom;\n}\n.media-heading {\n  margin-top: 0;\n  margin-bottom: 5px;\n}\n.media-list {\n  padding-left: 0;\n  list-style: none;\n}\n.list-group {\n  padding-left: 0;\n  margin-bottom: 20px;\n}\n.list-group-item {\n  position: relative;\n  display: block;\n  padding: 10px 15px;\n  margin-bottom: -1px;\n  background-color: #fff;\n  border: 1px solid #ddd;\n}\n.list-group-item:first-child {\n  border-top-left-radius: 4px;\n  border-top-right-radius: 4px;\n}\n.list-group-item:last-child {\n  margin-bottom: 0;\n  border-bottom-right-radius: 4px;\n  border-bottom-left-radius: 4px;\n}\na.list-group-item,\nbutton.list-group-item {\n  color: #555;\n}\na.list-group-item .list-group-item-heading,\nbutton.list-group-item .list-group-item-heading {\n  color: #333;\n}\na.list-group-item:hover,\nbutton.list-group-item:hover,\na.list-group-item:focus,\nbutton.list-group-item:focus {\n  color: #555;\n  text-decoration: none;\n  background-color: #f5f5f5;\n}\nbutton.list-group-item {\n  width: 100%;\n  text-align: left;\n}\n.list-group-item.disabled,\n.list-group-item.disabled:hover,\n.list-group-item.disabled:focus {\n  color: #777;\n  cursor: not-allowed;\n  background-color: #eee;\n}\n.list-group-item.disabled .list-group-item-heading,\n.list-group-item.disabled:hover .list-group-item-heading,\n.list-group-item.disabled:focus .list-group-item-heading {\n  color: inherit;\n}\n.list-group-item.disabled .list-group-item-text,\n.list-group-item.disabled:hover .list-group-item-text,\n.list-group-item.disabled:focus .list-group-item-text {\n  color: #777;\n}\n.list-group-item.active,\n.list-group-item.active:hover,\n.list-group-item.active:focus {\n  z-index: 2;\n  color: #fff;\n  background-color: #337ab7;\n  border-color: #337ab7;\n}\n.list-group-item.active .list-group-item-heading,\n.list-group-item.active:hover .list-group-item-heading,\n.list-group-item.active:focus .list-group-item-heading,\n.list-group-item.active .list-group-item-heading > small,\n.list-group-item.active:hover .list-group-item-heading > small,\n.list-group-item.active:focus .list-group-item-heading > small,\n.list-group-item.active .list-group-item-heading > .small,\n.list-group-item.active:hover .list-group-item-heading > .small,\n.list-group-item.active:focus .list-group-item-heading > .small {\n  color: inherit;\n}\n.list-group-item.active .list-group-item-text,\n.list-group-item.active:hover .list-group-item-text,\n.list-group-item.active:focus .list-group-item-text {\n  color: #c7ddef;\n}\n.list-group-item-success {\n  color: #3c763d;\n  background-color: #dff0d8;\n}\na.list-group-item-success,\nbutton.list-group-item-success {\n  color: #3c763d;\n}\na.list-group-item-success .list-group-item-heading,\nbutton.list-group-item-success .list-group-item-heading {\n  color: inherit;\n}\na.list-group-item-success:hover,\nbutton.list-group-item-success:hover,\na.list-group-item-success:focus,\nbutton.list-group-item-success:focus {\n  color: #3c763d;\n  background-color: #d0e9c6;\n}\na.list-group-item-success.active,\nbutton.list-group-item-success.active,\na.list-group-item-success.active:hover,\nbutton.list-group-item-success.active:hover,\na.list-group-item-success.active:focus,\nbutton.list-group-item-success.active:focus {\n  color: #fff;\n  background-color: #3c763d;\n  border-color: #3c763d;\n}\n.list-group-item-info {\n  color: #31708f;\n  background-color: #d9edf7;\n}\na.list-group-item-info,\nbutton.list-group-item-info {\n  color: #31708f;\n}\na.list-group-item-info .list-group-item-heading,\nbutton.list-group-item-info .list-group-item-heading {\n  color: inherit;\n}\na.list-group-item-info:hover,\nbutton.list-group-item-info:hover,\na.list-group-item-info:focus,\nbutton.list-group-item-info:focus {\n  color: #31708f;\n  background-color: #c4e3f3;\n}\na.list-group-item-info.active,\nbutton.list-group-item-info.active,\na.list-group-item-info.active:hover,\nbutton.list-group-item-info.active:hover,\na.list-group-item-info.active:focus,\nbutton.list-group-item-info.active:focus {\n  color: #fff;\n  background-color: #31708f;\n  border-color: #31708f;\n}\n.list-group-item-warning {\n  color: #8a6d3b;\n  background-color: #fcf8e3;\n}\na.list-group-item-warning,\nbutton.list-group-item-warning {\n  color: #8a6d3b;\n}\na.list-group-item-warning .list-group-item-heading,\nbutton.list-group-item-warning .list-group-item-heading {\n  color: inherit;\n}\na.list-group-item-warning:hover,\nbutton.list-group-item-warning:hover,\na.list-group-item-warning:focus,\nbutton.list-group-item-warning:focus {\n  color: #8a6d3b;\n  background-color: #faf2cc;\n}\na.list-group-item-warning.active,\nbutton.list-group-item-warning.active,\na.list-group-item-warning.active:hover,\nbutton.list-group-item-warning.active:hover,\na.list-group-item-warning.active:focus,\nbutton.list-group-item-warning.active:focus {\n  color: #fff;\n  background-color: #8a6d3b;\n  border-color: #8a6d3b;\n}\n.list-group-item-danger {\n  color: #a94442;\n  background-color: #f2dede;\n}\na.list-group-item-danger,\nbutton.list-group-item-danger {\n  color: #a94442;\n}\na.list-group-item-danger .list-group-item-heading,\nbutton.list-group-item-danger .list-group-item-heading {\n  color: inherit;\n}\na.list-group-item-danger:hover,\nbutton.list-group-item-danger:hover,\na.list-group-item-danger:focus,\nbutton.list-group-item-danger:focus {\n  color: #a94442;\n  background-color: #ebcccc;\n}\na.list-group-item-danger.active,\nbutton.list-group-item-danger.active,\na.list-group-item-danger.active:hover,\nbutton.list-group-item-danger.active:hover,\na.list-group-item-danger.active:focus,\nbutton.list-group-item-danger.active:focus {\n  color: #fff;\n  background-color: #a94442;\n  border-color: #a94442;\n}\n.list-group-item-heading {\n  margin-top: 0;\n  margin-bottom: 5px;\n}\n.list-group-item-text {\n  margin-bottom: 0;\n  line-height: 1.3;\n}\n.panel {\n  margin-bottom: 20px;\n  background-color: #fff;\n  border: 1px solid transparent;\n  border-radius: 4px;\n  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);\n          box-shadow: 0 1px 1px rgba(0, 0, 0, .05);\n}\n.panel-body {\n  padding: 15px;\n}\n.panel-heading {\n  padding: 10px 15px;\n  border-bottom: 1px solid transparent;\n  border-top-left-radius: 3px;\n  border-top-right-radius: 3px;\n}\n.panel-heading > .dropdown .dropdown-toggle {\n  color: inherit;\n}\n.panel-title {\n  margin-top: 0;\n  margin-bottom: 0;\n  font-size: 16px;\n  color: inherit;\n}\n.panel-title > a,\n.panel-title > small,\n.panel-title > .small,\n.panel-title > small > a,\n.panel-title > .small > a {\n  color: inherit;\n}\n.panel-footer {\n  padding: 10px 15px;\n  background-color: #f5f5f5;\n  border-top: 1px solid #ddd;\n  border-bottom-right-radius: 3px;\n  border-bottom-left-radius: 3px;\n}\n.panel > .list-group,\n.panel > .panel-collapse > .list-group {\n  margin-bottom: 0;\n}\n.panel > .list-group .list-group-item,\n.panel > .panel-collapse > .list-group .list-group-item {\n  border-width: 1px 0;\n  border-radius: 0;\n}\n.panel > .list-group:first-child .list-group-item:first-child,\n.panel > .panel-collapse > .list-group:first-child .list-group-item:first-child {\n  border-top: 0;\n  border-top-left-radius: 3px;\n  border-top-right-radius: 3px;\n}\n.panel > .list-group:last-child .list-group-item:last-child,\n.panel > .panel-collapse > .list-group:last-child .list-group-item:last-child {\n  border-bottom: 0;\n  border-bottom-right-radius: 3px;\n  border-bottom-left-radius: 3px;\n}\n.panel > .panel-heading + .panel-collapse > .list-group .list-group-item:first-child {\n  border-top-left-radius: 0;\n  border-top-right-radius: 0;\n}\n.panel-heading + .list-group .list-group-item:first-child {\n  border-top-width: 0;\n}\n.list-group + .panel-footer {\n  border-top-width: 0;\n}\n.panel > .table,\n.panel > .table-responsive > .table,\n.panel > .panel-collapse > .table {\n  margin-bottom: 0;\n}\n.panel > .table caption,\n.panel > .table-responsive > .table caption,\n.panel > .panel-collapse > .table caption {\n  padding-right: 15px;\n  padding-left: 15px;\n}\n.panel > .table:first-child,\n.panel > .table-responsive:first-child > .table:first-child {\n  border-top-left-radius: 3px;\n  border-top-right-radius: 3px;\n}\n.panel > .table:first-child > thead:first-child > tr:first-child,\n.panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child,\n.panel > .table:first-child > tbody:first-child > tr:first-child,\n.panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child {\n  border-top-left-radius: 3px;\n  border-top-right-radius: 3px;\n}\n.panel > .table:first-child > thead:first-child > tr:first-child td:first-child,\n.panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child td:first-child,\n.panel > .table:first-child > tbody:first-child > tr:first-child td:first-child,\n.panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child td:first-child,\n.panel > .table:first-child > thead:first-child > tr:first-child th:first-child,\n.panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child th:first-child,\n.panel > .table:first-child > tbody:first-child > tr:first-child th:first-child,\n.panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child th:first-child {\n  border-top-left-radius: 3px;\n}\n.panel > .table:first-child > thead:first-child > tr:first-child td:last-child,\n.panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child td:last-child,\n.panel > .table:first-child > tbody:first-child > tr:first-child td:last-child,\n.panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child td:last-child,\n.panel > .table:first-child > thead:first-child > tr:first-child th:last-child,\n.panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child th:last-child,\n.panel > .table:first-child > tbody:first-child > tr:first-child th:last-child,\n.panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child th:last-child {\n  border-top-right-radius: 3px;\n}\n.panel > .table:last-child,\n.panel > .table-responsive:last-child > .table:last-child {\n  border-bottom-right-radius: 3px;\n  border-bottom-left-radius: 3px;\n}\n.panel > .table:last-child > tbody:last-child > tr:last-child,\n.panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child,\n.panel > .table:last-child > tfoot:last-child > tr:last-child,\n.panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child {\n  border-bottom-right-radius: 3px;\n  border-bottom-left-radius: 3px;\n}\n.panel > .table:last-child > tbody:last-child > tr:last-child td:first-child,\n.panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child td:first-child,\n.panel > .table:last-child > tfoot:last-child > tr:last-child td:first-child,\n.panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child td:first-child,\n.panel > .table:last-child > tbody:last-child > tr:last-child th:first-child,\n.panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child th:first-child,\n.panel > .table:last-child > tfoot:last-child > tr:last-child th:first-child,\n.panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child th:first-child {\n  border-bottom-left-radius: 3px;\n}\n.panel > .table:last-child > tbody:last-child > tr:last-child td:last-child,\n.panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child td:last-child,\n.panel > .table:last-child > tfoot:last-child > tr:last-child td:last-child,\n.panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child td:last-child,\n.panel > .table:last-child > tbody:last-child > tr:last-child th:last-child,\n.panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child th:last-child,\n.panel > .table:last-child > tfoot:last-child > tr:last-child th:last-child,\n.panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child th:last-child {\n  border-bottom-right-radius: 3px;\n}\n.panel > .panel-body + .table,\n.panel > .panel-body + .table-responsive,\n.panel > .table + .panel-body,\n.panel > .table-responsive + .panel-body {\n  border-top: 1px solid #ddd;\n}\n.panel > .table > tbody:first-child > tr:first-child th,\n.panel > .table > tbody:first-child > tr:first-child td {\n  border-top: 0;\n}\n.panel > .table-bordered,\n.panel > .table-responsive > .table-bordered {\n  border: 0;\n}\n.panel > .table-bordered > thead > tr > th:first-child,\n.panel > .table-responsive > .table-bordered > thead > tr > th:first-child,\n.panel > .table-bordered > tbody > tr > th:first-child,\n.panel > .table-responsive > .table-bordered > tbody > tr > th:first-child,\n.panel > .table-bordered > tfoot > tr > th:first-child,\n.panel > .table-responsive > .table-bordered > tfoot > tr > th:first-child,\n.panel > .table-bordered > thead > tr > td:first-child,\n.panel > .table-responsive > .table-bordered > thead > tr > td:first-child,\n.panel > .table-bordered > tbody > tr > td:first-child,\n.panel > .table-responsive > .table-bordered > tbody > tr > td:first-child,\n.panel > .table-bordered > tfoot > tr > td:first-child,\n.panel > .table-responsive > .table-bordered > tfoot > tr > td:first-child {\n  border-left: 0;\n}\n.panel > .table-bordered > thead > tr > th:last-child,\n.panel > .table-responsive > .table-bordered > thead > tr > th:last-child,\n.panel > .table-bordered > tbody > tr > th:last-child,\n.panel > .table-responsive > .table-bordered > tbody > tr > th:last-child,\n.panel > .table-bordered > tfoot > tr > th:last-child,\n.panel > .table-responsive > .table-bordered > tfoot > tr > th:last-child,\n.panel > .table-bordered > thead > tr > td:last-child,\n.panel > .table-responsive > .table-bordered > thead > tr > td:last-child,\n.panel > .table-bordered > tbody > tr > td:last-child,\n.panel > .table-responsive > .table-bordered > tbody > tr > td:last-child,\n.panel > .table-bordered > tfoot > tr > td:last-child,\n.panel > .table-responsive > .table-bordered > tfoot > tr > td:last-child {\n  border-right: 0;\n}\n.panel > .table-bordered > thead > tr:first-child > td,\n.panel > .table-responsive > .table-bordered > thead > tr:first-child > td,\n.panel > .table-bordered > tbody > tr:first-child > td,\n.panel > .table-responsive > .table-bordered > tbody > tr:first-child > td,\n.panel > .table-bordered > thead > tr:first-child > th,\n.panel > .table-responsive > .table-bordered > thead > tr:first-child > th,\n.panel > .table-bordered > tbody > tr:first-child > th,\n.panel > .table-responsive > .table-bordered > tbody > tr:first-child > th {\n  border-bottom: 0;\n}\n.panel > .table-bordered > tbody > tr:last-child > td,\n.panel > .table-responsive > .table-bordered > tbody > tr:last-child > td,\n.panel > .table-bordered > tfoot > tr:last-child > td,\n.panel > .table-responsive > .table-bordered > tfoot > tr:last-child > td,\n.panel > .table-bordered > tbody > tr:last-child > th,\n.panel > .table-responsive > .table-bordered > tbody > tr:last-child > th,\n.panel > .table-bordered > tfoot > tr:last-child > th,\n.panel > .table-responsive > .table-bordered > tfoot > tr:last-child > th {\n  border-bottom: 0;\n}\n.panel > .table-responsive {\n  margin-bottom: 0;\n  border: 0;\n}\n.panel-group {\n  margin-bottom: 20px;\n}\n.panel-group .panel {\n  margin-bottom: 0;\n  border-radius: 4px;\n}\n.panel-group .panel + .panel {\n  margin-top: 5px;\n}\n.panel-group .panel-heading {\n  border-bottom: 0;\n}\n.panel-group .panel-heading + .panel-collapse > .panel-body,\n.panel-group .panel-heading + .panel-collapse > .list-group {\n  border-top: 1px solid #ddd;\n}\n.panel-group .panel-footer {\n  border-top: 0;\n}\n.panel-group .panel-footer + .panel-collapse .panel-body {\n  border-bottom: 1px solid #ddd;\n}\n.panel-default {\n  border-color: #ddd;\n}\n.panel-default > .panel-heading {\n  color: #333;\n  background-color: #f5f5f5;\n  border-color: #ddd;\n}\n.panel-default > .panel-heading + .panel-collapse > .panel-body {\n  border-top-color: #ddd;\n}\n.panel-default > .panel-heading .badge {\n  color: #f5f5f5;\n  background-color: #333;\n}\n.panel-default > .panel-footer + .panel-collapse > .panel-body {\n  border-bottom-color: #ddd;\n}\n.panel-primary {\n  border-color: #337ab7;\n}\n.panel-primary > .panel-heading {\n  color: #fff;\n  background-color: #337ab7;\n  border-color: #337ab7;\n}\n.panel-primary > .panel-heading + .panel-collapse > .panel-body {\n  border-top-color: #337ab7;\n}\n.panel-primary > .panel-heading .badge {\n  color: #337ab7;\n  background-color: #fff;\n}\n.panel-primary > .panel-footer + .panel-collapse > .panel-body {\n  border-bottom-color: #337ab7;\n}\n.panel-success {\n  border-color: #d6e9c6;\n}\n.panel-success > .panel-heading {\n  color: #3c763d;\n  background-color: #dff0d8;\n  border-color: #d6e9c6;\n}\n.panel-success > .panel-heading + .panel-collapse > .panel-body {\n  border-top-color: #d6e9c6;\n}\n.panel-success > .panel-heading .badge {\n  color: #dff0d8;\n  background-color: #3c763d;\n}\n.panel-success > .panel-footer + .panel-collapse > .panel-body {\n  border-bottom-color: #d6e9c6;\n}\n.panel-info {\n  border-color: #bce8f1;\n}\n.panel-info > .panel-heading {\n  color: #31708f;\n  background-color: #d9edf7;\n  border-color: #bce8f1;\n}\n.panel-info > .panel-heading + .panel-collapse > .panel-body {\n  border-top-color: #bce8f1;\n}\n.panel-info > .panel-heading .badge {\n  color: #d9edf7;\n  background-color: #31708f;\n}\n.panel-info > .panel-footer + .panel-collapse > .panel-body {\n  border-bottom-color: #bce8f1;\n}\n.panel-warning {\n  border-color: #faebcc;\n}\n.panel-warning > .panel-heading {\n  color: #8a6d3b;\n  background-color: #fcf8e3;\n  border-color: #faebcc;\n}\n.panel-warning > .panel-heading + .panel-collapse > .panel-body {\n  border-top-color: #faebcc;\n}\n.panel-warning > .panel-heading .badge {\n  color: #fcf8e3;\n  background-color: #8a6d3b;\n}\n.panel-warning > .panel-footer + .panel-collapse > .panel-body {\n  border-bottom-color: #faebcc;\n}\n.panel-danger {\n  border-color: #ebccd1;\n}\n.panel-danger > .panel-heading {\n  color: #a94442;\n  background-color: #f2dede;\n  border-color: #ebccd1;\n}\n.panel-danger > .panel-heading + .panel-collapse > .panel-body {\n  border-top-color: #ebccd1;\n}\n.panel-danger > .panel-heading .badge {\n  color: #f2dede;\n  background-color: #a94442;\n}\n.panel-danger > .panel-footer + .panel-collapse > .panel-body {\n  border-bottom-color: #ebccd1;\n}\n.embed-responsive {\n  position: relative;\n  display: block;\n  height: 0;\n  padding: 0;\n  overflow: hidden;\n}\n.embed-responsive .embed-responsive-item,\n.embed-responsive iframe,\n.embed-responsive embed,\n.embed-responsive object,\n.embed-responsive video {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  border: 0;\n}\n.embed-responsive-16by9 {\n  padding-bottom: 56.25%;\n}\n.embed-responsive-4by3 {\n  padding-bottom: 75%;\n}\n.well {\n  min-height: 20px;\n  padding: 19px;\n  margin-bottom: 20px;\n  background-color: #f5f5f5;\n  border: 1px solid #e3e3e3;\n  border-radius: 4px;\n  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);\n          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);\n}\n.well blockquote {\n  border-color: #ddd;\n  border-color: rgba(0, 0, 0, .15);\n}\n.well-lg {\n  padding: 24px;\n  border-radius: 6px;\n}\n.well-sm {\n  padding: 9px;\n  border-radius: 3px;\n}\n.close {\n  float: right;\n  font-size: 21px;\n  font-weight: bold;\n  line-height: 1;\n  color: #000;\n  text-shadow: 0 1px 0 #fff;\n  filter: alpha(opacity=20);\n  opacity: .2;\n}\n.close:hover,\n.close:focus {\n  color: #000;\n  text-decoration: none;\n  cursor: pointer;\n  filter: alpha(opacity=50);\n  opacity: .5;\n}\nbutton.close {\n  -webkit-appearance: none;\n  padding: 0;\n  cursor: pointer;\n  background: transparent;\n  border: 0;\n}\n.modal-open {\n  overflow: hidden;\n}\n.modal {\n  position: fixed;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  z-index: 1050;\n  display: none;\n  overflow: hidden;\n  -webkit-overflow-scrolling: touch;\n  outline: 0;\n}\n.modal.fade .modal-dialog {\n  -webkit-transition: -webkit-transform .3s ease-out;\n       -o-transition:      -o-transform .3s ease-out;\n          transition:         transform .3s ease-out;\n  -webkit-transform: translate(0, -25%);\n      -ms-transform: translate(0, -25%);\n       -o-transform: translate(0, -25%);\n          transform: translate(0, -25%);\n}\n.modal.in .modal-dialog {\n  -webkit-transform: translate(0, 0);\n      -ms-transform: translate(0, 0);\n       -o-transform: translate(0, 0);\n          transform: translate(0, 0);\n}\n.modal-open .modal {\n  overflow-x: hidden;\n  overflow-y: auto;\n}\n.modal-dialog {\n  position: relative;\n  width: auto;\n  margin: 10px;\n}\n.modal-content {\n  position: relative;\n  background-color: #fff;\n  -webkit-background-clip: padding-box;\n          background-clip: padding-box;\n  border: 1px solid #999;\n  border: 1px solid rgba(0, 0, 0, .2);\n  border-radius: 6px;\n  outline: 0;\n  -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, .5);\n          box-shadow: 0 3px 9px rgba(0, 0, 0, .5);\n}\n.modal-backdrop {\n  position: fixed;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  z-index: 1040;\n  background-color: #000;\n}\n.modal-backdrop.fade {\n  filter: alpha(opacity=0);\n  opacity: 0;\n}\n.modal-backdrop.in {\n  filter: alpha(opacity=50);\n  opacity: .5;\n}\n.modal-header {\n  padding: 15px;\n  border-bottom: 1px solid #e5e5e5;\n}\n.modal-header .close {\n  margin-top: -2px;\n}\n.modal-title {\n  margin: 0;\n  line-height: 1.42857143;\n}\n.modal-body {\n  position: relative;\n  padding: 15px;\n}\n.modal-footer {\n  padding: 15px;\n  text-align: right;\n  border-top: 1px solid #e5e5e5;\n}\n.modal-footer .btn + .btn {\n  margin-bottom: 0;\n  margin-left: 5px;\n}\n.modal-footer .btn-group .btn + .btn {\n  margin-left: -1px;\n}\n.modal-footer .btn-block + .btn-block {\n  margin-left: 0;\n}\n.modal-scrollbar-measure {\n  position: absolute;\n  top: -9999px;\n  width: 50px;\n  height: 50px;\n  overflow: scroll;\n}\n@media (min-width: 768px) {\n  .modal-dialog {\n    width: 600px;\n    margin: 30px auto;\n  }\n  .modal-content {\n    -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, .5);\n            box-shadow: 0 5px 15px rgba(0, 0, 0, .5);\n  }\n  .modal-sm {\n    width: 300px;\n  }\n}\n@media (min-width: 992px) {\n  .modal-lg {\n    width: 900px;\n  }\n}\n.tooltip {\n  position: absolute;\n  z-index: 1070;\n  display: block;\n  font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n  font-size: 12px;\n  font-style: normal;\n  font-weight: normal;\n  line-height: 1.42857143;\n  text-align: left;\n  text-align: start;\n  text-decoration: none;\n  text-shadow: none;\n  text-transform: none;\n  letter-spacing: normal;\n  word-break: normal;\n  word-spacing: normal;\n  word-wrap: normal;\n  white-space: normal;\n  filter: alpha(opacity=0);\n  opacity: 0;\n\n  line-break: auto;\n}\n.tooltip.in {\n  filter: alpha(opacity=90);\n  opacity: .9;\n}\n.tooltip.top {\n  padding: 5px 0;\n  margin-top: -3px;\n}\n.tooltip.right {\n  padding: 0 5px;\n  margin-left: 3px;\n}\n.tooltip.bottom {\n  padding: 5px 0;\n  margin-top: 3px;\n}\n.tooltip.left {\n  padding: 0 5px;\n  margin-left: -3px;\n}\n.tooltip-inner {\n  max-width: 200px;\n  padding: 3px 8px;\n  color: #fff;\n  text-align: center;\n  background-color: #000;\n  border-radius: 4px;\n}\n.tooltip-arrow {\n  position: absolute;\n  width: 0;\n  height: 0;\n  border-color: transparent;\n  border-style: solid;\n}\n.tooltip.top .tooltip-arrow {\n  bottom: 0;\n  left: 50%;\n  margin-left: -5px;\n  border-width: 5px 5px 0;\n  border-top-color: #000;\n}\n.tooltip.top-left .tooltip-arrow {\n  right: 5px;\n  bottom: 0;\n  margin-bottom: -5px;\n  border-width: 5px 5px 0;\n  border-top-color: #000;\n}\n.tooltip.top-right .tooltip-arrow {\n  bottom: 0;\n  left: 5px;\n  margin-bottom: -5px;\n  border-width: 5px 5px 0;\n  border-top-color: #000;\n}\n.tooltip.right .tooltip-arrow {\n  top: 50%;\n  left: 0;\n  margin-top: -5px;\n  border-width: 5px 5px 5px 0;\n  border-right-color: #000;\n}\n.tooltip.left .tooltip-arrow {\n  top: 50%;\n  right: 0;\n  margin-top: -5px;\n  border-width: 5px 0 5px 5px;\n  border-left-color: #000;\n}\n.tooltip.bottom .tooltip-arrow {\n  top: 0;\n  left: 50%;\n  margin-left: -5px;\n  border-width: 0 5px 5px;\n  border-bottom-color: #000;\n}\n.tooltip.bottom-left .tooltip-arrow {\n  top: 0;\n  right: 5px;\n  margin-top: -5px;\n  border-width: 0 5px 5px;\n  border-bottom-color: #000;\n}\n.tooltip.bottom-right .tooltip-arrow {\n  top: 0;\n  left: 5px;\n  margin-top: -5px;\n  border-width: 0 5px 5px;\n  border-bottom-color: #000;\n}\n.popover {\n  position: absolute;\n  top: 0;\n  left: 0;\n  z-index: 1060;\n  display: none;\n  max-width: 276px;\n  padding: 1px;\n  font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n  font-size: 14px;\n  font-style: normal;\n  font-weight: normal;\n  line-height: 1.42857143;\n  text-align: left;\n  text-align: start;\n  text-decoration: none;\n  text-shadow: none;\n  text-transform: none;\n  letter-spacing: normal;\n  word-break: normal;\n  word-spacing: normal;\n  word-wrap: normal;\n  white-space: normal;\n  background-color: #fff;\n  -webkit-background-clip: padding-box;\n          background-clip: padding-box;\n  border: 1px solid #ccc;\n  border: 1px solid rgba(0, 0, 0, .2);\n  border-radius: 6px;\n  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);\n          box-shadow: 0 5px 10px rgba(0, 0, 0, .2);\n\n  line-break: auto;\n}\n.popover.top {\n  margin-top: -10px;\n}\n.popover.right {\n  margin-left: 10px;\n}\n.popover.bottom {\n  margin-top: 10px;\n}\n.popover.left {\n  margin-left: -10px;\n}\n.popover-title {\n  padding: 8px 14px;\n  margin: 0;\n  font-size: 14px;\n  background-color: #f7f7f7;\n  border-bottom: 1px solid #ebebeb;\n  border-radius: 5px 5px 0 0;\n}\n.popover-content {\n  padding: 9px 14px;\n}\n.popover > .arrow,\n.popover > .arrow:after {\n  position: absolute;\n  display: block;\n  width: 0;\n  height: 0;\n  border-color: transparent;\n  border-style: solid;\n}\n.popover > .arrow {\n  border-width: 11px;\n}\n.popover > .arrow:after {\n  content: \"\";\n  border-width: 10px;\n}\n.popover.top > .arrow {\n  bottom: -11px;\n  left: 50%;\n  margin-left: -11px;\n  border-top-color: #999;\n  border-top-color: rgba(0, 0, 0, .25);\n  border-bottom-width: 0;\n}\n.popover.top > .arrow:after {\n  bottom: 1px;\n  margin-left: -10px;\n  content: \" \";\n  border-top-color: #fff;\n  border-bottom-width: 0;\n}\n.popover.right > .arrow {\n  top: 50%;\n  left: -11px;\n  margin-top: -11px;\n  border-right-color: #999;\n  border-right-color: rgba(0, 0, 0, .25);\n  border-left-width: 0;\n}\n.popover.right > .arrow:after {\n  bottom: -10px;\n  left: 1px;\n  content: \" \";\n  border-right-color: #fff;\n  border-left-width: 0;\n}\n.popover.bottom > .arrow {\n  top: -11px;\n  left: 50%;\n  margin-left: -11px;\n  border-top-width: 0;\n  border-bottom-color: #999;\n  border-bottom-color: rgba(0, 0, 0, .25);\n}\n.popover.bottom > .arrow:after {\n  top: 1px;\n  margin-left: -10px;\n  content: \" \";\n  border-top-width: 0;\n  border-bottom-color: #fff;\n}\n.popover.left > .arrow {\n  top: 50%;\n  right: -11px;\n  margin-top: -11px;\n  border-right-width: 0;\n  border-left-color: #999;\n  border-left-color: rgba(0, 0, 0, .25);\n}\n.popover.left > .arrow:after {\n  right: 1px;\n  bottom: -10px;\n  content: \" \";\n  border-right-width: 0;\n  border-left-color: #fff;\n}\n.carousel {\n  position: relative;\n}\n.carousel-inner {\n  position: relative;\n  width: 100%;\n  overflow: hidden;\n}\n.carousel-inner > .item {\n  position: relative;\n  display: none;\n  -webkit-transition: .6s ease-in-out left;\n       -o-transition: .6s ease-in-out left;\n          transition: .6s ease-in-out left;\n}\n.carousel-inner > .item > img,\n.carousel-inner > .item > a > img {\n  line-height: 1;\n}\n@media all and (transform-3d), (-webkit-transform-3d) {\n  .carousel-inner > .item {\n    -webkit-transition: -webkit-transform .6s ease-in-out;\n         -o-transition:      -o-transform .6s ease-in-out;\n            transition:         transform .6s ease-in-out;\n\n    -webkit-backface-visibility: hidden;\n            backface-visibility: hidden;\n    -webkit-perspective: 1000px;\n            perspective: 1000px;\n  }\n  .carousel-inner > .item.next,\n  .carousel-inner > .item.active.right {\n    left: 0;\n    -webkit-transform: translate3d(100%, 0, 0);\n            transform: translate3d(100%, 0, 0);\n  }\n  .carousel-inner > .item.prev,\n  .carousel-inner > .item.active.left {\n    left: 0;\n    -webkit-transform: translate3d(-100%, 0, 0);\n            transform: translate3d(-100%, 0, 0);\n  }\n  .carousel-inner > .item.next.left,\n  .carousel-inner > .item.prev.right,\n  .carousel-inner > .item.active {\n    left: 0;\n    -webkit-transform: translate3d(0, 0, 0);\n            transform: translate3d(0, 0, 0);\n  }\n}\n.carousel-inner > .active,\n.carousel-inner > .next,\n.carousel-inner > .prev {\n  display: block;\n}\n.carousel-inner > .active {\n  left: 0;\n}\n.carousel-inner > .next,\n.carousel-inner > .prev {\n  position: absolute;\n  top: 0;\n  width: 100%;\n}\n.carousel-inner > .next {\n  left: 100%;\n}\n.carousel-inner > .prev {\n  left: -100%;\n}\n.carousel-inner > .next.left,\n.carousel-inner > .prev.right {\n  left: 0;\n}\n.carousel-inner > .active.left {\n  left: -100%;\n}\n.carousel-inner > .active.right {\n  left: 100%;\n}\n.carousel-control {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  width: 15%;\n  font-size: 20px;\n  color: #fff;\n  text-align: center;\n  text-shadow: 0 1px 2px rgba(0, 0, 0, .6);\n  background-color: rgba(0, 0, 0, 0);\n  filter: alpha(opacity=50);\n  opacity: .5;\n}\n.carousel-control.left {\n  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, .5) 0%, rgba(0, 0, 0, .0001) 100%);\n  background-image:      -o-linear-gradient(left, rgba(0, 0, 0, .5) 0%, rgba(0, 0, 0, .0001) 100%);\n  background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, .5)), to(rgba(0, 0, 0, .0001)));\n  background-image:         linear-gradient(to right, rgba(0, 0, 0, .5) 0%, rgba(0, 0, 0, .0001) 100%);\n  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#80000000', endColorstr='#00000000', GradientType=1);\n  background-repeat: repeat-x;\n}\n.carousel-control.right {\n  right: 0;\n  left: auto;\n  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, .0001) 0%, rgba(0, 0, 0, .5) 100%);\n  background-image:      -o-linear-gradient(left, rgba(0, 0, 0, .0001) 0%, rgba(0, 0, 0, .5) 100%);\n  background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, .0001)), to(rgba(0, 0, 0, .5)));\n  background-image:         linear-gradient(to right, rgba(0, 0, 0, .0001) 0%, rgba(0, 0, 0, .5) 100%);\n  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#80000000', GradientType=1);\n  background-repeat: repeat-x;\n}\n.carousel-control:hover,\n.carousel-control:focus {\n  color: #fff;\n  text-decoration: none;\n  filter: alpha(opacity=90);\n  outline: 0;\n  opacity: .9;\n}\n.carousel-control .icon-prev,\n.carousel-control .icon-next,\n.carousel-control .glyphicon-chevron-left,\n.carousel-control .glyphicon-chevron-right {\n  position: absolute;\n  top: 50%;\n  z-index: 5;\n  display: inline-block;\n  margin-top: -10px;\n}\n.carousel-control .icon-prev,\n.carousel-control .glyphicon-chevron-left {\n  left: 50%;\n  margin-left: -10px;\n}\n.carousel-control .icon-next,\n.carousel-control .glyphicon-chevron-right {\n  right: 50%;\n  margin-right: -10px;\n}\n.carousel-control .icon-prev,\n.carousel-control .icon-next {\n  width: 20px;\n  height: 20px;\n  font-family: serif;\n  line-height: 1;\n}\n.carousel-control .icon-prev:before {\n  content: '\\2039';\n}\n.carousel-control .icon-next:before {\n  content: '\\203A';\n}\n.carousel-indicators {\n  position: absolute;\n  bottom: 10px;\n  left: 50%;\n  z-index: 15;\n  width: 60%;\n  padding-left: 0;\n  margin-left: -30%;\n  text-align: center;\n  list-style: none;\n}\n.carousel-indicators li {\n  display: inline-block;\n  width: 10px;\n  height: 10px;\n  margin: 1px;\n  text-indent: -999px;\n  cursor: pointer;\n  background-color: #000 \\9;\n  background-color: rgba(0, 0, 0, 0);\n  border: 1px solid #fff;\n  border-radius: 10px;\n}\n.carousel-indicators .active {\n  width: 12px;\n  height: 12px;\n  margin: 0;\n  background-color: #fff;\n}\n.carousel-caption {\n  position: absolute;\n  right: 15%;\n  bottom: 20px;\n  left: 15%;\n  z-index: 10;\n  padding-top: 20px;\n  padding-bottom: 20px;\n  color: #fff;\n  text-align: center;\n  text-shadow: 0 1px 2px rgba(0, 0, 0, .6);\n}\n.carousel-caption .btn {\n  text-shadow: none;\n}\n@media screen and (min-width: 768px) {\n  .carousel-control .glyphicon-chevron-left,\n  .carousel-control .glyphicon-chevron-right,\n  .carousel-control .icon-prev,\n  .carousel-control .icon-next {\n    width: 30px;\n    height: 30px;\n    margin-top: -10px;\n    font-size: 30px;\n  }\n  .carousel-control .glyphicon-chevron-left,\n  .carousel-control .icon-prev {\n    margin-left: -10px;\n  }\n  .carousel-control .glyphicon-chevron-right,\n  .carousel-control .icon-next {\n    margin-right: -10px;\n  }\n  .carousel-caption {\n    right: 20%;\n    left: 20%;\n    padding-bottom: 30px;\n  }\n  .carousel-indicators {\n    bottom: 20px;\n  }\n}\n.clearfix:before,\n.clearfix:after,\n.dl-horizontal dd:before,\n.dl-horizontal dd:after,\n.container:before,\n.container:after,\n.container-fluid:before,\n.container-fluid:after,\n.row:before,\n.row:after,\n.form-horizontal .form-group:before,\n.form-horizontal .form-group:after,\n.btn-toolbar:before,\n.btn-toolbar:after,\n.btn-group-vertical > .btn-group:before,\n.btn-group-vertical > .btn-group:after,\n.nav:before,\n.nav:after,\n.navbar:before,\n.navbar:after,\n.navbar-header:before,\n.navbar-header:after,\n.navbar-collapse:before,\n.navbar-collapse:after,\n.pager:before,\n.pager:after,\n.panel-body:before,\n.panel-body:after,\n.modal-header:before,\n.modal-header:after,\n.modal-footer:before,\n.modal-footer:after {\n  display: table;\n  content: \" \";\n}\n.clearfix:after,\n.dl-horizontal dd:after,\n.container:after,\n.container-fluid:after,\n.row:after,\n.form-horizontal .form-group:after,\n.btn-toolbar:after,\n.btn-group-vertical > .btn-group:after,\n.nav:after,\n.navbar:after,\n.navbar-header:after,\n.navbar-collapse:after,\n.pager:after,\n.panel-body:after,\n.modal-header:after,\n.modal-footer:after {\n  clear: both;\n}\n.center-block {\n  display: block;\n  margin-right: auto;\n  margin-left: auto;\n}\n.pull-right {\n  float: right !important;\n}\n.pull-left {\n  float: left !important;\n}\n.hide {\n  display: none !important;\n}\n.show {\n  display: block !important;\n}\n.invisible {\n  visibility: hidden;\n}\n.text-hide {\n  font: 0/0 a;\n  color: transparent;\n  text-shadow: none;\n  background-color: transparent;\n  border: 0;\n}\n.hidden {\n  display: none !important;\n}\n.affix {\n  position: fixed;\n}\n@-ms-viewport {\n  width: device-width;\n}\n.visible-xs,\n.visible-sm,\n.visible-md,\n.visible-lg {\n  display: none !important;\n}\n.visible-xs-block,\n.visible-xs-inline,\n.visible-xs-inline-block,\n.visible-sm-block,\n.visible-sm-inline,\n.visible-sm-inline-block,\n.visible-md-block,\n.visible-md-inline,\n.visible-md-inline-block,\n.visible-lg-block,\n.visible-lg-inline,\n.visible-lg-inline-block {\n  display: none !important;\n}\n@media (max-width: 767px) {\n  .visible-xs {\n    display: block !important;\n  }\n  table.visible-xs {\n    display: table !important;\n  }\n  tr.visible-xs {\n    display: table-row !important;\n  }\n  th.visible-xs,\n  td.visible-xs {\n    display: table-cell !important;\n  }\n}\n@media (max-width: 767px) {\n  .visible-xs-block {\n    display: block !important;\n  }\n}\n@media (max-width: 767px) {\n  .visible-xs-inline {\n    display: inline !important;\n  }\n}\n@media (max-width: 767px) {\n  .visible-xs-inline-block {\n    display: inline-block !important;\n  }\n}\n@media (min-width: 768px) and (max-width: 991px) {\n  .visible-sm {\n    display: block !important;\n  }\n  table.visible-sm {\n    display: table !important;\n  }\n  tr.visible-sm {\n    display: table-row !important;\n  }\n  th.visible-sm,\n  td.visible-sm {\n    display: table-cell !important;\n  }\n}\n@media (min-width: 768px) and (max-width: 991px) {\n  .visible-sm-block {\n    display: block !important;\n  }\n}\n@media (min-width: 768px) and (max-width: 991px) {\n  .visible-sm-inline {\n    display: inline !important;\n  }\n}\n@media (min-width: 768px) and (max-width: 991px) {\n  .visible-sm-inline-block {\n    display: inline-block !important;\n  }\n}\n@media (min-width: 992px) and (max-width: 1199px) {\n  .visible-md {\n    display: block !important;\n  }\n  table.visible-md {\n    display: table !important;\n  }\n  tr.visible-md {\n    display: table-row !important;\n  }\n  th.visible-md,\n  td.visible-md {\n    display: table-cell !important;\n  }\n}\n@media (min-width: 992px) and (max-width: 1199px) {\n  .visible-md-block {\n    display: block !important;\n  }\n}\n@media (min-width: 992px) and (max-width: 1199px) {\n  .visible-md-inline {\n    display: inline !important;\n  }\n}\n@media (min-width: 992px) and (max-width: 1199px) {\n  .visible-md-inline-block {\n    display: inline-block !important;\n  }\n}\n@media (min-width: 1200px) {\n  .visible-lg {\n    display: block !important;\n  }\n  table.visible-lg {\n    display: table !important;\n  }\n  tr.visible-lg {\n    display: table-row !important;\n  }\n  th.visible-lg,\n  td.visible-lg {\n    display: table-cell !important;\n  }\n}\n@media (min-width: 1200px) {\n  .visible-lg-block {\n    display: block !important;\n  }\n}\n@media (min-width: 1200px) {\n  .visible-lg-inline {\n    display: inline !important;\n  }\n}\n@media (min-width: 1200px) {\n  .visible-lg-inline-block {\n    display: inline-block !important;\n  }\n}\n@media (max-width: 767px) {\n  .hidden-xs {\n    display: none !important;\n  }\n}\n@media (min-width: 768px) and (max-width: 991px) {\n  .hidden-sm {\n    display: none !important;\n  }\n}\n@media (min-width: 992px) and (max-width: 1199px) {\n  .hidden-md {\n    display: none !important;\n  }\n}\n@media (min-width: 1200px) {\n  .hidden-lg {\n    display: none !important;\n  }\n}\n.visible-print {\n  display: none !important;\n}\n@media print {\n  .visible-print {\n    display: block !important;\n  }\n  table.visible-print {\n    display: table !important;\n  }\n  tr.visible-print {\n    display: table-row !important;\n  }\n  th.visible-print,\n  td.visible-print {\n    display: table-cell !important;\n  }\n}\n.visible-print-block {\n  display: none !important;\n}\n@media print {\n  .visible-print-block {\n    display: block !important;\n  }\n}\n.visible-print-inline {\n  display: none !important;\n}\n@media print {\n  .visible-print-inline {\n    display: inline !important;\n  }\n}\n.visible-print-inline-block {\n  display: none !important;\n}\n@media print {\n  .visible-print-inline-block {\n    display: inline-block !important;\n  }\n}\n@media print {\n  .hidden-print {\n    display: none !important;\n  }\n}\n/*# sourceMappingURL=bootstrap.css.map */\n", ""]);
 
 	// exports
 
 
 /***/ },
-/* 377 */
+/* 380 */
 /***/ function(module, exports) {
 
 	/*
@@ -34863,13 +35846,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 378 */
+/* 381 */
 /***/ function(module, exports) {
 
 	module.exports = "data:application/font-woff;base64,d09GRgABAAAAAFuAAA8AAAAAsVwAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABGRlRNAAABWAAAABwAAAAcbSqX3EdERUYAAAF0AAAAHwAAACABRAAET1MvMgAAAZQAAABFAAAAYGe5a4ljbWFwAAAB3AAAAsAAAAZy2q3jgWN2dCAAAAScAAAABAAAAAQAKAL4Z2FzcAAABKAAAAAIAAAACP//AANnbHlmAAAEqAAATRcAAJSkfV3Cb2hlYWQAAFHAAAAANAAAADYFTS/YaGhlYQAAUfQAAAAcAAAAJApEBBFobXR4AABSEAAAAU8AAAN00scgYGxvY2EAAFNgAAACJwAAAjBv+5XObWF4cAAAVYgAAAAgAAAAIAFqANhuYW1lAABVqAAAAZ4AAAOisyygm3Bvc3QAAFdIAAAELQAACtG6o+U1d2ViZgAAW3gAAAAGAAAABsMYVFAAAAABAAAAAMw9os8AAAAA0HaBdQAAAADQdnOXeNpjYGRgYOADYgkGEGBiYGRgZBQDkixgHgMABUgASgB42mNgZulmnMDAysDCzMN0gYGBIQpCMy5hMGLaAeQDpRCACYkd6h3ux+DAoPD/P/OB/wJAdSIM1UBhRiQlCgyMADGWCwwAAAB42u2UP2hTQRzHf5ekaVPExv6JjW3fvTQ0sa3QLA5xylBLgyBx0gzSWEUaXbIoBBQyCQGHLqXUqYNdtIIgIg5FHJxEtwqtpbnfaV1E1KFaSvX5vVwGEbW6OPngk8/vvXfv7pt3v4SImojIDw6BViKxRgIVBaZwVdSv+xvXA+Iuzqcog2cOkkvDNE8Lbqs74k64i+5Sf3u8Z2AnIRLbyVCyTflVSEXVoEqrrMqrgiqqsqqqWQ5xlAc5zWOc5TwXucxVnuE5HdQhHdFRHdNJndZZndeFLc/zsKJLQ/WV6BcrCdWkwspVKZVROaw0qUqqoqZZcJhdTnGGxznHBS5xhad5VhNWCuturBTXKZ3RObuS98pb9c57k6ql9rp2v1as5deb1r6s9q1GV2IrHSt73T631424YXzjgPwqt+Rn+VG+lRvyirwsS/KCPCfPytPypDwhj8mjctRZd9acF86y89x55jxxHjkPnXstXfbt/pNjj/nwXW+cHa6/SYvZ7yEwbDYazDcIgoUGzY3h2HtqgUcs1AFPWKgTXrRQF7xkoQhRf7uF9hPFeyzUTTSwY6EoUUJY6AC8bSGMS4Ys1Au3WaiPSGGsMtkdGH2rzJgYHAaYjxIwQqtB1CnYkEZ9BM6ALOpROAfyqI/DBQudgidBETXuqRIooz4DV0AV9UV4GsyivkTEyMMmw1UYGdhkuAYjA5sMGMvIwCbDDRgZeAz1TXgcmDy3YeRhk+cOjCxsMjyAkYFNhscwMrDJ8BQ2886gXoaRhedQvyTSkDZ7uA6HLLQBI5vGntAbGHugTc53cMxC7+E4SKL+ACOzNpk3YWTWJid+iRo5NXIKM3fBItAPW55FdJLY3FeHBDr90606JCIU9Jk+Ms3/Y/8L8jUq3y79bJ/0/+ROoP4v9v/4/mj+i7HBXUd0/elU6IHfHt8Aj9EPGAAoAvgAAAAB//8AAnjaxb0JfBvVtTA+dxaN1hltI1m2ZVuSJVneLVlSHCdy9oTEWchqtrBEJRAgCYEsQNhC2EsbWmpI2dqkQBoSYgKlpaQthVL0yusrpW77aEubfq/ly+ujvJampSTW5Dvnzmi1E+jr//3+Xmbu3Llz77nnbuece865DMu0MAy5jGtiOEZkOp8lTNeUwyLP/DH+rEH41ZTDHAtB5lkOowWMPiwayNiUwwTjE46AI5xwhFrINPXYn/7ENY0dbWHfZAiTZbL8ID/InAd5xz2NpIH4STpDGonHIJNE3OP1KG4ISaSNeBuITAyRLgIxoiEUhFAnmUpEiXSRSGqAQEw0kuyFUIb0k2gnGSApyBFi0il2SI5YLGb5MdFjXCey4mNHzQ7WwLGEdZiPPgYR64we8THZHAt+wnT84D/x8YTpGPgheKH4CMEDVF9xBOIeP3EbQgGH29BGgpGkIxCMTCW9qUTA0Zsir+QUP1mt+P2KusevwIO6Bx/Iaj8/OD5O0VNrZW2EsqZBWbO1skRiEKE0DdlKKaSVO5VAuRpqk8VQJAqY7ydxaK44YJvrO2EWjOoDBoFYzQbDNkON+UbiKoRkywMWWf1j4bEY2iIY1AeMgvmEz/kVo9v4FSc/aMZMrFbjl4zWLL0+Y5FlyzNlEVYDudJohg8gPUP7kcB/mn+G6cd+5PV4Q72dXCgocWJADBgUuDTwiXiGSyZo14HOEQ2lE6k0XDIEusexDzZOMXwt1Dutz+tqmxTvlskNWXXUQIbhaurum9GrePqm9Yaeabjkiqf+bUvzDOvb2Y1E+EX2DnemcTP/zLcuu7xjQXdAtjR0Lo5n4/Hs/GtntMlysHt+29NXbH6se//WbFcyu+r28H0MwzI30DYeYTLMXIA2EG8QlHpAsyS0EfEToR0a3utIxFPJ3kiIHCCrZ66b0e2xEmL1dM9YN/MwS5p01N5jMX/BLKt/1R83l0LyC29M6+iYxo/UNg/EF7c2WyyW5tYl8WnhWg2/hyySbD5UhnDyS7OcU0dnrFw+DfGdI7v4QfYIIzOMq9hFtY55gmvC7jZ2FK7sEdrn6IXBuucYhjsGdQ8z0yEbWkkczjjsE5hNAIZrPx2zOLZDmKNXcXtg7EMqidAEEWg+SJCBBNwxvxJfc/bZa+KKf+xoKZybnq5vaqpPTye7CiF+ZFjxZ8/7Qij0hfOG/cowPA1rT1l4ymWnrKmxxqfErTVrpgwPlz1kC+Oy8NMDz6c+IO38K/x0xkPnLW8Kx6qGAoQdL+TD9V9rb+/ctn//trxz8dUrZrD/zk/ferF0cNt1BzctmX2FZPXt/jnFCQNz4Ah/iKllGiCMs1w5Lkg0kiEwj6VTXCDKsX9rMpnvIj9pcDecXAIXMnqn2dTUbN6w0XQ9ue6FV/nnXCH7S3lPWGltVcLsH75ub3ab7A8M28caNrIeOr3o5Q0yFsYL80xaa0EY/UEczV7icUMY5pnelAkmUAXmHYjvFWFGxuqlSaow3OM+/iYY7/l/hVELF4EjRqNR/bvRbOY+DUGzGR/Oh3EqmE/ugIQQguGt/eMYz/+L0cimjeZfQDI3phXMbMQsqH+CjwVz/hf4idHovgVmB8gLvjbicDcC/NypP536E/9N/puMibExdohBmNwyiaZdJGoigos7GpF222xrfnZhML/7Z+ylaqP63Hr+m7bdUkQ6/2cXqdfmvwixY+s2ksXFeXcE+iX0Z+Iow76DBNgjJ7TOdUK18iPsPflfQD+DPsZG2Aj9VmKMMJ4fYRrhIaxhTDR0Elh2vA6h/AE6xUb29mj3sjmL72petXjejPy+oel60M99tFduCI59N3221xe7apOvxs6aHs7vab1IqY2tv7q2xsHeHGml/cV06u/8S/xTjJ+JYc0bWEX0ukW6YmIbGkJRMdjJ9mYIH5QIdJF4hvRGyK7cC7ctImQRcUET99fGXOoft35GYLMQu+g2smnkgZUrH8AL/9Si217IssJ916nv14ZrJrvdxLkQvrvtBcjgPC0NXOicO8Qf4mcxPqh3hgUw3DDfdvLJXngg7N3dN2zbPJSaed3OfZnMU7dvmznp3C3bruO+Nmue0LFsy7S+6265+fCKFYdvvuW6vmlblnUI8xCXp37CrOZv4B9gauDBlYp7adcUXB5DNCwYImlXOJJKkAdvExXxVvKEYnCo+3eIskP9qrrfIYs71CccBjfXRC52udTHHdaP1A1ui/VvH1otbrLrpNXBsGX5B89QghDyimlvNB2KfkxZ5C9/em3+d1+d//IfFp2+2Oxn/s+9n/79p39S3s8idN6g0yZObwJOgKUpNB3GyU0Ls0PbRzIRq4lcarLKOJBkLRzJQD4j2090XrbA7DW8K3jNF5hlGS5e4V2D17zgss4T20egOJte5iD0bReM9yjTxnQxCRj3c5kFzGJmGbNKmwGw39IJDJcXJZGMkaAB4jyJAKw0jt5IAuIE+A+U3cVAZZrq9zhDyBrU8oosuxcGNTzCKJfla7JjNVmuSb/+tuzN2H+X4vlB+PpdfMXXmuVsNiub1T34SFbjYw5itEvVi0K0Nt9pNJUMI7SLGRhf2xipfCYf8z5OdlGKayOucFeVPeS/dbo3lBrbSMmwUiQN5/ed7g0Ds1s17IuZC5kNzM3MZ6EWCa0DtekdJfAxz+R/OX28sND7yRMTBcf++s8mQCQWHya4qBv/ufeMoWyslPA9DtMxUknxkH/yfTnm2CMYzs+Cq3r7PxY/MXomrvTEsRpfEGHa+WN8E1AHjElb7d06ddA7oK/+5Mdsv9EtPms0jv0Z5kf1FqPxWdFtfFr0kHfgDX0Y+5PRSG7RUj0tQr7rmfX8DH4G5W28kKeJLtmQsQkuwMP1pk16EV4sl7vrMJATfyUWo/GwEco4rh4XFQgaiUX9qxZHrMQqKnz/c2d8b9TysYrAuXpP/Rf/Gr8b1qwwc5a+euLa6S6sneNXToG2XrEJi4R5SGs8Sq2S3d97bsfCRaTdaLwKClRHt37mkudvXbjwVrLhuYeGhh56bvfQkHpk2CwvwClqgWwuBfndC3c8dwmstj81KkagcUgbfPY8Zje0W/82VPWJHmSq6pP8hPWpotc/EexDOK3qU+wngPhOCiO9MJRm8TJefjelrzoKnG2Bn+1NCUmPE4gHFmBN9jrTigRIpsACrc9Gstg58ULkp9467+Gf/eFnD5/31lNrt2967dhrm7bzI+VT5m+fzKhvf2MzpICEm79Bopkn07lt1762adNr127LwVqQLdJ5+lpQDcvHPQtVY5knhYrK6q8/JsiP6EuhGZdFdaNszjvpqvc+PI0CdjN0AXsFOC3ZfALDJwr4q2Xq+GF+GNbsxUg5NLLIEXi8otcDQcUts0D8eQ1iVDRAMBTsYiNdRIxE09EIBJO9A2xqgERTaW86BUFn0OD2xFO97FAgFhF6OoQ7prYt4XwSeUgQHiJyDbeke9IdQntciLQ1FlJMaYcUNvZBg+FB1ubjlnRNvl3o6IEU2w7fdNPhm/hh+FLysUu6++DLHkOkrSHYEjH0tEPe7WdD3uyDgvAgK/m4szFFR7ch0toUgBTdWHr7EpaWru6+6dmbbnqWEbV2EtxAsXiZAPTtGPSbHsotI2leoM8TePEqgSQprs7AGFf8kuOkPdZPXGb55POAW1d/jLST9v5YflasP6v/CO7+GNAPC2BMZWmsOjp2NNbfHwMCJD+LPVL+D/OYlWEEI/9jpPddOFkB5d1GSuKZYggmCCd7JUxD7EXAzxyirYnNDLdDZoFdx14kivkvGc3579Jm36reTTvDgBnaO6vzyQ6chQmlsMoIkIQ2+bBDWBud1Va4pcCn8CPqxlh/fgtG8IPaPH8C5wk6/nZDv69jurV5QhtwE0x2iqOsj9Mx8B9/0EaUdiPfOYYDCi/q9jhWRuupMDEU0+CtX0sDFxv07T/K5niBPqN9+tQjgEc31NGCXFeMcCEuQBIc/BK4CO78u7EPYvl3yaEfK3vcb6qP1R2tI7vUjVDDUdKubsSrNjYKY1qBEa2P50SJoaXiksIoLiCwnxS6EBuBde87botNfdEWwYvF/R0/u5yCqhGeEOR2ynSeyXjt6ka7neyye8kryBSWE52y+RBgogrXPZ8E1yIHoHIFUM+AbJhE7lbMtt8ApL+xmZW7PwbjAO0fAVoXQOuiSP/ksIVdFZ0aulsamKUzwPZ/NYDMJRBPCxsBqLzqHyneXF6Ej9HlIFo7+pg+jUb3unRmGpstGkm6etOuDBGA5wCMefp1gTHcdZlvPBXlOslvYTp1cd8UjYLVd/J5awNrIOKLnIt9MD9qdrKrWCvA6ALm3QV9VrsPm60Q7+RHJHP+2hqfugo/MvI2H/mqr4b9tFnKSRY1Y5Ek80Nm/WIhr1ikKnxGz9TWXrokf9xwujfvcOTtNTWnxd0F37Y2W79tteBqZ4G5qLCuomw+nSr28QESCRVLTyYKILGJOPfcnaIFOsewhRdvv+rWa/Wih0vlbX6Zb75T5C0qNKVFvH1QL/vazSWgC2s6oWXXIuUxQelKiJbowuJDQViatLmLijg9CQBMg8WiPgiw3LEeYRmm5f+XdnvkDnxLLjMLxtvX74C3OlwPQqx4xwIdpPx38LrlDphiyWUWHWKAzzxurS/xTo+P5wGFak62ap1PVFFN4v/y+xuR39WnIO7lsWfwgVsK17wxrs9K8ltIKuhkw7f/6dhK6gQokFKhWX3urrjk/rnI0pgfpGMeuQIUaEM7+GF5q2iMkCaMQwxxOzcvU0eXbsnS9XknXvP7Gtw5dwPXlFu2ecvSHEZgNDsU6x/GdXBYXyOQjzZReSedeEPY6nEv9gJR4oBQJtFO6Kd0fwC6BO4LNHDeBujB6dSNcUQC9zIv2LnAzGk99bUDrdFY+9yGFQtEo0GQPNv6vS2drj4+1jHbv3aJSMUWP+QTZrmbNTjU8wyG/iXNNpskybLcJ3CiTF5Ir+JYzmJwE0mSVhlxbtbmvweB3ulB6Til5UuUZydpgiFVeobhU0WaBqpJ198d+/XeNRTZ9/1OPfG7+2hwzd5W3D+hmyjsRcUg/+Cavb++Vh2ls3L7zT/etOnHNxeerv313vzLVqPai4nJv+K1FC6040/4udw7sAb3laSg0XCkAAs0npBO6VJabS4Elk/U+D4gTXW+j0wnrMlqNamq4tMIYB87tE10i0FR3LZNhJsb7/R561btmes8YBCRkhYNByRtKd55mqTas9FYhJnbRGHuOh3M4QTdgQSqmgRxuzGdSvZGcbMxNQGk5C3ebLjoXIOFM4l+WKHmLTJwRv9E8GWJ6dYvf/FmEyEGr+gyrr1p5zrgkz0Cw2j94Hv8Jdx7dIVegBSNtgsqGsRQEYiIBoXwD0LNvQ5d7s5Z00QzwNhqZA0b+tMG1tQq5nd84uq8R0zPvX35G8uRaze4jcOHzz0w1+Q2BIRvf6J6Kgatnrbiem+CFvAxfkrndzD9MFPP1GWTUHclpASUkCNAQkpCCcCgDSUDAhDZ+CuEkgn8J7i9nMA7pA4lISappxILKfAeSAbIcSDuN2bJcfZILqeO5rLs0MnngSHYRdrHjmaz7JEsEPw51ZqDJDmUIOZIe34WaQeegNsJn1qz8AIpT3yCjyEih/xELkuJ0lEMYTLVCiWpo5oYMleMH6USyYJcD+uOe+kWKpn1Qns34iyYDjkSLvgnZXcgVQNeqINXr48m3iS7cjm8tedyY0f1QvTnHHdsrKby/+SSbPY8/NH6vpl/Esq3Ae4ZU1HC44KFiI9o7CEgab/RqHbj7s5KAg06s39ZP/zxI/mVuF/TbTSy+3Fb8If9/cv7+wt91yy8RfP1QXtW5RzQn7qIiZyuFM5QfJ5E9uVnqT85TanFx0lkP3ukBAMprvsRyi/C8NAJL1xbIIirSvnSj4O5netb4JxmNANHPssHAcHMHsFRgEug816gDBeMbdfiuRcghqYcm0+Xxx/5IAEtN3fqFF3LzAXqwoT0PN0OVTNqxo8sxMkd5Ig6k79Zk7VxxX6gMLOZFQgvpW2RrMW1D0BDihaXQ9wVRoBxPLfpknmkeMtoB/qM9cRc9IqmMD2XUmdZ7GSRKPUZvChf8BoykriM2MnKYbOHX8R7cLdNCxSFFVQqoYswnlWtlFS2mNkhswVpZiQW1J/UKFfipHGlUkM6UKBhMz1istELIHJLMSctu3ugzfaVSOjKvUgc/THK4Sdg2Wscz69leKIkkrwuuWiOe9yGYKQXRumkC3qbRcMwrvhjNXgdZk3RxAUEhuSPvn3nnd++U/3vlVOmrJzCD8JLxV1OHRjrZifbcFDOuRNTGqdgQm1tSNJ2OcQ04YiEXuxtII1ECSQRoQGYioEsgCfchB4ghAtw7FfJre4WZ9hkVi9MtjuWqtdNDlpMrfEG9fOT6q21okg+e4As38MfGquNt7oUws6Ysarj1/efE+yst86YUVNvDdts3Pv5c8m/aP0C+f8/Qb+IMnGq09BgwN01oIOAnAdagI8mBSrqk1gxTDUBOtk2ousEtBH2z4Ir2d3f6k8PXXVlt2qN9RODxRuoJT/v27wm09jRYVc/e++iyx2tyzJb/n3J0htXP87eSsQaf2Ly0s6Zmxela88REy1cf4273mI3iXNJ7KxrZibOm9xm6rl4fqy/t27smU8tOfdW2ucBzg2UfmOIVyLIl3kpYlwphDISTXJXsctmiDtN7fNV6zelgxwnWxsVr83Aj/S5ki1jL/a0GC6+2L6Um+aoddlNFuj+bJ8mH/iaLh8I0/U51NspIEfq0dohwyFXKgm4NggwQ4rRhCOUFtxxo8XnitT4cnGfT93IS8FaT85XE3H5LMY4zIEPL1hw443wz+1UmhTJyJGxZzw+wsKkKZgUiVtKOKMEb2AKHTv61FNc01PQFwKnvsZ/9pPA4RKTASWahmh+8MxwzHxKy74IRn5LGRjsPUUwTu64UYNY38caqd7HKucZ/tHnODtENw/2UfHRMaq1UUPDJQ0OKkWCeet5fYOhII1VRz8+/Elg5j4Gxur3J8o2PJ4rg+2d08T/fwEzSVbyZ9XPro95T477lRKqUSRXQnauHNsISAl27oWi6Fv9z48JMv8r/aMMj8onCP/DuDZOuN+GPPr/+p7bx+7JlbYdppcNhzKU/1Px5aiaGDn/s1iGMaBcleKUo/v9rcxkZj7DBEKOfrayytXNLYiUdBY+pleQXdnscKlQcpzuWluxsieeyuXIK6SdxozitWyGOV3vOHHjguyCQ6fpIYy2JwvrQEF/Qa9Pdf/QqOSqCiE/EE1/XIVKTc2tzWbHnimrEd+Vyz311Ml3P0GVTj7PD5aDnsvCvH36alEaPMePcMegXs7x8igTu4B9v7G9vTHvhCu/kzIdx+BxC0ay9zRSvoS0F2lIxI+X7klU63I40gLQ3w5ep5na+SFnba3z5D64zv+QtM4n4ffG3tq4aNHGRfxgrXPMim+5487abL7xhdseIRn1KDl+7aINixdv0OD+JSPwKf5+xoP6aiTeQIDVlIhMcL1H5R9PYXvprs3fv2bO7MOplCmweuiq2JRZ1zz+9a/v2PH1Hfz9236w+ZrPXvWfAxlj4NLLHpq3c/PQ3uvmvbrjG7fe+o2y/cLdtE6VUlXi0ASb1VLUBVSUWSU4HdvAraTyS8xzM8NxvxFkXV6pUVRiJwcgC5zEeht4rwcp7ki0k41G0qlQhG1Vzlq8alEmnFi58caB5Q9vn988MLhqyVlHvLEWjtQFeupdiocF/tkkOGPW2ibWaBTkeZ/dvPWazXfOnnvL6jkRXpi85sFzZt+55ZptW3bl1cCCHZPD06MhySha7UFzjcjbp8fOecFCirzAG/yVjBX6OFIaadSjQq1nNhyIe8tVbaaSdHlXIWKacMeuZA1uxS95zILhyrxAdsXTL6m7kNQlx2P9uZf2qhufePFFbpI6/OU0WcP99RrCsrwseVot5mtytpf6Y0gm9sdeyKnPQ7onyK4nXlR/rg7H95M1upzu89DH6pgUcikoiihJ6NJKmRxV1x+MJiOA3YwhDRQrWU0u/0rvq0VYXnyCwsLeTJYBq3dAtJDavuzyoVpzZ99Z0+a0uoiFH/xcqgDR7rUFeOrUn6Cywb8ZeNMbhLV5ugP9l0zv9UN5b5mFkjzxUcpPJCn3V402pRxtJd2GrnLdhtVk9ZSZh9W91fCSH5B7ofxPiWL+j3D/uwhBRdyAyozeZwvQzs79soi+BKSnafLviZCcfrpBpLyimfLfTyJtbyruIQKD01tUwJyKEo/ybaxkSNFUMdMkhQoJyRBQFhnUkDQSXhTM+3NmY0EDM7ffLIjqWEGt8lCO6mLia3PukFnghosJD5p5SIho/VDkzQfLE+IrYoJXkD19pdP7OwG/voIUtagiWiZ4PAFTHHlTVhRZ7dYmPar+NJ+8JhmR6DFK5DV1foHoLNO/pHrvZfmWZ15RQlwvoVDKhCWNK3CCch9lfFBuAqUgpFSShmNaPj+i5++WZfKeViJfW5HnUakVL4UCNVkA4+ETfIqx4B5xSaP2L1yn0zn2ltPn4+OqZGmwwEVCaCSqG53ldtL1oLGAhdMLd09MpCCF6tD6ZnAZBY9hDaYsP0jzZ0j5ZjKsF4i1UmLuhbJMCnYJPt5VwFNvmZawXjEvLJqIH8STonZjq7BZ8gKgR20C9MDFqJAX1H64QW2NEup6qgzLP8cvppL/NNTOBTCJABOHeWoXzLhw4Wuy7gaBtjKr9kgKq8ZlRYBS32Lpxc8vIhpNDTfyNXWybMJbn2RyQ5EmWc2QF9wmSZ0KYCE+cPuYO6b15Uotj2Kd4MItLS7gtFbkTdrFND6pvEZqv5Yv7jXAus7Pg7avo7KDot50NX3CPkP+Kps8J9/3mGQIteY/LGPC+L7872SPR2br5fy8MtKBMHedGuM28/MZmPJMrGgi3Gb1S+Si1/L/zrZwO9XH1ce/z7ZQ1WSoY/+pMb5FT4ua0Wm+Jf/298nFmChEQ+Ti71est4mq9VYI6RsymoRJKYidElT2FGnDTZvqtfhGAFTbeqEw68GqtfmbVa/1IFO1/jdWr/8BDRRtQh9XNjubEm4aWVpVonpTGR7PVGc+KJNoBIWF7kYi4gUV3r1U6723i6TxUl3n3/tM27aZfKb7THiHW9VzFSwHJ05VfK6Ar7kaB0XgPPE0BSkSFKsBUpaLihEWoA9wBt8qirh2VSOkZwXEwyrxZ5jyt2rJmSo9gX7cg6jsEUGJU9z9xJPOEM3uQQxKgkh35DNATnVyrmJ3mbCNyIB/yox4wH1bg2DwN7q9kov4pFqny8oSm3RQbGgJ1QQTs6ZMLilOVYJ9v6Wha3HcJ9jddsXp9YhGUXLXt/qMDnvLpPNTXfNa60z5/yjXQOMq+lNmwh5egpYrdfZQZV9rI47xlRkuyTjpzsmCBSWNkAXVoK8sgYWqQJWbo1RLo6QH0YW6pxqfCnRgkd+RiFjUQUQ7poIaYoakgXxwFd9BuuI38H1xBxXSFb/pBDIKQFn7YB3dB36l7sG1FLaKiBdp1KxLvfswap/30lnVESgNnvjbUoT6w9N+Xoio0qcYOIM+heg940YimsucQVvli9NEcft2UZwGQwLuilj1fFr1i3NP94X+PE7Hpvtj6lBJfJ4R6NvWiaL6MgzWHxiN66DExa+dAdAbMYX6HVF8A+7rjEZIXAVbDe7PVI9rmN69JOLV1DOSvRPxWNPZBZf/Nf+Ny65BhYxxxV+77XJ2wfQ389/IQPgajXbwMsuAz/0IaQcXJavKbRqR2IqyZruXjVC2+hdee/5vdnYOedpmVtR3NGXldxSzDSIiBVpkGb9by89UpEPKrSLZmyFDzMab/wXl2CNe7s/qCtTvWgG5kpBmCBlSzDS/r8N4uwBwohRW63JTS1y32f0TQsPfXVGEHQrV8/NCfiOUVirYcBbIeA2+iF68rQIo3B/S628vYESr79ehzS7Q9LEL9UXmik9XVHb1yBO3Ngvt5935+k1efkV51mzzrM0LL3/20avnwMeKuWyOUZg2TasSqZ+KcZQiOn1Iu2Vh497ALUVZiCKt/gh6IvTIj1ZLRjWAkpHKOKovNwp00eqPROiAbiNEKieXwMLcXhVJ1/uzmLP4tfxaHR59cBdJVG1kTAgl9ze9QKUEQ946Hkb+okJ5JRDyf54Axur1D+WS49cLr0tTPEu7UmXrxcSr3XNvumv4yXzInXKH4F7Tc7p17Zt+t/qW2+93k063X7VW6lALxTY7i1nBXMxcxmzQbabxz+tJo+wijYaIGMNS8AoSMgAPt84DdHOoMPfjXhF+kuH1tZvuFQrRCN07xGcXRX9MYxYchDe5BcHj+Z4i+42WyPc8Xofi7bbZJN5nJLJ5qr6IqRtzqNlM17SpFsnkEyTWoABEjz4JXOQvzWYuwdnV5LNGOwTM5v9r4RpQ8ZXsYodks3o31JBlzbYtNotisnm22MxiwGFXam5oN1n0TA/hRvshvTSDwHff4nNzRo9Dum6PaJbMXzDz+x+Fkj4L4bFNBb1asqsgH7Dyh4DvbkPtf5yMDKzEwyoaESMSNS9P9gJVA3/RTlwoMwZvxECFWxIPNw9gi01nOHjP32esZTtmXHnxvZd8ZtakqQ7ekajbXetpNa6ocTVxJtY+uSe69OLz77zh5bDR3xjZMzUz6fxrz1nqrZGcHQHfPVefN+fiK86LeXj+Sc5lPKy+k/vCUI/DaLFYCWHr6nbXuILTIsb5imNKY/rCm28fSMxPhkN1XbNMNZGuqwOBhtTSxWuTk6bw0ZaG86b1hKddePOKuBvmiguYBn4T/yOqOyGRBt7bKUI1GjioBC8aUKwF7Q319UgcmtFGIzCJGBqwQij0ynDsfdFGc3TS3BlNfJ25xmzniMkpXXTPvCaD3ZaZvyzjmZdudBostmhb0ORZNN2sJBeed1HXkrUsywueQH+L0eCPxmsa5ZpgRJSDZ11yDv+jmbd86vxZfc1WcZJ3UkMq1BOOOVtvu/+pB+en186d3GTwWAw2jheaJs09/+LNfZft37DALyrNj1wABMuUKbODyTVnT/KYbJ3Tpq8IrNh92dkxOj5P/YpZx4/ycyiVcDYdn4JbEoKdQi9054iBKsygLW46FRGxAb0NPNCm8BSNCPjoKcj6EAus4SuP3rB+cV99/eTF6294dA8+TK6v74MHVpYNRt/I30e8QGTOOdfGWzzxcy+87a7bLjw37rHw1nPzp0KyyRSeZO+QQhInt3dYgvycjrPOv+T8s1rptaP84VeywdWX2T4ysr0/7TLIs6+x9zib56ye1dM9e/XsZmePY3NDs9zlnNVt4+WgHJbbz3Livg4P9WWgviOMm4kCRT6I8vw0NbUUEnFvOuFKoxQW1gTsvFirsF5pb7qTUCx4i7VmtToveaDxvK9uOaedVvPRpVOnNz0Q6bry7uiSdQ8t7Vy4JQKVS+XPplV2ts4bvCwZu+KzgITtxepaPRzWdpv74muvv6RO0SorX6cu/dqKn/XWnrtp/Zragz13DUCl5myiFW2Ycvb0PtsXnU+tx8pvLFbUspLX68mdegwmOif/NPDONajTGoUh6tU56HBJCTBASVvNUB5VIiKpc9kd7kludodSFz7xQbiOmMk5dOYk56gzL6uaf7N8a6MQOHm0ae6snZpFDfuT3/jdYzjzwkXXIVHoXNuCfQslQZqBZjTsoHMqrkE4jaYdgkGz2ATOgB3cPkSukD01DnV3ttb1wx+6arPqbkcNAHoFPzKUUQ+qL0k97pjbZv1I/egC9zTFbrrlFpNdmea+gIgfWW3wqkcis8ky5FAcRd1If5nNZrl2FFpungc8wpoCl1BpQV/ScS+zjlASyUTVv/AJ46gkJI4bHX4lTnloctxPZE1ckS3+jG2fKIjkQFyzuo8jvYQG1OrGvJPSTu/nSp9PHNTl4z5hK/8gtXVKF6gEKiglgcKiRlCESsQCV5QIlKWKpr34lt/wkSx/JCmP5/cBKQfl/5gd+rOS/+p91/+YCg5CXK2W4M9fu+/6xxX+vnelVuldIDCG0VQTpU9Dw4pRfei+6zWx0MLie0gPbyrkmRU7OwT16JGeyXLHqOLqAfVN1GPlBzWtFNzj0TRTCjogtP1NjIvu5habN5Aoa1k66wGpqriVetJgiGdwDZtKhnN0y4n9sXYnsqGmZfDSR15+5NLBlhoDaedEm7sxmpqRija6ZEEg2EAnTiAC8IrmFbGz1q08P9PSkjl/5bqzYqT9hMmptEXDgTqP3Wiye+sD4Wir4jCeoHbbp5hRfpB7BakUIppIlPCD30dR1GtslDz8OsqbXmejFC/v8wu5X2myq7SJ8Avzv9DFUJySf5uNvq4+Ti7W9D/OZrLChdwxmPNiBRqVjnpK/aGxRCDspVYKAW9AN1JANoo8wP4BJUlGqdgw6m1qPQ2QW3+OfU5/ieLS/NuKpDU3uf8bcAXyBal5jMR2NEAbPAZt0K3hvxHBEDlUxfIGcD+N2gNSNx36nfqlAYow0puatNpRz0e4W2oahKzQHsjf2c16ad/3t2KTtPobnX6D8C8pd0MDP+Kx7wnXqGGlLQcvikMErm6TmfsuxJXbSAxqNjOogJLQBLiKEHAE+JGTS3JoEhTrz8/CB+5YlupJ58aOat8Kv4JvregxwcU5Cp8GFAFm1FyOfto6GS2m1NGTS6CPNKkbsTdCBlnN9onMho55BX8IJZtEQ35lk+htwN5A0V3RCPoD/yXAcv6pAtbZczRUA64JmcUf4q7Q89ZHLeJVZ5D1Ps/t+0iCT3AHVtZC7JDCXfR7OSb/Xja5H3zQbZL1B+ULX1BMTEk3AseSpmnKEK4T9ekMIidUCRQFfcbj7z8gNLvzF7mbhQN8h6ZbRset+nQWdS/ZX3k7WpS8P9sfo0iGS64wV516pOhjI6TZ2dApgI5+LhxywYoWxKUrykKJsIoDsR4mSrCTg0egMPnLW/3Q5Nn8BZEuzqEI7HK3n0+zFmuO3TtWQ5WJoG9YqCD6Gc32SxnbnVPfsxvrFXK2dILl7bLthDp6glhcsfp4bYvbSmj/mQ94uBTw0E73x2jbNRCvC6VL6GCFDwU7eWQDcC5FY5s0slieRDwtAbRsbLXbaXAuu14e2OJw1dc6jQ3ZdY8v7rv2/BWZLqvFWVvvcmwZkK9f5jS4muO9yR5res4kfkRxhV03L1RfPOiPtYi8pd7jNEsOpyTwxpaY/yCZu/Amd5Or9uS3DYaeqVOhH7gZN/8I/wi1fEuLXvyNivibjuKvN+1Nc01HF/3h+ef/sOhox8MPd5SFucPjorQwXT+ytA8EmA5mamHNFDVhBI5pjZbQpugBNkO8MvRub8KVDKST1Wag7D3xlin1ZF7LFP/79nbvCXFOY+PUjrT7/otsPXXZ4exdPzuhZuL5LUXVAn7k7PbhG89uz3b41X01gbjP1xwlu5rrvvf9+pbs6E/Vu7Nk642/PYRaAiUBdrmO6CDTBLPQFA1ur0uXoBR1INDMkypKpoTqnSMx5GiEdTEaSHLs0Alvu/19/5QW9Rv1U1ridT22i+53pzumbs+XFFXYC++CGsTj5JUT/GCgRt3n78i2n71FHG4/u6X++9+raya7os3ZbDmgWfXun44e+u2NZKuGZ0HiF8M4TlMPR+EU6rPKRJ8wOU2RFUFLex3egEsz3YqEAq0cqhAAW19dBZIlVzR61tuIdTnpXH7l+uXrbjPUyep+8cl6aXKWhPHpDcXl9KiTWDNr4mBQc8Tq+NzK/OKSbsfl79o9G20R+brBXYvUg0rLHhtrc4TN81TTOWSZ0gL1ZVlOYH2ery/7XVUjFMbzYpg7UswcqJPQwBd0LKLabJ8IaCr2otcjSkIrGwootKECaUd4XH1+SdazRrfddkBU98t1htvWrbjqSqjaCguxrffM/5zDCpBALUycmajhd+R6ww4SWafuZ5eU+tPid4lgd3gt+b/Y9rQoZNmiXYPXyRHbRs8zX/f4WIFjWZJtUdSD55AP3xtXH+ZipC0EqdBGDA4CoYEU6gRLGPU11QhkLTBiEYPiqOeQgwTCl9aok1Qr5pFf71qEeNxjy/8F0GoqYPv75Yh9j3x4DuJ+uEzHRpAq2lMqb+qfTdiq6kGtzfOWsv0c7lSeMXDHBDe1MT+LUgx0Pg/p87u2UicdIvqQi8DkxhcUwUXCedMpb4NQjwY3npTmgsURJavLwCRyEcN2HfWsDVGfv/u9ZUWUx+PYFueUKwaNvbtu+Xps3eVWbN1GcgVrdMnWJ7WmJz9SD66EBidag0NF1Ukep0t5A7sFCWdhzvYwHv6L/BehXuHqfaBwBEU7hfVLcXvS4VQv+T/vaSIl7cbeMc7ekv9i8S3e1L5xxpvMGcu1EYPbKyCiijjGXcDKckm43PqU2qNWlXusZMiqF82cuVzolUHN9NNR0HZPxFPV9V0wLtvq+k4DqOwVWDlzuQLVdqFiP08cRX7aRlBVfR8cb55bWe5LExnlcsDp1vAP8Q9BucPMk1Ulh4GnN0SAdxcNHv3q9ohx1Ati4S/tkWjIDe3hQdkUGrGRaFBiUdiTSkI41UkMuuQHP+EaSQYlPQTFWJF03BNPpTu5KFAdkWgDukzsZKMG0Q1TAQQglScOaP/dsZ8+fP75D/9Uu5Gs3FY/2SxPld0DHOciXI9gqjcEidXjE+3BLosy0OcX3T7O5g65ROGyzQ2BZs7WbZVnO5ydLe32hMwTQ4wnnKXW6XW5LAa7oaXOIHoUl0FgLQLH2by8wSTWeAx2Y5PDazK3BqZbeJZwXGPaYhX87ZNszoDdaRxotXO1nNlpdvAPFWHDm8PqEE0sZxDEqGzxisFNnuCWetPcGrObN0p23tTZwMuRVodSV8+LTrOV3eRvzjQZiSjaLYS1WEJe0kNsJlZu9LFun7++wW4gRDRbaxw2nrOGm+xOj9cmtbp9ZqeTM1m8UXfQQCSTVSQox6pvtjot/FpHvIUjJovFEoYvHYV9C5Y/xN9OfcalvII37UEhTbTg/AQIaPb4Vz6j5u8/aViycMod/fkDcpu8QZbZoeBi/vbzP3XPsZvOubMtaPHkD9jt6+U2O7vqU/9C9SMvgrXpQNG/E0oJxun+CiElUa0IKQSUwERxOntKSV7ekcuh9VBZBBo3VUcB58ofKBHCwLyf9qFosz9Ibf8dGqwaBMjRig4SGOZ2UkWI7UiO9OfUPdxOYFApUZyfpY7mgEc5rtNGGk2H1lPhAk1Hp/VAMqQEHEUfEYkkUQq1JMdzsX7kklRrTrUi1wMcDjmu1YYfATj7Y+pGpPEBXuoQIj8rR9mgCl4C9yqmF7xnVWxGVniNqtpVmXBvQ6iwni5YQ8a1jYrXtc2J13HvgkvqWxuva1sbr+P2S5ceKGyBwDv2DbrToe1u6BkAJV7xnVLUaq0sJB8pFqcUIPi3yuwxi4JuLr+P30f3OkPQ72aO0xYo3/EsmO3QO5qEF8S0qQH0UsKXv0brnl9+8M7jF174+DsfvPOl1au/RL5/9DsbNnwHL2pHR1NTRxMZhJtHktOOxLxErPF6YlLvpC9YP73x+4ofw+3xVdrHcDE0dQQCmCRgvt9b35xINDf1CDcRSfJ+pYl+Sf8YcurfmXP5F/kj6J82jNsrkWiEuhVlgFfyNkB3S5MUzLhoNiwSCYcxQ7Ui4J0Xh7fmqRbaPa1tzujxkBRlsEHy0/OM4pYLPb7g9O6BQJN6l9zQ0OGyCaZz0vMTbHOzXfQ7a2tsterTcqxeInODoemdktw+1SbVhKwtW9ffe8VKadK0OVuC3bWzyKm5LeddsWTeorWyY9IMtUFutdu5g+Rn533qkocdvLs2HmhU75br/MmWtD8zA3OP2t1ea636jEzqYxJZGAwFiDEd61oTsrRuW3/3pYNi3bS+Rd+GjOfVpAPNd6y64Gsz1GaZleWIPoYL/v9mTeQBENVEguiF1aC4YeXxFETw6QyPfn0m9g8IrMFAvKM1EI11DARnbqibHk/Iojy5rSdgCyZi06y8sS024PeuO4MfwQ5Y9yKRZCqyYaF30vzeHlmUprR21tR0t0yz8KZY66zWuGvxVQB/36kP+K38t2Hu6NQ9SFJfw0AdpqPEK2qTMpf2VCqJwqPoJezTL824b8akoL+x03nhh+oNo5e77psxg9Q5LzebIKD+fsY34f2MtB9fk9v5b8PT6tYrgv4kRPwd0q9z3gdJSJ0653KjCYPwCaR5aUY63eW48O/kdo33yxX9wCiMv2QTrk8eGSI6Ag6moG9t2P/F7GRNlDjl0gw7pJ5aOXXqyqn8SENnXBmbSwUYLyqJjv3UmY1nKr4t80no0faXsaIEiF/BRaIBnItSce4OUif7W6Vm9T9H1X9Vj71BEm+RdmIJQST/ZfVdudUvh9S/qqNvqT98g9SQ3lHibZY0mRVHooyDN/FHmTgzjdozKw28NwQ0hwN6BCoPKaEk3YtKwNhwRLXuk076CGoZNXDQcRwZvreTZY9EZi+d0s4+ztv8iei04JQl6ZbDD2eHV7X4uHuFVfPrOmcs6m6Kr7hssr+1VZFcEZ/PdJkn1hOs8SXS/NFFgqt94PIZzZ3tdaL6Q5vo6piSzdy737pwsX1VyxUrF15iJ4uNkq+rbyg1Z+O8VsNC1UmcvORPRfxtPrfRwL2p/oA1eZp6Z/aGffoewaXcA/xBlKlQLfhQL/oPgBGP3qsA7IQS8qDVNswHKRSheDUvA3Q7MZoRcJMxlEygujn1QdyzfPfq3dEp/bXh5e5YXW2Ngfvza0ZF6UgFL/E0fTq4LBlvTE2qb/KuuzYSXVnjTfM1osvqMHVbm9950quIZlbqaL6YP7jk3kUtA0GnX2nvq53f3WoSsvEdDRnULgo2fN7lNZJgI8/VWi33c3bBZnGY05+dm+3qc7fNmj4YGKLj2nfqFP+g7jdDlxEV5XsJQZP6hYrS1l0VQr4c69Xueixp90gnZPmE5OF22j+SYEWHlZ0K/Hgsh/Ztsbh6h2DNRlvv6jJh9XaJaHCZDiUDKNTMkvb8vsqCyf3ZNdSmO0fa0Y4baJTtpbKzuVzeeSI7fCKr2Z0WypapnXJ4gnoWy3PoUIlIQ1TXdqhQJIXp9Wx5fYdpeWh2TY5D+YVyKd0jw3iumwi/BC3cEy4o83QlZnW79MrCgCjbhWXBlRZVVZZv4rIKpXC01HFlHdHLoeWVl6UVc/J5uGm6CViW5mulYMk+HqNYr0AyUPivLg2oMs2MPqtuhHyRyiwvNJej1Br+fcLyoAyu8D9B7bgmzUqfFobF5nKnK4+t8MPJkI/xHUNWk117jugWF+xazTAALQn6+UE9lhoI5ApGA/iuJOsrlNP28SVVuBVajXmircLel46w2bJS1Q0Ft0KDuikDFL/3pYrid1Q4FvofwRIo4R9h2ftSwc6jHAMqLcCql8YPHtlzGoByNXYN6v8hXnRaOhUvx0sVLCexwupGDR4NOYC7PePa5keIPACnuAdD7dEadRuTIiS6Lb7uskb381My5yjzF8lGCjBRqdwrWJCagfB3yCy7XT1i92hbcZ5Ci1FJkgYMDf6n+jspIsHFjJrTOdzSMuOa9DbDcj/nH9N9bIoGVgzHPWIQuFuYtaMRaq8eCKI0gEF6lPOZjBz3EEvaaxwSUT9U/8JbJZPJJLBLolH1La/RbF9AbC8JJjv/mMnssKjLRBJyqj9QXxNko0Ux/X79epfiXkm6fmKwF/en1HLc6LxloXWKvGa5rVCVL83VuiPcDEX/K5pTXOxHfx6HHB0t2FI0qI2rCZFTrvPWU67zVuS/kTsLnc7IKhFg30e4FOkqNSfH5PtkmUy6Cpiv/36k2sbqCeCFNa+URpoY0sZoYmCgCr3qgZz6s8I0gP1bYiR+D79H56NOz0EVWCTy2/fffvSCCx59W7uRV9995eqrX8GLesOXNm360iZ+T/El3uZqL+FyzSZ8XxpTiI/G0nkT4zznFZ0t4ipMz5v4q9ssqbdKUZt6u82knPCrt6PZwsnn0XySVnyPR1ZXAn72yx48bWJsu7apnI3Hy8bygUK5Js32qcytapqgmn95uexccj205vGgJ+euOeG2SORmKZr/qKzcx9SFctMJdwMUFZDJITs7dnOp1EKZCxg304Cevyfya+vlKqv6aXK1qIj3imL+L6hL+yvUlFfE0VKZ7E8gBY3M/8VoJCFgizH1W6VyC76nH6b7jiibYVxUmVIEspry/LgZIlCeP11Z4zs/AwvVwtGFEut5S1JY4lfyT0N/evOLo+rUEgjcqc9IkGpQbv3iW7Co5b+KgjvpzYdH85PLcc4X21ouwEGl/S4qnUAvoSlXUUhR1eKr2VWFTB+GMl6FsiQsVD1R3urlAAIoSn7JQkmiVVCHSpCwDH/qPepXQ0Db77CJOAImohB+RPWr31ev5g/kE+zTa4lbvZo8xdWPffQu9yJTPCNB66s+zXoJt/0L6hSoCuBIoK8fnBGG87OoRckJpLqyWe4YbpGi50g0+3I3UD85Oa0fzubfoXxPLbW3FDWzigmyJeM0tQkax7PqTy80+UxfUHPlBZIRVNQ+v0xRm8REKPoLmNr0+Uo48v9GFbXPKylqQ2IKm00QddgyWGMROCTxdLB9nCY8P7j2DjlsV/+mfr0C0r/NkeXbbpPlOTBBwT0mVz1zx9S/wJecBF9Wgv3p032iP2v4VSgfgW2G+HUEdEXU6iq4CtpLJfIN9XQG8dwa1VoO8XC2SrPDDyCOQptXgbcPvlAgBfxBoGwftQKeKFrNTASPt3pGGqDt/QRasn2kri+H6L80MJRsmVYJrAKyDItpJUy3/15WYIJqcJ9Q5N/LFJ4c3dc1URpWl9hW6mu50MUIelg4ucTPf15zs5DFo1c0VSp1tKB9jkwIyuM45kb+IP8gHed+6jO3v0KbIknzLy636E8KPTdCuUpB0wLo9JKnAO6pv0vS31EtBha/fJemkgLVVnd8KCk4qBTpQ5m7FbifBKrPJcq0pZAFVG/XbOFz+Tcq2MLrcmV28Nmi/OHskh82bau0k8eWCaPijQPWQ5lUvslwVCfHkXBMIehqUgtDNLeauH1huvZTbYmw+luPjyWoNGEuxRLR7LK5fSyXFUyK7PURQv2v8D3XOt2NJ6liBbmPGOsakw1kbeOs+31Wm5qpH+iJWSzqdPr2O7zc2TmtnrzCig6bBd/vgQmzOlz0STWIlmZEQfupogOZFHUZ7EkUnMn0RrpIMqAgHRJAOjIJ3yGw1I/MAp9q9S3Q/clADNm1wEeO+xbwg5OIYHZLY3ehG5lJk2xhco+6JWybpEVz2wrR6hZyD0QXZbeDVB+onmlimpkWprdAs4WEZDSQppsDlcdCBJJESIYFuAtUnC4GIF2C3Uu2Kv7L1bdz6FxtqxpG4TqQOqOUNAJ2HLvPWA2GgDy4O4vaDrtyl6P+1fAll+SyFcQ28GHqh7fvvf37udylf0fNwhzgz87Y+cf5x9GnF6ygHu18sAbipWeF0YPBgp2GaKeQduxxdEr3SgbH1kvH7tvqSLhedomOvZyts2dw8acu3dY/f+ucuMtCuP/e4zC4XnH3OLZ8ZuxTWxy8dJfU5dhDeKPSlJy5pn/+7u3XrJhmr9C5CuleGflGQocKnlAUaRKp0BAHV0ZwUt9VCqk6zYOgRIuMfePJzdmBdpPJ7/6B23+f+sp9NMDZevovvfYHG5dGPISQq1DojqNckchVrCcCYz/Q0hI0m3NKDRfkgsrnamo+p0CAq1FyvC3a3Nak/s5VX282x9Ufy3E39VAx6o7LpCvO2wK+ch9jNqpJCutcIOooKnYWtDK8gTRVYygRQfwgzKM5+jP2jOZdx3r32Py7rQUPOzAnoRs95NvRAR0qLGU11Taqu1bUYSzMcWjMEir067JQQHfIrLBHsrgv00/Wavd8HRLMEEYFSW3HCSNQehnrHztKqHcDyo4VfZ6gPKCR+gufwA8GegxUEo4A+gd0BASHiH6jYMLIsUdQJTs/C641KN4oCHWolCMLlMfIdtWKScjx7SM5LD9HnfmhrGI0S139UWfUnxgOXdJFW+AMcGjKr6eHAttHF5sUoeArYKDcxMSYcKA/xUDhPiEOEAPafSIUFArN0r24ynI91EPARDXvIDYyvqZaWeroBOUABQA/E+DXC7PWafDLQY2oiwpUEyj4RQtVlUp1GrM7In2p2A7VuiOW6otMiGOo5Mrp05ejVuTy6dNX/k/7mybZQ0nUmfrbx3U4KueDnlHm5wdh8FFeKnoaKKh/TK18StOPhwG9Xo5mqXAxvw/79YQwwDR+nAKQQ4izVXioB84qcppWB7IqjU45z4CE17OvF1Dw+oTFqxtz8dxwtogBnF9MjIl/in+K8s3hM9laIn0TiCbTAXL0T798bPXqx36p3chrv0O+GC9Xaj48Ecv8U8UEeBvUEsDlTepiU5OvlpeNGvpnKF0RvUooWhIjnx6GeBapXCQYTw9DNg6/OC3gZjp76oNTj9Kz6Jqobxb9NDqc08vcKReOpcsQV2K8InXFaXW3aI6Ofr1k48rp7CX7rx+v1UKPsfvzQU0Kc83i2VdILmd2/yX55zT9luN2+Cu4nKfwPcK/CvDVU+pHh8+LaldIf1fA5h3ndT6Fln9/W/9Ce1vndfvJtnPVO2xhm3qbafHVCN1X363UXHq9xuVD8OSD29Z8pZ5cZrern9cAdGW/uib/ud+VK0L9a42r6C90kL8KzxwLQw9NkIQJL0ASU8M+VG0KsUdgdvpgP/6NqqP0/gHZFUfGEijZLHpiIgvV5/Bltrj8Qd7XQd5p4P+7tJo30NMO6VGBwahSPMYiaaBYoLY6uEnciyhhh1Z/vvacG/rjpsvnpzs0B1Id6fmX8119l88XnOxe/uGrzzHcdu7UtY3+2vmXN5zUyj3ZcPl8p1sZSs6/nGXtwrV7Ka0XZdz83fwjjINpZWYw85lL8BRK4nGyIir2RiOsEyipuEcIakpGjWgBjLiHWOgj0Yi34gW1kKPxHt2Na5q+lwg1RdRSpFDNzosb44YJXnAfoEOpZW//6u1lhYA6leevezbI26zNHO811M2dc5HFxpk4i1jPC0s21/BWW5DnPQbn2X1WK43/aM2n18DfSoybbNHijFpamzXI31eRibGUOxSu/lT96YZlq1Yt20DaSBuG6knw2eusHs5EPBfNmVvHKdaQzcDfz9ZsXmLDWGXy2U5OsYSsIn8CS12jQIyD12KKqZrLPy7mSPdICmd6WGHG8NDZkkHuE4h9TU8FpmUO/VjC/EinToFyoNDz2p9XD6g78WgQdPG7Z3R0T/Z5dTM9lsL8Ktek7szl2L+gQwGgwkZHc2g5Su7NvVqwGy2Ua4KSXUwt1X4PaM5paaEu6jQ5zVFyNabxvUksVt2T/4VeamYPlLtffdQsk+2sUTY/zDXl/05W53/Bz9UK3p7LjapZ2ZxOm+UlZXrL3HHGqO8+wVroDaCTTnTxitMxmiAAYQzVJQH+nj3oIHnPaN6Zq6sNSLjBl8tKgVr2mj/9CWi9dnKca8rBQBsd5R1tzVlgrl5pbnPw6kZclCr2CHxMnHohLz+3KRQokzALyeIKFU1TNCiayJdoHvDYe7K6mZLm8S3uJ9dojuaJ62/qN/tjQxnSnhnKPw+LNrLi8ZKyJ3x1YhiI1aNAtP6NzCGzYv3DmaGh/LvQZnt0evgIhTFV0kE/PYxAnOHhCQUZdCWY5JWJwMzlAGl1mpNbDU7yyGnhRMILsYhH3VRAijrPcBU8/Cj1Y9NY6cnGVW0CjTLaz7E3epvaT/LtTV72Rs+0WVVmd0dz/MGTI5F0OsIviaqDlbbO5X6xT3PeXbXHRtf/z+fdka+eKPr8KF7IF4vBsT9MFPuPJMBTBMq9hQxXelQ+bewnf18ap4Ib+mSMrtDU5zqlD8QANa5MBGh/OwOvSDfcV2d66mfEWsbGWmIz6nsyZDWQSmqmxDneYyvjHPmRXHZxeueyRGLZzvRioKnGto9nIPkibAJA16adcOZRQr1iAP3bUyBR7T4RgAWTKxhkCYFwshq+7iV9r0whk50cmRcTg4fy5x4OmmNkHndIA2+YuMbmE9dwGYB4KFTsvnDE6Ah47r/fE3AYI+oXADpkdlENcZ8OZEEf8FFGZNxMs6ZLpG3SUFLL7Q2kcFU/A/Jsw+vWDa/7emewLaoeibaF1B9qUNnuqWK3+UfXYVL1v/omD15xxeDkPnXTOKSVcCbDGtOu0YQNpGAP7U1HU58UrqGu8xIbHtkQ3LVhb7Dx46ET3Ffcm1q0YcOizNmf3bC3VjWfAcpSv3MyTlgJ23FHQgmgvk+gk8pL0mcCDOn08MDAQlf+/SlTZ1z12fnqntOhbOTL9/ZdevbAPN+yby1f/uUtC/ixm8ZBo59LTXEW060hGrTDplNprWd58fwB/b/E27BdS/s7U+rGVCeQ46nzaw9QccnmZerGZZs3Yw9aVHt+Kh6HN4ti6lxIhT/wahnZtWwzlY9QHQ2c79C+dxzvVDKy8GqKWQERO9YAKbpsDUTLdWV5dE8PVPjvj9pqw7ah/PFVtkit7aj6G5xY9mfJrCz1j1e0BcnPol4UjtrCdbahIVtd2HaURujnFJR8CuOuUUfhrGhgKKgjCYNSvCc1WKlEp8wHUaAYynFNyzZn+2MnYv36dbMDBTonl/T/ma5IKAyEGz+4eRnVtaX6tss2o34u8mWorFtuFgm4A6qK/yp/gLEBVat5WnPDdKA574ubuFJ/IUfZ/Y2Nt6mN+ZNNTSTaeI56gKwkXerTe9DDHUw8/H35FY3nNN7GGuBKWhrV9ep+0k1WjNWVaHkW1yA+QHWNu8rtBw2a5YXuE40rs7/GA+j09V3hA98yRnFPOGr8ltGlsFdD/7tRce3LH6Trcneuiy7K7J3khKu+3qUaXPWaX7T6/Kfj9BX2eZq2XAcZT79u1ClJzUtHUqfqSMWBcZS43Ena0cUGLgpkKxB1QM+0Fxz10wgg6r5rltnFpH05pepUq3Y2HfYqeKRntmUFNz+XmcOs1H31U6cC6RTVLfCg7RNBF1UF2/wBgu0fFQtPEU1sSg3VcNsR7dWq3af87tUFn1l3ltXpaJxpNvtcZkH2WmMst3JqRpxUH+WC0E1qOGtP66s1MYv+VLu8/XFXvV/ZbunYYBeVN64ls0ur6NzpV9xzlmQwB5qC4Tq70WC0tk8dWJXeHvkD0h9zJOM0vD86/1NJMaIAolctvlByferCsqOKDKceOfUu1PsmoFCamV5mCrMUOCi6V6FJosMF22AcrKJgQDVhfYh6tepp/lYgvnCEAbJQ1L0rOpajEmRcasMiPfxhgGoVo4rwreQpV6fUJHH2e8fa1s2c13Apl1b89a58ozdoap2sjgLN9uISl7P1DrulyeIkt0zr6JjWocoPOZsaXPb6jtqBblsgsaRre2xHi4nELm0MhG1+x1SXwLpFi53b+aHRYo/IrbZtuWAKu5cSEXfybnnmUCaXGTpQr0xK2O2WWY76f+nAjNVf7nCZHU5XqIkTnpt6VtvsFlPXg1031g/VRdpkkyVpD7jnmax88QwDvg/66NnMRdRXTcGTmQc3cuINwN5IQqi0yzb+YFVHuVqI5s4ADfg5oE4ybDLd28mFSFmYvRoomsWXEdLU2Wl3GJy93ZNb/d5gqmNaqJZSO1l6PVRy0nZIj/45EetjLguh1rLqR+SK0hO6NrsqcNX8zoUdjQYDJ7tb4os6+i+Y0qpY2AWlnLRDWdGFTfGY1gV0zNAtJ7pdo24se0D88AwLY/gZmE9iuP4V5v7CSR/RThaHLh+UeBkXwU6BC7lGOevK65udTv+tS/PfW7qj3ljTcj3b9OkbV85t8xsMj7Ddj7DGpthZKwKPvso/c/1K9aLE12fMWLV1y1D9ua8lyJdWXr/bG+noCFutf/mLILe39ITUV4igr3876fpX5g2zeB52sWnIL4fXHlgeUzOx5QfIvJQyrKQE9wHUqVq+PEaOrz0wVvNbJZVSfsuMzxN4l9PkedFzw9V5Dj+nzpgoT4ZxCxJfC5RWLc74YVHxKlExCYt0JAOMatREhHBSCAtSfod6x6Ls8HCWECLwXZ9nd5Dz1T24JUdWs6fU3++fcnT49Qe+kBs+wdsMZgPXMp3U5S958snPP/EE7bvkOPCuTUDTUQ/UzirLhML9yPahoe1D5Fj5jWsaoveyP00PehdUAHk/seDVWsvDWXXXsyn/4wfpXc2V3/Qxli3jl/5hj/83avSCfpTNxOEKLmTjxOEKuxgNlsQn0xgct724mhynupNW1Ph6o3RYS3/+2TJrzLlkFz+ip3qCHKf6eqW02QJLjBYuuj4sobhCWqa/YHGEHpcnumuWSOhxeaL7sOakNR6vvmo+YcfFA8UFXEPZf9UjyudIOyNwx/i90DdsujS/FX2UAwvWSVK4NxaMhAGw3oowp/uc8CTi7D2rBgZWwb/60faR7SPsEbjkXy4G0XaqhXPwe2cePjxjxuHD6ssQuR1fq6PF0E+o2t1nePTn8TUmxz/A3crMoCc7egESuoTHYc7mYdg6etORoOhR7BBGD+qJopELrl4S6cJNRtEAsLP/OdvnJq0Wo0GolY2Et9VFB2Kf+4bZvVyxfOMz3WdFfSIryj6DwWghre7aQbdiDrkTL3A3vNDuDpk93HqXwam+bWmUJZfNn5ozKV5Pmmq8PF/jVY+2Tlk2M2RzSXKjmbQ4RZcQavEYrN/9rlXwtIQqzxQNMzPPfHYLvuPoO9TbT8bpGw5CQPGd+SyX/Cyf0Vxjd2R9NmsunnXYa8xGHzn+sSfM5J0y0DZEXWWxkXjcR75KBLNLHi7XvX2G8VOrf4Ykg0AMdBESIpo7MgAfyakA6rkqpI6UjNs0px7cMV+D5BF49Tez1VGnYmq0WIijp985m4Sn2gJR9b07riPPFo97OYbUZbxJCpot7H/lpZBicglCPN7WOfJkcHqc3ElWqvvz/1E6bIQrG+tz6WkM1SM9FBTR7FSs8KyBBytSmNEoquJNFN5EQyTiCrnKDx1h58yxCepPHU5nxGoxEQeeOZi2m80DxNxncVhr6BmEfUarxejw+WSiHhWk19bSY7aKR5MsteblJpfTLtjimBouXsm3d3djjYM+wEW0El9dM/ueVRWIsXwe43R7SgbVZqrnqoJ1X/kuF7pcgf8duv4q6vayV5U9zMV91GxO59UUjW8rHV6u799WzKMT7umRCXbYUKM+foaCcwgaoqZUtmodV3p+X7akb4dnU9B9La38RPFUG2SCC90tVA4XwEFhyOpZZrUCsgWYHsczLFBBVGNtstoN1bw0Z+O4fYIbvZVt4EUcJEKOhHeincWqONw+q6w5Go+WGOSR7LhKV+KBqbBPpfUvOf9QqkpDyVhBeyyZQGMsdA5FBUqvFMtUyGq9vjnsAJU4UcrxldP1CCaofyDkSAifoP5QwWx+SyUGxp75BzGAvtG7uQ38LehlyEQMeh0TeE6Bm7tYdXqdkt0uOb3kfYlNwmOdDyacOq/qlFo1v+PTmTi3E/glC9W11b34A22zmLzvb231Q0L2Bgg60OTW4YdstO+YOJnO38TtpH7zy9ymokWyA79qlVSn38HtpFlImFnhu3b4boNWXklOXV0Iwo7lQ1hrZyPFcwtjwFP7iEKSHSSJw509kh8kj6pr+H1jR7km9vcvqN9657vffefkv+fKxge1X+7RdjYUPIESN7gTvRkB/RMYtEkaVkdHApmdBPpnKmz0n1xSWFOyVIuLrinZwpoCRe6kyiVZoHX088F+UX4+WKS4iBTP0IWxGtZgOdMaV4KTayqHQF/VihBwTbgDXTCmKoOBJeNhwJMzEVjtjIFLuU38fPR7hqNG1JS7g/qRCuy3vmQ3W9Vu8qbVbP+SzazGRJH83MzP90Ck2m31mMjP8TiLn5uwD2Ugr2PFvPQjB5BnSJvQxGQZZEB+LopqzGzDbMmbkAPkZVJjeO5FzOSBKCgJze2ZS4Gemc9twrwY6u9H61iUQTcRvtdT9RW3tRxAWwFs2tcuJRnI6xjmBdWjbgFNRHMHiF1uHYBfUR/ut5Ug2jXAaT96+9RH/FToRwIzGbKmVJ1AZQnoabSB1yyIg7ByAridHApPMjyw0OiV6RjSbCuzwLAvFizBliWJua1tsuAgvNPbmljYbpt8lkWam7b3XZiOiKJskMOtmfScnsbPW208knwjuXrXK4Q1iKIgNyYXXDVT9C2Ye/78GQ5BEEXfFdde2RwauOysdJNL5AzCy84ard/nGAVN8alecnFdgu5Gbd5DJTL+hHZK0vApVy3OfU8XTSJg1TlssivsPYUlIqvn66PzrVTymCc4wgF6SDNR0pDf+9Gp+VnsUH5WtpHYsuhOaey8zdwLN47V8MTbm78g687+P3cx6tcAeNpjYGRgYGBk8s0/zBIfz2/zlUGeZQNQhOFCWfF0GP0/8P8c1jusIkAuBwMTSBQAYwQM6HjaY2BkYGAV+d8KJgP/XWG9wwAUQQGLAYqPBl942n1TvUoDQRCe1VM8kWARjNrZGIurBAsRBIuA2vkAFsJiKTYW4guIjT5ARMgTxCLoA1hcb5OgDyGHrY7f7M65e8fpLF++2W/nZ2eTmGfaIJi5I0qGDlZZcD51QzTTJirZPAI9JIwVA+wT8L5nOdMaV0AuMJ+icRHq8of6LSD18fzq8ds7xjpwBnQiSI9V5QVl6NwPvgM15NXn/AtWZyj3W0HjEXitOc/dIdbetPdFTZ+P6t+X7xU0/k6GJtOe1/B3arN0/pmz1J4UZc+D6ExwjD7vioeGd5HvhvU+R+DZcGZ6YBPNfAi0G97iBPwFXqph2cW8+D7kjMfwtinHb6kLb6Wygk3cZytSEoptGrlScdHtLPeri1JKueACMZfU1ViJG1Sq5E43dIt7SZZFl1zuRhb/GOs44xFVDbrJzB5tYs35OmaXTrEmkv0DajnMWQB42mNgYNCCwk0MLxheMPrhgUuY2JiUmOqY2pjWMD1hdmPOY+5hPsLCwWLEksSyiOUOawzrLrYiti/sCuxJ7Kc45DiSOPZxmnG2cG7jvMelweXDNYXrEbcBdxf3KR4OngheLd443g18fHwZfFv4NfiX8T8TEBIIEZggsEpQS7BMcJsQl5CFUI3QAWEp4RLhCyJaIldEbURXiJ4RYxEzE0sQ2yD2TzxIfJkEk4SeRJbENIkNEg8k/klqSGZITpE8InlL8p2UmVSG1A6pb9Jx0ltkjGSmyDySlZF1kc2RnSK7R/aZnJ5cmdwB+ST5SwpuCvsUjRTLFHcoOShNU9qhzKespGyhXKV8SPmBCpOKgUqcyjSVR6omqgmqe9RE1OrUnqkHqO9R/6FholGgsUZzgeYZLTUtL60WbS7tKh0OnQydXTpvdGV0O3S/6Gnopekt0ruhz6fvpl+nv0n/h4GdQYvBJUMhwwTDdYYvjFSM4oxmGd0zVjK2M84w3mYiYZJgssLkkqmO6TzTF2Z2ZjVmd8ylzP3MJ5lfsRCwcLJoszhhyWXpZdlhecZKxirHapbVPesF1ndsJGwCbBbZ/LA1sn1jZ2XXY3fFXsM+z36V/S8HD4cGh2OOTI51ThJOK5zeOUs4OzmXOS9wPuUi4JLgss7lm2uU6zY3NrcSty1u39zN3Mvct7l/8xDzMPLw88jyaPM44ynkaeEZ59niucqLyUvPKwgAn3OqOQAAAQAAARcApwARAAAAAAACAAAAAQABAAAAQAAuAAAAAHjarZK9TgJBEMf/d6CRaAyRhMLqCgsbL4ciglTGRPEjSiSKlnLycXJ86CEniU/hM9jYWPgIFkYfwd6nsDD+d1mBIIUx3mZnfzs3MzszuwDCeIYG8UUwQxmAFgxxPeeuyxrmcaNYxzTuFAewi0fFQSTxqXgM11pC8TgS2oPiCUS1d8Uh8ofiSczpYcVT5LjiCPlY8Qui+ncOr7D02y6/BTCrP/m+b5bdTrPi2I26Z9qNGtbRQBMdXMJBGRW0YOCecxEWYoiTCvxrYBunqHPdoX2bLOyrMKlZg8thDETw5K7Itci1TXlGy0124QRZZLDFU/exhxztMozlosTpMH6ZPge0L+OKGnFKjJ4WRwppHPL0PP3SI2P9jLQwFOu3GRhDfkeyDo//G7IHgzllZQxLdquvrdCyBVvat3seJlYo06gxapUxhU2JWnFygR03sSxnEkvcpf5Y5eibGq315TDp7fKWm8zbUVl71Aqq/ZtNnlkWmLnQtno9ycvXYbA6W2pF3aKfCayyC0Ja7Fr/PW70/HO4YM0OKxFvzf0C1MyPjwAAeNpt1VWUU2cYRuHsgxenQt1d8/3JOUnqAyR1d/cCLQVKO22pu7tQd3d3d3d3d3cXmGzumrWy3pWLs/NdPDMpZaWu1783l1Lpf14MnfzO6FbqVupfGkD30iR60JNe9KYP09CXfvRnAAMZxGCGMG3pW6ZjemZgKDMyEzMzC7MyG7MzB3MyF3MzD/MyH/OzAAuyEAuzCIuyGIuzBGWCRIUqOQU16jRYkqVYmmVYluVYng6GMZwRNGmxAiuyEiuzCquyGquzBmuyFmuzDuuyHuuzARuyERuzCZuyGZuzBVuyFVuzDduyHdszklGMZgd2ZAw7MZZxjGdnJrALu9LJbuzOHkxkT/Zib/ZhX/Zjfw7gQA7iYA7hUA7jcI7gSI7iaI7hWI7jeE7gRE7iZE5hEqdyGqdzBmdyFmdzDudyHudzARdyERdzCZdyGZdzBVdyFVdzDddyHddzAzdyEzdzC7dyG7dzB3dyF3dzD/dyH/fzAA/yEA/zCI/yGI/zBE/yFE/zDM/yHM/zAi/yEi/zCq/yGq/zBm/yFm/zDu/yHu/zAR/yER/zCZ/yGZ/zBV/yFV/zDd/yHd/zAz/yEz/zC7/yG7/zB3/yF3/zD/9mpYwsy7pl3bMeWc+sV9Y765NNk/XN+mX9swHZwGxQNjgb0nPkmInjR0V7Uq/OsaPL5Y7ylE3l8tQNN7kVt+rmbuHW3LrbcDvam1rtzVvdm50TxrU/DBvRtZUY1rV5a3jXFn550Wo/XDNWK3dFmh7X9LimxzU9qulRTY9qelTTo5rlKLt2wk7YiaprL+yFvbAX9pK9ZC/ZS/aSvWQv2Uv2kr1kr2KvYq9ir2KvYq9ir2KvYq9ir2Kvaq9qr2qvaq9qr2qvaq9qr2qvai+3l9vL7eX2cnu5vdxebi+3l9sr7BV2CjuFncJOYaewU9gp7NTs1LyrZq9mr2avZq9mr2avZq9mr26vbq9ur26vbq9ur26vbq9ur26vYa9hr2GvYa9hr2GvYa/R7oXuQ/eh+2j/UU7e3C3cqc/V3fYdof/Qf+g/9B/6D/2H/kP/of/Qf+g/9B/6D/2H/kP/of/Qf+g/9B/6D/2H/kP/of/Qf+g/9B/6D/2H/kP/of/Qf+g/9B/6D92H7kP3ofvQfeg+dB+6D92H7kP3ofvQfRT29B/6D/2H/kP/of/Qf+g/9B/6D/2H/kP/of/Qf+g/9B/6D/2H/kP/of/Qf+g/9B/6D/2H/kP/of/Qf+g/9B/6j6nuG3Ya7U5q/0hN3nCTW3Grbu4Wrs/rP+k/6T/pP+k/6T/pP+k+6T7pPek86TzpPOk86TzpOuk66TrpOuk66TrpOlWmPu/36zrpOuk66TrpOuk66TrpOvl/Pek76TvpO+k76TvpO+k76TvpO+k76TvpO7V9t+qtVs/OaOURU6bo6PgPt6rZbwAAAAABVFDDFwAA"
 
 /***/ },
-/* 379 */
+/* 382 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -35123,16 +36106,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 380 */
+/* 383 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(381);
+	var content = __webpack_require__(384);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(379)(content, {});
+	var update = __webpack_require__(382)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -35149,10 +36132,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 381 */
+/* 384 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(377)();
+	exports = module.exports = __webpack_require__(380)();
 	// imports
 
 
@@ -35163,7 +36146,8318 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 382 */
+/* 385 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _GraphTitle = __webpack_require__(386);
+
+	var _GraphTitle2 = _interopRequireDefault(_GraphTitle);
+
+	var _GraphTitleForm = __webpack_require__(387);
+
+	var _GraphTitleForm2 = _interopRequireDefault(_GraphTitleForm);
+
+	var _GraphByLine = __webpack_require__(388);
+
+	var _GraphByLine2 = _interopRequireDefault(_GraphByLine);
+
+	var _GraphLinks = __webpack_require__(389);
+
+	var _GraphLinks2 = _interopRequireDefault(_GraphLinks);
+
+	var GraphHeader = (function (_Component) {
+	  _inherits(GraphHeader, _Component);
+
+	  function GraphHeader() {
+	    _classCallCheck(this, GraphHeader);
+
+	    _get(Object.getPrototypeOf(GraphHeader.prototype), 'constructor', this).apply(this, arguments);
+	  }
+
+	  _createClass(GraphHeader, [{
+	    key: 'render',
+	    value: function render() {
+	      var _props = this.props;
+	      var user = _props.user;
+	      var date = _props.date;
+	      var links = _props.links;
+	      var title = _props.title;
+	      var isEditor = _props.isEditor;
+	      var updateTitle = _props.updateTitle;
+	      var url = _props.url;
+
+	      return _react2['default'].createElement(
+	        'div',
+	        { id: 'oligrapherHeader' },
+	        isEditor ? _react2['default'].createElement(_GraphTitleForm2['default'], { title: title, updateTitle: updateTitle }) : _react2['default'].createElement(_GraphTitle2['default'], { title: title, url: url }),
+	        user || date ? _react2['default'].createElement(_GraphByLine2['default'], { user: user, date: date }) : null,
+	        links ? _react2['default'].createElement(_GraphLinks2['default'], { links: links }) : null
+	      );
+	    }
+	  }]);
+
+	  return GraphHeader;
+	})(_react.Component);
+
+	exports['default'] = GraphHeader;
+	module.exports = exports['default'];
+
+/***/ },
+/* 386 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var GraphTitle = (function (_Component) {
+	  _inherits(GraphTitle, _Component);
+
+	  function GraphTitle() {
+	    _classCallCheck(this, GraphTitle);
+
+	    _get(Object.getPrototypeOf(GraphTitle.prototype), "constructor", this).apply(this, arguments);
+	  }
+
+	  _createClass(GraphTitle, [{
+	    key: "render",
+	    value: function render() {
+	      return _react2["default"].createElement(
+	        "h1",
+	        { id: "oligrapherTitle" },
+	        this.props.url ? _react2["default"].createElement(
+	          "a",
+	          { href: this.props.url, target: "_blank" },
+	          this.props.title
+	        ) : this.props.title
+	      );
+	    }
+	  }]);
+
+	  return GraphTitle;
+	})(_react.Component);
+
+	exports["default"] = GraphTitle;
+	module.exports = exports["default"];
+
+/***/ },
+/* 387 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var GraphTitleForm = (function (_Component) {
+	  _inherits(GraphTitleForm, _Component);
+
+	  function GraphTitleForm() {
+	    _classCallCheck(this, GraphTitleForm);
+
+	    _get(Object.getPrototypeOf(GraphTitleForm.prototype), "constructor", this).apply(this, arguments);
+	  }
+
+	  _createClass(GraphTitleForm, [{
+	    key: "render",
+	    value: function render() {
+	      var _this = this;
+
+	      return _react2["default"].createElement(
+	        "h1",
+	        { id: "oligrapherTitle", className: "oligrapherTitleInput" },
+	        _react2["default"].createElement("input", {
+	          ref: "title",
+	          id: "oligrapherTitleInput",
+	          value: this.props.title,
+	          placeholder: "title",
+	          onChange: function (event) {
+	            return _this._handleChange(event);
+	          } })
+	      );
+	    }
+	  }, {
+	    key: "_handleChange",
+	    value: function _handleChange(event) {
+	      var title = this.refs.title.value;
+	      this.props.updateTitle(title);
+	    }
+	  }]);
+
+	  return GraphTitleForm;
+	})(_react.Component);
+
+	exports["default"] = GraphTitleForm;
+	module.exports = exports["default"];
+
+/***/ },
+/* 388 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var GraphByLine = (function (_Component) {
+	  _inherits(GraphByLine, _Component);
+
+	  function GraphByLine() {
+	    _classCallCheck(this, GraphByLine);
+
+	    _get(Object.getPrototypeOf(GraphByLine.prototype), "constructor", this).apply(this, arguments);
+	  }
+
+	  _createClass(GraphByLine, [{
+	    key: "render",
+	    value: function render() {
+	      var _props = this.props;
+	      var user = _props.user;
+	      var date = _props.date;
+
+	      return _react2["default"].createElement(
+	        "div",
+	        { id: "oligrapherByLine", style: { display: "inline-block" } },
+	        user ? this._renderUser(user) : null,
+	        date ? _react2["default"].createElement(
+	          "span",
+	          { id: "oligrapherDate" },
+	          date
+	        ) : null
+	      );
+	    }
+	  }, {
+	    key: "_renderUser",
+	    value: function _renderUser(user) {
+	      return _react2["default"].createElement(
+	        "span",
+	        null,
+	        "by ",
+	        user.url ? _react2["default"].createElement(
+	          "a",
+	          { id: "oligrapherUser", href: user.url, target: "_blank" },
+	          user.name
+	        ) : _react2["default"].createElement(
+	          "span",
+	          { id: "oligrapherUser" },
+	          user.name
+	        ),
+	        "  "
+	      );
+	    }
+	  }]);
+
+	  return GraphByLine;
+	})(_react.Component);
+
+	exports["default"] = GraphByLine;
+	module.exports = exports["default"];
+
+/***/ },
+/* 389 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var GraphLinks = (function (_Component) {
+	  _inherits(GraphLinks, _Component);
+
+	  function GraphLinks() {
+	    _classCallCheck(this, GraphLinks);
+
+	    _get(Object.getPrototypeOf(GraphLinks.prototype), "constructor", this).apply(this, arguments);
+	  }
+
+	  _createClass(GraphLinks, [{
+	    key: "render",
+	    value: function render() {
+	      var _this = this;
+
+	      var links = this.props.links;
+
+	      return _react2["default"].createElement(
+	        "div",
+	        { id: "oligrapherGraphLinks", style: { display: "inline-block" } },
+	        links.map(function (link, i) {
+	          return link.method == "POST" ? _this._postLink(link, i) : _this._getLink(link, i);
+	        })
+	      );
+	    }
+	  }, {
+	    key: "_getLink",
+	    value: function _getLink(link, i) {
+	      return _react2["default"].createElement(
+	        "a",
+	        { key: i, id: link.id, href: link.url, target: link.target },
+	        link.text
+	      );
+	    }
+	  }, {
+	    key: "_postLink",
+	    value: function _postLink(link, i) {
+	      return _react2["default"].createElement(
+	        "form",
+	        { key: i, action: link.url, method: "POST" },
+	        _react2["default"].createElement("input", { type: "hidden", name: "foo", value: "bar" }),
+	        _react2["default"].createElement(
+	          "a",
+	          { id: link.id, onClick: function (e) {
+	              return e.target.parentElement.submit();
+	            } },
+	          link.text
+	        )
+	      );
+	    }
+	  }, {
+	    key: "_renderUser",
+	    value: function _renderUser(user) {
+	      return _react2["default"].createElement(
+	        "span",
+	        null,
+	        "by ",
+	        user.url ? _react2["default"].createElement(
+	          "a",
+	          { id: "oligrapherUser", href: user.url, target: "_blank" },
+	          user.name
+	        ) : _react2["default"].createElement(
+	          "span",
+	          { id: "oligrapherUser" },
+	          user.name
+	        ),
+	        "  "
+	      );
+	    }
+	  }]);
+
+	  return GraphLinks;
+	})(_react.Component);
+
+	exports["default"] = GraphLinks;
+	module.exports = exports["default"];
+
+/***/ },
+/* 390 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _GraphNavButtons = __webpack_require__(391);
+
+	var _GraphNavButtons2 = _interopRequireDefault(_GraphNavButtons);
+
+	var _GraphAnnotationList = __webpack_require__(392);
+
+	var _GraphAnnotationList2 = _interopRequireDefault(_GraphAnnotationList);
+
+	var _GraphAnnotation = __webpack_require__(393);
+
+	var _GraphAnnotation2 = _interopRequireDefault(_GraphAnnotation);
+
+	var _GraphAnnotationForm = __webpack_require__(394);
+
+	var _GraphAnnotationForm2 = _interopRequireDefault(_GraphAnnotationForm);
+
+	__webpack_require__(400);
+
+	var GraphAnnotations = (function (_Component) {
+	  _inherits(GraphAnnotations, _Component);
+
+	  function GraphAnnotations() {
+	    _classCallCheck(this, GraphAnnotations);
+
+	    _get(Object.getPrototypeOf(GraphAnnotations.prototype), 'constructor', this).apply(this, arguments);
+	  }
+
+	  _createClass(GraphAnnotations, [{
+	    key: 'render',
+	    value: function render() {
+	      var _props = this.props;
+	      var prevClick = _props.prevClick;
+	      var nextClick = _props.nextClick;
+	      var isEditor = _props.isEditor;
+	      var editForm = _props.editForm;
+	      var navList = _props.navList;
+	      var swapAnnotations = _props.swapAnnotations;
+	      var annotation = _props.annotation;
+	      var currentIndex = _props.currentIndex;
+	      var update = _props.update;
+	      var remove = _props.remove;
+	      var swapEditForm = _props.swapEditForm;
+	      var annotations = _props.annotations;
+	      var show = _props.show;
+	      var create = _props.create;
+	      var move = _props.move;
+
+	      var navComponent = _react2['default'].createElement(_GraphNavButtons2['default'], {
+	        prevClick: prevClick,
+	        nextClick: nextClick,
+	        isEditor: isEditor,
+	        swapAnnotations: swapAnnotations });
+
+	      var formComponent = _react2['default'].createElement(_GraphAnnotationForm2['default'], {
+	        annotation: annotation,
+	        index: currentIndex,
+	        update: update,
+	        remove: remove,
+	        swapEditForm: swapEditForm });
+
+	      var annotationComponent = _react2['default'].createElement(_GraphAnnotation2['default'], {
+	        annotation: annotation,
+	        index: currentIndex,
+	        isEditor: isEditor,
+	        swapEditForm: swapEditForm });
+
+	      var navListComponent = _react2['default'].createElement(_GraphAnnotationList2['default'], {
+	        currentIndex: currentIndex,
+	        annotations: annotations,
+	        isEditor: isEditor,
+	        show: show,
+	        create: create,
+	        move: move,
+	        hideEditTools: this.props.hideEditTools });
+
+	      return _react2['default'].createElement(
+	        'div',
+	        { id: 'oligrapherGraphAnnotations', className: 'col-md-4' },
+	        annotation || isEditor ? navComponent : null,
+	        isEditor && navList ? navListComponent : null,
+	        annotation ? isEditor ? formComponent : annotationComponent : null
+	      );
+	    }
+	  }]);
+
+	  return GraphAnnotations;
+	})(_react.Component);
+
+	exports['default'] = GraphAnnotations;
+	module.exports = exports['default'];
+
+/***/ },
+/* 391 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var GraphNavButtons = (function (_Component) {
+	  _inherits(GraphNavButtons, _Component);
+
+	  function GraphNavButtons() {
+	    _classCallCheck(this, GraphNavButtons);
+
+	    _get(Object.getPrototypeOf(GraphNavButtons.prototype), "constructor", this).apply(this, arguments);
+	  }
+
+	  _createClass(GraphNavButtons, [{
+	    key: "render",
+	    value: function render() {
+	      var _this = this;
+
+	      return _react2["default"].createElement(
+	        "div",
+	        { id: "oligrapherNavButtons" },
+	        _react2["default"].createElement(
+	          "button",
+	          {
+	            className: "btn btn-lg btn-default",
+	            onClick: this.props.prevClick,
+	            disabled: !this.props.prevClick },
+	          "Prev"
+	        ),
+	        _react2["default"].createElement(
+	          "button",
+	          {
+	            className: "clickplz btn btn-lg btn-default",
+	            onClick: this.props.nextClick,
+	            disabled: !this.props.nextClick },
+	          "Next"
+	        ),
+	        _react2["default"].createElement(
+	          "div",
+	          { style: { float: "right" } },
+	          _react2["default"].createElement(
+	            "button",
+	            {
+	              id: "oligrapherHideAnnotationsButton",
+	              className: "btn btn-lg btn-default",
+	              onClick: function () {
+	                return _this.props.swapAnnotations();
+	              } },
+	            _react2["default"].createElement("span", { className: "glyphicon glyphicon-font" })
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return GraphNavButtons;
+	})(_react.Component);
+
+	exports["default"] = GraphNavButtons;
+	module.exports = exports["default"];
+
+/***/ },
+/* 392 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _BaseComponent2 = __webpack_require__(266);
+
+	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
+
+	var GraphAnnotationList = (function (_BaseComponent) {
+	  _inherits(GraphAnnotationList, _BaseComponent);
+
+	  function GraphAnnotationList(props) {
+	    _classCallCheck(this, GraphAnnotationList);
+
+	    _get(Object.getPrototypeOf(GraphAnnotationList.prototype), 'constructor', this).call(this, props);
+	    this.bindAll('_handleClick', '_handleDragOver', '_handleDragStart', '_handleDragEnd');
+	    this._placeholder = document.createElement("li");
+	    this._placeholder.className = "placeholder";
+	  }
+
+	  _createClass(GraphAnnotationList, [{
+	    key: 'render',
+	    value: function render() {
+	      var _this = this;
+
+	      return _react2['default'].createElement(
+	        'div',
+	        { id: 'oligrapherAnnotationList' },
+	        _react2['default'].createElement(
+	          'ul',
+	          { id: 'oligrapherAnnotationListItems', onDragOver: this._handleDragOver },
+	          this.props.annotations.map(function (annotation, index) {
+	            return _react2['default'].createElement(
+	              'li',
+	              {
+	                key: annotation.id,
+	                'data-id': index,
+	                className: index == _this.props.currentIndex ? "active" : null,
+	                draggable: true,
+	                onClick: _this._handleClick,
+	                onDragStart: _this._handleDragStart,
+	                onDragEnd: _this._handleDragEnd },
+	              annotation.header.trim().length > 0 ? annotation.header : "Untitled Annotation"
+	            );
+	          })
+	        ),
+	        this.props.isEditor ? _react2['default'].createElement(
+	          'button',
+	          {
+	            id: 'oligrapherCreateGraphAnnotationButton',
+	            className: 'btn btn-sm btn-default',
+	            onClick: this.props.create },
+	          'New Annotation'
+	        ) : null
+	      );
+	    }
+	  }, {
+	    key: '_handleClick',
+	    value: function _handleClick(e) {
+	      this.props.show(parseInt(e.target.dataset.id));
+
+	      if (this.props.isEditor) {
+	        this.props.hideEditTools();
+	      };
+	    }
+	  }, {
+	    key: '_handleDragStart',
+	    value: function _handleDragStart(e) {
+	      this._startY = e.clientY;
+	      this._dragged = e.currentTarget;
+	      this._placeholder.innerHTML = e.currentTarget.innerHTML;
+
+	      e.dataTransfer.effectAllowed = "move";
+	      e.dataTransfer.setData("text/html", e.currentTarget);
+	    }
+	  }, {
+	    key: '_handleDragEnd',
+	    value: function _handleDragEnd(e) {
+	      this._dragged.style.display = "block";
+	      this._dragged.parentNode.removeChild(this._placeholder);
+
+	      // update store
+	      var from = Number(this._dragged.dataset.id);
+	      var to = Number(this._over.dataset.id);
+
+	      this.props.move(from, to);
+
+	      this._startY = undefined;
+	    }
+	  }, {
+	    key: '_handleDragOver',
+	    value: function _handleDragOver(e) {
+	      e.preventDefault();
+
+	      var thisHeight = this._dragged.offsetHeight;
+	      this._dragged.style.display = "none";
+
+	      if (e.target.className == "placeholder") return;
+
+	      this._over = e.target;
+
+	      var relY = e.clientY - this._startY;
+	      var height = (this._over.offsetHeight || thisHeight) / 2;
+	      var parent = e.target.parentNode;
+
+	      console.log(this._over.dataset.id, relY, height);
+
+	      if (relY > height) {
+	        parent.insertBefore(this._placeholder, e.target.nextElementSibling);
+	      } else if (relY < height) {
+	        parent.insertBefore(this._placeholder, e.target);
+	      }
+	    }
+	  }]);
+
+	  return GraphAnnotationList;
+	})(_BaseComponent3['default']);
+
+	exports['default'] = GraphAnnotationList;
+	module.exports = exports['default'];
+
+/***/ },
+/* 393 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var GraphAnnotation = (function (_Component) {
+	  _inherits(GraphAnnotation, _Component);
+
+	  function GraphAnnotation() {
+	    _classCallCheck(this, GraphAnnotation);
+
+	    _get(Object.getPrototypeOf(GraphAnnotation.prototype), "constructor", this).apply(this, arguments);
+	  }
+
+	  _createClass(GraphAnnotation, [{
+	    key: "render",
+	    value: function render() {
+	      return _react2["default"].createElement(
+	        "div",
+	        { id: "oligrapherGraphAnnotation" },
+	        _react2["default"].createElement(
+	          "h2",
+	          null,
+	          this.props.annotation.header
+	        ),
+	        _react2["default"].createElement("div", {
+	          id: "oligrapherGraphAnnotationText",
+	          dangerouslySetInnerHTML: { __html: this.props.annotation.text } }),
+	        this.props.isEditor ? _react2["default"].createElement(
+	          "button",
+	          {
+	            id: "oligrapherGraphAnnotationEditButton",
+	            className: "btn btn-default btn-sm",
+	            onClick: this.props.swapEditForm },
+	          "Edit"
+	        ) : null
+	      );
+	    }
+	  }]);
+
+	  return GraphAnnotation;
+	})(_react.Component);
+
+	exports["default"] = GraphAnnotation;
+	module.exports = exports["default"];
+
+/***/ },
+/* 394 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _BaseComponent2 = __webpack_require__(266);
+
+	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
+
+	var _lodashObjectMerge = __webpack_require__(179);
+
+	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
+
+	var _lodashObjectPick = __webpack_require__(355);
+
+	var _lodashObjectPick2 = _interopRequireDefault(_lodashObjectPick);
+
+	var _reactMediumEditor = __webpack_require__(395);
+
+	var _reactMediumEditor2 = _interopRequireDefault(_reactMediumEditor);
+
+	var GraphAnnotationForm = (function (_BaseComponent) {
+	  _inherits(GraphAnnotationForm, _BaseComponent);
+
+	  function GraphAnnotationForm(props) {
+	    _classCallCheck(this, GraphAnnotationForm);
+
+	    _get(Object.getPrototypeOf(GraphAnnotationForm.prototype), 'constructor', this).call(this, props);
+	    this.bindAll('_handleHeaderChange', '_handleTextChange', '_handleRemove');
+	    this.state = (0, _lodashObjectPick2['default'])(this.props.annotation, ['header', 'text']);
+	  }
+
+	  _createClass(GraphAnnotationForm, [{
+	    key: 'render',
+	    value: function render() {
+	      var editorOptions = {
+	        toolbar: { buttons: ['bold', 'italic', 'underline', 'anchor', 'h2', 'h3', 'quote', 'unorderedlist', 'orderedlist'] },
+	        targetBlank: true,
+	        placeholder: { text: "annotation text" }
+	      };
+
+	      return _react2['default'].createElement(
+	        'div',
+	        { id: 'oligrapherGraphAnnotationForm' },
+	        _react2['default'].createElement('textarea', {
+	          id: 'oligrapherGraphAnnotationFormHeader',
+	          ref: 'header',
+	          className: 'form-control input-lg',
+	          placeholder: 'annotation header',
+	          value: this.props.annotation.header,
+	          onChange: this._handleHeaderChange }),
+	        _react2['default'].createElement(_reactMediumEditor2['default'], {
+	          ref: 'editor',
+	          id: 'oligrapherGraphAnnotationFormText',
+	          text: this.state.text,
+	          options: editorOptions,
+	          onChange: this._handleTextChange }),
+	        _react2['default'].createElement(
+	          'button',
+	          {
+	            className: 'btn btn-danger btn-sm',
+	            onClick: this._handleRemove },
+	          'Remove'
+	        )
+	      );
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this = this;
+
+	      this.refs.editor.medium.subscribe("blur", function () {
+	        _this.saveText();
+	      });
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(props) {
+	      this.setState((0, _lodashObjectMerge2['default'])({ header: null, text: null }, (0, _lodashObjectPick2['default'])(props.annotation, ['header', 'text'])));
+	    }
+	  }, {
+	    key: '_handleRemove',
+	    value: function _handleRemove() {
+	      if (confirm("Are you sure you want to delete this annotation?")) {
+	        this.props.remove(this.props.index);
+	      }
+	    }
+	  }, {
+	    key: '_handleHeaderChange',
+	    value: function _handleHeaderChange(event) {
+	      this.setState({ header: event.target.value });
+	      this.props.update(this.props.index, { header: event.target.value, text: this.state.text });
+	    }
+	  }, {
+	    key: '_handleTextChange',
+	    value: function _handleTextChange(value, medium) {
+	      this.setState({ text: value });
+	    }
+	  }, {
+	    key: 'saveText',
+	    value: function saveText() {
+	      this.props.update(this.props.index, this.state);
+	    }
+	  }, {
+	    key: '_handleChange',
+	    value: function _handleChange(field, value) {
+	      this.setState(_defineProperty({}, field, value));
+	      this._apply();
+	    }
+	  }, {
+	    key: '_apply',
+	    value: function _apply() {
+	      var header = this.refs.header.value;
+	      var text = this.refs.text.value;
+	      this.props.update(this.props.index, { header: header, text: text });
+	    }
+	  }]);
+
+	  return GraphAnnotationForm;
+	})(_BaseComponent3['default']);
+
+	exports['default'] = GraphAnnotationForm;
+	module.exports = exports['default'];
+
+/***/ },
+/* 395 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(396);
+
+
+/***/ },
+/* 396 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var assign = __webpack_require__(397);
+	var blacklist = __webpack_require__(398);
+	var React = __webpack_require__(2);
+	var ReactDOM = __webpack_require__(154);
+
+	if (typeof document !== 'undefined') {
+	  var MediumEditor = __webpack_require__(399);
+	}
+
+	module.exports = React.createClass({
+	  displayName: 'MediumEditor',
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      text: this.props.text
+	    };
+	  },
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      tag: 'div'
+	    };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    var _this = this;
+
+	    var dom = ReactDOM.findDOMNode(this);
+
+	    this.medium = new MediumEditor(dom, this.props.options);
+	    this.medium.subscribe('editableInput', function (e) {
+	      _this._updated = true;
+	      _this.change(dom.innerHTML);
+	    });
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.medium.destroy();
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    if (nextProps.text !== this.state.text && !this._updated) {
+	      this.setState({ text: nextProps.text });
+	    }
+
+	    if (this._updated) this._updated = false;
+	  },
+	  render: function render() {
+	    var tag = this.props.tag;
+	    var props = blacklist(this.props, 'tag', 'contentEditable', 'dangerouslySetInnerHTML');
+
+	    assign(props, {
+	      contentEditable: true,
+	      dangerouslySetInnerHTML: { __html: this.state.text }
+	    });
+
+	    return React.createElement(tag, props);
+	  },
+	  change: function change(text) {
+	    if (this.props.onChange) this.props.onChange(text, this.medium);
+	  }
+	});
+
+/***/ },
+/* 397 */
+/***/ function(module, exports) {
+
+	/* eslint-disable no-unused-vars */
+	'use strict';
+	var hasOwnProperty = Object.prototype.hasOwnProperty;
+	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+	function toObject(val) {
+		if (val === null || val === undefined) {
+			throw new TypeError('Object.assign cannot be called with null or undefined');
+		}
+
+		return Object(val);
+	}
+
+	module.exports = Object.assign || function (target, source) {
+		var from;
+		var to = toObject(target);
+		var symbols;
+
+		for (var s = 1; s < arguments.length; s++) {
+			from = Object(arguments[s]);
+
+			for (var key in from) {
+				if (hasOwnProperty.call(from, key)) {
+					to[key] = from[key];
+				}
+			}
+
+			if (Object.getOwnPropertySymbols) {
+				symbols = Object.getOwnPropertySymbols(from);
+				for (var i = 0; i < symbols.length; i++) {
+					if (propIsEnumerable.call(from, symbols[i])) {
+						to[symbols[i]] = from[symbols[i]];
+					}
+				}
+			}
+		}
+
+		return to;
+	};
+
+
+/***/ },
+/* 398 */
+/***/ function(module, exports) {
+
+	module.exports = function blacklist (src) {
+	  var copy = {}, filter = arguments[1]
+
+	  if (typeof filter === 'string') {
+	    filter = {}
+	    for (var i = 1; i < arguments.length; i++) {
+	      filter[arguments[i]] = true
+	    }
+	  }
+
+	  for (var key in src) {
+	    // blacklist?
+	    if (filter[key]) continue
+
+	    copy[key] = src[key]
+	  }
+
+	  return copy
+	}
+
+
+/***/ },
+/* 399 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*global self, document, DOMException */
+
+	/*! @source http://purl.eligrey.com/github/classList.js/blob/master/classList.js */
+
+	// Full polyfill for browsers with no classList support
+	if (!("classList" in document.createElement("_"))) {
+	  (function (view) {
+
+	  "use strict";
+
+	  if (!('Element' in view)) return;
+
+	  var
+	      classListProp = "classList"
+	    , protoProp = "prototype"
+	    , elemCtrProto = view.Element[protoProp]
+	    , objCtr = Object
+	    , strTrim = String[protoProp].trim || function () {
+	      return this.replace(/^\s+|\s+$/g, "");
+	    }
+	    , arrIndexOf = Array[protoProp].indexOf || function (item) {
+	      var
+	          i = 0
+	        , len = this.length
+	      ;
+	      for (; i < len; i++) {
+	        if (i in this && this[i] === item) {
+	          return i;
+	        }
+	      }
+	      return -1;
+	    }
+	    // Vendors: please allow content code to instantiate DOMExceptions
+	    , DOMEx = function (type, message) {
+	      this.name = type;
+	      this.code = DOMException[type];
+	      this.message = message;
+	    }
+	    , checkTokenAndGetIndex = function (classList, token) {
+	      if (token === "") {
+	        throw new DOMEx(
+	            "SYNTAX_ERR"
+	          , "An invalid or illegal string was specified"
+	        );
+	      }
+	      if (/\s/.test(token)) {
+	        throw new DOMEx(
+	            "INVALID_CHARACTER_ERR"
+	          , "String contains an invalid character"
+	        );
+	      }
+	      return arrIndexOf.call(classList, token);
+	    }
+	    , ClassList = function (elem) {
+	      var
+	          trimmedClasses = strTrim.call(elem.getAttribute("class") || "")
+	        , classes = trimmedClasses ? trimmedClasses.split(/\s+/) : []
+	        , i = 0
+	        , len = classes.length
+	      ;
+	      for (; i < len; i++) {
+	        this.push(classes[i]);
+	      }
+	      this._updateClassName = function () {
+	        elem.setAttribute("class", this.toString());
+	      };
+	    }
+	    , classListProto = ClassList[protoProp] = []
+	    , classListGetter = function () {
+	      return new ClassList(this);
+	    }
+	  ;
+	  // Most DOMException implementations don't allow calling DOMException's toString()
+	  // on non-DOMExceptions. Error's toString() is sufficient here.
+	  DOMEx[protoProp] = Error[protoProp];
+	  classListProto.item = function (i) {
+	    return this[i] || null;
+	  };
+	  classListProto.contains = function (token) {
+	    token += "";
+	    return checkTokenAndGetIndex(this, token) !== -1;
+	  };
+	  classListProto.add = function () {
+	    var
+	        tokens = arguments
+	      , i = 0
+	      , l = tokens.length
+	      , token
+	      , updated = false
+	    ;
+	    do {
+	      token = tokens[i] + "";
+	      if (checkTokenAndGetIndex(this, token) === -1) {
+	        this.push(token);
+	        updated = true;
+	      }
+	    }
+	    while (++i < l);
+
+	    if (updated) {
+	      this._updateClassName();
+	    }
+	  };
+	  classListProto.remove = function () {
+	    var
+	        tokens = arguments
+	      , i = 0
+	      , l = tokens.length
+	      , token
+	      , updated = false
+	      , index
+	    ;
+	    do {
+	      token = tokens[i] + "";
+	      index = checkTokenAndGetIndex(this, token);
+	      while (index !== -1) {
+	        this.splice(index, 1);
+	        updated = true;
+	        index = checkTokenAndGetIndex(this, token);
+	      }
+	    }
+	    while (++i < l);
+
+	    if (updated) {
+	      this._updateClassName();
+	    }
+	  };
+	  classListProto.toggle = function (token, force) {
+	    token += "";
+
+	    var
+	        result = this.contains(token)
+	      , method = result ?
+	        force !== true && "remove"
+	      :
+	        force !== false && "add"
+	    ;
+
+	    if (method) {
+	      this[method](token);
+	    }
+
+	    if (force === true || force === false) {
+	      return force;
+	    } else {
+	      return !result;
+	    }
+	  };
+	  classListProto.toString = function () {
+	    return this.join(" ");
+	  };
+
+	  if (objCtr.defineProperty) {
+	    var classListPropDesc = {
+	        get: classListGetter
+	      , enumerable: true
+	      , configurable: true
+	    };
+	    try {
+	      objCtr.defineProperty(elemCtrProto, classListProp, classListPropDesc);
+	    } catch (ex) { // IE 8 doesn't support enumerable:true
+	      if (ex.number === -0x7FF5EC54) {
+	        classListPropDesc.enumerable = false;
+	        objCtr.defineProperty(elemCtrProto, classListProp, classListPropDesc);
+	      }
+	    }
+	  } else if (objCtr[protoProp].__defineGetter__) {
+	    elemCtrProto.__defineGetter__(classListProp, classListGetter);
+	  }
+
+	  }(self));
+	}
+
+	/* Blob.js
+	 * A Blob implementation.
+	 * 2014-07-24
+	 *
+	 * By Eli Grey, http://eligrey.com
+	 * By Devin Samarin, https://github.com/dsamarin
+	 * License: X11/MIT
+	 *   See https://github.com/eligrey/Blob.js/blob/master/LICENSE.md
+	 */
+
+	/*global self, unescape */
+	/*jslint bitwise: true, regexp: true, confusion: true, es5: true, vars: true, white: true,
+	  plusplus: true */
+
+	/*! @source http://purl.eligrey.com/github/Blob.js/blob/master/Blob.js */
+
+	(function (view) {
+	  "use strict";
+
+	  view.URL = view.URL || view.webkitURL;
+
+	  if (view.Blob && view.URL) {
+	    try {
+	      new Blob;
+	      return;
+	    } catch (e) {}
+	  }
+
+	  // Internally we use a BlobBuilder implementation to base Blob off of
+	  // in order to support older browsers that only have BlobBuilder
+	  var BlobBuilder = view.BlobBuilder || view.WebKitBlobBuilder || view.MozBlobBuilder || (function(view) {
+	    var
+	        get_class = function(object) {
+	        return Object.prototype.toString.call(object).match(/^\[object\s(.*)\]$/)[1];
+	      }
+	      , FakeBlobBuilder = function BlobBuilder() {
+	        this.data = [];
+	      }
+	      , FakeBlob = function Blob(data, type, encoding) {
+	        this.data = data;
+	        this.size = data.length;
+	        this.type = type;
+	        this.encoding = encoding;
+	      }
+	      , FBB_proto = FakeBlobBuilder.prototype
+	      , FB_proto = FakeBlob.prototype
+	      , FileReaderSync = view.FileReaderSync
+	      , FileException = function(type) {
+	        this.code = this[this.name = type];
+	      }
+	      , file_ex_codes = (
+	          "NOT_FOUND_ERR SECURITY_ERR ABORT_ERR NOT_READABLE_ERR ENCODING_ERR "
+	        + "NO_MODIFICATION_ALLOWED_ERR INVALID_STATE_ERR SYNTAX_ERR"
+	      ).split(" ")
+	      , file_ex_code = file_ex_codes.length
+	      , real_URL = view.URL || view.webkitURL || view
+	      , real_create_object_URL = real_URL.createObjectURL
+	      , real_revoke_object_URL = real_URL.revokeObjectURL
+	      , URL = real_URL
+	      , btoa = view.btoa
+	      , atob = view.atob
+
+	      , ArrayBuffer = view.ArrayBuffer
+	      , Uint8Array = view.Uint8Array
+
+	      , origin = /^[\w-]+:\/*\[?[\w\.:-]+\]?(?::[0-9]+)?/
+	    ;
+	    FakeBlob.fake = FB_proto.fake = true;
+	    while (file_ex_code--) {
+	      FileException.prototype[file_ex_codes[file_ex_code]] = file_ex_code + 1;
+	    }
+	    // Polyfill URL
+	    if (!real_URL.createObjectURL) {
+	      URL = view.URL = function(uri) {
+	        var
+	            uri_info = document.createElementNS("http://www.w3.org/1999/xhtml", "a")
+	          , uri_origin
+	        ;
+	        uri_info.href = uri;
+	        if (!("origin" in uri_info)) {
+	          if (uri_info.protocol.toLowerCase() === "data:") {
+	            uri_info.origin = null;
+	          } else {
+	            uri_origin = uri.match(origin);
+	            uri_info.origin = uri_origin && uri_origin[1];
+	          }
+	        }
+	        return uri_info;
+	      };
+	    }
+	    URL.createObjectURL = function(blob) {
+	      var
+	          type = blob.type
+	        , data_URI_header
+	      ;
+	      if (type === null) {
+	        type = "application/octet-stream";
+	      }
+	      if (blob instanceof FakeBlob) {
+	        data_URI_header = "data:" + type;
+	        if (blob.encoding === "base64") {
+	          return data_URI_header + ";base64," + blob.data;
+	        } else if (blob.encoding === "URI") {
+	          return data_URI_header + "," + decodeURIComponent(blob.data);
+	        } if (btoa) {
+	          return data_URI_header + ";base64," + btoa(blob.data);
+	        } else {
+	          return data_URI_header + "," + encodeURIComponent(blob.data);
+	        }
+	      } else if (real_create_object_URL) {
+	        return real_create_object_URL.call(real_URL, blob);
+	      }
+	    };
+	    URL.revokeObjectURL = function(object_URL) {
+	      if (object_URL.substring(0, 5) !== "data:" && real_revoke_object_URL) {
+	        real_revoke_object_URL.call(real_URL, object_URL);
+	      }
+	    };
+	    FBB_proto.append = function(data/*, endings*/) {
+	      var bb = this.data;
+	      // decode data to a binary string
+	      if (Uint8Array && (data instanceof ArrayBuffer || data instanceof Uint8Array)) {
+	        var
+	            str = ""
+	          , buf = new Uint8Array(data)
+	          , i = 0
+	          , buf_len = buf.length
+	        ;
+	        for (; i < buf_len; i++) {
+	          str += String.fromCharCode(buf[i]);
+	        }
+	        bb.push(str);
+	      } else if (get_class(data) === "Blob" || get_class(data) === "File") {
+	        if (FileReaderSync) {
+	          var fr = new FileReaderSync;
+	          bb.push(fr.readAsBinaryString(data));
+	        } else {
+	          // async FileReader won't work as BlobBuilder is sync
+	          throw new FileException("NOT_READABLE_ERR");
+	        }
+	      } else if (data instanceof FakeBlob) {
+	        if (data.encoding === "base64" && atob) {
+	          bb.push(atob(data.data));
+	        } else if (data.encoding === "URI") {
+	          bb.push(decodeURIComponent(data.data));
+	        } else if (data.encoding === "raw") {
+	          bb.push(data.data);
+	        }
+	      } else {
+	        if (typeof data !== "string") {
+	          data += ""; // convert unsupported types to strings
+	        }
+	        // decode UTF-16 to binary string
+	        bb.push(unescape(encodeURIComponent(data)));
+	      }
+	    };
+	    FBB_proto.getBlob = function(type) {
+	      if (!arguments.length) {
+	        type = null;
+	      }
+	      return new FakeBlob(this.data.join(""), type, "raw");
+	    };
+	    FBB_proto.toString = function() {
+	      return "[object BlobBuilder]";
+	    };
+	    FB_proto.slice = function(start, end, type) {
+	      var args = arguments.length;
+	      if (args < 3) {
+	        type = null;
+	      }
+	      return new FakeBlob(
+	          this.data.slice(start, args > 1 ? end : this.data.length)
+	        , type
+	        , this.encoding
+	      );
+	    };
+	    FB_proto.toString = function() {
+	      return "[object Blob]";
+	    };
+	    FB_proto.close = function() {
+	      this.size = 0;
+	      delete this.data;
+	    };
+	    return FakeBlobBuilder;
+	  }(view));
+
+	  view.Blob = function(blobParts, options) {
+	    var type = options ? (options.type || "") : "";
+	    var builder = new BlobBuilder();
+	    if (blobParts) {
+	      for (var i = 0, len = blobParts.length; i < len; i++) {
+	        if (Uint8Array && blobParts[i] instanceof Uint8Array) {
+	          builder.append(blobParts[i].buffer);
+	        }
+	        else {
+	          builder.append(blobParts[i]);
+	        }
+	      }
+	    }
+	    var blob = builder.getBlob(type);
+	    if (!blob.slice && blob.webkitSlice) {
+	      blob.slice = blob.webkitSlice;
+	    }
+	    return blob;
+	  };
+
+	  var getPrototypeOf = Object.getPrototypeOf || function(object) {
+	    return object.__proto__;
+	  };
+	  view.Blob.prototype = getPrototypeOf(new view.Blob());
+	}(typeof self !== "undefined" && self || typeof window !== "undefined" && window || this.content || this));
+
+	(function (root, factory) {
+	    'use strict';
+	    if (true) {
+	        module.exports = factory;
+	    } else if (typeof define === 'function' && define.amd) {
+	        define(function () {
+	            return factory;
+	        });
+	    } else {
+	        root.MediumEditor = factory;
+	    }
+	}(this, function () {
+
+	    'use strict';
+
+	function MediumEditor(elements, options) {
+	    'use strict';
+	    return this.init(elements, options);
+	}
+
+	MediumEditor.extensions = {};
+	/*jshint unused: true */
+	(function (window) {
+	    'use strict';
+
+	    function copyInto(overwrite, dest) {
+	        var prop,
+	            sources = Array.prototype.slice.call(arguments, 2);
+	        dest = dest || {};
+	        for (var i = 0; i < sources.length; i++) {
+	            var source = sources[i];
+	            if (source) {
+	                for (prop in source) {
+	                    if (source.hasOwnProperty(prop) &&
+	                        typeof source[prop] !== 'undefined' &&
+	                        (overwrite || dest.hasOwnProperty(prop) === false)) {
+	                        dest[prop] = source[prop];
+	                    }
+	                }
+	            }
+	        }
+	        return dest;
+	    }
+
+	    // https://developer.mozilla.org/en-US/docs/Web/API/Node/contains
+	    // Some browsers (including phantom) don't return true for Node.contains(child)
+	    // if child is a text node.  Detect these cases here and use a fallback
+	    // for calls to Util.isDescendant()
+	    var nodeContainsWorksWithTextNodes = false;
+	    try {
+	        var testParent = document.createElement('div'),
+	            testText = document.createTextNode(' ');
+	        testParent.appendChild(testText);
+	        nodeContainsWorksWithTextNodes = testParent.contains(testText);
+	    } catch (exc) {}
+
+	    var Util = {
+
+	        // http://stackoverflow.com/questions/17907445/how-to-detect-ie11#comment30165888_17907562
+	        // by rg89
+	        isIE: ((navigator.appName === 'Microsoft Internet Explorer') || ((navigator.appName === 'Netscape') && (new RegExp('Trident/.*rv:([0-9]{1,}[.0-9]{0,})').exec(navigator.userAgent) !== null))),
+
+	        // if firefox
+	        isFF: (navigator.userAgent.toLowerCase().indexOf('firefox') > -1),
+
+	        // http://stackoverflow.com/a/11752084/569101
+	        isMac: (window.navigator.platform.toUpperCase().indexOf('MAC') >= 0),
+
+	        // https://github.com/jashkenas/underscore
+	        keyCode: {
+	            BACKSPACE: 8,
+	            TAB: 9,
+	            ENTER: 13,
+	            ESCAPE: 27,
+	            SPACE: 32,
+	            DELETE: 46,
+	            K: 75, // K keycode, and not k
+	            M: 77
+	        },
+
+	        /**
+	         * Returns true if it's metaKey on Mac, or ctrlKey on non-Mac.
+	         * See #591
+	         */
+	        isMetaCtrlKey: function (event) {
+	            if ((Util.isMac && event.metaKey) || (!Util.isMac && event.ctrlKey)) {
+	                return true;
+	            }
+
+	            return false;
+	        },
+
+	        /**
+	         * Returns true if the key associated to the event is inside keys array
+	         *
+	         * @see : https://github.com/jquery/jquery/blob/0705be475092aede1eddae01319ec931fb9c65fc/src/event.js#L473-L484
+	         * @see : http://stackoverflow.com/q/4471582/569101
+	         */
+	        isKey: function (event, keys) {
+	            var keyCode = Util.getKeyCode(event);
+
+	            // it's not an array let's just compare strings!
+	            if (false === Array.isArray(keys)) {
+	                return keyCode === keys;
+	            }
+
+	            if (-1 === keys.indexOf(keyCode)) {
+	                return false;
+	            }
+
+	            return true;
+	        },
+
+	        getKeyCode: function (event) {
+	            var keyCode = event.which;
+
+	            // getting the key code from event
+	            if (null === keyCode) {
+	                keyCode = event.charCode !== null ? event.charCode : event.keyCode;
+	            }
+
+	            return keyCode;
+	        },
+
+	        blockContainerElementNames: [
+	            // elements our editor generates
+	            'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'pre', 'ul', 'li', 'ol',
+	            // all other known block elements
+	            'address', 'article', 'aside', 'audio', 'canvas', 'dd', 'dl', 'dt', 'fieldset',
+	            'figcaption', 'figure', 'footer', 'form', 'header', 'hgroup', 'main', 'nav',
+	            'noscript', 'output', 'section', 'video',
+	            'table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td'
+	        ],
+
+	        emptyElementNames: ['br', 'col', 'colgroup', 'hr', 'img', 'input', 'source', 'wbr'],
+
+	        extend: function extend(/* dest, source1, source2, ...*/) {
+	            var args = [true].concat(Array.prototype.slice.call(arguments));
+	            return copyInto.apply(this, args);
+	        },
+
+	        defaults: function defaults(/*dest, source1, source2, ...*/) {
+	            var args = [false].concat(Array.prototype.slice.call(arguments));
+	            return copyInto.apply(this, args);
+	        },
+
+	        /*
+	         * Create a link around the provided text nodes which must be adjacent to each other and all be
+	         * descendants of the same closest block container. If the preconditions are not met, unexpected
+	         * behavior will result.
+	         */
+	        createLink: function (document, textNodes, href, target) {
+	            var anchor = document.createElement('a');
+	            Util.moveTextRangeIntoElement(textNodes[0], textNodes[textNodes.length - 1], anchor);
+	            anchor.setAttribute('href', href);
+	            if (target) {
+	                anchor.setAttribute('target', target);
+	            }
+	            return anchor;
+	        },
+
+	        /*
+	         * Given the provided match in the format {start: 1, end: 2} where start and end are indices into the
+	         * textContent of the provided element argument, modify the DOM inside element to ensure that the text
+	         * identified by the provided match can be returned as text nodes that contain exactly that text, without
+	         * any additional text at the beginning or end of the returned array of adjacent text nodes.
+	         *
+	         * The only DOM manipulation performed by this function is splitting the text nodes, non-text nodes are
+	         * not affected in any way.
+	         */
+	        findOrCreateMatchingTextNodes: function (document, element, match) {
+	            var treeWalker = document.createTreeWalker(element, NodeFilter.SHOW_ALL, null, false),
+	                matchedNodes = [],
+	                currentTextIndex = 0,
+	                startReached = false,
+	                currentNode = null,
+	                newNode = null;
+
+	            while ((currentNode = treeWalker.nextNode()) !== null) {
+	                if (currentNode.nodeType > 3) {
+	                    continue;
+	                } else if (currentNode.nodeType === 3) {
+	                    if (!startReached && match.start < (currentTextIndex + currentNode.nodeValue.length)) {
+	                        startReached = true;
+	                        newNode = Util.splitStartNodeIfNeeded(currentNode, match.start, currentTextIndex);
+	                    }
+	                    if (startReached) {
+	                        Util.splitEndNodeIfNeeded(currentNode, newNode, match.end, currentTextIndex);
+	                    }
+	                    if (startReached && currentTextIndex === match.end) {
+	                        break; // Found the node(s) corresponding to the link. Break out and move on to the next.
+	                    } else if (startReached && currentTextIndex > (match.end + 1)) {
+	                        throw new Error('PerformLinking overshot the target!'); // should never happen...
+	                    }
+
+	                    if (startReached) {
+	                        matchedNodes.push(newNode || currentNode);
+	                    }
+
+	                    currentTextIndex += currentNode.nodeValue.length;
+	                    if (newNode !== null) {
+	                        currentTextIndex += newNode.nodeValue.length;
+	                        // Skip the newNode as we'll already have pushed it to the matches
+	                        treeWalker.nextNode();
+	                    }
+	                    newNode = null;
+	                } else if (currentNode.tagName.toLowerCase() === 'img') {
+	                    if (!startReached && (match.start <= currentTextIndex)) {
+	                        startReached = true;
+	                    }
+	                    if (startReached) {
+	                        matchedNodes.push(currentNode);
+	                    }
+	                }
+	            }
+	            return matchedNodes;
+	        },
+
+	        /*
+	         * Given the provided text node and text coordinates, split the text node if needed to make it align
+	         * precisely with the coordinates.
+	         *
+	         * This function is intended to be called from Util.findOrCreateMatchingTextNodes.
+	         */
+	        splitStartNodeIfNeeded: function (currentNode, matchStartIndex, currentTextIndex) {
+	            if (matchStartIndex !== currentTextIndex) {
+	                return currentNode.splitText(matchStartIndex - currentTextIndex);
+	            }
+	            return null;
+	        },
+
+	        /*
+	         * Given the provided text node and text coordinates, split the text node if needed to make it align
+	         * precisely with the coordinates. The newNode argument should from the result of Util.splitStartNodeIfNeeded,
+	         * if that function has been called on the same currentNode.
+	         *
+	         * This function is intended to be called from Util.findOrCreateMatchingTextNodes.
+	         */
+	        splitEndNodeIfNeeded: function (currentNode, newNode, matchEndIndex, currentTextIndex) {
+	            var textIndexOfEndOfFarthestNode,
+	                endSplitPoint;
+	            textIndexOfEndOfFarthestNode = currentTextIndex + (newNode || currentNode).nodeValue.length +
+	                    (newNode ? currentNode.nodeValue.length : 0) -
+	                    1;
+	            endSplitPoint = (newNode || currentNode).nodeValue.length -
+	                    (textIndexOfEndOfFarthestNode + 1 - matchEndIndex);
+	            if (textIndexOfEndOfFarthestNode >= matchEndIndex &&
+	                    currentTextIndex !== textIndexOfEndOfFarthestNode &&
+	                    endSplitPoint !== 0) {
+	                (newNode || currentNode).splitText(endSplitPoint);
+	            }
+	        },
+
+	        /*
+	        * Take an element, and break up all of its text content into unique pieces such that:
+	         * 1) All text content of the elements are in separate blocks. No piece of text content should span
+	         *    across multiple blocks. This means no element return by this function should have
+	         *    any blocks as children.
+	         * 2) The union of the textcontent of all of the elements returned here covers all
+	         *    of the text within the element.
+	         *
+	         *
+	         * EXAMPLE:
+	         * In the event that we have something like:
+	         *
+	         * <blockquote>
+	         *   <p>Some Text</p>
+	         *   <ol>
+	         *     <li>List Item 1</li>
+	         *     <li>List Item 2</li>
+	         *   </ol>
+	         * </blockquote>
+	         *
+	         * This function would return these elements as an array:
+	         *   [ <p>Some Text</p>, <li>List Item 1</li>, <li>List Item 2</li> ]
+	         *
+	         * Since the <blockquote> and <ol> elements contain blocks within them they are not returned.
+	         * Since the <p> and <li>'s don't contain block elements and cover all the text content of the
+	         * <blockquote> container, they are the elements returned.
+	         */
+	        splitByBlockElements: function (element) {
+	            if (element.nodeType !== 3 && element.nodeType !== 1) {
+	                return [];
+	            }
+
+	            var toRet = [],
+	                blockElementQuery = MediumEditor.util.blockContainerElementNames.join(',');
+
+	            if (element.nodeType === 3 || element.querySelectorAll(blockElementQuery).length === 0) {
+	                return [element];
+	            }
+
+	            for (var i = 0; i < element.childNodes.length; i++) {
+	                var child = element.childNodes[i];
+	                if (child.nodeType === 3) {
+	                    toRet.push(child);
+	                } else if (child.nodeType === 1) {
+	                    var blockElements = child.querySelectorAll(blockElementQuery);
+	                    if (blockElements.length === 0) {
+	                        toRet.push(child);
+	                    } else {
+	                        toRet = toRet.concat(MediumEditor.util.splitByBlockElements(child));
+	                    }
+	                }
+	            }
+
+	            return toRet;
+	        },
+
+	        // Find the next node in the DOM tree that represents any text that is being
+	        // displayed directly next to the targetNode (passed as an argument)
+	        // Text that appears directly next to the current node can be:
+	        //  - A sibling text node
+	        //  - A descendant of a sibling element
+	        //  - A sibling text node of an ancestor
+	        //  - A descendant of a sibling element of an ancestor
+	        findAdjacentTextNodeWithContent: function findAdjacentTextNodeWithContent(rootNode, targetNode, ownerDocument) {
+	            var pastTarget = false,
+	                nextNode,
+	                nodeIterator = ownerDocument.createNodeIterator(rootNode, NodeFilter.SHOW_TEXT, null, false);
+
+	            // Use a native NodeIterator to iterate over all the text nodes that are descendants
+	            // of the rootNode.  Once past the targetNode, choose the first non-empty text node
+	            nextNode = nodeIterator.nextNode();
+	            while (nextNode) {
+	                if (nextNode === targetNode) {
+	                    pastTarget = true;
+	                } else if (pastTarget) {
+	                    if (nextNode.nodeType === 3 && nextNode.nodeValue && nextNode.nodeValue.trim().length > 0) {
+	                        break;
+	                    }
+	                }
+	                nextNode = nodeIterator.nextNode();
+	            }
+
+	            return nextNode;
+	        },
+
+	        isDescendant: function isDescendant(parent, child, checkEquality) {
+	            if (!parent || !child) {
+	                return false;
+	            }
+	            if (parent === child) {
+	                return !!checkEquality;
+	            }
+	            // If parent is not an element, it can't have any descendants
+	            if (parent.nodeType !== 1) {
+	                return false;
+	            }
+	            if (nodeContainsWorksWithTextNodes || child.nodeType !== 3) {
+	                return parent.contains(child);
+	            }
+	            var node = child.parentNode;
+	            while (node !== null) {
+	                if (node === parent) {
+	                    return true;
+	                }
+	                node = node.parentNode;
+	            }
+	            return false;
+	        },
+
+	        // https://github.com/jashkenas/underscore
+	        isElement: function isElement(obj) {
+	            return !!(obj && obj.nodeType === 1);
+	        },
+
+	        // https://github.com/jashkenas/underscore
+	        throttle: function (func, wait) {
+	            var THROTTLE_INTERVAL = 50,
+	                context,
+	                args,
+	                result,
+	                timeout = null,
+	                previous = 0,
+	                later = function () {
+	                    previous = Date.now();
+	                    timeout = null;
+	                    result = func.apply(context, args);
+	                    if (!timeout) {
+	                        context = args = null;
+	                    }
+	                };
+
+	            if (!wait && wait !== 0) {
+	                wait = THROTTLE_INTERVAL;
+	            }
+
+	            return function () {
+	                var now = Date.now(),
+	                    remaining = wait - (now - previous);
+
+	                context = this;
+	                args = arguments;
+	                if (remaining <= 0 || remaining > wait) {
+	                    if (timeout) {
+	                        clearTimeout(timeout);
+	                        timeout = null;
+	                    }
+	                    previous = now;
+	                    result = func.apply(context, args);
+	                    if (!timeout) {
+	                        context = args = null;
+	                    }
+	                } else if (!timeout) {
+	                    timeout = setTimeout(later, remaining);
+	                }
+	                return result;
+	            };
+	        },
+
+	        traverseUp: function (current, testElementFunction) {
+	            if (!current) {
+	                return false;
+	            }
+
+	            do {
+	                if (current.nodeType === 1) {
+	                    if (testElementFunction(current)) {
+	                        return current;
+	                    }
+	                    // do not traverse upwards past the nearest containing editor
+	                    if (Util.isMediumEditorElement(current)) {
+	                        return false;
+	                    }
+	                }
+
+	                current = current.parentNode;
+	            } while (current);
+
+	            return false;
+	        },
+
+	        htmlEntities: function (str) {
+	            // converts special characters (like <) into their escaped/encoded values (like &lt;).
+	            // This allows you to show to display the string without the browser reading it as HTML.
+	            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+	        },
+
+	        // http://stackoverflow.com/questions/6690752/insert-html-at-caret-in-a-contenteditable-div
+	        insertHTMLCommand: function (doc, html) {
+	            var selection, range, el, fragment, node, lastNode, toReplace;
+
+	            if (doc.queryCommandSupported('insertHTML')) {
+	                try {
+	                    return doc.execCommand('insertHTML', false, html);
+	                } catch (ignore) {}
+	            }
+
+	            selection = doc.getSelection();
+	            if (selection.rangeCount) {
+	                range = selection.getRangeAt(0);
+	                toReplace = range.commonAncestorContainer;
+
+	                // https://github.com/yabwe/medium-editor/issues/748
+	                // If the selection is an empty editor element, create a temporary text node inside of the editor
+	                // and select it so that we don't delete the editor element
+	                if (Util.isMediumEditorElement(toReplace) && !toReplace.firstChild) {
+	                    range.selectNode(toReplace.appendChild(doc.createTextNode('')));
+	                } else if ((toReplace.nodeType === 3 && range.startOffset === 0 && range.endOffset === toReplace.nodeValue.length) ||
+	                        (toReplace.nodeType !== 3 && toReplace.innerHTML === range.toString())) {
+	                    // Ensure range covers maximum amount of nodes as possible
+	                    // By moving up the DOM and selecting ancestors whose only child is the range
+	                    while (!Util.isMediumEditorElement(toReplace) &&
+	                            toReplace.parentNode &&
+	                            toReplace.parentNode.childNodes.length === 1 &&
+	                            !Util.isMediumEditorElement(toReplace.parentNode)) {
+	                        toReplace = toReplace.parentNode;
+	                    }
+	                    range.selectNode(toReplace);
+	                }
+	                range.deleteContents();
+
+	                el = doc.createElement('div');
+	                el.innerHTML = html;
+	                fragment = doc.createDocumentFragment();
+	                while (el.firstChild) {
+	                    node = el.firstChild;
+	                    lastNode = fragment.appendChild(node);
+	                }
+	                range.insertNode(fragment);
+
+	                // Preserve the selection:
+	                if (lastNode) {
+	                    range = range.cloneRange();
+	                    range.setStartAfter(lastNode);
+	                    range.collapse(true);
+	                    selection.removeAllRanges();
+	                    selection.addRange(range);
+	                }
+	            }
+	        },
+
+	        execFormatBlock: function (doc, tagName) {
+	            // Get the top level block element that contains the selection
+	            var blockContainer = Util.getTopBlockContainer(MediumEditor.selection.getSelectionStart(doc)),
+	                childNodes;
+
+	            // Special handling for blockquote
+	            if (tagName === 'blockquote') {
+	                if (blockContainer) {
+	                    childNodes = Array.prototype.slice.call(blockContainer.childNodes);
+	                    // Check if the blockquote has a block element as a child (nested blocks)
+	                    if (childNodes.some(function (childNode) {
+	                        return Util.isBlockContainer(childNode);
+	                    })) {
+	                        // FF handles blockquote differently on formatBlock
+	                        // allowing nesting, we need to use outdent
+	                        // https://developer.mozilla.org/en-US/docs/Rich-Text_Editing_in_Mozilla
+	                        return doc.execCommand('outdent', false, null);
+	                    }
+	                }
+
+	                // When IE blockquote needs to be called as indent
+	                // http://stackoverflow.com/questions/1816223/rich-text-editor-with-blockquote-function/1821777#1821777
+	                if (Util.isIE) {
+	                    return doc.execCommand('indent', false, tagName);
+	                }
+	            }
+
+	            // If the blockContainer is already the element type being passed in
+	            // treat it as 'undo' formatting and just convert it to a <p>
+	            if (blockContainer && tagName === blockContainer.nodeName.toLowerCase()) {
+	                tagName = 'p';
+	            }
+
+	            // When IE we need to add <> to heading elements
+	            // http://stackoverflow.com/questions/10741831/execcommand-formatblock-headings-in-ie
+	            if (Util.isIE) {
+	                tagName = '<' + tagName + '>';
+	            }
+
+	            // When FF or IE, we have to handle blockquote node seperately as 'formatblock' does not work.
+	            // https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand#Commands
+	            if (blockContainer && blockContainer.nodeName.toLowerCase() === 'blockquote') {
+	                // For IE, just use outdent
+	                if (Util.isIE && tagName === '<p>') {
+	                    return doc.execCommand('outdent', false, tagName);
+	                }
+
+	                // For Firefox, make sure there's a nested block element before calling outdent
+	                if (Util.isFF && tagName === 'p') {
+	                    childNodes = Array.prototype.slice.call(blockContainer.childNodes);
+	                    // If there are some non-block elements we need to wrap everything in a <p> before we outdent
+	                    if (childNodes.some(function (childNode) {
+	                        return !Util.isBlockContainer(childNode);
+	                    })) {
+	                        doc.execCommand('formatBlock', false, tagName);
+	                    }
+	                    return doc.execCommand('outdent', false, tagName);
+	                }
+	            }
+
+	            return doc.execCommand('formatBlock', false, tagName);
+	        },
+
+	        /**
+	         * Set target to blank on the given el element
+	         *
+	         * TODO: not sure if this should be here
+	         *
+	         * When creating a link (using core -> createLink) the selection returned by Firefox will be the parent of the created link
+	         * instead of the created link itself (as it is for Chrome for example), so we retrieve all "a" children to grab the good one by
+	         * using `anchorUrl` to ensure that we are adding target="_blank" on the good one.
+	         * This isn't a bulletproof solution anyway ..
+	         */
+	        setTargetBlank: function (el, anchorUrl) {
+	            var i, url = anchorUrl || false;
+	            if (el.nodeName.toLowerCase() === 'a') {
+	                el.target = '_blank';
+	            } else {
+	                el = el.getElementsByTagName('a');
+
+	                for (i = 0; i < el.length; i += 1) {
+	                    if (false === url || url === el[i].attributes.href.value) {
+	                        el[i].target = '_blank';
+	                    }
+	                }
+	            }
+	        },
+
+	        addClassToAnchors: function (el, buttonClass) {
+	            var classes = buttonClass.split(' '),
+	                i,
+	                j;
+	            if (el.nodeName.toLowerCase() === 'a') {
+	                for (j = 0; j < classes.length; j += 1) {
+	                    el.classList.add(classes[j]);
+	                }
+	            } else {
+	                el = el.getElementsByTagName('a');
+	                for (i = 0; i < el.length; i += 1) {
+	                    for (j = 0; j < classes.length; j += 1) {
+	                        el[i].classList.add(classes[j]);
+	                    }
+	                }
+	            }
+	        },
+
+	        isListItem: function (node) {
+	            if (!node) {
+	                return false;
+	            }
+	            if (node.nodeName.toLowerCase() === 'li') {
+	                return true;
+	            }
+
+	            var parentNode = node.parentNode,
+	                tagName = parentNode.nodeName.toLowerCase();
+	            while (tagName === 'li' || (!Util.isBlockContainer(parentNode) && tagName !== 'div')) {
+	                if (tagName === 'li') {
+	                    return true;
+	                }
+	                parentNode = parentNode.parentNode;
+	                if (parentNode) {
+	                    tagName = parentNode.nodeName.toLowerCase();
+	                } else {
+	                    return false;
+	                }
+	            }
+	            return false;
+	        },
+
+	        cleanListDOM: function (ownerDocument, element) {
+	            if (element.nodeName.toLowerCase() !== 'li') {
+	                return;
+	            }
+
+	            var list = element.parentElement;
+
+	            if (list.parentElement.nodeName.toLowerCase() === 'p') { // yes we need to clean up
+	                Util.unwrap(list.parentElement, ownerDocument);
+
+	                // move cursor at the end of the text inside the list
+	                // for some unknown reason, the cursor is moved to end of the "visual" line
+	                MediumEditor.selection.moveCursor(ownerDocument, element.firstChild, element.firstChild.textContent.length);
+	            }
+	        },
+
+	        /* splitDOMTree
+	         *
+	         * Given a root element some descendant element, split the root element
+	         * into its own element containing the descendant element and all elements
+	         * on the left or right side of the descendant ('right' is default)
+	         *
+	         * example:
+	         *
+	         *         <div>
+	         *      /    |   \
+	         *  <span> <span> <span>
+	         *   / \    / \    / \
+	         *  1   2  3   4  5   6
+	         *
+	         *  If I wanted to split this tree given the <div> as the root and "4" as the leaf
+	         *  the result would be (the prime ' marks indicates nodes that are created as clones):
+	         *
+	         *   SPLITTING OFF 'RIGHT' TREE       SPLITTING OFF 'LEFT' TREE
+	         *
+	         *     <div>            <div>'              <div>'      <div>
+	         *      / \              / \                 / \          |
+	         * <span> <span>   <span>' <span>       <span> <span>   <span>
+	         *   / \    |        |      / \           /\     /\       /\
+	         *  1   2   3        4     5   6         1  2   3  4     5  6
+	         *
+	         *  The above example represents splitting off the 'right' or 'left' part of a tree, where
+	         *  the <div>' would be returned as an element not appended to the DOM, and the <div>
+	         *  would remain in place where it was
+	         *
+	        */
+	        splitOffDOMTree: function (rootNode, leafNode, splitLeft) {
+	            var splitOnNode = leafNode,
+	                createdNode = null,
+	                splitRight = !splitLeft;
+
+	            // loop until we hit the root
+	            while (splitOnNode !== rootNode) {
+	                var currParent = splitOnNode.parentNode,
+	                    newParent = currParent.cloneNode(false),
+	                    targetNode = (splitRight ? splitOnNode : currParent.firstChild),
+	                    appendLast;
+
+	                // Create a new parent element which is a clone of the current parent
+	                if (createdNode) {
+	                    if (splitRight) {
+	                        // If we're splitting right, add previous created element before siblings
+	                        newParent.appendChild(createdNode);
+	                    } else {
+	                        // If we're splitting left, add previous created element last
+	                        appendLast = createdNode;
+	                    }
+	                }
+	                createdNode = newParent;
+
+	                while (targetNode) {
+	                    var sibling = targetNode.nextSibling;
+	                    // Special handling for the 'splitNode'
+	                    if (targetNode === splitOnNode) {
+	                        if (!targetNode.hasChildNodes()) {
+	                            targetNode.parentNode.removeChild(targetNode);
+	                        } else {
+	                            // For the node we're splitting on, if it has children, we need to clone it
+	                            // and not just move it
+	                            targetNode = targetNode.cloneNode(false);
+	                        }
+	                        // If the resulting split node has content, add it
+	                        if (targetNode.textContent) {
+	                            createdNode.appendChild(targetNode);
+	                        }
+
+	                        targetNode = (splitRight ? sibling : null);
+	                    } else {
+	                        // For general case, just remove the element and only
+	                        // add it to the split tree if it contains something
+	                        targetNode.parentNode.removeChild(targetNode);
+	                        if (targetNode.hasChildNodes() || targetNode.textContent) {
+	                            createdNode.appendChild(targetNode);
+	                        }
+
+	                        targetNode = sibling;
+	                    }
+	                }
+
+	                // If we had an element we wanted to append at the end, do that now
+	                if (appendLast) {
+	                    createdNode.appendChild(appendLast);
+	                }
+
+	                splitOnNode = currParent;
+	            }
+
+	            return createdNode;
+	        },
+
+	        moveTextRangeIntoElement: function (startNode, endNode, newElement) {
+	            if (!startNode || !endNode) {
+	                return false;
+	            }
+
+	            var rootNode = Util.findCommonRoot(startNode, endNode);
+	            if (!rootNode) {
+	                return false;
+	            }
+
+	            if (endNode === startNode) {
+	                var temp = startNode.parentNode,
+	                    sibling = startNode.nextSibling;
+	                temp.removeChild(startNode);
+	                newElement.appendChild(startNode);
+	                if (sibling) {
+	                    temp.insertBefore(newElement, sibling);
+	                } else {
+	                    temp.appendChild(newElement);
+	                }
+	                return newElement.hasChildNodes();
+	            }
+
+	            // create rootChildren array which includes all the children
+	            // we care about
+	            var rootChildren = [],
+	                firstChild,
+	                lastChild,
+	                nextNode;
+	            for (var i = 0; i < rootNode.childNodes.length; i++) {
+	                nextNode = rootNode.childNodes[i];
+	                if (!firstChild) {
+	                    if (Util.isDescendant(nextNode, startNode, true)) {
+	                        firstChild = nextNode;
+	                    }
+	                } else {
+	                    if (Util.isDescendant(nextNode, endNode, true)) {
+	                        lastChild = nextNode;
+	                        break;
+	                    } else {
+	                        rootChildren.push(nextNode);
+	                    }
+	                }
+	            }
+
+	            var afterLast = lastChild.nextSibling,
+	                fragment = rootNode.ownerDocument.createDocumentFragment();
+
+	            // build up fragment on startNode side of tree
+	            if (firstChild === startNode) {
+	                firstChild.parentNode.removeChild(firstChild);
+	                fragment.appendChild(firstChild);
+	            } else {
+	                fragment.appendChild(Util.splitOffDOMTree(firstChild, startNode));
+	            }
+
+	            // add any elements between firstChild & lastChild
+	            rootChildren.forEach(function (element) {
+	                element.parentNode.removeChild(element);
+	                fragment.appendChild(element);
+	            });
+
+	            // build up fragment on endNode side of the tree
+	            if (lastChild === endNode) {
+	                lastChild.parentNode.removeChild(lastChild);
+	                fragment.appendChild(lastChild);
+	            } else {
+	                fragment.appendChild(Util.splitOffDOMTree(lastChild, endNode, true));
+	            }
+
+	            // Add fragment into passed in element
+	            newElement.appendChild(fragment);
+
+	            if (lastChild.parentNode === rootNode) {
+	                // If last child is in the root, insert newElement in front of it
+	                rootNode.insertBefore(newElement, lastChild);
+	            } else if (afterLast) {
+	                // If last child was removed, but it had a sibling, insert in front of it
+	                rootNode.insertBefore(newElement, afterLast);
+	            } else {
+	                // lastChild was removed and was the last actual element just append
+	                rootNode.appendChild(newElement);
+	            }
+
+	            return newElement.hasChildNodes();
+	        },
+
+	        /* based on http://stackoverflow.com/a/6183069 */
+	        depthOfNode: function (inNode) {
+	            var theDepth = 0,
+	                node = inNode;
+	            while (node.parentNode !== null) {
+	                node = node.parentNode;
+	                theDepth++;
+	            }
+	            return theDepth;
+	        },
+
+	        findCommonRoot: function (inNode1, inNode2) {
+	            var depth1 = Util.depthOfNode(inNode1),
+	                depth2 = Util.depthOfNode(inNode2),
+	                node1 = inNode1,
+	                node2 = inNode2;
+
+	            while (depth1 !== depth2) {
+	                if (depth1 > depth2) {
+	                    node1 = node1.parentNode;
+	                    depth1 -= 1;
+	                } else {
+	                    node2 = node2.parentNode;
+	                    depth2 -= 1;
+	                }
+	            }
+
+	            while (node1 !== node2) {
+	                node1 = node1.parentNode;
+	                node2 = node2.parentNode;
+	            }
+
+	            return node1;
+	        },
+	        /* END - based on http://stackoverflow.com/a/6183069 */
+
+	        isElementAtBeginningOfBlock: function (node) {
+	            var textVal,
+	                sibling;
+	            while (!Util.isBlockContainer(node) && !Util.isMediumEditorElement(node)) {
+	                sibling = node;
+	                while (sibling = sibling.previousSibling) {
+	                    textVal = sibling.nodeType === 3 ? sibling.nodeValue : sibling.textContent;
+	                    if (textVal.length > 0) {
+	                        return false;
+	                    }
+	                }
+	                node = node.parentNode;
+	            }
+	            return true;
+	        },
+
+	        isMediumEditorElement: function (element) {
+	            return element && element.getAttribute && !!element.getAttribute('data-medium-editor-element');
+	        },
+
+	        getContainerEditorElement: function (element) {
+	            return Util.traverseUp(element, function (node) {
+	                return Util.isMediumEditorElement(node);
+	            });
+	        },
+
+	        isBlockContainer: function (element) {
+	            return element && element.nodeType !== 3 && Util.blockContainerElementNames.indexOf(element.nodeName.toLowerCase()) !== -1;
+	        },
+
+	        getClosestBlockContainer: function (node) {
+	            return Util.traverseUp(node, function (node) {
+	                return Util.isBlockContainer(node);
+	            });
+	        },
+
+	        getTopBlockContainer: function (element) {
+	            var topBlock = element;
+	            Util.traverseUp(element, function (el) {
+	                if (Util.isBlockContainer(el)) {
+	                    topBlock = el;
+	                }
+	                return false;
+	            });
+	            return topBlock;
+	        },
+
+	        getFirstSelectableLeafNode: function (element) {
+	            while (element && element.firstChild) {
+	                element = element.firstChild;
+	            }
+
+	            // We don't want to set the selection to an element that can't have children, this messes up Gecko.
+	            element = Util.traverseUp(element, function (el) {
+	                return Util.emptyElementNames.indexOf(el.nodeName.toLowerCase()) === -1;
+	            });
+	            // Selecting at the beginning of a table doesn't work in PhantomJS.
+	            if (element.nodeName.toLowerCase() === 'table') {
+	                var firstCell = element.querySelector('th, td');
+	                if (firstCell) {
+	                    element = firstCell;
+	                }
+	            }
+	            return element;
+	        },
+
+	        getFirstTextNode: function (element) {
+	            if (element.nodeType === 3) {
+	                return element;
+	            }
+
+	            for (var i = 0; i < element.childNodes.length; i++) {
+	                var textNode = Util.getFirstTextNode(element.childNodes[i]);
+	                if (textNode !== null) {
+	                    return textNode;
+	                }
+	            }
+	            return null;
+	        },
+
+	        ensureUrlHasProtocol: function (url) {
+	            if (url.indexOf('://') === -1) {
+	                return 'http://' + url;
+	            }
+	            return url;
+	        },
+
+	        warn: function () {
+	            if (window.console !== undefined && typeof window.console.warn === 'function') {
+	                window.console.warn.apply(window.console, arguments);
+	            }
+	        },
+
+	        deprecated: function (oldName, newName, version) {
+	            // simple deprecation warning mechanism.
+	            var m = oldName + ' is deprecated, please use ' + newName + ' instead.';
+	            if (version) {
+	                m += ' Will be removed in ' + version;
+	            }
+	            Util.warn(m);
+	        },
+
+	        deprecatedMethod: function (oldName, newName, args, version) {
+	            // run the replacement and warn when someone calls a deprecated method
+	            Util.deprecated(oldName, newName, version);
+	            if (typeof this[newName] === 'function') {
+	                this[newName].apply(this, args);
+	            }
+	        },
+
+	        cleanupAttrs: function (el, attrs) {
+	            attrs.forEach(function (attr) {
+	                el.removeAttribute(attr);
+	            });
+	        },
+
+	        cleanupTags: function (el, tags) {
+	            tags.forEach(function (tag) {
+	                if (el.nodeName.toLowerCase() === tag) {
+	                    el.parentNode.removeChild(el);
+	                }
+	            });
+	        },
+
+	        // get the closest parent
+	        getClosestTag: function (el, tag) {
+	            return Util.traverseUp(el, function (element) {
+	                return element.nodeName.toLowerCase() === tag.toLowerCase();
+	            });
+	        },
+
+	        unwrap: function (el, doc) {
+	            var fragment = doc.createDocumentFragment(),
+	                nodes = Array.prototype.slice.call(el.childNodes);
+
+	            // cast nodeList to array since appending child
+	            // to a different node will alter length of el.childNodes
+	            for (var i = 0; i < nodes.length; i++) {
+	                fragment.appendChild(nodes[i]);
+	            }
+
+	            if (fragment.childNodes.length) {
+	                el.parentNode.replaceChild(fragment, el);
+	            } else {
+	                el.parentNode.removeChild(el);
+	            }
+	        }
+	    };
+
+	    MediumEditor.util = Util;
+	}(window));
+
+	(function () {
+	    'use strict';
+
+	    var Extension = function (options) {
+	        MediumEditor.util.extend(this, options);
+	    };
+
+	    Extension.extend = function (protoProps) {
+	        // magic extender thinger. mostly borrowed from backbone/goog.inherits
+	        // place this function on some thing you want extend-able.
+	        //
+	        // example:
+	        //
+	        //      function Thing(args){
+	        //          this.options = args;
+	        //      }
+	        //
+	        //      Thing.prototype = { foo: "bar" };
+	        //      Thing.extend = extenderify;
+	        //
+	        //      var ThingTwo = Thing.extend({ foo: "baz" });
+	        //
+	        //      var thingOne = new Thing(); // foo === "bar"
+	        //      var thingTwo = new ThingTwo(); // foo === "baz"
+	        //
+	        //      which seems like some simply shallow copy nonsense
+	        //      at first, but a lot more is going on there.
+	        //
+	        //      passing a `constructor` to the extend props
+	        //      will cause the instance to instantiate through that
+	        //      instead of the parent's constructor.
+
+	        var parent = this,
+	            child;
+
+	        // The constructor function for the new subclass is either defined by you
+	        // (the "constructor" property in your `extend` definition), or defaulted
+	        // by us to simply call the parent's constructor.
+
+	        if (protoProps && protoProps.hasOwnProperty('constructor')) {
+	            child = protoProps.constructor;
+	        } else {
+	            child = function () {
+	                return parent.apply(this, arguments);
+	            };
+	        }
+
+	        // das statics (.extend comes over, so your subclass can have subclasses too)
+	        MediumEditor.util.extend(child, parent);
+
+	        // Set the prototype chain to inherit from `parent`, without calling
+	        // `parent`'s constructor function.
+	        var Surrogate = function () {
+	            this.constructor = child;
+	        };
+	        Surrogate.prototype = parent.prototype;
+	        child.prototype = new Surrogate();
+
+	        if (protoProps) {
+	            MediumEditor.util.extend(child.prototype, protoProps);
+	        }
+
+	        // todo: $super?
+
+	        return child;
+	    };
+
+	    Extension.prototype = {
+	        /* init: [function]
+	         *
+	         * Called by MediumEditor during initialization.
+	         * The .base property will already have been set to
+	         * current instance of MediumEditor when this is called.
+	         * All helper methods will exist as well
+	         */
+	        init: function () {},
+
+	        /* base: [MediumEditor instance]
+	         *
+	         * If not overriden, this will be set to the current instance
+	         * of MediumEditor, before the init method is called
+	         */
+	        base: undefined,
+
+	        /* name: [string]
+	         *
+	         * 'name' of the extension, used for retrieving the extension.
+	         * If not set, MediumEditor will set this to be the key
+	         * used when passing the extension into MediumEditor via the
+	         * 'extensions' option
+	         */
+	        name: undefined,
+
+	        /* checkState: [function (node)]
+	         *
+	         * If implemented, this function will be called one or more times
+	         * the state of the editor & toolbar are updated.
+	         * When the state is updated, the editor does the following:
+	         *
+	         * 1) Find the parent node containing the current selection
+	         * 2) Call checkState on the extension, passing the node as an argument
+	         * 3) Get the parent node of the previous node
+	         * 4) Repeat steps #2 and #3 until we move outside the parent contenteditable
+	         */
+	        checkState: undefined,
+
+	        /* destroy: [function ()]
+	         *
+	         * This method should remove any created html, custom event handlers
+	         * or any other cleanup tasks that should be performed.
+	         * If implemented, this function will be called when MediumEditor's
+	         * destroy method has been called.
+	         */
+	        destroy: undefined,
+
+	        /* As alternatives to checkState, these functions provide a more structured
+	         * path to updating the state of an extension (usually a button) whenever
+	         * the state of the editor & toolbar are updated.
+	         */
+
+	        /* queryCommandState: [function ()]
+	         *
+	         * If implemented, this function will be called once on each extension
+	         * when the state of the editor/toolbar is being updated.
+	         *
+	         * If this function returns a non-null value, the extension will
+	         * be ignored as the code climbs the dom tree.
+	         *
+	         * If this function returns true, and the setActive() function is defined
+	         * setActive() will be called
+	         */
+	        queryCommandState: undefined,
+
+	        /* isActive: [function ()]
+	         *
+	         * If implemented, this function will be called when MediumEditor
+	         * has determined that this extension is 'active' for the current selection.
+	         * This may be called when the editor & toolbar are being updated,
+	         * but only if queryCommandState() or isAlreadyApplied() functions
+	         * are implemented, and when called, return true.
+	         */
+	        isActive: undefined,
+
+	        /* isAlreadyApplied: [function (node)]
+	         *
+	         * If implemented, this function is similar to checkState() in
+	         * that it will be called repeatedly as MediumEditor moves up
+	         * the DOM to update the editor & toolbar after a state change.
+	         *
+	         * NOTE: This function will NOT be called if checkState() has
+	         * been implemented. This function will NOT be called if
+	         * queryCommandState() is implemented and returns a non-null
+	         * value when called
+	         */
+	        isAlreadyApplied: undefined,
+
+	        /* setActive: [function ()]
+	         *
+	         * If implemented, this function is called when MediumEditor knows
+	         * that this extension is currently enabled.  Currently, this
+	         * function is called when updating the editor & toolbar, and
+	         * only if queryCommandState() or isAlreadyApplied(node) return
+	         * true when called
+	         */
+	        setActive: undefined,
+
+	        /* setInactive: [function ()]
+	         *
+	         * If implemented, this function is called when MediumEditor knows
+	         * that this extension is currently disabled.  Curently, this
+	         * is called at the beginning of each state change for
+	         * the editor & toolbar. After calling this, MediumEditor
+	         * will attempt to update the extension, either via checkState()
+	         * or the combination of queryCommandState(), isAlreadyApplied(node),
+	         * isActive(), and setActive()
+	         */
+	        setInactive: undefined,
+
+	        /************************ Helpers ************************
+	         * The following are helpers that are either set by MediumEditor
+	         * during initialization, or are helper methods which either
+	         * route calls to the MediumEditor instance or provide common
+	         * functionality for all extensions
+	         *********************************************************/
+
+	        /* window: [Window]
+	         *
+	         * If not overriden, this will be set to the window object
+	         * to be used by MediumEditor and its extensions.  This is
+	         * passed via the 'contentWindow' option to MediumEditor
+	         * and is the global 'window' object by default
+	         */
+	        'window': undefined,
+
+	        /* document: [Document]
+	         *
+	         * If not overriden, this will be set to the document object
+	         * to be used by MediumEditor and its extensions. This is
+	         * passed via the 'ownerDocument' optin to MediumEditor
+	         * and is the global 'document' object by default
+	         */
+	        'document': undefined,
+
+	        /* getEditorElements: [function ()]
+	         *
+	         * Helper function which returns an array containing
+	         * all the contenteditable elements for this instance
+	         * of MediumEditor
+	         */
+	        getEditorElements: function () {
+	            return this.base.elements;
+	        },
+
+	        /* getEditorId: [function ()]
+	         *
+	         * Helper function which returns a unique identifier
+	         * for this instance of MediumEditor
+	         */
+	        getEditorId: function () {
+	            return this.base.id;
+	        },
+
+	        /* getEditorOptions: [function (option)]
+	         *
+	         * Helper function which returns the value of an option
+	         * used to initialize this instance of MediumEditor
+	         */
+	        getEditorOption: function (option) {
+	            return this.base.options[option];
+	        }
+	    };
+
+	    /* List of method names to add to the prototype of Extension
+	     * Each of these methods will be defined as helpers that
+	     * just call directly into the MediumEditor instance.
+	     *
+	     * example for 'on' method:
+	     * Extension.prototype.on = function () {
+	     *     return this.base.on.apply(this.base, arguments);
+	     * }
+	     */
+	    [
+	        // general helpers
+	        'execAction',
+
+	        // event handling
+	        'on',
+	        'off',
+	        'subscribe',
+	        'trigger'
+
+	    ].forEach(function (helper) {
+	        Extension.prototype[helper] = function () {
+	            return this.base[helper].apply(this.base, arguments);
+	        };
+	    });
+
+	    MediumEditor.Extension = Extension;
+	})();
+
+	(function () {
+	    'use strict';
+
+	    function filterOnlyParentElements(node) {
+	        if (MediumEditor.util.isBlockContainer(node)) {
+	            return NodeFilter.FILTER_ACCEPT;
+	        } else {
+	            return NodeFilter.FILTER_SKIP;
+	        }
+	    }
+
+	    var Selection = {
+	        findMatchingSelectionParent: function (testElementFunction, contentWindow) {
+	            var selection = contentWindow.getSelection(),
+	                range,
+	                current;
+
+	            if (selection.rangeCount === 0) {
+	                return false;
+	            }
+
+	            range = selection.getRangeAt(0);
+	            current = range.commonAncestorContainer;
+
+	            return MediumEditor.util.traverseUp(current, testElementFunction);
+	        },
+
+	        getSelectionElement: function (contentWindow) {
+	            return this.findMatchingSelectionParent(function (el) {
+	                return MediumEditor.util.isMediumEditorElement(el);
+	            }, contentWindow);
+	        },
+
+	        // http://stackoverflow.com/questions/17678843/cant-restore-selection-after-html-modify-even-if-its-the-same-html
+	        // Tim Down
+	        exportSelection: function (root, doc) {
+	            if (!root) {
+	                return null;
+	            }
+
+	            var selectionState = null,
+	                selection = doc.getSelection();
+
+	            if (selection.rangeCount > 0) {
+	                var range = selection.getRangeAt(0),
+	                    preSelectionRange = range.cloneRange(),
+	                    start;
+
+	                preSelectionRange.selectNodeContents(root);
+	                preSelectionRange.setEnd(range.startContainer, range.startOffset);
+	                start = preSelectionRange.toString().length;
+
+	                selectionState = {
+	                    start: start,
+	                    end: start + range.toString().length
+	                };
+
+	                // Range contains an image, check to see if the selection ends with that image
+	                if (range.endOffset !== 0 && (range.endContainer.nodeName.toLowerCase() === 'img' || (range.endContainer.nodeType === 1 && range.endContainer.querySelector('img')))) {
+	                    var trailingImageCount = this.getTrailingImageCount(root, selectionState, range.endContainer, range.endOffset);
+	                    if (trailingImageCount) {
+	                        selectionState.trailingImageCount = trailingImageCount;
+	                    }
+	                }
+
+	                // If start = 0 there may still be an empty paragraph before it, but we don't care.
+	                if (start !== 0) {
+	                    var emptyBlocksIndex = this.getIndexRelativeToAdjacentEmptyBlocks(doc, root, range.startContainer, range.startOffset);
+	                    if (emptyBlocksIndex !== -1) {
+	                        selectionState.emptyBlocksIndex = emptyBlocksIndex;
+	                    }
+	                }
+	            }
+
+	            return selectionState;
+	        },
+
+	        // http://stackoverflow.com/questions/17678843/cant-restore-selection-after-html-modify-even-if-its-the-same-html
+	        // Tim Down
+	        //
+	        // {object} selectionState - the selection to import
+	        // {DOMElement} root - the root element the selection is being restored inside of
+	        // {Document} doc - the document to use for managing selection
+	        // {boolean} [favorLaterSelectionAnchor] - defaults to false. If true, import the cursor immediately
+	        //      subsequent to an anchor tag if it would otherwise be placed right at the trailing edge inside the
+	        //      anchor. This cursor positioning, even though visually equivalent to the user, can affect behavior
+	        //      in MS IE.
+	        importSelection: function (selectionState, root, doc, favorLaterSelectionAnchor) {
+	            if (!selectionState || !root) {
+	                return;
+	            }
+
+	            var range = doc.createRange();
+	            range.setStart(root, 0);
+	            range.collapse(true);
+
+	            var node = root,
+	                nodeStack = [],
+	                charIndex = 0,
+	                foundStart = false,
+	                foundEnd = false,
+	                trailingImageCount = 0,
+	                stop = false,
+	                nextCharIndex;
+
+	            while (!stop && node) {
+	                // Only iterate over elements and text nodes
+	                if (node.nodeType > 3) {
+	                    continue;
+	                }
+
+	                // If we hit a text node, we need to add the amount of characters to the overall count
+	                if (node.nodeType === 3 && !foundEnd) {
+	                    nextCharIndex = charIndex + node.length;
+	                    if (!foundStart && selectionState.start >= charIndex && selectionState.start <= nextCharIndex) {
+	                        range.setStart(node, selectionState.start - charIndex);
+	                        foundStart = true;
+	                    }
+	                    if (foundStart && selectionState.end >= charIndex && selectionState.end <= nextCharIndex) {
+	                        if (!selectionState.trailingImageCount) {
+	                            range.setEnd(node, selectionState.end - charIndex);
+	                            stop = true;
+	                        } else {
+	                            foundEnd = true;
+	                        }
+	                    }
+	                    charIndex = nextCharIndex;
+	                } else {
+	                    if (selectionState.trailingImageCount && foundEnd) {
+	                        if (node.nodeName.toLowerCase() === 'img') {
+	                            trailingImageCount++;
+	                        }
+	                        if (trailingImageCount === selectionState.trailingImageCount) {
+	                            // Find which index the image is in its parent's children
+	                            var endIndex = 0;
+	                            while (node.parentNode.childNodes[endIndex] !== node) {
+	                                endIndex++;
+	                            }
+	                            range.setEnd(node.parentNode, endIndex + 1);
+	                            stop = true;
+	                        }
+	                    }
+
+	                    if (!stop && node.nodeType === 1) {
+	                        // this is an element
+	                        // add all its children to the stack
+	                        var i = node.childNodes.length - 1;
+	                        while (i >= 0) {
+	                            nodeStack.push(node.childNodes[i]);
+	                            i -= 1;
+	                        }
+	                    }
+	                }
+
+	                if (!stop) {
+	                    node = nodeStack.pop();
+	                }
+	            }
+
+	            if (typeof selectionState.emptyBlocksIndex !== 'undefined') {
+	                range = this.importSelectionMoveCursorPastBlocks(doc, root, selectionState.emptyBlocksIndex, range);
+	            }
+
+	            // If the selection is right at the ending edge of a link, put it outside the anchor tag instead of inside.
+	            if (favorLaterSelectionAnchor) {
+	                range = this.importSelectionMoveCursorPastAnchor(selectionState, range);
+	            }
+
+	            var sel = doc.getSelection();
+	            sel.removeAllRanges();
+	            sel.addRange(range);
+	        },
+
+	        // Utility method called from importSelection only
+	        importSelectionMoveCursorPastAnchor: function (selectionState, range) {
+	            var nodeInsideAnchorTagFunction = function (node) {
+	                return node.nodeName.toLowerCase() === 'a';
+	            };
+	            if (selectionState.start === selectionState.end &&
+	                    range.startContainer.nodeType === 3 &&
+	                    range.startOffset === range.startContainer.nodeValue.length &&
+	                    MediumEditor.util.traverseUp(range.startContainer, nodeInsideAnchorTagFunction)) {
+	                var prevNode = range.startContainer,
+	                    currentNode = range.startContainer.parentNode;
+	                while (currentNode !== null && currentNode.nodeName.toLowerCase() !== 'a') {
+	                    if (currentNode.childNodes[currentNode.childNodes.length - 1] !== prevNode) {
+	                        currentNode = null;
+	                    } else {
+	                        prevNode = currentNode;
+	                        currentNode = currentNode.parentNode;
+	                    }
+	                }
+	                if (currentNode !== null && currentNode.nodeName.toLowerCase() === 'a') {
+	                    var currentNodeIndex = null;
+	                    for (var i = 0; currentNodeIndex === null && i < currentNode.parentNode.childNodes.length; i++) {
+	                        if (currentNode.parentNode.childNodes[i] === currentNode) {
+	                            currentNodeIndex = i;
+	                        }
+	                    }
+	                    range.setStart(currentNode.parentNode, currentNodeIndex + 1);
+	                    range.collapse(true);
+	                }
+	            }
+	            return range;
+	        },
+
+	        // Uses the emptyBlocksIndex calculated by getIndexRelativeToAdjacentEmptyBlocks
+	        // to move the cursor back to the start of the correct paragraph
+	        importSelectionMoveCursorPastBlocks: function (doc, root, index, range) {
+	            var treeWalker = doc.createTreeWalker(root, NodeFilter.SHOW_ELEMENT, filterOnlyParentElements, false),
+	                startContainer = range.startContainer,
+	                startBlock,
+	                targetNode,
+	                currIndex = 0;
+	            index = index || 1; // If index is 0, we still want to move to the next block
+
+	            // Chrome counts newlines and spaces that separate block elements as actual elements.
+	            // If the selection is inside one of these text nodes, and it has a previous sibling
+	            // which is a block element, we want the treewalker to start at the previous sibling
+	            // and NOT at the parent of the textnode
+	            if (startContainer.nodeType === 3 && MediumEditor.util.isBlockContainer(startContainer.previousSibling)) {
+	                startBlock = startContainer.previousSibling;
+	            } else {
+	                startBlock = MediumEditor.util.getClosestBlockContainer(startContainer);
+	            }
+
+	            // Skip over empty blocks until we hit the block we want the selection to be in
+	            while (treeWalker.nextNode()) {
+	                if (!targetNode) {
+	                    // Loop through all blocks until we hit the starting block element
+	                    if (startBlock === treeWalker.currentNode) {
+	                        targetNode = treeWalker.currentNode;
+	                    }
+	                } else {
+	                    targetNode = treeWalker.currentNode;
+	                    currIndex++;
+	                    // We hit the target index, bail
+	                    if (currIndex === index) {
+	                        break;
+	                    }
+	                    // If we find a non-empty block, ignore the emptyBlocksIndex and just put selection here
+	                    if (targetNode.textContent.length > 0) {
+	                        break;
+	                    }
+	                }
+	            }
+
+	            // We're selecting a high-level block node, so make sure the cursor gets moved into the deepest
+	            // element at the beginning of the block
+	            range.setStart(MediumEditor.util.getFirstSelectableLeafNode(targetNode), 0);
+
+	            return range;
+	        },
+
+	        // Returns -1 unless the cursor is at the beginning of a paragraph/block
+	        // If the paragraph/block is preceeded by empty paragraphs/block (with no text)
+	        // it will return the number of empty paragraphs before the cursor.
+	        // Otherwise, it will return 0, which indicates the cursor is at the beginning
+	        // of a paragraph/block, and not at the end of the paragraph/block before it
+	        getIndexRelativeToAdjacentEmptyBlocks: function (doc, root, cursorContainer, cursorOffset) {
+	            // If there is text in front of the cursor, that means there isn't only empty blocks before it
+	            if (cursorContainer.textContent.length > 0 && cursorOffset > 0) {
+	                return -1;
+	            }
+
+	            // Check if the block that contains the cursor has any other text in front of the cursor
+	            var node = cursorContainer;
+	            if (node.nodeType !== 3) {
+	                node = cursorContainer.childNodes[cursorOffset];
+	            }
+	            if (node && !MediumEditor.util.isElementAtBeginningOfBlock(node)) {
+	                return -1;
+	            }
+
+	            // Walk over block elements, counting number of empty blocks between last piece of text
+	            // and the block the cursor is in
+	            var closestBlock = MediumEditor.util.getClosestBlockContainer(cursorContainer),
+	                treeWalker = doc.createTreeWalker(root, NodeFilter.SHOW_ELEMENT, filterOnlyParentElements, false),
+	                emptyBlocksCount = 0;
+	            while (treeWalker.nextNode()) {
+	                var blockIsEmpty = treeWalker.currentNode.textContent === '';
+	                if (blockIsEmpty || emptyBlocksCount > 0) {
+	                    emptyBlocksCount += 1;
+	                }
+	                if (treeWalker.currentNode === closestBlock) {
+	                    return emptyBlocksCount;
+	                }
+	                if (!blockIsEmpty) {
+	                    emptyBlocksCount = 0;
+	                }
+	            }
+
+	            return emptyBlocksCount;
+	        },
+
+	        getTrailingImageCount: function (root, selectionState, endContainer, endOffset) {
+	            var lastNode = endContainer.childNodes[endOffset - 1];
+	            while (lastNode.hasChildNodes()) {
+	                lastNode = lastNode.lastChild;
+	            }
+
+	            var node = root,
+	                nodeStack = [],
+	                charIndex = 0,
+	                foundStart = false,
+	                foundEnd = false,
+	                stop = false,
+	                nextCharIndex,
+	                trailingImages = 0;
+
+	            while (!stop && node) {
+	                // Only iterate over elements and text nodes
+	                if (node.nodeType > 3) {
+	                    continue;
+	                }
+
+	                if (node.nodeType === 3 && !foundEnd) {
+	                    trailingImages = 0;
+	                    nextCharIndex = charIndex + node.length;
+	                    if (!foundStart && selectionState.start >= charIndex && selectionState.start <= nextCharIndex) {
+	                        foundStart = true;
+	                    }
+	                    if (foundStart && selectionState.end >= charIndex && selectionState.end <= nextCharIndex) {
+	                        foundEnd = true;
+	                    }
+	                    charIndex = nextCharIndex;
+	                } else {
+	                    if (node.nodeName.toLowerCase() === 'img') {
+	                        trailingImages++;
+	                    }
+
+	                    if (node === lastNode) {
+	                        stop = true;
+	                    } else if (node.nodeType === 1) {
+	                        // this is an element
+	                        // add all its children to the stack
+	                        var i = node.childNodes.length - 1;
+	                        while (i >= 0) {
+	                            nodeStack.push(node.childNodes[i]);
+	                            i -= 1;
+	                        }
+	                    }
+	                }
+
+	                if (!stop) {
+	                    node = nodeStack.pop();
+	                }
+	            }
+
+	            return trailingImages;
+	        },
+
+	        // determine if the current selection contains any 'content'
+	        // content being and non-white space text or an image
+	        selectionContainsContent: function (doc) {
+	            var sel = doc.getSelection();
+
+	            // collapsed selection or selection withour range doesn't contain content
+	            if (!sel || sel.isCollapsed || !sel.rangeCount) {
+	                return false;
+	            }
+
+	            // if toString() contains any text, the selection contains some content
+	            if (sel.toString().trim() !== '') {
+	                return true;
+	            }
+
+	            // if selection contains only image(s), it will return empty for toString()
+	            // so check for an image manually
+	            var selectionNode = this.getSelectedParentElement(sel.getRangeAt(0));
+	            if (selectionNode) {
+	                if (selectionNode.nodeName.toLowerCase() === 'img' ||
+	                    (selectionNode.nodeType === 1 && selectionNode.querySelector('img'))) {
+	                    return true;
+	                }
+	            }
+
+	            return false;
+	        },
+
+	        selectionInContentEditableFalse: function (contentWindow) {
+	            // determine if the current selection is exclusively inside
+	            // a contenteditable="false", though treat the case of an
+	            // explicit contenteditable="true" inside a "false" as false.
+	            var sawtrue,
+	                sawfalse = this.findMatchingSelectionParent(function (el) {
+	                    var ce = el && el.getAttribute('contenteditable');
+	                    if (ce === 'true') {
+	                        sawtrue = true;
+	                    }
+	                    return el.nodeName !== '#text' && ce === 'false';
+	                }, contentWindow);
+
+	            return !sawtrue && sawfalse;
+	        },
+
+	        // http://stackoverflow.com/questions/4176923/html-of-selected-text
+	        // by Tim Down
+	        getSelectionHtml: function getSelectionHtml(doc) {
+	            var i,
+	                html = '',
+	                sel = doc.getSelection(),
+	                len,
+	                container;
+	            if (sel.rangeCount) {
+	                container = doc.createElement('div');
+	                for (i = 0, len = sel.rangeCount; i < len; i += 1) {
+	                    container.appendChild(sel.getRangeAt(i).cloneContents());
+	                }
+	                html = container.innerHTML;
+	            }
+	            return html;
+	        },
+
+	        /**
+	         *  Find the caret position within an element irrespective of any inline tags it may contain.
+	         *
+	         *  @param {DOMElement} An element containing the cursor to find offsets relative to.
+	         *  @param {Range} A Range representing cursor position. Will window.getSelection if none is passed.
+	         *  @return {Object} 'left' and 'right' attributes contain offsets from begining and end of Element
+	         */
+	        getCaretOffsets: function getCaretOffsets(element, range) {
+	            var preCaretRange, postCaretRange;
+
+	            if (!range) {
+	                range = window.getSelection().getRangeAt(0);
+	            }
+
+	            preCaretRange = range.cloneRange();
+	            postCaretRange = range.cloneRange();
+
+	            preCaretRange.selectNodeContents(element);
+	            preCaretRange.setEnd(range.endContainer, range.endOffset);
+
+	            postCaretRange.selectNodeContents(element);
+	            postCaretRange.setStart(range.endContainer, range.endOffset);
+
+	            return {
+	                left: preCaretRange.toString().length,
+	                right: postCaretRange.toString().length
+	            };
+	        },
+
+	        // http://stackoverflow.com/questions/15867542/range-object-get-selection-parent-node-chrome-vs-firefox
+	        rangeSelectsSingleNode: function (range) {
+	            var startNode = range.startContainer;
+	            return startNode === range.endContainer &&
+	                startNode.hasChildNodes() &&
+	                range.endOffset === range.startOffset + 1;
+	        },
+
+	        getSelectedParentElement: function (range) {
+	            if (!range) {
+	                return null;
+	            }
+
+	            // Selection encompasses a single element
+	            if (this.rangeSelectsSingleNode(range) && range.startContainer.childNodes[range.startOffset].nodeType !== 3) {
+	                return range.startContainer.childNodes[range.startOffset];
+	            }
+
+	            // Selection range starts inside a text node, so get its parent
+	            if (range.startContainer.nodeType === 3) {
+	                return range.startContainer.parentNode;
+	            }
+
+	            // Selection starts inside an element
+	            return range.startContainer;
+	        },
+
+	        getSelectedElements: function (doc) {
+	            var selection = doc.getSelection(),
+	                range,
+	                toRet,
+	                currNode;
+
+	            if (!selection.rangeCount || selection.isCollapsed || !selection.getRangeAt(0).commonAncestorContainer) {
+	                return [];
+	            }
+
+	            range = selection.getRangeAt(0);
+
+	            if (range.commonAncestorContainer.nodeType === 3) {
+	                toRet = [];
+	                currNode = range.commonAncestorContainer;
+	                while (currNode.parentNode && currNode.parentNode.childNodes.length === 1) {
+	                    toRet.push(currNode.parentNode);
+	                    currNode = currNode.parentNode;
+	                }
+
+	                return toRet;
+	            }
+
+	            return [].filter.call(range.commonAncestorContainer.getElementsByTagName('*'), function (el) {
+	                return (typeof selection.containsNode === 'function') ? selection.containsNode(el, true) : true;
+	            });
+	        },
+
+	        selectNode: function (node, doc) {
+	            var range = doc.createRange(),
+	                sel = doc.getSelection();
+
+	            range.selectNodeContents(node);
+	            sel.removeAllRanges();
+	            sel.addRange(range);
+	        },
+
+	        select: function (doc, startNode, startOffset, endNode, endOffset) {
+	            doc.getSelection().removeAllRanges();
+	            var range = doc.createRange();
+	            range.setStart(startNode, startOffset);
+	            if (endNode) {
+	                range.setEnd(endNode, endOffset);
+	            } else {
+	                range.collapse(true);
+	            }
+	            doc.getSelection().addRange(range);
+	            return range;
+	        },
+
+	        /**
+	         * Move cursor to the given node with the given offset.
+	         *
+	         * @param  {DomDocument} doc     Current document
+	         * @param  {DomElement}  node    Element where to jump
+	         * @param  {integer}     offset  Where in the element should we jump, 0 by default
+	         */
+	        moveCursor: function (doc, node, offset) {
+	            this.select(doc, node, offset);
+	        },
+
+	        getSelectionRange: function (ownerDocument) {
+	            var selection = ownerDocument.getSelection();
+	            if (selection.rangeCount === 0) {
+	                return null;
+	            }
+	            return selection.getRangeAt(0);
+	        },
+
+	        // http://stackoverflow.com/questions/1197401/how-can-i-get-the-element-the-caret-is-in-with-javascript-when-using-contentedi
+	        // by You
+	        getSelectionStart: function (ownerDocument) {
+	            var node = ownerDocument.getSelection().anchorNode,
+	                startNode = (node && node.nodeType === 3 ? node.parentNode : node);
+
+	            return startNode;
+	        }
+	    };
+
+	    MediumEditor.selection = Selection;
+	}());
+
+	(function () {
+	    'use strict';
+
+	    var Events = function (instance) {
+	        this.base = instance;
+	        this.options = this.base.options;
+	        this.events = [];
+	        this.disabledEvents = {};
+	        this.customEvents = {};
+	        this.listeners = {};
+	    };
+
+	    Events.prototype = {
+	        InputEventOnContenteditableSupported: !MediumEditor.util.isIE,
+
+	        // Helpers for event handling
+
+	        attachDOMEvent: function (target, event, listener, useCapture) {
+	            target.addEventListener(event, listener, useCapture);
+	            this.events.push([target, event, listener, useCapture]);
+	        },
+
+	        detachDOMEvent: function (target, event, listener, useCapture) {
+	            var index = this.indexOfListener(target, event, listener, useCapture),
+	                e;
+	            if (index !== -1) {
+	                e = this.events.splice(index, 1)[0];
+	                e[0].removeEventListener(e[1], e[2], e[3]);
+	            }
+	        },
+
+	        indexOfListener: function (target, event, listener, useCapture) {
+	            var i, n, item;
+	            for (i = 0, n = this.events.length; i < n; i = i + 1) {
+	                item = this.events[i];
+	                if (item[0] === target && item[1] === event && item[2] === listener && item[3] === useCapture) {
+	                    return i;
+	                }
+	            }
+	            return -1;
+	        },
+
+	        detachAllDOMEvents: function () {
+	            var e = this.events.pop();
+	            while (e) {
+	                e[0].removeEventListener(e[1], e[2], e[3]);
+	                e = this.events.pop();
+	            }
+	        },
+
+	        enableCustomEvent: function (event) {
+	            if (this.disabledEvents[event] !== undefined) {
+	                delete this.disabledEvents[event];
+	            }
+	        },
+
+	        disableCustomEvent: function (event) {
+	            this.disabledEvents[event] = true;
+	        },
+
+	        // custom events
+	        attachCustomEvent: function (event, listener) {
+	            this.setupListener(event);
+	            if (!this.customEvents[event]) {
+	                this.customEvents[event] = [];
+	            }
+	            this.customEvents[event].push(listener);
+	        },
+
+	        detachCustomEvent: function (event, listener) {
+	            var index = this.indexOfCustomListener(event, listener);
+	            if (index !== -1) {
+	                this.customEvents[event].splice(index, 1);
+	                // TODO: If array is empty, should detach internal listeners via destroyListener()
+	            }
+	        },
+
+	        indexOfCustomListener: function (event, listener) {
+	            if (!this.customEvents[event] || !this.customEvents[event].length) {
+	                return -1;
+	            }
+
+	            return this.customEvents[event].indexOf(listener);
+	        },
+
+	        detachAllCustomEvents: function () {
+	            this.customEvents = {};
+	            // TODO: Should detach internal listeners here via destroyListener()
+	        },
+
+	        triggerCustomEvent: function (name, data, editable) {
+	            if (this.customEvents[name] && !this.disabledEvents[name]) {
+	                this.customEvents[name].forEach(function (listener) {
+	                    listener(data, editable);
+	                });
+	            }
+	        },
+
+	        // Cleaning up
+
+	        destroy: function () {
+	            this.detachAllDOMEvents();
+	            this.detachAllCustomEvents();
+	            this.detachExecCommand();
+
+	            if (this.base.elements) {
+	                this.base.elements.forEach(function (element) {
+	                    element.removeAttribute('data-medium-focused');
+	                });
+	            }
+	        },
+
+	        // Listening to calls to document.execCommand
+
+	        // Attach a listener to be notified when document.execCommand is called
+	        attachToExecCommand: function () {
+	            if (this.execCommandListener) {
+	                return;
+	            }
+
+	            // Store an instance of the listener so:
+	            // 1) We only attach to execCommand once
+	            // 2) We can remove the listener later
+	            this.execCommandListener = function (execInfo) {
+	                this.handleDocumentExecCommand(execInfo);
+	            }.bind(this);
+
+	            // Ensure that execCommand has been wrapped correctly
+	            this.wrapExecCommand();
+
+	            // Add listener to list of execCommand listeners
+	            this.options.ownerDocument.execCommand.listeners.push(this.execCommandListener);
+	        },
+
+	        // Remove our listener for calls to document.execCommand
+	        detachExecCommand: function () {
+	            var doc = this.options.ownerDocument;
+	            if (!this.execCommandListener || !doc.execCommand.listeners) {
+	                return;
+	            }
+
+	            // Find the index of this listener in the array of listeners so it can be removed
+	            var index = doc.execCommand.listeners.indexOf(this.execCommandListener);
+	            if (index !== -1) {
+	                doc.execCommand.listeners.splice(index, 1);
+	            }
+
+	            // If the list of listeners is now empty, put execCommand back to its original state
+	            if (!doc.execCommand.listeners.length) {
+	                this.unwrapExecCommand();
+	            }
+	        },
+
+	        // Wrap document.execCommand in a custom method so we can listen to calls to it
+	        wrapExecCommand: function () {
+	            var doc = this.options.ownerDocument;
+
+	            // Ensure all instance of MediumEditor only wrap execCommand once
+	            if (doc.execCommand.listeners) {
+	                return;
+	            }
+
+	            // Create a wrapper method for execCommand which will:
+	            // 1) Call document.execCommand with the correct arguments
+	            // 2) Loop through any listeners and notify them that execCommand was called
+	            //    passing extra info on the call
+	            // 3) Return the result
+	            var wrapper = function (aCommandName, aShowDefaultUI, aValueArgument) {
+	                var result = doc.execCommand.orig.apply(this, arguments);
+
+	                if (!doc.execCommand.listeners) {
+	                    return result;
+	                }
+
+	                var args = Array.prototype.slice.call(arguments);
+	                doc.execCommand.listeners.forEach(function (listener) {
+	                    listener({
+	                        command: aCommandName,
+	                        value: aValueArgument,
+	                        args: args,
+	                        result: result
+	                    });
+	                });
+
+	                return result;
+	            };
+
+	            // Store a reference to the original execCommand
+	            wrapper.orig = doc.execCommand;
+
+	            // Attach an array for storing listeners
+	            wrapper.listeners = [];
+
+	            // Overwrite execCommand
+	            doc.execCommand = wrapper;
+	        },
+
+	        // Revert document.execCommand back to its original self
+	        unwrapExecCommand: function () {
+	            var doc = this.options.ownerDocument;
+	            if (!doc.execCommand.orig) {
+	                return;
+	            }
+
+	            // Use the reference to the original execCommand to revert back
+	            doc.execCommand = doc.execCommand.orig;
+	        },
+
+	        // Listening to browser events to emit events medium-editor cares about
+	        setupListener: function (name) {
+	            if (this.listeners[name]) {
+	                return;
+	            }
+
+	            switch (name) {
+	                case 'externalInteraction':
+	                    // Detecting when user has interacted with elements outside of MediumEditor
+	                    this.attachDOMEvent(this.options.ownerDocument.body, 'mousedown', this.handleBodyMousedown.bind(this), true);
+	                    this.attachDOMEvent(this.options.ownerDocument.body, 'click', this.handleBodyClick.bind(this), true);
+	                    this.attachDOMEvent(this.options.ownerDocument.body, 'focus', this.handleBodyFocus.bind(this), true);
+	                    break;
+	                case 'blur':
+	                    // Detecting when focus is lost
+	                    this.setupListener('externalInteraction');
+	                    break;
+	                case 'focus':
+	                    // Detecting when focus moves into some part of MediumEditor
+	                    this.setupListener('externalInteraction');
+	                    break;
+	                case 'editableInput':
+	                    // setup cache for knowing when the content has changed
+	                    this.contentCache = [];
+	                    this.base.elements.forEach(function (element) {
+	                        this.contentCache[element.getAttribute('medium-editor-index')] = element.innerHTML;
+
+	                        // Attach to the 'oninput' event, handled correctly by most browsers
+	                        if (this.InputEventOnContenteditableSupported) {
+	                            this.attachDOMEvent(element, 'input', this.handleInput.bind(this));
+	                        }
+	                    }.bind(this));
+
+	                    // For browsers which don't support the input event on contenteditable (IE)
+	                    // we'll attach to 'selectionchange' on the document and 'keypress' on the editables
+	                    if (!this.InputEventOnContenteditableSupported) {
+	                        this.setupListener('editableKeypress');
+	                        this.keypressUpdateInput = true;
+	                        this.attachDOMEvent(document, 'selectionchange', this.handleDocumentSelectionChange.bind(this));
+	                        // Listen to calls to execCommand
+	                        this.attachToExecCommand();
+	                    }
+	                    break;
+	                case 'editableClick':
+	                    // Detecting click in the contenteditables
+	                    this.attachToEachElement('click', this.handleClick);
+	                    break;
+	                case 'editableBlur':
+	                    // Detecting blur in the contenteditables
+	                    this.attachToEachElement('blur', this.handleBlur);
+	                    break;
+	                case 'editableKeypress':
+	                    // Detecting keypress in the contenteditables
+	                    this.attachToEachElement('keypress', this.handleKeypress);
+	                    break;
+	                case 'editableKeyup':
+	                    // Detecting keyup in the contenteditables
+	                    this.attachToEachElement('keyup', this.handleKeyup);
+	                    break;
+	                case 'editableKeydown':
+	                    // Detecting keydown on the contenteditables
+	                    this.attachToEachElement('keydown', this.handleKeydown);
+	                    break;
+	                case 'editableKeydownSpace':
+	                    // Detecting keydown for SPACE on the contenteditables
+	                    this.setupListener('editableKeydown');
+	                    break;
+	                case 'editableKeydownEnter':
+	                    // Detecting keydown for ENTER on the contenteditables
+	                    this.setupListener('editableKeydown');
+	                    break;
+	                case 'editableKeydownTab':
+	                    // Detecting keydown for TAB on the contenteditable
+	                    this.setupListener('editableKeydown');
+	                    break;
+	                case 'editableKeydownDelete':
+	                    // Detecting keydown for DELETE/BACKSPACE on the contenteditables
+	                    this.setupListener('editableKeydown');
+	                    break;
+	                case 'editableMouseover':
+	                    // Detecting mouseover on the contenteditables
+	                    this.attachToEachElement('mouseover', this.handleMouseover);
+	                    break;
+	                case 'editableDrag':
+	                    // Detecting dragover and dragleave on the contenteditables
+	                    this.attachToEachElement('dragover', this.handleDragging);
+	                    this.attachToEachElement('dragleave', this.handleDragging);
+	                    break;
+	                case 'editableDrop':
+	                    // Detecting drop on the contenteditables
+	                    this.attachToEachElement('drop', this.handleDrop);
+	                    break;
+	                case 'editablePaste':
+	                    // Detecting paste on the contenteditables
+	                    this.attachToEachElement('paste', this.handlePaste);
+	                    break;
+	            }
+	            this.listeners[name] = true;
+	        },
+
+	        attachToEachElement: function (name, handler) {
+	            this.base.elements.forEach(function (element) {
+	                this.attachDOMEvent(element, name, handler.bind(this));
+	            }, this);
+	        },
+
+	        focusElement: function (element) {
+	            element.focus();
+	            this.updateFocus(element, { target: element, type: 'focus' });
+	        },
+
+	        updateFocus: function (target, eventObj) {
+	            var toolbar = this.base.getExtensionByName('toolbar'),
+	                toolbarEl = toolbar ? toolbar.getToolbarElement() : null,
+	                anchorPreview = this.base.getExtensionByName('anchor-preview'),
+	                previewEl = (anchorPreview && anchorPreview.getPreviewElement) ? anchorPreview.getPreviewElement() : null,
+	                hadFocus = this.base.getFocusedElement(),
+	                toFocus;
+
+	            // For clicks, we need to know if the mousedown that caused the click happened inside the existing focused element.
+	            // If so, we don't want to focus another element
+	            if (hadFocus &&
+	                    eventObj.type === 'click' &&
+	                    this.lastMousedownTarget &&
+	                    (MediumEditor.util.isDescendant(hadFocus, this.lastMousedownTarget, true) ||
+	                     MediumEditor.util.isDescendant(toolbarEl, this.lastMousedownTarget, true) ||
+	                     MediumEditor.util.isDescendant(previewEl, this.lastMousedownTarget, true))) {
+	                toFocus = hadFocus;
+	            }
+
+	            if (!toFocus) {
+	                this.base.elements.some(function (element) {
+	                    // If the target is part of an editor element, this is the element getting focus
+	                    if (!toFocus && (MediumEditor.util.isDescendant(element, target, true))) {
+	                        toFocus = element;
+	                    }
+
+	                    // bail if we found an element that's getting focus
+	                    return !!toFocus;
+	                }, this);
+	            }
+
+	            // Check if the target is external (not part of the editor, toolbar, or anchorpreview)
+	            var externalEvent = !MediumEditor.util.isDescendant(hadFocus, target, true) &&
+	                                !MediumEditor.util.isDescendant(toolbarEl, target, true) &&
+	                                !MediumEditor.util.isDescendant(previewEl, target, true);
+
+	            if (toFocus !== hadFocus) {
+	                // If element has focus, and focus is going outside of editor
+	                // Don't blur focused element if clicking on editor, toolbar, or anchorpreview
+	                if (hadFocus && externalEvent) {
+	                    // Trigger blur on the editable that has lost focus
+	                    hadFocus.removeAttribute('data-medium-focused');
+	                    this.triggerCustomEvent('blur', eventObj, hadFocus);
+	                }
+
+	                // If focus is going into an editor element
+	                if (toFocus) {
+	                    // Trigger focus on the editable that now has focus
+	                    toFocus.setAttribute('data-medium-focused', true);
+	                    this.triggerCustomEvent('focus', eventObj, toFocus);
+	                }
+	            }
+
+	            if (externalEvent) {
+	                this.triggerCustomEvent('externalInteraction', eventObj);
+	            }
+	        },
+
+	        updateInput: function (target, eventObj) {
+	            if (!this.contentCache) {
+	                return;
+	            }
+	            // An event triggered which signifies that the user may have changed someting
+	            // Look in our cache of input for the contenteditables to see if something changed
+	            var index = target.getAttribute('medium-editor-index');
+	            if (target.innerHTML !== this.contentCache[index]) {
+	                // The content has changed since the last time we checked, fire the event
+	                this.triggerCustomEvent('editableInput', eventObj, target);
+	            }
+	            this.contentCache[index] = target.innerHTML;
+	        },
+
+	        handleDocumentSelectionChange: function (event) {
+	            // When selectionchange fires, target and current target are set
+	            // to document, since this is where the event is handled
+	            // However, currentTarget will have an 'activeElement' property
+	            // which will point to whatever element has focus.
+	            if (event.currentTarget && event.currentTarget.activeElement) {
+	                var activeElement = event.currentTarget.activeElement,
+	                    currentTarget;
+	                // We can look at the 'activeElement' to determine if the selectionchange has
+	                // happened within a contenteditable owned by this instance of MediumEditor
+	                this.base.elements.some(function (element) {
+	                    if (MediumEditor.util.isDescendant(element, activeElement, true)) {
+	                        currentTarget = element;
+	                        return true;
+	                    }
+	                    return false;
+	                }, this);
+
+	                // We know selectionchange fired within one of our contenteditables
+	                if (currentTarget) {
+	                    this.updateInput(currentTarget, { target: activeElement, currentTarget: currentTarget });
+	                }
+	            }
+	        },
+
+	        handleDocumentExecCommand: function () {
+	            // document.execCommand has been called
+	            // If one of our contenteditables currently has focus, we should
+	            // attempt to trigger the 'editableInput' event
+	            var target = this.base.getFocusedElement();
+	            if (target) {
+	                this.updateInput(target, { target: target, currentTarget: target });
+	            }
+	        },
+
+	        handleBodyClick: function (event) {
+	            this.updateFocus(event.target, event);
+	        },
+
+	        handleBodyFocus: function (event) {
+	            this.updateFocus(event.target, event);
+	        },
+
+	        handleBodyMousedown: function (event) {
+	            this.lastMousedownTarget = event.target;
+	        },
+
+	        handleInput: function (event) {
+	            this.updateInput(event.currentTarget, event);
+	        },
+
+	        handleClick: function (event) {
+	            this.triggerCustomEvent('editableClick', event, event.currentTarget);
+	        },
+
+	        handleBlur: function (event) {
+	            this.triggerCustomEvent('editableBlur', event, event.currentTarget);
+	        },
+
+	        handleKeypress: function (event) {
+	            this.triggerCustomEvent('editableKeypress', event, event.currentTarget);
+
+	            // If we're doing manual detection of the editableInput event we need
+	            // to check for input changes during 'keypress'
+	            if (this.keypressUpdateInput) {
+	                var eventObj = { target: event.target, currentTarget: event.currentTarget };
+
+	                // In IE, we need to let the rest of the event stack complete before we detect
+	                // changes to input, so using setTimeout here
+	                setTimeout(function () {
+	                    this.updateInput(eventObj.currentTarget, eventObj);
+	                }.bind(this), 0);
+	            }
+	        },
+
+	        handleKeyup: function (event) {
+	            this.triggerCustomEvent('editableKeyup', event, event.currentTarget);
+	        },
+
+	        handleMouseover: function (event) {
+	            this.triggerCustomEvent('editableMouseover', event, event.currentTarget);
+	        },
+
+	        handleDragging: function (event) {
+	            this.triggerCustomEvent('editableDrag', event, event.currentTarget);
+	        },
+
+	        handleDrop: function (event) {
+	            this.triggerCustomEvent('editableDrop', event, event.currentTarget);
+	        },
+
+	        handlePaste: function (event) {
+	            this.triggerCustomEvent('editablePaste', event, event.currentTarget);
+	        },
+
+	        handleKeydown: function (event) {
+
+	            this.triggerCustomEvent('editableKeydown', event, event.currentTarget);
+
+	            if (MediumEditor.util.isKey(event, MediumEditor.util.keyCode.SPACE)) {
+	                return this.triggerCustomEvent('editableKeydownSpace', event, event.currentTarget);
+	            }
+
+	            if (MediumEditor.util.isKey(event, MediumEditor.util.keyCode.ENTER) || (event.ctrlKey && MediumEditor.util.isKey(event, MediumEditor.util.keyCode.M))) {
+	                return this.triggerCustomEvent('editableKeydownEnter', event, event.currentTarget);
+	            }
+
+	            if (MediumEditor.util.isKey(event, MediumEditor.util.keyCode.TAB)) {
+	                return this.triggerCustomEvent('editableKeydownTab', event, event.currentTarget);
+	            }
+
+	            if (MediumEditor.util.isKey(event, [MediumEditor.util.keyCode.DELETE, MediumEditor.util.keyCode.BACKSPACE])) {
+	                return this.triggerCustomEvent('editableKeydownDelete', event, event.currentTarget);
+	            }
+	        }
+	    };
+
+	    MediumEditor.Events = Events;
+	}());
+
+	(function () {
+	    'use strict';
+
+	    var Button = MediumEditor.Extension.extend({
+
+	        /* Button Options */
+
+	        /* action: [string]
+	         * The action argument to pass to MediumEditor.execAction()
+	         * when the button is clicked
+	         */
+	        action: undefined,
+
+	        /* aria: [string]
+	         * The value to add as the aria-label attribute of the button
+	         * element displayed in the toolbar.
+	         * This is also used as the tooltip for the button
+	         */
+	        aria: undefined,
+
+	        /* tagNames: [Array]
+	         * NOTE: This is not used if useQueryState is set to true.
+	         *
+	         * Array of element tag names that would indicate that this
+	         * button has already been applied. If this action has already
+	         * been applied, the button will be displayed as 'active' in the toolbar
+	         *
+	         * Example:
+	         * For 'bold', if the text is ever within a <b> or <strong>
+	         * tag that indicates the text is already bold. So the array
+	         * of tagNames for bold would be: ['b', 'strong']
+	         */
+	        tagNames: undefined,
+
+	        /* style: [Object]
+	         * NOTE: This is not used if useQueryState is set to true.
+	         *
+	         * A pair of css property & value(s) that indicate that this
+	         * button has already been applied. If this action has already
+	         * been applied, the button will be displayed as 'active' in the toolbar
+	         * Properties of the object:
+	         *   prop [String]: name of the css property
+	         *   value [String]: value(s) of the css property
+	         *                   multiple values can be separated by a '|'
+	         *
+	         * Example:
+	         * For 'bold', if the text is ever within an element with a 'font-weight'
+	         * style property set to '700' or 'bold', that indicates the text
+	         * is already bold.  So the style object for bold would be:
+	         * { prop: 'font-weight', value: '700|bold' }
+	         */
+	        style: undefined,
+
+	        /* useQueryState: [boolean]
+	         * Enables/disables whether this button should use the built-in
+	         * document.queryCommandState() method to determine whether
+	         * the action has already been applied.  If the action has already
+	         * been applied, the button will be displayed as 'active' in the toolbar
+	         *
+	         * Example:
+	         * For 'bold', if this is set to true, the code will call:
+	         * document.queryCommandState('bold') which will return true if the
+	         * browser thinks the text is already bold, and false otherwise
+	         */
+	        useQueryState: undefined,
+
+	        /* contentDefault: [string]
+	         * Default innerHTML to put inside the button
+	         */
+	        contentDefault: undefined,
+
+	        /* contentFA: [string]
+	         * The innerHTML to use for the content of the button
+	         * if the `buttonLabels` option for MediumEditor is set to 'fontawesome'
+	         */
+	        contentFA: undefined,
+
+	        /* classList: [Array]
+	         * An array of classNames (strings) to be added to the button
+	         */
+	        classList: undefined,
+
+	        /* attrs: [object]
+	         * A set of key-value pairs to add to the button as custom attributes
+	         */
+	        attrs: undefined,
+
+	        // The button constructor can optionally accept the name of a built-in button
+	        // (ie 'bold', 'italic', etc.)
+	        // When the name of a button is passed, it will initialize itself with the
+	        // configuration for that button
+	        constructor: function (options) {
+	            if (Button.isBuiltInButton(options)) {
+	                MediumEditor.Extension.call(this, this.defaults[options]);
+	            } else {
+	                MediumEditor.Extension.call(this, options);
+	            }
+	        },
+
+	        init: function () {
+	            MediumEditor.Extension.prototype.init.apply(this, arguments);
+
+	            this.button = this.createButton();
+	            this.on(this.button, 'click', this.handleClick.bind(this));
+	        },
+
+	        /* getButton: [function ()]
+	         *
+	         * If implemented, this function will be called when
+	         * the toolbar is being created.  The DOM Element returned
+	         * by this function will be appended to the toolbar along
+	         * with any other buttons.
+	         */
+	        getButton: function () {
+	            return this.button;
+	        },
+
+	        getAction: function () {
+	            return (typeof this.action === 'function') ? this.action(this.base.options) : this.action;
+	        },
+
+	        getAria: function () {
+	            return (typeof this.aria === 'function') ? this.aria(this.base.options) : this.aria;
+	        },
+
+	        getTagNames: function () {
+	            return (typeof this.tagNames === 'function') ? this.tagNames(this.base.options) : this.tagNames;
+	        },
+
+	        createButton: function () {
+	            var button = this.document.createElement('button'),
+	                content = this.contentDefault,
+	                ariaLabel = this.getAria(),
+	                buttonLabels = this.getEditorOption('buttonLabels');
+	            // Add class names
+	            button.classList.add('medium-editor-action');
+	            button.classList.add('medium-editor-action-' + this.name);
+	            if (this.classList) {
+	                this.classList.forEach(function (className) {
+	                    button.classList.add(className);
+	                });
+	            }
+
+	            // Add attributes
+	            button.setAttribute('data-action', this.getAction());
+	            if (ariaLabel) {
+	                button.setAttribute('title', ariaLabel);
+	                button.setAttribute('aria-label', ariaLabel);
+	            }
+	            if (this.attrs) {
+	                Object.keys(this.attrs).forEach(function (attr) {
+	                    button.setAttribute(attr, this.attrs[attr]);
+	                }, this);
+	            }
+
+	            if (buttonLabels === 'fontawesome' && this.contentFA) {
+	                content = this.contentFA;
+	            }
+	            button.innerHTML = content;
+	            return button;
+	        },
+
+	        handleClick: function (event) {
+	            event.preventDefault();
+	            event.stopPropagation();
+
+	            var action = this.getAction();
+
+	            if (action) {
+	                this.execAction(action);
+	            }
+	        },
+
+	        isActive: function () {
+	            return this.button.classList.contains(this.getEditorOption('activeButtonClass'));
+	        },
+
+	        setInactive: function () {
+	            this.button.classList.remove(this.getEditorOption('activeButtonClass'));
+	            delete this.knownState;
+	        },
+
+	        setActive: function () {
+	            this.button.classList.add(this.getEditorOption('activeButtonClass'));
+	            delete this.knownState;
+	        },
+
+	        queryCommandState: function () {
+	            var queryState = null;
+	            if (this.useQueryState) {
+	                queryState = this.base.queryCommandState(this.getAction());
+	            }
+	            return queryState;
+	        },
+
+	        isAlreadyApplied: function (node) {
+	            var isMatch = false,
+	                tagNames = this.getTagNames(),
+	                styleVals,
+	                computedStyle;
+
+	            if (this.knownState === false || this.knownState === true) {
+	                return this.knownState;
+	            }
+
+	            if (tagNames && tagNames.length > 0) {
+	                isMatch = tagNames.indexOf(node.nodeName.toLowerCase()) !== -1;
+	            }
+
+	            if (!isMatch && this.style) {
+	                styleVals = this.style.value.split('|');
+	                computedStyle = this.window.getComputedStyle(node, null).getPropertyValue(this.style.prop);
+	                styleVals.forEach(function (val) {
+	                    if (!this.knownState) {
+	                        isMatch = (computedStyle.indexOf(val) !== -1);
+	                        // text-decoration is not inherited by default
+	                        // so if the computed style for text-decoration doesn't match
+	                        // don't write to knownState so we can fallback to other checks
+	                        if (isMatch || this.style.prop !== 'text-decoration') {
+	                            this.knownState = isMatch;
+	                        }
+	                    }
+	                }, this);
+	            }
+
+	            return isMatch;
+	        }
+	    });
+
+	    Button.isBuiltInButton = function (name) {
+	        return (typeof name === 'string') && MediumEditor.extensions.button.prototype.defaults.hasOwnProperty(name);
+	    };
+
+	    MediumEditor.extensions.button = Button;
+	}());
+
+	(function () {
+	    'use strict';
+
+	    /* MediumEditor.extensions.button.defaults: [Object]
+	     * Set of default config options for all of the built-in MediumEditor buttons
+	     */
+	    MediumEditor.extensions.button.prototype.defaults = {
+	        'bold': {
+	            name: 'bold',
+	            action: 'bold',
+	            aria: 'bold',
+	            tagNames: ['b', 'strong'],
+	            style: {
+	                prop: 'font-weight',
+	                value: '700|bold'
+	            },
+	            useQueryState: true,
+	            contentDefault: '<b>B</b>',
+	            contentFA: '<i class="fa fa-bold"></i>'
+	        },
+	        'italic': {
+	            name: 'italic',
+	            action: 'italic',
+	            aria: 'italic',
+	            tagNames: ['i', 'em'],
+	            style: {
+	                prop: 'font-style',
+	                value: 'italic'
+	            },
+	            useQueryState: true,
+	            contentDefault: '<b><i>I</i></b>',
+	            contentFA: '<i class="fa fa-italic"></i>'
+	        },
+	        'underline': {
+	            name: 'underline',
+	            action: 'underline',
+	            aria: 'underline',
+	            tagNames: ['u'],
+	            style: {
+	                prop: 'text-decoration',
+	                value: 'underline'
+	            },
+	            useQueryState: true,
+	            contentDefault: '<b><u>U</u></b>',
+	            contentFA: '<i class="fa fa-underline"></i>'
+	        },
+	        'strikethrough': {
+	            name: 'strikethrough',
+	            action: 'strikethrough',
+	            aria: 'strike through',
+	            tagNames: ['strike'],
+	            style: {
+	                prop: 'text-decoration',
+	                value: 'line-through'
+	            },
+	            useQueryState: true,
+	            contentDefault: '<s>A</s>',
+	            contentFA: '<i class="fa fa-strikethrough"></i>'
+	        },
+	        'superscript': {
+	            name: 'superscript',
+	            action: 'superscript',
+	            aria: 'superscript',
+	            tagNames: ['sup'],
+	            /* firefox doesn't behave the way we want it to, so we CAN'T use queryCommandState for superscript
+	               https://github.com/guardian/scribe/blob/master/BROWSERINCONSISTENCIES.md#documentquerycommandstate */
+	            // useQueryState: true
+	            contentDefault: '<b>x<sup>1</sup></b>',
+	            contentFA: '<i class="fa fa-superscript"></i>'
+	        },
+	        'subscript': {
+	            name: 'subscript',
+	            action: 'subscript',
+	            aria: 'subscript',
+	            tagNames: ['sub'],
+	            /* firefox doesn't behave the way we want it to, so we CAN'T use queryCommandState for subscript
+	               https://github.com/guardian/scribe/blob/master/BROWSERINCONSISTENCIES.md#documentquerycommandstate */
+	            // useQueryState: true
+	            contentDefault: '<b>x<sub>1</sub></b>',
+	            contentFA: '<i class="fa fa-subscript"></i>'
+	        },
+	        'image': {
+	            name: 'image',
+	            action: 'image',
+	            aria: 'image',
+	            tagNames: ['img'],
+	            contentDefault: '<b>image</b>',
+	            contentFA: '<i class="fa fa-picture-o"></i>'
+	        },
+	        'orderedlist': {
+	            name: 'orderedlist',
+	            action: 'insertorderedlist',
+	            aria: 'ordered list',
+	            tagNames: ['ol'],
+	            useQueryState: true,
+	            contentDefault: '<b>1.</b>',
+	            contentFA: '<i class="fa fa-list-ol"></i>'
+	        },
+	        'unorderedlist': {
+	            name: 'unorderedlist',
+	            action: 'insertunorderedlist',
+	            aria: 'unordered list',
+	            tagNames: ['ul'],
+	            useQueryState: true,
+	            contentDefault: '<b>&bull;</b>',
+	            contentFA: '<i class="fa fa-list-ul"></i>'
+	        },
+	        'indent': {
+	            name: 'indent',
+	            action: 'indent',
+	            aria: 'indent',
+	            tagNames: [],
+	            contentDefault: '<b>&rarr;</b>',
+	            contentFA: '<i class="fa fa-indent"></i>'
+	        },
+	        'outdent': {
+	            name: 'outdent',
+	            action: 'outdent',
+	            aria: 'outdent',
+	            tagNames: [],
+	            contentDefault: '<b>&larr;</b>',
+	            contentFA: '<i class="fa fa-outdent"></i>'
+	        },
+	        'justifyCenter': {
+	            name: 'justifyCenter',
+	            action: 'justifyCenter',
+	            aria: 'center justify',
+	            tagNames: [],
+	            style: {
+	                prop: 'text-align',
+	                value: 'center'
+	            },
+	            contentDefault: '<b>C</b>',
+	            contentFA: '<i class="fa fa-align-center"></i>'
+	        },
+	        'justifyFull': {
+	            name: 'justifyFull',
+	            action: 'justifyFull',
+	            aria: 'full justify',
+	            tagNames: [],
+	            style: {
+	                prop: 'text-align',
+	                value: 'justify'
+	            },
+	            contentDefault: '<b>J</b>',
+	            contentFA: '<i class="fa fa-align-justify"></i>'
+	        },
+	        'justifyLeft': {
+	            name: 'justifyLeft',
+	            action: 'justifyLeft',
+	            aria: 'left justify',
+	            tagNames: [],
+	            style: {
+	                prop: 'text-align',
+	                value: 'left'
+	            },
+	            contentDefault: '<b>L</b>',
+	            contentFA: '<i class="fa fa-align-left"></i>'
+	        },
+	        'justifyRight': {
+	            name: 'justifyRight',
+	            action: 'justifyRight',
+	            aria: 'right justify',
+	            tagNames: [],
+	            style: {
+	                prop: 'text-align',
+	                value: 'right'
+	            },
+	            contentDefault: '<b>R</b>',
+	            contentFA: '<i class="fa fa-align-right"></i>'
+	        },
+	        // Known inline elements that are not removed, or not removed consistantly across browsers:
+	        // <span>, <label>, <br>
+	        'removeFormat': {
+	            name: 'removeFormat',
+	            aria: 'remove formatting',
+	            action: 'removeFormat',
+	            contentDefault: '<b>X</b>',
+	            contentFA: '<i class="fa fa-eraser"></i>'
+	        },
+
+	        /***** Buttons for appending block elements (append-<element> action) *****/
+
+	        'quote': {
+	            name: 'quote',
+	            action: 'append-blockquote',
+	            aria: 'blockquote',
+	            tagNames: ['blockquote'],
+	            contentDefault: '<b>&ldquo;</b>',
+	            contentFA: '<i class="fa fa-quote-right"></i>'
+	        },
+	        'pre': {
+	            name: 'pre',
+	            action: 'append-pre',
+	            aria: 'preformatted text',
+	            tagNames: ['pre'],
+	            contentDefault: '<b>0101</b>',
+	            contentFA: '<i class="fa fa-code fa-lg"></i>'
+	        },
+	        'h1': {
+	            name: 'h1',
+	            action: 'append-h1',
+	            aria: 'header type one',
+	            tagNames: ['h1'],
+	            contentDefault: '<b>H1</b>',
+	            contentFA: '<i class="fa fa-header"><sup>1</sup>'
+	        },
+	        'h2': {
+	            name: 'h2',
+	            action: 'append-h2',
+	            aria: 'header type two',
+	            tagNames: ['h2'],
+	            contentDefault: '<b>H2</b>',
+	            contentFA: '<i class="fa fa-header"><sup>2</sup>'
+	        },
+	        'h3': {
+	            name: 'h3',
+	            action: 'append-h3',
+	            aria: 'header type three',
+	            tagNames: ['h3'],
+	            contentDefault: '<b>H3</b>',
+	            contentFA: '<i class="fa fa-header"><sup>3</sup>'
+	        },
+	        'h4': {
+	            name: 'h4',
+	            action: 'append-h4',
+	            aria: 'header type four',
+	            tagNames: ['h4'],
+	            contentDefault: '<b>H4</b>',
+	            contentFA: '<i class="fa fa-header"><sup>4</sup>'
+	        },
+	        'h5': {
+	            name: 'h5',
+	            action: 'append-h5',
+	            aria: 'header type five',
+	            tagNames: ['h5'],
+	            contentDefault: '<b>H5</b>',
+	            contentFA: '<i class="fa fa-header"><sup>5</sup>'
+	        },
+	        'h6': {
+	            name: 'h6',
+	            action: 'append-h6',
+	            aria: 'header type six',
+	            tagNames: ['h6'],
+	            contentDefault: '<b>H6</b>',
+	            contentFA: '<i class="fa fa-header"><sup>6</sup>'
+	        }
+	    };
+
+	})();
+	(function () {
+	    'use strict';
+
+	    /* Base functionality for an extension which will display
+	     * a 'form' inside the toolbar
+	     */
+	    var FormExtension = MediumEditor.extensions.button.extend({
+
+	        init: function () {
+	            MediumEditor.extensions.button.prototype.init.apply(this, arguments);
+	        },
+
+	        // default labels for the form buttons
+	        formSaveLabel: '&#10003;',
+	        formCloseLabel: '&times;',
+
+	        /* hasForm: [boolean]
+	         *
+	         * Setting this to true will cause getForm() to be called
+	         * when the toolbar is created, so the form can be appended
+	         * inside the toolbar container
+	         */
+	        hasForm: true,
+
+	        /* getForm: [function ()]
+	         *
+	         * When hasForm is true, this function must be implemented
+	         * and return a DOM Element which will be appended to
+	         * the toolbar container. The form should start hidden, and
+	         * the extension can choose when to hide/show it
+	         */
+	        getForm: function () {},
+
+	        /* isDisplayed: [function ()]
+	         *
+	         * This function should return true/false reflecting
+	         * whether the form is currently displayed
+	         */
+	        isDisplayed: function () {},
+
+	        /* hideForm: [function ()]
+	         *
+	         * This function should hide the form element inside
+	         * the toolbar container
+	         */
+	        hideForm: function () {},
+
+	        /************************ Helpers ************************
+	         * The following are helpers that are either set by MediumEditor
+	         * during initialization, or are helper methods which either
+	         * route calls to the MediumEditor instance or provide common
+	         * functionality for all form extensions
+	         *********************************************************/
+
+	        /* showToolbarDefaultActions: [function ()]
+	         *
+	         * Helper method which will turn back the toolbar after canceling
+	         * the customized form
+	         */
+	        showToolbarDefaultActions: function () {
+	            var toolbar = this.base.getExtensionByName('toolbar');
+	            if (toolbar) {
+	                toolbar.showToolbarDefaultActions();
+	            }
+	        },
+
+	        /* hideToolbarDefaultActions: [function ()]
+	         *
+	         * Helper function which will hide the default contents of the
+	         * toolbar, but leave the toolbar container in the same state
+	         * to allow a form to display its custom contents inside the toolbar
+	         */
+	        hideToolbarDefaultActions: function () {
+	            var toolbar = this.base.getExtensionByName('toolbar');
+	            if (toolbar) {
+	                toolbar.hideToolbarDefaultActions();
+	            }
+	        },
+
+	        /* setToolbarPosition: [function ()]
+	         *
+	         * Helper function which will update the size and position
+	         * of the toolbar based on the toolbar content and the current
+	         * position of the user's selection
+	         */
+	        setToolbarPosition: function () {
+	            var toolbar = this.base.getExtensionByName('toolbar');
+	            if (toolbar) {
+	                toolbar.setToolbarPosition();
+	            }
+	        }
+	    });
+
+	    MediumEditor.extensions.form = FormExtension;
+	})();
+	(function () {
+	    'use strict';
+
+	    var AnchorForm = MediumEditor.extensions.form.extend({
+	        /* Anchor Form Options */
+
+	        /* customClassOption: [string]  (previously options.anchorButton + options.anchorButtonClass)
+	         * Custom class name the user can optionally have added to their created links (ie 'button').
+	         * If passed as a non-empty string, a checkbox will be displayed allowing the user to choose
+	         * whether to have the class added to the created link or not.
+	         */
+	        customClassOption: null,
+
+	        /* customClassOptionText: [string]
+	         * text to be shown in the checkbox when the __customClassOption__ is being used.
+	         */
+	        customClassOptionText: 'Button',
+
+	        /* linkValidation: [boolean]  (previously options.checkLinkFormat)
+	         * enables/disables check for common URL protocols on anchor links.
+	         */
+	        linkValidation: false,
+
+	        /* placeholderText: [string]  (previously options.anchorInputPlaceholder)
+	         * text to be shown as placeholder of the anchor input.
+	         */
+	        placeholderText: 'Paste or type a link',
+
+	        /* targetCheckbox: [boolean]  (previously options.anchorTarget)
+	         * enables/disables displaying a "Open in new window" checkbox, which when checked
+	         * changes the `target` attribute of the created link.
+	         */
+	        targetCheckbox: false,
+
+	        /* targetCheckboxText: [string]  (previously options.anchorInputCheckboxLabel)
+	         * text to be shown in the checkbox enabled via the __targetCheckbox__ option.
+	         */
+	        targetCheckboxText: 'Open in new window',
+
+	        // Options for the Button base class
+	        name: 'anchor',
+	        action: 'createLink',
+	        aria: 'link',
+	        tagNames: ['a'],
+	        contentDefault: '<b>#</b>',
+	        contentFA: '<i class="fa fa-link"></i>',
+
+	        init: function () {
+	            MediumEditor.extensions.form.prototype.init.apply(this, arguments);
+
+	            this.subscribe('editableKeydown', this.handleKeydown.bind(this));
+	        },
+
+	        // Called when the button the toolbar is clicked
+	        // Overrides ButtonExtension.handleClick
+	        handleClick: function (event) {
+	            event.preventDefault();
+	            event.stopPropagation();
+
+	            var range = MediumEditor.selection.getSelectionRange(this.document);
+
+	            if (range.startContainer.nodeName.toLowerCase() === 'a' ||
+	                range.endContainer.nodeName.toLowerCase() === 'a' ||
+	                MediumEditor.util.getClosestTag(MediumEditor.selection.getSelectedParentElement(range), 'a')) {
+	                return this.execAction('unlink');
+	            }
+
+	            if (!this.isDisplayed()) {
+	                this.showForm();
+	            }
+
+	            return false;
+	        },
+
+	        // Called when user hits the defined shortcut (CTRL / COMMAND + K)
+	        handleKeydown: function (event) {
+	            if (MediumEditor.util.isKey(event, MediumEditor.util.keyCode.K) && MediumEditor.util.isMetaCtrlKey(event) && !event.shiftKey) {
+	                this.handleClick(event);
+	            }
+	        },
+
+	        // Called by medium-editor to append form to the toolbar
+	        getForm: function () {
+	            if (!this.form) {
+	                this.form = this.createForm();
+	            }
+	            return this.form;
+	        },
+
+	        getTemplate: function () {
+	            var template = [
+	                '<input type="text" class="medium-editor-toolbar-input" placeholder="', this.placeholderText, '">'
+	            ];
+
+	            template.push(
+	                '<a href="#" class="medium-editor-toolbar-save">',
+	                this.getEditorOption('buttonLabels') === 'fontawesome' ? '<i class="fa fa-check"></i>' : this.formSaveLabel,
+	                '</a>'
+	            );
+
+	            template.push('<a href="#" class="medium-editor-toolbar-close">',
+	                this.getEditorOption('buttonLabels') === 'fontawesome' ? '<i class="fa fa-times"></i>' : this.formCloseLabel,
+	                '</a>');
+
+	            // both of these options are slightly moot with the ability to
+	            // override the various form buildup/serialize functions.
+
+	            if (this.targetCheckbox) {
+	                // fixme: ideally, this targetCheckboxText would be a formLabel too,
+	                // figure out how to deprecate? also consider `fa-` icon default implcations.
+	                template.push(
+	                    '<div class="medium-editor-toolbar-form-row">',
+	                    '<input type="checkbox" class="medium-editor-toolbar-anchor-target">',
+	                    '<label>',
+	                    this.targetCheckboxText,
+	                    '</label>',
+	                    '</div>'
+	                );
+	            }
+
+	            if (this.customClassOption) {
+	                // fixme: expose this `Button` text as a formLabel property, too
+	                // and provide similar access to a `fa-` icon default.
+	                template.push(
+	                    '<div class="medium-editor-toolbar-form-row">',
+	                    '<input type="checkbox" class="medium-editor-toolbar-anchor-button">',
+	                    '<label>',
+	                    this.customClassOptionText,
+	                    '</label>',
+	                    '</div>'
+	                );
+	            }
+
+	            return template.join('');
+
+	        },
+
+	        // Used by medium-editor when the default toolbar is to be displayed
+	        isDisplayed: function () {
+	            return this.getForm().style.display === 'block';
+	        },
+
+	        hideForm: function () {
+	            this.getForm().style.display = 'none';
+	            this.getInput().value = '';
+	        },
+
+	        showForm: function (opts) {
+	            var input = this.getInput(),
+	                targetCheckbox = this.getAnchorTargetCheckbox(),
+	                buttonCheckbox = this.getAnchorButtonCheckbox();
+
+	            opts = opts || { url: '' };
+	            // TODO: This is for backwards compatability
+	            // We don't need to support the 'string' argument in 6.0.0
+	            if (typeof opts === 'string') {
+	                opts = {
+	                    url: opts
+	                };
+	            }
+
+	            this.base.saveSelection();
+	            this.hideToolbarDefaultActions();
+	            this.getForm().style.display = 'block';
+	            this.setToolbarPosition();
+
+	            input.value = opts.url;
+	            input.focus();
+
+	            // If we have a target checkbox, we want it to be checked/unchecked
+	            // based on whether the existing link has target=_blank
+	            if (targetCheckbox) {
+	                targetCheckbox.checked = opts.target === '_blank';
+	            }
+
+	            // If we have a custom class checkbox, we want it to be checked/unchecked
+	            // based on whether an existing link already has the class
+	            if (buttonCheckbox) {
+	                var classList = opts.buttonClass ? opts.buttonClass.split(' ') : [];
+	                buttonCheckbox.checked = (classList.indexOf(this.customClassOption) !== -1);
+	            }
+	        },
+
+	        // Called by core when tearing down medium-editor (destroy)
+	        destroy: function () {
+	            if (!this.form) {
+	                return false;
+	            }
+
+	            if (this.form.parentNode) {
+	                this.form.parentNode.removeChild(this.form);
+	            }
+
+	            delete this.form;
+	        },
+
+	        // core methods
+
+	        getFormOpts: function () {
+	            // no notion of private functions? wanted `_getFormOpts`
+	            var targetCheckbox = this.getAnchorTargetCheckbox(),
+	                buttonCheckbox = this.getAnchorButtonCheckbox(),
+	                opts = {
+	                    url: this.getInput().value.trim()
+	                };
+
+	            if (this.linkValidation) {
+	                opts.url = this.checkLinkFormat(opts.url);
+	            }
+
+	            opts.target = '_self';
+	            if (targetCheckbox && targetCheckbox.checked) {
+	                opts.target = '_blank';
+	            }
+
+	            if (buttonCheckbox && buttonCheckbox.checked) {
+	                opts.buttonClass = this.customClassOption;
+	            }
+
+	            return opts;
+	        },
+
+	        doFormSave: function () {
+	            var opts = this.getFormOpts();
+	            this.completeFormSave(opts);
+	        },
+
+	        completeFormSave: function (opts) {
+	            this.base.restoreSelection();
+	            this.execAction(this.action, opts);
+	            this.base.checkSelection();
+	        },
+
+	        checkLinkFormat: function (value) {
+	            // Matches any alphabetical characters followed by ://
+	            // Matches protocol relative "//"
+	            // Matches common external protocols "mailto:" "tel:" "maps:"
+	            var urlSchemeRegex = /^([a-z]+:)?\/\/|^(mailto|tel|maps):/i,
+	            // var te is a regex for checking if the string is a telephone number
+	            telRegex = /^\+?\s?\(?(?:\d\s?\-?\)?){3,20}$/;
+	            if (telRegex.test(value)) {
+	                return 'tel:' + value;
+	            } else {
+	                // Check for URL scheme and default to http:// if none found
+	                return (urlSchemeRegex.test(value) ? '' : 'http://') + value;
+	            }
+	        },
+
+	        doFormCancel: function () {
+	            this.base.restoreSelection();
+	            this.base.checkSelection();
+	        },
+
+	        // form creation and event handling
+	        attachFormEvents: function (form) {
+	            var close = form.querySelector('.medium-editor-toolbar-close'),
+	                save = form.querySelector('.medium-editor-toolbar-save'),
+	                input = form.querySelector('.medium-editor-toolbar-input');
+
+	            // Handle clicks on the form itself
+	            this.on(form, 'click', this.handleFormClick.bind(this));
+
+	            // Handle typing in the textbox
+	            this.on(input, 'keyup', this.handleTextboxKeyup.bind(this));
+
+	            // Handle close button clicks
+	            this.on(close, 'click', this.handleCloseClick.bind(this));
+
+	            // Handle save button clicks (capture)
+	            this.on(save, 'click', this.handleSaveClick.bind(this), true);
+
+	        },
+
+	        createForm: function () {
+	            var doc = this.document,
+	                form = doc.createElement('div');
+
+	            // Anchor Form (div)
+	            form.className = 'medium-editor-toolbar-form';
+	            form.id = 'medium-editor-toolbar-form-anchor-' + this.getEditorId();
+	            form.innerHTML = this.getTemplate();
+	            this.attachFormEvents(form);
+
+	            return form;
+	        },
+
+	        getInput: function () {
+	            return this.getForm().querySelector('input.medium-editor-toolbar-input');
+	        },
+
+	        getAnchorTargetCheckbox: function () {
+	            return this.getForm().querySelector('.medium-editor-toolbar-anchor-target');
+	        },
+
+	        getAnchorButtonCheckbox: function () {
+	            return this.getForm().querySelector('.medium-editor-toolbar-anchor-button');
+	        },
+
+	        handleTextboxKeyup: function (event) {
+	            // For ENTER -> create the anchor
+	            if (event.keyCode === MediumEditor.util.keyCode.ENTER) {
+	                event.preventDefault();
+	                this.doFormSave();
+	                return;
+	            }
+
+	            // For ESCAPE -> close the form
+	            if (event.keyCode === MediumEditor.util.keyCode.ESCAPE) {
+	                event.preventDefault();
+	                this.doFormCancel();
+	            }
+	        },
+
+	        handleFormClick: function (event) {
+	            // make sure not to hide form when clicking inside the form
+	            event.stopPropagation();
+	        },
+
+	        handleSaveClick: function (event) {
+	            // Clicking Save -> create the anchor
+	            event.preventDefault();
+	            this.doFormSave();
+	        },
+
+	        handleCloseClick: function (event) {
+	            // Click Close -> close the form
+	            event.preventDefault();
+	            this.doFormCancel();
+	        }
+	    });
+
+	    MediumEditor.extensions.anchor = AnchorForm;
+	}());
+
+	(function () {
+	    'use strict';
+
+	    var AnchorPreview = MediumEditor.Extension.extend({
+	        name: 'anchor-preview',
+
+	        // Anchor Preview Options
+
+	        /* hideDelay: [number]  (previously options.anchorPreviewHideDelay)
+	         * time in milliseconds to show the anchor tag preview after the mouse has left the anchor tag.
+	         */
+	        hideDelay: 500,
+
+	        /* previewValueSelector: [string]
+	         * the default selector to locate where to put the activeAnchor value in the preview
+	         */
+	        previewValueSelector: 'a',
+
+	        /* showWhenToolbarIsVisible: [boolean]
+	         * determines whether the anchor tag preview shows up when the toolbar is visible
+	         */
+	        showWhenToolbarIsVisible: false,
+
+	        init: function () {
+	            this.anchorPreview = this.createPreview();
+
+	            this.getEditorOption('elementsContainer').appendChild(this.anchorPreview);
+
+	            this.attachToEditables();
+	        },
+
+	        getPreviewElement: function () {
+	            return this.anchorPreview;
+	        },
+
+	        createPreview: function () {
+	            var el = this.document.createElement('div');
+
+	            el.id = 'medium-editor-anchor-preview-' + this.getEditorId();
+	            el.className = 'medium-editor-anchor-preview';
+	            el.innerHTML = this.getTemplate();
+
+	            this.on(el, 'click', this.handleClick.bind(this));
+
+	            return el;
+	        },
+
+	        getTemplate: function () {
+	            return '<div class="medium-editor-toolbar-anchor-preview" id="medium-editor-toolbar-anchor-preview">' +
+	                '    <a class="medium-editor-toolbar-anchor-preview-inner"></a>' +
+	                '</div>';
+	        },
+
+	        destroy: function () {
+	            if (this.anchorPreview) {
+	                if (this.anchorPreview.parentNode) {
+	                    this.anchorPreview.parentNode.removeChild(this.anchorPreview);
+	                }
+	                delete this.anchorPreview;
+	            }
+	        },
+
+	        hidePreview: function () {
+	            this.anchorPreview.classList.remove('medium-editor-anchor-preview-active');
+	            this.activeAnchor = null;
+	        },
+
+	        showPreview: function (anchorEl) {
+	            if (this.anchorPreview.classList.contains('medium-editor-anchor-preview-active') ||
+	                    anchorEl.getAttribute('data-disable-preview')) {
+	                return true;
+	            }
+
+	            if (this.previewValueSelector) {
+	                this.anchorPreview.querySelector(this.previewValueSelector).textContent = anchorEl.attributes.href.value;
+	                this.anchorPreview.querySelector(this.previewValueSelector).href = anchorEl.attributes.href.value;
+	            }
+
+	            this.anchorPreview.classList.add('medium-toolbar-arrow-over');
+	            this.anchorPreview.classList.remove('medium-toolbar-arrow-under');
+
+	            if (!this.anchorPreview.classList.contains('medium-editor-anchor-preview-active')) {
+	                this.anchorPreview.classList.add('medium-editor-anchor-preview-active');
+	            }
+
+	            this.activeAnchor = anchorEl;
+
+	            this.positionPreview();
+	            this.attachPreviewHandlers();
+
+	            return this;
+	        },
+
+	        positionPreview: function (activeAnchor) {
+	            activeAnchor = activeAnchor || this.activeAnchor;
+	            var buttonHeight = this.anchorPreview.offsetHeight,
+	                boundary = activeAnchor.getBoundingClientRect(),
+	                middleBoundary = (boundary.left + boundary.right) / 2,
+	                diffLeft = this.diffLeft,
+	                diffTop = this.diffTop,
+	                halfOffsetWidth,
+	                defaultLeft;
+
+	            halfOffsetWidth = this.anchorPreview.offsetWidth / 2;
+	            var toolbarExtension = this.base.getExtensionByName('toolbar');
+	            if (toolbarExtension) {
+	                diffLeft = toolbarExtension.diffLeft;
+	                diffTop = toolbarExtension.diffTop;
+	            }
+	            defaultLeft = diffLeft - halfOffsetWidth;
+
+	            this.anchorPreview.style.top = Math.round(buttonHeight + boundary.bottom - diffTop + this.window.pageYOffset - this.anchorPreview.offsetHeight) + 'px';
+	            if (middleBoundary < halfOffsetWidth) {
+	                this.anchorPreview.style.left = defaultLeft + halfOffsetWidth + 'px';
+	            } else if ((this.window.innerWidth - middleBoundary) < halfOffsetWidth) {
+	                this.anchorPreview.style.left = this.window.innerWidth + defaultLeft - halfOffsetWidth + 'px';
+	            } else {
+	                this.anchorPreview.style.left = defaultLeft + middleBoundary + 'px';
+	            }
+	        },
+
+	        attachToEditables: function () {
+	            this.subscribe('editableMouseover', this.handleEditableMouseover.bind(this));
+	        },
+
+	        handleClick: function (event) {
+	            var anchorExtension = this.base.getExtensionByName('anchor'),
+	                activeAnchor = this.activeAnchor;
+
+	            if (anchorExtension && activeAnchor) {
+	                event.preventDefault();
+
+	                this.base.selectElement(this.activeAnchor);
+
+	                // Using setTimeout + delay because:
+	                // We may actually be displaying the anchor form, which should be controlled by delay
+	                this.base.delay(function () {
+	                    if (activeAnchor) {
+	                        var opts = {
+	                            url: activeAnchor.attributes.href.value,
+	                            target: activeAnchor.getAttribute('target'),
+	                            buttonClass: activeAnchor.getAttribute('class')
+	                        };
+	                        anchorExtension.showForm(opts);
+	                        activeAnchor = null;
+	                    }
+	                }.bind(this));
+	            }
+
+	            this.hidePreview();
+	        },
+
+	        handleAnchorMouseout: function () {
+	            this.anchorToPreview = null;
+	            this.off(this.activeAnchor, 'mouseout', this.instanceHandleAnchorMouseout);
+	            this.instanceHandleAnchorMouseout = null;
+	        },
+
+	        handleEditableMouseover: function (event) {
+	            var target = MediumEditor.util.getClosestTag(event.target, 'a');
+
+	            if (false === target) {
+	                return;
+	            }
+
+	            // Detect empty href attributes
+	            // The browser will make href="" or href="#top"
+	            // into absolute urls when accessed as event.target.href, so check the html
+	            if (!/href=["']\S+["']/.test(target.outerHTML) || /href=["']#\S+["']/.test(target.outerHTML)) {
+	                return true;
+	            }
+
+	            // only show when toolbar is not present
+	            var toolbar = this.base.getExtensionByName('toolbar');
+	            if (!this.showWhenToolbarIsVisible && toolbar && toolbar.isDisplayed && toolbar.isDisplayed()) {
+	                return true;
+	            }
+
+	            // detach handler for other anchor in case we hovered multiple anchors quickly
+	            if (this.activeAnchor && this.activeAnchor !== target) {
+	                this.detachPreviewHandlers();
+	            }
+
+	            this.anchorToPreview = target;
+
+	            this.instanceHandleAnchorMouseout = this.handleAnchorMouseout.bind(this);
+	            this.on(this.anchorToPreview, 'mouseout', this.instanceHandleAnchorMouseout);
+	            // Using setTimeout + delay because:
+	            // - We're going to show the anchor preview according to the configured delay
+	            //   if the mouse has not left the anchor tag in that time
+	            this.base.delay(function () {
+	                if (this.anchorToPreview) {
+	                    this.showPreview(this.anchorToPreview);
+	                }
+	            }.bind(this));
+	        },
+
+	        handlePreviewMouseover: function () {
+	            this.lastOver = (new Date()).getTime();
+	            this.hovering = true;
+	        },
+
+	        handlePreviewMouseout: function (event) {
+	            if (!event.relatedTarget || !/anchor-preview/.test(event.relatedTarget.className)) {
+	                this.hovering = false;
+	            }
+	        },
+
+	        updatePreview: function () {
+	            if (this.hovering) {
+	                return true;
+	            }
+	            var durr = (new Date()).getTime() - this.lastOver;
+	            if (durr > this.hideDelay) {
+	                // hide the preview 1/2 second after mouse leaves the link
+	                this.detachPreviewHandlers();
+	            }
+	        },
+
+	        detachPreviewHandlers: function () {
+	            // cleanup
+	            clearInterval(this.intervalTimer);
+	            if (this.instanceHandlePreviewMouseover) {
+	                this.off(this.anchorPreview, 'mouseover', this.instanceHandlePreviewMouseover);
+	                this.off(this.anchorPreview, 'mouseout', this.instanceHandlePreviewMouseout);
+	                if (this.activeAnchor) {
+	                    this.off(this.activeAnchor, 'mouseover', this.instanceHandlePreviewMouseover);
+	                    this.off(this.activeAnchor, 'mouseout', this.instanceHandlePreviewMouseout);
+	                }
+	            }
+
+	            this.hidePreview();
+
+	            this.hovering = this.instanceHandlePreviewMouseover = this.instanceHandlePreviewMouseout = null;
+	        },
+
+	        // TODO: break up method and extract out handlers
+	        attachPreviewHandlers: function () {
+	            this.lastOver = (new Date()).getTime();
+	            this.hovering = true;
+
+	            this.instanceHandlePreviewMouseover = this.handlePreviewMouseover.bind(this);
+	            this.instanceHandlePreviewMouseout = this.handlePreviewMouseout.bind(this);
+
+	            this.intervalTimer = setInterval(this.updatePreview.bind(this), 200);
+
+	            this.on(this.anchorPreview, 'mouseover', this.instanceHandlePreviewMouseover);
+	            this.on(this.anchorPreview, 'mouseout', this.instanceHandlePreviewMouseout);
+	            this.on(this.activeAnchor, 'mouseover', this.instanceHandlePreviewMouseover);
+	            this.on(this.activeAnchor, 'mouseout', this.instanceHandlePreviewMouseout);
+	        }
+	    });
+
+	    MediumEditor.extensions.anchorPreview = AnchorPreview;
+	}());
+
+	(function () {
+	    'use strict';
+
+	    var WHITESPACE_CHARS,
+	        KNOWN_TLDS_FRAGMENT,
+	        LINK_REGEXP_TEXT,
+	        KNOWN_TLDS_REGEXP;
+
+	    WHITESPACE_CHARS = [' ', '\t', '\n', '\r', '\u00A0', '\u2000', '\u2001', '\u2002', '\u2003',
+	                                    '\u2028', '\u2029'];
+	    KNOWN_TLDS_FRAGMENT = 'com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int|jobs|mobi|museum|name|post|pro|tel|travel|' +
+	        'xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|' +
+	        'bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|' +
+	        'fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|' +
+	        'is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|' +
+	        'mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|' +
+	        'pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|ja|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|' +
+	        'tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw';
+
+	    LINK_REGEXP_TEXT =
+	        '(' +
+	        // Version of Gruber URL Regexp optimized for JS: http://stackoverflow.com/a/17733640
+	        '((?:(https?://|ftps?://|nntp://)|www\\d{0,3}[.]|[a-z0-9.\\-]+[.](' + KNOWN_TLDS_FRAGMENT + ')\\\/)\\S+(?:[^\\s`!\\[\\]{};:\'\".,?\u00AB\u00BB\u201C\u201D\u2018\u2019]))' +
+	        // Addition to above Regexp to support bare domains/one level subdomains with common non-i18n TLDs and without www prefix:
+	        ')|(([a-z0-9\\-]+\\.)?[a-z0-9\\-]+\\.(' + KNOWN_TLDS_FRAGMENT + '))';
+
+	    KNOWN_TLDS_REGEXP = new RegExp('^(' + KNOWN_TLDS_FRAGMENT + ')$', 'i');
+
+	    function nodeIsNotInsideAnchorTag(node) {
+	        return !MediumEditor.util.getClosestTag(node, 'a');
+	    }
+
+	    var AutoLink = MediumEditor.Extension.extend({
+	        init: function () {
+	            MediumEditor.Extension.prototype.init.apply(this, arguments);
+
+	            this.disableEventHandling = false;
+	            this.subscribe('editableKeypress', this.onKeypress.bind(this));
+	            this.subscribe('editableBlur', this.onBlur.bind(this));
+	            // MS IE has it's own auto-URL detect feature but ours is better in some ways. Be consistent.
+	            this.document.execCommand('AutoUrlDetect', false, false);
+	        },
+
+	        destroy: function () {
+	            // Turn AutoUrlDetect back on
+	            if (this.document.queryCommandSupported('AutoUrlDetect')) {
+	                this.document.execCommand('AutoUrlDetect', false, true);
+	            }
+	        },
+
+	        onBlur: function (blurEvent, editable) {
+	            this.performLinking(editable);
+	        },
+
+	        onKeypress: function (keyPressEvent) {
+	            if (this.disableEventHandling) {
+	                return;
+	            }
+
+	            if (MediumEditor.util.isKey(keyPressEvent, [MediumEditor.util.keyCode.SPACE, MediumEditor.util.keyCode.ENTER])) {
+	                clearTimeout(this.performLinkingTimeout);
+	                // Saving/restoring the selection in the middle of a keypress doesn't work well...
+	                this.performLinkingTimeout = setTimeout(function () {
+	                    try {
+	                        var sel = this.base.exportSelection();
+	                        if (this.performLinking(keyPressEvent.target)) {
+	                            // pass true for favorLaterSelectionAnchor - this is needed for links at the end of a
+	                            // paragraph in MS IE, or MS IE causes the link to be deleted right after adding it.
+	                            this.base.importSelection(sel, true);
+	                        }
+	                    } catch (e) {
+	                        if (window.console) {
+	                            window.console.error('Failed to perform linking', e);
+	                        }
+	                        this.disableEventHandling = true;
+	                    }
+	                }.bind(this), 0);
+	            }
+	        },
+
+	        performLinking: function (contenteditable) {
+	            /*
+	            Perform linking on blockElement basis, blockElements are HTML elements with text content and without
+	            child element.
+
+	            Example:
+	            - HTML content
+	            <blockquote>
+	              <p>link.</p>
+	              <p>my</p>
+	            </blockquote>
+
+	            - blockElements
+	            [<p>link.</p>, <p>my</p>]
+
+	            otherwise the detection can wrongly find the end of one paragraph and the beginning of another paragraph
+	            to constitute a link, such as a paragraph ending "link." and the next paragraph beginning with "my" is
+	            interpreted into "link.my" and the code tries to create a link across blockElements - which doesn't work
+	            and is terrible.
+	            (Medium deletes the spaces/returns between P tags so the textContent ends up without paragraph spacing)
+	            */
+	            var blockElements = MediumEditor.util.splitByBlockElements(contenteditable),
+	                documentModified = false;
+	            if (blockElements.length === 0) {
+	                blockElements = [contenteditable];
+	            }
+	            for (var i = 0; i < blockElements.length; i++) {
+	                documentModified = this.removeObsoleteAutoLinkSpans(blockElements[i]) || documentModified;
+	                documentModified = this.performLinkingWithinElement(blockElements[i]) || documentModified;
+	            }
+	            return documentModified;
+	        },
+
+	        removeObsoleteAutoLinkSpans: function (element) {
+	            if (!element || element.nodeType === 3) {
+	                return false;
+	            }
+
+	            var spans = element.querySelectorAll('span[data-auto-link="true"]'),
+	                documentModified = false;
+
+	            for (var i = 0; i < spans.length; i++) {
+	                var textContent = spans[i].textContent;
+	                if (textContent.indexOf('://') === -1) {
+	                    textContent = MediumEditor.util.ensureUrlHasProtocol(textContent);
+	                }
+	                if (spans[i].getAttribute('data-href') !== textContent && nodeIsNotInsideAnchorTag(spans[i])) {
+	                    documentModified = true;
+	                    var trimmedTextContent = textContent.replace(/\s+$/, '');
+	                    if (spans[i].getAttribute('data-href') === trimmedTextContent) {
+	                        var charactersTrimmed = textContent.length - trimmedTextContent.length,
+	                            subtree = MediumEditor.util.splitOffDOMTree(spans[i], this.splitTextBeforeEnd(spans[i], charactersTrimmed));
+	                        spans[i].parentNode.insertBefore(subtree, spans[i].nextSibling);
+	                    } else {
+	                        // Some editing has happened to the span, so just remove it entirely. The user can put it back
+	                        // around just the href content if they need to prevent it from linking
+	                        MediumEditor.util.unwrap(spans[i], this.document);
+	                    }
+	                }
+	            }
+	            return documentModified;
+	        },
+
+	        splitTextBeforeEnd: function (element, characterCount) {
+	            var treeWalker = this.document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false),
+	                lastChildNotExhausted = true;
+
+	            // Start the tree walker at the last descendant of the span
+	            while (lastChildNotExhausted) {
+	                lastChildNotExhausted = treeWalker.lastChild() !== null;
+	            }
+
+	            var currentNode,
+	                currentNodeValue,
+	                previousNode;
+	            while (characterCount > 0 && previousNode !== null) {
+	                currentNode = treeWalker.currentNode;
+	                currentNodeValue = currentNode.nodeValue;
+	                if (currentNodeValue.length > characterCount) {
+	                    previousNode = currentNode.splitText(currentNodeValue.length - characterCount);
+	                    characterCount = 0;
+	                } else {
+	                    previousNode = treeWalker.previousNode();
+	                    characterCount -= currentNodeValue.length;
+	                }
+	            }
+	            return previousNode;
+	        },
+
+	        performLinkingWithinElement: function (element) {
+	            var matches = this.findLinkableText(element),
+	                linkCreated = false;
+
+	            for (var matchIndex = 0; matchIndex < matches.length; matchIndex++) {
+	                var matchingTextNodes = MediumEditor.util.findOrCreateMatchingTextNodes(this.document, element,
+	                        matches[matchIndex]);
+	                if (this.shouldNotLink(matchingTextNodes)) {
+	                    continue;
+	                }
+	                this.createAutoLink(matchingTextNodes, matches[matchIndex].href);
+	            }
+	            return linkCreated;
+	        },
+
+	        shouldNotLink: function (textNodes) {
+	            var shouldNotLink = false;
+	            for (var i = 0; i < textNodes.length && shouldNotLink === false; i++) {
+	                // Do not link if the text node is either inside an anchor or inside span[data-auto-link]
+	                shouldNotLink = !!MediumEditor.util.traverseUp(textNodes[i], function (node) {
+	                    return node.nodeName.toLowerCase() === 'a' ||
+	                        (node.getAttribute && node.getAttribute('data-auto-link') === 'true');
+	                });
+	            }
+	            return shouldNotLink;
+	        },
+
+	        findLinkableText: function (contenteditable) {
+	            var linkRegExp = new RegExp(LINK_REGEXP_TEXT, 'gi'),
+	                textContent = contenteditable.textContent,
+	                match = null,
+	                matches = [];
+
+	            while ((match = linkRegExp.exec(textContent)) !== null) {
+	                var matchOk = true,
+	                    matchEnd = match.index + match[0].length;
+	                // If the regexp detected something as a link that has text immediately preceding/following it, bail out.
+	                matchOk = (match.index === 0 || WHITESPACE_CHARS.indexOf(textContent[match.index - 1]) !== -1) &&
+	                    (matchEnd === textContent.length || WHITESPACE_CHARS.indexOf(textContent[matchEnd]) !== -1);
+	                // If the regexp detected a bare domain that doesn't use one of our expected TLDs, bail out.
+	                matchOk = matchOk && (match[0].indexOf('/') !== -1 ||
+	                    KNOWN_TLDS_REGEXP.test(match[0].split('.').pop().split('?').shift()));
+
+	                if (matchOk) {
+	                    matches.push({
+	                        href: match[0],
+	                        start: match.index,
+	                        end: matchEnd
+	                    });
+	                }
+	            }
+	            return matches;
+	        },
+
+	        createAutoLink: function (textNodes, href) {
+	            href = MediumEditor.util.ensureUrlHasProtocol(href);
+	            var anchor = MediumEditor.util.createLink(this.document, textNodes, href, this.getEditorOption('targetBlank') ? '_blank' : null),
+	                span = this.document.createElement('span');
+	            span.setAttribute('data-auto-link', 'true');
+	            span.setAttribute('data-href', href);
+	            anchor.insertBefore(span, anchor.firstChild);
+	            while (anchor.childNodes.length > 1) {
+	                span.appendChild(anchor.childNodes[1]);
+	            }
+	        }
+
+	    });
+
+	    MediumEditor.extensions.autoLink = AutoLink;
+	}());
+
+	(function () {
+	    'use strict';
+
+	    var CLASS_DRAG_OVER = 'medium-editor-dragover';
+
+	    function clearClassNames(element) {
+	        var editable = MediumEditor.util.getContainerEditorElement(element),
+	            existing = Array.prototype.slice.call(editable.parentElement.querySelectorAll('.' + CLASS_DRAG_OVER));
+
+	        existing.forEach(function (el) {
+	            el.classList.remove(CLASS_DRAG_OVER);
+	        });
+	    }
+
+	    var FileDragging = MediumEditor.Extension.extend({
+	        name: 'fileDragging',
+
+	        allowedTypes: ['image'],
+
+	        init: function () {
+	            MediumEditor.Extension.prototype.init.apply(this, arguments);
+
+	            this.subscribe('editableDrag', this.handleDrag.bind(this));
+	            this.subscribe('editableDrop', this.handleDrop.bind(this));
+	        },
+
+	        handleDrag: function (event) {
+	            event.preventDefault();
+	            event.dataTransfer.dropEffect = 'copy';
+
+	            var target = event.target.classList ? event.target : event.target.parentElement;
+
+	            // Ensure the class gets removed from anything that had it before
+	            clearClassNames(target);
+
+	            if (event.type === 'dragover') {
+	                target.classList.add(CLASS_DRAG_OVER);
+	            }
+	        },
+
+	        handleDrop: function (event) {
+	            // Prevent file from opening in the current window
+	            event.preventDefault();
+	            event.stopPropagation();
+
+	            // IE9 does not support the File API, so prevent file from opening in the window
+	            // but also don't try to actually get the file
+	            if (event.dataTransfer.files) {
+	                Array.prototype.slice.call(event.dataTransfer.files).forEach(function (file) {
+	                    if (this.isAllowedFile(file)) {
+	                        if (file.type.match('image')) {
+	                            this.insertImageFile(file);
+	                        }
+	                    }
+	                }, this);
+	            }
+
+	            // Make sure we remove our class from everything
+	            clearClassNames(event.target);
+	        },
+
+	        isAllowedFile: function (file) {
+	            return this.allowedTypes.some(function (fileType) {
+	                return !!file.type.match(fileType);
+	            });
+	        },
+
+	        insertImageFile: function (file) {
+	            var fileReader = new FileReader();
+	            fileReader.readAsDataURL(file);
+
+	            var id = 'medium-img-' + (+new Date());
+	            MediumEditor.util.insertHTMLCommand(this.document, '<img class="medium-editor-image-loading" id="' + id + '" />');
+
+	            fileReader.onload = function () {
+	                var img = this.document.getElementById(id);
+	                if (img) {
+	                    img.removeAttribute('id');
+	                    img.removeAttribute('class');
+	                    img.src = fileReader.result;
+	                }
+	            }.bind(this);
+	        }
+	    });
+
+	    MediumEditor.extensions.fileDragging = FileDragging;
+	}());
+
+	(function () {
+	    'use strict';
+
+	    var KeyboardCommands = MediumEditor.Extension.extend({
+	        name: 'keyboard-commands',
+
+	        /* KeyboardCommands Options */
+
+	        /* commands: [Array]
+	         * Array of objects describing each command and the combination of keys that will trigger it
+	         * Required for each object:
+	         *   command [String] (argument passed to editor.execAction())
+	         *   key [String] (keyboard character that triggers this command)
+	         *   meta [boolean] (whether the ctrl/meta key has to be active or inactive)
+	         *   shift [boolean] (whether the shift key has to be active or inactive)
+	         *   alt [boolean] (whether the alt key has to be active or inactive)
+	         */
+	        commands: [
+	            {
+	                command: 'bold',
+	                key: 'B',
+	                meta: true,
+	                shift: false,
+	                alt: false
+	            },
+	            {
+	                command: 'italic',
+	                key: 'I',
+	                meta: true,
+	                shift: false,
+	                alt: false
+	            },
+	            {
+	                command: 'underline',
+	                key: 'U',
+	                meta: true,
+	                shift: false,
+	                alt: false
+	            }
+	        ],
+
+	        init: function () {
+	            MediumEditor.Extension.prototype.init.apply(this, arguments);
+
+	            this.subscribe('editableKeydown', this.handleKeydown.bind(this));
+	            this.keys = {};
+	            this.commands.forEach(function (command) {
+	                var keyCode = command.key.charCodeAt(0);
+	                if (!this.keys[keyCode]) {
+	                    this.keys[keyCode] = [];
+	                }
+	                this.keys[keyCode].push(command);
+	            }, this);
+	        },
+
+	        handleKeydown: function (event) {
+	            var keyCode = MediumEditor.util.getKeyCode(event);
+	            if (!this.keys[keyCode]) {
+	                return;
+	            }
+
+	            var isMeta = MediumEditor.util.isMetaCtrlKey(event),
+	                isShift = !!event.shiftKey,
+	                isAlt = !!event.altKey;
+
+	            this.keys[keyCode].forEach(function (data) {
+	                if (data.meta === isMeta &&
+	                    data.shift === isShift &&
+	                    (data.alt === isAlt ||
+	                     undefined === data.alt)) { // TODO deprecated: remove check for undefined === data.alt when jumping to 6.0.0
+	                    event.preventDefault();
+	                    event.stopPropagation();
+
+	                    // command can be false so the shortcut is just disabled
+	                    if (false !== data.command) {
+	                        this.execAction(data.command);
+	                    }
+	                }
+	            }, this);
+	        }
+	    });
+
+	    MediumEditor.extensions.keyboardCommands = KeyboardCommands;
+	}());
+
+	(function () {
+	    'use strict';
+
+	    var FontNameForm = MediumEditor.extensions.form.extend({
+
+	        name: 'fontname',
+	        action: 'fontName',
+	        aria: 'change font name',
+	        contentDefault: '&#xB1;', // ±
+	        contentFA: '<i class="fa fa-font"></i>',
+
+	        fonts: ['', 'Arial', 'Verdana', 'Times New Roman'],
+
+	        init: function () {
+	            MediumEditor.extensions.form.prototype.init.apply(this, arguments);
+	        },
+
+	        // Called when the button the toolbar is clicked
+	        // Overrides ButtonExtension.handleClick
+	        handleClick: function (event) {
+	            event.preventDefault();
+	            event.stopPropagation();
+
+	            if (!this.isDisplayed()) {
+	                // Get FontName of current selection (convert to string since IE returns this as number)
+	                var fontName = this.document.queryCommandValue('fontName') + '';
+	                this.showForm(fontName);
+	            }
+
+	            return false;
+	        },
+
+	        // Called by medium-editor to append form to the toolbar
+	        getForm: function () {
+	            if (!this.form) {
+	                this.form = this.createForm();
+	            }
+	            return this.form;
+	        },
+
+	        // Used by medium-editor when the default toolbar is to be displayed
+	        isDisplayed: function () {
+	            return this.getForm().style.display === 'block';
+	        },
+
+	        hideForm: function () {
+	            this.getForm().style.display = 'none';
+	            this.getSelect().value = '';
+	        },
+
+	        showForm: function (fontName) {
+	            var select = this.getSelect();
+
+	            this.base.saveSelection();
+	            this.hideToolbarDefaultActions();
+	            this.getForm().style.display = 'block';
+	            this.setToolbarPosition();
+
+	            select.value = fontName || '';
+	            select.focus();
+	        },
+
+	        // Called by core when tearing down medium-editor (destroy)
+	        destroy: function () {
+	            if (!this.form) {
+	                return false;
+	            }
+
+	            if (this.form.parentNode) {
+	                this.form.parentNode.removeChild(this.form);
+	            }
+
+	            delete this.form;
+	        },
+
+	        // core methods
+
+	        doFormSave: function () {
+	            this.base.restoreSelection();
+	            this.base.checkSelection();
+	        },
+
+	        doFormCancel: function () {
+	            this.base.restoreSelection();
+	            this.clearFontName();
+	            this.base.checkSelection();
+	        },
+
+	        // form creation and event handling
+	        createForm: function () {
+	            var doc = this.document,
+	                form = doc.createElement('div'),
+	                select = doc.createElement('select'),
+	                close = doc.createElement('a'),
+	                save = doc.createElement('a'),
+	                option;
+
+	            // Font Name Form (div)
+	            form.className = 'medium-editor-toolbar-form';
+	            form.id = 'medium-editor-toolbar-form-fontname-' + this.getEditorId();
+
+	            // Handle clicks on the form itself
+	            this.on(form, 'click', this.handleFormClick.bind(this));
+
+	            // Add font names
+	            for (var i = 0; i<this.fonts.length; i++) {
+	                option = doc.createElement('option');
+	                option.innerHTML = this.fonts[i];
+	                option.value = this.fonts[i];
+	                select.appendChild(option);
+	            }
+
+	            select.className = 'medium-editor-toolbar-select';
+	            form.appendChild(select);
+
+	            // Handle typing in the textbox
+	            this.on(select, 'change', this.handleFontChange.bind(this));
+
+	            // Add save buton
+	            save.setAttribute('href', '#');
+	            save.className = 'medium-editor-toobar-save';
+	            save.innerHTML = this.getEditorOption('buttonLabels') === 'fontawesome' ?
+	                             '<i class="fa fa-check"></i>' :
+	                             '&#10003;';
+	            form.appendChild(save);
+
+	            // Handle save button clicks (capture)
+	            this.on(save, 'click', this.handleSaveClick.bind(this), true);
+
+	            // Add close button
+	            close.setAttribute('href', '#');
+	            close.className = 'medium-editor-toobar-close';
+	            close.innerHTML = this.getEditorOption('buttonLabels') === 'fontawesome' ?
+	                              '<i class="fa fa-times"></i>' :
+	                              '&times;';
+	            form.appendChild(close);
+
+	            // Handle close button clicks
+	            this.on(close, 'click', this.handleCloseClick.bind(this));
+
+	            return form;
+	        },
+
+	        getSelect: function () {
+	            return this.getForm().querySelector('select.medium-editor-toolbar-select');
+	        },
+
+	        clearFontName: function () {
+	            MediumEditor.selection.getSelectedElements(this.document).forEach(function (el) {
+	                if (el.nodeName.toLowerCase() === 'font' && el.hasAttribute('face')) {
+	                    el.removeAttribute('face');
+	                }
+	            });
+	        },
+
+	        handleFontChange: function () {
+	            var font = this.getSelect().value;
+	            if (font === '') {
+	                this.clearFontName();
+	            } else {
+	                this.execAction('fontName', { name: font });
+	            }
+	        },
+
+	        handleFormClick: function (event) {
+	            // make sure not to hide form when clicking inside the form
+	            event.stopPropagation();
+	        },
+
+	        handleSaveClick: function (event) {
+	            // Clicking Save -> create the font size
+	            event.preventDefault();
+	            this.doFormSave();
+	        },
+
+	        handleCloseClick: function (event) {
+	            // Click Close -> close the form
+	            event.preventDefault();
+	            this.doFormCancel();
+	        }
+	    });
+
+	    MediumEditor.extensions.fontName = FontNameForm;
+	}());
+
+	(function () {
+	    'use strict';
+
+	    var FontSizeForm = MediumEditor.extensions.form.extend({
+
+	        name: 'fontsize',
+	        action: 'fontSize',
+	        aria: 'increase/decrease font size',
+	        contentDefault: '&#xB1;', // ±
+	        contentFA: '<i class="fa fa-text-height"></i>',
+
+	        init: function () {
+	            MediumEditor.extensions.form.prototype.init.apply(this, arguments);
+	        },
+
+	        // Called when the button the toolbar is clicked
+	        // Overrides ButtonExtension.handleClick
+	        handleClick: function (event) {
+	            event.preventDefault();
+	            event.stopPropagation();
+
+	            if (!this.isDisplayed()) {
+	                // Get fontsize of current selection (convert to string since IE returns this as number)
+	                var fontSize = this.document.queryCommandValue('fontSize') + '';
+	                this.showForm(fontSize);
+	            }
+
+	            return false;
+	        },
+
+	        // Called by medium-editor to append form to the toolbar
+	        getForm: function () {
+	            if (!this.form) {
+	                this.form = this.createForm();
+	            }
+	            return this.form;
+	        },
+
+	        // Used by medium-editor when the default toolbar is to be displayed
+	        isDisplayed: function () {
+	            return this.getForm().style.display === 'block';
+	        },
+
+	        hideForm: function () {
+	            this.getForm().style.display = 'none';
+	            this.getInput().value = '';
+	        },
+
+	        showForm: function (fontSize) {
+	            var input = this.getInput();
+
+	            this.base.saveSelection();
+	            this.hideToolbarDefaultActions();
+	            this.getForm().style.display = 'block';
+	            this.setToolbarPosition();
+
+	            input.value = fontSize || '';
+	            input.focus();
+	        },
+
+	        // Called by core when tearing down medium-editor (destroy)
+	        destroy: function () {
+	            if (!this.form) {
+	                return false;
+	            }
+
+	            if (this.form.parentNode) {
+	                this.form.parentNode.removeChild(this.form);
+	            }
+
+	            delete this.form;
+	        },
+
+	        // core methods
+
+	        doFormSave: function () {
+	            this.base.restoreSelection();
+	            this.base.checkSelection();
+	        },
+
+	        doFormCancel: function () {
+	            this.base.restoreSelection();
+	            this.clearFontSize();
+	            this.base.checkSelection();
+	        },
+
+	        // form creation and event handling
+	        createForm: function () {
+	            var doc = this.document,
+	                form = doc.createElement('div'),
+	                input = doc.createElement('input'),
+	                close = doc.createElement('a'),
+	                save = doc.createElement('a');
+
+	            // Font Size Form (div)
+	            form.className = 'medium-editor-toolbar-form';
+	            form.id = 'medium-editor-toolbar-form-fontsize-' + this.getEditorId();
+
+	            // Handle clicks on the form itself
+	            this.on(form, 'click', this.handleFormClick.bind(this));
+
+	            // Add font size slider
+	            input.setAttribute('type', 'range');
+	            input.setAttribute('min', '1');
+	            input.setAttribute('max', '7');
+	            input.className = 'medium-editor-toolbar-input';
+	            form.appendChild(input);
+
+	            // Handle typing in the textbox
+	            this.on(input, 'change', this.handleSliderChange.bind(this));
+
+	            // Add save buton
+	            save.setAttribute('href', '#');
+	            save.className = 'medium-editor-toobar-save';
+	            save.innerHTML = this.getEditorOption('buttonLabels') === 'fontawesome' ?
+	                             '<i class="fa fa-check"></i>' :
+	                             '&#10003;';
+	            form.appendChild(save);
+
+	            // Handle save button clicks (capture)
+	            this.on(save, 'click', this.handleSaveClick.bind(this), true);
+
+	            // Add close button
+	            close.setAttribute('href', '#');
+	            close.className = 'medium-editor-toobar-close';
+	            close.innerHTML = this.getEditorOption('buttonLabels') === 'fontawesome' ?
+	                              '<i class="fa fa-times"></i>' :
+	                              '&times;';
+	            form.appendChild(close);
+
+	            // Handle close button clicks
+	            this.on(close, 'click', this.handleCloseClick.bind(this));
+
+	            return form;
+	        },
+
+	        getInput: function () {
+	            return this.getForm().querySelector('input.medium-editor-toolbar-input');
+	        },
+
+	        clearFontSize: function () {
+	            MediumEditor.selection.getSelectedElements(this.document).forEach(function (el) {
+	                if (el.nodeName.toLowerCase() === 'font' && el.hasAttribute('size')) {
+	                    el.removeAttribute('size');
+	                }
+	            });
+	        },
+
+	        handleSliderChange: function () {
+	            var size = this.getInput().value;
+	            if (size === '4') {
+	                this.clearFontSize();
+	            } else {
+	                this.execAction('fontSize', { size: size });
+	            }
+	        },
+
+	        handleFormClick: function (event) {
+	            // make sure not to hide form when clicking inside the form
+	            event.stopPropagation();
+	        },
+
+	        handleSaveClick: function (event) {
+	            // Clicking Save -> create the font size
+	            event.preventDefault();
+	            this.doFormSave();
+	        },
+
+	        handleCloseClick: function (event) {
+	            // Click Close -> close the form
+	            event.preventDefault();
+	            this.doFormCancel();
+	        }
+	    });
+
+	    MediumEditor.extensions.fontSize = FontSizeForm;
+	}());
+	(function () {
+	    'use strict';
+	    /*jslint regexp: true*/
+	    /*
+	        jslint does not allow character negation, because the negation
+	        will not match any unicode characters. In the regexes in this
+	        block, negation is used specifically to match the end of an html
+	        tag, and in fact unicode characters *should* be allowed.
+	    */
+	    function createReplacements() {
+	        return [
+	            // replace two bogus tags that begin pastes from google docs
+	            [new RegExp(/<[^>]*docs-internal-guid[^>]*>/gi), ''],
+	            [new RegExp(/<\/b>(<br[^>]*>)?$/gi), ''],
+
+	             // un-html spaces and newlines inserted by OS X
+	            [new RegExp(/<span class="Apple-converted-space">\s+<\/span>/g), ' '],
+	            [new RegExp(/<br class="Apple-interchange-newline">/g), '<br>'],
+
+	            // replace google docs italics+bold with a span to be replaced once the html is inserted
+	            [new RegExp(/<span[^>]*(font-style:italic;font-weight:bold|font-weight:bold;font-style:italic)[^>]*>/gi), '<span class="replace-with italic bold">'],
+
+	            // replace google docs italics with a span to be replaced once the html is inserted
+	            [new RegExp(/<span[^>]*font-style:italic[^>]*>/gi), '<span class="replace-with italic">'],
+
+	            //[replace google docs bolds with a span to be replaced once the html is inserted
+	            [new RegExp(/<span[^>]*font-weight:bold[^>]*>/gi), '<span class="replace-with bold">'],
+
+	             // replace manually entered b/i/a tags with real ones
+	            [new RegExp(/&lt;(\/?)(i|b|a)&gt;/gi), '<$1$2>'],
+
+	             // replace manually a tags with real ones, converting smart-quotes from google docs
+	            [new RegExp(/&lt;a(?:(?!href).)+href=(?:&quot;|&rdquo;|&ldquo;|"|“|”)(((?!&quot;|&rdquo;|&ldquo;|"|“|”).)*)(?:&quot;|&rdquo;|&ldquo;|"|“|”)(?:(?!&gt;).)*&gt;/gi), '<a href="$1">'],
+
+	            // Newlines between paragraphs in html have no syntactic value,
+	            // but then have a tendency to accidentally become additional paragraphs down the line
+	            [new RegExp(/<\/p>\n+/gi), '</p>'],
+	            [new RegExp(/\n+<p/gi), '<p'],
+
+	            // Microsoft Word makes these odd tags, like <o:p></o:p>
+	            [new RegExp(/<\/?o:[a-z]*>/gi), ''],
+
+	            // cleanup comments added by Chrome when pasting html
+	            ['<!--EndFragment-->', ''],
+	            ['<!--StartFragment-->', '']
+	        ];
+	    }
+	    /*jslint regexp: false*/
+
+	    var PasteHandler = MediumEditor.Extension.extend({
+	        /* Paste Options */
+
+	        /* forcePlainText: [boolean]
+	         * Forces pasting as plain text.
+	         */
+	        forcePlainText: true,
+
+	        /* cleanPastedHTML: [boolean]
+	         * cleans pasted content from different sources, like google docs etc.
+	         */
+	        cleanPastedHTML: false,
+
+	        /* cleanReplacements: [Array]
+	         * custom pairs (2 element arrays) of RegExp and replacement text to use during paste when
+	         * __forcePlainText__ or __cleanPastedHTML__ are `true` OR when calling `cleanPaste(text)` helper method.
+	         */
+	        cleanReplacements: [],
+
+	        /* cleanAttrs:: [Array]
+	         * list of element attributes to remove during paste when __cleanPastedHTML__ is `true` or when
+	         * calling `cleanPaste(text)` or `pasteHTML(html, options)` helper methods.
+	         */
+	        cleanAttrs: ['class', 'style', 'dir'],
+
+	        /* cleanTags: [Array]
+	         * list of element tag names to remove during paste when __cleanPastedHTML__ is `true` or when
+	         * calling `cleanPaste(text)` or `pasteHTML(html, options)` helper methods.
+	         */
+	        cleanTags: ['meta'],
+
+	        init: function () {
+	            MediumEditor.Extension.prototype.init.apply(this, arguments);
+
+	            if (this.forcePlainText || this.cleanPastedHTML) {
+	                this.subscribe('editablePaste', this.handlePaste.bind(this));
+	            }
+	        },
+
+	        handlePaste: function (event, element) {
+	            var paragraphs,
+	                html = '',
+	                p,
+	                dataFormatHTML = 'text/html',
+	                dataFormatPlain = 'text/plain',
+	                pastedHTML,
+	                pastedPlain;
+
+	            if (this.window.clipboardData && event.clipboardData === undefined) {
+	                event.clipboardData = this.window.clipboardData;
+	                // If window.clipboardData exists, but event.clipboardData doesn't exist,
+	                // we're probably in IE. IE only has two possibilities for clipboard
+	                // data format: 'Text' and 'URL'.
+	                //
+	                // Of the two, we want 'Text':
+	                dataFormatHTML = 'Text';
+	                dataFormatPlain = 'Text';
+	            }
+
+	            if (event.clipboardData &&
+	                    event.clipboardData.getData &&
+	                    !event.defaultPrevented) {
+	                event.preventDefault();
+
+	                pastedHTML = event.clipboardData.getData(dataFormatHTML);
+	                pastedPlain = event.clipboardData.getData(dataFormatPlain);
+
+	                if (this.cleanPastedHTML && pastedHTML) {
+	                    return this.cleanPaste(pastedHTML);
+	                }
+
+	                if (!(this.getEditorOption('disableReturn') || element.getAttribute('data-disable-return'))) {
+	                    paragraphs = pastedPlain.split(/[\r\n]+/g);
+	                    // If there are no \r\n in data, don't wrap in <p>
+	                    if (paragraphs.length > 1) {
+	                        for (p = 0; p < paragraphs.length; p += 1) {
+	                            if (paragraphs[p] !== '') {
+	                                html += '<p>' + MediumEditor.util.htmlEntities(paragraphs[p]) + '</p>';
+	                            }
+	                        }
+	                    } else {
+	                        html = MediumEditor.util.htmlEntities(paragraphs[0]);
+	                    }
+	                } else {
+	                    html = MediumEditor.util.htmlEntities(pastedPlain);
+	                }
+	                MediumEditor.util.insertHTMLCommand(this.document, html);
+	            }
+	        },
+
+	        cleanPaste: function (text) {
+	            var i, elList, tmp, workEl,
+	                multiline = /<p|<br|<div/.test(text),
+	                replacements = createReplacements().concat(this.cleanReplacements || []);
+
+	            for (i = 0; i < replacements.length; i += 1) {
+	                text = text.replace(replacements[i][0], replacements[i][1]);
+	            }
+
+	            if (!multiline) {
+	                return this.pasteHTML(text);
+	            }
+
+	            // create a temporary div to cleanup block elements
+	            tmp = this.document.createElement('div');
+
+	            // double br's aren't converted to p tags, but we want paragraphs.
+	            tmp.innerHTML = '<p>' + text.split('<br><br>').join('</p><p>') + '</p>';
+
+	            // block element cleanup
+	            elList = tmp.querySelectorAll('a,p,div,br');
+	            for (i = 0; i < elList.length; i += 1) {
+	                workEl = elList[i];
+
+	                // Microsoft Word replaces some spaces with newlines.
+	                // While newlines between block elements are meaningless, newlines within
+	                // elements are sometimes actually spaces.
+	                workEl.innerHTML = workEl.innerHTML.replace(/\n/gi, ' ');
+
+	                switch (workEl.nodeName.toLowerCase()) {
+	                    case 'p':
+	                    case 'div':
+	                        this.filterCommonBlocks(workEl);
+	                        break;
+	                    case 'br':
+	                        this.filterLineBreak(workEl);
+	                        break;
+	                }
+	            }
+
+	            this.pasteHTML(tmp.innerHTML);
+	        },
+
+	        pasteHTML: function (html, options) {
+	            options = MediumEditor.util.defaults({}, options, {
+	                cleanAttrs: this.cleanAttrs,
+	                cleanTags: this.cleanTags
+	            });
+
+	            var elList, workEl, i, fragmentBody, pasteBlock = this.document.createDocumentFragment();
+
+	            pasteBlock.appendChild(this.document.createElement('body'));
+
+	            fragmentBody = pasteBlock.querySelector('body');
+	            fragmentBody.innerHTML = html;
+
+	            this.cleanupSpans(fragmentBody);
+
+	            elList = fragmentBody.querySelectorAll('*');
+	            for (i = 0; i < elList.length; i += 1) {
+	                workEl = elList[i];
+
+	                if ('a' === workEl.nodeName.toLowerCase() && this.getEditorOption('targetBlank')) {
+	                    MediumEditor.util.setTargetBlank(workEl);
+	                }
+
+	                MediumEditor.util.cleanupAttrs(workEl, options.cleanAttrs);
+	                MediumEditor.util.cleanupTags(workEl, options.cleanTags);
+	            }
+
+	            MediumEditor.util.insertHTMLCommand(this.document, fragmentBody.innerHTML.replace(/&nbsp;/g, ' '));
+	        },
+
+	        isCommonBlock: function (el) {
+	            return (el && (el.nodeName.toLowerCase() === 'p' || el.nodeName.toLowerCase() === 'div'));
+	        },
+
+	        filterCommonBlocks: function (el) {
+	            if (/^\s*$/.test(el.textContent) && el.parentNode) {
+	                el.parentNode.removeChild(el);
+	            }
+	        },
+
+	        filterLineBreak: function (el) {
+	            if (this.isCommonBlock(el.previousElementSibling)) {
+	                // remove stray br's following common block elements
+	                this.removeWithParent(el);
+	            } else if (this.isCommonBlock(el.parentNode) && (el.parentNode.firstChild === el || el.parentNode.lastChild === el)) {
+	                // remove br's just inside open or close tags of a div/p
+	                this.removeWithParent(el);
+	            } else if (el.parentNode && el.parentNode.childElementCount === 1 && el.parentNode.textContent === '') {
+	                // and br's that are the only child of elements other than div/p
+	                this.removeWithParent(el);
+	            }
+	        },
+
+	        // remove an element, including its parent, if it is the only element within its parent
+	        removeWithParent: function (el) {
+	            if (el && el.parentNode) {
+	                if (el.parentNode.parentNode && el.parentNode.childElementCount === 1) {
+	                    el.parentNode.parentNode.removeChild(el.parentNode);
+	                } else {
+	                    el.parentNode.removeChild(el);
+	                }
+	            }
+	        },
+
+	        cleanupSpans: function (containerEl) {
+	            var i,
+	                el,
+	                newEl,
+	                spans = containerEl.querySelectorAll('.replace-with'),
+	                isCEF = function (el) {
+	                    return (el && el.nodeName !== '#text' && el.getAttribute('contenteditable') === 'false');
+	                };
+
+	            for (i = 0; i < spans.length; i += 1) {
+	                el = spans[i];
+	                newEl = this.document.createElement(el.classList.contains('bold') ? 'b' : 'i');
+
+	                if (el.classList.contains('bold') && el.classList.contains('italic')) {
+	                    // add an i tag as well if this has both italics and bold
+	                    newEl.innerHTML = '<i>' + el.innerHTML + '</i>';
+	                } else {
+	                    newEl.innerHTML = el.innerHTML;
+	                }
+	                el.parentNode.replaceChild(newEl, el);
+	            }
+
+	            spans = containerEl.querySelectorAll('span');
+	            for (i = 0; i < spans.length; i += 1) {
+	                el = spans[i];
+
+	                // bail if span is in contenteditable = false
+	                if (MediumEditor.util.traverseUp(el, isCEF)) {
+	                    return false;
+	                }
+
+	                // remove empty spans, replace others with their contents
+	                MediumEditor.util.unwrap(el, this.document);
+	            }
+	        }
+	    });
+
+	    MediumEditor.extensions.paste = PasteHandler;
+	}());
+
+	(function () {
+	    'use strict';
+
+	    var Placeholder = MediumEditor.Extension.extend({
+	        name: 'placeholder',
+
+	        /* Placeholder Options */
+
+	        /* text: [string]
+	         * Text to display in the placeholder
+	         */
+	        text: 'Type your text',
+
+	        /* hideOnClick: [boolean]
+	         * Should we hide the placeholder on click (true) or when user starts typing (false)
+	         */
+	        hideOnClick: true,
+
+	        init: function () {
+	            MediumEditor.Extension.prototype.init.apply(this, arguments);
+
+	            this.initPlaceholders();
+	            this.attachEventHandlers();
+	        },
+
+	        initPlaceholders: function () {
+	            this.getEditorElements().forEach(function (el) {
+	                if (!el.getAttribute('data-placeholder')) {
+	                    el.setAttribute('data-placeholder', this.text);
+	                }
+	                this.updatePlaceholder(el);
+	            }, this);
+	        },
+
+	        destroy: function () {
+	            this.getEditorElements().forEach(function (el) {
+	                if (el.getAttribute('data-placeholder') === this.text) {
+	                    el.removeAttribute('data-placeholder');
+	                }
+	            }, this);
+	        },
+
+	        showPlaceholder: function (el) {
+	            if (el) {
+	                el.classList.add('medium-editor-placeholder');
+	            }
+	        },
+
+	        hidePlaceholder: function (el) {
+	            if (el) {
+	                el.classList.remove('medium-editor-placeholder');
+	            }
+	        },
+
+	        updatePlaceholder: function (el, dontShow) {
+	            // If the element has content, hide the placeholder
+	            if (el.querySelector('img, blockquote, ul, ol') || (el.textContent.replace(/^\s+|\s+$/g, '') !== '')) {
+	                return this.hidePlaceholder(el);
+	            }
+
+	            if (!dontShow) {
+	                this.showPlaceholder(el);
+	            }
+	        },
+
+	        attachEventHandlers: function () {
+	            if (this.hideOnClick) {
+	                // For the 'hideOnClick' option, the placeholder should always be hidden on focus
+	                this.subscribe('focus', this.handleFocus.bind(this));
+	            }
+
+	            // If the editor has content, it should always hide the placeholder
+	            this.subscribe('editableInput', this.handleInput.bind(this));
+
+	            // When the editor loses focus, check if the placeholder should be visible
+	            this.subscribe('blur', this.handleBlur.bind(this));
+	        },
+
+	        handleInput: function (event, element) {
+	            // If the placeholder should be hidden on focus and the
+	            // element has focus, don't show the placeholder
+	            var dontShow = this.hideOnClick && (element === this.base.getFocusedElement());
+
+	            // Editor's content has changed, check if the placeholder should be hidden
+	            this.updatePlaceholder(element, dontShow);
+	        },
+
+	        handleFocus: function (event, element) {
+	            // Editor has focus, hide the placeholder
+	            this.hidePlaceholder(element);
+	        },
+
+	        handleBlur: function (event, element) {
+	            // Editor has lost focus, check if the placeholder should be shown
+	            this.updatePlaceholder(element);
+	        }
+	    });
+
+	    MediumEditor.extensions.placeholder = Placeholder;
+	}());
+
+	(function () {
+	    'use strict';
+
+	    var Toolbar = MediumEditor.Extension.extend({
+	        name: 'toolbar',
+
+	        /* Toolbar Options */
+
+	        /* align: ['left'|'center'|'right']
+	         * When the __static__ option is true, this aligns the static toolbar
+	         * relative to the medium-editor element.
+	         */
+	        align: 'center',
+
+	        /* allowMultiParagraphSelection: [boolean]
+	         * enables/disables whether the toolbar should be displayed when
+	         * selecting multiple paragraphs/block elements
+	         */
+	        allowMultiParagraphSelection: true,
+
+	        /* buttons: [Array]
+	         * the names of the set of buttons to display on the toolbar.
+	         */
+	        buttons: ['bold', 'italic', 'underline', 'anchor', 'h2', 'h3', 'quote'],
+
+	        /* diffLeft: [Number]
+	         * value in pixels to be added to the X axis positioning of the toolbar.
+	         */
+	        diffLeft: 0,
+
+	        /* diffTop: [Number]
+	         * value in pixels to be added to the Y axis positioning of the toolbar.
+	         */
+	        diffTop: -10,
+
+	        /* firstButtonClass: [string]
+	         * CSS class added to the first button in the toolbar.
+	         */
+	        firstButtonClass: 'medium-editor-button-first',
+
+	        /* lastButtonClass: [string]
+	         * CSS class added to the last button in the toolbar.
+	         */
+	        lastButtonClass: 'medium-editor-button-last',
+
+	        /* standardizeSelectionStart: [boolean]
+	         * enables/disables standardizing how the beginning of a range is decided
+	         * between browsers whenever the selected text is analyzed for updating toolbar buttons status.
+	         */
+	        standardizeSelectionStart: false,
+
+	        /* static: [boolean]
+	         * enable/disable the toolbar always displaying in the same location
+	         * relative to the medium-editor element.
+	         */
+	        static: false,
+
+	        /* sticky: [boolean]
+	         * When the __static__ option is true, this enables/disables the toolbar
+	         * "sticking" to the viewport and staying visible on the screen while
+	         * the page scrolls.
+	         */
+	        sticky: false,
+
+	        /* updateOnEmptySelection: [boolean]
+	         * When the __static__ option is true, this enables/disables updating
+	         * the state of the toolbar buttons even when the selection is collapsed
+	         * (there is no selection, just a cursor).
+	         */
+	        updateOnEmptySelection: false,
+
+	        /* relativeContainer: [node]
+	         * appending the toolbar to a given node instead of body
+	         */
+	        relativeContainer: null,
+
+	        init: function () {
+	            MediumEditor.Extension.prototype.init.apply(this, arguments);
+
+	            this.initThrottledMethods();
+
+	            if (!this.relativeContainer) {
+	                this.getEditorOption('elementsContainer').appendChild(this.getToolbarElement());
+	            } else {
+	                this.relativeContainer.appendChild(this.getToolbarElement());
+	            }
+	        },
+
+	        // Helper method to execute method for every extension, but ignoring the toolbar extension
+	        forEachExtension: function (iterator, context) {
+	            return this.base.extensions.forEach(function (command) {
+	                if (command === this) {
+	                    return;
+	                }
+	                return iterator.apply(context || this, arguments);
+	            }, this);
+	        },
+
+	        // Toolbar creation/deletion
+
+	        createToolbar: function () {
+	            var toolbar = this.document.createElement('div');
+
+	            toolbar.id = 'medium-editor-toolbar-' + this.getEditorId();
+	            toolbar.className = 'medium-editor-toolbar';
+
+	            if (this.static) {
+	                toolbar.className += ' static-toolbar';
+	            } else if (this.relativeContainer) {
+	                toolbar.className += ' medium-editor-relative-toolbar';
+	            } else {
+	                toolbar.className += ' medium-editor-stalker-toolbar';
+	            }
+
+	            toolbar.appendChild(this.createToolbarButtons());
+
+	            // Add any forms that extensions may have
+	            this.forEachExtension(function (extension) {
+	                if (extension.hasForm) {
+	                    toolbar.appendChild(extension.getForm());
+	                }
+	            });
+
+	            this.attachEventHandlers();
+
+	            return toolbar;
+	        },
+
+	        createToolbarButtons: function () {
+	            var ul = this.document.createElement('ul'),
+	                li,
+	                btn,
+	                buttons,
+	                extension,
+	                buttonName,
+	                buttonOpts;
+
+	            ul.id = 'medium-editor-toolbar-actions' + this.getEditorId();
+	            ul.className = 'medium-editor-toolbar-actions';
+	            ul.style.display = 'block';
+
+	            this.buttons.forEach(function (button) {
+	                if (typeof button === 'string') {
+	                    buttonName = button;
+	                    buttonOpts = null;
+	                } else {
+	                    buttonName = button.name;
+	                    buttonOpts = button;
+	                }
+
+	                // If the button already exists as an extension, it'll be returned
+	                // othwerise it'll create the default built-in button
+	                extension = this.base.addBuiltInExtension(buttonName, buttonOpts);
+
+	                if (extension && typeof extension.getButton === 'function') {
+	                    btn = extension.getButton(this.base);
+	                    li = this.document.createElement('li');
+	                    if (MediumEditor.util.isElement(btn)) {
+	                        li.appendChild(btn);
+	                    } else {
+	                        li.innerHTML = btn;
+	                    }
+	                    ul.appendChild(li);
+	                }
+	            }, this);
+
+	            buttons = ul.querySelectorAll('button');
+	            if (buttons.length > 0) {
+	                buttons[0].classList.add(this.firstButtonClass);
+	                buttons[buttons.length - 1].classList.add(this.lastButtonClass);
+	            }
+
+	            return ul;
+	        },
+
+	        destroy: function () {
+	            if (this.toolbar) {
+	                if (this.toolbar.parentNode) {
+	                    this.toolbar.parentNode.removeChild(this.toolbar);
+	                }
+	                delete this.toolbar;
+	            }
+	        },
+
+	        // Toolbar accessors
+
+	        getToolbarElement: function () {
+	            if (!this.toolbar) {
+	                this.toolbar = this.createToolbar();
+	            }
+
+	            return this.toolbar;
+	        },
+
+	        getToolbarActionsElement: function () {
+	            return this.getToolbarElement().querySelector('.medium-editor-toolbar-actions');
+	        },
+
+	        // Toolbar event handlers
+
+	        initThrottledMethods: function () {
+	            // throttledPositionToolbar is throttled because:
+	            // - It will be called when the browser is resizing, which can fire many times very quickly
+	            // - For some event (like resize) a slight lag in UI responsiveness is OK and provides performance benefits
+	            this.throttledPositionToolbar = MediumEditor.util.throttle(function () {
+	                if (this.base.isActive) {
+	                    this.positionToolbarIfShown();
+	                }
+	            }.bind(this));
+	        },
+
+	        attachEventHandlers: function () {
+	            // MediumEditor custom events for when user beings and ends interaction with a contenteditable and its elements
+	            this.subscribe('blur', this.handleBlur.bind(this));
+	            this.subscribe('focus', this.handleFocus.bind(this));
+
+	            // Updating the state of the toolbar as things change
+	            this.subscribe('editableClick', this.handleEditableClick.bind(this));
+	            this.subscribe('editableKeyup', this.handleEditableKeyup.bind(this));
+
+	            // Handle mouseup on document for updating the selection in the toolbar
+	            this.on(this.document.documentElement, 'mouseup', this.handleDocumentMouseup.bind(this));
+
+	            // Add a scroll event for sticky toolbar
+	            if (this.static && this.sticky) {
+	                // On scroll (capture), re-position the toolbar
+	                this.on(this.window, 'scroll', this.handleWindowScroll.bind(this), true);
+	            }
+
+	            // On resize, re-position the toolbar
+	            this.on(this.window, 'resize', this.handleWindowResize.bind(this));
+	        },
+
+	        handleWindowScroll: function () {
+	            this.positionToolbarIfShown();
+	        },
+
+	        handleWindowResize: function () {
+	            this.throttledPositionToolbar();
+	        },
+
+	        handleDocumentMouseup: function (event) {
+	            // Do not trigger checkState when mouseup fires over the toolbar
+	            if (event &&
+	                    event.target &&
+	                    MediumEditor.util.isDescendant(this.getToolbarElement(), event.target)) {
+	                return false;
+	            }
+	            this.checkState();
+	        },
+
+	        handleEditableClick: function () {
+	            // Delay the call to checkState to handle bug where selection is empty
+	            // immediately after clicking inside a pre-existing selection
+	            setTimeout(function () {
+	                this.checkState();
+	            }.bind(this), 0);
+	        },
+
+	        handleEditableKeyup: function () {
+	            this.checkState();
+	        },
+
+	        handleBlur: function () {
+	            // Kill any previously delayed calls to hide the toolbar
+	            clearTimeout(this.hideTimeout);
+
+	            // Blur may fire even if we have a selection, so we want to prevent any delayed showToolbar
+	            // calls from happening in this specific case
+	            clearTimeout(this.delayShowTimeout);
+
+	            // Delay the call to hideToolbar to handle bug with multiple editors on the page at once
+	            this.hideTimeout = setTimeout(function () {
+	                this.hideToolbar();
+	            }.bind(this), 1);
+	        },
+
+	        handleFocus: function () {
+	            this.checkState();
+	        },
+
+	        // Hiding/showing toolbar
+
+	        isDisplayed: function () {
+	            return this.getToolbarElement().classList.contains('medium-editor-toolbar-active');
+	        },
+
+	        showToolbar: function () {
+	            clearTimeout(this.hideTimeout);
+	            if (!this.isDisplayed()) {
+	                this.getToolbarElement().classList.add('medium-editor-toolbar-active');
+	                this.trigger('showToolbar', {}, this.base.getFocusedElement());
+	            }
+	        },
+
+	        hideToolbar: function () {
+	            if (this.isDisplayed()) {
+	                this.getToolbarElement().classList.remove('medium-editor-toolbar-active');
+	                this.trigger('hideToolbar', {}, this.base.getFocusedElement());
+	            }
+	        },
+
+	        isToolbarDefaultActionsDisplayed: function () {
+	            return this.getToolbarActionsElement().style.display === 'block';
+	        },
+
+	        hideToolbarDefaultActions: function () {
+	            if (this.isToolbarDefaultActionsDisplayed()) {
+	                this.getToolbarActionsElement().style.display = 'none';
+	            }
+	        },
+
+	        showToolbarDefaultActions: function () {
+	            this.hideExtensionForms();
+
+	            if (!this.isToolbarDefaultActionsDisplayed()) {
+	                this.getToolbarActionsElement().style.display = 'block';
+	            }
+
+	            // Using setTimeout + options.delay because:
+	            // We will actually be displaying the toolbar, which should be controlled by options.delay
+	            this.delayShowTimeout = this.base.delay(function () {
+	                this.showToolbar();
+	            }.bind(this));
+	        },
+
+	        hideExtensionForms: function () {
+	            // Hide all extension forms
+	            this.forEachExtension(function (extension) {
+	                if (extension.hasForm && extension.isDisplayed()) {
+	                    extension.hideForm();
+	                }
+	            });
+	        },
+
+	        // Responding to changes in user selection
+
+	        // Checks for existance of multiple block elements in the current selection
+	        multipleBlockElementsSelected: function () {
+	            var regexEmptyHTMLTags = /<[^\/>][^>]*><\/[^>]+>/gim, // http://stackoverflow.com/questions/3129738/remove-empty-tags-using-regex
+	                regexBlockElements = new RegExp('<(' + MediumEditor.util.blockContainerElementNames.join('|') + ')[^>]*>', 'g'),
+	                selectionHTML = MediumEditor.selection.getSelectionHtml(this.document).replace(regexEmptyHTMLTags, ''), // Filter out empty blocks from selection
+	                hasMultiParagraphs = selectionHTML.match(regexBlockElements); // Find how many block elements are within the html
+
+	            return !!hasMultiParagraphs && hasMultiParagraphs.length > 1;
+	        },
+
+	        modifySelection: function () {
+	            var selection = this.window.getSelection(),
+	                selectionRange = selection.getRangeAt(0);
+
+	            /*
+	            * In firefox, there are cases (ie doubleclick of a word) where the selectionRange start
+	            * will be at the very end of an element.  In other browsers, the selectionRange start
+	            * would instead be at the very beginning of an element that actually has content.
+	            * example:
+	            *   <span>foo</span><span>bar</span>
+	            *
+	            * If the text 'bar' is selected, most browsers will have the selectionRange start at the beginning
+	            * of the 'bar' span.  However, there are cases where firefox will have the selectionRange start
+	            * at the end of the 'foo' span.  The contenteditable behavior will be ok, but if there are any
+	            * properties on the 'bar' span, they won't be reflected accurately in the toolbar
+	            * (ie 'Bold' button wouldn't be active)
+	            *
+	            * So, for cases where the selectionRange start is at the end of an element/node, find the next
+	            * adjacent text node that actually has content in it, and move the selectionRange start there.
+	            */
+	            if (this.standardizeSelectionStart &&
+	                    selectionRange.startContainer.nodeValue &&
+	                    (selectionRange.startOffset === selectionRange.startContainer.nodeValue.length)) {
+	                var adjacentNode = MediumEditor.util.findAdjacentTextNodeWithContent(MediumEditor.selection.getSelectionElement(this.window), selectionRange.startContainer, this.document);
+	                if (adjacentNode) {
+	                    var offset = 0;
+	                    while (adjacentNode.nodeValue.substr(offset, 1).trim().length === 0) {
+	                        offset = offset + 1;
+	                    }
+	                    selectionRange = MediumEditor.selection.select(this.document, adjacentNode, offset,
+	                        selectionRange.endContainer, selectionRange.endOffset);
+	                }
+	            }
+	        },
+
+	        checkState: function () {
+	            if (this.base.preventSelectionUpdates) {
+	                return;
+	            }
+
+	            // If no editable has focus OR selection is inside contenteditable = false
+	            // hide toolbar
+	            if (!this.base.getFocusedElement() ||
+	                    MediumEditor.selection.selectionInContentEditableFalse(this.window)) {
+	                return this.hideToolbar();
+	            }
+
+	            // If there's no selection element, selection element doesn't belong to this editor
+	            // or toolbar is disabled for this selection element
+	            // hide toolbar
+	            var selectionElement = MediumEditor.selection.getSelectionElement(this.window);
+	            if (!selectionElement ||
+	                    this.getEditorElements().indexOf(selectionElement) === -1 ||
+	                    selectionElement.getAttribute('data-disable-toolbar')) {
+	                return this.hideToolbar();
+	            }
+
+	            // Now we know there's a focused editable with a selection
+
+	            // If the updateOnEmptySelection option is true, show the toolbar
+	            if (this.updateOnEmptySelection && this.static) {
+	                return this.showAndUpdateToolbar();
+	            }
+
+	            // If we don't have a 'valid' selection -> hide toolbar
+	            if (!MediumEditor.selection.selectionContainsContent(this.document) ||
+	                (this.allowMultiParagraphSelection === false && this.multipleBlockElementsSelected())) {
+	                return this.hideToolbar();
+	            }
+
+	            this.showAndUpdateToolbar();
+	        },
+
+	        // Updating the toolbar
+
+	        showAndUpdateToolbar: function () {
+	            this.modifySelection();
+	            this.setToolbarButtonStates();
+	            this.trigger('positionToolbar', {}, this.base.getFocusedElement());
+	            this.showToolbarDefaultActions();
+	            this.setToolbarPosition();
+	        },
+
+	        setToolbarButtonStates: function () {
+	            this.forEachExtension(function (extension) {
+	                if (typeof extension.isActive === 'function' &&
+	                    typeof extension.setInactive === 'function') {
+	                    extension.setInactive();
+	                }
+	            });
+
+	            this.checkActiveButtons();
+	        },
+
+	        checkActiveButtons: function () {
+	            var manualStateChecks = [],
+	                queryState = null,
+	                selectionRange = MediumEditor.selection.getSelectionRange(this.document),
+	                parentNode,
+	                updateExtensionState = function (extension) {
+	                    if (typeof extension.checkState === 'function') {
+	                        extension.checkState(parentNode);
+	                    } else if (typeof extension.isActive === 'function' &&
+	                               typeof extension.isAlreadyApplied === 'function' &&
+	                               typeof extension.setActive === 'function') {
+	                        if (!extension.isActive() && extension.isAlreadyApplied(parentNode)) {
+	                            extension.setActive();
+	                        }
+	                    }
+	                };
+
+	            if (!selectionRange) {
+	                return;
+	            }
+
+	            // Loop through all extensions
+	            this.forEachExtension(function (extension) {
+	                // For those extensions where we can use document.queryCommandState(), do so
+	                if (typeof extension.queryCommandState === 'function') {
+	                    queryState = extension.queryCommandState();
+	                    // If queryCommandState returns a valid value, we can trust the browser
+	                    // and don't need to do our manual checks
+	                    if (queryState !== null) {
+	                        if (queryState && typeof extension.setActive === 'function') {
+	                            extension.setActive();
+	                        }
+	                        return;
+	                    }
+	                }
+	                // We can't use queryCommandState for this extension, so add to manualStateChecks
+	                manualStateChecks.push(extension);
+	            });
+
+	            parentNode = MediumEditor.selection.getSelectedParentElement(selectionRange);
+
+	            // Make sure the selection parent isn't outside of the contenteditable
+	            if (!this.getEditorElements().some(function (element) {
+	                    return MediumEditor.util.isDescendant(element, parentNode, true);
+	                })) {
+	                return;
+	            }
+
+	            // Climb up the DOM and do manual checks for whether a certain extension is currently enabled for this node
+	            while (parentNode) {
+	                manualStateChecks.forEach(updateExtensionState);
+
+	                // we can abort the search upwards if we leave the contentEditable element
+	                if (MediumEditor.util.isMediumEditorElement(parentNode)) {
+	                    break;
+	                }
+	                parentNode = parentNode.parentNode;
+	            }
+	        },
+
+	        // Positioning toolbar
+
+	        positionToolbarIfShown: function () {
+	            if (this.isDisplayed()) {
+	                this.setToolbarPosition();
+	            }
+	        },
+
+	        setToolbarPosition: function () {
+	            var container = this.base.getFocusedElement(),
+	                selection = this.window.getSelection(),
+	                anchorPreview;
+
+	            // If there isn't a valid selection, bail
+	            if (!container) {
+	                return this;
+	            }
+
+	            if (this.static && !this.relativeContainer) {
+	                this.showToolbar();
+	                this.positionStaticToolbar(container);
+	            } else if (!selection.isCollapsed) {
+	                this.showToolbar();
+
+	                // we don't need any absolute positioning if relativeContainer is set
+	                if (!this.relativeContainer) {
+	                    this.positionToolbar(selection);
+	                }
+	            }
+
+	            anchorPreview = this.base.getExtensionByName('anchor-preview');
+
+	            if (anchorPreview && typeof anchorPreview.hidePreview === 'function') {
+	                anchorPreview.hidePreview();
+	            }
+	        },
+
+	        positionStaticToolbar: function (container) {
+	            // position the toolbar at left 0, so we can get the real width of the toolbar
+	            this.getToolbarElement().style.left = '0';
+
+	            // document.documentElement for IE 9
+	            var scrollTop = (this.document.documentElement && this.document.documentElement.scrollTop) || this.document.body.scrollTop,
+	                windowWidth = this.window.innerWidth,
+	                toolbarElement = this.getToolbarElement(),
+	                containerRect = container.getBoundingClientRect(),
+	                containerTop = containerRect.top + scrollTop,
+	                containerCenter = (containerRect.left + (containerRect.width / 2)),
+	                toolbarHeight = toolbarElement.offsetHeight,
+	                toolbarWidth = toolbarElement.offsetWidth,
+	                halfOffsetWidth = toolbarWidth / 2,
+	                targetLeft;
+
+	            if (this.sticky) {
+	                // If it's beyond the height of the editor, position it at the bottom of the editor
+	                if (scrollTop > (containerTop + container.offsetHeight - toolbarHeight)) {
+	                    toolbarElement.style.top = (containerTop + container.offsetHeight - toolbarHeight) + 'px';
+	                    toolbarElement.classList.remove('medium-editor-sticky-toolbar');
+
+	                // Stick the toolbar to the top of the window
+	                } else if (scrollTop > (containerTop - toolbarHeight)) {
+	                    toolbarElement.classList.add('medium-editor-sticky-toolbar');
+	                    toolbarElement.style.top = '0px';
+
+	                // Normal static toolbar position
+	                } else {
+	                    toolbarElement.classList.remove('medium-editor-sticky-toolbar');
+	                    toolbarElement.style.top = containerTop - toolbarHeight + 'px';
+	                }
+	            } else {
+	                toolbarElement.style.top = containerTop - toolbarHeight + 'px';
+	            }
+
+	            switch (this.align) {
+	                case 'left':
+	                    targetLeft = containerRect.left;
+	                    break;
+
+	                case 'right':
+	                    targetLeft = containerRect.right - toolbarWidth;
+	                    break;
+
+	                case 'center':
+	                    targetLeft = containerCenter - halfOffsetWidth;
+	                    break;
+	            }
+
+	            if (targetLeft < 0) {
+	                targetLeft = 0;
+	            } else if ((targetLeft + toolbarWidth) > windowWidth) {
+	                targetLeft = (windowWidth - Math.ceil(toolbarWidth) - 1);
+	            }
+
+	            toolbarElement.style.left = targetLeft + 'px';
+	        },
+
+	        positionToolbar: function (selection) {
+	            // position the toolbar at left 0, so we can get the real width of the toolbar
+	            this.getToolbarElement().style.left = '0';
+
+	            var range = selection.getRangeAt(0),
+	                boundary = range.getBoundingClientRect();
+
+	            // Handle selections with just images
+	            if (!boundary || ((boundary.height === 0 && boundary.width === 0) && range.startContainer === range.endContainer)) {
+	                // If there's a nested image, use that for the bounding rectangle
+	                if (range.startContainer.nodeType === 1 && range.startContainer.querySelector('img')) {
+	                    boundary = range.startContainer.querySelector('img').getBoundingClientRect();
+	                } else {
+	                    boundary = range.startContainer.getBoundingClientRect();
+	                }
+	            }
+
+	            var windowWidth = this.window.innerWidth,
+	                middleBoundary = (boundary.left + boundary.right) / 2,
+	                toolbarElement = this.getToolbarElement(),
+	                toolbarHeight = toolbarElement.offsetHeight,
+	                toolbarWidth = toolbarElement.offsetWidth,
+	                halfOffsetWidth = toolbarWidth / 2,
+	                buttonHeight = 50,
+	                defaultLeft = this.diffLeft - halfOffsetWidth;
+
+	            if (boundary.top < buttonHeight) {
+	                toolbarElement.classList.add('medium-toolbar-arrow-over');
+	                toolbarElement.classList.remove('medium-toolbar-arrow-under');
+	                toolbarElement.style.top = buttonHeight + boundary.bottom - this.diffTop + this.window.pageYOffset - toolbarHeight + 'px';
+	            } else {
+	                toolbarElement.classList.add('medium-toolbar-arrow-under');
+	                toolbarElement.classList.remove('medium-toolbar-arrow-over');
+	                toolbarElement.style.top = boundary.top + this.diffTop + this.window.pageYOffset - toolbarHeight + 'px';
+	            }
+
+	            if (middleBoundary < halfOffsetWidth) {
+	                toolbarElement.style.left = defaultLeft + halfOffsetWidth + 'px';
+	            } else if ((windowWidth - middleBoundary) < halfOffsetWidth) {
+	                toolbarElement.style.left = windowWidth + defaultLeft - halfOffsetWidth + 'px';
+	            } else {
+	                toolbarElement.style.left = defaultLeft + middleBoundary + 'px';
+	            }
+	        }
+	    });
+
+	    MediumEditor.extensions.toolbar = Toolbar;
+	}());
+
+	(function () {
+	    'use strict';
+
+	    var ImageDragging = MediumEditor.Extension.extend({
+	        init: function () {
+	            MediumEditor.Extension.prototype.init.apply(this, arguments);
+
+	            this.subscribe('editableDrag', this.handleDrag.bind(this));
+	            this.subscribe('editableDrop', this.handleDrop.bind(this));
+	        },
+
+	        handleDrag: function (event) {
+	            var className = 'medium-editor-dragover';
+	            event.preventDefault();
+	            event.dataTransfer.dropEffect = 'copy';
+
+	            if (event.type === 'dragover') {
+	                event.target.classList.add(className);
+	            } else if (event.type === 'dragleave') {
+	                event.target.classList.remove(className);
+	            }
+	        },
+
+	        handleDrop: function (event) {
+	            var className = 'medium-editor-dragover',
+	                files;
+	            event.preventDefault();
+	            event.stopPropagation();
+
+	            // IE9 does not support the File API, so prevent file from opening in a new window
+	            // but also don't try to actually get the file
+	            if (event.dataTransfer.files) {
+	                files = Array.prototype.slice.call(event.dataTransfer.files, 0);
+	                files.some(function (file) {
+	                    if (file.type.match('image')) {
+	                        var fileReader, id;
+	                        fileReader = new FileReader();
+	                        fileReader.readAsDataURL(file);
+
+	                        id = 'medium-img-' + (+new Date());
+	                        MediumEditor.util.insertHTMLCommand(this.document, '<img class="medium-editor-image-loading" id="' + id + '" />');
+
+	                        fileReader.onload = function () {
+	                            var img = this.document.getElementById(id);
+	                            if (img) {
+	                                img.removeAttribute('id');
+	                                img.removeAttribute('class');
+	                                img.src = fileReader.result;
+	                            }
+	                        }.bind(this);
+	                    }
+	                }.bind(this));
+	            }
+	            event.target.classList.remove(className);
+	        }
+	    });
+
+	    MediumEditor.extensions.imageDragging = ImageDragging;
+	}());
+
+	(function () {
+	    'use strict';
+
+	    // Event handlers that shouldn't be exposed externally
+
+	    function handleDisableExtraSpaces(event) {
+	        var node = MediumEditor.selection.getSelectionStart(this.options.ownerDocument),
+	            textContent = node.textContent,
+	            caretPositions = MediumEditor.selection.getCaretOffsets(node);
+
+	        if ((textContent[caretPositions.left - 1] === undefined) || (textContent[caretPositions.left - 1].trim() === '')) {
+	            event.preventDefault();
+	        }
+	    }
+
+	    function handleDisabledEnterKeydown(event, element) {
+	        if (this.options.disableReturn || element.getAttribute('data-disable-return')) {
+	            event.preventDefault();
+	        } else if (this.options.disableDoubleReturn || element.getAttribute('data-disable-double-return')) {
+	            var node = MediumEditor.selection.getSelectionStart(this.options.ownerDocument);
+
+	            // if current text selection is empty OR previous sibling text is empty OR it is not a list
+	            if ((node && node.textContent.trim() === '' && node.nodeName.toLowerCase() !== 'li') ||
+	                (node.previousElementSibling && node.previousElementSibling.nodeName.toLowerCase() !== 'br' &&
+	                 node.previousElementSibling.textContent.trim() === '')) {
+	                event.preventDefault();
+	            }
+	        }
+	    }
+
+	    function handleTabKeydown(event) {
+	        // Override tab only for pre nodes
+	        var node = MediumEditor.selection.getSelectionStart(this.options.ownerDocument),
+	            tag = node && node.nodeName.toLowerCase();
+
+	        if (tag === 'pre') {
+	            event.preventDefault();
+	            MediumEditor.util.insertHTMLCommand(this.options.ownerDocument, '    ');
+	        }
+
+	        // Tab to indent list structures!
+	        if (MediumEditor.util.isListItem(node)) {
+	            event.preventDefault();
+
+	            // If Shift is down, outdent, otherwise indent
+	            if (event.shiftKey) {
+	                this.options.ownerDocument.execCommand('outdent', false, null);
+	            } else {
+	                this.options.ownerDocument.execCommand('indent', false, null);
+	            }
+	        }
+	    }
+
+	    function handleBlockDeleteKeydowns(event) {
+	        var p, node = MediumEditor.selection.getSelectionStart(this.options.ownerDocument),
+	            tagName = node.nodeName.toLowerCase(),
+	            isEmpty = /^(\s+|<br\/?>)?$/i,
+	            isHeader = /h\d/i;
+
+	        if (MediumEditor.util.isKey(event, [MediumEditor.util.keyCode.BACKSPACE, MediumEditor.util.keyCode.ENTER]) &&
+	                // has a preceeding sibling
+	                node.previousElementSibling &&
+	                // in a header
+	                isHeader.test(tagName) &&
+	                // at the very end of the block
+	                MediumEditor.selection.getCaretOffsets(node).left === 0) {
+	            if (MediumEditor.util.isKey(event, MediumEditor.util.keyCode.BACKSPACE) && isEmpty.test(node.previousElementSibling.innerHTML)) {
+	                // backspacing the begining of a header into an empty previous element will
+	                // change the tagName of the current node to prevent one
+	                // instead delete previous node and cancel the event.
+	                node.previousElementSibling.parentNode.removeChild(node.previousElementSibling);
+	                event.preventDefault();
+	            } else if (MediumEditor.util.isKey(event, MediumEditor.util.keyCode.ENTER)) {
+	                // hitting return in the begining of a header will create empty header elements before the current one
+	                // instead, make "<p><br></p>" element, which are what happens if you hit return in an empty paragraph
+	                p = this.options.ownerDocument.createElement('p');
+	                p.innerHTML = '<br>';
+	                node.previousElementSibling.parentNode.insertBefore(p, node);
+	                event.preventDefault();
+	            }
+	        } else if (MediumEditor.util.isKey(event, MediumEditor.util.keyCode.DELETE) &&
+	                    // between two sibling elements
+	                    node.nextElementSibling &&
+	                    node.previousElementSibling &&
+	                    // not in a header
+	                    !isHeader.test(tagName) &&
+	                    // in an empty tag
+	                    isEmpty.test(node.innerHTML) &&
+	                    // when the next tag *is* a header
+	                    isHeader.test(node.nextElementSibling.nodeName.toLowerCase())) {
+	            // hitting delete in an empty element preceding a header, ex:
+	            //  <p>[CURSOR]</p><h1>Header</h1>
+	            // Will cause the h1 to become a paragraph.
+	            // Instead, delete the paragraph node and move the cursor to the begining of the h1
+
+	            // remove node and move cursor to start of header
+	            MediumEditor.selection.moveCursor(this.options.ownerDocument, node.nextElementSibling);
+
+	            node.previousElementSibling.parentNode.removeChild(node);
+
+	            event.preventDefault();
+	        } else if (MediumEditor.util.isKey(event, MediumEditor.util.keyCode.BACKSPACE) &&
+	                tagName === 'li' &&
+	                // hitting backspace inside an empty li
+	                isEmpty.test(node.innerHTML) &&
+	                // is first element (no preceeding siblings)
+	                !node.previousElementSibling &&
+	                // parent also does not have a sibling
+	                !node.parentElement.previousElementSibling &&
+	                // is not the only li in a list
+	                node.nextElementSibling &&
+	                node.nextElementSibling.nodeName.toLowerCase() === 'li') {
+	            // backspacing in an empty first list element in the first list (with more elements) ex:
+	            //  <ul><li>[CURSOR]</li><li>List Item 2</li></ul>
+	            // will remove the first <li> but add some extra element before (varies based on browser)
+	            // Instead, this will:
+	            // 1) remove the list element
+	            // 2) create a paragraph before the list
+	            // 3) move the cursor into the paragraph
+
+	            // create a paragraph before the list
+	            p = this.options.ownerDocument.createElement('p');
+	            p.innerHTML = '<br>';
+	            node.parentElement.parentElement.insertBefore(p, node.parentElement);
+
+	            // move the cursor into the new paragraph
+	            MediumEditor.selection.moveCursor(this.options.ownerDocument, p);
+
+	            // remove the list element
+	            node.parentElement.removeChild(node);
+
+	            event.preventDefault();
+	        } else if (MediumEditor.util.isKey(event, MediumEditor.util.keyCode.BACKSPACE) &&
+	                (MediumEditor.util.getClosestTag(node, 'blockquote') !== false) &&
+	                MediumEditor.selection.getCaretOffsets(node).left === 0) {
+
+	            // when cursor is at the begining of the element and the element is <blockquote>
+	            // then pressing backspace key should change the <blockquote> to a <p> tag
+	            event.preventDefault();
+	            MediumEditor.util.execFormatBlock(this.options.ownerDocument, 'p');
+	        }
+	    }
+
+	    function handleKeyup(event) {
+	        var node = MediumEditor.selection.getSelectionStart(this.options.ownerDocument),
+	            tagName;
+
+	        if (!node) {
+	            return;
+	        }
+
+	        if (MediumEditor.util.isMediumEditorElement(node) && node.children.length === 0) {
+	            this.options.ownerDocument.execCommand('formatBlock', false, 'p');
+	        }
+
+	        if (MediumEditor.util.isKey(event, MediumEditor.util.keyCode.ENTER) && !MediumEditor.util.isListItem(node)) {
+	            tagName = node.nodeName.toLowerCase();
+	            // For anchor tags, unlink
+	            if (tagName === 'a') {
+	                this.options.ownerDocument.execCommand('unlink', false, null);
+	            } else if (!event.shiftKey && !event.ctrlKey) {
+	                // only format block if this is not a header tag
+	                if (!/h\d/.test(tagName)) {
+	                    this.options.ownerDocument.execCommand('formatBlock', false, 'p');
+	                }
+	            }
+	        }
+	    }
+
+	    // Internal helper methods which shouldn't be exposed externally
+
+	    function addToEditors(win) {
+	        if (!win._mediumEditors) {
+	            // To avoid breaking users who are assuming that the unique id on
+	            // medium-editor elements will start at 1, inserting a 'null' in the
+	            // array so the unique-id can always map to the index of the editor instance
+	            win._mediumEditors = [null];
+	        }
+
+	        // If this already has a unique id, re-use it
+	        if (!this.id) {
+	            this.id = win._mediumEditors.length;
+	        }
+
+	        win._mediumEditors[this.id] = this;
+	    }
+
+	    function removeFromEditors(win) {
+	        if (!win._mediumEditors || !win._mediumEditors[this.id]) {
+	            return;
+	        }
+
+	        /* Setting the instance to null in the array instead of deleting it allows:
+	         * 1) Each instance to preserve its own unique-id, even after being destroyed
+	         *    and initialized again
+	         * 2) The unique-id to always correspond to an index in the array of medium-editor
+	         *    instances. Thus, we will be able to look at a contenteditable, and determine
+	         *    which instance it belongs to, by indexing into the global array.
+	         */
+	        win._mediumEditors[this.id] = null;
+	    }
+
+	    function createElementsArray(selector) {
+	        if (!selector) {
+	            selector = [];
+	        }
+	        // If string, use as query selector
+	        if (typeof selector === 'string') {
+	            selector = this.options.ownerDocument.querySelectorAll(selector);
+	        }
+	        // If element, put into array
+	        if (MediumEditor.util.isElement(selector)) {
+	            selector = [selector];
+	        }
+	        // Convert NodeList (or other array like object) into an array
+	        var elements = Array.prototype.slice.apply(selector);
+
+	        // Loop through elements and convert textarea's into divs
+	        this.elements = [];
+	        elements.forEach(function (element, index) {
+	            if (element.nodeName.toLowerCase() === 'textarea') {
+	                this.elements.push(createContentEditable.call(this, element, index));
+	            } else {
+	                this.elements.push(element);
+	            }
+	        }, this);
+	    }
+
+	    function setExtensionDefaults(extension, defaults) {
+	        Object.keys(defaults).forEach(function (prop) {
+	            if (extension[prop] === undefined) {
+	                extension[prop] = defaults[prop];
+	            }
+	        });
+	        return extension;
+	    }
+
+	    function initExtension(extension, name, instance) {
+	        var extensionDefaults = {
+	            'window': instance.options.contentWindow,
+	            'document': instance.options.ownerDocument,
+	            'base': instance
+	        };
+
+	        // Add default options into the extension
+	        extension = setExtensionDefaults(extension, extensionDefaults);
+
+	        // Call init on the extension
+	        if (typeof extension.init === 'function') {
+	            extension.init();
+	        }
+
+	        // Set extension name (if not already set)
+	        if (!extension.name) {
+	            extension.name = name;
+	        }
+	        return extension;
+	    }
+
+	    function isToolbarEnabled() {
+	        // If any of the elements don't have the toolbar disabled
+	        // We need a toolbar
+	        if (this.elements.every(function (element) {
+	                return !!element.getAttribute('data-disable-toolbar');
+	            })) {
+	            return false;
+	        }
+
+	        return this.options.toolbar !== false;
+	    }
+
+	    function isAnchorPreviewEnabled() {
+	        // If toolbar is disabled, don't add
+	        if (!isToolbarEnabled.call(this)) {
+	            return false;
+	        }
+
+	        return this.options.anchorPreview !== false;
+	    }
+
+	    function isPlaceholderEnabled() {
+	        return this.options.placeholder !== false;
+	    }
+
+	    function isAutoLinkEnabled() {
+	        return this.options.autoLink !== false;
+	    }
+
+	    function isImageDraggingEnabled() {
+	        return this.options.imageDragging !== false;
+	    }
+
+	    function isKeyboardCommandsEnabled() {
+	        return this.options.keyboardCommands !== false;
+	    }
+
+	    function shouldUseFileDraggingExtension() {
+	        // Since the file-dragging extension replaces the image-dragging extension,
+	        // we need to check if the user passed an overrided image-dragging extension.
+	        // If they have, to avoid breaking users, we won't use file-dragging extension.
+	        return !this.options.extensions['imageDragging'];
+	    }
+
+	    function createContentEditable(textarea, id) {
+	        var div = this.options.ownerDocument.createElement('div'),
+	            now = Date.now(),
+	            uniqueId = 'medium-editor-' + now + '-' + id,
+	            atts = textarea.attributes;
+
+	        // Some browsers can move pretty fast, since we're using a timestamp
+	        // to make a unique-id, ensure that the id is actually unique on the page
+	        while (this.options.ownerDocument.getElementById(uniqueId)) {
+	            now++;
+	            uniqueId = 'medium-editor-' + now + '-' + id;
+	        }
+
+	        div.className = textarea.className;
+	        div.id = uniqueId;
+	        div.innerHTML = textarea.value;
+
+	        textarea.setAttribute('medium-editor-textarea-id', uniqueId);
+
+	        // re-create all attributes from the textearea to the new created div
+	        for (var i = 0, n = atts.length; i < n; i++) {
+	            // do not re-create existing attributes
+	            if (!div.hasAttribute(atts[i].nodeName)) {
+	                div.setAttribute(atts[i].nodeName, atts[i].nodeValue);
+	            }
+	        }
+
+	        textarea.classList.add('medium-editor-hidden');
+	        textarea.parentNode.insertBefore(
+	            div,
+	            textarea
+	        );
+
+	        return div;
+	    }
+
+	    function initElements() {
+	        var isTextareaUsed = false;
+
+	        this.elements.forEach(function (element, index) {
+	            if (!this.options.disableEditing && !element.getAttribute('data-disable-editing')) {
+	                element.setAttribute('contentEditable', true);
+	                element.setAttribute('spellcheck', this.options.spellcheck);
+	            }
+	            element.setAttribute('data-medium-editor-element', true);
+	            element.setAttribute('role', 'textbox');
+	            element.setAttribute('aria-multiline', true);
+	            element.setAttribute('medium-editor-index', index);
+
+	            if (element.hasAttribute('medium-editor-textarea-id')) {
+	                isTextareaUsed = true;
+	            }
+	        }, this);
+
+	        if (isTextareaUsed) {
+	            this.subscribe('editableInput', function (event, editable) {
+	                var textarea = editable.parentNode.querySelector('textarea[medium-editor-textarea-id="' + editable.getAttribute('medium-editor-textarea-id') + '"]');
+	                if (textarea) {
+	                    textarea.value = this.serialize()[editable.id].value;
+	                }
+	            }.bind(this));
+	        }
+	    }
+
+	    function attachHandlers() {
+	        var i;
+
+	        // attach to tabs
+	        this.subscribe('editableKeydownTab', handleTabKeydown.bind(this));
+
+	        // Bind keys which can create or destroy a block element: backspace, delete, return
+	        this.subscribe('editableKeydownDelete', handleBlockDeleteKeydowns.bind(this));
+	        this.subscribe('editableKeydownEnter', handleBlockDeleteKeydowns.bind(this));
+
+	        // Bind double space event
+	        if (this.options.disableExtraSpaces) {
+	            this.subscribe('editableKeydownSpace', handleDisableExtraSpaces.bind(this));
+	        }
+
+	        // disabling return or double return
+	        if (this.options.disableReturn || this.options.disableDoubleReturn) {
+	            this.subscribe('editableKeydownEnter', handleDisabledEnterKeydown.bind(this));
+	        } else {
+	            for (i = 0; i < this.elements.length; i += 1) {
+	                if (this.elements[i].getAttribute('data-disable-return') || this.elements[i].getAttribute('data-disable-double-return')) {
+	                    this.subscribe('editableKeydownEnter', handleDisabledEnterKeydown.bind(this));
+	                    break;
+	                }
+	            }
+	        }
+
+	        // if we're not disabling return, add a handler to help handle cleanup
+	        // for certain cases when enter is pressed
+	        if (!this.options.disableReturn) {
+	            this.elements.forEach(function (element) {
+	                if (!element.getAttribute('data-disable-return')) {
+	                    this.on(element, 'keyup', handleKeyup.bind(this));
+	                }
+	            }, this);
+	        }
+	    }
+
+	    function initExtensions() {
+
+	        this.extensions = [];
+
+	        // Passed in extensions
+	        Object.keys(this.options.extensions).forEach(function (name) {
+	            // Always save the toolbar extension for last
+	            if (name !== 'toolbar' && this.options.extensions[name]) {
+	                this.extensions.push(initExtension(this.options.extensions[name], name, this));
+	            }
+	        }, this);
+
+	        // 4 Cases for imageDragging + fileDragging extensons:
+	        //
+	        // 1. ImageDragging ON + No Custom Image Dragging Extension:
+	        //    * Use fileDragging extension (default options)
+	        // 2. ImageDragging OFF + No Custom Image Dragging Extension:
+	        //    * Use fileDragging extension w/ images turned off
+	        // 3. ImageDragging ON + Custom Image Dragging Extension:
+	        //    * Don't use fileDragging (could interfere with custom image dragging extension)
+	        // 4. ImageDragging OFF + Custom Image Dragging:
+	        //    * Don't use fileDragging (could interfere with custom image dragging extension)
+	        if (shouldUseFileDraggingExtension.call(this)) {
+	            var opts = this.options.fileDragging;
+	            if (!opts) {
+	                opts = {};
+
+	                // Image is in the 'allowedTypes' list by default.
+	                // If imageDragging is off override the 'allowedTypes' list with an empty one
+	                if (!isImageDraggingEnabled.call(this)) {
+	                    opts.allowedTypes = [];
+	                }
+	            }
+	            this.addBuiltInExtension('fileDragging', opts);
+	        }
+
+	        // Built-in extensions
+	        var builtIns = {
+	            paste: true,
+	            'anchor-preview': isAnchorPreviewEnabled.call(this),
+	            autoLink: isAutoLinkEnabled.call(this),
+	            keyboardCommands: isKeyboardCommandsEnabled.call(this),
+	            placeholder: isPlaceholderEnabled.call(this)
+	        };
+	        Object.keys(builtIns).forEach(function (name) {
+	            if (builtIns[name]) {
+	                this.addBuiltInExtension(name);
+	            }
+	        }, this);
+
+	        // Users can pass in a custom toolbar extension
+	        // so check for that first and if it's not present
+	        // just create the default toolbar
+	        var toolbarExtension = this.options.extensions['toolbar'];
+	        if (!toolbarExtension && isToolbarEnabled.call(this)) {
+	            // Backwards compatability
+	            var toolbarOptions = MediumEditor.util.extend({}, this.options.toolbar, {
+	                allowMultiParagraphSelection: this.options.allowMultiParagraphSelection // deprecated
+	            });
+	            toolbarExtension = new MediumEditor.extensions.toolbar(toolbarOptions);
+	        }
+
+	        // If the toolbar is not disabled, so we actually have an extension
+	        // initialize it and add it to the extensions array
+	        if (toolbarExtension) {
+	            this.extensions.push(initExtension(toolbarExtension, 'toolbar', this));
+	        }
+	    }
+
+	    function mergeOptions(defaults, options) {
+	        var deprecatedProperties = [
+	            ['allowMultiParagraphSelection', 'toolbar.allowMultiParagraphSelection']
+	        ];
+	        // warn about using deprecated properties
+	        if (options) {
+	            deprecatedProperties.forEach(function (pair) {
+	                if (options.hasOwnProperty(pair[0]) && options[pair[0]] !== undefined) {
+	                    MediumEditor.util.deprecated(pair[0], pair[1], 'v6.0.0');
+	                }
+	            });
+	        }
+
+	        return MediumEditor.util.defaults({}, options, defaults);
+	    }
+
+	    function execActionInternal(action, opts) {
+	        /*jslint regexp: true*/
+	        var appendAction = /^append-(.+)$/gi,
+	            justifyAction = /justify([A-Za-z]*)$/g, /* Detecting if is justifyCenter|Right|Left */
+	            match;
+	        /*jslint regexp: false*/
+
+	        // Actions starting with 'append-' should attempt to format a block of text ('formatBlock') using a specific
+	        // type of block element (ie append-blockquote, append-h1, append-pre, etc.)
+	        match = appendAction.exec(action);
+	        if (match) {
+	            return MediumEditor.util.execFormatBlock(this.options.ownerDocument, match[1]);
+	        }
+
+	        if (action === 'fontSize') {
+	            return this.options.ownerDocument.execCommand('fontSize', false, opts.size);
+	        }
+
+	        if (action === 'fontName') {
+	            return this.options.ownerDocument.execCommand('fontName', false, opts.name);
+	        }
+
+	        if (action === 'createLink') {
+	            return this.createLink(opts);
+	        }
+
+	        if (action === 'image') {
+	            var src = this.options.contentWindow.getSelection().toString().trim();
+	            return this.options.ownerDocument.execCommand('insertImage', false, src);
+	        }
+
+	        /* Issue: https://github.com/yabwe/medium-editor/issues/595
+	         * If the action is to justify the text */
+	        if (justifyAction.exec(action)) {
+	            var result = this.options.ownerDocument.execCommand(action, false, null),
+	                parentNode = MediumEditor.selection.getSelectedParentElement(MediumEditor.selection.getSelectionRange(this.options.ownerDocument));
+	            if (parentNode) {
+	                cleanupJustifyDivFragments.call(this, MediumEditor.util.getTopBlockContainer(parentNode));
+	            }
+
+	            return result;
+	        }
+
+	        return this.options.ownerDocument.execCommand(action, false, null);
+	    }
+
+	    /* If we've just justified text within a container block
+	     * Chrome may have removed <br> elements and instead wrapped lines in <div> elements
+	     * with a text-align property.  If so, we want to fix this
+	     */
+	    function cleanupJustifyDivFragments(blockContainer) {
+	        if (!blockContainer) {
+	            return;
+	        }
+
+	        var textAlign,
+	            childDivs = Array.prototype.slice.call(blockContainer.childNodes).filter(function (element) {
+	                var isDiv = element.nodeName.toLowerCase() === 'div';
+	                if (isDiv && !textAlign) {
+	                    textAlign = element.style.textAlign;
+	                }
+	                return isDiv;
+	            });
+
+	        /* If we found child <div> elements with text-align style attributes
+	         * we should fix this by:
+	         *
+	         * 1) Unwrapping each <div> which has a text-align style
+	         * 2) Insert a <br> element after each set of 'unwrapped' div children
+	         * 3) Set the text-align style of the parent block element
+	         */
+	        if (childDivs.length) {
+	            // Since we're mucking with the HTML, preserve selection
+	            this.saveSelection();
+	            childDivs.forEach(function (div) {
+	                if (div.style.textAlign === textAlign) {
+	                    var lastChild = div.lastChild;
+	                    if (lastChild) {
+	                        // Instead of a div, extract the child elements and add a <br>
+	                        MediumEditor.util.unwrap(div, this.options.ownerDocument);
+	                        var br = this.options.ownerDocument.createElement('BR');
+	                        lastChild.parentNode.insertBefore(br, lastChild.nextSibling);
+	                    }
+	                }
+	            }, this);
+	            blockContainer.style.textAlign = textAlign;
+	            // We're done, so restore selection
+	            this.restoreSelection();
+	        }
+	    }
+
+	    MediumEditor.prototype = {
+	        // NOT DOCUMENTED - exposed for backwards compatability
+	        init: function (elements, options) {
+	            this.options = mergeOptions.call(this, this.defaults, options);
+	            this.origElements = elements;
+
+	            if (!this.options.elementsContainer) {
+	                this.options.elementsContainer = this.options.ownerDocument.body;
+	            }
+
+	            return this.setup();
+	        },
+
+	        setup: function () {
+	            if (this.isActive) {
+	                return;
+	            }
+
+	            createElementsArray.call(this, this.origElements);
+
+	            if (this.elements.length === 0) {
+	                return;
+	            }
+
+	            this.isActive = true;
+	            addToEditors.call(this, this.options.contentWindow);
+
+	            this.events = new MediumEditor.Events(this);
+
+	            // Call initialization helpers
+	            initElements.call(this);
+	            initExtensions.call(this);
+	            attachHandlers.call(this);
+	        },
+
+	        destroy: function () {
+	            if (!this.isActive) {
+	                return;
+	            }
+
+	            this.isActive = false;
+
+	            this.extensions.forEach(function (extension) {
+	                if (typeof extension.destroy === 'function') {
+	                    extension.destroy();
+	                }
+	            }, this);
+
+	            this.events.destroy();
+
+	            this.elements.forEach(function (element) {
+	                // Reset elements content, fix for issue where after editor destroyed the red underlines on spelling errors are left
+	                if (this.options.spellcheck) {
+	                    element.innerHTML = element.innerHTML;
+	                }
+
+	                // cleanup extra added attributes
+	                element.removeAttribute('contentEditable');
+	                element.removeAttribute('spellcheck');
+	                element.removeAttribute('data-medium-editor-element');
+	                element.removeAttribute('role');
+	                element.removeAttribute('aria-multiline');
+	                element.removeAttribute('medium-editor-index');
+
+	                // Remove any elements created for textareas
+	                if (element.hasAttribute('medium-editor-textarea-id')) {
+	                    var textarea = element.parentNode.querySelector('textarea[medium-editor-textarea-id="' + element.getAttribute('medium-editor-textarea-id') + '"]');
+	                    if (textarea) {
+	                        // Un-hide the textarea
+	                        textarea.classList.remove('medium-editor-hidden');
+	                    }
+	                    if (element.parentNode) {
+	                        element.parentNode.removeChild(element);
+	                    }
+	                }
+	            }, this);
+	            this.elements = [];
+
+	            removeFromEditors.call(this, this.options.contentWindow);
+	        },
+
+	        on: function (target, event, listener, useCapture) {
+	            this.events.attachDOMEvent(target, event, listener, useCapture);
+	        },
+
+	        off: function (target, event, listener, useCapture) {
+	            this.events.detachDOMEvent(target, event, listener, useCapture);
+	        },
+
+	        subscribe: function (event, listener) {
+	            this.events.attachCustomEvent(event, listener);
+	        },
+
+	        unsubscribe: function (event, listener) {
+	            this.events.detachCustomEvent(event, listener);
+	        },
+
+	        trigger: function (name, data, editable) {
+	            this.events.triggerCustomEvent(name, data, editable);
+	        },
+
+	        delay: function (fn) {
+	            var self = this;
+	            return setTimeout(function () {
+	                if (self.isActive) {
+	                    fn();
+	                }
+	            }, this.options.delay);
+	        },
+
+	        serialize: function () {
+	            var i,
+	                elementid,
+	                content = {};
+	            for (i = 0; i < this.elements.length; i += 1) {
+	                elementid = (this.elements[i].id !== '') ? this.elements[i].id : 'element-' + i;
+	                content[elementid] = {
+	                    value: this.elements[i].innerHTML.trim()
+	                };
+	            }
+	            return content;
+	        },
+
+	        getExtensionByName: function (name) {
+	            var extension;
+	            if (this.extensions && this.extensions.length) {
+	                this.extensions.some(function (ext) {
+	                    if (ext.name === name) {
+	                        extension = ext;
+	                        return true;
+	                    }
+	                    return false;
+	                });
+	            }
+	            return extension;
+	        },
+
+	        /**
+	         * NOT DOCUMENTED - exposed as a helper for other extensions to use
+	         */
+	        addBuiltInExtension: function (name, opts) {
+	            var extension = this.getExtensionByName(name),
+	                merged;
+	            if (extension) {
+	                return extension;
+	            }
+
+	            switch (name) {
+	                case 'anchor':
+	                    merged = MediumEditor.util.extend({}, this.options.anchor, opts);
+	                    extension = new MediumEditor.extensions.anchor(merged);
+	                    break;
+	                case 'anchor-preview':
+	                    extension = new MediumEditor.extensions.anchorPreview(this.options.anchorPreview);
+	                    break;
+	                case 'autoLink':
+	                    extension = new MediumEditor.extensions.autoLink();
+	                    break;
+	                case 'fileDragging':
+	                    extension = new MediumEditor.extensions.fileDragging(opts);
+	                    break;
+	                case 'fontname':
+	                    extension = new MediumEditor.extensions.fontName(this.options.fontName);
+	                    break;
+	                case 'fontsize':
+	                    extension = new MediumEditor.extensions.fontSize(opts);
+	                    break;
+	                case 'keyboardCommands':
+	                    extension = new MediumEditor.extensions.keyboardCommands(this.options.keyboardCommands);
+	                    break;
+	                case 'paste':
+	                    extension = new MediumEditor.extensions.paste(this.options.paste);
+	                    break;
+	                case 'placeholder':
+	                    extension = new MediumEditor.extensions.placeholder(this.options.placeholder);
+	                    break;
+	                default:
+	                    // All of the built-in buttons for MediumEditor are extensions
+	                    // so check to see if the extension we're creating is a built-in button
+	                    if (MediumEditor.extensions.button.isBuiltInButton(name)) {
+	                        if (opts) {
+	                            merged = MediumEditor.util.defaults({}, opts, MediumEditor.extensions.button.prototype.defaults[name]);
+	                            extension = new MediumEditor.extensions.button(merged);
+	                        } else {
+	                            extension = new MediumEditor.extensions.button(name);
+	                        }
+	                    }
+	            }
+
+	            if (extension) {
+	                this.extensions.push(initExtension(extension, name, this));
+	            }
+
+	            return extension;
+	        },
+
+	        stopSelectionUpdates: function () {
+	            this.preventSelectionUpdates = true;
+	        },
+
+	        startSelectionUpdates: function () {
+	            this.preventSelectionUpdates = false;
+	        },
+
+	        checkSelection: function () {
+	            var toolbar = this.getExtensionByName('toolbar');
+	            if (toolbar) {
+	                toolbar.checkState();
+	            }
+	            return this;
+	        },
+
+	        // Wrapper around document.queryCommandState for checking whether an action has already
+	        // been applied to the current selection
+	        queryCommandState: function (action) {
+	            var fullAction = /^full-(.+)$/gi,
+	                match,
+	                queryState = null;
+
+	            // Actions starting with 'full-' need to be modified since this is a medium-editor concept
+	            match = fullAction.exec(action);
+	            if (match) {
+	                action = match[1];
+	            }
+
+	            try {
+	                queryState = this.options.ownerDocument.queryCommandState(action);
+	            } catch (exc) {
+	                queryState = null;
+	            }
+
+	            return queryState;
+	        },
+
+	        execAction: function (action, opts) {
+	            /*jslint regexp: true*/
+	            var fullAction = /^full-(.+)$/gi,
+	                match,
+	                result;
+	            /*jslint regexp: false*/
+
+	            // Actions starting with 'full-' should be applied to to the entire contents of the editable element
+	            // (ie full-bold, full-append-pre, etc.)
+	            match = fullAction.exec(action);
+	            if (match) {
+	                // Store the current selection to be restored after applying the action
+	                this.saveSelection();
+	                // Select all of the contents before calling the action
+	                this.selectAllContents();
+	                result = execActionInternal.call(this, match[1], opts);
+	                // Restore the previous selection
+	                this.restoreSelection();
+	            } else {
+	                result = execActionInternal.call(this, action, opts);
+	            }
+
+	            // do some DOM clean-up for known browser issues after the action
+	            if (action === 'insertunorderedlist' || action === 'insertorderedlist') {
+	                MediumEditor.util.cleanListDOM(this.options.ownerDocument, this.getSelectedParentElement());
+	            }
+
+	            this.checkSelection();
+	            return result;
+	        },
+
+	        getSelectedParentElement: function (range) {
+	            if (range === undefined) {
+	                range = this.options.contentWindow.getSelection().getRangeAt(0);
+	            }
+	            return MediumEditor.selection.getSelectedParentElement(range);
+	        },
+
+	        selectAllContents: function () {
+	            var currNode = MediumEditor.selection.getSelectionElement(this.options.contentWindow);
+
+	            if (currNode) {
+	                // Move to the lowest descendant node that still selects all of the contents
+	                while (currNode.children.length === 1) {
+	                    currNode = currNode.children[0];
+	                }
+
+	                this.selectElement(currNode);
+	            }
+	        },
+
+	        selectElement: function (element) {
+	            MediumEditor.selection.selectNode(element, this.options.ownerDocument);
+
+	            var selElement = MediumEditor.selection.getSelectionElement(this.options.contentWindow);
+	            if (selElement) {
+	                this.events.focusElement(selElement);
+	            }
+	        },
+
+	        getFocusedElement: function () {
+	            var focused;
+	            this.elements.some(function (element) {
+	                // Find the element that has focus
+	                if (!focused && element.getAttribute('data-medium-focused')) {
+	                    focused = element;
+	                }
+
+	                // bail if we found the element that had focus
+	                return !!focused;
+	            }, this);
+
+	            return focused;
+	        },
+
+	        // Export the state of the selection in respect to one of this
+	        // instance of MediumEditor's elements
+	        exportSelection: function () {
+	            var selectionElement = MediumEditor.selection.getSelectionElement(this.options.contentWindow),
+	                editableElementIndex = this.elements.indexOf(selectionElement),
+	                selectionState = null;
+
+	            if (editableElementIndex >= 0) {
+	                selectionState = MediumEditor.selection.exportSelection(selectionElement, this.options.ownerDocument);
+	            }
+
+	            if (selectionState !== null && editableElementIndex !== 0) {
+	                selectionState.editableElementIndex = editableElementIndex;
+	            }
+
+	            return selectionState;
+	        },
+
+	        saveSelection: function () {
+	            this.selectionState = this.exportSelection();
+	        },
+
+	        // Restore a selection based on a selectionState returned by a call
+	        // to MediumEditor.exportSelection
+	        importSelection: function (selectionState, favorLaterSelectionAnchor) {
+	            if (!selectionState) {
+	                return;
+	            }
+
+	            var editableElement = this.elements[selectionState.editableElementIndex || 0];
+	            MediumEditor.selection.importSelection(selectionState, editableElement, this.options.ownerDocument, favorLaterSelectionAnchor);
+	        },
+
+	        restoreSelection: function () {
+	            this.importSelection(this.selectionState);
+	        },
+
+	        createLink: function (opts) {
+	            var currentEditor = MediumEditor.selection.getSelectionElement(this.options.contentWindow),
+	                customEvent = {};
+
+	            // Make sure the selection is within an element this editor is tracking
+	            if (this.elements.indexOf(currentEditor) === -1) {
+	                return;
+	            }
+
+	            try {
+	                this.events.disableCustomEvent('editableInput');
+	                if (opts.url && opts.url.trim().length > 0) {
+	                    var currentSelection = this.options.contentWindow.getSelection();
+	                    if (currentSelection) {
+	                        var currRange = currentSelection.getRangeAt(0),
+	                            commonAncestorContainer = currRange.commonAncestorContainer,
+	                            exportedSelection,
+	                            startContainerParentElement,
+	                            endContainerParentElement,
+	                            textNodes;
+
+	                        // If the selection is contained within a single text node
+	                        // and the selection starts at the beginning of the text node,
+	                        // MSIE still says the startContainer is the parent of the text node.
+	                        // If the selection is contained within a single text node, we
+	                        // want to just use the default browser 'createLink', so we need
+	                        // to account for this case and adjust the commonAncestorContainer accordingly
+	                        if (currRange.endContainer.nodeType === 3 &&
+	                            currRange.startContainer.nodeType !== 3 &&
+	                            currRange.startOffset === 0 &&
+	                            currRange.startContainer.firstChild === currRange.endContainer) {
+	                            commonAncestorContainer = currRange.endContainer;
+	                        }
+
+	                        startContainerParentElement = MediumEditor.util.getClosestBlockContainer(currRange.startContainer);
+	                        endContainerParentElement = MediumEditor.util.getClosestBlockContainer(currRange.endContainer);
+
+	                        // If the selection is not contained within a single text node
+	                        // but the selection is contained within the same block element
+	                        // we want to make sure we create a single link, and not multiple links
+	                        // which can happen with the built in browser functionality
+	                        if (commonAncestorContainer.nodeType !== 3 && commonAncestorContainer.textContent.length !== 0 && startContainerParentElement === endContainerParentElement) {
+	                            var parentElement = (startContainerParentElement || currentEditor),
+	                                fragment = this.options.ownerDocument.createDocumentFragment();
+
+	                            // since we are going to create a link from an extracted text,
+	                            // be sure that if we are updating a link, we won't let an empty link behind (see #754)
+	                            // (Workaroung for Chrome)
+	                            this.execAction('unlink');
+
+	                            exportedSelection = this.exportSelection();
+	                            fragment.appendChild(parentElement.cloneNode(true));
+
+	                            if (currentEditor === parentElement) {
+	                                // We have to avoid the editor itself being wiped out when it's the only block element,
+	                                // as our reference inside this.elements gets detached from the page when insertHTML runs.
+	                                // If we just use [parentElement, 0] and [parentElement, parentElement.childNodes.length]
+	                                // as the range boundaries, this happens whenever parentElement === currentEditor.
+	                                // The tradeoff to this workaround is that a orphaned tag can sometimes be left behind at
+	                                // the end of the editor's content.
+	                                // In Gecko:
+	                                // as an empty <strong></strong> if parentElement.lastChild is a <strong> tag.
+	                                // In WebKit:
+	                                // an invented <br /> tag at the end in the same situation
+	                                MediumEditor.selection.select(
+	                                    this.options.ownerDocument,
+	                                    parentElement.firstChild,
+	                                    0,
+	                                    parentElement.lastChild,
+	                                    parentElement.lastChild.nodeType === 3 ?
+	                                    parentElement.lastChild.nodeValue.length : parentElement.lastChild.childNodes.length
+	                                );
+	                            } else {
+	                                MediumEditor.selection.select(
+	                                    this.options.ownerDocument,
+	                                    parentElement,
+	                                    0,
+	                                    parentElement,
+	                                    parentElement.childNodes.length
+	                                );
+	                            }
+
+	                            var modifiedExportedSelection = this.exportSelection();
+
+	                            textNodes = MediumEditor.util.findOrCreateMatchingTextNodes(
+	                                this.options.ownerDocument,
+	                                fragment,
+	                                {
+	                                    start: exportedSelection.start - modifiedExportedSelection.start,
+	                                    end: exportedSelection.end - modifiedExportedSelection.start,
+	                                    editableElementIndex: exportedSelection.editableElementIndex
+	                                }
+	                            );
+	                            // If textNodes are not present, when changing link on images
+	                            // ex: <a><img src="http://image.test.com"></a>, change fragment to currRange.startContainer
+	                            // and set textNodes array to [imageElement, imageElement]
+	                            if (textNodes.length === 0) {
+	                                fragment = this.options.ownerDocument.createDocumentFragment();
+	                                fragment.appendChild(commonAncestorContainer.cloneNode(true));
+	                                textNodes = [fragment.firstChild.firstChild, fragment.firstChild.lastChild];
+	                            }
+
+	                            // Creates the link in the document fragment
+	                            MediumEditor.util.createLink(this.options.ownerDocument, textNodes, opts.url.trim());
+
+	                            // Chrome trims the leading whitespaces when inserting HTML, which messes up restoring the selection.
+	                            var leadingWhitespacesCount = (fragment.firstChild.innerHTML.match(/^\s+/) || [''])[0].length;
+
+	                            // Now move the created link back into the original document in a way to preserve undo/redo history
+	                            MediumEditor.util.insertHTMLCommand(this.options.ownerDocument, fragment.firstChild.innerHTML.replace(/^\s+/, ''));
+	                            exportedSelection.start -= leadingWhitespacesCount;
+	                            exportedSelection.end -= leadingWhitespacesCount;
+
+	                            this.importSelection(exportedSelection);
+	                        } else {
+	                            this.options.ownerDocument.execCommand('createLink', false, opts.url);
+	                        }
+
+	                        if (this.options.targetBlank || opts.target === '_blank') {
+	                            MediumEditor.util.setTargetBlank(MediumEditor.selection.getSelectionStart(this.options.ownerDocument), opts.url);
+	                        }
+
+	                        if (opts.buttonClass) {
+	                            MediumEditor.util.addClassToAnchors(MediumEditor.selection.getSelectionStart(this.options.ownerDocument), opts.buttonClass);
+	                        }
+	                    }
+	                }
+	                // Fire input event for backwards compatibility if anyone was listening directly to the DOM input event
+	                if (this.options.targetBlank || opts.target === '_blank' || opts.buttonClass) {
+	                    customEvent = this.options.ownerDocument.createEvent('HTMLEvents');
+	                    customEvent.initEvent('input', true, true, this.options.contentWindow);
+	                    for (var i = 0; i < this.elements.length; i += 1) {
+	                        this.elements[i].dispatchEvent(customEvent);
+	                    }
+	                }
+	            } finally {
+	                this.events.enableCustomEvent('editableInput');
+	            }
+	            // Fire our custom editableInput event
+	            this.events.triggerCustomEvent('editableInput', customEvent, currentEditor);
+	        },
+
+	        cleanPaste: function (text) {
+	            this.getExtensionByName('paste').cleanPaste(text);
+	        },
+
+	        pasteHTML: function (html, options) {
+	            this.getExtensionByName('paste').pasteHTML(html, options);
+	        },
+
+	        setContent: function (html, index) {
+	            index = index || 0;
+
+	            if (this.elements[index]) {
+	                var target = this.elements[index];
+	                target.innerHTML = html;
+	                this.events.updateInput(target, { target: target, currentTarget: target });
+	            }
+	        }
+	    };
+	}());
+
+	(function () {
+	    // summary: The default options hash used by the Editor
+
+	    MediumEditor.prototype.defaults = {
+	        activeButtonClass: 'medium-editor-button-active',
+	        buttonLabels: false,
+	        delay: 0,
+	        disableReturn: false,
+	        disableDoubleReturn: false,
+	        disableExtraSpaces: false,
+	        disableEditing: false,
+	        autoLink: false,
+	        elementsContainer: false,
+	        contentWindow: window,
+	        ownerDocument: document,
+	        targetBlank: false,
+	        extensions: {},
+	        spellcheck: true
+	    };
+	})();
+
+	MediumEditor.parseVersionString = function (release) {
+	    var split = release.split('-'),
+	        version = split[0].split('.'),
+	        preRelease = (split.length > 1) ? split[1] : '';
+	    return {
+	        major: parseInt(version[0], 10),
+	        minor: parseInt(version[1], 10),
+	        revision: parseInt(version[2], 10),
+	        preRelease: preRelease,
+	        toString: function () {
+	            return [version[0], version[1], version[2]].join('.') + (preRelease ? '-' + preRelease : '');
+	        }
+	    };
+	};
+
+	MediumEditor.version = MediumEditor.parseVersionString.call(this, ({
+	    // grunt-bump looks for this:
+	    'version': '5.12.0'
+	}).version);
+
+	    return MediumEditor;
+	}()));
+
+
+/***/ },
+/* 400 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(401);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(382)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./oligrapher.annotations.css", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./oligrapher.annotations.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 401 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(380)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "#oligrapherAnnotationsContainer {\n  position: relative;\n}\n\n#oligrapherGraphContainer {\n  position: relative;\n}\n\n#oligrapherHeader {\n  margin-bottom: 10px;  \n}\n\n#oligrapherTitle {\n  font-size: 50px;\n  font-weight: 300;\n  margin-top: 3px;\n  margin-bottom: 5px;\n}\n\n#oligrapherTitle.oligrapherTitleInput {\n  margin-top: 0;\n  margin-bottom: 1px;\n}\n\n#oligrapherTitle a {\n  text-decoration: none;\n}\n\n#oligrapherTitleInput {\n  border: 1px solid #ccc;\n  padding: 0;\n  width: 100%;\n}\n\n#oligrapherByLine {\n  margin-right: 18px;\n}\n\n#oligrapherDate {\n  color: #888;\n}\n\n#oligrapherGraphLinks {\n  margin-left: 2px;\n}\n\n#oligrapherGraphLinks a {\n  display: inline-block;\n  margin-right: 12px;\n  font-size: 12px;\n  cursor: pointer;\n}\n\n#oligrapherGraphLinks form {\n  display: inline-block;\n}\n\n#oligrapherMetaButtons {\n  position: absolute;\n  top: 85px;\n  left: 15px;\n}\n\n#oligrapherMetaButtons {\n  position: absolute;\n  top: 85px;\n  left: 15px;\n}\n\n#oligrapherMetaButtons button {\n  display: block;\n  border: 1px solid #ccc;\n  background-color: rgba(255, 255, 255, 0.8);\n  width: 32px;\n  padding-top: 7px;\n  margin-bottom: 10px;\n}\n\n#oligrapherEditButton.editContentMode {\n  background-color: rgba(0, 255, 0, 0.5);\n}\n\n#oligrapherEditButton.editAnnotationsMode {\n  background-color: rgba(255, 255, 0, 0.5);\n}\n\n#oligrapherSaveButton {\n  position: fixed;\n  bottom: 20px;\n  left: 20px;\n  background-color: #f8f8f8;\n}\n\n#oligrapherShowAnnotations {\n  position: absolute;\n  top: 5px;\n  right: 10px;\n}\n\n#oligrapherShowAnnotations button {\n  font-size: 24px;\n  font-weight: 200;  \n}\n\n#oligrapherGraph {\n  border: 1px solid #f8f8f8;\n}\n\n#oligrapherNavButtons {\n  margin-top: 5px;\n  margin-bottom: 25px;\n}\n\n#oligrapherNavButtons button {\n  margin-right: 10px;\n  font-size: 24px;\n  font-weight: 200;\n  border: 0 solid #eee;\n  background-color: #eee;\n\n  &:disabled {\n    color: #ccc;\n    background-color: #f8f8f8;\n    opacity: 1;\n  }\n}\n\n#oligrapherNavButtons button#oligrapherNavListButton, \n#oligrapherNavButtons button#oligrapherHideAnnotationsButton,\n#oligrapherShowAnnotations button {\n  border: 1px solid #eee;\n  background-color: #fff;\n}\n\n.clickplz:enabled:not(:focus) {\n  animation: clickplz 3s;\n  -webkit-animation: clickplz 3s;\n  animation-iteration-count: infinite;\n  -webkit-animation-iteration-count: infinite;\n}\n\n@keyframes clickplz {\n  0%   { color: #666; background-color:#eee; text-shadow: 0 0 9px rgba(255,255,255,0); }\n  50%  { color: #666; background-color:#ffd; text-shadow: 0 0 9px rgba(255,255,128,0.75); }\n  100% { color: #666; background-color:#eee; text-shadow: 0 0 9px rgba(255,255,255,0); }\n}\n\n@-webkit-keyframes clickplz {\n  0%   { color: #666; background-color:#eee; text-shadow: 0 0 9px rgba(255,255,255,0); }\n  50%  { color: #666; background-color:#ffd; text-shadow: 0 0 9px rgba(255,255,128,0.75); }\n  100% { color: #666; background-color:#eee; text-shadow: 0 0 9px rgba(255,255,255,0); }\n}\n\n#oligrapherAnnotationListItems {\n  padding: 0;\n  list-style-type: none;\n}\n\n#oligrapherAnnotationListItems li.placeholder {\n  background: rgb(255, 240, 120);\n}\n\n#oligrapherAnnotationListItems li.placeholder:before {\n  color: rgb(225, 210, 90);\n}\n\n#oligrapherAnnotationListItems li {\n  font-size: 18px;\n  line-height: 34px;\n  padding-left: 10px;\n  padding-right: 10px;\n  margin-left: -10px;\n  border-bottom: 1px solid #eee;\n  cursor: pointer;\n  width: 100%;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  border-radius: 3px;\n}\n\n#oligrapherAnnotationListItems li.active {\n  background-color: #eee;\n}\n\n#oligrapherAnnotationList button {\n  margin-top: 0px;\n  margin-bottom: 5px;\n}\n\n#oligrapherGraphAnnotationEditButton {\n  margin-top: 10px;\n}\n\n#oligrapherGraphAnnotationForm {\n  margin-top: 10px;\n}\n\n#oligrapherGraphAnnotationForm textarea {\n  margin-bottom: 10px;\n}\n\n#oligrapherGraphAnnotationFormText, #oligrapherGraphAnnotationFormHeader {\n  /* height: 400px; */\n  padding: 10px;\n  padding-left: 16px;\n  padding-right: 16px;\n  border: 1px solid #eee;\n  border-radius: 6px;\n}\n\n#oligrapherGraphAnnotationFormText {\n  margin-bottom: 20px;\n}\n\n#oligrapherSettingsForm {\n  position: absolute;\n  display: inline-block;\n  z-index: 20;\n  top: 15px;\n  right: 15px;\n  margin: 0 auto;\n  text-align: right;\n}\n\n#oligrapherHelpScreen {\n  background: white;\n  width: 800px;\n  padding: 20px;\n  border-radius: 5px;\n  position: absolute;\n  z-index: 20;\n  top: 20px;\n  right: 20px;\n  margin: 0 auto;\n  box-shadow: 0px 0px 20px #888;\n}\n\n#oligrapherHelpScreen h3 {\n  margin-top: 0;\n}\n\n#oligrapherHelpScreenCloseButton {\n  position: absolute;\n  top: 20px;\n  right: 20px;\n  color: #888;\n}\n\n\n/* MEDIUM EDITOR */\n\n@-webkit-keyframes medium-editor-image-loading {\n  0% {\n    -webkit-transform: scale(0);\n            transform: scale(0); }\n  100% {\n    -webkit-transform: scale(1);\n            transform: scale(1); } }\n\n@keyframes medium-editor-image-loading {\n  0% {\n    -webkit-transform: scale(0);\n            transform: scale(0); }\n  100% {\n    -webkit-transform: scale(1);\n            transform: scale(1); } }\n\n@-webkit-keyframes medium-editor-pop-upwards {\n  0% {\n    opacity: 0;\n    -webkit-transform: matrix(0.97, 0, 0, 1, 0, 12);\n            transform: matrix(0.97, 0, 0, 1, 0, 12); }\n  20% {\n    opacity: .7;\n    -webkit-transform: matrix(0.99, 0, 0, 1, 0, 2);\n            transform: matrix(0.99, 0, 0, 1, 0, 2); }\n  40% {\n    opacity: 1;\n    -webkit-transform: matrix(1, 0, 0, 1, 0, -1);\n            transform: matrix(1, 0, 0, 1, 0, -1); }\n  100% {\n    -webkit-transform: matrix(1, 0, 0, 1, 0, 0);\n            transform: matrix(1, 0, 0, 1, 0, 0); } }\n\n@keyframes medium-editor-pop-upwards {\n  0% {\n    opacity: 0;\n    -webkit-transform: matrix(0.97, 0, 0, 1, 0, 12);\n            transform: matrix(0.97, 0, 0, 1, 0, 12); }\n  20% {\n    opacity: .7;\n    -webkit-transform: matrix(0.99, 0, 0, 1, 0, 2);\n            transform: matrix(0.99, 0, 0, 1, 0, 2); }\n  40% {\n    opacity: 1;\n    -webkit-transform: matrix(1, 0, 0, 1, 0, -1);\n            transform: matrix(1, 0, 0, 1, 0, -1); }\n  100% {\n    -webkit-transform: matrix(1, 0, 0, 1, 0, 0);\n            transform: matrix(1, 0, 0, 1, 0, 0); } }\n\n.medium-editor-anchor-preview {\n  font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n  font-size: 16px;\n  left: 0;\n  line-height: 1.4;\n  max-width: 280px;\n  position: absolute;\n  text-align: center;\n  top: 0;\n  word-break: break-all;\n  word-wrap: break-word;\n  visibility: hidden;\n  z-index: 2000; }\n  .medium-editor-anchor-preview a {\n    color: #fff;\n    display: inline-block;\n    margin: 5px 5px 10px; }\n\n.medium-editor-anchor-preview-active {\n  visibility: visible; }\n\n.medium-editor-dragover {\n  background: #ddd; }\n\n.medium-editor-image-loading {\n  -webkit-animation: medium-editor-image-loading 1s infinite ease-in-out;\n          animation: medium-editor-image-loading 1s infinite ease-in-out;\n  background-color: #333;\n  border-radius: 100%;\n  display: inline-block;\n  height: 40px;\n  width: 40px; }\n\n.medium-editor-placeholder {\n  position: relative; }\n  .medium-editor-placeholder:after {\n    content: attr(data-placeholder) !important;\n    font-style: italic;\n    left: 0;\n    position: absolute;\n    top: 0;\n    white-space: pre;\n    padding: inherit;\n    margin: inherit; }\n\n.medium-toolbar-arrow-under:after, .medium-toolbar-arrow-over:before {\n  border-style: solid;\n  content: '';\n  display: block;\n  height: 0;\n  left: 50%;\n  margin-left: -8px;\n  position: absolute;\n  width: 0; }\n\n.medium-toolbar-arrow-under:after {\n  border-width: 8px 8px 0 8px; }\n\n.medium-toolbar-arrow-over:before {\n  border-width: 0 8px 8px 8px;\n  top: -8px; }\n\n.medium-editor-toolbar {\n  font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n  font-size: 16px;\n  left: 0;\n  position: absolute;\n  top: 0;\n  visibility: hidden;\n  z-index: 2000; }\n  .medium-editor-toolbar ul {\n    margin: 0;\n    padding: 0; }\n  .medium-editor-toolbar li {\n    float: left;\n    list-style: none;\n    margin: 0;\n    padding: 0; }\n    .medium-editor-toolbar li button {\n      box-sizing: border-box;\n      cursor: pointer;\n      display: block;\n      font-size: 14px;\n      line-height: 1.33;\n      margin: 0;\n      padding: 15px;\n      text-decoration: none; }\n      .medium-editor-toolbar li button:focus {\n        outline: none; }\n    .medium-editor-toolbar li .medium-editor-action-underline {\n      text-decoration: underline; }\n    .medium-editor-toolbar li .medium-editor-action-pre {\n      font-family: Consolas, \"Liberation Mono\", Menlo, Courier, monospace;\n      font-size: 12px;\n      font-weight: 100;\n      padding: 15px 0; }\n\n.medium-editor-toolbar-active {\n  visibility: visible; }\n\n.medium-editor-sticky-toolbar {\n  position: fixed;\n  top: 1px; }\n\n.medium-editor-relative-toolbar {\n  position: relative; }\n\n.medium-editor-toolbar-active.medium-editor-stalker-toolbar {\n  -webkit-animation: medium-editor-pop-upwards 160ms forwards linear;\n          animation: medium-editor-pop-upwards 160ms forwards linear; }\n\n.medium-editor-action-bold {\n  font-weight: bolder; }\n\n.medium-editor-action-italic {\n  font-style: italic; }\n\n.medium-editor-toolbar-form {\n  display: none; }\n  .medium-editor-toolbar-form input,\n  .medium-editor-toolbar-form a {\n    font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif; }\n  .medium-editor-toolbar-form .medium-editor-toolbar-form-row {\n    line-height: 14px;\n    margin-left: 5px;\n    padding-bottom: 5px; }\n  .medium-editor-toolbar-form .medium-editor-toolbar-input,\n  .medium-editor-toolbar-form label {\n    border: none;\n    box-sizing: border-box;\n    font-size: 14px;\n    margin: 0;\n    padding: 6px;\n    width: 316px;\n    display: inline-block; }\n    .medium-editor-toolbar-form .medium-editor-toolbar-input:focus,\n    .medium-editor-toolbar-form label:focus {\n      -webkit-appearance: none;\n         -moz-appearance: none;\n              appearance: none;\n      border: none;\n      box-shadow: none;\n      outline: 0; }\n  .medium-editor-toolbar-form a {\n    display: inline-block;\n    font-size: 24px;\n    font-weight: bolder;\n    margin: 0 10px;\n    text-decoration: none; }\n\n.medium-editor-toolbar-actions:after {\n  clear: both;\n  content: \"\";\n  display: table; }\n\n[data-medium-editor-element] img {\n  max-width: 100%; }\n\n[data-medium-editor-element] sub {\n  vertical-align: sub; }\n\n[data-medium-editor-element] sup {\n  vertical-align: super; }\n\n.medium-editor-hidden {\n  display: none; }\n\n\n/* MEDIUM EDITOR THEME */\n\n.medium-toolbar-arrow-under:after {\n  border-color: #242424 transparent transparent transparent;\n  top: 50px; }\n\n.medium-toolbar-arrow-over:before {\n  border-color: transparent transparent #242424 transparent;\n  top: -8px; }\n\n.medium-editor-toolbar {\n  background-color: #242424;\n  background: -webkit-linear-gradient(top, #242424, rgba(36, 36, 36, 0.75));\n  background: linear-gradient(to bottom, #242424, rgba(36, 36, 36, 0.75));\n  border: 1px solid #000;\n  border-radius: 5px;\n  box-shadow: 0 0 3px #000; }\n  .medium-editor-toolbar li button {\n    background-color: #242424;\n    background: -webkit-linear-gradient(top, #242424, rgba(36, 36, 36, 0.89));\n    background: linear-gradient(to bottom, #242424, rgba(36, 36, 36, 0.89));\n    border: 0;\n    border-right: 1px solid #000;\n    border-left: 1px solid #333;\n    border-left: 1px solid rgba(255, 255, 255, 0.1);\n    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);\n    color: #fff;\n    height: 50px;\n    min-width: 50px;\n    -webkit-transition: background-color .2s ease-in;\n            transition: background-color .2s ease-in; }\n    .medium-editor-toolbar li button:hover {\n      background-color: #000;\n      color: yellow; }\n  .medium-editor-toolbar li .medium-editor-button-first {\n    border-bottom-left-radius: 5px;\n    border-top-left-radius: 5px; }\n  .medium-editor-toolbar li .medium-editor-button-last {\n    border-bottom-right-radius: 5px;\n    border-top-right-radius: 5px; }\n  .medium-editor-toolbar li .medium-editor-button-active {\n    background-color: #000;\n    background: -webkit-linear-gradient(top, #242424, rgba(0, 0, 0, 0.89));\n    background: linear-gradient(to bottom, #242424, rgba(0, 0, 0, 0.89));\n    color: #fff; }\n\n.medium-editor-toolbar-form {\n  background: #242424;\n  border-radius: 5px;\n  color: #999; }\n  .medium-editor-toolbar-form .medium-editor-toolbar-input {\n    background: #242424;\n    box-sizing: border-box;\n    color: #ccc;\n    height: 50px; }\n  .medium-editor-toolbar-form a {\n    color: #fff; }\n\n.medium-editor-toolbar-anchor-preview {\n  background: #242424;\n  border-radius: 5px;\n  color: #fff; }\n\n.medium-editor-placeholder:after {\n  color: #b3b3b1; }", ""]);
+
+	// exports
+
+
+/***/ },
+/* 402 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var EditButton = (function (_Component) {
+	  _inherits(EditButton, _Component);
+
+	  function EditButton() {
+	    _classCallCheck(this, EditButton);
+
+	    _get(Object.getPrototypeOf(EditButton.prototype), "constructor", this).apply(this, arguments);
+	  }
+
+	  _createClass(EditButton, [{
+	    key: "render",
+	    value: function render() {
+	      return _react2["default"].createElement(
+	        "button",
+	        {
+	          id: "oligrapherEditButton",
+	          className: "btn btn-sm btn-default " + (this.props.showEditTools ? "editContentMode" : "editAnnotationsMode"),
+	          title: this.props.showEditTools ? "disable graph editor" : "enable graph editor",
+	          onClick: this.props.toggle },
+	        _react2["default"].createElement("span", { className: "glyphicon glyphicon-pencil" })
+	      );
+	    }
+	  }]);
+
+	  return EditButton;
+	})(_react.Component);
+
+	exports["default"] = EditButton;
+	module.exports = exports["default"];
+
+/***/ },
+/* 403 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var HelpButton = (function (_Component) {
+	  _inherits(HelpButton, _Component);
+
+	  function HelpButton() {
+	    _classCallCheck(this, HelpButton);
+
+	    _get(Object.getPrototypeOf(HelpButton.prototype), "constructor", this).apply(this, arguments);
+	  }
+
+	  _createClass(HelpButton, [{
+	    key: "render",
+	    value: function render() {
+	      return _react2["default"].createElement(
+	        "button",
+	        {
+	          id: "oligrapherHelpButton",
+	          className: "btn btn-sm btn-default",
+	          title: "show user guide",
+	          onClick: this.props.toggleHelpScreen },
+	        _react2["default"].createElement("span", { className: "glyphicon glyphicon-question-sign" })
+	      );
+	    }
+	  }]);
+
+	  return HelpButton;
+	})(_react.Component);
+
+	exports["default"] = HelpButton;
+	module.exports = exports["default"];
+
+/***/ },
+/* 404 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var SettingsButton = (function (_Component) {
+	  _inherits(SettingsButton, _Component);
+
+	  function SettingsButton() {
+	    _classCallCheck(this, SettingsButton);
+
+	    _get(Object.getPrototypeOf(SettingsButton.prototype), "constructor", this).apply(this, arguments);
+	  }
+
+	  _createClass(SettingsButton, [{
+	    key: "render",
+	    value: function render() {
+	      var _this = this;
+
+	      return _react2["default"].createElement(
+	        "button",
+	        {
+	          id: "oligrapherSettingsButton",
+	          className: "btn btn-sm btn-default",
+	          title: "edit settings",
+	          onClick: function () {
+	            return _this.props.toggleSettings();
+	          } },
+	        _react2["default"].createElement("span", { className: "glyphicon glyphicon-cog" })
+	      );
+	    }
+	  }]);
+
+	  return SettingsButton;
+	})(_react.Component);
+
+	exports["default"] = SettingsButton;
+	module.exports = exports["default"];
+
+/***/ },
+/* 405 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _titleize = __webpack_require__(406);
+
+	var _titleize2 = _interopRequireDefault(_titleize);
+
+	var GraphSettingsForm = (function (_Component) {
+	  _inherits(GraphSettingsForm, _Component);
+
+	  function GraphSettingsForm() {
+	    _classCallCheck(this, GraphSettingsForm);
+
+	    _get(Object.getPrototypeOf(GraphSettingsForm.prototype), 'constructor', this).apply(this, arguments);
+	  }
+
+	  _createClass(GraphSettingsForm, [{
+	    key: 'render',
+	    value: function render() {
+	      var _this = this;
+
+	      return _react2['default'].createElement(
+	        'div',
+	        { id: 'oligrapherSettingsForm' },
+	        Object.keys(this.props.settings).map(function (key) {
+	          return _react2['default'].createElement(
+	            'div',
+	            { key: key },
+	            (0, _titleize2['default'])(key.replace(/[_-]+/, " ")),
+	            ' ',
+	            _react2['default'].createElement('input', {
+	              ref: key,
+	              name: key,
+	              type: 'checkbox',
+	              checked: _this.props.settings[key],
+	              onChange: function (event) {
+	                return _this.handleChange(event);
+	              } })
+	          );
+	        })
+	      );
+	    }
+	  }, {
+	    key: 'handleChange',
+	    value: function handleChange(event) {
+	      var key = event.target.name;
+	      var value = event.target.checked;
+	      this.props.updateSettings(_defineProperty({}, key, value));
+	    }
+	  }]);
+
+	  return GraphSettingsForm;
+	})(_react.Component);
+
+	exports['default'] = GraphSettingsForm;
+	module.exports = exports['default'];
+
+/***/ },
+/* 406 */
+/***/ function(module, exports) {
+
+	'use strict';
+	module.exports = function (str) {
+		if (typeof str !== 'string') {
+			throw new TypeError('Expected a string');
+		}
+
+		return str.toLowerCase().replace(/(?:^|\s|-)\S/g, function (m) {
+			return m.toUpperCase();
+		});
+	};
+
+
+/***/ },
+/* 407 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var SaveButton = (function (_Component) {
+	  _inherits(SaveButton, _Component);
+
+	  function SaveButton() {
+	    _classCallCheck(this, SaveButton);
+
+	    _get(Object.getPrototypeOf(SaveButton.prototype), "constructor", this).apply(this, arguments);
+	  }
+
+	  _createClass(SaveButton, [{
+	    key: "render",
+	    value: function render() {
+	      return _react2["default"].createElement(
+	        "button",
+	        {
+	          id: "oligrapherSaveButton",
+	          className: "btn btn-lg btn-default",
+	          onClick: this.props.save },
+	        "Save"
+	      );
+	    }
+	  }]);
+
+	  return SaveButton;
+	})(_react.Component);
+
+	exports["default"] = SaveButton;
+	module.exports = exports["default"];
+
+/***/ },
+/* 408 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35176,37 +44470,63 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _redux = __webpack_require__(155);
 
-	var _reducersGraphs = __webpack_require__(383);
+	var _reducersGraphs = __webpack_require__(409);
 
 	var _reducersGraphs2 = _interopRequireDefault(_reducersGraphs);
 
-	var _reducersPosition = __webpack_require__(384);
+	var _reducersPosition = __webpack_require__(410);
 
 	var _reducersPosition2 = _interopRequireDefault(_reducersPosition);
 
-	var _reducersSelection = __webpack_require__(385);
+	var _reducersSelection = __webpack_require__(412);
 
 	var _reducersSelection2 = _interopRequireDefault(_reducersSelection);
 
-	var _reducersZoom = __webpack_require__(386);
+	var _reducersZoom = __webpack_require__(413);
 
 	var _reducersZoom2 = _interopRequireDefault(_reducersZoom);
 
-	var _reducersEditTools = __webpack_require__(387);
+	var _reducersEditTools = __webpack_require__(414);
 
 	var _reducersEditTools2 = _interopRequireDefault(_reducersEditTools);
+
+	var _reducersTitle = __webpack_require__(415);
+
+	var _reducersTitle2 = _interopRequireDefault(_reducersTitle);
+
+	var _reducersAnnotations = __webpack_require__(416);
+
+	var _reducersAnnotations2 = _interopRequireDefault(_reducersAnnotations);
+
+	var _reducersSettings = __webpack_require__(418);
+
+	var _reducersSettings2 = _interopRequireDefault(_reducersSettings);
+
+	var _reducersShowHelpScreen = __webpack_require__(419);
+
+	var _reducersShowHelpScreen2 = _interopRequireDefault(_reducersShowHelpScreen);
+
+	var _reducersShowSettings = __webpack_require__(420);
+
+	var _reducersShowSettings2 = _interopRequireDefault(_reducersShowSettings);
 
 	exports['default'] = (0, _redux.combineReducers)({
 	  graphs: _reducersGraphs2['default'],
 	  position: _reducersPosition2['default'],
 	  selection: _reducersSelection2['default'],
 	  zoom: _reducersZoom2['default'],
-	  editTools: _reducersEditTools2['default']
+	  editTools: _reducersEditTools2['default'],
+	  // from annotations
+	  title: _reducersTitle2['default'],
+	  annotations: _reducersAnnotations2['default'],
+	  settings: _reducersSettings2['default'],
+	  showHelpScreen: _reducersShowHelpScreen2['default'],
+	  showSettings: _reducersShowSettings2['default']
 	});
 	module.exports = exports['default'];
 
 /***/ },
-/* 383 */
+/* 409 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35214,29 +44534,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
-	exports['default'] = graphs;
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-	var _actions = __webpack_require__(174);
+	var _actions = __webpack_require__(176);
 
-	var _modelsGraph = __webpack_require__(175);
+	var _modelsGraph = __webpack_require__(177);
 
 	var _modelsGraph2 = _interopRequireDefault(_modelsGraph);
 
-	var _modelsEdge = __webpack_require__(237);
+	var _modelsEdge = __webpack_require__(239);
 
 	var _modelsEdge2 = _interopRequireDefault(_modelsEdge);
 
-	var _lodashObjectMerge = __webpack_require__(177);
+	var _lodashObjectMerge = __webpack_require__(179);
 
 	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
 
-	var _lodashObjectAssign = __webpack_require__(239);
+	var _lodashObjectAssign = __webpack_require__(241);
 
 	var _lodashObjectAssign2 = _interopRequireDefault(_lodashObjectAssign);
+
+	var _shortid = __webpack_require__(214);
+
+	var _shortid2 = _interopRequireDefault(_shortid);
+
+	var _reduxUndo = __webpack_require__(175);
+
+	var _reduxUndo2 = _interopRequireDefault(_reduxUndo);
 
 	function graphs(state, action) {
 	  if (state === undefined) state = {};
@@ -35322,10 +44649,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	}
 
+	// export default undoable(graphs, { filter: excludeAction([LOAD_GRAPH, SHOW_GRAPH, TOGGLE_EDIT_TOOLS]) });
+	// export default undoable(graphs, { filter: distinctState() });
+	exports['default'] = (0, _reduxUndo2['default'])(graphs, { filter: function filterState(action, currentState, previousState) {
+	    // only add to history if not initializing graph and state changed
+	    return [_actions.LOAD_GRAPH, _actions.SHOW_GRAPH].indexOf(action.type) === -1 && currentState !== previousState;
+	  } });
 	module.exports = exports['default'];
 
 /***/ },
-/* 384 */
+/* 410 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35337,14 +44670,27 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _actions = __webpack_require__(174);
+	var _actions = __webpack_require__(176);
 
-	var _lodashObjectMerge = __webpack_require__(177);
+	var _lodashObjectMerge = __webpack_require__(179);
 
 	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
 
+	var _lodashUtilityRange = __webpack_require__(411);
+
+	var _lodashUtilityRange2 = _interopRequireDefault(_lodashUtilityRange);
+
+	var _lodashLangIsNumber = __webpack_require__(212);
+
+	var _lodashLangIsNumber2 = _interopRequireDefault(_lodashLangIsNumber);
+
+	var initState = {
+	  currentId: null,
+	  currentIndex: 0
+	};
+
 	function position(state, action) {
-	  if (state === undefined) state = { currentId: null };
+	  if (state === undefined) state = initState;
 
 	  switch (action.type) {
 
@@ -35357,6 +44703,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	    case _actions.SHOW_GRAPH:
 	      return (0, _lodashObjectMerge2['default'])({}, state, { currentId: action.id });
 
+	    // annotations
+
+	    case _actions.SHOW_ANNOTATION:
+	      return (0, _lodashLangIsNumber2['default'])(action.id) && action.id !== state.currntIndex ? (0, _lodashObjectMerge2['default'])({}, state, { currentIndex: action.id }) : state;
+
+	    case _actions.DELETE_ANNOTATION:
+	      return (0, _lodashObjectMerge2['default'])({}, state, { currentIndex: Math.max(0, state.currentIndex - 1) });
+
+	    case _actions.MOVE_ANNOTATION:
+	      var fromIndex = action.fromIndex,
+	          toIndex = action.toIndex;
+
+	      var indexes = (0, _lodashUtilityRange2['default'])(Math.max(fromIndex, toIndex, state.currentIndex) + 1);
+	      indexes.splice(toIndex, 0, indexes.splice(fromIndex, 1)[0]);
+	      return (0, _lodashObjectMerge2['default'])({}, state, { currentIndex: indexes.indexOf(state.currentIndex) });
+
+	    case _actions.CREATE_ANNOTATION:
+	      return typeof action.newIndex !== "undefined" ? (0, _lodashObjectMerge2['default'])({}, state, { currentIndex: action.newIndex }) : state;
+
 	    default:
 	      return state;
 	  }
@@ -35366,7 +44731,79 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 385 */
+/* 411 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isIterateeCall = __webpack_require__(210);
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeCeil = Math.ceil,
+	    nativeMax = Math.max;
+
+	/**
+	 * Creates an array of numbers (positive and/or negative) progressing from
+	 * `start` up to, but not including, `end`. If `end` is not specified it's
+	 * set to `start` with `start` then set to `0`. If `end` is less than `start`
+	 * a zero-length range is created unless a negative `step` is specified.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Utility
+	 * @param {number} [start=0] The start of the range.
+	 * @param {number} end The end of the range.
+	 * @param {number} [step=1] The value to increment or decrement by.
+	 * @returns {Array} Returns the new array of numbers.
+	 * @example
+	 *
+	 * _.range(4);
+	 * // => [0, 1, 2, 3]
+	 *
+	 * _.range(1, 5);
+	 * // => [1, 2, 3, 4]
+	 *
+	 * _.range(0, 20, 5);
+	 * // => [0, 5, 10, 15]
+	 *
+	 * _.range(0, -4, -1);
+	 * // => [0, -1, -2, -3]
+	 *
+	 * _.range(1, 4, 0);
+	 * // => [1, 1, 1]
+	 *
+	 * _.range(0);
+	 * // => []
+	 */
+	function range(start, end, step) {
+	  if (step && isIterateeCall(start, end, step)) {
+	    end = step = undefined;
+	  }
+	  start = +start || 0;
+	  step = step == null ? 1 : (+step || 0);
+
+	  if (end == null) {
+	    end = start;
+	    start = 0;
+	  } else {
+	    end = +end || 0;
+	  }
+	  // Use `Array(length)` so engines like Chakra and V8 avoid slower modes.
+	  // See https://youtu.be/XAqIpGU8ZZk#t=17m25s for more details.
+	  var index = -1,
+	      length = nativeMax(nativeCeil((end - start) / (step || 1)), 0),
+	      result = Array(length);
+
+	  while (++index < length) {
+	    result[index] = start;
+	    start += step;
+	  }
+	  return result;
+	}
+
+	module.exports = range;
+
+
+/***/ },
+/* 412 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35378,13 +44815,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _actions = __webpack_require__(174);
+	var _actions = __webpack_require__(176);
 
-	var _lodashObjectMerge = __webpack_require__(177);
+	var _lodashObjectMerge = __webpack_require__(179);
 
 	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
 
-	var _lodashObjectAssign = __webpack_require__(239);
+	var _lodashObjectAssign = __webpack_require__(241);
 
 	var _lodashObjectAssign2 = _interopRequireDefault(_lodashObjectAssign);
 
@@ -35444,7 +44881,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 386 */
+/* 413 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35454,7 +44891,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports['default'] = zoom;
 
-	var _actions = __webpack_require__(174);
+	var _actions = __webpack_require__(176);
 
 	function zoom(state, action) {
 	  if (state === undefined) state = 1;
@@ -35478,7 +44915,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 387 */
+/* 414 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -35488,7 +44925,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports["default"] = editTools;
 
-	var _actions = __webpack_require__(174);
+	var _actions = __webpack_require__(176);
 
 	var initState = {
 	  visible: false,
@@ -35512,6 +44949,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    case _actions.SET_NODE_RESULTS:
 	      return Object.assign({}, state, { nodeResults: action.nodes });
 
+	    case _actions.CREATE_ANNOTATION:
+	      return Object.assign({}, state, { visible: false });
+
 	    default:
 	      return state;
 	  }
@@ -35521,16 +44961,267 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 388 */
+/* 415 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports['default'] = title;
+
+	var _actions = __webpack_require__(176);
+
+	function title(state, action) {
+	  if (state === undefined) state = null;
+
+	  switch (action.type) {
+
+	    case _actions.SET_TITLE:
+	      return action.title;
+
+	    default:
+	      return state;
+	  }
+	}
+
+	;
+	module.exports = exports['default'];
+
+/***/ },
+/* 416 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports['default'] = annotations;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+
+	var _modelsAnnotation = __webpack_require__(417);
+
+	var _modelsAnnotation2 = _interopRequireDefault(_modelsAnnotation);
+
+	var _actions = __webpack_require__(176);
+
+	var _lodashObjectMerge = __webpack_require__(179);
+
+	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
+
+	var _lodashObjectAssign = __webpack_require__(241);
+
+	var _lodashObjectAssign2 = _interopRequireDefault(_lodashObjectAssign);
+
+	var _lodashObjectKeys = __webpack_require__(205);
+
+	var _lodashObjectKeys2 = _interopRequireDefault(_lodashObjectKeys);
+
+	var _lodashLangCloneDeep = __webpack_require__(255);
+
+	var _lodashLangCloneDeep2 = _interopRequireDefault(_lodashLangCloneDeep);
+
+	var initState = { list: [], visible: true };
+
+	function annotations(state, action) {
+	  if (state === undefined) state = initState;
+
+	  switch (action.type) {
+
+	    case _actions.LOAD_ANNOTATIONS:
+	      return (0, _lodashObjectMerge2['default'])({}, state, { list: action.annotations.map(function (a) {
+	          return _modelsAnnotation2['default'].setDefaults(a);
+	        }) });
+
+	    case _actions.UPDATE_ANNOTATION:
+	      return (0, _lodashObjectMerge2['default'])({}, state, { list: [].concat(_toConsumableArray(state.list.slice(0, action.id)), [(0, _lodashObjectAssign2['default'])({}, state.list[action.id], action.data)], _toConsumableArray(state.list.slice(action.id + 1))) });
+
+	    case _actions.DELETE_ANNOTATION:
+	      return (0, _lodashObjectAssign2['default'])({}, state, { list: [].concat(_toConsumableArray(state.list.slice(0, action.id)), _toConsumableArray(state.list.slice(action.id + 1))) });
+
+	    case _actions.CREATE_ANNOTATION:
+	      return (0, _lodashObjectMerge2['default'])({}, state, { list: [].concat(_toConsumableArray(state.list), [_modelsAnnotation2['default'].defaults()]) });
+
+	    case _actions.MOVE_ANNOTATION:
+	      var annotations = (0, _lodashLangCloneDeep2['default'])(state.list);
+	      annotations.splice(action.toIndex, 0, annotations.splice(action.fromIndex, 1)[0]);
+	      return (0, _lodashObjectMerge2['default'])({}, state, { list: annotations });
+
+	    case _actions.TOGGLE_ANNOTATIONS:
+	      var visible = typeof action.value == "undefined" ? !state.visible : action.value;
+	      return (0, _lodashObjectMerge2['default'])({}, state, { visible: visible });
+
+	    default:
+	      return state;
+	  }
+	}
+
+	;
+	module.exports = exports['default'];
+
+/***/ },
+/* 417 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var _lodashObjectMerge = __webpack_require__(179);
+
+	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
+
+	var _shortid = __webpack_require__(214);
+
+	var _shortid2 = _interopRequireDefault(_shortid);
+
+	var Annotation = (function () {
+	  function Annotation() {
+	    _classCallCheck(this, Annotation);
+	  }
+
+	  _createClass(Annotation, null, [{
+	    key: 'defaults',
+	    value: function defaults() {
+	      return {
+	        id: _shortid2['default'].generate(),
+	        header: "Untitled Annotation",
+	        text: "",
+	        nodeIds: [],
+	        edgeIds: [],
+	        captionIds: []
+	      };
+	    }
+	  }, {
+	    key: 'setDefaults',
+	    value: function setDefaults(annotation) {
+	      return (0, _lodashObjectMerge2['default'])({}, this.defaults(), annotation);
+	    }
+	  }]);
+
+	  return Annotation;
+	})();
+
+	exports['default'] = Annotation;
+	module.exports = exports['default'];
+
+/***/ },
+/* 418 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports['default'] = title;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _actions = __webpack_require__(176);
+
+	var _lodashObjectMerge = __webpack_require__(179);
+
+	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
+
+	function title(state, action) {
+	  if (state === undefined) state = {};
+
+	  switch (action.type) {
+
+	    case _actions.SET_SETTINGS:
+	      return (0, _lodashObjectMerge2['default'])({}, state, action.settings);
+
+	    default:
+	      return state;
+	  }
+	}
+
+	;
+	module.exports = exports['default'];
+
+/***/ },
+/* 419 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports["default"] = showHelpScreen;
+
+	var _actions = __webpack_require__(176);
+
+	function showHelpScreen(state, action) {
+	  if (state === undefined) state = false;
+
+	  switch (action.type) {
+
+	    case _actions.TOGGLE_HELP_SCREEN:
+	      return typeof action.value == "undefined" ? !state : action.value;
+
+	    default:
+	      return state;
+	  }
+	}
+
+	;
+	module.exports = exports["default"];
+
+/***/ },
+/* 420 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports["default"] = showSettings;
+
+	var _actions = __webpack_require__(176);
+
+	function showSettings(state, action) {
+	  if (state === undefined) state = false;
+
+	  switch (action.type) {
+
+	    case _actions.TOGGLE_SETTINGS:
+	      return typeof action.value == "undefined" ? !state : action.value;
+
+	    default:
+	      return state;
+	  }
+	}
+
+	;
+	module.exports = exports["default"];
+
+/***/ },
+/* 421 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(389);
+	var content = __webpack_require__(422);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(379)(content, {});
+	var update = __webpack_require__(382)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -35547,15 +45238,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 389 */
+/* 422 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(377)();
+	exports = module.exports = __webpack_require__(380)();
 	// imports
 
 
 	// module
-	exports.push([module.id, "#oligrapherContainer:focus, #oligrapherContainer :focus {\n  outline: none;\n}\n\na.nodeLabel {\n  cursor: pointer;\n}\n\na.nodeLabel:hover {\n  text-decoration: none;\n}\n\na.nodeLabel text tspan {\n  font-family: Helvetica, Arial, sans-serif;  \n}\n\n.edge text {\n  font-family: Helvetica, Arial, sans-serif;  \n}\n\n#oligrapherContainer:hover .edge:not(.dragging) text {\n  display: none;\n}\n\n#oligrapherContainer:hover .edge:hover text, .edge.selected text, .edge.highlighted text {\n  display: inline;\n}\n\n.edge:hover text.link {\n  cursor: pointer;\n}\n\n.caption {\n  font-family: Helvetica, Arial, sans-serif;\n  cursor: default;\n}", ""]);
+	exports.push([module.id, "#oligrapherContainer:focus, #oligrapherContainer :focus {\n  outline: none;\n}\n\na.nodeLabel {\n  cursor: pointer;\n}\n\na.nodeLabel:hover {\n  text-decoration: none;\n}\n\na.nodeLabel text tspan {\n  font-family: Helvetica, Arial, sans-serif;  \n}\n\n.edge text {\n  font-family: Helvetica, Arial, sans-serif;  \n}\n\n#oligrapherContainer:hover .edge:not(.dragging) text {\n  display: none;\n}\n\n#oligrapherContainer:hover .edge:hover text, .edge.selected text, .edge.highlighted text {\n  display: inline;\n}\n\n.edge:hover text.link {\n  cursor: pointer;\n}\n\n.caption {\n  font-family: Helvetica, Arial, sans-serif;\n  cursor: default;\n}\n\n/* from annotations app */\n\n#oligrapherContainer {\n  position: relative;\n}\n\n#oligrapherGraphContainer {\n  position: relative;\n  border: 1px solid #f8f8f8;\n}\n\n#oligrapherHeader {\n  margin-bottom: 10px;  \n}\n\n#oligrapherTitle {\n  font-size: 50px;\n  font-weight: 300;\n  margin-top: 3px;\n  margin-bottom: 5px;\n}\n\n#oligrapherTitle.oligrapherTitleInput {\n  margin-top: 0;\n  margin-bottom: 1px;\n}\n\n#oligrapherTitle a {\n  text-decoration: none;\n}\n\n#oligrapherTitleInput {\n  border: 1px solid #ccc;\n  padding: 0;\n  width: 100%;\n}\n\n#oligrapherByLine {\n  margin-right: 18px;\n}\n\n#oligrapherDate {\n  color: #888;\n}\n\n#oligrapherGraphLinks {\n  margin-left: 2px;\n}\n\n#oligrapherGraphLinks a {\n  display: inline-block;\n  margin-right: 12px;\n  font-size: 12px;\n  cursor: pointer;\n}\n\n#oligrapherGraphLinks form {\n  display: inline-block;\n}", ""]);
 
 	// exports
 
