@@ -188,10 +188,6 @@ class Oligrapher {
   circleLayout() {
     this.root.dispatchProps.dispatch(layoutCircle(this.currentGraphId()));
   }
-
-  setGraphHeight(height) {
-    this.root.getWrappedInstance().graph.setHeight(height);
-  }
 };
 
 module.exports = Oligrapher;

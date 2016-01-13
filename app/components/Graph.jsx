@@ -284,8 +284,4 @@ export default class Graph extends BaseComponent {
   recenter() {
     this.setState({ x: 0, y: 0 });
   }
-
-  setHeight(height) {
-    this.setState({ height });
-  }
 }
