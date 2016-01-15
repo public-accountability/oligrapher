@@ -35,6 +35,7 @@ import merge from 'lodash/object/merge';
 import cloneDeep from 'lodash/lang/cloneDeep';
 import isNumber from 'lodash/lang/isNumber';
 import keys from 'lodash/object/keys';
+import filter from 'lodash/collection/filter';
 
 class Root extends Component {
   constructor(props) {
@@ -48,6 +49,9 @@ class Root extends Component {
           hasSettings, graphSettings, showSettings, onSave,
           currentIndex, annotation, annotations, showAnnotations } = this.props;
     let that = this;
+
+    // apply annotation highlights to graph if available
+    let annotatedGraph = graph && annotation ? GraphModel.setHighlights(graph, annotation, !isEditor) : graph;
 
     const keyMap = { 
       'undo': 'ctrl+,',
@@ -129,17 +133,19 @@ class Root extends Component {
       <div id="oligrapherContainer" style={{ height: '100%' }}>
         <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={keyHandlers}>
           <div className="row">
-            <div className={showAnnotations && hasAnnotations ? "col-md-8" : "col-md-12"}>
+            <div id="oligrapherGraphCol" className={showAnnotations && hasAnnotations ? "col-md-8" : "col-md-12"}>
               { isEditor || graphTitle ? 
                 <GraphHeader
+                  {...this.props}
                   updateTitle={updateTitle}
-                  title={this.props.graphTitle}
-                  isEditor={isEditor}
-                  {...this.props} /> : null }
+                  title={graphTitle}
+                  isEditor={isEditor} /> : null }
 
               <div id="oligrapherGraphContainer">
-                { this.props.graph ? <Graph 
+                { graph ? <Graph 
                   ref={(c) => { this.graph = c; if (c) { c.root = this; } }}
+                  {...this.props}
+                  graph={annotatedGraph ? annotatedGraph : graph}
                   isEditor={isEditor}
                   isLocked={isLocked}
                   clickNode={clickNode}
@@ -147,31 +153,22 @@ class Root extends Component {
                   clickCaption={clickCaption}
                   moveNode={(graphId, nodeId, x, y) => dispatch(moveNode(graphId, nodeId, x, y))} 
                   moveEdge={(graphId, edgeId, cx, cy) => dispatch(moveEdge(graphId, edgeId, cx, cy))} 
-                  moveCaption={(graphId, captionId, x, y) => dispatch(moveCaption(graphId, captionId, x, y))} 
-                  {...this.props} /> : null }
+                  moveCaption={(graphId, captionId, x, y) => dispatch(moveCaption(graphId, captionId, x, y))} /> : null }
 
-                { this.props.graph ? <Editor 
-                  graph={this.props.graph}
+                { graph ? <Editor 
+                  {...this.props}
                   graphApi={graphApi}
                   isEditor={isEditor} 
-                  showEditTools={this.props.showEditTools} 
                   showEditButton={false} 
                   hideHelp={true} 
-                  dataSource={this.props.dataSource} 
-                  selection={this.props.selection} 
-                  nodeResults={this.props.nodeResults}
                   setNodeResults={(nodes) => dispatch(setNodeResults(nodes))}
-                  addForm={this.props.addForm}
-                  toggleEditTools={this.toggleEditTools}
                   toggleAddForm={(form) => dispatch(toggleAddForm(form))}
                   undo={() => dispatch(ActionCreators.undo())}
-                  redo={() => dispatch(ActionCreators.redo())} 
-                  canUndo={this.props.canUndo}
-                  canRedo={this.props.canRedo} /> : null }
+                  redo={() => dispatch(ActionCreators.redo())} /> : null }
 
                 <div id="oligrapherMetaButtons">
                   { isEditor ? 
-                    <EditButton toggle={this.toggleEditTools} showEditTools={showEditTools} /> : null }
+                    <EditButton toggle={() => this.toggleEditTools()} showEditTools={showEditTools} /> : null }
                   { isEditor && hasSettings ? 
                     <SettingsButton toggleSettings={(value) => dispatch(toggleSettings(value))} /> : null }
                   { isEditor ? 
@@ -184,7 +181,7 @@ class Root extends Component {
             { showAnnotations && hasAnnotations ?
               <GraphAnnotations 
                 isEditor={isEditor}
-                navList={this.props.isEditor}
+                navList={isEditor}
                 prevClick={prevClick}
                 nextClick={nextClick}
                 swapAnnotations={swapAnnotations}
@@ -243,19 +240,21 @@ class Root extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    // fire selection callback with glorified selection state if selection changed
-    if (this.props.onSelection) {
-      let { selection, graph } = this.props;
+    let { selection, graph, onSelection } = this.props;
 
-      if (JSON.stringify(prevProps.selection) !== JSON.stringify(selection)) {
-        this.props.onSelection(selection);
+    if (JSON.stringify(prevProps.selection) !== JSON.stringify(selection)) {
+      // fire selection callback with glorified selection state if selection changed
+      if (onSelection) {
+        onSelection(selection);
       }
     }
 
-    // fire update callback if graph changed
-    if (this.props.onUpdate) {
-      if (JSON.stringify(prevProps.graph) !== JSON.stringify(this.props.graph)) {
-        this.props.onUpdate(this.props.graph);
+    if (JSON.stringify(prevProps.graph) !== JSON.stringify(this.props.graph)) {
+      // this.updateAnnotationHighlights();
+
+      // fire update callback if graph changed
+      if (this.props.onUpdate) {      
+          this.props.onUpdate(this.props.graph);
       }
     }
   }
@@ -302,6 +301,16 @@ class Root extends Component {
     );
   }
 
+  updateAnnotationHighlights() {
+    let highlights = GraphModel.highlightedOnly(this.props.graph);
+    let updateData = { 
+      nodeIds: keys(highlights.nodes), 
+      edgeIds: keys(highlights.edges), 
+      captionIds: keys(highlights.captions) 
+    }
+    this.props.dispatch(updateAnnotation(this.props.currentIndex, updateData));    
+  }
+
   handleSave() {
     if (this.props.onSave) {
       this.props.onSave({
@@ -326,9 +335,9 @@ function select(state) {
     addForm: state.editTools.addForm,
     nodeResults: state.editTools.nodeResults,
     graphTitle: state.title,
-    currentIndex: state.position.currentIndex,
+    currentIndex: state.annotations.currentIndex,
     numAnnotations: state.annotations.list.length,
-    annotation: state.annotations.list[state.position.currentIndex],
+    annotation: state.annotations.list[state.annotations.currentIndex],
     annotations: state.annotations.list,
     showAnnotations: state.annotations.visible,
     graphSettings: state.settings,

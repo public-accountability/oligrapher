@@ -74,7 +74,7 @@ export default class UpdateEdgeForm extends BaseComponent {
 
   apply() {
     if (this.props.data) {
-      let label = this.refs.label.value.trim();
+      let label = this.refs.label.value;
       let arrow = this.refs.arrow.checked;
       let dash = this.refs.dash.checked;
       let scale = parseFloat(this.refs.scale.value);

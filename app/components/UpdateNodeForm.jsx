@@ -68,7 +68,7 @@ export default class UpdateNodeForm extends BaseComponent {
 
   apply() {
     if (this.props.data) {
-      let name = this.refs.name.value.trim();
+      let name = this.refs.name.value;
       let image = this.refs.image.value.trim();
       let scale = parseFloat(this.refs.scale.value);
       let url = this.refs.url.value.trim();

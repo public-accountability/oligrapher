@@ -89,7 +89,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _componentsRoot2 = _interopRequireDefault(_componentsRoot);
 
-	var _reducers = __webpack_require__(408);
+	var _reducers = __webpack_require__(411);
 
 	var _reducers2 = _interopRequireDefault(_reducers);
 
@@ -107,7 +107,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _lodashArrayDifference2 = _interopRequireDefault(_lodashArrayDifference);
 
-	__webpack_require__(421);
+	__webpack_require__(424);
 
 	var Oligrapher = (function () {
 	  function Oligrapher() {
@@ -150,6 +150,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  _createClass(Oligrapher, [{
+	    key: 'toggleEditTools',
+	    value: function toggleEditTools(value) {
+	      this.root.getWrappedInstance().toggleEditTools(value);
+	    }
+	  }, {
 	    key: 'toggleEditor',
 	    value: function toggleEditor(value) {
 	      this.root.getWrappedInstance().toggleEditor(value);
@@ -161,14 +166,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }, {
 	    key: 'import',
-	    value: function _import(graphData) {
-	      this.root.dispatchProps.dispatch((0, _actions.loadGraph)(graphData));
+	    value: function _import(data) {
+	      this.root.dispatchProps.dispatch((0, _actions.loadGraph)(data.graph));
+	      this.root.dispatchProps.dispatch(loadAnnotations(data.annotations));
 	      return this.root.getWrappedInstance().props.loadedId;
 	    }
 	  }, {
 	    key: 'export',
 	    value: function _export() {
+	      var instance = this.root.getWrappedInstance();
+
+	      return {
+	        title: instance.props.graphTitle,
+	        graph: instance.graphWithoutHighlights(),
+	        annotations: instance.props.annotations,
+	        settings: instance.props.graphSettings
+	      };
+	    }
+	  }, {
+	    key: 'exportGraph',
+	    value: function exportGraph() {
 	      return this.root.getWrappedInstance().props.graph;
+	    }
+	  }, {
+	    key: 'exportAnnotation',
+	    value: function exportAnnotation() {
+	      return this.root.getWrappedInstance().props.annotation;
 	    }
 	  }, {
 	    key: 'new',
@@ -177,10 +200,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this.currentGraphId();
 	    }
 	  }, {
-	    key: 'show',
-	    value: function show(id) {
+	    key: 'showGraph',
+	    value: function showGraph(id) {
 	      this.root.dispatchProps.dispatch((0, _actions.showGraph)(id));
 	    }
+	  }, {
+	    key: 'showAnnotation',
+	    value: (function (_showAnnotation) {
+	      function showAnnotation(_x) {
+	        return _showAnnotation.apply(this, arguments);
+	      }
+
+	      showAnnotation.toString = function () {
+	        return _showAnnotation.toString();
+	      };
+
+	      return showAnnotation;
+	    })(function (index) {
+	      this.root.dispatchProps.dispatch(showAnnotation(index));
+	    })
 	  }, {
 	    key: 'zoomIn',
 	    value: function zoomIn() {
@@ -20570,6 +20608,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
@@ -20584,6 +20624,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactDom = __webpack_require__(154);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
 	var _reactRedux = __webpack_require__(164);
 
 	var _reduxUndo = __webpack_require__(175);
@@ -20594,37 +20638,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Graph2 = _interopRequireDefault(_Graph);
 
-	var _modelsGraph = __webpack_require__(177);
-
-	var _modelsGraph2 = _interopRequireDefault(_modelsGraph);
-
-	var _reactHotkeys = __webpack_require__(308);
-
-	var _reactDom = __webpack_require__(154);
-
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-
-	var _lodashObjectPick = __webpack_require__(355);
-
-	var _lodashObjectPick2 = _interopRequireDefault(_lodashObjectPick);
-
-	var _lodashObjectMerge = __webpack_require__(179);
-
-	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
-
-	var _lodashLangCloneDeep = __webpack_require__(255);
-
-	var _lodashLangCloneDeep2 = _interopRequireDefault(_lodashLangCloneDeep);
-
-	var _lodashLangIsNumber = __webpack_require__(212);
-
-	var _lodashLangIsNumber2 = _interopRequireDefault(_lodashLangIsNumber);
-
-	var _lodashObjectKeys = __webpack_require__(205);
-
-	var _lodashObjectKeys2 = _interopRequireDefault(_lodashObjectKeys);
-
-	var _Editor = __webpack_require__(356);
+	var _Editor = __webpack_require__(308);
 
 	var _Editor2 = _interopRequireDefault(_Editor);
 
@@ -20644,7 +20658,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _HelpButton2 = _interopRequireDefault(_HelpButton);
 
-	var _HelpScreen = __webpack_require__(377);
+	var _HelpScreen = __webpack_require__(376);
 
 	var _HelpScreen2 = _interopRequireDefault(_HelpScreen);
 
@@ -20659,6 +20673,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _SaveButton = __webpack_require__(407);
 
 	var _SaveButton2 = _interopRequireDefault(_SaveButton);
+
+	var _modelsGraph = __webpack_require__(177);
+
+	var _modelsGraph2 = _interopRequireDefault(_modelsGraph);
+
+	var _reactHotkeys = __webpack_require__(309);
+
+	var _lodashObjectPick = __webpack_require__(377);
+
+	var _lodashObjectPick2 = _interopRequireDefault(_lodashObjectPick);
+
+	var _lodashObjectMerge = __webpack_require__(179);
+
+	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
+
+	var _lodashLangCloneDeep = __webpack_require__(255);
+
+	var _lodashLangCloneDeep2 = _interopRequireDefault(_lodashLangCloneDeep);
+
+	var _lodashLangIsNumber = __webpack_require__(212);
+
+	var _lodashLangIsNumber2 = _interopRequireDefault(_lodashLangIsNumber);
+
+	var _lodashObjectKeys = __webpack_require__(205);
+
+	var _lodashObjectKeys2 = _interopRequireDefault(_lodashObjectKeys);
+
+	var _lodashCollectionFilter = __webpack_require__(408);
+
+	var _lodashCollectionFilter2 = _interopRequireDefault(_lodashCollectionFilter);
 
 	var Root = (function (_Component) {
 	  _inherits(Root, _Component);
@@ -20675,6 +20719,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function render() {
 	      var _this = this;
 
+	      var _props = this.props;
+	      var dispatch = _props.dispatch;
+	      var graph = _props.graph;
+	      var selection = _props.selection;
+	      var isEditor = _props.isEditor;
+	      var isLocked = _props.isLocked;
+	      var graphTitle = _props.graphTitle;
+	      var showEditTools = _props.showEditTools;
+	      var showSaveButton = _props.showSaveButton;
+	      var showHelpScreen = _props.showHelpScreen;
+	      var hasSettings = _props.hasSettings;
+	      var graphSettings = _props.graphSettings;
+	      var showSettings = _props.showSettings;
+	      var onSave = _props.onSave;
+	      var currentIndex = _props.currentIndex;
+	      var annotation = _props.annotation;
+	      var annotations = _props.annotations;
+	      var showAnnotations = _props.showAnnotations;
+
+	      var that = this;
+
+	      // apply annotation highlights to graph if available
+	      var annotatedGraph = graph && annotation ? _modelsGraph2['default'].setHighlights(graph, annotation, !isEditor) : graph;
+
 	      var keyMap = {
 	        'undo': 'ctrl+,',
 	        'redo': 'ctrl+.',
@@ -20683,9 +20751,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        'resetZoom': 'ctrl+0',
 	        'shiftDown': { sequence: 'shift', action: 'keydown' },
 	        'shiftUp': { sequence: 'shift', action: 'keyup' },
-	        'altDown': [{ sequence: 'alt', action: 'keydown' }, { sequence: 'ctrl', action: 'keydown' }, { sequence: 'command', action: 'keydown' }],
-	        'altUp': [{ sequence: 'alt', action: 'keyup' }, { sequence: 'ctrl', action: 'keyup' }, { sequence: 'command', action: 'keyup' }],
-	        'delSelected': ['alt+d', 'ctrl+d', 'command+d']
+	        'delete': ['alt+d', 'ctrl+d', 'command+d']
 	      };
 
 	      var keyHandlers = {
@@ -20710,36 +20776,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        'shiftUp': function shiftUp() {
 	          return _this.setState({ shiftKey: false });
 	        },
-	        'altDown': function altDown() {
-	          return _this.setState({ altKey: true });
-	        },
-	        'altUp': function altUp() {
-	          return _this.setState({ altKey: false });
-	        },
-	        'delSelected': function delSelected() {
-	          return dispatch((0, _actions.deleteSelection)(_this.props.graph.id, _this.props.selection));
+	        'delete': function _delete() {
+	          return dispatch((0, _actions.deleteSelection)(graph.id, selection));
 	        }
 	      };
-
-	      var _props = this.props;
-	      var dispatch = _props.dispatch;
-	      var graph = _props.graph;
-	      var isEditor = _props.isEditor;
-	      var isLocked = _props.isLocked;
-	      var graphTitle = _props.graphTitle;
-	      var showEditTools = _props.showEditTools;
-	      var showSaveButton = _props.showSaveButton;
-	      var showHelpScreen = _props.showHelpScreen;
-	      var hasSettings = _props.hasSettings;
-	      var graphSettings = _props.graphSettings;
-	      var showSettings = _props.showSettings;
-	      var onSave = _props.onSave;
-	      var currentIndex = _props.currentIndex;
-	      var annotation = _props.annotation;
-	      var annotations = _props.annotations;
-	      var showAnnotations = _props.showAnnotations;
-
-	      var that = this;
 
 	      var graphApi = {
 	        getGraph: function getGraph() {
@@ -20789,8 +20829,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      };
 
-	      var _toggleEditTools = function _toggleEditTools(value) {
-	        dispatch((0, _actions.toggleEditTools)(value));
+	      var clickNode = function clickNode(graphId, nodeId) {
+	        isEditor && showEditTools ? dispatch((0, _actions.swapNodeSelection)(nodeId, !that.state.shiftKey)) : isLocked ? null : dispatch((0, _actions.swapNodeHighlight)(graphId, nodeId));
+	      };
+	      var clickEdge = function clickEdge(graphId, edgeId) {
+	        isEditor && showEditTools ? dispatch((0, _actions.swapEdgeSelection)(edgeId, !that.state.shiftKey)) : isLocked ? null : dispatch((0, _actions.swapEdgeHighlight)(graphId, edgeId));
+	      };
+	      var clickCaption = function clickCaption(graphId, captionId) {
+	        isEditor && showEditTools ? dispatch((0, _actions.swapCaptionSelection)(captionId, !that.state.shiftKey)) : isLocked ? null : dispatch((0, _actions.swapCaptionHighlight)(graphId, captionId));
 	      };
 
 	      // annotations stuff
@@ -20842,35 +20888,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	            { className: 'row' },
 	            _react2['default'].createElement(
 	              'div',
-	              { className: showAnnotations && hasAnnotations ? "col-md-8" : "col-md-12" },
-	              isEditor || graphTitle ? _react2['default'].createElement(_GraphHeader2['default'], {
-	                graph: this.props.graph,
-	                title: this.props.graphTitle,
-	                url: this.props.url,
+	              { id: 'oligrapherGraphCol', className: showAnnotations && hasAnnotations ? "col-md-8" : "col-md-12" },
+	              isEditor || graphTitle ? _react2['default'].createElement(_GraphHeader2['default'], _extends({}, this.props, {
 	                updateTitle: updateTitle,
-	                user: this.props.user,
-	                date: this.props.date,
-	                links: this.props.links,
-	                isEditor: isEditor }) : null,
+	                title: graphTitle,
+	                isEditor: isEditor })) : null,
 	              _react2['default'].createElement(
 	                'div',
 	                { id: 'oligrapherGraphContainer' },
-	                this.props.graph ? _react2['default'].createElement(_Graph2['default'], {
+	                graph ? _react2['default'].createElement(_Graph2['default'], _extends({
 	                  ref: function (c) {
 	                    _this.graph = c;if (c) {
 	                      c.root = _this;
 	                    }
-	                  },
-	                  graph: this.props.graph,
-	                  zoom: this.props.zoom,
-	                  height: this.props.height,
+	                  }
+	                }, this.props, {
+	                  graph: annotatedGraph ? annotatedGraph : graph,
 	                  isEditor: isEditor,
 	                  isLocked: isLocked,
-	                  viewOnlyHighlighted: this.props.viewOnlyHighlighted,
-	                  selection: this.props.selection,
-	                  resetZoom: function () {
-	                    return dispatch((0, _actions.resetZoom)());
-	                  },
+	                  clickNode: clickNode,
+	                  clickEdge: clickEdge,
+	                  clickCaption: clickCaption,
 	                  moveNode: function (graphId, nodeId, x, y) {
 	                    return dispatch((0, _actions.moveNode)(graphId, nodeId, x, y));
 	                  },
@@ -20879,31 +20917,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	                  },
 	                  moveCaption: function (graphId, captionId, x, y) {
 	                    return dispatch((0, _actions.moveCaption)(graphId, captionId, x, y));
-	                  },
-	                  clickNode: function (graphId, nodeId) {
-	                    isEditor && showEditTools ? dispatch((0, _actions.swapNodeSelection)(nodeId, !that.state.shiftKey)) : isLocked ? null : dispatch((0, _actions.swapNodeHighlight)(graphId, nodeId));
-	                  },
-	                  clickEdge: function (graphId, edgeId) {
-	                    isEditor && showEditTools ? dispatch((0, _actions.swapEdgeSelection)(edgeId, !that.state.shiftKey)) : isLocked ? null : dispatch((0, _actions.swapEdgeHighlight)(graphId, edgeId));
-	                  },
-	                  clickCaption: function (graphId, captionId) {
-	                    isEditor && showEditTools ? dispatch((0, _actions.swapCaptionSelection)(captionId, !that.state.shiftKey)) : isLocked ? null : dispatch((0, _actions.swapCaptionHighlight)(graphId, captionId));
-	                  } }) : null,
-	                this.props.graph ? _react2['default'].createElement(_Editor2['default'], {
-	                  graph: this.props.graph,
+	                  } })) : null,
+	                graph ? _react2['default'].createElement(_Editor2['default'], _extends({}, this.props, {
 	                  graphApi: graphApi,
 	                  isEditor: isEditor,
-	                  showEditTools: this.props.showEditTools,
 	                  showEditButton: false,
 	                  hideHelp: true,
-	                  dataSource: this.props.dataSource,
-	                  selection: this.props.selection,
-	                  nodeResults: this.props.nodeResults,
 	                  setNodeResults: function (nodes) {
 	                    return dispatch((0, _actions.setNodeResults)(nodes));
 	                  },
-	                  addForm: this.props.addForm,
-	                  toggleEditTools: _toggleEditTools,
 	                  toggleAddForm: function (form) {
 	                    return dispatch((0, _actions.toggleAddForm)(form));
 	                  },
@@ -20912,14 +20934,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                  },
 	                  redo: function () {
 	                    return dispatch(_reduxUndo.ActionCreators.redo());
-	                  },
-	                  canUndo: this.props.canUndo,
-	                  canRedo: this.props.canRedo }) : null,
+	                  } })) : null,
 	                _react2['default'].createElement(
 	                  'div',
 	                  { id: 'oligrapherMetaButtons' },
 	                  isEditor ? _react2['default'].createElement(_EditButton2['default'], { toggle: function () {
-	                      return dispatch((0, _actions.toggleEditTools)());
+	                      return _this.toggleEditTools();
 	                    }, showEditTools: showEditTools }) : null,
 	                  isEditor && hasSettings ? _react2['default'].createElement(_SettingsButton2['default'], { toggleSettings: function (value) {
 	                      return dispatch((0, _actions.toggleSettings)(value));
@@ -20933,7 +20953,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            ),
 	            showAnnotations && hasAnnotations ? _react2['default'].createElement(_GraphAnnotations2['default'], {
 	              isEditor: isEditor,
-	              navList: this.props.isEditor,
+	              navList: isEditor,
 	              prevClick: prevClick,
 	              nextClick: nextClick,
 	              swapAnnotations: swapAnnotations,
@@ -21012,20 +21032,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'componentDidUpdate',
 	    value: function componentDidUpdate(prevProps) {
-	      // fire selection callback with glorified selection state if selection changed
-	      if (this.props.onSelection) {
-	        var _props3 = this.props;
-	        var selection = _props3.selection;
-	        var graph = _props3.graph;
+	      var _props3 = this.props;
+	      var selection = _props3.selection;
+	      var graph = _props3.graph;
+	      var onSelection = _props3.onSelection;
 
-	        if (JSON.stringify(prevProps.selection) !== JSON.stringify(selection)) {
-	          this.props.onSelection(selection);
+	      if (JSON.stringify(prevProps.selection) !== JSON.stringify(selection)) {
+	        // fire selection callback with glorified selection state if selection changed
+	        if (onSelection) {
+	          onSelection(selection);
 	        }
 	      }
 
-	      // fire update callback if graph changed
-	      if (this.props.onUpdate) {
-	        if (JSON.stringify(prevProps.graph) !== JSON.stringify(this.props.graph)) {
+	      if (JSON.stringify(prevProps.graph) !== JSON.stringify(this.props.graph)) {
+	        // this.updateAnnotationHighlights();
+
+	        // fire update callback if graph changed
+	        if (this.props.onUpdate) {
 	          this.props.onUpdate(this.props.graph);
 	        }
 	      }
@@ -21048,6 +21071,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'toggleLocked',
 	    value: function toggleLocked(value) {
 	      this.setState({ isLocked: value });
+	    }
+	  }, {
+	    key: 'toggleEditTools',
+	    value: function toggleEditTools(value) {
+	      this.props.dispatch((0, _actions.toggleEditTools)(value));
 	    }
 	  }, {
 	    key: 'prevIndex',
@@ -21078,6 +21106,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return (0, _lodashObjectPick2['default'])(_modelsGraph2['default'].clearHighlights(this.props.graph), ['nodes', 'edges', 'captions']);
 	    }
 	  }, {
+	    key: 'updateAnnotationHighlights',
+	    value: function updateAnnotationHighlights() {
+	      var highlights = _modelsGraph2['default'].highlightedOnly(this.props.graph);
+	      var updateData = {
+	        nodeIds: (0, _lodashObjectKeys2['default'])(highlights.nodes),
+	        edgeIds: (0, _lodashObjectKeys2['default'])(highlights.edges),
+	        captionIds: (0, _lodashObjectKeys2['default'])(highlights.captions)
+	      };
+	      this.props.dispatch((0, _actions.updateAnnotation)(this.props.currentIndex, updateData));
+	    }
+	  }, {
 	    key: 'handleSave',
 	    value: function handleSave() {
 	      if (this.props.onSave) {
@@ -21106,9 +21145,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    addForm: state.editTools.addForm,
 	    nodeResults: state.editTools.nodeResults,
 	    graphTitle: state.title,
-	    currentIndex: state.position.currentIndex,
+	    currentIndex: state.annotations.currentIndex,
 	    numAnnotations: state.annotations.list.length,
-	    annotation: state.annotations.list[state.position.currentIndex],
+	    annotation: state.annotations.list[state.annotations.currentIndex],
 	    annotations: state.annotations.list,
 	    showAnnotations: state.annotations.visible,
 	    graphSettings: state.settings,
@@ -26323,7 +26362,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
-	      _reactDom2['default'].findDOMNode(this).setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
 	      this.mounted = true;
 	      this._updateActualZoom(this.state.viewBox);
 	    }
@@ -26910,16 +26948,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _BaseComponent2 = __webpack_require__(266);
-
-	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
-
 	var _NodeDisplaySettings = __webpack_require__(269);
 
 	var _NodeDisplaySettings2 = _interopRequireDefault(_NodeDisplaySettings);
 
-	var NodeLabel = (function (_BaseComponent) {
-	  _inherits(NodeLabel, _BaseComponent);
+	var NodeLabel = (function (_Component) {
+	  _inherits(NodeLabel, _Component);
 
 	  function NodeLabel() {
 	    _classCallCheck(this, NodeLabel);
@@ -27055,7 +27089,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 
 	  return NodeLabel;
-	})(_BaseComponent3['default']);
+	})(_react.Component);
 
 	exports['default'] = NodeLabel;
 	module.exports = exports['default'];
@@ -30448,22 +30482,303 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(154);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _reactHotkeys = __webpack_require__(309);
+
+	var _BaseComponent2 = __webpack_require__(266);
+
+	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
+
+	var _ZoomButtons = __webpack_require__(356);
+
+	var _ZoomButtons2 = _interopRequireDefault(_ZoomButtons);
+
+	var _EditTools = __webpack_require__(357);
+
+	var _EditTools2 = _interopRequireDefault(_EditTools);
+
+	var _lodashObjectMerge = __webpack_require__(179);
+
+	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
+
+	var _lodashObjectValues = __webpack_require__(243);
+
+	var _lodashObjectValues2 = _interopRequireDefault(_lodashObjectValues);
+
+	var _lodashLangCloneDeep = __webpack_require__(255);
+
+	var _lodashLangCloneDeep2 = _interopRequireDefault(_lodashLangCloneDeep);
+
+	var _lodashObjectPick = __webpack_require__(377);
+
+	var _lodashObjectPick2 = _interopRequireDefault(_lodashObjectPick);
+
+	__webpack_require__(378);
+	__webpack_require__(383);
+
+	var Editor = (function (_BaseComponent) {
+	  _inherits(Editor, _BaseComponent);
+
+	  function Editor() {
+	    _classCallCheck(this, Editor);
+
+	    _get(Object.getPrototypeOf(Editor.prototype), 'constructor', this).apply(this, arguments);
+	  }
+
+	  _createClass(Editor, [{
+	    key: 'render',
+	    value: function render() {
+	      var _this = this;
+
+	      var zoomIn = undefined,
+	          zoomOut = undefined,
+	          resetZoom = undefined;
+
+	      if (this.props.graphApi) {
+	        zoomIn = function () {
+	          return _this.props.graphApi.zoomIn();
+	        };
+	        zoomOut = function () {
+	          return _this.props.graphApi.zoomOut();
+	        };
+	        resetZoom = function () {
+	          return _this.props.graphApi.resetZoom();
+	        };
+	      }
+
+	      var keyMap = {
+	        'altP': ['alt+p', 'ctrl+p'],
+	        'altO': ['alt+o', 'ctrl+o'],
+	        'altN': ['alt+n', 'ctrl+n'],
+	        'altE': ['alt+e', 'ctrl+e'],
+	        'altC': ['alt+c', 'ctrl+c'],
+	        'altH': ['alt+h', 'ctrl+h'],
+	        'altR': ['alt+r', 'ctrl+r'],
+	        'esc': 'esc'
+	      };
+
+	      var keyHandlers = {
+	        'altP': function altP() {
+	          return _this.props.graphApi.prune();
+	        },
+	        'altO': function altO() {
+	          return _this.props.graphApi.circleLayout();
+	        },
+	        'altN': function altN() {
+	          return _this._focusAddNodeInput();
+	        },
+	        'altE': function altE() {
+	          return _this._toggleAddEdgeForm();
+	        },
+	        'altC': function altC() {
+	          return _this._toggleAddCaptionForm();
+	        },
+	        'altH': function altH() {
+	          return _this._toggleHelpScreen();
+	        },
+	        'altR': function altR() {
+	          return _this._toggleAddConnectedNodesForm();
+	        },
+	        'esc': function esc() {
+	          return _this._clearForms();
+	        }
+	      };
+
+	      var _closeAddForm = function _closeAddForm() {
+	        return _this.props.toggleAddForm(null);
+	      };
+
+	      var _computeEditForms2 = this._computeEditForms(this.props.selection);
+
+	      var currentForm = _computeEditForms2.currentForm;
+	      var formData = _computeEditForms2.formData;
+	      var addForm = _computeEditForms2.addForm;
+
+	      return _react2['default'].createElement(
+	        'div',
+	        { id: 'oligrapherEditorContainer', style: { height: '100%' } },
+	        _react2['default'].createElement(
+	          _reactHotkeys.HotKeys,
+	          { focused: true, attach: window, keyMap: keyMap, handlers: keyHandlers },
+	          _react2['default'].createElement(_ZoomButtons2['default'], { zoomIn: zoomIn, zoomOut: zoomOut }),
+	          this.props.showEditButton && this.props.isEditor ? _react2['default'].createElement(
+	            'button',
+	            {
+	              id: 'toggleEditTools',
+	              className: 'btn btn-sm btn-default',
+	              onClick: function () {
+	                return _this.props.toggleEditTools();
+	              } },
+	            _react2['default'].createElement('span', { className: 'glyphicon glyphicon-pencil' })
+	          ) : null,
+	          this.props.showEditTools ? _react2['default'].createElement(_EditTools2['default'], {
+	            ref: 'editTools',
+	            closeAddForm: _closeAddForm,
+	            source: this.props.dataSource,
+	            graph: this.props.graph,
+	            toggleAddEdgeForm: function () {
+	              return _this._toggleAddEdgeForm();
+	            },
+	            toggleHelpScreen: function () {
+	              return _this._toggleHelpScreen();
+	            },
+	            clearGraph: function () {
+	              return _this._clearGraph();
+	            },
+	            data: formData,
+	            nodeResults: this.props.nodeResults,
+	            setNodeResults: this.props.setNodeResults,
+	            addForm: addForm,
+	            currentForm: currentForm,
+	            helpScreen: this.props.helpScreen,
+	            hideHelp: this.props.hideHelp,
+	            graphApi: this.props.graphApi,
+	            undo: this.props.undo,
+	            redo: this.props.redo,
+	            canUndo: this.props.canUndo,
+	            canRedo: this.props.canRedo }) : null
+	        )
+	      );
+	    }
+	  }, {
+	    key: '_computeEditForms',
+	    value: function _computeEditForms() {
+	      var currentForm = null;
+	      var formData = null;
+	      var addForm = this.props.addForm;
+
+	      if (this.props.showSettings) {
+	        return { currentForm: currentForm, formData: formData, addForm: null };
+	      }
+
+	      var _props$selection = this.props.selection;
+	      var nodeIds = _props$selection.nodeIds;
+	      var edgeIds = _props$selection.edgeIds;
+	      var captionIds = _props$selection.captionIds;
+
+	      var graph = this.props.graph;
+	      var nodes = (0, _lodashObjectPick2['default'])(graph.nodes, nodeIds);
+	      var edges = (0, _lodashObjectPick2['default'])(graph.edges, edgeIds);
+	      var captions = (0, _lodashObjectPick2['default'])(graph.captions, captionIds);
+	      var nodeCount = Object.keys(nodes).length;
+	      var edgeCount = Object.keys(edges).length;
+	      var captionCount = Object.keys(captions).length;
+
+	      if (nodeCount == 1 && edgeCount == 0 && captionCount == 0) {
+	        if (addForm != 'AddEdgeForm') {
+	          currentForm = 'UpdateNodeForm';
+	        }
+	        formData = (0, _lodashObjectValues2['default'])(nodes)[0];
+	      } else if (nodeCount == 0 && edgeCount == 1 && captionCount == 0) {
+	        currentForm = 'UpdateEdgeForm';
+	        addForm = null;
+	        formData = (0, _lodashObjectValues2['default'])(edges)[0];
+	      } else if (nodeCount == 0 && edgeCount == 0 && captionCount == 1) {
+	        currentForm = 'UpdateCaptionForm';
+	        addForm = null;
+	        formData = (0, _lodashObjectValues2['default'])(captions)[0];
+	      } else if (nodeCount == 2 && edgeCount == 0 && captionCount == 0) {
+	        currentForm = null;
+	        addForm = 'AddEdgeForm';
+	        formData = (0, _lodashObjectValues2['default'])(nodes);
+	      } else {
+	        currentForm = null;
+	        formData = null;
+	      }
+
+	      return { currentForm: currentForm, formData: formData, addForm: addForm };
+	    }
+	  }, {
+	    key: '_toggleAddEdgeForm',
+	    value: function _toggleAddEdgeForm() {
+	      this.props.toggleAddForm('AddEdgeForm');
+	    }
+	  }, {
+	    key: '_toggleAddCaptionForm',
+	    value: function _toggleAddCaptionForm() {
+	      this.props.toggleAddForm('AddCaptionForm');
+	    }
+	  }, {
+	    key: '_toggleAddConnectedNodesForm',
+	    value: function _toggleAddConnectedNodesForm() {
+	      this.props.toggleAddForm('AddConnectedNodesForm');
+	    }
+	  }, {
+	    key: '_toggleHelpScreen',
+	    value: function _toggleHelpScreen() {
+	      this.setState({ addForm: null, helpScreen: !this.state.helpScreen });
+	    }
+	  }, {
+	    key: '_clearGraph',
+	    value: function _clearGraph() {
+	      if (confirm("Are you sure you want to clear the graph? This can't be undone!")) {
+	        this.props.graphApi.deleteAll();
+	        this.props.toggleAddForm(null);
+	      }
+	    }
+	  }, {
+	    key: '_clearForms',
+	    value: function _clearForms() {
+	      this.props.toggleAddForm(null);
+	      this.props.graphApi.deselectAll();
+	      this.refs.editTools.refs.editButtons.refs.addNodeInput.clear();
+	    }
+	  }, {
+	    key: '_focusAddNodeInput',
+	    value: function _focusAddNodeInput() {
+	      this.refs.editTools.refs.editButtons.refs.addNodeInput.refs.name.focus();
+	    }
+	  }]);
+
+	  return Editor;
+	})(_BaseComponent3['default']);
+
+	exports['default'] = Editor;
+	module.exports = exports['default'];
+
+/***/ },
+/* 309 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
 	function _interopRequire(obj) { return obj && obj.__esModule ? obj['default'] : obj; }
 
-	var _HotKeys = __webpack_require__(309);
+	var _HotKeys = __webpack_require__(310);
 
 	exports.HotKeys = _interopRequire(_HotKeys);
 
-	var _FocusTrap = __webpack_require__(310);
+	var _FocusTrap = __webpack_require__(311);
 
 	exports.FocusTrap = _interopRequire(_FocusTrap);
 
-	var _HotKeyMapMixin = __webpack_require__(311);
+	var _HotKeyMapMixin = __webpack_require__(312);
 
 	exports.HotKeyMapMixin = _interopRequire(_HotKeyMapMixin);
 
 /***/ },
-/* 309 */
+/* 310 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30484,31 +30799,31 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _FocusTrap = __webpack_require__(310);
+	var _FocusTrap = __webpack_require__(311);
 
 	var _FocusTrap2 = _interopRequireDefault(_FocusTrap);
 
-	var _HotKeyMapMixin = __webpack_require__(311);
+	var _HotKeyMapMixin = __webpack_require__(312);
 
 	var _HotKeyMapMixin2 = _interopRequireDefault(_HotKeyMapMixin);
 
-	var _lodashLangIsBoolean = __webpack_require__(344);
+	var _lodashLangIsBoolean = __webpack_require__(345);
 
 	var _lodashLangIsBoolean2 = _interopRequireDefault(_lodashLangIsBoolean);
 
-	var _lodashLangIsArray = __webpack_require__(326);
+	var _lodashLangIsArray = __webpack_require__(327);
 
 	var _lodashLangIsArray2 = _interopRequireDefault(_lodashLangIsArray);
 
-	var _lodashLangIsObject = __webpack_require__(318);
+	var _lodashLangIsObject = __webpack_require__(319);
 
 	var _lodashLangIsObject2 = _interopRequireDefault(_lodashLangIsObject);
 
-	var _lodashCollectionForEach = __webpack_require__(345);
+	var _lodashCollectionForEach = __webpack_require__(346);
 
 	var _lodashCollectionForEach2 = _interopRequireDefault(_lodashCollectionForEach);
 
-	var _lodashLangIsEqual = __webpack_require__(336);
+	var _lodashLangIsEqual = __webpack_require__(337);
 
 	var _lodashLangIsEqual2 = _interopRequireDefault(_lodashLangIsEqual);
 
@@ -30559,7 +30874,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  componentDidMount: function componentDidMount() {
 	    // import is here to support React's server rendering as Mousetrap immediately
 	    // calls itself with window and it fails in Node environment
-	    var Mousetrap = __webpack_require__(354);
+	    var Mousetrap = __webpack_require__(355);
 	    // Not optimal - imagine hundreds of this component. We need a top level
 	    // delegation point for mousetrap
 	    this.__mousetrap__ = new Mousetrap(this.props.attach || _reactDom2['default'].findDOMNode(this));
@@ -30682,7 +30997,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 310 */
+/* 311 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30731,7 +31046,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 311 */
+/* 312 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30747,11 +31062,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _lodashObjectAssign = __webpack_require__(312);
+	var _lodashObjectAssign = __webpack_require__(313);
 
 	var _lodashObjectAssign2 = _interopRequireDefault(_lodashObjectAssign);
 
-	var _lodashLangIsEqual = __webpack_require__(336);
+	var _lodashLangIsEqual = __webpack_require__(337);
 
 	var _lodashLangIsEqual2 = _interopRequireDefault(_lodashLangIsEqual);
 
@@ -30807,12 +31122,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 312 */
+/* 313 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assignWith = __webpack_require__(313),
-	    baseAssign = __webpack_require__(329),
-	    createAssigner = __webpack_require__(331);
+	var assignWith = __webpack_require__(314),
+	    baseAssign = __webpack_require__(330),
+	    createAssigner = __webpack_require__(332);
 
 	/**
 	 * Assigns own enumerable properties of source object(s) to the destination
@@ -30856,10 +31171,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 313 */
+/* 314 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(314);
+	var keys = __webpack_require__(315);
 
 	/**
 	 * A specialized version of `_.assign` for customizing assigned values without
@@ -30894,13 +31209,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 314 */
+/* 315 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(315),
-	    isArrayLike = __webpack_require__(320),
-	    isObject = __webpack_require__(318),
-	    shimKeys = __webpack_require__(324);
+	var getNative = __webpack_require__(316),
+	    isArrayLike = __webpack_require__(321),
+	    isObject = __webpack_require__(319),
+	    shimKeys = __webpack_require__(325);
 
 	/* Native method references for those with the same name as other `lodash` methods. */
 	var nativeKeys = getNative(Object, 'keys');
@@ -30945,10 +31260,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 315 */
+/* 316 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isNative = __webpack_require__(316);
+	var isNative = __webpack_require__(317);
 
 	/**
 	 * Gets the native function at `key` of `object`.
@@ -30967,11 +31282,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 316 */
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isFunction = __webpack_require__(317),
-	    isObjectLike = __webpack_require__(319);
+	var isFunction = __webpack_require__(318),
+	    isObjectLike = __webpack_require__(320);
 
 	/** Used to detect host constructors (Safari > 5). */
 	var reIsHostCtor = /^\[object .+?Constructor\]$/;
@@ -31021,10 +31336,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 317 */
+/* 318 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(318);
+	var isObject = __webpack_require__(319);
 
 	/** `Object#toString` result references. */
 	var funcTag = '[object Function]';
@@ -31065,7 +31380,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 318 */
+/* 319 */
 /***/ function(module, exports) {
 
 	/**
@@ -31099,7 +31414,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 319 */
+/* 320 */
 /***/ function(module, exports) {
 
 	/**
@@ -31117,11 +31432,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 320 */
+/* 321 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(321),
-	    isLength = __webpack_require__(323);
+	var getLength = __webpack_require__(322),
+	    isLength = __webpack_require__(324);
 
 	/**
 	 * Checks if `value` is array-like.
@@ -31138,10 +31453,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 321 */
+/* 322 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseProperty = __webpack_require__(322);
+	var baseProperty = __webpack_require__(323);
 
 	/**
 	 * Gets the "length" property value of `object`.
@@ -31159,7 +31474,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 322 */
+/* 323 */
 /***/ function(module, exports) {
 
 	/**
@@ -31179,7 +31494,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 323 */
+/* 324 */
 /***/ function(module, exports) {
 
 	/**
@@ -31205,14 +31520,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 324 */
+/* 325 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArguments = __webpack_require__(325),
-	    isArray = __webpack_require__(326),
-	    isIndex = __webpack_require__(327),
-	    isLength = __webpack_require__(323),
-	    keysIn = __webpack_require__(328);
+	var isArguments = __webpack_require__(326),
+	    isArray = __webpack_require__(327),
+	    isIndex = __webpack_require__(328),
+	    isLength = __webpack_require__(324),
+	    keysIn = __webpack_require__(329);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -31252,11 +31567,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 325 */
+/* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(320),
-	    isObjectLike = __webpack_require__(319);
+	var isArrayLike = __webpack_require__(321),
+	    isObjectLike = __webpack_require__(320);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -31292,12 +31607,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 326 */
+/* 327 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(315),
-	    isLength = __webpack_require__(323),
-	    isObjectLike = __webpack_require__(319);
+	var getNative = __webpack_require__(316),
+	    isLength = __webpack_require__(324),
+	    isObjectLike = __webpack_require__(320);
 
 	/** `Object#toString` result references. */
 	var arrayTag = '[object Array]';
@@ -31338,7 +31653,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 327 */
+/* 328 */
 /***/ function(module, exports) {
 
 	/** Used to detect unsigned integer values. */
@@ -31368,14 +31683,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 328 */
+/* 329 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArguments = __webpack_require__(325),
-	    isArray = __webpack_require__(326),
-	    isIndex = __webpack_require__(327),
-	    isLength = __webpack_require__(323),
-	    isObject = __webpack_require__(318);
+	var isArguments = __webpack_require__(326),
+	    isArray = __webpack_require__(327),
+	    isIndex = __webpack_require__(328),
+	    isLength = __webpack_require__(324),
+	    isObject = __webpack_require__(319);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -31438,11 +31753,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 329 */
+/* 330 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCopy = __webpack_require__(330),
-	    keys = __webpack_require__(314);
+	var baseCopy = __webpack_require__(331),
+	    keys = __webpack_require__(315);
 
 	/**
 	 * The base implementation of `_.assign` without support for argument juggling,
@@ -31463,7 +31778,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 330 */
+/* 331 */
 /***/ function(module, exports) {
 
 	/**
@@ -31492,12 +31807,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 331 */
+/* 332 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bindCallback = __webpack_require__(332),
-	    isIterateeCall = __webpack_require__(334),
-	    restParam = __webpack_require__(335);
+	var bindCallback = __webpack_require__(333),
+	    isIterateeCall = __webpack_require__(335),
+	    restParam = __webpack_require__(336);
 
 	/**
 	 * Creates a `_.assign`, `_.defaults`, or `_.merge` function.
@@ -31539,10 +31854,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 332 */
+/* 333 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var identity = __webpack_require__(333);
+	var identity = __webpack_require__(334);
 
 	/**
 	 * A specialized version of `baseCallback` which only supports `this` binding
@@ -31584,7 +31899,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 333 */
+/* 334 */
 /***/ function(module, exports) {
 
 	/**
@@ -31610,12 +31925,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 334 */
+/* 335 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(320),
-	    isIndex = __webpack_require__(327),
-	    isObject = __webpack_require__(318);
+	var isArrayLike = __webpack_require__(321),
+	    isIndex = __webpack_require__(328),
+	    isObject = __webpack_require__(319);
 
 	/**
 	 * Checks if the provided arguments are from an iteratee call.
@@ -31644,7 +31959,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 335 */
+/* 336 */
 /***/ function(module, exports) {
 
 	/** Used as the `TypeError` message for "Functions" methods. */
@@ -31708,11 +32023,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 336 */
+/* 337 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqual = __webpack_require__(337),
-	    bindCallback = __webpack_require__(332);
+	var baseIsEqual = __webpack_require__(338),
+	    bindCallback = __webpack_require__(333);
 
 	/**
 	 * Performs a deep comparison between two values to determine if they are
@@ -31768,12 +32083,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 337 */
+/* 338 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqualDeep = __webpack_require__(338),
-	    isObject = __webpack_require__(318),
-	    isObjectLike = __webpack_require__(319);
+	var baseIsEqualDeep = __webpack_require__(339),
+	    isObject = __webpack_require__(319),
+	    isObjectLike = __webpack_require__(320);
 
 	/**
 	 * The base implementation of `_.isEqual` without support for `this` binding
@@ -31802,14 +32117,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 338 */
+/* 339 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var equalArrays = __webpack_require__(339),
-	    equalByTag = __webpack_require__(341),
-	    equalObjects = __webpack_require__(342),
-	    isArray = __webpack_require__(326),
-	    isTypedArray = __webpack_require__(343);
+	var equalArrays = __webpack_require__(340),
+	    equalByTag = __webpack_require__(342),
+	    equalObjects = __webpack_require__(343),
+	    isArray = __webpack_require__(327),
+	    isTypedArray = __webpack_require__(344);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -31910,10 +32225,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 339 */
+/* 340 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arraySome = __webpack_require__(340);
+	var arraySome = __webpack_require__(341);
 
 	/**
 	 * A specialized version of `baseIsEqualDeep` for arrays with support for
@@ -31967,7 +32282,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 340 */
+/* 341 */
 /***/ function(module, exports) {
 
 	/**
@@ -31996,7 +32311,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 341 */
+/* 342 */
 /***/ function(module, exports) {
 
 	/** `Object#toString` result references. */
@@ -32050,10 +32365,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 342 */
+/* 343 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keys = __webpack_require__(314);
+	var keys = __webpack_require__(315);
 
 	/** Used for native method references. */
 	var objectProto = Object.prototype;
@@ -32123,11 +32438,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 343 */
+/* 344 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isLength = __webpack_require__(323),
-	    isObjectLike = __webpack_require__(319);
+	var isLength = __webpack_require__(324),
+	    isObjectLike = __webpack_require__(320);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -32203,10 +32518,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 344 */
+/* 345 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObjectLike = __webpack_require__(319);
+	var isObjectLike = __webpack_require__(320);
 
 	/** `Object#toString` result references. */
 	var boolTag = '[object Boolean]';
@@ -32244,12 +32559,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 345 */
+/* 346 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayEach = __webpack_require__(346),
-	    baseEach = __webpack_require__(347),
-	    createForEach = __webpack_require__(353);
+	var arrayEach = __webpack_require__(347),
+	    baseEach = __webpack_require__(348),
+	    createForEach = __webpack_require__(354);
 
 	/**
 	 * Iterates over elements of `collection` invoking `iteratee` for each element.
@@ -32287,7 +32602,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 346 */
+/* 347 */
 /***/ function(module, exports) {
 
 	/**
@@ -32315,11 +32630,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 347 */
+/* 348 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForOwn = __webpack_require__(348),
-	    createBaseEach = __webpack_require__(352);
+	var baseForOwn = __webpack_require__(349),
+	    createBaseEach = __webpack_require__(353);
 
 	/**
 	 * The base implementation of `_.forEach` without support for callback
@@ -32336,11 +32651,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 348 */
+/* 349 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFor = __webpack_require__(349),
-	    keys = __webpack_require__(314);
+	var baseFor = __webpack_require__(350),
+	    keys = __webpack_require__(315);
 
 	/**
 	 * The base implementation of `_.forOwn` without support for callback
@@ -32359,10 +32674,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 349 */
+/* 350 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createBaseFor = __webpack_require__(350);
+	var createBaseFor = __webpack_require__(351);
 
 	/**
 	 * The base implementation of `baseForIn` and `baseForOwn` which iterates
@@ -32382,10 +32697,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 350 */
+/* 351 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(351);
+	var toObject = __webpack_require__(352);
 
 	/**
 	 * Creates a base function for `_.forIn` or `_.forInRight`.
@@ -32415,10 +32730,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 351 */
+/* 352 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(318);
+	var isObject = __webpack_require__(319);
 
 	/**
 	 * Converts `value` to an object if it's not one.
@@ -32435,12 +32750,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 352 */
+/* 353 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(321),
-	    isLength = __webpack_require__(323),
-	    toObject = __webpack_require__(351);
+	var getLength = __webpack_require__(322),
+	    isLength = __webpack_require__(324),
+	    toObject = __webpack_require__(352);
 
 	/**
 	 * Creates a `baseEach` or `baseEachRight` function.
@@ -32472,11 +32787,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 353 */
+/* 354 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bindCallback = __webpack_require__(332),
-	    isArray = __webpack_require__(326);
+	var bindCallback = __webpack_require__(333),
+	    isArray = __webpack_require__(327);
 
 	/**
 	 * Creates a function for `_.forEach` or `_.forEachRight`.
@@ -32498,7 +32813,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 354 */
+/* 355 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*global define:false */
@@ -33525,336 +33840,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 355 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseFlatten = __webpack_require__(253),
-	    bindCallback = __webpack_require__(208),
-	    pickByArray = __webpack_require__(259),
-	    pickByCallback = __webpack_require__(260),
-	    restParam = __webpack_require__(211);
-
-	/**
-	 * Creates an object composed of the picked `object` properties. Property
-	 * names may be specified as individual arguments or as arrays of property
-	 * names. If `predicate` is provided it's invoked for each property of `object`
-	 * picking the properties `predicate` returns truthy for. The predicate is
-	 * bound to `thisArg` and invoked with three arguments: (value, key, object).
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Object
-	 * @param {Object} object The source object.
-	 * @param {Function|...(string|string[])} [predicate] The function invoked per
-	 *  iteration or property names to pick, specified as individual property
-	 *  names or arrays of property names.
-	 * @param {*} [thisArg] The `this` binding of `predicate`.
-	 * @returns {Object} Returns the new object.
-	 * @example
-	 *
-	 * var object = { 'user': 'fred', 'age': 40 };
-	 *
-	 * _.pick(object, 'user');
-	 * // => { 'user': 'fred' }
-	 *
-	 * _.pick(object, _.isString);
-	 * // => { 'user': 'fred' }
-	 */
-	var pick = restParam(function(object, props) {
-	  if (object == null) {
-	    return {};
-	  }
-	  return typeof props[0] == 'function'
-	    ? pickByCallback(object, bindCallback(props[0], props[1], 3))
-	    : pickByArray(object, baseFlatten(props));
-	});
-
-	module.exports = pick;
-
-
-/***/ },
 /* 356 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactDom = __webpack_require__(154);
-
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-
-	var _reactHotkeys = __webpack_require__(308);
-
-	var _BaseComponent2 = __webpack_require__(266);
-
-	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
-
-	var _ZoomButtons = __webpack_require__(357);
-
-	var _ZoomButtons2 = _interopRequireDefault(_ZoomButtons);
-
-	var _EditTools = __webpack_require__(358);
-
-	var _EditTools2 = _interopRequireDefault(_EditTools);
-
-	var _lodashObjectMerge = __webpack_require__(179);
-
-	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
-
-	var _lodashObjectValues = __webpack_require__(243);
-
-	var _lodashObjectValues2 = _interopRequireDefault(_lodashObjectValues);
-
-	var _lodashLangCloneDeep = __webpack_require__(255);
-
-	var _lodashLangCloneDeep2 = _interopRequireDefault(_lodashLangCloneDeep);
-
-	var _lodashObjectPick = __webpack_require__(355);
-
-	var _lodashObjectPick2 = _interopRequireDefault(_lodashObjectPick);
-
-	__webpack_require__(378);
-	__webpack_require__(383);
-
-	var Editor = (function (_BaseComponent) {
-	  _inherits(Editor, _BaseComponent);
-
-	  function Editor() {
-	    _classCallCheck(this, Editor);
-
-	    _get(Object.getPrototypeOf(Editor.prototype), 'constructor', this).apply(this, arguments);
-	  }
-
-	  _createClass(Editor, [{
-	    key: 'render',
-	    value: function render() {
-	      var _this = this;
-
-	      var zoomIn = undefined,
-	          zoomOut = undefined,
-	          resetZoom = undefined;
-
-	      if (this.props.graphApi) {
-	        zoomIn = function () {
-	          return _this.props.graphApi.zoomIn();
-	        };
-	        zoomOut = function () {
-	          return _this.props.graphApi.zoomOut();
-	        };
-	        resetZoom = function () {
-	          return _this.props.graphApi.resetZoom();
-	        };
-	      }
-
-	      var keyMap = {
-	        'altZ': ['alt+z', 'ctrl+z'],
-	        'altP': ['alt+p', 'ctrl+p'],
-	        'altO': ['alt+o', 'ctrl+o'],
-	        'altN': ['alt+n', 'ctrl+n'],
-	        'altE': ['alt+e', 'ctrl+e'],
-	        'altC': ['alt+c', 'ctrl+c'],
-	        'altH': ['alt+h', 'ctrl+h'],
-	        'altR': ['alt+r', 'ctrl+r'],
-	        'esc': 'esc'
-	      };
-
-	      var keyHandlers = {
-	        'altZ': function altZ() {
-	          return _this.props.graphApi.resetZoom();
-	        },
-	        'altP': function altP() {
-	          return _this.props.graphApi.prune();
-	        },
-	        'altO': function altO() {
-	          return _this.props.graphApi.circleLayout();
-	        },
-	        'altN': function altN() {
-	          return _this._focusAddNodeInput();
-	        },
-	        'altE': function altE() {
-	          return _this._toggleAddEdgeForm();
-	        },
-	        'altC': function altC() {
-	          return _this._toggleAddCaptionForm();
-	        },
-	        'altH': function altH() {
-	          return _this._toggleHelpScreen();
-	        },
-	        'altR': function altR() {
-	          return _this._toggleAddConnectedNodesForm();
-	        },
-	        'esc': function esc() {
-	          return _this._clearForms();
-	        }
-	      };
-
-	      var _closeAddForm = function _closeAddForm() {
-	        return _this.props.toggleAddForm(null);
-	      };
-
-	      var _computeEditForms2 = this._computeEditForms(this.props.selection);
-
-	      var currentForm = _computeEditForms2.currentForm;
-	      var formData = _computeEditForms2.formData;
-	      var addForm = _computeEditForms2.addForm;
-
-	      return _react2['default'].createElement(
-	        'div',
-	        { id: 'oligrapherEditorContainer', style: { height: '100%' } },
-	        _react2['default'].createElement(
-	          _reactHotkeys.HotKeys,
-	          { focused: true, attach: window, keyMap: keyMap, handlers: keyHandlers },
-	          _react2['default'].createElement(_ZoomButtons2['default'], { zoomIn: zoomIn, zoomOut: zoomOut }),
-	          this.props.showEditButton && this.props.isEditor ? _react2['default'].createElement(
-	            'button',
-	            {
-	              id: 'toggleEditTools',
-	              className: 'btn btn-sm btn-default',
-	              onClick: function () {
-	                return _this.props.toggleEditTools();
-	              } },
-	            _react2['default'].createElement('span', { className: 'glyphicon glyphicon-pencil' })
-	          ) : null,
-	          this.props.showEditTools ? _react2['default'].createElement(_EditTools2['default'], {
-	            ref: 'editTools',
-	            closeAddForm: _closeAddForm,
-	            source: this.props.dataSource,
-	            graph: this.props.graph,
-	            toggleAddEdgeForm: function () {
-	              return _this._toggleAddEdgeForm();
-	            },
-	            toggleHelpScreen: function () {
-	              return _this._toggleHelpScreen();
-	            },
-	            clearGraph: function () {
-	              return _this._clearGraph();
-	            },
-	            data: formData,
-	            nodeResults: this.props.nodeResults,
-	            setNodeResults: this.props.setNodeResults,
-	            addForm: addForm,
-	            currentForm: currentForm,
-	            helpScreen: this.props.helpScreen,
-	            hideHelp: this.props.hideHelp,
-	            graphApi: this.props.graphApi,
-	            undo: this.props.undo,
-	            redo: this.props.redo,
-	            canUndo: this.props.canUndo,
-	            canRedo: this.props.canRedo }) : null
-	        )
-	      );
-	    }
-	  }, {
-	    key: '_computeEditForms',
-	    value: function _computeEditForms() {
-	      var currentForm = null;
-	      var formData = null;
-	      var addForm = this.props.addForm;
-
-	      var _props$selection = this.props.selection;
-	      var nodeIds = _props$selection.nodeIds;
-	      var edgeIds = _props$selection.edgeIds;
-	      var captionIds = _props$selection.captionIds;
-
-	      var graph = this.props.graph;
-	      var nodes = (0, _lodashObjectPick2['default'])(graph.nodes, nodeIds);
-	      var edges = (0, _lodashObjectPick2['default'])(graph.edges, edgeIds);
-	      var captions = (0, _lodashObjectPick2['default'])(graph.captions, captionIds);
-	      var nodeCount = Object.keys(nodes).length;
-	      var edgeCount = Object.keys(edges).length;
-	      var captionCount = Object.keys(captions).length;
-
-	      if (nodeCount == 1 && edgeCount == 0 && captionCount == 0) {
-	        if (addForm != 'AddEdgeForm') {
-	          currentForm = 'UpdateNodeForm';
-	        }
-	        formData = (0, _lodashObjectValues2['default'])(nodes)[0];
-	      } else if (nodeCount == 0 && edgeCount == 1 && captionCount == 0) {
-	        currentForm = 'UpdateEdgeForm';
-	        addForm = null;
-	        formData = (0, _lodashObjectValues2['default'])(edges)[0];
-	      } else if (nodeCount == 0 && edgeCount == 0 && captionCount == 1) {
-	        currentForm = 'UpdateCaptionForm';
-	        addForm = null;
-	        formData = (0, _lodashObjectValues2['default'])(captions)[0];
-	      } else if (nodeCount == 2 && edgeCount == 0 && captionCount == 0) {
-	        currentForm = null;
-	        addForm = 'AddEdgeForm';
-	        formData = (0, _lodashObjectValues2['default'])(nodes);
-	      } else {
-	        currentForm = null;
-	        formData = null;
-	      }
-
-	      return { currentForm: currentForm, formData: formData, addForm: addForm };
-	    }
-	  }, {
-	    key: '_toggleAddEdgeForm',
-	    value: function _toggleAddEdgeForm() {
-	      this.props.toggleAddForm('AddEdgeForm');
-	    }
-	  }, {
-	    key: '_toggleAddCaptionForm',
-	    value: function _toggleAddCaptionForm() {
-	      this.props.toggleAddForm('AddCaptionForm');
-	    }
-	  }, {
-	    key: '_toggleAddConnectedNodesForm',
-	    value: function _toggleAddConnectedNodesForm() {
-	      this.props.toggleAddForm('AddConnectedNodesForm');
-	    }
-	  }, {
-	    key: '_toggleHelpScreen',
-	    value: function _toggleHelpScreen() {
-	      this.setState({ addForm: null, helpScreen: !this.state.helpScreen });
-	    }
-	  }, {
-	    key: '_clearGraph',
-	    value: function _clearGraph() {
-	      if (confirm("Are you sure you want to clear the graph? This can't be undone!")) {
-	        this.props.graphApi.deleteAll();
-	        this.props.toggleAddForm(null);
-	      }
-	    }
-	  }, {
-	    key: '_clearForms',
-	    value: function _clearForms() {
-	      this.props.toggleAddForm(null);
-	      this.props.graphApi.deselectAll();
-	      this.refs.editTools.refs.editButtons.refs.addNodeInput.clear();
-	    }
-	  }, {
-	    key: '_focusAddNodeInput',
-	    value: function _focusAddNodeInput() {
-	      this.refs.editTools.refs.editButtons.refs.addNodeInput.refs.name.focus();
-	    }
-	  }]);
-
-	  return Editor;
-	})(_BaseComponent3['default']);
-
-	exports['default'] = Editor;
-	module.exports = exports['default'];
-
-/***/ },
-/* 357 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33913,7 +33899,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 358 */
+/* 357 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33936,43 +33922,43 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _UndoButtons = __webpack_require__(359);
+	var _UndoButtons = __webpack_require__(358);
 
 	var _UndoButtons2 = _interopRequireDefault(_UndoButtons);
 
-	var _LayoutButtons = __webpack_require__(360);
+	var _LayoutButtons = __webpack_require__(359);
 
 	var _LayoutButtons2 = _interopRequireDefault(_LayoutButtons);
 
-	var _EditButtons = __webpack_require__(361);
+	var _EditButtons = __webpack_require__(360);
 
 	var _EditButtons2 = _interopRequireDefault(_EditButtons);
 
-	var _AddEdgeForm = __webpack_require__(364);
+	var _AddEdgeForm = __webpack_require__(363);
 
 	var _AddEdgeForm2 = _interopRequireDefault(_AddEdgeForm);
 
-	var _AddCaptionForm = __webpack_require__(370);
+	var _AddCaptionForm = __webpack_require__(369);
 
 	var _AddCaptionForm2 = _interopRequireDefault(_AddCaptionForm);
 
-	var _AddConnectedNodesForm = __webpack_require__(371);
+	var _AddConnectedNodesForm = __webpack_require__(370);
 
 	var _AddConnectedNodesForm2 = _interopRequireDefault(_AddConnectedNodesForm);
 
-	var _UpdateNodeForm = __webpack_require__(374);
+	var _UpdateNodeForm = __webpack_require__(373);
 
 	var _UpdateNodeForm2 = _interopRequireDefault(_UpdateNodeForm);
 
-	var _UpdateEdgeForm = __webpack_require__(375);
+	var _UpdateEdgeForm = __webpack_require__(374);
 
 	var _UpdateEdgeForm2 = _interopRequireDefault(_UpdateEdgeForm);
 
-	var _UpdateCaptionForm = __webpack_require__(376);
+	var _UpdateCaptionForm = __webpack_require__(375);
 
 	var _UpdateCaptionForm2 = _interopRequireDefault(_UpdateCaptionForm);
 
-	var _HelpScreen = __webpack_require__(377);
+	var _HelpScreen = __webpack_require__(376);
 
 	var _HelpScreen2 = _interopRequireDefault(_HelpScreen);
 
@@ -34087,7 +34073,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 359 */
+/* 358 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -34146,7 +34132,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 360 */
+/* 359 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -34210,7 +34196,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 361 */
+/* 360 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34233,7 +34219,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _AddNodeInput = __webpack_require__(362);
+	var _AddNodeInput = __webpack_require__(361);
 
 	var _AddNodeInput2 = _interopRequireDefault(_AddNodeInput);
 
@@ -34278,7 +34264,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 362 */
+/* 361 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34309,11 +34295,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
 
-	var _AddNodeResult = __webpack_require__(363);
+	var _AddNodeResult = __webpack_require__(362);
 
 	var _AddNodeResult2 = _interopRequireDefault(_AddNodeResult);
 
-	var _reactHotkeys = __webpack_require__(308);
+	var _reactHotkeys = __webpack_require__(309);
 
 	var AddNodeInput = (function (_BaseComponent) {
 	  _inherits(AddNodeInput, _BaseComponent);
@@ -34385,6 +34371,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'clear',
 	    value: function clear() {
 	      this.refs.name.value = '';
+	      this.refs.name.blur();
 	      this.props.setNodeResults([]);
 	    }
 	  }, {
@@ -34438,7 +34425,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 363 */
+/* 362 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34521,7 +34508,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 364 */
+/* 363 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34552,11 +34539,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _lodashObjectValues2 = _interopRequireDefault(_lodashObjectValues);
 
-	var _lodashCollectionSortBy = __webpack_require__(365);
+	var _lodashCollectionSortBy = __webpack_require__(364);
 
 	var _lodashCollectionSortBy2 = _interopRequireDefault(_lodashCollectionSortBy);
 
-	var _reactHotkeys = __webpack_require__(308);
+	var _reactHotkeys = __webpack_require__(309);
 
 	var AddEdgeForm = (function (_BaseComponent) {
 	  _inherits(AddEdgeForm, _BaseComponent);
@@ -34679,13 +34666,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 365 */
+/* 364 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseCallback = __webpack_require__(281),
-	    baseMap = __webpack_require__(366),
-	    baseSortBy = __webpack_require__(367),
-	    compareAscending = __webpack_require__(368),
+	    baseMap = __webpack_require__(365),
+	    baseSortBy = __webpack_require__(366),
+	    compareAscending = __webpack_require__(367),
 	    isIterateeCall = __webpack_require__(210);
 
 	/**
@@ -34756,7 +34743,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 366 */
+/* 365 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseEach = __webpack_require__(233),
@@ -34785,7 +34772,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 367 */
+/* 366 */
 /***/ function(module, exports) {
 
 	/**
@@ -34812,10 +34799,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 368 */
+/* 367 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCompareAscending = __webpack_require__(369);
+	var baseCompareAscending = __webpack_require__(368);
 
 	/**
 	 * Used by `_.sortBy` to compare transformed elements of a collection and stable
@@ -34834,7 +34821,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 369 */
+/* 368 */
 /***/ function(module, exports) {
 
 	/**
@@ -34874,7 +34861,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 370 */
+/* 369 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34901,7 +34888,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
 
-	var _reactHotkeys = __webpack_require__(308);
+	var _reactHotkeys = __webpack_require__(309);
 
 	var AddCaptionForm = (function (_BaseComponent) {
 	  _inherits(AddCaptionForm, _BaseComponent);
@@ -34975,7 +34962,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 371 */
+/* 370 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35002,9 +34989,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
 
-	var _reactHotkeys = __webpack_require__(308);
+	var _reactHotkeys = __webpack_require__(309);
 
-	var _lodashObjectMapKeys = __webpack_require__(372);
+	var _lodashObjectMapKeys = __webpack_require__(371);
 
 	var _lodashObjectMapKeys2 = _interopRequireDefault(_lodashObjectMapKeys);
 
@@ -35124,10 +35111,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 372 */
+/* 371 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createObjectMapper = __webpack_require__(373);
+	var createObjectMapper = __webpack_require__(372);
 
 	/**
 	 * The opposite of `_.mapValues`; this method creates an object with the
@@ -35155,7 +35142,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 373 */
+/* 372 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseCallback = __webpack_require__(281),
@@ -35187,7 +35174,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 374 */
+/* 373 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35214,7 +35201,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
 
-	var _reactHotkeys = __webpack_require__(308);
+	var _reactHotkeys = __webpack_require__(309);
 
 	var _lodashObjectMerge = __webpack_require__(179);
 
@@ -35316,7 +35303,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'apply',
 	    value: function apply() {
 	      if (this.props.data) {
-	        var _name = this.refs.name.value.trim();
+	        var _name = this.refs.name.value;
 	        var image = this.refs.image.value.trim();
 	        var scale = parseFloat(this.refs.scale.value);
 	        var url = this.refs.url.value.trim();
@@ -35332,7 +35319,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 375 */
+/* 374 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35359,13 +35346,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
 
-	var _reactHotkeys = __webpack_require__(308);
+	var _reactHotkeys = __webpack_require__(309);
 
 	var _lodashObjectValues = __webpack_require__(243);
 
 	var _lodashObjectValues2 = _interopRequireDefault(_lodashObjectValues);
 
-	var _lodashCollectionSortBy = __webpack_require__(365);
+	var _lodashCollectionSortBy = __webpack_require__(364);
 
 	var _lodashCollectionSortBy2 = _interopRequireDefault(_lodashCollectionSortBy);
 
@@ -35475,7 +35462,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'apply',
 	    value: function apply() {
 	      if (this.props.data) {
-	        var label = this.refs.label.value.trim();
+	        var label = this.refs.label.value;
 	        var arrow = this.refs.arrow.checked;
 	        var dash = this.refs.dash.checked;
 	        var scale = parseFloat(this.refs.scale.value);
@@ -35492,7 +35479,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 376 */
+/* 375 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35519,7 +35506,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _BaseComponent3 = _interopRequireDefault(_BaseComponent2);
 
-	var _reactHotkeys = __webpack_require__(308);
+	var _reactHotkeys = __webpack_require__(309);
 
 	var _lodashObjectMerge = __webpack_require__(179);
 
@@ -35607,7 +35594,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 377 */
+/* 376 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -35748,6 +35735,54 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports["default"] = HelpScreen;
 	module.exports = exports["default"];
+
+/***/ },
+/* 377 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseFlatten = __webpack_require__(253),
+	    bindCallback = __webpack_require__(208),
+	    pickByArray = __webpack_require__(259),
+	    pickByCallback = __webpack_require__(260),
+	    restParam = __webpack_require__(211);
+
+	/**
+	 * Creates an object composed of the picked `object` properties. Property
+	 * names may be specified as individual arguments or as arrays of property
+	 * names. If `predicate` is provided it's invoked for each property of `object`
+	 * picking the properties `predicate` returns truthy for. The predicate is
+	 * bound to `thisArg` and invoked with three arguments: (value, key, object).
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Object
+	 * @param {Object} object The source object.
+	 * @param {Function|...(string|string[])} [predicate] The function invoked per
+	 *  iteration or property names to pick, specified as individual property
+	 *  names or arrays of property names.
+	 * @param {*} [thisArg] The `this` binding of `predicate`.
+	 * @returns {Object} Returns the new object.
+	 * @example
+	 *
+	 * var object = { 'user': 'fred', 'age': 40 };
+	 *
+	 * _.pick(object, 'user');
+	 * // => { 'user': 'fred' }
+	 *
+	 * _.pick(object, _.isString);
+	 * // => { 'user': 'fred' }
+	 */
+	var pick = restParam(function(object, props) {
+	  if (object == null) {
+	    return {};
+	  }
+	  return typeof props[0] == 'function'
+	    ? pickByCallback(object, bindCallback(props[0], props[1], 3))
+	    : pickByArray(object, baseFlatten(props));
+	});
+
+	module.exports = pick;
+
 
 /***/ },
 /* 378 */
@@ -36330,8 +36365,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "_handleChange",
 	    value: function _handleChange(event) {
-	      var title = this.refs.title.value;
-	      this.props.updateTitle(title);
+	      this.props.updateTitle(this.refs.title.value);
 	    }
 	  }]);
 
@@ -36955,7 +36989,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
 
-	var _lodashObjectPick = __webpack_require__(355);
+	var _lodashObjectPick = __webpack_require__(377);
 
 	var _lodashObjectPick2 = _interopRequireDefault(_lodashObjectPick);
 
@@ -44460,6 +44494,132 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 408 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var arrayFilter = __webpack_require__(409),
+	    baseCallback = __webpack_require__(281),
+	    baseFilter = __webpack_require__(410),
+	    isArray = __webpack_require__(190);
+
+	/**
+	 * Iterates over elements of `collection`, returning an array of all elements
+	 * `predicate` returns truthy for. The predicate is bound to `thisArg` and
+	 * invoked with three arguments: (value, index|key, collection).
+	 *
+	 * If a property name is provided for `predicate` the created `_.property`
+	 * style callback returns the property value of the given element.
+	 *
+	 * If a value is also provided for `thisArg` the created `_.matchesProperty`
+	 * style callback returns `true` for elements that have a matching property
+	 * value, else `false`.
+	 *
+	 * If an object is provided for `predicate` the created `_.matches` style
+	 * callback returns `true` for elements that have the properties of the given
+	 * object, else `false`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @alias select
+	 * @category Collection
+	 * @param {Array|Object|string} collection The collection to iterate over.
+	 * @param {Function|Object|string} [predicate=_.identity] The function invoked
+	 *  per iteration.
+	 * @param {*} [thisArg] The `this` binding of `predicate`.
+	 * @returns {Array} Returns the new filtered array.
+	 * @example
+	 *
+	 * _.filter([4, 5, 6], function(n) {
+	 *   return n % 2 == 0;
+	 * });
+	 * // => [4, 6]
+	 *
+	 * var users = [
+	 *   { 'user': 'barney', 'age': 36, 'active': true },
+	 *   { 'user': 'fred',   'age': 40, 'active': false }
+	 * ];
+	 *
+	 * // using the `_.matches` callback shorthand
+	 * _.pluck(_.filter(users, { 'age': 36, 'active': true }), 'user');
+	 * // => ['barney']
+	 *
+	 * // using the `_.matchesProperty` callback shorthand
+	 * _.pluck(_.filter(users, 'active', false), 'user');
+	 * // => ['fred']
+	 *
+	 * // using the `_.property` callback shorthand
+	 * _.pluck(_.filter(users, 'active'), 'user');
+	 * // => ['barney']
+	 */
+	function filter(collection, predicate, thisArg) {
+	  var func = isArray(collection) ? arrayFilter : baseFilter;
+	  predicate = baseCallback(predicate, thisArg, 3);
+	  return func(collection, predicate);
+	}
+
+	module.exports = filter;
+
+
+/***/ },
+/* 409 */
+/***/ function(module, exports) {
+
+	/**
+	 * A specialized version of `_.filter` for arrays without support for callback
+	 * shorthands and `this` binding.
+	 *
+	 * @private
+	 * @param {Array} array The array to iterate over.
+	 * @param {Function} predicate The function invoked per iteration.
+	 * @returns {Array} Returns the new filtered array.
+	 */
+	function arrayFilter(array, predicate) {
+	  var index = -1,
+	      length = array.length,
+	      resIndex = -1,
+	      result = [];
+
+	  while (++index < length) {
+	    var value = array[index];
+	    if (predicate(value, index, array)) {
+	      result[++resIndex] = value;
+	    }
+	  }
+	  return result;
+	}
+
+	module.exports = arrayFilter;
+
+
+/***/ },
+/* 410 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseEach = __webpack_require__(233);
+
+	/**
+	 * The base implementation of `_.filter` without support for callback
+	 * shorthands and `this` binding.
+	 *
+	 * @private
+	 * @param {Array|Object|string} collection The collection to iterate over.
+	 * @param {Function} predicate The function invoked per iteration.
+	 * @returns {Array} Returns the new filtered array.
+	 */
+	function baseFilter(collection, predicate) {
+	  var result = [];
+	  baseEach(collection, function(value, index, collection) {
+	    if (predicate(value, index, collection)) {
+	      result.push(value);
+	    }
+	  });
+	  return result;
+	}
+
+	module.exports = baseFilter;
+
+
+/***/ },
+/* 411 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
@@ -44470,43 +44630,43 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _redux = __webpack_require__(155);
 
-	var _reducersGraphs = __webpack_require__(409);
+	var _reducersGraphs = __webpack_require__(412);
 
 	var _reducersGraphs2 = _interopRequireDefault(_reducersGraphs);
 
-	var _reducersPosition = __webpack_require__(410);
+	var _reducersPosition = __webpack_require__(413);
 
 	var _reducersPosition2 = _interopRequireDefault(_reducersPosition);
 
-	var _reducersSelection = __webpack_require__(412);
+	var _reducersSelection = __webpack_require__(415);
 
 	var _reducersSelection2 = _interopRequireDefault(_reducersSelection);
 
-	var _reducersZoom = __webpack_require__(413);
+	var _reducersZoom = __webpack_require__(416);
 
 	var _reducersZoom2 = _interopRequireDefault(_reducersZoom);
 
-	var _reducersEditTools = __webpack_require__(414);
+	var _reducersEditTools = __webpack_require__(417);
 
 	var _reducersEditTools2 = _interopRequireDefault(_reducersEditTools);
 
-	var _reducersTitle = __webpack_require__(415);
+	var _reducersTitle = __webpack_require__(418);
 
 	var _reducersTitle2 = _interopRequireDefault(_reducersTitle);
 
-	var _reducersAnnotations = __webpack_require__(416);
+	var _reducersAnnotations = __webpack_require__(419);
 
 	var _reducersAnnotations2 = _interopRequireDefault(_reducersAnnotations);
 
-	var _reducersSettings = __webpack_require__(418);
+	var _reducersSettings = __webpack_require__(421);
 
 	var _reducersSettings2 = _interopRequireDefault(_reducersSettings);
 
-	var _reducersShowHelpScreen = __webpack_require__(419);
+	var _reducersShowHelpScreen = __webpack_require__(422);
 
 	var _reducersShowHelpScreen2 = _interopRequireDefault(_reducersShowHelpScreen);
 
-	var _reducersShowSettings = __webpack_require__(420);
+	var _reducersShowSettings = __webpack_require__(423);
 
 	var _reducersShowSettings2 = _interopRequireDefault(_reducersShowSettings);
 
@@ -44526,7 +44686,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 409 */
+/* 412 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -44658,7 +44818,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 410 */
+/* 413 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -44676,7 +44836,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
 
-	var _lodashUtilityRange = __webpack_require__(411);
+	var _lodashUtilityRange = __webpack_require__(414);
 
 	var _lodashUtilityRange2 = _interopRequireDefault(_lodashUtilityRange);
 
@@ -44685,8 +44845,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _lodashLangIsNumber2 = _interopRequireDefault(_lodashLangIsNumber);
 
 	var initState = {
-	  currentId: null,
-	  currentIndex: 0
+	  currentId: null
 	};
 
 	function position(state, action) {
@@ -44703,25 +44862,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    case _actions.SHOW_GRAPH:
 	      return (0, _lodashObjectMerge2['default'])({}, state, { currentId: action.id });
 
-	    // annotations
-
-	    case _actions.SHOW_ANNOTATION:
-	      return (0, _lodashLangIsNumber2['default'])(action.id) && action.id !== state.currntIndex ? (0, _lodashObjectMerge2['default'])({}, state, { currentIndex: action.id }) : state;
-
-	    case _actions.DELETE_ANNOTATION:
-	      return (0, _lodashObjectMerge2['default'])({}, state, { currentIndex: Math.max(0, state.currentIndex - 1) });
-
-	    case _actions.MOVE_ANNOTATION:
-	      var fromIndex = action.fromIndex,
-	          toIndex = action.toIndex;
-
-	      var indexes = (0, _lodashUtilityRange2['default'])(Math.max(fromIndex, toIndex, state.currentIndex) + 1);
-	      indexes.splice(toIndex, 0, indexes.splice(fromIndex, 1)[0]);
-	      return (0, _lodashObjectMerge2['default'])({}, state, { currentIndex: indexes.indexOf(state.currentIndex) });
-
-	    case _actions.CREATE_ANNOTATION:
-	      return typeof action.newIndex !== "undefined" ? (0, _lodashObjectMerge2['default'])({}, state, { currentIndex: action.newIndex }) : state;
-
 	    default:
 	      return state;
 	  }
@@ -44731,7 +44871,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 411 */
+/* 414 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isIterateeCall = __webpack_require__(210);
@@ -44803,7 +44943,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 412 */
+/* 415 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -44881,7 +45021,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 413 */
+/* 416 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -44915,7 +45055,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 414 */
+/* 417 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -44961,7 +45101,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 415 */
+/* 418 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -44990,7 +45130,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 416 */
+/* 419 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45004,7 +45144,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
 
-	var _modelsAnnotation = __webpack_require__(417);
+	var _modelsAnnotation = __webpack_require__(420);
 
 	var _modelsAnnotation2 = _interopRequireDefault(_modelsAnnotation);
 
@@ -45026,7 +45166,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _lodashLangCloneDeep2 = _interopRequireDefault(_lodashLangCloneDeep);
 
-	var initState = { list: [], visible: true };
+	var _lodashLangIsNumber = __webpack_require__(212);
+
+	var _lodashLangIsNumber2 = _interopRequireDefault(_lodashLangIsNumber);
+
+	var initState = { list: [], visible: true, currentIndex: 0 };
 
 	function annotations(state, action) {
 	  if (state === undefined) state = initState;
@@ -45038,23 +45182,86 @@ return /******/ (function(modules) { // webpackBootstrap
 	          return _modelsAnnotation2['default'].setDefaults(a);
 	        }) });
 
+	    case _actions.SHOW_ANNOTATION:
+	      return (0, _lodashLangIsNumber2['default'])(action.id) && action.id !== state.currntIndex ? (0, _lodashObjectAssign2['default'])({}, state, { currentIndex: action.id }) : state;
+
 	    case _actions.UPDATE_ANNOTATION:
 	      return (0, _lodashObjectMerge2['default'])({}, state, { list: [].concat(_toConsumableArray(state.list.slice(0, action.id)), [(0, _lodashObjectAssign2['default'])({}, state.list[action.id], action.data)], _toConsumableArray(state.list.slice(action.id + 1))) });
 
 	    case _actions.DELETE_ANNOTATION:
-	      return (0, _lodashObjectAssign2['default'])({}, state, { list: [].concat(_toConsumableArray(state.list.slice(0, action.id)), _toConsumableArray(state.list.slice(action.id + 1))) });
+	      return (0, _lodashObjectAssign2['default'])({}, state, {
+	        currentIndex: Math.max(0, state.currentIndex - 1),
+	        list: [].concat(_toConsumableArray(state.list.slice(0, action.id)), _toConsumableArray(state.list.slice(action.id + 1)))
+	      });
 
 	    case _actions.CREATE_ANNOTATION:
-	      return (0, _lodashObjectMerge2['default'])({}, state, { list: [].concat(_toConsumableArray(state.list), [_modelsAnnotation2['default'].defaults()]) });
+	      return typeof action.newIndex !== "undefined" ? (0, _lodashObjectMerge2['default'])({}, state, { currentIndex: action.newIndex }) : state;
+
+	      return (0, _lodashObjectMerge2['default'])({}, state, {
+	        list: [].concat(_toConsumableArray(state.list), [_modelsAnnotation2['default'].defaults()]),
+	        currentIndex: typeof action.newIndex !== "undefined" ? action.newIndex : state.currentIndex
+	      });
 
 	    case _actions.MOVE_ANNOTATION:
+	      var fromIndex = action.fromIndex,
+	          toIndex = action.toIndex;
+
 	      var annotations = (0, _lodashLangCloneDeep2['default'])(state.list);
-	      annotations.splice(action.toIndex, 0, annotations.splice(action.fromIndex, 1)[0]);
-	      return (0, _lodashObjectMerge2['default'])({}, state, { list: annotations });
+	      annotations.splice(toIndex, 0, annotations.splice(fromIndex, 1)[0]);
+
+	      var indexes = range(Math.max(fromIndex, toIndex, state.currentIndex) + 1);
+	      indexes.splice(toIndex, 0, indexes.splice(fromIndex, 1)[0]);
+
+	      return (0, _lodashObjectMerge2['default'])({}, state, {
+	        list: annotations,
+	        currentIndex: indexes.indexOf(state.currentIndex)
+	      });
 
 	    case _actions.TOGGLE_ANNOTATIONS:
 	      var visible = typeof action.value == "undefined" ? !state.visible : action.value;
 	      return (0, _lodashObjectMerge2['default'])({}, state, { visible: visible });
+
+	    case _actions.SWAP_NODE_HIGHLIGHT:
+	      var nodeId = String(action.nodeId);
+	      var annotation = state.list[state.currentIndex];
+	      var nodeIds = annotation.nodeIds;
+	      var index = nodeIds.indexOf(nodeId);
+
+	      if (index == -1) {
+	        nodeIds = nodeIds.concat([nodeId]);
+	      } else {
+	        nodeIds.splice(index, 1);
+	      }
+
+	      return (0, _lodashObjectAssign2['default'])({}, state, { list: [].concat(_toConsumableArray(state.list.slice(0, state.currentIndex)), [(0, _lodashObjectAssign2['default'])({}, annotation, { nodeIds: nodeIds })], _toConsumableArray(state.list.slice(state.currentIndex + 1))) });
+
+	    case _actions.SWAP_EDGE_HIGHLIGHT:
+	      var edgeId = String(action.edgeId);
+	      annotation = state.list[state.currentIndex];
+	      var edgeIds = annotation.edgeIds;
+	      index = edgeIds.indexOf(edgeId);
+
+	      if (index == -1) {
+	        edgeIds = edgeIds.concat([edgeId]);
+	      } else {
+	        edgeIds.splice(index, 1);
+	      }
+
+	      return (0, _lodashObjectAssign2['default'])({}, state, { list: [].concat(_toConsumableArray(state.list.slice(0, state.currentIndex)), [(0, _lodashObjectAssign2['default'])({}, annotation, { edgeIds: edgeIds })], _toConsumableArray(state.list.slice(state.currentIndex + 1))) });
+
+	    case _actions.SWAP_CAPTION_HIGHLIGHT:
+	      var captionId = String(action.captionId);
+	      annotation = state.list[state.currentIndex];
+	      var captionIds = annotation.captionIds;
+	      index = captionIds.indexOf(captionId);
+
+	      if (index == -1) {
+	        captionIds = captionIds.concat([captionId]);
+	      } else {
+	        captionIds.splice(index, 1);
+	      }
+
+	      return (0, _lodashObjectAssign2['default'])({}, state, { list: [].concat(_toConsumableArray(state.list.slice(0, state.currentIndex)), [(0, _lodashObjectAssign2['default'])({}, annotation, { captionIds: captionIds })], _toConsumableArray(state.list.slice(state.currentIndex + 1))) });
 
 	    default:
 	      return state;
@@ -45065,7 +45272,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 417 */
+/* 420 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45119,7 +45326,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 418 */
+/* 421 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45154,7 +45361,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 419 */
+/* 422 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -45183,7 +45390,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 420 */
+/* 423 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -45212,13 +45419,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 421 */
+/* 424 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(422);
+	var content = __webpack_require__(425);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(382)(content, {});
@@ -45238,7 +45445,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 422 */
+/* 425 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(380)();

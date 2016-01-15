@@ -16,7 +16,6 @@ export default class GraphTitleForm extends Component {
   }
 
   _handleChange(event) {
-    let title = this.refs.title.value;
-    this.props.updateTitle(title);
+    this.props.updateTitle(this.refs.title.value);
   }
 }

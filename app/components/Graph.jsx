@@ -26,7 +26,6 @@ export default class Graph extends BaseComponent {
     let { x, y, prevGraph, viewBox, height } = this.state;
 
     return (
-
       <svg id="svg" version="1.1" xmlns="http://www.w3.org/2000/svg" className="Graph" width="100%" height={height} viewBox={viewBox} preserveAspectRatio="xMidYMid">
         <DraggableCore
           handle="#zoom-handle"
