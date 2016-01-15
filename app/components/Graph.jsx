@@ -23,9 +23,10 @@ export default class Graph extends BaseComponent {
   }
 
   render() {
-    const { x, y, prevGraph, viewBox, height } = this.state;
+    let { x, y, prevGraph, viewBox, height } = this.state;
 
     return (
+
       <svg id="svg" version="1.1" xmlns="http://www.w3.org/2000/svg" className="Graph" width="100%" height={height} viewBox={viewBox} preserveAspectRatio="xMidYMid">
         <DraggableCore
           handle="#zoom-handle"
@@ -48,7 +49,6 @@ export default class Graph extends BaseComponent {
   // COMPONENT LIFECYCLE
   
   componentDidMount() {
-    ReactDOM.findDOMNode(this).setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
     this.mounted = true;
     this._updateActualZoom(this.state.viewBox);
   }

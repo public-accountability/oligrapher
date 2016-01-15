@@ -53,6 +53,10 @@ class Oligrapher {
     return this;
   }
 
+  toggleEditTools(value) {
+    this.root.getWrappedInstance().toggleEditTools(value);
+  }
+
   toggleEditor(value) {
     this.root.getWrappedInstance().toggleEditor(value);
   }
@@ -61,13 +65,29 @@ class Oligrapher {
     this.root.getWrappedInstance().toggleLocked(value);
   }
 
-  import(graphData) {
-    this.root.dispatchProps.dispatch(loadGraph(graphData));
+  import(data) {
+    this.root.dispatchProps.dispatch(loadGraph(data.graph));
+    this.root.dispatchProps.dispatch(loadAnnotations(data.annotations));
     return this.root.getWrappedInstance().props.loadedId;
   }
 
   export() {
+    let instance = this.root.getWrappedInstance();
+
+    return {
+      title: instance.props.graphTitle,
+      graph: instance.graphWithoutHighlights(),
+      annotations: instance.props.annotations,
+      settings: instance.props.graphSettings
+    };
+  }
+
+  exportGraph() {
     return this.root.getWrappedInstance().props.graph;
+  }
+
+  exportAnnotation() {
+    return this.root.getWrappedInstance().props.annotation;
   }
 
   new() {
@@ -75,8 +95,12 @@ class Oligrapher {
     return this.currentGraphId();
   }
 
-  show(id) {
+  showGraph(id) {
     this.root.dispatchProps.dispatch(showGraph(id));
+  }
+
+  showAnnotation(index) {
+    this.root.dispatchProps.dispatch(showAnnotation(index));
   }
 
   zoomIn() {

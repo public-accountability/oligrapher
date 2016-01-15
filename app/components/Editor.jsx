@@ -23,7 +23,6 @@ export default class Editor extends BaseComponent {
     }
 
     const keyMap = { 
-      'altZ': ['alt+z', 'ctrl+z'],
       'altP': ['alt+p', 'ctrl+p'],
       'altO': ['alt+o', 'ctrl+o'],
       'altN': ['alt+n', 'ctrl+n'],
@@ -35,7 +34,6 @@ export default class Editor extends BaseComponent {
     };
 
     const keyHandlers = {
-      'altZ': () => this.props.graphApi.resetZoom(),
       'altP': () => this.props.graphApi.prune(),
       'altO': () => this.props.graphApi.circleLayout(),
       'altN': () => this._focusAddNodeInput(),
@@ -150,7 +148,7 @@ export default class Editor extends BaseComponent {
   _clearForms() {
     this.props.toggleAddForm(null);
     this.props.graphApi.deselectAll();
-    this.refs.editTools.refs.editButtons.refs.addNodeInput.clear();    
+    this.refs.editTools.refs.editButtons.refs.addNodeInput.clear();
   }
 
   _focusAddNodeInput() {

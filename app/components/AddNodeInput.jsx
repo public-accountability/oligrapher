@@ -52,6 +52,7 @@ export default class AddNodeInput extends BaseComponent {
 
   clear() {
     this.refs.name.value = '';
+    this.refs.name.blur();
     this.props.setNodeResults([]);
   }
 

@@ -1,9 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
-import BaseComponent from './BaseComponent';
 import ds from '../NodeDisplaySettings';
 
-export default class NodeLabel extends BaseComponent {
+export default class NodeLabel extends Component {
   render() {
     let n = this.props.node;
     let { name, url, scale, status } = n.display;

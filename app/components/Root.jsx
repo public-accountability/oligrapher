@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { ActionCreators } from 'redux-undo';
 import { loadGraph, showGraph, 
@@ -18,14 +19,6 @@ import { loadGraph, showGraph,
          deleteAnnotation, moveAnnotation,
          toggleHelpScreen, setSettings, toggleSettings } from '../actions';
 import Graph from './Graph';
-import GraphModel from '../models/Graph';
-import { HotKeys } from 'react-hotkeys';
-import ReactDOM from 'react-dom';
-import pick from 'lodash/object/pick';
-import merge from 'lodash/object/merge';
-import cloneDeep from 'lodash/lang/cloneDeep';
-import isNumber from 'lodash/lang/isNumber';
-import keys from 'lodash/object/keys';
 import Editor from './Editor';
 import GraphHeader from './GraphHeader';
 import GraphAnnotations from './GraphAnnotations';
@@ -35,6 +28,13 @@ import HelpScreen from './HelpScreen';
 import SettingsButton from './SettingsButton';
 import GraphSettingsForm from './GraphSettingsForm';
 import SaveButton from './SaveButton';
+import GraphModel from '../models/Graph';
+import { HotKeys } from 'react-hotkeys';
+import pick from 'lodash/object/pick';
+import merge from 'lodash/object/merge';
+import cloneDeep from 'lodash/lang/cloneDeep';
+import isNumber from 'lodash/lang/isNumber';
+import keys from 'lodash/object/keys';
 
 class Root extends Component {
   constructor(props) {
@@ -43,6 +43,12 @@ class Root extends Component {
   }
 
   render() {
+    let { dispatch, graph, selection, isEditor, isLocked, graphTitle,
+          showEditTools, showSaveButton, showHelpScreen, 
+          hasSettings, graphSettings, showSettings, onSave,
+          currentIndex, annotation, annotations, showAnnotations } = this.props;
+    let that = this;
+
     const keyMap = { 
       'undo': 'ctrl+,',
       'redo': 'ctrl+.',
@@ -51,17 +57,7 @@ class Root extends Component {
       'resetZoom': 'ctrl+0',
       'shiftDown': { sequence: 'shift', action: 'keydown' },
       'shiftUp': { sequence: 'shift', action: 'keyup' },
-      'altDown': [
-        { sequence: 'alt', action: 'keydown' }, 
-        { sequence: 'ctrl', action: 'keydown' },
-        { sequence: 'command', action: 'keydown' }
-      ],
-      'altUp': [
-        { sequence: 'alt', action: 'keyup' },
-        { sequence: 'ctrl', action: 'keyup' },
-        { sequence: 'command', action: 'keyup' }
-      ],
-      'delSelected': ['alt+d', 'ctrl+d', 'command+d']
+      'delete': ['alt+d', 'ctrl+d', 'command+d']
     };
 
     const keyHandlers = {
@@ -72,16 +68,8 @@ class Root extends Component {
       'resetZoom': () => dispatch(resetZoom()),
       'shiftDown': () => this.setState({ shiftKey: true }),
       'shiftUp': () => this.setState({ shiftKey: false }),
-      'altDown': () => this.setState({ altKey: true }),
-      'altUp': () => this.setState({ altKey: false }),
-      'delSelected': () => dispatch(deleteSelection(this.props.graph.id, this.props.selection))
+      'delete': () => dispatch(deleteSelection(graph.id, selection))
     };
-
-    let { dispatch, graph, isEditor, isLocked, graphTitle,
-          showEditTools, showSaveButton, showHelpScreen, 
-          hasSettings, graphSettings, showSettings, onSave,
-          currentIndex, annotation, annotations, showAnnotations } = this.props;
-    let that = this;
 
     let graphApi = {
       getGraph: () => this.props.graph,
@@ -101,8 +89,21 @@ class Root extends Component {
       addSurroundingNodes: (centerId, nodes) => dispatch(addSurroundingNodes(graph.id, centerId, nodes))
     };
 
-    let _toggleEditTools = (value) => { dispatch(toggleEditTools(value)) };
-
+    let clickNode = (graphId, nodeId) => { 
+      isEditor && showEditTools ? 
+      dispatch(swapNodeSelection(nodeId, !that.state.shiftKey)) : 
+      (isLocked ? null : dispatch(swapNodeHighlight(graphId, nodeId))) 
+    }
+    let clickEdge = (graphId, edgeId) => { 
+      isEditor && showEditTools ? 
+      dispatch(swapEdgeSelection(edgeId, !that.state.shiftKey)) : 
+      (isLocked ? null : dispatch(swapEdgeHighlight(graphId, edgeId)))
+    }
+    let clickCaption = (graphId, captionId) => { 
+      isEditor && showEditTools ? 
+      dispatch(swapCaptionSelection(captionId, !that.state.shiftKey)) : 
+      (isLocked ? null : dispatch(swapCaptionHighlight(graphId, captionId)))
+    }
 
     // annotations stuff
 
@@ -131,44 +132,23 @@ class Root extends Component {
             <div className={showAnnotations && hasAnnotations ? "col-md-8" : "col-md-12"}>
               { isEditor || graphTitle ? 
                 <GraphHeader
-                  graph={this.props.graph}
-                  title={this.props.graphTitle}
-                  url={this.props.url}
                   updateTitle={updateTitle}
-                  user={this.props.user}
-                  date={this.props.date}
-                  links={this.props.links}
-                  isEditor={isEditor} /> : null }
+                  title={this.props.graphTitle}
+                  isEditor={isEditor}
+                  {...this.props} /> : null }
 
               <div id="oligrapherGraphContainer">
                 { this.props.graph ? <Graph 
                   ref={(c) => { this.graph = c; if (c) { c.root = this; } }}
-                  graph={this.props.graph}
-                  zoom={this.props.zoom} 
-                  height={this.props.height}
                   isEditor={isEditor}
                   isLocked={isLocked}
-                  viewOnlyHighlighted={this.props.viewOnlyHighlighted}
-                  selection={this.props.selection}
-                  resetZoom={() => dispatch(resetZoom())} 
+                  clickNode={clickNode}
+                  clickEdge={clickEdge}
+                  clickCaption={clickCaption}
                   moveNode={(graphId, nodeId, x, y) => dispatch(moveNode(graphId, nodeId, x, y))} 
                   moveEdge={(graphId, edgeId, cx, cy) => dispatch(moveEdge(graphId, edgeId, cx, cy))} 
                   moveCaption={(graphId, captionId, x, y) => dispatch(moveCaption(graphId, captionId, x, y))} 
-                  clickNode={(graphId, nodeId) => { 
-                    isEditor && showEditTools ? 
-                    dispatch(swapNodeSelection(nodeId, !that.state.shiftKey)) : 
-                    (isLocked ? null : dispatch(swapNodeHighlight(graphId, nodeId))) 
-                  }}
-                  clickEdge={(graphId, edgeId) => { 
-                    isEditor && showEditTools ? 
-                    dispatch(swapEdgeSelection(edgeId, !that.state.shiftKey)) : 
-                    (isLocked ? null : dispatch(swapEdgeHighlight(graphId, edgeId)))
-                  }}
-                  clickCaption={(graphId, captionId) => { 
-                    isEditor && showEditTools ? 
-                    dispatch(swapCaptionSelection(captionId, !that.state.shiftKey)) : 
-                    (isLocked ? null : dispatch(swapCaptionHighlight(graphId, captionId)))
-                  }} /> : null }
+                  {...this.props} /> : null }
 
                 { this.props.graph ? <Editor 
                   graph={this.props.graph}
@@ -182,16 +162,16 @@ class Root extends Component {
                   nodeResults={this.props.nodeResults}
                   setNodeResults={(nodes) => dispatch(setNodeResults(nodes))}
                   addForm={this.props.addForm}
-                  toggleEditTools={_toggleEditTools}
+                  toggleEditTools={this.toggleEditTools}
                   toggleAddForm={(form) => dispatch(toggleAddForm(form))}
                   undo={() => dispatch(ActionCreators.undo())}
                   redo={() => dispatch(ActionCreators.redo())} 
-                  canUndo={(this.props.canUndo)}
+                  canUndo={this.props.canUndo}
                   canRedo={this.props.canRedo} /> : null }
 
                 <div id="oligrapherMetaButtons">
                   { isEditor ? 
-                    <EditButton toggle={() => dispatch(toggleEditTools())} showEditTools={showEditTools} /> : null }
+                    <EditButton toggle={this.toggleEditTools} showEditTools={showEditTools} /> : null }
                   { isEditor && hasSettings ? 
                     <SettingsButton toggleSettings={(value) => dispatch(toggleSettings(value))} /> : null }
                   { isEditor ? 
@@ -295,6 +275,11 @@ class Root extends Component {
   toggleLocked(value) {
     this.setState({ isLocked: value });
   }
+
+  toggleEditTools(value)  { 
+    this.props.dispatch(toggleEditTools(value));
+  };
+
 
   prevIndex() {
     let { currentIndex, numAnnotations } = this.props;
