@@ -44,7 +44,7 @@ class Root extends Component {
   }
 
   render() {
-    let { dispatch, graph, selection, isEditor, isLocked, graphTitle,
+    let { dispatch, graph, selection, isEditor, isLocked, title,
           showEditTools, showSaveButton, showHelpScreen, 
           hasSettings, graphSettings, showSettings, onSave,
           currentIndex, annotation, annotations, showAnnotations } = this.props;
@@ -134,11 +134,10 @@ class Root extends Component {
         <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={keyHandlers}>
           <div className="row">
             <div id="oligrapherGraphCol" className={showAnnotations && hasAnnotations ? "col-md-8" : "col-md-12"}>
-              { isEditor || graphTitle ? 
+              { isEditor || title ? 
                 <GraphHeader
                   {...this.props}
                   updateTitle={updateTitle}
-                  title={graphTitle}
                   isEditor={isEditor} /> : null }
 
               <div id="oligrapherGraphContainer">
@@ -210,28 +209,30 @@ class Root extends Component {
   }
 
   componentDidMount() {
-    let { dispatch, title, graph, graphData, annotationsData, startIndex, settings, onSave } = this.props;
+    let { dispatch, title, data, startIndex, settings, onSave } = this.props;
 
-    if (graphData) {
-      // data provided from outside
-      this.loadData(graphData);
-    } else if (!graph) {
-      // load empty graph
-      this.loadData(GraphModel.defaults());
-    }
+    if (data) {
+      if (data.graph) {
+        // data provided from outside
+        this.loadGraph(data.graph);
+      } else if (!graph) {
+        // load empty graph
+        this.loadGraph(GraphModel.defaults());
+      }
 
-    if (title) {
-      dispatch(setTitle(title));
-    }
+      if (data.title) {
+        dispatch(setTitle(data.title));
+      }
 
-    if (annotationsData) {
-      dispatch(loadAnnotations(annotationsData));
-    }
+      if (data.annotations) {
+        dispatch(loadAnnotations(data.annotations));
 
-    startIndex = (annotationsData[startIndex] ? startIndex : 0);
+        startIndex = (data.annotations[startIndex] ? startIndex : 0);
 
-    if (startIndex) {
-      dispatch(showAnnotation(startIndex));
+        if (startIndex) {
+          dispatch(showAnnotation(startIndex));
+        }
+      }
     }
 
     if (settings) {
@@ -259,7 +260,7 @@ class Root extends Component {
     }
   }
 
-  loadData(data) {
+  loadGraph(data) {
     // showGraph needs a graph id so it's set here
     let graph = GraphModel.setDefaults(data);
     this.props.dispatch(loadGraph(graph));
@@ -314,7 +315,7 @@ class Root extends Component {
   handleSave() {
     if (this.props.onSave) {
       this.props.onSave({
-        title: this.props.graphTitle,
+        title: this.props.title,
         graph: this.graphWithoutHighlights(),
         annotations: this.props.annotations,
         settings: this.props.graphSettings
@@ -334,7 +335,7 @@ function select(state) {
     showEditTools: state.editTools.visible,
     addForm: state.editTools.addForm,
     nodeResults: state.editTools.nodeResults,
-    graphTitle: state.title,
+    title: state.title,
     currentIndex: state.annotations.currentIndex,
     numAnnotations: state.annotations.list.length,
     annotation: state.annotations.list[state.annotations.currentIndex],

@@ -107,7 +107,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _lodashArrayDifference2 = _interopRequireDefault(_lodashArrayDifference);
 
-	__webpack_require__(424);
+	__webpack_require__(423);
 
 	var Oligrapher = (function () {
 	  function Oligrapher() {
@@ -20725,7 +20725,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var selection = _props.selection;
 	      var isEditor = _props.isEditor;
 	      var isLocked = _props.isLocked;
-	      var graphTitle = _props.graphTitle;
+	      var title = _props.title;
 	      var showEditTools = _props.showEditTools;
 	      var showSaveButton = _props.showSaveButton;
 	      var showHelpScreen = _props.showHelpScreen;
@@ -20889,9 +20889,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            _react2['default'].createElement(
 	              'div',
 	              { id: 'oligrapherGraphCol', className: showAnnotations && hasAnnotations ? "col-md-8" : "col-md-12" },
-	              isEditor || graphTitle ? _react2['default'].createElement(_GraphHeader2['default'], _extends({}, this.props, {
+	              isEditor || title ? _react2['default'].createElement(_GraphHeader2['default'], _extends({}, this.props, {
 	                updateTitle: updateTitle,
-	                title: graphTitle,
 	                isEditor: isEditor })) : null,
 	              _react2['default'].createElement(
 	                'div',
@@ -20996,33 +20995,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var _props2 = this.props;
 	      var dispatch = _props2.dispatch;
 	      var title = _props2.title;
-	      var graph = _props2.graph;
-	      var graphData = _props2.graphData;
-	      var annotationsData = _props2.annotationsData;
+	      var data = _props2.data;
 	      var startIndex = _props2.startIndex;
 	      var settings = _props2.settings;
 	      var onSave = _props2.onSave;
 
-	      if (graphData) {
-	        // data provided from outside
-	        this.loadData(graphData);
-	      } else if (!graph) {
-	        // load empty graph
-	        this.loadData(_modelsGraph2['default'].defaults());
-	      }
+	      if (data) {
+	        if (data.graph) {
+	          // data provided from outside
+	          this.loadGraph(data.graph);
+	        } else if (!graph) {
+	          // load empty graph
+	          this.loadGraph(_modelsGraph2['default'].defaults());
+	        }
 
-	      if (title) {
-	        dispatch((0, _actions.setTitle)(title));
-	      }
+	        if (data.title) {
+	          dispatch((0, _actions.setTitle)(data.title));
+	        }
 
-	      if (annotationsData) {
-	        dispatch((0, _actions.loadAnnotations)(annotationsData));
-	      }
+	        if (data.annotations) {
+	          dispatch((0, _actions.loadAnnotations)(data.annotations));
 
-	      startIndex = annotationsData[startIndex] ? startIndex : 0;
+	          startIndex = data.annotations[startIndex] ? startIndex : 0;
 
-	      if (startIndex) {
-	        dispatch((0, _actions.showAnnotation)(startIndex));
+	          if (startIndex) {
+	            dispatch((0, _actions.showAnnotation)(startIndex));
+	          }
+	        }
 	      }
 
 	      if (settings) {
@@ -21054,8 +21053,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	  }, {
-	    key: 'loadData',
-	    value: function loadData(data) {
+	    key: 'loadGraph',
+	    value: function loadGraph(data) {
 	      // showGraph needs a graph id so it's set here
 	      var graph = _modelsGraph2['default'].setDefaults(data);
 	      this.props.dispatch((0, _actions.loadGraph)(graph));
@@ -21121,7 +21120,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function handleSave() {
 	      if (this.props.onSave) {
 	        this.props.onSave({
-	          title: this.props.graphTitle,
+	          title: this.props.title,
 	          graph: this.graphWithoutHighlights(),
 	          annotations: this.props.annotations,
 	          settings: this.props.graphSettings
@@ -21144,7 +21143,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    showEditTools: state.editTools.visible,
 	    addForm: state.editTools.addForm,
 	    nodeResults: state.editTools.nodeResults,
-	    graphTitle: state.title,
+	    title: state.title,
 	    currentIndex: state.annotations.currentIndex,
 	    numAnnotations: state.annotations.list.length,
 	    annotation: state.annotations.list[state.annotations.currentIndex],
@@ -44638,35 +44637,35 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reducersPosition2 = _interopRequireDefault(_reducersPosition);
 
-	var _reducersSelection = __webpack_require__(415);
+	var _reducersSelection = __webpack_require__(414);
 
 	var _reducersSelection2 = _interopRequireDefault(_reducersSelection);
 
-	var _reducersZoom = __webpack_require__(416);
+	var _reducersZoom = __webpack_require__(415);
 
 	var _reducersZoom2 = _interopRequireDefault(_reducersZoom);
 
-	var _reducersEditTools = __webpack_require__(417);
+	var _reducersEditTools = __webpack_require__(416);
 
 	var _reducersEditTools2 = _interopRequireDefault(_reducersEditTools);
 
-	var _reducersTitle = __webpack_require__(418);
+	var _reducersTitle = __webpack_require__(417);
 
 	var _reducersTitle2 = _interopRequireDefault(_reducersTitle);
 
-	var _reducersAnnotations = __webpack_require__(419);
+	var _reducersAnnotations = __webpack_require__(418);
 
 	var _reducersAnnotations2 = _interopRequireDefault(_reducersAnnotations);
 
-	var _reducersSettings = __webpack_require__(421);
+	var _reducersSettings = __webpack_require__(420);
 
 	var _reducersSettings2 = _interopRequireDefault(_reducersSettings);
 
-	var _reducersShowHelpScreen = __webpack_require__(422);
+	var _reducersShowHelpScreen = __webpack_require__(421);
 
 	var _reducersShowHelpScreen2 = _interopRequireDefault(_reducersShowHelpScreen);
 
-	var _reducersShowSettings = __webpack_require__(423);
+	var _reducersShowSettings = __webpack_require__(422);
 
 	var _reducersShowSettings2 = _interopRequireDefault(_reducersShowSettings);
 
@@ -44836,14 +44835,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
 
-	var _lodashUtilityRange = __webpack_require__(414);
-
-	var _lodashUtilityRange2 = _interopRequireDefault(_lodashUtilityRange);
-
-	var _lodashLangIsNumber = __webpack_require__(212);
-
-	var _lodashLangIsNumber2 = _interopRequireDefault(_lodashLangIsNumber);
-
 	var initState = {
 	  currentId: null
 	};
@@ -44872,78 +44863,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 414 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isIterateeCall = __webpack_require__(210);
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeCeil = Math.ceil,
-	    nativeMax = Math.max;
-
-	/**
-	 * Creates an array of numbers (positive and/or negative) progressing from
-	 * `start` up to, but not including, `end`. If `end` is not specified it's
-	 * set to `start` with `start` then set to `0`. If `end` is less than `start`
-	 * a zero-length range is created unless a negative `step` is specified.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Utility
-	 * @param {number} [start=0] The start of the range.
-	 * @param {number} end The end of the range.
-	 * @param {number} [step=1] The value to increment or decrement by.
-	 * @returns {Array} Returns the new array of numbers.
-	 * @example
-	 *
-	 * _.range(4);
-	 * // => [0, 1, 2, 3]
-	 *
-	 * _.range(1, 5);
-	 * // => [1, 2, 3, 4]
-	 *
-	 * _.range(0, 20, 5);
-	 * // => [0, 5, 10, 15]
-	 *
-	 * _.range(0, -4, -1);
-	 * // => [0, -1, -2, -3]
-	 *
-	 * _.range(1, 4, 0);
-	 * // => [1, 1, 1]
-	 *
-	 * _.range(0);
-	 * // => []
-	 */
-	function range(start, end, step) {
-	  if (step && isIterateeCall(start, end, step)) {
-	    end = step = undefined;
-	  }
-	  start = +start || 0;
-	  step = step == null ? 1 : (+step || 0);
-
-	  if (end == null) {
-	    end = start;
-	    start = 0;
-	  } else {
-	    end = +end || 0;
-	  }
-	  // Use `Array(length)` so engines like Chakra and V8 avoid slower modes.
-	  // See https://youtu.be/XAqIpGU8ZZk#t=17m25s for more details.
-	  var index = -1,
-	      length = nativeMax(nativeCeil((end - start) / (step || 1)), 0),
-	      result = Array(length);
-
-	  while (++index < length) {
-	    result[index] = start;
-	    start += step;
-	  }
-	  return result;
-	}
-
-	module.exports = range;
-
-
-/***/ },
-/* 415 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45021,7 +44940,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 416 */
+/* 415 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45055,7 +44974,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 417 */
+/* 416 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -45101,7 +45020,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 418 */
+/* 417 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45130,7 +45049,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 419 */
+/* 418 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45144,7 +45063,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
 
-	var _modelsAnnotation = __webpack_require__(420);
+	var _modelsAnnotation = __webpack_require__(419);
 
 	var _modelsAnnotation2 = _interopRequireDefault(_modelsAnnotation);
 
@@ -45272,7 +45191,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 420 */
+/* 419 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45326,7 +45245,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 421 */
+/* 420 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45361,7 +45280,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 422 */
+/* 421 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -45390,7 +45309,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 423 */
+/* 422 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -45419,13 +45338,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 424 */
+/* 423 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(425);
+	var content = __webpack_require__(424);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(382)(content, {});
@@ -45445,7 +45364,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 425 */
+/* 424 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(380)();

@@ -6,10 +6,8 @@
     <script src="http://localhost:8090/webpack-dev-server.js"></script>
     <script src="http://localhost:8090/build/vendors.js"></script>
     <script src="http://localhost:8090/build/oligrapher.min.js"></script>
-    <script src="LsDataConverter.js"></script>
     <script src="LsDataSource.js"></script>
-    <script src="PopoloDataConverter.js"></script>
-    <script src="oligrapher-annotations-example-data.js"></script>
+    <script src="oligrapher-demo-data.js"></script>
     <style>
       body {
         margin: 10px;
@@ -21,22 +19,16 @@
     <div id="oligrapher"></div>
     <script>
       var elem = document.getElementById('oligrapher');
-      elem.style.height = window.innerHeight + "px";
-
-      // GRAPH DATA WITH LAYOUT FROM LITTLESIS
-      var data = {"captions":{"1":{"id":1,"display":{"text":"CAPTION","x":100,"y":100,"scale":1,"status":"faded"}}},"nodes":{"877":{"id":877,"display":{"name":"DynCorp International",x:-264.6942446363226,y:-170.10866190881234,"scale":1,"status":"normal","image":"//s3.amazonaws.com/pai-littlesis/images/profile/f21df76a4c3b47c29e6f48ffc35bfaf9f5ab6391_1380236573.png","url":"http://littlesis.org/org/877/DynCorp_International"}},"14730":{"id":14730,"display":{"name":"Harvard University",x:206.04711962430443,y:-237.79105217507154,"scale":1,"status":"normal","image":"//s3.amazonaws.com/pai-littlesis/images/profile/2b5b9c32440f3a6435a2cccba0cef50467ad4fef_1228784985.png","url":"http://littlesis.org/org/14730/Harvard_University"}},"33512":{"id":33512,"display":{"name":"Belfer Center for Science and International Affairs","x":-130.70728238972922,"y":286.20902559194667,"scale":1,"status":"normal","image":"//s3.amazonaws.com/pai-littlesis/images/profile/bb09fd79576e988a0c4d1c19d8d361b4311941a3_1228784676.png","url":"http://littlesis.org/org/33512/Belfer_Center_for_Science_and_International_Affairs"}},"33765":{"id":33765,"display":{"name":"The Woodrow Wilson International Center for Scholars","x":301.8974161451924,"y":-88.64507952986752,"scale":1,"status":"faded","image":null,"url":"http://littlesis.org/org/33765/The_Woodrow_Wilson_International_Center_for_Scholars"}},"37207":{"id":37207,"display":{"name":"Enron Corp","x":-264.6942446363226,"y":170.10866190881234,"scale":1,"status":"normal","image":null,"url":"http://littlesis.org/org/37207/Enron_Corp"}},"37221":{"id":37221,"display":{"name":"Capricorn Holdings","x":-130.7072823897291,"y":-286.2090255919467,"scale":1,"status":"normal","image":"//s3.amazonaws.com/pai-littlesis/images/profile/f3e8493e0f6b5fde221c0123c520afd102c5662f_1236467440.png","url":"http://littlesis.org/org/37221/Capricorn_Holdings"}},"37231":{"id":37231,"display":{"name":"National Humanities Center","x":44.778318482077594,"y":-311.4400459059779,"scale":1,"status":"normal","image":null,"url":"http://littlesis.org/org/37231/National_Humanities_Center"}},"38077":{"id":38077,"display":{"name":"Greenwich Academy","x":301.89741614519244,"y":88.64507952986736,"scale":1,"status":"normal","image":null,"url":"http://littlesis.org/org/38077/Greenwich_Academy"}},"38452":{"id":38452,"display":{"name":"Herbert S Winokur Jr","x":-314.6426544510455,"y":3.853261196486995e-14,"scale":1,"status":"normal","image":"//s3.amazonaws.com/pai-littlesis/images/profile/e834bc8801dd113cfce4cb477ed35c523bac0dc6_1244909226.png","url":"http://littlesis.org/person/38452/Herbert_S_Winokur_Jr"}},"78945":{"id":78945,"display":{"name":"Columbia Journalism Review","x":206.04711962430454,"y":237.7910521750714,"scale":1,"status":"normal","image":null,"url":"http://littlesis.org/org/78945/Columbia_Journalism_Review"}},"83423":{"id":83423,"display":{"name":"Ithaka","x":44.77831848207775,"y":311.4400459059779,"scale":1,"status":"normal","image":null,"url":"http://littlesis.org/org/83423/Ithaka"}}},"edges":{"120752":{"id":120752,"node1_id":38452,"node2_id":37221,"display":{"label":null,"cx":null,"cy":null,"scale":1,"dash":1,"status":"normal","url":"http://littlesis.org/relationship/view/id/120752"}},"120753":{"id":120753,"node1_id":38452,"node2_id":37207,"display":{"label":"Position","cx":null,"cy":null,"scale":2,"dash":null,"status":"faded","url":"http://littlesis.org/relationship/view/id/120753"}},"120755":{"id":120755,"node1_id":38452,"node2_id":37231,"display":{"label":"Position","cx":null,"cy":null,"scale":1,"dash":1,"status":"normal","url":"http://littlesis.org/relationship/view/id/120755"}},"120756":{"id":120756,"node1_id":38452,"node2_id":14730,"display":{"label":"Position","cx":null,"cy":null,"scale":1,"dash":null,"status":"normal","url":"http://littlesis.org/relationship/view/id/120756"}},"120757":{"id":120757,"node1_id":38452,"node2_id":33765,"display":{"label":"Position","cx":null,"cy":null,"scale":1,"dash":1,"status":"normal","url":"http://littlesis.org/relationship/view/id/120757"}},"120758":{"id":120758,"node1_id":38452,"node2_id":38077,"display":{"label":"Position","cx":null,"cy":null,"scale":1,"dash":null,"status":"normal","url":"http://littlesis.org/relationship/view/id/120758"}},"337143":{"id":337143,"node1_id":38452,"node2_id":78945,"display":{"label":"Position","cx":null,"cy":null,"scale":1,"dash":1,"status":"normal","url":"http://littlesis.org/relationship/view/id/337143"}},"363251":{"id":363251,"node1_id":38452,"node2_id":83423,"display":{"label":"Position","cx":null,"cy":null,"scale":1,"dash":1,"status":"normal","url":"http://littlesis.org/relationship/view/id/363251"}},"363357":{"id":363357,"node1_id":38452,"node2_id":877,"display":{"label":"Position","cx":null,"cy":null,"scale":1,"dash":null,"status":"normal","url":"http://littlesis.org/relationship/view/id/363357"}},"480589":{"id":480589,"node1_id":38452,"node2_id":33512,"display":{"label":"Position","cx":null,"cy":null,"scale":1,"dash":1,"status":"normal","url":"http://littlesis.org/relationship/view/id/480589"}}}};
+      elem.style.height = window.innerHeight - 100 + "px";
 
       var oli = new Oligrapher({ 
         root: elem,
-        data: data,
         isEditor: true,
         isLocked: false,
         logActions: false,
         viewOnlyHighlighted: false,
         dataSource: LsDataSource,
-        title: oligrapherAnnotationsData.title,
-        graphData: oligrapherAnnotationsData.graph, 
-        annotationsData: oligrapherAnnotationsData.annotations,
+        data: oligrapherDemoData,
         user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },
         date: "August 30, 2015",
         startIndex: 0,
@@ -50,8 +42,7 @@
         ],
         settings: {
           is_private: false,
-          is_featured: false,
-          list_sources: false
+          is_featured: false
         }
       });
     </script>
