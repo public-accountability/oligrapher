@@ -31,8 +31,6 @@ To run Oligrapher app in a web page, include the .js file from the build directo
     <div id="oligrapher"></div>
     <script>
       var elem = document.getElementById('oligrapher');
-      elem.style.height = window.innerHeight - 100 + "px";
-
       var oli = new Oligrapher({ 
         root: elem,
         isEditor: true,
