@@ -1,56 +1,89 @@
 # Oligrapher 2
-Oligrapher is a JavaScript app for visualizing network graphs. Oligrapher accepts graph data of a specific format and allows a user to design a nice-looking SVG rendering of the graph.
+Oligrapher is a JavaScript app for visualizing network graphs. It allows a user to design a nice-looking network graph using a combination of imported or manually entered data, and to create a collection of annotations for a graph.
 
 Oligrapher 1 was originally developed by [LittleSis](http://littlesis.org) before it was separated into a standalone library. LittleSis has a large collection of [maps created with Oligrapher](http://littlesis.org/oligrapher). 
 
-Oligrapher 2 is built with [React](http://reactjs.com) and [Redux](http://rackt.org/redux) and is easy to embed in a web page or web application.
+Oligrapher 2 is built with [React](http://reactjs.com) and [Redux](http://rackt.org/redux) and is bundled into a single JavaScript file that is easy to run on any web page.
 
-![Oligrapher Demo Screenshot](https://cloud.githubusercontent.com/assets/981611/10861420/b209fc5a-7f54-11e5-82e9-164a5fca11c8.png)
+![Oligrapher Demo Screenshot](https://cloud.githubusercontent.com/assets/981611/12380419/5fbd509e-bd40-11e5-823b-07f093ef6844.png)
 
-Install
--------
-This repository is a small Node.js application with a single demo page. To simple view the demo, point your browser to the /build directory. If you want to tinker with the code, install the dependencies and launch the dev server:
+Quick Start
+-----------
 
-```
-npm install
-npm run dev
-```
-
-Then visit ```http://localhost:8080/demo```.
-
-
-Embed
------
-Oligrapher is easy to embed in a web page. All you have to do is include the .js and .css files from the ```build``` directory in your page header and mount it in an HTML element.
+To run Oligrapher app in a web page, include the .js file from the build directory in your page header and mount the app in an HTML element. Examine ```build/index.html``` in the repository for an example:
 
 ```html
+<!DOCTYPE html>
 <html>
   <head>
-    <link href="/path/to/oligrapher.css" rel="stylesheet" />
-    <script src="/path/to/oligrapher.min.js"></script>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/><meta charset="UTF-8">
+    <title>Oligrapher Demo</title>
+    <script src="oligrapher.js"></script>
+    <script src="LsDataSource.js"></script>
+    <script src="oligrapher-demo-data.js"></script>
     <style>
-      #graph {
-        width: 900px;
-        height: 600px;
+      body {
+        margin: 10px;
       }
     </style>
   </head>
   <body>
-    <div id="graph"></div>
+    <div id="oligrapher"></div>
     <script>
-      var div = document.getElementById('#graph');
-      var data = getDataFromSomewhere();
-      var config = { data: data };
-      var oli = new Oligrapher(div, config);
+      var elem = document.getElementById('oligrapher');
+      elem.style.height = window.innerHeight - 100 + "px";
+
+      var oli = new Oligrapher({ 
+        root: elem,
+        isEditor: true,
+        isLocked: false,
+        logActions: false,
+        viewOnlyHighlighted: false,
+        dataSource: LsDataSource,
+        data: oligrapherDemoData,
+        user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },
+        date: "August 30, 2015",
+        startIndex: 0,
+        showSaveButton: true,
+        onSave: function(data) { console.log(data); },
+        onNav: function(index) { console.log("navigating to annotation " + String(index)); },
+        links: [
+          { text: "some", url: "http://some.net" },
+          { id: "exampleLink", text: "example", url: "http://example.com" },
+          { method: "POST", text: "clone", url: "http://lilsis.local/maps/118-satoshi/clone" }
+        ],
+        settings: {
+          is_private: false,
+          is_featured: false
+        }
+      });
     </script>
   </body>
 </html>
 ```
 
+Development
+-----------
+
+To run this app in development mode:
+
+```
+cd /var/www/
+clone https://github.com/skomputer/oligrapher2.git
+npm install
+npm run dev-build
+```
+
+Then point your browser to the repository's `build/dev.html` to view a demo graph with annotations in edit mode. In development mode the React application is served by webpack with hot loading.
+
+To include Oligrapher in a Node.js application, include the `oligrapher2` node module in the app's `package.json` and then `require` it in the application code.
 
 Data Schema
 -----------
-Graph data coming in (and out) of Oligrapher should conform to the following general structure.
+
+Initial data can be provided to the app with the `data` configuration option. If no data is provided at initialization the app will begin empty. Data consists of a `graph` and, optionally, an array of `annotations` as well as `title`, `user`, and `date`. 
+
+`graph` data should conform to the following general schema:
 
 ```javascript
 {
@@ -104,26 +137,69 @@ The ```id``` of the graph itself is optional, Oligrapher will generate it if not
   - ```x:``` x-coordinate of the caption's position
   - ```y:``` y-coordinate of the caption's position
 
+### Annotation Attributes
+
+The `annotations` array should conforms to the following schema:
+
+```javascript
+[
+  { 
+    header: "The Revolving Door", 
+    text: "Goldman Sachs has many former executives with top positions in the federal government.", 
+    nodeIds: [...], 
+    edgeIds: [...], 
+    captionIds: [...] 
+  },
+  { 
+    header: "Treasury Department", 
+    text: "Former Treasury Secretary Robert Rubin was co-chair of Goldman before joining the Clinton Administration in 1993." , 
+    nodeIds: [...], 
+    edgeIds: [...], 
+    captionIds: [] 
+  },
+  ...
+]
+```
+
+- ```header:``` **(required)** a header to be displayed above the annotation
+- ```text:``` **(required)** the text body of the annotation, with optional HTML markup
+- ```nodeIds:``` **(required)** an array of ids of nodes to highlight from the underlying graph (can be empty)
+- ```edgeIds:``` **(required)** an array of ids of edges to highlight from the underlying graph (can be empty)
+- ```captionIds:``` **(required)** an array of ids of captions to highlight from the underlying graph (can be empty)
+
+If no node, edge, or captions are highlighted, the graph will have its normal appearance when viewing the annotation. If there are highlights, non-highlighted content will appear faded.
+
 API
 ---
 
 ### ```constructor(config)```
 Returns an Oligrapher instance within a specified ```root``` DOM element and accepts other configuration options.
 ```javascript
-var div = document.getElementById('#graph');
+var elem = document.getElementById('#oligrapher');
 var data = getDataFromSomeWhere();
 var config = { 
-  root: div
+  root: elem,   // DOM element to mount Oligrapher within
   data: data,   // initial graph data to load and display (null by default)
   isEditor: true,   // if true, clicking nodes or edges selects them; if false, clicking highlights (false by defaut)
-  onSelect: function(selection) {
-    // executed every time the displayed graph's selected nodes, edges, or captions change
-    // selection argument has three array attributes: nodeIds, edgeIds, captionIds
-  }, 
-  onUpdate: function(graph) {
-    // executed every time the graph's content changes
-    // graph argument is the same object returned by Oligrapher's export() API method
-  }
+  isLocked: false,   // if true, nodes and edges cannot be dragged by the user
+  viewOnlyHighlighted: false,   // center viewbox around highlighted content
+  dataSource: LsDataSource,   // API wrapper for importing nodes and edges from a data source, see build/LsDataSource.js for an example
+  user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },   // optional author data to display
+  date: "August 30, 2015",   // optional date data to display
+  startAnnotation: 0,   // index of annotation to load initially
+  showSaveButton: true,   // show a save button
+  onSave: function(data) { console.log(data); },   // callback triggered by save button
+  onNav: function(index) { console.log("navigating to annotation " + String(index)); },   // callback triggered by annotation navigation buttons
+  links: [
+    { text: "some", url: "http://some.net" },
+    { id: "exampleLink", text: "example", url: "http://example.com" },
+    { method: "POST", text: "clone", url: "http://lilsis.local/maps/118-satoshi/clone" }
+  ],   // links to display beside the title, author, and date; text attributes are required, url, id, method, and target attributes are optional
+  settings: {
+    is_private: false,
+    is_featured: false
+  },   // checkboxes with initial values to appear on the settings screen; settings are included in data setn to onSave callback
+  logActions: false   // for development purposes, logs all Redux actions to the browser console
 }
 
 var oli = new Oligrapher(config);
