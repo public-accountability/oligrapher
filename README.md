@@ -1,16 +1,16 @@
 # Oligrapher 2
 
-- [Quick Start](#quick-start)
-- [Development](#development)
-- [Data Schema](#data-schema)
-- [API](#api)
-- [Editing Guide](#editing-guide)
-
 Oligrapher is a JavaScript app for visualizing network graphs. It allows a user to design a nice-looking network graph using a combination of imported or manually entered data, and to create a collection of annotations for a graph.
 
 Oligrapher 1 was originally developed by [LittleSis](http://littlesis.org) before it was separated into a standalone library. LittleSis has a large collection of [maps created with Oligrapher](http://littlesis.org/oligrapher). 
 
 Oligrapher 2 is built with [React](http://reactjs.com) and [Redux](http://rackt.org/redux) and is bundled into a single JavaScript file that is easy to run on any web page.
+
+- [Quick Start](#quick-start)
+- [Development](#development)
+- [Data Schema](#data-schema)
+- [API](#api)
+- [Editing Guide](#editing-guide)
 
 ![Oligrapher Demo Screenshot](https://cloud.githubusercontent.com/assets/981611/12380419/5fbd509e-bd40-11e5-823b-07f093ef6844.png)
 
