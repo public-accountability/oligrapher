@@ -72,7 +72,7 @@ class Root extends Component {
       'resetZoom': () => dispatch(resetZoom()),
       'shiftDown': () => this.setState({ shiftKey: true }),
       'shiftUp': () => this.setState({ shiftKey: false }),
-      'delete': () => dispatch(deleteSelection(graph.id, selection))
+      'delete': () => dispatch(deleteSelection(selection))
     };
 
     let graphApi = {
@@ -324,7 +324,6 @@ class Root extends Component {
 }
 
 function select(state) {
-  console.log(state.graph);
   return {
     graph: state.graph.present,
     canUndo: state.graph.past.length > 0,

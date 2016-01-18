@@ -107,7 +107,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _lodashArrayDifference2 = _interopRequireDefault(_lodashArrayDifference);
 
-	__webpack_require__(423);
+	__webpack_require__(422);
 
 	var Oligrapher = (function () {
 	  function Oligrapher() {
@@ -168,8 +168,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'import',
 	    value: function _import(data) {
 	      this.root.dispatchProps.dispatch((0, _actions.loadGraph)(data.graph));
-	      this.root.dispatchProps.dispatch(loadAnnotations(data.annotations));
-	      return this.root.getWrappedInstance().props.loadedId;
+
+	      if (data.annotations) {
+	        this.root.dispatchProps.dispatch((0, _actions.loadAnnotations)(data.annotations));
+	      }
+
+	      if (data.title) {
+	        this.root.dispatchProps.dispatch((0, _actions.setTitle)(data.title));
+	      }
 	    }
 	  }, {
 	    key: 'export',
@@ -192,17 +198,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'exportAnnotation',
 	    value: function exportAnnotation() {
 	      return this.root.getWrappedInstance().props.annotation;
-	    }
-	  }, {
-	    key: 'new',
-	    value: function _new() {
-	      this.root.dispatchProps.dispatch((0, _actions.newGraph)());
-	      return this.currentGraphId();
-	    }
-	  }, {
-	    key: 'showGraph',
-	    value: function showGraph(id) {
-	      this.root.dispatchProps.dispatch((0, _actions.showGraph)(id));
 	    }
 	  }, {
 	    key: 'showAnnotation',
@@ -235,15 +230,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.root.dispatchProps.dispatch((0, _actions.resetZoom)());
 	    }
 	  }, {
-	    key: 'currentGraphId',
-	    value: function currentGraphId() {
-	      return this.root.getWrappedInstance().props.graph.id;
-	    }
-	  }, {
 	    key: 'addNode',
 	    value: function addNode(node) {
 	      var nodeIds = Object.keys(this.root.getWrappedInstance().props.graph.nodes);
-	      this.root.dispatchProps.dispatch((0, _actions.addNode)(this.currentGraphId(), node));
+	      this.root.dispatchProps.dispatch((0, _actions.addNode)(node));
 	      var newNodeIds = Object.keys(this.root.getWrappedInstance().props.graph.nodes);
 	      return (0, _lodashArrayDifference2['default'])(newNodeIds, nodeIds);
 	    }
@@ -251,7 +241,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'addEdge',
 	    value: function addEdge(edge) {
 	      var edgeIds = Object.keys(this.root.getWrappedInstance().props.graph.edges);
-	      this.root.dispatchProps.dispatch((0, _actions.addEdge)(this.currentGraphId(), edge));
+	      this.root.dispatchProps.dispatch((0, _actions.addEdge)(edge));
 	      var newEdgeIds = Object.keys(this.root.getWrappedInstance().props.graph.edges);
 	      return (0, _lodashArrayDifference2['default'])(newEdgeIds, edgeIds);
 	    }
@@ -259,7 +249,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'addCaption',
 	    value: function addCaption(caption) {
 	      var captionIds = Object.keys(this.root.getWrappedInstance().props.graph.captions);
-	      this.root.dispatchProps.dispatch((0, _actions.addCaption)(this.currentGraphId(), caption));
+	      this.root.dispatchProps.dispatch((0, _actions.addCaption)(caption));
 	      var newCaptionIds = Object.keys(this.root.getWrappedInstance().props.graph.captions);
 	      return (0, _lodashArrayDifference2['default'])(newCaptionIds, captionIds);
 	    }
@@ -267,29 +257,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'addSurroundingNodes',
 	    value: function addSurroundingNodes(centerId, nodes) {
 	      var nodeIds = Object.keys(this.root.getWrappedInstance().props.graph.nodes);
-	      this.root.dispatchProps.dispatch((0, _actions.addSurroundingNodes)(this.currentGraphId(), centerId, nodes));
+	      this.root.dispatchProps.dispatch((0, _actions.addSurroundingNodes)(centerId, nodes));
 	      var newNodeIds = Object.keys(this.root.getWrappedInstance().props.graph.nodes);
 	      return (0, _lodashArrayDifference2['default'])(newNodeIds, nodeIds);
 	    }
 	  }, {
 	    key: 'deleteNode',
 	    value: function deleteNode(nodeId) {
-	      this.root.dispatchProps.dispatch((0, _actions.deleteNode)(this.currentGraphId(), nodeId));
+	      this.root.dispatchProps.dispatch((0, _actions.deleteNode)(nodeId));
 	    }
 	  }, {
 	    key: 'deleteEdge',
 	    value: function deleteEdge(edgeId) {
-	      this.root.dispatchProps.dispatch((0, _actions.deleteEdge)(this.currentGraphId(), edgeId));
+	      this.root.dispatchProps.dispatch((0, _actions.deleteEdge)(edgeId));
 	    }
 	  }, {
 	    key: 'deleteCaption',
 	    value: function deleteCaption(captionId) {
-	      this.root.dispatchProps.dispatch((0, _actions.deleteCaption)(this.currentGraphId(), captionId));
+	      this.root.dispatchProps.dispatch((0, _actions.deleteCaption)(captionId));
 	    }
 	  }, {
 	    key: 'deleteAll',
 	    value: function deleteAll() {
-	      this.root.dispatchProps.dispatch((0, _actions.deleteAll)(this.currentGraphId()));
+	      this.root.dispatchProps.dispatch((0, _actions.deleteAll)());
 	      this.root.getWrappedInstance().graph.recenter();
 	    }
 	  }, {
@@ -302,13 +292,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function setHighlights(highlights) {
 	      var otherwiseFaded = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
-	      this.root.dispatchProps.dispatch((0, _actions.setHighlights)(this.currentGraphId(), highlights, otherwiseFaded));
+	      this.root.dispatchProps.dispatch((0, _actions.setHighlights)(highlights, otherwiseFaded));
 	      return this.root.getWrappedInstance().props.graph;
 	    }
 	  }, {
 	    key: 'clearHighlights',
 	    value: function clearHighlights() {
-	      this.root.dispatchProps.dispatch((0, _actions.clearHighlights)(this.currentGraphId()));
+	      this.root.dispatchProps.dispatch((0, _actions.clearHighlights)());
 	      return this.root.getWrappedInstance().props.graph;
 	    }
 	  }, {
@@ -319,40 +309,40 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'deselectAll',
 	    value: function deselectAll() {
-	      this.root.dispatchProps.dispatch((0, _actions.deselectAll)(this.currentGraphId()));
+	      this.root.dispatchProps.dispatch((0, _actions.deselectAll)());
 	    }
 	  }, {
 	    key: 'deleteSelection',
 	    value: function deleteSelection() {
-	      this.root.dispatchProps.dispatch((0, _actions.deleteSelection)(this.currentGraphId(), this.getSelection()));
+	      this.root.dispatchProps.dispatch((0, _actions.deleteSelection)(this.getSelection()));
 	    }
 	  }, {
 	    key: 'updateNode',
 	    value: function updateNode(nodeId, data) {
-	      this.root.dispatchProps.dispatch((0, _actions.updateNode)(this.currentGraphId(), nodeId, data));
+	      this.root.dispatchProps.dispatch((0, _actions.updateNode)(nodeId, data));
 	      return this.root.getWrappedInstance().props.graph.nodes[nodeId];
 	    }
 	  }, {
 	    key: 'updateEdge',
 	    value: function updateEdge(edgeId, data) {
-	      this.root.dispatchProps.dispatch((0, _actions.updateEdge)(this.currentGraphId(), edgeId, data));
+	      this.root.dispatchProps.dispatch((0, _actions.updateEdge)(edgeId, data));
 	      return this.root.getWrappedInstance().props.graph.edges[edgeId];
 	    }
 	  }, {
 	    key: 'updateCaption',
 	    value: function updateCaption(captionId, data) {
-	      this.root.dispatchProps.dispatch((0, _actions.updateCaption)(this.currentGraphId(), captionId, data));
+	      this.root.dispatchProps.dispatch((0, _actions.updateCaption)(captionId, data));
 	      return this.root.getWrappedInstance().props.graph.captions[captionId];
 	    }
 	  }, {
 	    key: 'prune',
 	    value: function prune() {
-	      this.root.dispatchProps.dispatch((0, _actions.pruneGraph)(this.currentGraphId()));
+	      this.root.dispatchProps.dispatch((0, _actions.pruneGraph)());
 	    }
 	  }, {
 	    key: 'circleLayout',
 	    value: function circleLayout() {
-	      this.root.dispatchProps.dispatch((0, _actions.layoutCircle)(this.currentGraphId()));
+	      this.root.dispatchProps.dispatch((0, _actions.layoutCircle)());
 	    }
 	  }]);
 
@@ -20777,7 +20767,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          return _this.setState({ shiftKey: false });
 	        },
 	        'delete': function _delete() {
-	          return dispatch((0, _actions.deleteSelection)(graph.id, selection));
+	          return dispatch((0, _actions.deleteSelection)(selection));
 	        }
 	      };
 
@@ -20795,48 +20785,48 @@ return /******/ (function(modules) { // webpackBootstrap
 	          return dispatch((0, _actions.resetZoom)());
 	        },
 	        prune: function prune() {
-	          return dispatch((0, _actions.pruneGraph)(graph.id));
+	          return dispatch((0, _actions.pruneGraph)());
 	        },
 	        circleLayout: function circleLayout() {
-	          return dispatch((0, _actions.layoutCircle)(graph.id));
+	          return dispatch((0, _actions.layoutCircle)());
 	        },
 	        addNode: function addNode(node) {
-	          return dispatch((0, _actions.addNode)(graph.id, node));
+	          return dispatch((0, _actions.addNode)(node));
 	        },
 	        addEdge: function addEdge(edge) {
-	          return dispatch((0, _actions.addEdge)(graph.id, edge));
+	          return dispatch((0, _actions.addEdge)(edge));
 	        },
 	        addCaption: function addCaption(caption) {
-	          return dispatch((0, _actions.addCaption)(graph.id, caption));
+	          return dispatch((0, _actions.addCaption)(caption));
 	        },
 	        updateNode: function updateNode(nodeId, data) {
-	          return dispatch((0, _actions.updateNode)(graph.id, nodeId, data));
+	          return dispatch((0, _actions.updateNode)(nodeId, data));
 	        },
 	        updateEdge: function updateEdge(edgeId, data) {
-	          return dispatch((0, _actions.updateEdge)(graph.id, edgeId, data));
+	          return dispatch((0, _actions.updateEdge)(edgeId, data));
 	        },
 	        updateCaption: function updateCaption(captionId, data) {
-	          return dispatch((0, _actions.updateCaption)(graph.id, captionId, data));
+	          return dispatch((0, _actions.updateCaption)(captionId, data));
 	        },
 	        deselectAll: function deselectAll() {
-	          return dispatch((0, _actions.deselectAll)(graph.id));
+	          return dispatch((0, _actions.deselectAll)());
 	        },
 	        deleteAll: function deleteAll() {
-	          return dispatch((0, _actions.deleteAll)(graph.id));
+	          return dispatch((0, _actions.deleteAll)());
 	        },
 	        addSurroundingNodes: function addSurroundingNodes(centerId, nodes) {
-	          return dispatch((0, _actions.addSurroundingNodes)(graph.id, centerId, nodes));
+	          return dispatch((0, _actions.addSurroundingNodes)(centerId, nodes));
 	        }
 	      };
 
-	      var clickNode = function clickNode(graphId, nodeId) {
-	        isEditor && showEditTools ? dispatch((0, _actions.swapNodeSelection)(nodeId, !that.state.shiftKey)) : isLocked ? null : dispatch((0, _actions.swapNodeHighlight)(graphId, nodeId));
+	      var clickNode = function clickNode(nodeId) {
+	        isEditor && showEditTools ? dispatch((0, _actions.swapNodeSelection)(nodeId, !that.state.shiftKey)) : isLocked ? null : dispatch((0, _actions.swapNodeHighlight)(nodeId));
 	      };
-	      var clickEdge = function clickEdge(graphId, edgeId) {
-	        isEditor && showEditTools ? dispatch((0, _actions.swapEdgeSelection)(edgeId, !that.state.shiftKey)) : isLocked ? null : dispatch((0, _actions.swapEdgeHighlight)(graphId, edgeId));
+	      var clickEdge = function clickEdge(edgeId) {
+	        isEditor && showEditTools ? dispatch((0, _actions.swapEdgeSelection)(edgeId, !that.state.shiftKey)) : isLocked ? null : dispatch((0, _actions.swapEdgeHighlight)(edgeId));
 	      };
-	      var clickCaption = function clickCaption(graphId, captionId) {
-	        isEditor && showEditTools ? dispatch((0, _actions.swapCaptionSelection)(captionId, !that.state.shiftKey)) : isLocked ? null : dispatch((0, _actions.swapCaptionHighlight)(graphId, captionId));
+	      var clickCaption = function clickCaption(captionId) {
+	        isEditor && showEditTools ? dispatch((0, _actions.swapCaptionSelection)(captionId, !that.state.shiftKey)) : isLocked ? null : dispatch((0, _actions.swapCaptionHighlight)(captionId));
 	      };
 
 	      // annotations stuff
@@ -20994,34 +20984,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function componentDidMount() {
 	      var _props2 = this.props;
 	      var dispatch = _props2.dispatch;
-	      var title = _props2.title;
 	      var data = _props2.data;
-	      var startIndex = _props2.startIndex;
 	      var settings = _props2.settings;
-	      var onSave = _props2.onSave;
 
-	      if (data) {
-	        if (data.graph) {
-	          // data provided from outside
-	          this.loadGraph(data.graph);
-	        } else if (!graph) {
-	          // load empty graph
-	          this.loadGraph(_modelsGraph2['default'].defaults());
-	        }
+	      this.loadData(data);
 
-	        if (data.title) {
-	          dispatch((0, _actions.setTitle)(data.title));
-	        }
-
-	        if (data.annotations) {
-	          dispatch((0, _actions.loadAnnotations)(data.annotations));
-
-	          startIndex = data.annotations[startIndex] ? startIndex : 0;
-
-	          if (startIndex) {
-	            dispatch((0, _actions.showAnnotation)(startIndex));
-	          }
-	        }
+	      if (!data || !data.graph) {
+	        // show edit tools if there's no initial graph
+	        this.toggleEditTools(true);
 	      }
 
 	      if (settings) {
@@ -21053,12 +21023,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	  }, {
-	    key: 'loadGraph',
-	    value: function loadGraph(data) {
-	      // showGraph needs a graph id so it's set here
-	      var graph = _modelsGraph2['default'].setDefaults(data);
-	      this.props.dispatch((0, _actions.loadGraph)(graph));
-	      this.props.dispatch((0, _actions.showGraph)(graph.id));
+	    key: 'loadData',
+	    value: function loadData(data) {
+	      var _props4 = this.props;
+	      var dispatch = _props4.dispatch;
+	      var startAnnotation = _props4.startAnnotation;
+
+	      // data provided from outside
+	      var graph = data && data.graph ? _modelsGraph2['default'].setDefaults(data.graph) : _modelsGraph2['default'].defaults();
+	      dispatch((0, _actions.loadGraph)(graph));
+
+	      if (data && data.title) {
+	        dispatch((0, _actions.setTitle)(data.title));
+	      }
+
+	      if (data && data.annotations) {
+	        dispatch((0, _actions.loadAnnotations)(data.annotations));
+
+	        startAnnotation = data.annotations[startAnnotation] ? startAnnotation : 0;
+
+	        if (startAnnotation) {
+	          dispatch((0, _actions.showAnnotation)(startAnnotation));
+	        }
+	      }
 	    }
 	  }, {
 	    key: 'toggleEditor',
@@ -21079,18 +21066,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'prevIndex',
 	    value: function prevIndex() {
-	      var _props4 = this.props;
-	      var currentIndex = _props4.currentIndex;
-	      var numAnnotations = _props4.numAnnotations;
+	      var _props5 = this.props;
+	      var currentIndex = _props5.currentIndex;
+	      var numAnnotations = _props5.numAnnotations;
 
 	      return currentIndex - 1 < 0 ? null : currentIndex - 1;
 	    }
 	  }, {
 	    key: 'nextIndex',
 	    value: function nextIndex() {
-	      var _props5 = this.props;
-	      var currentIndex = _props5.currentIndex;
-	      var numAnnotations = _props5.numAnnotations;
+	      var _props6 = this.props;
+	      var currentIndex = _props6.currentIndex;
+	      var numAnnotations = _props6.numAnnotations;
 
 	      return currentIndex + 1 > numAnnotations - 1 ? null : currentIndex + 1;
 	    }
@@ -21134,10 +21121,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function select(state) {
 	  return {
-	    graph: state.graphs.present[state.position.currentId],
-	    canUndo: state.graphs.past.length > 0,
-	    canRedo: state.graphs.future.length > 0,
-	    loadedId: state.position.loadedId,
+	    graph: state.graph.present,
+	    canUndo: state.graph.past.length > 0,
+	    canRedo: state.graph.future.length > 0,
 	    selection: state.selection,
 	    zoom: state.zoom,
 	    showEditTools: state.editTools.visible,
@@ -21521,7 +21507,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 	exports.loadGraph = loadGraph;
-	exports.showGraph = showGraph;
 	exports.newGraph = newGraph;
 	exports.zoomIn = zoomIn;
 	exports.zoomOut = zoomOut;
@@ -21673,12 +21658,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 
 	function loadGraph(graph) {
-	  var graphWithId = _modelsGraph2['default'].setId(graph);
-	  return { type: LOAD_GRAPH, graph: graphWithId, id: graphWithId.id };
-	}
-
-	function showGraph(id) {
-	  return { type: SHOW_GRAPH, id: id };
+	  return { type: LOAD_GRAPH, graph: graph };
 	}
 
 	function newGraph() {
@@ -21702,28 +21682,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return { type: RESET_ZOOM };
 	}
 
-	function moveNode(graphId, nodeId, x, y) {
-	  return { type: MOVE_NODE, graphId: graphId, nodeId: nodeId, x: x, y: y };
+	function moveNode(nodeId, x, y) {
+	  return { type: MOVE_NODE, nodeId: nodeId, x: x, y: y };
 	}
 
-	function moveEdge(graphId, edgeId, cx, cy) {
-	  return { type: MOVE_EDGE, graphId: graphId, edgeId: edgeId, cx: cx, cy: cy };
+	function moveEdge(edgeId, cx, cy) {
+	  return { type: MOVE_EDGE, edgeId: edgeId, cx: cx, cy: cy };
 	}
 
-	function moveCaption(graphId, captionId, x, y) {
-	  return { type: MOVE_CAPTION, graphId: graphId, captionId: captionId, x: x, y: y };
+	function moveCaption(captionId, x, y) {
+	  return { type: MOVE_CAPTION, captionId: captionId, x: x, y: y };
 	}
 
-	function swapNodeHighlight(graphId, nodeId) {
-	  return { type: SWAP_NODE_HIGHLIGHT, graphId: graphId, nodeId: nodeId };
+	function swapNodeHighlight(nodeId) {
+	  return { type: SWAP_NODE_HIGHLIGHT, nodeId: nodeId };
 	}
 
-	function swapEdgeHighlight(graphId, edgeId) {
-	  return { type: SWAP_EDGE_HIGHLIGHT, graphId: graphId, edgeId: edgeId };
+	function swapEdgeHighlight(edgeId) {
+	  return { type: SWAP_EDGE_HIGHLIGHT, edgeId: edgeId };
 	}
 
-	function swapCaptionHighlight(graphId, captionId) {
-	  return { type: SWAP_CAPTION_HIGHLIGHT, graphId: graphId, captionId: captionId };
+	function swapCaptionHighlight(captionId) {
+	  return { type: SWAP_CAPTION_HIGHLIGHT, captionId: captionId };
 	}
 
 	function swapNodeSelection(nodeId) {
@@ -21744,75 +21724,75 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return { type: SWAP_CAPTION_SELECTION, captionId: captionId, singleSelect: singleSelect };
 	}
 
-	function deselectAll(graphId) {
-	  return { type: DESELECT_ALL, graphId: graphId };
+	function deselectAll() {
+	  return { type: DESELECT_ALL };
 	}
 
-	function addNode(graphId, node) {
-	  return { type: ADD_NODE, graphId: graphId, node: node };
+	function addNode(node) {
+	  return { type: ADD_NODE, node: node };
 	}
 
-	function addEdge(graphId, edge) {
-	  return { type: ADD_EDGE, graphId: graphId, edge: edge };
+	function addEdge(edge) {
+	  return { type: ADD_EDGE, edge: edge };
 	}
 
-	function addCaption(graphId, caption) {
-	  return { type: ADD_CAPTION, graphId: graphId, caption: caption };
+	function addCaption(caption) {
+	  return { type: ADD_CAPTION, caption: caption };
 	}
 
-	function addSurroundingNodes(graphId, centerId, nodes) {
-	  return { type: ADD_SURROUNDING_NODES, graphId: graphId, centerId: centerId, nodes: nodes };
+	function addSurroundingNodes(centerId, nodes) {
+	  return { type: ADD_SURROUNDING_NODES, centerId: centerId, nodes: nodes };
 	}
 
-	function deleteNode(graphId, nodeId) {
-	  return { type: DELETE_NODE, graphId: graphId, nodeId: nodeId };
+	function deleteNode(nodeId) {
+	  return { type: DELETE_NODE, nodeId: nodeId };
 	}
 
-	function deleteEdge(graphId, edgeId) {
-	  return { type: DELETE_EDGE, graphId: graphId, edgeId: edgeId };
+	function deleteEdge(edgeId) {
+	  return { type: DELETE_EDGE, edgeId: edgeId };
 	}
 
-	function deleteCaption(graphId, captionId) {
-	  return { type: DELETE_CAPTION, graphId: graphId, captionId: captionId };
+	function deleteCaption(captionId) {
+	  return { type: DELETE_CAPTION, captionId: captionId };
 	}
 
-	function deleteSelection(graphId, selection) {
-	  return { type: DELETE_SELECTION, graphId: graphId, selection: selection };
+	function deleteSelection(selection) {
+	  return { type: DELETE_SELECTION, selection: selection };
 	}
 
-	function deleteAll(graphId) {
-	  return { type: DELETE_ALL, graphId: graphId };
+	function deleteAll() {
+	  return { type: DELETE_ALL };
 	}
 
-	function updateNode(graphId, nodeId, data) {
-	  return { type: UPDATE_NODE, graphId: graphId, nodeId: nodeId, data: data };
+	function updateNode(nodeId, data) {
+	  return { type: UPDATE_NODE, nodeId: nodeId, data: data };
 	}
 
-	function updateEdge(graphId, edgeId, data) {
-	  return { type: UPDATE_EDGE, graphId: graphId, edgeId: edgeId, data: data };
+	function updateEdge(edgeId, data) {
+	  return { type: UPDATE_EDGE, edgeId: edgeId, data: data };
 	}
 
-	function updateCaption(graphId, captionId, data) {
-	  return { type: UPDATE_CAPTION, graphId: graphId, captionId: captionId, data: data };
+	function updateCaption(captionId, data) {
+	  return { type: UPDATE_CAPTION, captionId: captionId, data: data };
 	}
 
-	function pruneGraph(graphId) {
-	  return { type: PRUNE_GRAPH, graphId: graphId };
+	function pruneGraph() {
+	  return { type: PRUNE_GRAPH };
 	}
 
-	function layoutCircle(graphId) {
-	  return { type: LAYOUT_CIRCLE, graphId: graphId };
+	function layoutCircle() {
+	  return { type: LAYOUT_CIRCLE };
 	}
 
-	function setHighlights(graphId, highlights) {
-	  var otherwiseFaded = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+	function setHighlights(highlights) {
+	  var otherwiseFaded = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
-	  return { type: SET_HIGHLIGHTS, graphId: graphId, highlights: highlights, otherwiseFaded: otherwiseFaded };
+	  return { type: SET_HIGHLIGHTS, highlights: highlights, otherwiseFaded: otherwiseFaded };
 	}
 
-	function clearHighlights(graphId) {
+	function clearHighlights() {
 	  var highlights = { nodeIds: [], edgeIds: [], captionIds: [] };
-	  return { type: SET_HIGHLIGHTS, graphId: graphId, highlights: highlights };
+	  return { type: SET_HIGHLIGHTS, highlights: highlights };
 	}
 
 	function toggleEditTools(value) {
@@ -21957,28 +21937,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  _createClass(Graph, null, [{
-	    key: 'generateId',
-	    value: function generateId() {
-	      return _Helpers2['default'].generateId();
-	    }
-	  }, {
 	    key: 'defaults',
 	    value: function defaults() {
-	      return (0, _lodashObjectMerge2['default'])({ id: this.generateId() }, this.defaultContent());
-	    }
-	  }, {
-	    key: 'defaultContent',
-	    value: function defaultContent() {
 	      return {
 	        nodes: {},
 	        edges: {},
 	        captions: {}
 	      };
-	    }
-	  }, {
-	    key: 'setId',
-	    value: function setId(graph) {
-	      return (0, _lodashObjectMerge2['default'])({}, { id: this.generateId() }, graph);
 	    }
 	  }, {
 	    key: 'setDefaults',
@@ -26899,7 +26864,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function _handleDragStop(e, ui) {
 	      // event fires every mouseup so we check for actual drag before updating store
 	      if (this._dragging) {
-	        this.props.moveNode(this.props.graph.id, this.props.node.id, this.state.x, this.state.y);
+	        this.props.moveNode(this.props.node.id, this.state.x, this.state.y);
 	      }
 	    }
 	  }, {
@@ -26908,7 +26873,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (this._dragging) {
 	        this._dragging = false;
 	      } else if (this.props.clickNode) {
-	        this.props.clickNode(this.props.graph.id, this.props.node.id);
+	        this.props.clickNode(this.props.node.id);
 	      }
 	    }
 	  }]);
@@ -28841,7 +28806,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function _handleDragStop(e, ui) {
 	      // event fires every mouseup so we check for actual drag before updating store
 	      if (this._dragging) {
-	        this.props.moveEdge(this.props.graphId, this.props.edge.id, this.state.cx, this.state.cy);
+	        this.props.moveEdge(this.props.edge.id, this.state.cx, this.state.cy);
 	      }
 	    }
 	  }, {
@@ -28850,7 +28815,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (this._dragging) {
 	        this._dragging = false;
 	      } else if (this.props.clickEdge) {
-	        this.props.clickEdge(this.props.graphId, this.props.edge.id);
+	        this.props.clickEdge(this.props.edge.id);
 	      }
 	    }
 	  }, {
@@ -29186,7 +29151,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function _handleDragStop(e, ui) {
 	      // event fires every mouseup so we check for actual drag before updating store
 	      if (this._dragging) {
-	        this.props.moveCaption(this.props.graphId, this.props.caption.id, this.state.x, this.state.y);
+	        this.props.moveCaption(this.props.caption.id, this.state.x, this.state.y);
 	      }
 	    }
 	  }, {
@@ -29195,7 +29160,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (this._dragging) {
 	        this._dragging = false;
 	      } else if (this.props.clickCaption) {
-	        this.props.clickCaption(this.props.graphId, this.props.caption.id);
+	        this.props.clickCaption(this.props.caption.id);
 	      }
 	    }
 	  }, {
@@ -34580,7 +34545,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          return _this.props.closeAddForm();
 	        },
 	        'esc': function esc() {
-	          return _this.props.closeAddForm();
+	          return _this._clear();
 	        }
 	      };
 
@@ -44629,49 +44594,44 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _redux = __webpack_require__(155);
 
-	var _reducersGraphs = __webpack_require__(412);
+	var _reducersGraph = __webpack_require__(412);
 
-	var _reducersGraphs2 = _interopRequireDefault(_reducersGraphs);
+	var _reducersGraph2 = _interopRequireDefault(_reducersGraph);
 
-	var _reducersPosition = __webpack_require__(413);
-
-	var _reducersPosition2 = _interopRequireDefault(_reducersPosition);
-
-	var _reducersSelection = __webpack_require__(414);
+	var _reducersSelection = __webpack_require__(413);
 
 	var _reducersSelection2 = _interopRequireDefault(_reducersSelection);
 
-	var _reducersZoom = __webpack_require__(415);
+	var _reducersZoom = __webpack_require__(414);
 
 	var _reducersZoom2 = _interopRequireDefault(_reducersZoom);
 
-	var _reducersEditTools = __webpack_require__(416);
+	var _reducersEditTools = __webpack_require__(415);
 
 	var _reducersEditTools2 = _interopRequireDefault(_reducersEditTools);
 
-	var _reducersTitle = __webpack_require__(417);
+	var _reducersTitle = __webpack_require__(416);
 
 	var _reducersTitle2 = _interopRequireDefault(_reducersTitle);
 
-	var _reducersAnnotations = __webpack_require__(418);
+	var _reducersAnnotations = __webpack_require__(417);
 
 	var _reducersAnnotations2 = _interopRequireDefault(_reducersAnnotations);
 
-	var _reducersSettings = __webpack_require__(420);
+	var _reducersSettings = __webpack_require__(419);
 
 	var _reducersSettings2 = _interopRequireDefault(_reducersSettings);
 
-	var _reducersShowHelpScreen = __webpack_require__(421);
+	var _reducersShowHelpScreen = __webpack_require__(420);
 
 	var _reducersShowHelpScreen2 = _interopRequireDefault(_reducersShowHelpScreen);
 
-	var _reducersShowSettings = __webpack_require__(422);
+	var _reducersShowSettings = __webpack_require__(421);
 
 	var _reducersShowSettings2 = _interopRequireDefault(_reducersShowSettings);
 
 	exports['default'] = (0, _redux.combineReducers)({
-	  graphs: _reducersGraphs2['default'],
-	  position: _reducersPosition2['default'],
+	  graph: _reducersGraph2['default'],
 	  selection: _reducersSelection2['default'],
 	  zoom: _reducersZoom2['default'],
 	  editTools: _reducersEditTools2['default'],
@@ -44696,8 +44656,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 	var _actions = __webpack_require__(176);
 
 	var _modelsGraph = __webpack_require__(177);
@@ -44708,24 +44666,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _modelsEdge2 = _interopRequireDefault(_modelsEdge);
 
-	var _lodashObjectMerge = __webpack_require__(179);
-
-	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
-
-	var _lodashObjectAssign = __webpack_require__(241);
-
-	var _lodashObjectAssign2 = _interopRequireDefault(_lodashObjectAssign);
-
-	var _shortid = __webpack_require__(214);
-
-	var _shortid2 = _interopRequireDefault(_shortid);
-
 	var _reduxUndo = __webpack_require__(175);
 
 	var _reduxUndo2 = _interopRequireDefault(_reduxUndo);
 
-	function graphs(state, action) {
-	  if (state === undefined) state = {};
+	function graph(state, action) {
+	  if (state === undefined) state = null;
 
 	  var newState = undefined,
 	      graph = undefined;
@@ -44734,74 +44680,71 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    case _actions.NEW_GRAPH:
 	    case _actions.LOAD_GRAPH:
-	      var graph = _modelsGraph2['default'].prepare(action.graph);
-	      return (0, _lodashObjectMerge2['default'])({}, state, _defineProperty({}, graph.id, graph));
+	      return _modelsGraph2['default'].prepare(action.graph);
 
 	    case _actions.MOVE_NODE:
-	      return (0, _lodashObjectMerge2['default'])({}, state, _defineProperty({}, action.graphId, _modelsGraph2['default'].moveNode(state[action.graphId], action.nodeId, action.x, action.y)));
+	      return _modelsGraph2['default'].moveNode(state, action.nodeId, action.x, action.y);
 
 	    case _actions.MOVE_EDGE:
-	      return (0, _lodashObjectMerge2['default'])({}, state, _defineProperty({}, action.graphId, _modelsGraph2['default'].moveEdge(state[action.graphId], action.edgeId, action.cx, action.cy)));
+	      return _modelsGraph2['default'].moveEdge(state, action.edgeId, action.cx, action.cy);
 
 	    case _actions.MOVE_CAPTION:
-	      return (0, _lodashObjectMerge2['default'])({}, state, _defineProperty({}, action.graphId, _modelsGraph2['default'].moveCaption(state[action.graphId], action.captionId, action.x, action.y)));
+	      return _modelsGraph2['default'].moveCaption(state, action.captionId, action.x, action.y);
 
 	    case _actions.SWAP_NODE_HIGHLIGHT:
-	      return (0, _lodashObjectMerge2['default'])({}, state, _defineProperty({}, action.graphId, _modelsGraph2['default'].swapNodeHighlight(state[action.graphId], action.nodeId, action.singleSelect)));
+	      return _modelsGraph2['default'].swapNodeHighlight(state, action.nodeId, action.singleSelect);
 
 	    case _actions.SWAP_EDGE_HIGHLIGHT:
-	      return (0, _lodashObjectMerge2['default'])({}, state, _defineProperty({}, action.graphId, _modelsGraph2['default'].swapEdgeHighlight(state[action.graphId], action.edgeId, action.singleSelect)));
+	      return _modelsGraph2['default'].swapEdgeHighlight(state, action.edgeId, action.singleSelect);
 
 	    case _actions.SWAP_CAPTION_HIGHLIGHT:
-	      return (0, _lodashObjectMerge2['default'])({}, state, _defineProperty({}, action.graphId, _modelsGraph2['default'].swapCaptionHighlight(state[action.graphId], action.captionId, action.singleSelect)));
+	      return _modelsGraph2['default'].swapCaptionHighlight(state, action.captionId, action.singleSelect);
 
 	    case _actions.ADD_NODE:
-	      return (0, _lodashObjectMerge2['default'])({}, state, _defineProperty({}, action.graphId, _modelsGraph2['default'].addNode(state[action.graphId], action.node)));
+	      return _modelsGraph2['default'].addNode(state, action.node);
 
 	    case _actions.ADD_EDGE:
-	      return (0, _lodashObjectMerge2['default'])({}, state, _defineProperty({}, action.graphId, _modelsGraph2['default'].addEdge(state[action.graphId], action.edge)));
+	      return _modelsGraph2['default'].addEdge(state, action.edge);
 
 	    case _actions.ADD_CAPTION:
-	      return (0, _lodashObjectMerge2['default'])({}, state, _defineProperty({}, action.graphId, _modelsGraph2['default'].addCaption(state[action.graphId], action.caption)));
+	      return _modelsGraph2['default'].addCaption(state, action.caption);
 
 	    case _actions.ADD_SURROUNDING_NODES:
-	      return (0, _lodashObjectMerge2['default'])({}, state, _defineProperty({}, action.graphId, _modelsGraph2['default'].addSurroundingNodes(state[action.graphId], action.centerId, action.nodes)));
+	      return _modelsGraph2['default'].addSurroundingNodes(state, action.centerId, action.nodes);
 
 	    case _actions.DELETE_NODE:
-	      return (0, _lodashObjectAssign2['default'])({}, state, _defineProperty({}, action.graphId, _modelsGraph2['default'].deleteNode(state[action.graphId], action.nodeId)));
+	      return _modelsGraph2['default'].deleteNode(state, action.nodeId);
 
 	    case _actions.DELETE_EDGE:
-	      return (0, _lodashObjectAssign2['default'])({}, state, _defineProperty({}, action.graphId, _modelsGraph2['default'].deleteEdge(state[action.graphId], action.edgeId)));
+	      return _modelsGraph2['default'].deleteEdge(state, action.edgeId);
 
 	    case _actions.DELETE_CAPTION:
-	      return (0, _lodashObjectAssign2['default'])({}, state, _defineProperty({}, action.graphId, _modelsGraph2['default'].deleteCaption(state[action.graphId], action.captionId)));
+	      return _modelsGraph2['default'].deleteCaption(state, action.captionId);
 
 	    case _actions.DELETE_SELECTION:
-	      graph = _modelsGraph2['default'].deleteCaptions(_modelsGraph2['default'].deleteNodes(_modelsGraph2['default'].deleteEdges(state[action.graphId], action.selection.edgeIds), action.selection.nodeIds), action.selection.captionIds);
-
-	      return (0, _lodashObjectAssign2['default'])({}, state, _defineProperty({}, action.graphId, graph));
+	      return _modelsGraph2['default'].deleteCaptions(_modelsGraph2['default'].deleteNodes(_modelsGraph2['default'].deleteEdges(state, action.selection.edgeIds), action.selection.nodeIds), action.selection.captionIds);
 
 	    case _actions.DELETE_ALL:
-	      return (0, _lodashObjectAssign2['default'])({}, state, _defineProperty({}, action.graphId, (0, _lodashObjectAssign2['default'])({}, state[action.graphId], _modelsGraph2['default'].defaultContent())));
+	      return _modelsGraph2['default'].defaults();
 
 	    case _actions.UPDATE_NODE:
 	      // update connected edges to ensure that endpoints are correct in case node scale changed
-	      return (0, _lodashObjectAssign2['default'])({}, state, _defineProperty({}, action.graphId, _modelsGraph2['default'].prepareEdges(_modelsGraph2['default'].updateNode(state[action.graphId], action.nodeId, action.data))));
+	      return _modelsGraph2['default'].prepareEdges(_modelsGraph2['default'].updateNode(state, action.nodeId, action.data));
 
 	    case _actions.UPDATE_EDGE:
-	      return (0, _lodashObjectAssign2['default'])({}, state, _defineProperty({}, action.graphId, _modelsGraph2['default'].updateEdge(state[action.graphId], action.edgeId, action.data)));
+	      return _modelsGraph2['default'].updateEdge(state, action.edgeId, action.data);
 
 	    case _actions.UPDATE_CAPTION:
-	      return (0, _lodashObjectAssign2['default'])({}, state, _defineProperty({}, action.graphId, _modelsGraph2['default'].updateCaption(state[action.graphId], action.captionId, action.data)));
+	      return _modelsGraph2['default'].updateCaption(state, action.captionId, action.data);
 
 	    case _actions.PRUNE_GRAPH:
-	      return (0, _lodashObjectAssign2['default'])({}, state, _defineProperty({}, action.graphId, _modelsGraph2['default'].prune(state[action.graphId])));
+	      return _modelsGraph2['default'].prune(state);
 
 	    case _actions.LAYOUT_CIRCLE:
-	      return (0, _lodashObjectAssign2['default'])({}, state, _defineProperty({}, action.graphId, _modelsGraph2['default'].prepareEdges(_modelsGraph2['default'].circleLayout(state[action.graphId], true))));
+	      return _modelsGraph2['default'].prepareEdges(_modelsGraph2['default'].circleLayout(state, true));
 
 	    case _actions.SET_HIGHLIGHTS:
-	      return (0, _lodashObjectAssign2['default'])({}, state, _defineProperty({}, action.graphId, _modelsGraph2['default'].setHighlights(state[action.graphId], action.highlights, action.otherwiseFaded)));
+	      return _modelsGraph2['default'].setHighlights(state, action.highlights, action.otherwiseFaded);
 
 	    default:
 	      return state;
@@ -44810,7 +44753,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// export default undoable(graphs, { filter: excludeAction([LOAD_GRAPH, SHOW_GRAPH, TOGGLE_EDIT_TOOLS]) });
 	// export default undoable(graphs, { filter: distinctState() });
-	exports['default'] = (0, _reduxUndo2['default'])(graphs, { filter: function filterState(action, currentState, previousState) {
+	exports['default'] = (0, _reduxUndo2['default'])(graph, { filter: function filterState(action, currentState, previousState) {
 	    // only add to history if not initializing graph and state changed
 	    return [_actions.LOAD_GRAPH, _actions.SHOW_GRAPH].indexOf(action.type) === -1 && currentState !== previousState;
 	  } });
@@ -44818,51 +44761,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 413 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports['default'] = position;
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _actions = __webpack_require__(176);
-
-	var _lodashObjectMerge = __webpack_require__(179);
-
-	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
-
-	var initState = {
-	  currentId: null
-	};
-
-	function position(state, action) {
-	  if (state === undefined) state = initState;
-
-	  switch (action.type) {
-
-	    case _actions.NEW_GRAPH:
-	      return (0, _lodashObjectMerge2['default'])({}, state, { currentId: action.graph.id });
-
-	    case _actions.LOAD_GRAPH:
-	      return (0, _lodashObjectMerge2['default'])({}, state, { loadedId: action.id });
-
-	    case _actions.SHOW_GRAPH:
-	      return (0, _lodashObjectMerge2['default'])({}, state, { currentId: action.id });
-
-	    default:
-	      return state;
-	  }
-	}
-
-	;
-	module.exports = exports['default'];
-
-/***/ },
-/* 414 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -44940,7 +44838,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 415 */
+/* 414 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -44974,7 +44872,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 416 */
+/* 415 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -45020,7 +44918,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 417 */
+/* 416 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45049,7 +44947,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 418 */
+/* 417 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45063,7 +44961,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
 
-	var _modelsAnnotation = __webpack_require__(419);
+	var _modelsAnnotation = __webpack_require__(418);
 
 	var _modelsAnnotation2 = _interopRequireDefault(_modelsAnnotation);
 
@@ -45114,8 +45012,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      });
 
 	    case _actions.CREATE_ANNOTATION:
-	      return typeof action.newIndex !== "undefined" ? (0, _lodashObjectMerge2['default'])({}, state, { currentIndex: action.newIndex }) : state;
-
 	      return (0, _lodashObjectMerge2['default'])({}, state, {
 	        list: [].concat(_toConsumableArray(state.list), [_modelsAnnotation2['default'].defaults()]),
 	        currentIndex: typeof action.newIndex !== "undefined" ? action.newIndex : state.currentIndex
@@ -45182,6 +45078,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      return (0, _lodashObjectAssign2['default'])({}, state, { list: [].concat(_toConsumableArray(state.list.slice(0, state.currentIndex)), [(0, _lodashObjectAssign2['default'])({}, annotation, { captionIds: captionIds })], _toConsumableArray(state.list.slice(state.currentIndex + 1))) });
 
+	    case _actions.DELETE_ALL:
+	      return (0, _lodashObjectAssign2['default'])({}, state, { list: [] });
+
 	    default:
 	      return state;
 	  }
@@ -45191,7 +45090,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 419 */
+/* 418 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45245,7 +45144,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 420 */
+/* 419 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45280,7 +45179,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 421 */
+/* 420 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -45309,7 +45208,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 422 */
+/* 421 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -45338,13 +45237,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 423 */
+/* 422 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(424);
+	var content = __webpack_require__(423);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(382)(content, {});
@@ -45364,7 +45263,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 424 */
+/* 423 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(380)();

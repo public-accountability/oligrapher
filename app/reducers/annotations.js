@@ -38,8 +38,6 @@ export default function annotations(state = initState, action) {
     });
 
   case CREATE_ANNOTATION:
-    return typeof action.newIndex !== "undefined" ? merge({}, state, { currentIndex: action.newIndex }) : state;
-
     return merge({}, state, { 
       list: [...state.list, Annotation.defaults()],
       currentIndex: typeof action.newIndex !== "undefined" ? action.newIndex  : state.currentIndex
