@@ -17,7 +17,7 @@ Oligrapher 2 is built with [React](http://reactjs.com) and [Redux](http://rackt.
 Quick Start
 -----------
 
-To run Oligrapher app in a web page, include (oligrapher.min.js)[build/oligrapher.min.js] in your page and mount the app in an HTML element:
+To run Oligrapher app in a web page, include [oligrapher.min.js](build/oligrapher.min.js) in your page and mount the app in an HTML element:
 
 ```html
 <script src="oligrapher.min.js"></script>
@@ -29,7 +29,7 @@ var oli = new Oligrapher({
 });
 </script>
 ```
-Examine ```build/index.html``` in the repository for a complete example.
+Examine [build/index.html](build/index.html) in the repository for a complete example.
 
 Development
 -----------
@@ -43,9 +43,9 @@ npm install
 npm run dev-build
 ```
 
-Then point your browser to the repository's `build/dev.html` to view a demo graph with annotations in edit mode. In development mode the React application is served by webpack with hot loading.
+Then point your browser to the repository's [build/dev.html](build/dev.html) to view a demo graph with annotations in edit mode. In development mode the React application is served by webpack with hot loading.
 
-To include Oligrapher in a Node.js application, include the `oligrapher2` node module in the app's `package.json` and then `require` it in the application code.
+To include Oligrapher in a Node.js application, include the `oligrapher2` node module in the app's [package.json](package.json) and then `require` it in the application code.
 
 Data Schema
 -----------
