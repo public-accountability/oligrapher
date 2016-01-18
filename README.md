@@ -1,4 +1,11 @@
 # Oligrapher 2
+
+- [Quick Start](#quick-start)
+- [Development](#development)
+- [Data Schema](#data-schema)
+- [API](#api)
+- [Editing Guide](#editing-guide)
+
 Oligrapher is a JavaScript app for visualizing network graphs. It allows a user to design a nice-looking network graph using a combination of imported or manually entered data, and to create a collection of annotations for a graph.
 
 Oligrapher 1 was originally developed by [LittleSis](http://littlesis.org) before it was separated into a standalone library. LittleSis has a large collection of [maps created with Oligrapher](http://littlesis.org/oligrapher). 
@@ -10,55 +17,19 @@ Oligrapher 2 is built with [React](http://reactjs.com) and [Redux](http://rackt.
 Quick Start
 -----------
 
-To run Oligrapher app in a web page, include the .js file from the build directory in your page header and mount the app in an HTML element. Examine ```build/index.html``` in the repository for an example:
+To run Oligrapher app in a web page, include (oligrapher.min.js)[build/oligrapher.min.js] in your page and mount the app in an HTML element:
 
 ```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/><meta charset="UTF-8">
-    <title>Oligrapher Demo</title>
-    <script src="oligrapher.js"></script>
-    <script src="LsDataSource.js"></script>
-    <script src="oligrapher-demo-data.js"></script>
-    <style>
-      body {
-        margin: 10px;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="oligrapher"></div>
-    <script>
-      var elem = document.getElementById('oligrapher');
-      var oli = new Oligrapher({ 
-        root: elem,
-        isEditor: true,
-        isLocked: false,
-        logActions: false,
-        viewOnlyHighlighted: false,
-        dataSource: LsDataSource,
-        data: oligrapherDemoData,
-        user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },
-        date: "August 30, 2015",
-        startIndex: 0,
-        showSaveButton: true,
-        onSave: function(data) { console.log(data); },
-        onNav: function(index) { console.log("navigating to annotation " + String(index)); },
-        links: [
-          { text: "some", url: "http://some.net" },
-          { id: "exampleLink", text: "example", url: "http://example.com" },
-          { method: "POST", text: "clone", url: "http://lilsis.local/maps/118-satoshi/clone" }
-        ],
-        settings: {
-          is_private: false,
-          is_featured: false
-        }
-      });
-    </script>
-  </body>
-</html>
+<script src="oligrapher.min.js"></script>
+<script>
+var elem = document.getElementById('oligrapher');
+var oli = new Oligrapher({ 
+  root: elem,
+  isEditor: true
+});
+</script>
 ```
+Examine ```build/index.html``` in the repository for a complete example.
 
 Development
 -----------
@@ -276,8 +247,8 @@ Removes all nodes that aren't connected by edges to other nodes.
 Arranges all nodes in a circle.
 
 
-Editing Instructions
---------------------
+Editing Guide
+-------------
 
 Use the editor to create a network graph along with an optional series of annotations overlaying the graph. Annotations consists of a title, a text body, and a highlighted section of the graph.
 
