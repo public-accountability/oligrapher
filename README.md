@@ -205,26 +205,9 @@ var oli = new Oligrapher(config);
 
 ### `import(data)`
 Imports `data` into Oligrapher and displays it. Existing Oligrapher data will be overwritten.
-```javascript
-var oli = new Oligrapher(config);
-var id1 = oli.import(data1);
-var id2 = oli.import(data2);
-```
 
 ### `export()`
 Returns a snapshot of the current data, including `graph`, `annotations`, `title`, and `settings`. This data can be `import`ed later to display the identical graph.
-```javascript
-var oli = new Oligrapher(config);
-var data = getGraphFromDatabase();
-oli.import(data);
-// ... user edits graph ...
-data = oli.export();   // get data snapshot
-// ... user edits graph some more ...
-oli.import(data);   // restore data snapshot
-// ... user edits graph some more ...
-data = oli.export();
-saveGraphToDatabase(data);
-```
 
 ### `exportGraph()`
 Returns a snapshot of the graph data with highlights applied.
@@ -271,39 +254,69 @@ Returns the displayed graph filtered to only highlighted nodes, edges, and capti
 ### `getSelection()`
 Returns an object with the ids of the currently selected nodes, edges, and captions. NOTE: selection is only enabled when `isEditor: true` is present in the config object at initialization. Unlight highlighting, selection does not alter a graph's data; it is used only for editing purposes.
 
-### ```deselectAll()```
+### `deselectAll()`
 Clears selection.
 
-### ```deleteSelection()```
-Deletes the currently selected nodes, edges, and captions, as well as any other edges connected to the deleted nodes. This can be triggered with the keyboard shortcut ```ctrl+d```.
+### `deleteSelection()`
+Deletes the currently selected nodes, edges, and captions, as well as any other edges connected to the deleted nodes. This can be triggered with the keyboard shortcut `ctrl+d`.
 
-### ```updateNode(nodeId, data)```
-Merges the provided ```data``` into the node specified by ```nodeId```. Null ```data``` fields will erase those fields in the node.
-```javascript
-var oldNode = oli.export().nodeIds[nodeId]; 
-// { id: 64, display: { name: "James Houghton", url: "http://example.com", scale: 1 } }
-oli.update(nodeId, { display: { name: "James R Houghton",  url: null, scale: 2 } });
-var newNode = oli.export().nodeIds[nodeId];
-// { id: 64, display: { name: "James R Houghton", scale: 2 } }
-```
+### `updateNode(nodeId, data)`
+Merges the provided `data` into the node specified by `nodeId`. Null `data` fields will erase those fields in the node.
 
-React Component Tree
+### `updateEdge(edgeId, data)`
+Merges the provided `data` into the edge specified by `edgeId`. Null `data` fields will erase those fields in the edge.
+
+### `updateCaption(captionId, data)`
+Merges the provided `data` into the caption specified by `captionId`. Null `data` fields will erase those fields in the caption.
+
+### `prune()`
+Removes all nodes that aren't connected by edges to other nodes.
+
+### `circleLayout()`
+Arranges all nodes in a circle.
+
+
+Editing Instructions
 --------------------
-```
-└─┬ Root
-  └─┬ Graph
-    ├── Node(s)
-    ├── Edge(s)
-    └── Caption(s)
-```
 
-User Guide
-----------
+Use the editor to create a network graph along with an optional series of annotations overlaying the graph. Annotations consists of a title, a text body, and a highlighted section of the graph.
 
-### Keyboard Shortcuts
+The pencil button swaps between graph editing mode and annotation editing mode. It will appear green when editing the graph and yellow when editing annotations.
 
-ALT or COMMAND keys can be used instead of CONTROL in any of the below shortcuts.
+### Graph Editing Mode
 
-**CONTROL+EQUALS:** zoom in  
-**CONTROL+MINUS:** zoom out  
-**CONTROL+D:** delete selection  
+Type a name in the "add node" box and press enter to add the node to the graph. If Oligrapher is connected to an external data source, nodes from the data source matching the name you type will appear below; click on them to add them to the graph.      
+
+ALT+C opens a form for adding a new caption in the top right of the graph.  
+CLICK a node, edge, or caption to select or deselect it.  
+SHIFT+CLICK to select mutiple nodes, edges, or captions.
+
+Select a single node, edge, or caption to view an editing form in the top-right corner of the map. Changes you make in the form will upate the item immediately.
+
+The CIRCLE button arranges nodes in a circle.  
+The PRUNE button removes unconnected nodes.  
+The CLEAR button deletes all content from the graph.  
+The HELP button displays this user guide.
+
+### Annotation Editing Mode
+
+Annotations are edited using the sidebar on the right. Click the big "A" button to hide or show the sidebar.
+
+Click the NEW ANNOTATION button create a new annotation and display a form for editing it. Select text in the annotation body input to display a formatting toolbar. Click on any annotation title in the list to edit it. A REMOVE button at the bottom of the edit form will delete the annotation. When editing an annotation, click on nodes, edges, or captions from the graph to highlight them in that annotation. Drag annotaions up and down the list to reorder them.
+
+### Shortcut Keys
+
+LEFT & RIGHT ARROWS navigate to the previous and next annotations.  
+ALT+H toggles this user guide.  
+ALT+H swaps the editing mode between graph editing and annotations.  
+ALT+D deletes selected nodes and edges.  
+ALT+E adds an edge. Selected nodes will be auto-populated in the form.  
+ALT+C adds a caption.  
+
+If ALT keys interfere with your browser or operating system shortcuts, all of the above shortcuts will work with CTRL instead of ALT.
+
+CTRL+"=" zooms in.
+CTRL+"-" zooms out.
+CTRL+0 resets zoom.
+
+ESC closes all forms and deselects graph content.
