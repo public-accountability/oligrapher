@@ -55,12 +55,7 @@ export const TOGGLE_SETTINGS = 'TOGGLE_SETTINGS';
  */
 
 export function loadGraph(graph) {
-  let graphWithId = Graph.setId(graph);
-  return { type: LOAD_GRAPH, graph: graphWithId, id: graphWithId.id };
-}
-
-export function showGraph(id) {
-  return { type: SHOW_GRAPH, id };
+  return { type: LOAD_GRAPH, graph };
 }
 
 export function newGraph() {
@@ -80,28 +75,28 @@ export function resetZoom() {
   return { type: RESET_ZOOM };
 }
 
-export function moveNode(graphId, nodeId, x, y) {
-  return { type: MOVE_NODE, graphId, nodeId, x, y };
+export function moveNode(nodeId, x, y) {
+  return { type: MOVE_NODE, nodeId, x, y };
 }
 
-export function moveEdge(graphId, edgeId, cx, cy) {
-  return { type: MOVE_EDGE, graphId, edgeId, cx, cy };
+export function moveEdge(edgeId, cx, cy) {
+  return { type: MOVE_EDGE, edgeId, cx, cy };
 }
 
-export function moveCaption(graphId, captionId, x, y) {
-  return { type: MOVE_CAPTION, graphId, captionId, x, y };
+export function moveCaption(captionId, x, y) {
+  return { type: MOVE_CAPTION, captionId, x, y };
 }
 
-export function swapNodeHighlight(graphId, nodeId) {
-  return { type: SWAP_NODE_HIGHLIGHT, graphId, nodeId };
+export function swapNodeHighlight(nodeId) {
+  return { type: SWAP_NODE_HIGHLIGHT, nodeId };
 }
 
-export function swapEdgeHighlight(graphId, edgeId) {
-  return { type: SWAP_EDGE_HIGHLIGHT, graphId, edgeId };
+export function swapEdgeHighlight(edgeId) {
+  return { type: SWAP_EDGE_HIGHLIGHT, edgeId };
 }
 
-export function swapCaptionHighlight(graphId, captionId) {
-  return { type: SWAP_CAPTION_HIGHLIGHT, graphId, captionId };
+export function swapCaptionHighlight(captionId) {
+  return { type: SWAP_CAPTION_HIGHLIGHT, captionId };
 }
 
 export function swapNodeSelection(nodeId, singleSelect = true) {
@@ -116,73 +111,73 @@ export function swapCaptionSelection(captionId, singleSelect = true) {
   return { type: SWAP_CAPTION_SELECTION, captionId, singleSelect };
 }
 
-export function deselectAll(graphId) {
-  return { type: DESELECT_ALL, graphId };
+export function deselectAll() {
+  return { type: DESELECT_ALL };
 }
 
-export function addNode(graphId, node) {
-  return { type: ADD_NODE, graphId, node };
+export function addNode(node) {
+  return { type: ADD_NODE, node };
 }
 
-export function addEdge(graphId, edge) {
-  return { type: ADD_EDGE, graphId, edge };
+export function addEdge(edge) {
+  return { type: ADD_EDGE, edge };
 }
 
-export function addCaption(graphId, caption) {
-  return { type: ADD_CAPTION, graphId, caption };
+export function addCaption(caption) {
+  return { type: ADD_CAPTION, caption };
 }
 
-export function addSurroundingNodes(graphId, centerId, nodes) {
-  return { type: ADD_SURROUNDING_NODES, graphId, centerId, nodes };
+export function addSurroundingNodes(centerId, nodes) {
+  return { type: ADD_SURROUNDING_NODES, centerId, nodes };
 }
 
-export function deleteNode(graphId, nodeId) {
-  return { type: DELETE_NODE, graphId, nodeId };
+export function deleteNode(nodeId) {
+  return { type: DELETE_NODE, nodeId };
 }
 
-export function deleteEdge(graphId, edgeId) {
-  return { type: DELETE_EDGE, graphId, edgeId };
+export function deleteEdge(edgeId) {
+  return { type: DELETE_EDGE, edgeId };
 }
 
-export function deleteCaption(graphId, captionId) {
-  return { type: DELETE_CAPTION, graphId, captionId };
+export function deleteCaption(captionId) {
+  return { type: DELETE_CAPTION, captionId };
 }
 
-export function deleteSelection(graphId, selection) {
-  return { type: DELETE_SELECTION, graphId, selection };
+export function deleteSelection(selection) {
+  return { type: DELETE_SELECTION, selection };
 }
 
-export function deleteAll(graphId) {
-  return { type: DELETE_ALL, graphId };
+export function deleteAll() {
+  return { type: DELETE_ALL };
 }
 
-export function updateNode(graphId, nodeId, data) {
-  return { type: UPDATE_NODE, graphId, nodeId, data };
+export function updateNode(nodeId, data) {
+  return { type: UPDATE_NODE, nodeId, data };
 }
 
-export function updateEdge(graphId, edgeId, data) {
-  return { type: UPDATE_EDGE, graphId, edgeId, data };
+export function updateEdge(edgeId, data) {
+  return { type: UPDATE_EDGE, edgeId, data };
 }
 
-export function updateCaption(graphId, captionId, data) {
-  return { type: UPDATE_CAPTION, graphId, captionId, data };
+export function updateCaption(captionId, data) {
+  return { type: UPDATE_CAPTION, captionId, data };
 }
 
-export function pruneGraph(graphId) {
-  return { type: PRUNE_GRAPH, graphId };
+export function pruneGraph() {
+  return { type: PRUNE_GRAPH };
 }
 
-export function layoutCircle(graphId) {
-  return { type: LAYOUT_CIRCLE, graphId };
+export function layoutCircle() {
+  return { type: LAYOUT_CIRCLE };
 }
 
-export function setHighlights(graphId, highlights, otherwiseFaded = false) {
-  return { type: SET_HIGHLIGHTS, graphId, highlights, otherwiseFaded };
+export function setHighlights(highlights, otherwiseFaded = false) {
+  return { type: SET_HIGHLIGHTS, highlights, otherwiseFaded };
 }
 
-export function clearHighlights(graphId) {
+export function clearHighlights() {
   let highlights = { nodeIds: [], edgeIds: [], captionIds: [] };
-  return { type: SET_HIGHLIGHTS, graphId, highlights };
+  return { type: SET_HIGHLIGHTS, highlights };
 }
 
 export function toggleEditTools(value) {

@@ -28,7 +28,7 @@ export default class AddEdgeForm extends BaseComponent {
 
     const keyHandlers = {
       'altN': () => this.props.closeAddForm(),
-      'esc': () => this.props.closeAddForm()
+      'esc': () => this._clear()
     };
 
     let nodes = sortBy(values(this.props.nodes), (node) => node.display.name);

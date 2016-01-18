@@ -91,7 +91,7 @@ export default class Node extends BaseComponent {
   _handleDragStop(e, ui) {
     // event fires every mouseup so we check for actual drag before updating store
     if (this._dragging) {
-      this.props.moveNode(this.props.graph.id, this.props.node.id, this.state.x, this.state.y);
+      this.props.moveNode(this.props.node.id, this.state.x, this.state.y);
     }
   }
 
@@ -99,7 +99,7 @@ export default class Node extends BaseComponent {
     if (this._dragging) {
       this._dragging = false;
     } else if (this.props.clickNode) {
-      this.props.clickNode(this.props.graph.id, this.props.node.id);
+      this.props.clickNode(this.props.node.id);
     }
   }
 }

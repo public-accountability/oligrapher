@@ -80,33 +80,33 @@ class Root extends Component {
       zoomIn: () => dispatch(zoomIn()),
       zoomOut: () => dispatch(zoomOut()),
       resetZoom: () => dispatch(resetZoom()),
-      prune: () => dispatch(pruneGraph(graph.id)),
-      circleLayout: () => dispatch(layoutCircle(graph.id)),
-      addNode: (node) => dispatch(addNode(graph.id, node)),
-      addEdge: (edge) => dispatch(addEdge(graph.id, edge)),
-      addCaption: (caption) => dispatch(addCaption(graph.id, caption)),
-      updateNode: (nodeId, data) => dispatch(updateNode(graph.id, nodeId, data)),
-      updateEdge: (edgeId, data) => dispatch(updateEdge(graph.id, edgeId, data)),
-      updateCaption: (captionId, data) => dispatch(updateCaption(graph.id, captionId, data)),
-      deselectAll: () => dispatch(deselectAll(graph.id)),
-      deleteAll: () => dispatch(deleteAll(graph.id)),
-      addSurroundingNodes: (centerId, nodes) => dispatch(addSurroundingNodes(graph.id, centerId, nodes))
+      prune: () => dispatch(pruneGraph()),
+      circleLayout: () => dispatch(layoutCircle()),
+      addNode: (node) => dispatch(addNode(node)),
+      addEdge: (edge) => dispatch(addEdge(edge)),
+      addCaption: (caption) => dispatch(addCaption(caption)),
+      updateNode: (nodeId, data) => dispatch(updateNode(nodeId, data)),
+      updateEdge: (edgeId, data) => dispatch(updateEdge(edgeId, data)),
+      updateCaption: (captionId, data) => dispatch(updateCaption(captionId, data)),
+      deselectAll: () => dispatch(deselectAll()),
+      deleteAll: () => dispatch(deleteAll()),
+      addSurroundingNodes: (centerId, nodes) => dispatch(addSurroundingNodes(centerId, nodes))
     };
 
-    let clickNode = (graphId, nodeId) => { 
+    let clickNode = (nodeId) => { 
       isEditor && showEditTools ? 
       dispatch(swapNodeSelection(nodeId, !that.state.shiftKey)) : 
-      (isLocked ? null : dispatch(swapNodeHighlight(graphId, nodeId))) 
+      (isLocked ? null : dispatch(swapNodeHighlight(nodeId))) 
     }
-    let clickEdge = (graphId, edgeId) => { 
+    let clickEdge = (edgeId) => { 
       isEditor && showEditTools ? 
       dispatch(swapEdgeSelection(edgeId, !that.state.shiftKey)) : 
-      (isLocked ? null : dispatch(swapEdgeHighlight(graphId, edgeId)))
+      (isLocked ? null : dispatch(swapEdgeHighlight(edgeId)))
     }
-    let clickCaption = (graphId, captionId) => { 
+    let clickCaption = (captionId) => { 
       isEditor && showEditTools ? 
       dispatch(swapCaptionSelection(captionId, !that.state.shiftKey)) : 
-      (isLocked ? null : dispatch(swapCaptionHighlight(graphId, captionId)))
+      (isLocked ? null : dispatch(swapCaptionHighlight(captionId)))
     }
 
     // annotations stuff
@@ -209,30 +209,13 @@ class Root extends Component {
   }
 
   componentDidMount() {
-    let { dispatch, title, data, startIndex, settings, onSave } = this.props;
+    let { dispatch, data, settings } = this.props;
 
-    if (data) {
-      if (data.graph) {
-        // data provided from outside
-        this.loadGraph(data.graph);
-      } else if (!graph) {
-        // load empty graph
-        this.loadGraph(GraphModel.defaults());
-      }
+    this.loadData(data);
 
-      if (data.title) {
-        dispatch(setTitle(data.title));
-      }
-
-      if (data.annotations) {
-        dispatch(loadAnnotations(data.annotations));
-
-        startIndex = (data.annotations[startIndex] ? startIndex : 0);
-
-        if (startIndex) {
-          dispatch(showAnnotation(startIndex));
-        }
-      }
+    if (!data || !data.graph) {
+      // show edit tools if there's no initial graph
+      this.toggleEditTools(true);
     }
 
     if (settings) {
@@ -260,11 +243,27 @@ class Root extends Component {
     }
   }
 
-  loadGraph(data) {
-    // showGraph needs a graph id so it's set here
-    let graph = GraphModel.setDefaults(data);
-    this.props.dispatch(loadGraph(graph));
-    this.props.dispatch(showGraph(graph.id));
+  loadData(data) {
+    let { dispatch, startAnnotation } = this.props;
+
+    // data provided from outside
+    let graph = (data && data.graph) ? GraphModel.setDefaults(data.graph) : GraphModel.defaults();
+    dispatch(loadGraph(graph));
+
+    if (data && data.title) {
+      dispatch(setTitle(data.title));
+    }
+
+    if (data && data.annotations) {
+      dispatch(loadAnnotations(data.annotations));
+
+      startAnnotation = (data.annotations[startAnnotation] ? startAnnotation : 0);
+
+      if (startAnnotation) {
+        dispatch(showAnnotation(startAnnotation));
+      }
+    }
+
   }
 
   toggleEditor(value) {
@@ -325,11 +324,11 @@ class Root extends Component {
 }
 
 function select(state) {
+  console.log(state.graph);
   return {
-    graph: state.graphs.present[state.position.currentId],
-    canUndo: state.graphs.past.length > 0,
-    canRedo: state.graphs.future.length > 0,
-    loadedId: state.position.loadedId,
+    graph: state.graph.present,
+    canUndo: state.graph.past.length > 0,
+    canRedo: state.graph.future.length > 0,
     selection: state.selection,
     zoom: state.zoom,
     showEditTools: state.editTools.visible,

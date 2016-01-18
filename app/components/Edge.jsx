@@ -110,7 +110,7 @@ export default class Edge extends BaseComponent {
   _handleDragStop(e, ui) {
     // event fires every mouseup so we check for actual drag before updating store
     if (this._dragging) {
-      this.props.moveEdge(this.props.graphId, this.props.edge.id, this.state.cx, this.state.cy);
+      this.props.moveEdge(this.props.edge.id, this.state.cx, this.state.cy);
     }
   }
 
@@ -118,7 +118,7 @@ export default class Edge extends BaseComponent {
     if (this._dragging) {
       this._dragging = false;
     } else if (this.props.clickEdge) {
-      this.props.clickEdge(this.props.graphId, this.props.edge.id);
+      this.props.clickEdge(this.props.edge.id);
     }
   }
 

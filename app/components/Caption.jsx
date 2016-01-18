@@ -102,7 +102,7 @@ export default class Caption extends BaseComponent {
   _handleDragStop(e, ui) {
     // event fires every mouseup so we check for actual drag before updating store
     if (this._dragging) {
-      this.props.moveCaption(this.props.graphId, this.props.caption.id, this.state.x, this.state.y);
+      this.props.moveCaption(this.props.caption.id, this.state.x, this.state.y);
     }
   }
 
@@ -110,7 +110,7 @@ export default class Caption extends BaseComponent {
     if (this._dragging) {
       this._dragging = false;
     } else if (this.props.clickCaption) {
-      this.props.clickCaption(this.props.graphId, this.props.caption.id);
+      this.props.clickCaption(this.props.caption.id);
     }
   }
 

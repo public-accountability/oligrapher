@@ -12,7 +12,8 @@ import { loadGraph, showGraph, newGraph,
          deselectAll, deleteSelection,
          updateNode, updateEdge, updateCaption,
          pruneGraph, layoutCircle,
-         setHighlights, clearHighlights } from './actions';
+         setHighlights, clearHighlights,
+         loadAnnotations, setTitle } from './actions';
 import Graph from './models/Graph';
 import merge from 'lodash/object/merge';
 import difference from 'lodash/array/difference';
@@ -67,8 +68,14 @@ class Oligrapher {
 
   import(data) {
     this.root.dispatchProps.dispatch(loadGraph(data.graph));
-    this.root.dispatchProps.dispatch(loadAnnotations(data.annotations));
-    return this.root.getWrappedInstance().props.loadedId;
+
+    if (data.annotations) {
+      this.root.dispatchProps.dispatch(loadAnnotations(data.annotations));
+    }
+
+    if (data.title) {
+      this.root.dispatchProps.dispatch(setTitle(data.title));
+    }
   }
 
   export() {
@@ -90,15 +97,6 @@ class Oligrapher {
     return this.root.getWrappedInstance().props.annotation;
   }
 
-  new() {
-    this.root.dispatchProps.dispatch(newGraph());
-    return this.currentGraphId();
-  }
-
-  showGraph(id) {
-    this.root.dispatchProps.dispatch(showGraph(id));
-  }
-
   showAnnotation(index) {
     this.root.dispatchProps.dispatch(showAnnotation(index));
   }
@@ -115,52 +113,48 @@ class Oligrapher {
     this.root.dispatchProps.dispatch(resetZoom())
   }
 
-  currentGraphId() {
-    return this.root.getWrappedInstance().props.graph.id;
-  }
-
   addNode(node) {
     let nodeIds = Object.keys(this.root.getWrappedInstance().props.graph.nodes);
-    this.root.dispatchProps.dispatch(addNode(this.currentGraphId(), node));
+    this.root.dispatchProps.dispatch(addNode(node));
     let newNodeIds = Object.keys(this.root.getWrappedInstance().props.graph.nodes);
     return difference(newNodeIds, nodeIds);
   }
 
   addEdge(edge) {
     let edgeIds = Object.keys(this.root.getWrappedInstance().props.graph.edges);
-    this.root.dispatchProps.dispatch(addEdge(this.currentGraphId(), edge));
+    this.root.dispatchProps.dispatch(addEdge(edge));
     let newEdgeIds = Object.keys(this.root.getWrappedInstance().props.graph.edges);
     return difference(newEdgeIds, edgeIds);
   }
 
   addCaption(caption) {
     let captionIds = Object.keys(this.root.getWrappedInstance().props.graph.captions);
-    this.root.dispatchProps.dispatch(addCaption(this.currentGraphId(), caption));
+    this.root.dispatchProps.dispatch(addCaption(caption));
     let newCaptionIds = Object.keys(this.root.getWrappedInstance().props.graph.captions);
     return difference(newCaptionIds, captionIds);
   }
 
   addSurroundingNodes(centerId, nodes) {
     let nodeIds = Object.keys(this.root.getWrappedInstance().props.graph.nodes);
-    this.root.dispatchProps.dispatch(addSurroundingNodes(this.currentGraphId(), centerId, nodes));
+    this.root.dispatchProps.dispatch(addSurroundingNodes(centerId, nodes));
     let newNodeIds = Object.keys(this.root.getWrappedInstance().props.graph.nodes);
     return difference(newNodeIds, nodeIds);    
   }
 
   deleteNode(nodeId) {
-    this.root.dispatchProps.dispatch(deleteNode(this.currentGraphId(), nodeId));
+    this.root.dispatchProps.dispatch(deleteNode(nodeId));
   }
 
   deleteEdge(edgeId) {
-    this.root.dispatchProps.dispatch(deleteEdge(this.currentGraphId(), edgeId));
+    this.root.dispatchProps.dispatch(deleteEdge(edgeId));
   }
 
   deleteCaption(captionId) {
-    this.root.dispatchProps.dispatch(deleteCaption(this.currentGraphId(), captionId));
+    this.root.dispatchProps.dispatch(deleteCaption(captionId));
   }
 
   deleteAll() {
-    this.root.dispatchProps.dispatch(deleteAll(this.currentGraphId()));
+    this.root.dispatchProps.dispatch(deleteAll());
     this.root.getWrappedInstance().graph.recenter();
   }
 
@@ -169,12 +163,12 @@ class Oligrapher {
   }
 
   setHighlights(highlights, otherwiseFaded = false) {
-    this.root.dispatchProps.dispatch(setHighlights(this.currentGraphId(), highlights, otherwiseFaded));
+    this.root.dispatchProps.dispatch(setHighlights(highlights, otherwiseFaded));
     return this.root.getWrappedInstance().props.graph;
   }
 
   clearHighlights() {
-    this.root.dispatchProps.dispatch(clearHighlights(this.currentGraphId()));
+    this.root.dispatchProps.dispatch(clearHighlights());
     return this.root.getWrappedInstance().props.graph;    
   }
 
@@ -183,34 +177,34 @@ class Oligrapher {
   }
 
   deselectAll() {
-    this.root.dispatchProps.dispatch(deselectAll(this.currentGraphId()));
+    this.root.dispatchProps.dispatch(deselectAll());
   }
 
   deleteSelection() {
-    this.root.dispatchProps.dispatch(deleteSelection(this.currentGraphId(), this.getSelection()));
+    this.root.dispatchProps.dispatch(deleteSelection(this.getSelection()));
   }
 
   updateNode(nodeId, data) {
-    this.root.dispatchProps.dispatch(updateNode(this.currentGraphId(), nodeId, data));
+    this.root.dispatchProps.dispatch(updateNode(nodeId, data));
     return this.root.getWrappedInstance().props.graph.nodes[nodeId];
   }
 
   updateEdge(edgeId, data) {
-    this.root.dispatchProps.dispatch(updateEdge(this.currentGraphId(), edgeId, data));
+    this.root.dispatchProps.dispatch(updateEdge(edgeId, data));
     return this.root.getWrappedInstance().props.graph.edges[edgeId];
   }
 
   updateCaption(captionId, data) {
-    this.root.dispatchProps.dispatch(updateCaption(this.currentGraphId(), captionId, data));
+    this.root.dispatchProps.dispatch(updateCaption(captionId, data));
     return this.root.getWrappedInstance().props.graph.captions[captionId];
   }
 
   prune() {
-    this.root.dispatchProps.dispatch(pruneGraph(this.currentGraphId()));
+    this.root.dispatchProps.dispatch(pruneGraph());
   }
 
   circleLayout() {
-    this.root.dispatchProps.dispatch(layoutCircle(this.currentGraphId()));
+    this.root.dispatchProps.dispatch(layoutCircle());
   }
 };
 

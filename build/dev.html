@@ -25,13 +25,13 @@
         root: elem,
         isEditor: true,
         isLocked: false,
-        logActions: false,
+        logActions: true,
         viewOnlyHighlighted: false,
         dataSource: LsDataSource,
-        data: oligrapherDemoData,
+        // data: oligrapherDemoData,
         user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },
         date: "August 30, 2015",
-        startIndex: 0,
+        startAnnotation: 0,
         showSaveButton: true,
         onSave: function(data) { console.log(data); },
         onNav: function(index) { console.log("navigating to annotation " + String(index)); },
@@ -45,6 +45,8 @@
           is_featured: false
         }
       });
+
+      oli.import(oligrapherDemoData);
     </script>
   </body>
 </html>

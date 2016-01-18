@@ -2,7 +2,7 @@ import Annotation from '../models/Annotation';
 import { LOAD_ANNOTATIONS, UPDATE_ANNOTATION, DELETE_ANNOTATION, 
          CREATE_ANNOTATION, MOVE_ANNOTATION, TOGGLE_ANNOTATIONS,
          SHOW_ANNOTATION, SWAP_NODE_HIGHLIGHT, SWAP_EDGE_HIGHLIGHT, 
-         SWAP_CAPTION_HIGHLIGHT } from '../actions';
+         SWAP_CAPTION_HIGHLIGHT, DELETE_ALL } from '../actions';
 import merge from 'lodash/object/merge'; 
 import assign from 'lodash/object/assign'; 
 import keys from 'lodash/object/keys';
@@ -116,6 +116,9 @@ export default function annotations(state = initState, action) {
       assign({}, annotation, { captionIds }),
       ...state.list.slice(state.currentIndex + 1)
     ] });
+
+  case DELETE_ALL:
+    return assign({}, state, { list: [] });
 
   default:
     return state;

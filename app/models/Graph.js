@@ -16,24 +16,12 @@ import includes from 'lodash/collection/includes';
 import isNumber from 'lodash/lang/isNumber';
 
 class Graph {
-  static generateId() {
-    return Helpers.generateId();
-  }
-
   static defaults() {
-    return merge({ id: this.generateId() }, this.defaultContent());
-  }
-
-  static defaultContent() {
     return {
       nodes: {},
       edges: {},
       captions: {}
     };
-  }
-
-  static setId(graph) {
-    return merge({}, { id: this.generateId() }, graph);
   }
 
   static setDefaults(graph) {
