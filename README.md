@@ -170,7 +170,7 @@ If no node, edge, or captions are highlighted, the graph will have its normal ap
 API
 ---
 
-### ```constructor(config)```
+### `constructor(config)`
 Returns an Oligrapher instance within a specified ```root``` DOM element and accepts other configuration options.
 ```javascript
 var elem = document.getElementById('#oligrapher');
@@ -203,16 +203,16 @@ var config = {
 var oli = new Oligrapher(config);
 ```
 
-### ```import(data)```
-Imports graph ```data``` into Oligrapher and displays it, returning the imported graph's ```id```.
+### `import(data)`
+Imports `data` into Oligrapher and displays it. Existing Oligrapher data will be overwritten.
 ```javascript
 var oli = new Oligrapher(config);
 var id1 = oli.import(data1);
 var id2 = oli.import(data2);
 ```
 
-### ```export()```
-Returns a snapshot of the currently displayed graph data, including display attributes. This data can be ```import```ed later to display the identical graph.
+### `export()`
+Returns a snapshot of the current data, including `graph`, `annotations`, `title`, and `settings`. This data can be `import`ed later to display the identical graph.
 ```javascript
 var oli = new Oligrapher(config);
 var data = getGraphFromDatabase();
@@ -226,95 +226,50 @@ data = oli.export();
 saveGraphToDatabase(data);
 ```
 
-### ```new```
-Creates and displays a blank graph.
-```javascript
-var oli = new Oligrapher(config);
-oli.export();   // { nodeIds: [], edgeIds: [], captionIds: [] }
-```
+### `exportGraph()`
+Returns a snapshot of the graph data with highlights applied.
 
-### ```show(id)```
-Displays the previously-imported graph with the given ```id```.
-```javascript
-var oli = new Oligrapher(config);
-var id1 = oli.import(data1);
-var id2 = oli.import(data2);
-oli.show(id1);
-```
+### `exportAnnotation()`
+Returns the currently displayed annotation.
 
-### ```zoomIn()```
-Zooms in by 20%. This can be triggered with the keyboard shortcut ```ctrl+equals```.
+### `showAnnotation(index)`
+Displays the annotation with the given index in the `annotations` array.
 
-### ```zoomOut()```
-Zooms out by 20%. This can be triggered with the keyboard shortcut ```ctrl+minus```.
-```javascript
-var oli = new Oligrapher(config);
-oli.import(data);
-oli.zoomIn();
-oli.zoomOut();   // back to normal
-```
+### `zoomIn()`
+Zooms in by 20%. This can be triggered with the keyboard shortcut `ctrl+equals`.
 
-### ```resetZoom()```
+### `zoomOut()`
+Zooms out by 20%. This can be triggered with the keyboard shortcut `ctrl+minus`.
+
+### `resetZoom()`
 Resets the zoom to the default level (1.00). 
 
-### ```currentGraphId()```
-Returns id of currently displayed graph.
-```javascript
-var oli = new Oligrapher(config);
-var id1 = oli.import(data1);
-var id2 = oli.import(data2);
-oli.show(id1);
-oli.getCurrentId() == id1;   // true
-```
+### `addNode(node)`
+Adds given node to graph. Node must conform to data schema described above. Returns `id` of new node.
 
-### ```addNode(node)```
-Adds given node to graph. Node must conform to data schema described above. Returns ```id``` of new node.
-```javascript
-var oli = new Oligrapher({ root: element, data: data });
-var nodeId = oli.addNode({ display: { name: "Kofi Annan" } });
-```
+### `addEdge(edge)`
+Adds given edge to graph. Edge must conform to data schema described above. Returns `id` of new edge.
 
-### ```addEdge(edge)```
-Adds given edge to graph. Edge must conform to data schema described above. Returns ```id``` of new edge.
-```javascript
-var oli = new Oligrapher({ root: element, data: data });
-var edgeId = oli.addEdge({ display: { label: "sister" } });
-```
+### `addCaption(caption)`
+Adds given caption to graph. Caption must conform to data schema described above. Returns `id` of new caption.
 
-### ```addCaption(caption)```
-Adds given caption to graph. Caption must conform to data schema described above. Returns ```id``` of new caption.
-```javascript
-var oli = new Oligrapher({ root: element, data: data });
-var captionId = oli.addCaption({ display: { text: "This is the most interesting thin you'll read today" } });
-```
+### `deleteNode(id)`
+Deletes the node with the given `id` and any edges connected to it from the current graph.
 
-### ```deleteNode(id)```
-Deletes the node with the given ```id``` and any edges connected to it from the current graph.
+### `deleteEdge(id)`
+Deletes the edge with the given `id` from the current graph.
 
-### ```deleteEdge(id)```
-Deletes the edge with the given ```id``` from the current graph.
+### `deleteCaption(id)`
+Deletes the caption with the given `id` from the current graph.
 
-### ```deleteCaption(id)```
-Deletes the caption with the given ```id``` from the current graph.
+### `deleteAll()`
+Deletes all nodes, edges, and captions from the graph, as well as all annotations.
 
-### ```deleteAll()```
-Deletes all nodes, edges, and captions from the graph.
-```javascript
-oli = new Oligrapher(config);
-oli.import(data);
-oli.deleteAll();
-oli.export();   // { nodeIds: [], edgeIds: [], captionIds: [] }
-```
-
-### ```getHighlights()```
+### `getHighlights()`
 Returns the displayed graph filtered to only highlighted nodes, edges, and captions.
 
-### ```getSelection()```
-Returns an object with the ids of the currently selected nodes, edges, and captions. NOTE: selection is only enabled when ```isEditor: true``` is present in the config object at initialization. Unlight highlighting, selection does not alter a graph's data; it is used only for editing purposes.
-```javascript
-var selection = oli.getSelection();
-// { nodeIds: [1, 2], edgeIds: [1], captionIds: [] }
-```
+### `getSelection()`
+Returns an object with the ids of the currently selected nodes, edges, and captions. NOTE: selection is only enabled when `isEditor: true` is present in the config object at initialization. Unlight highlighting, selection does not alter a graph's data; it is used only for editing purposes.
 
 ### ```deselectAll()```
 Clears selection.
