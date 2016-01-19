@@ -2,11 +2,13 @@
 
 Oligrapher is a JavaScript app for visualizing network graphs. It allows a user to design a nice-looking network graph using a combination of imported or manually entered data, and to create a collection of annotations for a graph.
 
-Oligrapher 1 was originally developed by [LittleSis](http://littlesis.org) before it was separated into a standalone library. LittleSis has a large collection of [maps created with Oligrapher](http://littlesis.org/oligrapher). 
+Oligrapher was originally developed by [LittleSis](http://littlesis.org) before it was separated into a standalone library. LittleSis has a large collection of [maps created with Oligrapher](http://littlesis.org/oligrapher). 
 
 Oligrapher 2 is built with [React](http://reactjs.com) and [Redux](http://rackt.org/redux) and is bundled into a single JavaScript file that is easy to run on any web page.
 
-- [Quick Start](#quick-start)
+- [Demo](http://oli2.littlesis.org)
+- [Features](#features)
+- [Install](#install)
 - [Development](#development)
 - [Data Schema](#data-schema)
 - [API](#api)
@@ -14,8 +16,19 @@ Oligrapher 2 is built with [React](http://reactjs.com) and [Redux](http://rackt.
 
 ![Oligrapher Demo Screenshot](https://cloud.githubusercontent.com/assets/981611/12380419/5fbd509e-bd40-11e5-823b-07f093ef6844.png)
 
-Quick Start
------------
+Features
+--------
+
+- easily create and display network graphs
+- tell a story about networks with click-through series of annotations
+- add images, labels, links, and captions
+- customize graph layout by dragging nodes and edges
+- import data from LittleSis and other APIs
+- undo and redo edits to a graph
+- runs on all modern web browsers
+
+Install
+-------
 
 To run Oligrapher app in a web page, include [oligrapher.min.js](build/oligrapher.min.js) in your page and mount the app in an HTML element:
 
@@ -245,7 +258,6 @@ Removes all nodes that aren't connected by edges to other nodes.
 
 ### `circleLayout()`
 Arranges all nodes in a circle.
-
 
 Editing Guide
 -------------
