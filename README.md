@@ -12,6 +12,7 @@ Oligrapher 2 is built with [React](http://reactjs.com) and [Redux](http://rackt.
 - [Development](#development)
 - [Data Schema](#data-schema)
 - [API](#api)
+- [Data Sources](#data-sources)
 - [Editing Guide](#editing-guide)
 
 ![Oligrapher Demo Screenshot](https://cloud.githubusercontent.com/assets/981611/12380419/5fbd509e-bd40-11e5-823b-07f093ef6844.png)
@@ -258,6 +259,29 @@ Removes all nodes that aren't connected by edges to other nodes.
 
 ### `circleLayout()`
 Arranges all nodes in a circle.
+
+Data Sources
+------------
+
+In order to add nodes from an external data source from within the Oligrapher editor UI, you must pass a valid data source object to the `dataSource` configuration option. See [build/LsDataSource.js](build/LsDataSource.js) for an example data source that fetches nodes and edges from the LittleSis API.
+
+If you want to create your own data source object, it must implement the following API:
+
+### `findNodes(text, callback)`
+
+This function accepts a search string and passes a resulting array of nodes (conforming to the Data Schema above) to the given callback function. Each node in the array must have an `id` that can be provided to `getNodeWithEdges()` below. 
+
+### `getNodeWithEdges(nodeId, nodeIds, callback)`
+
+This function accepts the id of a new node to be added to the graph, an array of node ids already in the graph, and a callback. It should return an object with a `node` and an array of `edges` conforming to the Data Schema above. The `id` of the resulting `node` should be equal to the provided `nodeId` and the resulting `edges` should each connect the `node` to one of the existing nodes in the graph (i.e., for each edge, either `node1_id` or `node2_id` is equal to `nodeId`, and the other one belongs to `nodeIds`).
+
+### `getConnectedNodes(nodeId, nodeIds, options, callback)`
+
+This function returns an array of new `nodes` connected to an existing node in the graph, as well as an array of `edges` that connect the new `nodes` to the existing node. It accepts the id of the existing node, an array of node ids already in the graph (so that duplicate nodes are not returned), an optional `options` hash, and a callback.
+
+### `getConnectedNodesOptions`
+
+This attribute of the data source object should provide a hash of keys and possible values to be passed as the `options` object to `getConnectedNodes`. The Oligrapher editor UI will display a drop-down menu for each key. 
 
 Editing Guide
 -------------
