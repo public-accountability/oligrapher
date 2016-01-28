@@ -62,7 +62,7 @@ export default class Graph extends BaseComponent {
     return values(this.props.graph.edges).map((e, i) =>  
       <Edge 
         ref={(c) => { this.edges[e.id] = c; if (c) { c.graph = this; } }} 
-        key={i} 
+        key={e.id} 
         edge={e} 
         graphId={this.props.graph.id} 
         zoom={this.props.zoom}
@@ -76,7 +76,7 @@ export default class Graph extends BaseComponent {
     return values(this.props.graph.nodes).map((n, i) => 
       <Node 
         ref={(c) => { this.nodes[n.id] = c; if (c) { c.graph = this; } }} 
-        key={i} 
+        key={n.id} 
         node={n} 
         graph={this.props.graph} 
         zoom={this.props.zoom} 
@@ -90,7 +90,7 @@ export default class Graph extends BaseComponent {
     return values(this.props.graph.captions).map((c, i) => 
       <Caption 
         ref={(c) => { if (c) { c.graph = this; } }}
-        key={i} 
+        key={c.id} 
         caption={c}
         graphId={this.props.graph.id}
         selected={this.props.selection && includes(this.props.selection.captionIds, c.id)}
