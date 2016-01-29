@@ -55,13 +55,13 @@ export default class GraphAnnotationForm extends BaseComponent {
 
   _handleRemove() {
     if (confirm("Are you sure you want to delete this annotation?")) {
-      this.props.remove(this.props.index);
+      this.props.remove(this.props.currentIndex);
     }
   }
 
   _handleHeaderChange(event) {
     this.setState({ header: event.target.value });
-    this.props.update(this.props.index, { header: event.target.value, text: this.state.text });
+    this.props.update(this.props.currentIndex, { header: event.target.value, text: this.state.text });
   }
 
   _handleTextChange(value, medium) {
@@ -69,7 +69,7 @@ export default class GraphAnnotationForm extends BaseComponent {
   }
 
   saveText() {
-    this.props.update(this.props.index, this.state);
+    this.props.update(this.props.currentIndex, this.state);
   }
 
   _handleChange(field, value) {
@@ -80,6 +80,6 @@ export default class GraphAnnotationForm extends BaseComponent {
   _apply() {
     let header = this.refs.header.value;
     let text = this.refs.text.value;
-    this.props.update(this.props.index, { header, text });
+    this.props.update(this.props.currentIndex, { header, text });
   }
 }

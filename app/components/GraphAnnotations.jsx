@@ -11,49 +11,29 @@ export default class GraphAnnotations extends Component {
     let { prevClick, nextClick, isEditor, editForm, navList, 
           swapAnnotations, annotation, currentIndex, 
           update, remove, swapEditForm, annotations, show, 
-          create, move } = this.props;
+          create, move, canClickPrev, canClickNext } = this.props;
 
     let navComponent = (
-      <GraphNavButtons 
-        prevClick={prevClick} 
-        nextClick={nextClick} 
-        isEditor={isEditor}
-        swapAnnotations={swapAnnotations} />
+      <GraphNavButtons {...this.props} />
     );
 
     let formComponent = (
-      <GraphAnnotationForm 
-        annotation={annotation} 
-        index={currentIndex} 
-        update={update} 
-        remove={remove}
-        swapEditForm={swapEditForm} />
+      <GraphAnnotationForm {...this.props} />
     );
 
     let annotationComponent = (
-      <GraphAnnotation 
-        annotation={annotation} 
-        index={currentIndex} 
-        isEditor={isEditor}
-        swapEditForm={swapEditForm} />
+      <GraphAnnotation {...this.props} />
     );
 
     let navListComponent = (
-      <GraphAnnotationList
-        currentIndex={currentIndex}
-        annotations={annotations}
-        isEditor={isEditor}
-        show={show} 
-        create={create}
-        move={move} 
-        hideEditTools={this.props.hideEditTools} />
+      <GraphAnnotationList {...this.props} />
     );
 
     return (
       <div id="oligrapherGraphAnnotations" className="col-md-4">
-        { annotation || isEditor ? navComponent : null }
-        { isEditor && navList ? navListComponent : null }
-        { annotation ? (isEditor ? formComponent : annotationComponent) : null }
+        { (annotation || isEditor) && navComponent }
+        { isEditor && navList && navListComponent }
+        { annotation && (isEditor ? formComponent : annotationComponent) }
       </div>
     );
   }

@@ -113,6 +113,8 @@ class Root extends Component {
 
     let prevIndex = this.prevIndex();
     let nextIndex = this.nextIndex();
+    let canClickPrev = !!prevIndex;
+    let canClickNext = !!nextIndex;
 
     let prevClick = () => dispatch(showAnnotation(prevIndex));
     let nextClick = () => dispatch(showAnnotation(nextIndex));
@@ -134,55 +136,61 @@ class Root extends Component {
         <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={keyHandlers}>
           <div className="row">
             <div id="oligrapherGraphCol" className={showAnnotations && hasAnnotations ? "col-md-8" : "col-md-12"}>
-              { isEditor || title ? 
+              { (isEditor || title) && 
                 <GraphHeader
                   {...this.props}
                   updateTitle={updateTitle}
-                  isEditor={isEditor} /> : null }
+                  isEditor={isEditor} /> }
 
               <div id="oligrapherGraphContainer">
-                { graph ? <Graph 
-                  ref={(c) => { this.graph = c; if (c) { c.root = this; } }}
-                  {...this.props}
-                  graph={annotatedGraph ? annotatedGraph : graph}
-                  isEditor={isEditor}
-                  isLocked={isLocked}
-                  clickNode={clickNode}
-                  clickEdge={clickEdge}
-                  clickCaption={clickCaption}
-                  moveNode={(graphId, nodeId, x, y) => dispatch(moveNode(graphId, nodeId, x, y))} 
-                  moveEdge={(graphId, edgeId, cx, cy) => dispatch(moveEdge(graphId, edgeId, cx, cy))} 
-                  moveCaption={(graphId, captionId, x, y) => dispatch(moveCaption(graphId, captionId, x, y))} /> : null }
+                { graph && 
+                  <Graph 
+                    ref={(c) => { this.graph = c; if (c) { c.root = this; } }}
+                    {...this.props}
+                    graph={annotatedGraph ? annotatedGraph : graph}
+                    isEditor={isEditor}
+                    isLocked={isLocked}
+                    clickNode={clickNode}
+                    clickEdge={clickEdge}
+                    clickCaption={clickCaption}
+                    moveNode={(graphId, nodeId, x, y) => dispatch(moveNode(graphId, nodeId, x, y))} 
+                    moveEdge={(graphId, edgeId, cx, cy) => dispatch(moveEdge(graphId, edgeId, cx, cy))} 
+                    moveCaption={(graphId, captionId, x, y) => dispatch(moveCaption(graphId, captionId, x, y))} /> 
+                }
 
-                { graph ? <Editor 
-                  {...this.props}
-                  graphApi={graphApi}
-                  isEditor={isEditor} 
-                  showEditButton={false} 
-                  hideHelp={true} 
-                  setNodeResults={(nodes) => dispatch(setNodeResults(nodes))}
-                  toggleAddForm={(form) => dispatch(toggleAddForm(form))}
-                  undo={() => dispatch(ActionCreators.undo())}
-                  redo={() => dispatch(ActionCreators.redo())} /> : null }
+                { graph &&
+                  <Editor 
+                    {...this.props}
+                    graphApi={graphApi}
+                    isEditor={isEditor} 
+                    showEditButton={false} 
+                    hideHelp={true} 
+                    setNodeResults={(nodes) => dispatch(setNodeResults(nodes))}
+                    toggleAddForm={(form) => dispatch(toggleAddForm(form))}
+                    undo={() => dispatch(ActionCreators.undo())}
+                    redo={() => dispatch(ActionCreators.redo())} />
+                }
 
                 <div id="oligrapherMetaButtons">
-                  { isEditor ? 
-                    <EditButton toggle={() => this.toggleEditTools()} showEditTools={showEditTools} /> : null }
-                  { isEditor && hasSettings ? 
-                    <SettingsButton toggleSettings={(value) => dispatch(toggleSettings(value))} /> : null }
-                  { isEditor ? 
-                    <HelpButton toggleHelpScreen={() => dispatch(toggleHelpScreen())} /> : null }
+                  { isEditor && 
+                    <EditButton toggle={() => this.toggleEditTools()} showEditTools={showEditTools} /> }
+                  { isEditor && hasSettings && 
+                    <SettingsButton toggleSettings={(value) => dispatch(toggleSettings(value))} /> }
+                  { isEditor && 
+                    <HelpButton toggleHelpScreen={() => dispatch(toggleHelpScreen())} /> }
                 </div>
 
-                { showSettings && hasSettings ? <GraphSettingsForm settings={graphSettings} updateSettings={updateSettings} /> : null }
+                { showSettings && hasSettings && <GraphSettingsForm settings={graphSettings} updateSettings={updateSettings} /> }
               </div>
             </div>
-            { showAnnotations && hasAnnotations ?
+            { showAnnotations && hasAnnotations &&
               <GraphAnnotations 
                 isEditor={isEditor}
                 navList={isEditor}
                 prevClick={prevClick}
                 nextClick={nextClick}
+                canClickPrev={canClickPrev}
+                canClickNext={canClickNext}
                 swapAnnotations={swapAnnotations}
                 annotation={annotation}
                 annotations={annotations}
@@ -193,16 +201,18 @@ class Root extends Component {
                 move={move}
                 remove={remove}
                 editForm={true}
-                hideEditTools={() => dispatch(toggleEditTools(false))} /> : null }
+                hideEditTools={() => dispatch(toggleEditTools(false))} />
+            }
           </div>
-          { !showAnnotations && hasAnnotations ? 
+          { !showAnnotations && hasAnnotations && 
             <div id="oligrapherShowAnnotations">
               <button onClick={() => swapAnnotations()} className="btn btn-lg btn-default">
                 <span className="glyphicon glyphicon-font"></span>
               </button>
-            </div> : null }          
-          { showSaveButton && isEditor && onSave ? <SaveButton save={() => this.handleSave()} /> : null }
-          { showHelpScreen ? <HelpScreen source={this.props.dataSource} close={() => dispatch(toggleHelpScreen(false))} /> : null }
+            </div> 
+          }
+          { showSaveButton && isEditor && onSave && <SaveButton save={() => this.handleSave()} /> }
+          { showHelpScreen && <HelpScreen source={this.props.dataSource} close={() => dispatch(toggleHelpScreen(false))} /> }
         </HotKeys>
       </div>
     );
