@@ -47,7 +47,7 @@ class Root extends Component {
     let { dispatch, graph, selection, isEditor, isLocked, title,
           showEditTools, showSaveButton, showHelpScreen, 
           hasSettings, graphSettings, showSettings, onSave,
-          currentIndex, annotation, annotations, showAnnotations } = this.props;
+          currentIndex, annotation, annotations, visibleAnnotations } = this.props;
     let that = this;
 
     // apply annotation highlights to graph if available
@@ -129,13 +129,13 @@ class Root extends Component {
     let updateTitle = (title) => dispatch(setTitle(title));
     let updateSettings = (settings) => dispatch(setSettings(settings));
 
-    let hasAnnotations = this.props.numAnnotations > 0;
+    let showAnnotations = this.showAnnotations();
 
     return (
       <div id="oligrapherContainer" style={{ height: '100%' }}>
         <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={keyHandlers}>
           <div className="row">
-            <div id="oligrapherGraphCol" className={showAnnotations && hasAnnotations ? "col-md-8" : "col-md-12"}>
+            <div id="oligrapherGraphCol" className={showAnnotations ? "col-md-8" : "col-md-12"}>
               { (isEditor || title) && 
                 <GraphHeader
                   {...this.props}
@@ -183,7 +183,7 @@ class Root extends Component {
                 { showSettings && hasSettings && <GraphSettingsForm settings={graphSettings} updateSettings={updateSettings} /> }
               </div>
             </div>
-            { showAnnotations && hasAnnotations &&
+            { showAnnotations &&
               <GraphAnnotations 
                 isEditor={isEditor}
                 navList={isEditor}
@@ -204,7 +204,7 @@ class Root extends Component {
                 hideEditTools={() => dispatch(toggleEditTools(false))} />
             }
           </div>
-          { !showAnnotations && hasAnnotations && 
+          { !showAnnotations && this.enableAnnotations() &&
             <div id="oligrapherShowAnnotations">
               <button onClick={() => swapAnnotations()} className="btn btn-lg btn-default">
                 <span className="glyphicon glyphicon-font"></span>
@@ -300,8 +300,16 @@ class Root extends Component {
     return currentIndex + 1 > numAnnotations - 1 ? null : currentIndex + 1;
   }
 
-  visibleAnnotations() {
-    return this.props.showAnnotations && this.props.numAnnotations > 0;
+  hasAnnotations() {
+    return this.props.numAnnotations > 0;
+  }
+
+  enableAnnotations() {
+    return (this.props.isEditor || this.hasAnnotations());
+  }
+
+  showAnnotations() {
+    return this.props.visibleAnnotations && this.enableAnnotations();
   }
 
   graphWithoutHighlights() {
@@ -348,7 +356,7 @@ function select(state) {
     numAnnotations: state.annotations.list.length,
     annotation: state.annotations.list[state.annotations.currentIndex],
     annotations: state.annotations.list,
-    showAnnotations: state.annotations.visible,
+    visibleAnnotations: state.annotations.visible,
     graphSettings: state.settings,
     hasSettings: Object.keys(state.settings).length > 0,
     showHelpScreen: state.showHelpScreen,

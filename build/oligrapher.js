@@ -20726,7 +20726,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var currentIndex = _props.currentIndex;
 	      var annotation = _props.annotation;
 	      var annotations = _props.annotations;
-	      var showAnnotations = _props.showAnnotations;
+	      var visibleAnnotations = _props.visibleAnnotations;
 
 	      var that = this;
 
@@ -20867,7 +20867,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return dispatch((0, _actions.setSettings)(settings));
 	      };
 
-	      var hasAnnotations = this.props.numAnnotations > 0;
+	      var showAnnotations = this.showAnnotations();
 
 	      return _react2['default'].createElement(
 	        'div',
@@ -20880,7 +20880,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            { className: 'row' },
 	            _react2['default'].createElement(
 	              'div',
-	              { id: 'oligrapherGraphCol', className: showAnnotations && hasAnnotations ? "col-md-8" : "col-md-12" },
+	              { id: 'oligrapherGraphCol', className: showAnnotations ? "col-md-8" : "col-md-12" },
 	              (isEditor || title) && _react2['default'].createElement(_GraphHeader2['default'], _extends({}, this.props, {
 	                updateTitle: updateTitle,
 	                isEditor: isEditor })),
@@ -20942,7 +20942,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                showSettings && hasSettings && _react2['default'].createElement(_GraphSettingsForm2['default'], { settings: graphSettings, updateSettings: updateSettings })
 	              )
 	            ),
-	            showAnnotations && hasAnnotations && _react2['default'].createElement(_GraphAnnotations2['default'], {
+	            showAnnotations && _react2['default'].createElement(_GraphAnnotations2['default'], {
 	              isEditor: isEditor,
 	              navList: isEditor,
 	              prevClick: prevClick,
@@ -20963,7 +20963,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return dispatch((0, _actions.toggleEditTools)(false));
 	              } })
 	          ),
-	          !showAnnotations && hasAnnotations && _react2['default'].createElement(
+	          !showAnnotations && this.enableAnnotations() && _react2['default'].createElement(
 	            'div',
 	            { id: 'oligrapherShowAnnotations' },
 	            _react2['default'].createElement(
@@ -21086,9 +21086,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return currentIndex + 1 > numAnnotations - 1 ? null : currentIndex + 1;
 	    }
 	  }, {
-	    key: 'visibleAnnotations',
-	    value: function visibleAnnotations() {
-	      return this.props.showAnnotations && this.props.numAnnotations > 0;
+	    key: 'hasAnnotations',
+	    value: function hasAnnotations() {
+	      return this.props.numAnnotations > 0;
+	    }
+	  }, {
+	    key: 'enableAnnotations',
+	    value: function enableAnnotations() {
+	      return this.props.isEditor || this.hasAnnotations();
+	    }
+	  }, {
+	    key: 'showAnnotations',
+	    value: function showAnnotations() {
+	      return this.props.visibleAnnotations && this.enableAnnotations();
 	    }
 	  }, {
 	    key: 'graphWithoutHighlights',
@@ -21138,7 +21148,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    numAnnotations: state.annotations.list.length,
 	    annotation: state.annotations.list[state.annotations.currentIndex],
 	    annotations: state.annotations.list,
-	    showAnnotations: state.annotations.visible,
+	    visibleAnnotations: state.annotations.visible,
 	    graphSettings: state.settings,
 	    hasSettings: Object.keys(state.settings).length > 0,
 	    showHelpScreen: state.showHelpScreen,
