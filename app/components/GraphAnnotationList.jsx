@@ -81,8 +81,6 @@ export default class GraphAnnotationList extends BaseComponent {
     let height = (this._over.offsetHeight || thisHeight) / 2;
     let parent = e.target.parentNode;
 
-    console.log(this._over.dataset.id, relY, height);
-
     if (relY > height) {
       parent.insertBefore(this._placeholder, e.target.nextElementSibling);
     }

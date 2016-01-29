@@ -113,7 +113,7 @@ class Root extends Component {
 
     let prevIndex = this.prevIndex();
     let nextIndex = this.nextIndex();
-    let canClickPrev = !!prevIndex;
+    let canClickPrev = !!prevIndex || prevIndex === 0;
     let canClickNext = !!nextIndex;
 
     let prevClick = () => dispatch(showAnnotation(prevIndex));

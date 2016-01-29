@@ -107,7 +107,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _lodashArrayDifference2 = _interopRequireDefault(_lodashArrayDifference);
 
-	__webpack_require__(422);
+	__webpack_require__(423);
 
 	var Oligrapher = (function () {
 	  function Oligrapher() {
@@ -20833,7 +20833,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var prevIndex = this.prevIndex();
 	      var nextIndex = this.nextIndex();
-	      var canClickPrev = !!prevIndex;
+	      var canClickPrev = !!prevIndex || prevIndex === 0;
 	      var canClickNext = !!nextIndex;
 
 	      var prevClick = function prevClick() {
@@ -36824,8 +36824,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var height = (this._over.offsetHeight || thisHeight) / 2;
 	      var parent = e.target.parentNode;
 
-	      console.log(this._over.dataset.id, relY, height);
-
 	      if (relY > height) {
 	        parent.insertBefore(this._placeholder, e.target.nextElementSibling);
 	      } else if (relY < height) {
@@ -44604,15 +44602,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reducersAnnotations2 = _interopRequireDefault(_reducersAnnotations);
 
-	var _reducersSettings = __webpack_require__(419);
+	var _reducersSettings = __webpack_require__(420);
 
 	var _reducersSettings2 = _interopRequireDefault(_reducersSettings);
 
-	var _reducersShowHelpScreen = __webpack_require__(420);
+	var _reducersShowHelpScreen = __webpack_require__(421);
 
 	var _reducersShowHelpScreen2 = _interopRequireDefault(_reducersShowHelpScreen);
 
-	var _reducersShowSettings = __webpack_require__(421);
+	var _reducersShowSettings = __webpack_require__(422);
 
 	var _reducersShowSettings2 = _interopRequireDefault(_reducersShowSettings);
 
@@ -44957,6 +44955,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
 
+	var _lodashUtilityRange = __webpack_require__(419);
+
+	var _lodashUtilityRange2 = _interopRequireDefault(_lodashUtilityRange);
+
 	var _lodashObjectAssign = __webpack_require__(241);
 
 	var _lodashObjectAssign2 = _interopRequireDefault(_lodashObjectAssign);
@@ -45010,7 +45012,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var annotations = (0, _lodashLangCloneDeep2['default'])(state.list);
 	      annotations.splice(toIndex, 0, annotations.splice(fromIndex, 1)[0]);
 
-	      var indexes = range(Math.max(fromIndex, toIndex, state.currentIndex) + 1);
+	      var indexes = (0, _lodashUtilityRange2['default'])(Math.max(fromIndex, toIndex, state.currentIndex) + 1);
 	      indexes.splice(toIndex, 0, indexes.splice(fromIndex, 1)[0]);
 
 	      return (0, _lodashObjectMerge2['default'])({}, state, {
@@ -45133,6 +45135,78 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 419 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var isIterateeCall = __webpack_require__(210);
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeCeil = Math.ceil,
+	    nativeMax = Math.max;
+
+	/**
+	 * Creates an array of numbers (positive and/or negative) progressing from
+	 * `start` up to, but not including, `end`. If `end` is not specified it's
+	 * set to `start` with `start` then set to `0`. If `end` is less than `start`
+	 * a zero-length range is created unless a negative `step` is specified.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Utility
+	 * @param {number} [start=0] The start of the range.
+	 * @param {number} end The end of the range.
+	 * @param {number} [step=1] The value to increment or decrement by.
+	 * @returns {Array} Returns the new array of numbers.
+	 * @example
+	 *
+	 * _.range(4);
+	 * // => [0, 1, 2, 3]
+	 *
+	 * _.range(1, 5);
+	 * // => [1, 2, 3, 4]
+	 *
+	 * _.range(0, 20, 5);
+	 * // => [0, 5, 10, 15]
+	 *
+	 * _.range(0, -4, -1);
+	 * // => [0, -1, -2, -3]
+	 *
+	 * _.range(1, 4, 0);
+	 * // => [1, 1, 1]
+	 *
+	 * _.range(0);
+	 * // => []
+	 */
+	function range(start, end, step) {
+	  if (step && isIterateeCall(start, end, step)) {
+	    end = step = undefined;
+	  }
+	  start = +start || 0;
+	  step = step == null ? 1 : (+step || 0);
+
+	  if (end == null) {
+	    end = start;
+	    start = 0;
+	  } else {
+	    end = +end || 0;
+	  }
+	  // Use `Array(length)` so engines like Chakra and V8 avoid slower modes.
+	  // See https://youtu.be/XAqIpGU8ZZk#t=17m25s for more details.
+	  var index = -1,
+	      length = nativeMax(nativeCeil((end - start) / (step || 1)), 0),
+	      result = Array(length);
+
+	  while (++index < length) {
+	    result[index] = start;
+	    start += step;
+	  }
+	  return result;
+	}
+
+	module.exports = range;
+
+
+/***/ },
+/* 420 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
@@ -45165,7 +45239,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 420 */
+/* 421 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -45194,7 +45268,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 421 */
+/* 422 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -45223,13 +45297,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 422 */
+/* 423 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(423);
+	var content = __webpack_require__(424);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(382)(content, {});
@@ -45249,7 +45323,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 423 */
+/* 424 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(380)();
