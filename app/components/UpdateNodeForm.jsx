@@ -47,7 +47,7 @@ export default class UpdateNodeForm extends BaseComponent {
               ref="scale" 
               onChange={() => this.apply()}>
               { scales.map((scale, i) =>
-                <option key={i} value={scale[0]}>{scale[1]}</option>
+                <option key={scale[1]} value={scale[0]}>{scale[1]}</option>
               ) }
             </select>
           </div>

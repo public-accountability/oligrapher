@@ -35,7 +35,7 @@ export default class AddNodeForm extends BaseComponent {
                 or import from {this.props.source.name}: &nbsp;
                 { results.map((node, i) =>
                     <AddNodeResult 
-                      key={i} 
+                      key={node.id} 
                       node={node} 
                       source={this.props.source} 
                       nodes={this.props.nodes} 

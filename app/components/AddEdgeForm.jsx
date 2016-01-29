@@ -40,13 +40,13 @@ export default class AddEdgeForm extends BaseComponent {
             <select defaultValue={node1Id} className="form-control input-sm" ref="node1Id">
               <option value="">Node 1</option>
               { nodes.map((node, i) =>
-                <option key={i} value={node.id}>{node.display.name}</option>
+                <option key={node.id} value={node.id}>{node.display.name}</option>
               ) }
             </select>
             <select defaultValue={node2Id} className="form-control input-sm" ref="node2Id">
               <option value="">Node 2</option>
               { nodes.map((node, i) =>
-                <option key={i} value={node.id}>{node.display.name}</option>
+                <option key={node.id} value={node.id}>{node.display.name}</option>
               ) }
             </select>
             <input type="text" placeholder="label" className="form-control input-sm" ref="label" />

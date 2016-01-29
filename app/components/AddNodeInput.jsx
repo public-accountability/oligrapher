@@ -31,7 +31,7 @@ export default class AddNodeInput extends BaseComponent {
               <ul className="addNodeResults dropdown-menu" style={{ display: results.length > 0 ? "block" : "none" }} ref="results">
                 { results.map((node, i) =>
                   <AddNodeResult 
-                    key={i} 
+                    key={node.id}
                     node={node} 
                     source={this.props.source} 
                     nodes={this.props.nodes} 

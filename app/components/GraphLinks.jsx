@@ -15,12 +15,12 @@ export default class GraphLinks extends Component {
   }
 
   _getLink(link, i) {
-    return <a key={i} id={link.id} href={link.url} target={link.target}>{link.text}</a>;
+    return <a key={link.text} id={link.id} href={link.url} target={link.target}>{link.text}</a>;
   }
 
   _postLink(link, i) {
     return (
-      <form key={i} action={link.url} method="POST">
+      <form key={link.text} action={link.url} method="POST">
         <input type="hidden" name="foo" value="bar" />
         <a id={link.id} onClick={e => e.target.parentElement.submit()}>{link.text}</a>
       </form>

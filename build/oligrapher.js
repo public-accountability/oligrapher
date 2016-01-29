@@ -20833,6 +20833,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var prevIndex = this.prevIndex();
 	      var nextIndex = this.nextIndex();
+	      var canClickPrev = !!prevIndex;
+	      var canClickNext = !!nextIndex;
 
 	      var prevClick = function prevClick() {
 	        return dispatch((0, _actions.showAnnotation)(prevIndex));
@@ -20879,13 +20881,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            _react2['default'].createElement(
 	              'div',
 	              { id: 'oligrapherGraphCol', className: showAnnotations && hasAnnotations ? "col-md-8" : "col-md-12" },
-	              isEditor || title ? _react2['default'].createElement(_GraphHeader2['default'], _extends({}, this.props, {
+	              (isEditor || title) && _react2['default'].createElement(_GraphHeader2['default'], _extends({}, this.props, {
 	                updateTitle: updateTitle,
-	                isEditor: isEditor })) : null,
+	                isEditor: isEditor })),
 	              _react2['default'].createElement(
 	                'div',
 	                { id: 'oligrapherGraphContainer' },
-	                graph ? _react2['default'].createElement(_Graph2['default'], _extends({
+	                graph && _react2['default'].createElement(_Graph2['default'], _extends({
 	                  ref: function (c) {
 	                    _this.graph = c;if (c) {
 	                      c.root = _this;
@@ -20906,8 +20908,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                  },
 	                  moveCaption: function (graphId, captionId, x, y) {
 	                    return dispatch((0, _actions.moveCaption)(graphId, captionId, x, y));
-	                  } })) : null,
-	                graph ? _react2['default'].createElement(_Editor2['default'], _extends({}, this.props, {
+	                  } })),
+	                graph && _react2['default'].createElement(_Editor2['default'], _extends({}, this.props, {
 	                  graphApi: graphApi,
 	                  isEditor: isEditor,
 	                  showEditButton: false,
@@ -20923,28 +20925,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	                  },
 	                  redo: function () {
 	                    return dispatch(_reduxUndo.ActionCreators.redo());
-	                  } })) : null,
+	                  } })),
 	                _react2['default'].createElement(
 	                  'div',
 	                  { id: 'oligrapherMetaButtons' },
-	                  isEditor ? _react2['default'].createElement(_EditButton2['default'], { toggle: function () {
+	                  isEditor && _react2['default'].createElement(_EditButton2['default'], { toggle: function () {
 	                      return _this.toggleEditTools();
-	                    }, showEditTools: showEditTools }) : null,
-	                  isEditor && hasSettings ? _react2['default'].createElement(_SettingsButton2['default'], { toggleSettings: function (value) {
+	                    }, showEditTools: showEditTools }),
+	                  isEditor && hasSettings && _react2['default'].createElement(_SettingsButton2['default'], { toggleSettings: function (value) {
 	                      return dispatch((0, _actions.toggleSettings)(value));
-	                    } }) : null,
-	                  isEditor ? _react2['default'].createElement(_HelpButton2['default'], { toggleHelpScreen: function () {
+	                    } }),
+	                  isEditor && _react2['default'].createElement(_HelpButton2['default'], { toggleHelpScreen: function () {
 	                      return dispatch((0, _actions.toggleHelpScreen)());
-	                    } }) : null
+	                    } })
 	                ),
-	                showSettings && hasSettings ? _react2['default'].createElement(_GraphSettingsForm2['default'], { settings: graphSettings, updateSettings: updateSettings }) : null
+	                showSettings && hasSettings && _react2['default'].createElement(_GraphSettingsForm2['default'], { settings: graphSettings, updateSettings: updateSettings })
 	              )
 	            ),
-	            showAnnotations && hasAnnotations ? _react2['default'].createElement(_GraphAnnotations2['default'], {
+	            showAnnotations && hasAnnotations && _react2['default'].createElement(_GraphAnnotations2['default'], {
 	              isEditor: isEditor,
 	              navList: isEditor,
 	              prevClick: prevClick,
 	              nextClick: nextClick,
+	              canClickPrev: canClickPrev,
+	              canClickNext: canClickNext,
 	              swapAnnotations: swapAnnotations,
 	              annotation: annotation,
 	              annotations: annotations,
@@ -20957,9 +20961,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	              editForm: true,
 	              hideEditTools: function () {
 	                return dispatch((0, _actions.toggleEditTools)(false));
-	              } }) : null
+	              } })
 	          ),
-	          !showAnnotations && hasAnnotations ? _react2['default'].createElement(
+	          !showAnnotations && hasAnnotations && _react2['default'].createElement(
 	            'div',
 	            { id: 'oligrapherShowAnnotations' },
 	            _react2['default'].createElement(
@@ -20969,13 +20973,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }, className: 'btn btn-lg btn-default' },
 	              _react2['default'].createElement('span', { className: 'glyphicon glyphicon-font' })
 	            )
-	          ) : null,
-	          showSaveButton && isEditor && onSave ? _react2['default'].createElement(_SaveButton2['default'], { save: function () {
+	          ),
+	          showSaveButton && isEditor && onSave && _react2['default'].createElement(_SaveButton2['default'], { save: function () {
 	              return _this.handleSave();
-	            } }) : null,
-	          showHelpScreen ? _react2['default'].createElement(_HelpScreen2['default'], { source: this.props.dataSource, close: function () {
+	            } }),
+	          showHelpScreen && _react2['default'].createElement(_HelpScreen2['default'], { source: this.props.dataSource, close: function () {
 	              return dispatch((0, _actions.toggleHelpScreen)(false));
-	            } }) : null
+	            } })
 	        )
 	      );
 	    }
@@ -26349,7 +26353,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              c.graph = _this;
 	            }
 	          },
-	          key: i,
+	          key: e.id,
 	          edge: e,
 	          graphId: _this.props.graph.id,
 	          zoom: _this.props.zoom,
@@ -26371,7 +26375,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              c.graph = _this2;
 	            }
 	          },
-	          key: i,
+	          key: n.id,
 	          node: n,
 	          graph: _this2.props.graph,
 	          zoom: _this2.props.zoom,
@@ -26393,7 +26397,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              c.graph = _this3;
 	            }
 	          },
-	          key: i,
+	          key: c.id,
 	          caption: c,
 	          graphId: _this3.props.graph.id,
 	          selected: _this3.props.selection && (0, _lodashCollectionIncludes2['default'])(_this3.props.selection.captionIds, c.id),
@@ -34311,7 +34315,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              { className: 'addNodeResults dropdown-menu', style: { display: results.length > 0 ? "block" : "none" }, ref: 'results' },
 	              results.map(function (node, i) {
 	                return _react2['default'].createElement(_AddNodeResult2['default'], {
-	                  key: i,
+	                  key: node.id,
 	                  node: node,
 	                  source: _this.props.source,
 	                  nodes: _this.props.nodes,
@@ -34573,7 +34577,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              nodes.map(function (node, i) {
 	                return _react2['default'].createElement(
 	                  'option',
-	                  { key: i, value: node.id },
+	                  { key: node.id, value: node.id },
 	                  node.display.name
 	                );
 	              })
@@ -34589,7 +34593,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              nodes.map(function (node, i) {
 	                return _react2['default'].createElement(
 	                  'option',
-	                  { key: i, value: node.id },
+	                  { key: node.id, value: node.id },
 	                  node.display.name
 	                );
 	              })
@@ -35240,7 +35244,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              scales.map(function (scale, i) {
 	                return _react2['default'].createElement(
 	                  'option',
-	                  { key: i, value: scale[0] },
+	                  { key: scale[1], value: scale[0] },
 	                  scale[1]
 	                );
 	              })
@@ -35399,7 +35403,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              scales.map(function (scale, i) {
 	                return _react2['default'].createElement(
 	                  'option',
-	                  { key: i, value: scale[0] },
+	                  { key: scale[1], value: scale[0] },
 	                  scale[1]
 	                );
 	              })
@@ -35532,7 +35536,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            scales.map(function (scale, i) {
 	              return _react2['default'].createElement(
 	                'option',
-	                { key: i, value: scale[0] },
+	                { key: scale[1], value: scale[0] },
 	                scale[1]
 	              );
 	            })
@@ -36470,7 +36474,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function _getLink(link, i) {
 	      return _react2["default"].createElement(
 	        "a",
-	        { key: i, id: link.id, href: link.url, target: link.target },
+	        { key: link.text, id: link.id, href: link.url, target: link.target },
 	        link.text
 	      );
 	    }
@@ -36479,7 +36483,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function _postLink(link, i) {
 	      return _react2["default"].createElement(
 	        "form",
-	        { key: i, action: link.url, method: "POST" },
+	        { key: link.text, action: link.url, method: "POST" },
 	        _react2["default"].createElement("input", { type: "hidden", name: "foo", value: "bar" }),
 	        _react2["default"].createElement(
 	          "a",
@@ -36587,41 +36591,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var show = _props.show;
 	      var create = _props.create;
 	      var move = _props.move;
+	      var canClickPrev = _props.canClickPrev;
+	      var canClickNext = _props.canClickNext;
 
-	      var navComponent = _react2['default'].createElement(_GraphNavButtons2['default'], {
-	        prevClick: prevClick,
-	        nextClick: nextClick,
-	        isEditor: isEditor,
-	        swapAnnotations: swapAnnotations });
+	      var navComponent = _react2['default'].createElement(_GraphNavButtons2['default'], this.props);
 
-	      var formComponent = _react2['default'].createElement(_GraphAnnotationForm2['default'], {
-	        annotation: annotation,
-	        index: currentIndex,
-	        update: update,
-	        remove: remove,
-	        swapEditForm: swapEditForm });
+	      var formComponent = _react2['default'].createElement(_GraphAnnotationForm2['default'], this.props);
 
-	      var annotationComponent = _react2['default'].createElement(_GraphAnnotation2['default'], {
-	        annotation: annotation,
-	        index: currentIndex,
-	        isEditor: isEditor,
-	        swapEditForm: swapEditForm });
+	      var annotationComponent = _react2['default'].createElement(_GraphAnnotation2['default'], this.props);
 
-	      var navListComponent = _react2['default'].createElement(_GraphAnnotationList2['default'], {
-	        currentIndex: currentIndex,
-	        annotations: annotations,
-	        isEditor: isEditor,
-	        show: show,
-	        create: create,
-	        move: move,
-	        hideEditTools: this.props.hideEditTools });
+	      var navListComponent = _react2['default'].createElement(_GraphAnnotationList2['default'], this.props);
 
 	      return _react2['default'].createElement(
 	        'div',
 	        { id: 'oligrapherGraphAnnotations', className: 'col-md-4' },
-	        annotation || isEditor ? navComponent : null,
-	        isEditor && navList ? navListComponent : null,
-	        annotation ? isEditor ? formComponent : annotationComponent : null
+	        (annotation || isEditor) && navComponent,
+	        isEditor && navList && navListComponent,
+	        annotation && (isEditor ? formComponent : annotationComponent)
 	      );
 	    }
 	  }]);
@@ -36678,7 +36664,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          {
 	            className: "btn btn-lg btn-default",
 	            onClick: this.props.prevClick,
-	            disabled: !this.props.prevClick },
+	            disabled: !this.props.canClickPrev },
 	          "Prev"
 	        ),
 	        _react2["default"].createElement(
@@ -36686,7 +36672,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          {
 	            className: "clickplz btn btn-lg btn-default",
 	            onClick: this.props.nextClick,
-	            disabled: !this.props.nextClick },
+	            disabled: !this.props.canClickNext },
 	          "Next"
 	        ),
 	        _react2["default"].createElement(
@@ -37024,14 +37010,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: '_handleRemove',
 	    value: function _handleRemove() {
 	      if (confirm("Are you sure you want to delete this annotation?")) {
-	        this.props.remove(this.props.index);
+	        this.props.remove(this.props.currentIndex);
 	      }
 	    }
 	  }, {
 	    key: '_handleHeaderChange',
 	    value: function _handleHeaderChange(event) {
 	      this.setState({ header: event.target.value });
-	      this.props.update(this.props.index, { header: event.target.value, text: this.state.text });
+	      this.props.update(this.props.currentIndex, { header: event.target.value, text: this.state.text });
 	    }
 	  }, {
 	    key: '_handleTextChange',
@@ -37041,7 +37027,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'saveText',
 	    value: function saveText() {
-	      this.props.update(this.props.index, this.state);
+	      this.props.update(this.props.currentIndex, this.state);
 	    }
 	  }, {
 	    key: '_handleChange',
@@ -37054,7 +37040,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function _apply() {
 	      var header = this.refs.header.value;
 	      var text = this.refs.text.value;
-	      this.props.update(this.props.index, { header: header, text: text });
+	      this.props.update(this.props.currentIndex, { header: header, text: text });
 	    }
 	  }]);
 
