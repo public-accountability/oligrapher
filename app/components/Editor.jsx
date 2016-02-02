@@ -48,38 +48,45 @@ export default class Editor extends BaseComponent {
 
     let { currentForm, formData, addForm } = this._computeEditForms(this.props.selection);
 
+    let fetchInterlocks = () => {};
+    let showInterlocksButton = (this.props.dataSource.getInterlocks && formData && formData.length == 2);
+
+    if (showInterlocksButton) {
+      let node1Id = formData[0].id;
+      let node2Id = formData[1].id;
+      let nodeIds = Object.keys(this.props.graph.nodes);
+      fetchInterlocks = () => { 
+        this.props.fetchInterlocks(node1Id, node2Id, nodeIds, this.props.dataSource.getInterlocks);
+      }
+    }
+
     return (
       <div id="oligrapherEditorContainer" style={{ height: '100%' }}>
         <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={keyHandlers}>
           <ZoomButtons zoomIn={zoomIn} zoomOut={zoomOut} />
-          { this.props.showEditButton && this.props.isEditor ? 
+          { this.props.showEditButton && this.props.isEditor && 
             <button 
               id="toggleEditTools" 
               className="btn btn-sm btn-default" 
               onClick={() => this.props.toggleEditTools()}>
               <span className="glyphicon glyphicon-pencil"></span>
-            </button> : null }
-          { this.props.showEditTools ? 
+            </button>
+          }
+          { this.props.showEditTools && 
             <EditTools
               ref="editTools"
+              {...this.props}
               closeAddForm={_closeAddForm} 
               source={this.props.dataSource} 
-              graph={this.props.graph}
               toggleAddEdgeForm={() => this._toggleAddEdgeForm()}
               toggleHelpScreen={() => this._toggleHelpScreen()}
               clearGraph={() => this._clearGraph()}
               data={formData}
-              nodeResults={this.props.nodeResults}
-              setNodeResults={this.props.setNodeResults}
               addForm={addForm}
-              currentForm={currentForm} 
-              helpScreen={this.props.helpScreen}
-              hideHelp={this.props.hideHelp} 
-              graphApi={this.props.graphApi} 
-              undo={this.props.undo}
-              redo={this.props.redo} 
-              canUndo={this.props.canUndo}
-              canRedo={this.props.canRedo}/> : null }       
+              currentForm={currentForm}
+              showInterlocksButton={showInterlocksButton}
+              fetchInterlocks={fetchInterlocks} />
+          }       
         </HotKeys>
       </div>
     );

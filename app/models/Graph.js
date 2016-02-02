@@ -256,6 +256,39 @@ class Graph {
     return merge({}, graph, { nodes: newNodes });
   }
 
+  static addInterlocks(graph, node1Id, node2Id, data) {
+    let nodes = data.nodes;
+    let edges = data.edges;
+
+    let n1 = graph.nodes[node1Id];
+    let n2 = graph.nodes[node2Id];
+    let x1 = n1.display.x;
+    let y1 = n1.display.y;
+    let x2 = n2.display.x;
+    let y2 = n2.display.y;
+
+    let midX = (x1 + x2)/2;  
+    let midY = (y1 + y2)/2;
+    let angle = Math.atan2(x1 - x2, y2 - y1);
+    let num = Object.keys(nodes).length;
+    let spacing = Math.max(50, 200 - (num * 10));
+
+    nodes = nodes.reduce((result, node, i) => {
+      node.display.x = midX + Math.cos(angle) * (-(num-1)*spacing/2 + i*spacing);
+      node.display.y = midY + Math.sin(angle) * (-(num-1)*spacing/2 + i*spacing)
+      assign(result, { [node.id]: Node.setDefaults(node) });
+      return result;
+    }, {});
+
+    let graphWithNodes = merge({}, graph, { nodes });
+
+    edges.forEach((edge, i) => {
+      graphWithNodes = this.addEdge(graphWithNodes, edge);
+    });
+
+    return graphWithNodes;
+  }
+
   // CONTENT DELETION API
 
   static deleteNode(graph, nodeId) {

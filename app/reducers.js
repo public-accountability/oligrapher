@@ -14,7 +14,6 @@ export default combineReducers({
   selection,
   zoom,
   editTools,
-  // from annotations
   title,
   annotations,
   settings,

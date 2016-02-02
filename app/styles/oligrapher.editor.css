@@ -69,6 +69,10 @@ button#toggleEditTools {
   margin-right: 10px;
 }
 
+#addInterlocksButton {
+  margin-left: 10px;
+}
+
 .addNodeResults {
   display: block;
 }

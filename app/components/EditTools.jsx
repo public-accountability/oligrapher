@@ -39,47 +39,49 @@ export default class EditTools extends Component {
             addNode={addNode}
             addEdge={addEdge}
             closeAddForm={closeAddForm} 
-            source={source} 
+            source={source}
             nodes={graph.nodes}
             nodeResults={this.props.nodeResults}
             setNodeResults={this.props.setNodeResults}
-            toggleAddEdgeForm={toggleAddEdgeForm} />
+            toggleAddEdgeForm={toggleAddEdgeForm}
+            showInterlocksButton={this.props.showInterlocksButton}
+            fetchInterlocks={this.props.fetchInterlocks} />
         </div>
 
-        { addForm == 'AddEdgeForm' ? 
+        { addForm == 'AddEdgeForm' && 
           <AddEdgeForm 
             addEdge={addEdge} 
             nodes={graph.nodes}
             closeAddForm={closeAddForm} 
-            data={data} /> : null }
-        { addForm == 'AddCaptionForm' ? 
+            data={data} /> }
+        { addForm == 'AddCaptionForm' && 
           <AddCaptionForm 
             addCaption={addCaption} 
-            closeAddForm={closeAddForm} /> : null }
-        { currentForm == 'UpdateNodeForm' ? 
+            closeAddForm={closeAddForm} /> }
+        { currentForm == 'UpdateNodeForm' && 
           <UpdateNodeForm 
             updateNode={updateNode} 
             data={data} 
-            deselect={deselectAll} /> : null }
-        { currentForm == 'UpdateEdgeForm' ? 
+            deselect={deselectAll} /> }
+        { currentForm == 'UpdateEdgeForm' && 
           <UpdateEdgeForm 
             updateEdge={updateEdge} 
             getGraph={getGraph} 
             data={data}
-            deselect={deselectAll} /> : null }
-        { currentForm == 'UpdateCaptionForm' ? 
+            deselect={deselectAll} /> }
+        { currentForm == 'UpdateCaptionForm' && 
           <UpdateCaptionForm 
             updateCaption={updateCaption} 
             data={data}
-            deselect={deselectAll} /> : null }
-        { currentForm == 'UpdateNodeForm' && source && source.getConnectedNodes ? 
+            deselect={deselectAll} /> }
+        { currentForm == 'UpdateNodeForm' && source && source.getConnectedNodes && 
           <AddConnectedNodesForm
             data={data}
             source={source} 
             closeAddForm={closeAddForm} 
             graph={graph}
             addSurroundingNodes={addSurroundingNodes} 
-            addEdge={addEdge} /> : null }
+            addEdge={addEdge} /> }
         { helpScreen && !this.props.hideHelp ? <HelpScreen source={source} /> : null }
       </div>
     );

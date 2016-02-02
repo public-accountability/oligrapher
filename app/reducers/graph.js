@@ -2,6 +2,7 @@ import { LOAD_GRAPH, SHOW_GRAPH, NEW_GRAPH,
          MOVE_NODE, MOVE_EDGE, MOVE_CAPTION, 
          SWAP_NODE_HIGHLIGHT, SWAP_EDGE_HIGHLIGHT, SWAP_CAPTION_HIGHLIGHT,
          ADD_NODE, ADD_EDGE, ADD_CAPTION, ADD_SURROUNDING_NODES,
+         ADD_INTERLOCKS,
          DELETE_NODE, DELETE_EDGE, DELETE_CAPTION, DELETE_SELECTION, DELETE_ALL,
          UPDATE_NODE, UPDATE_EDGE, UPDATE_CAPTION,
          PRUNE_GRAPH, LAYOUT_CIRCLE,
@@ -48,6 +49,9 @@ function graph(state = null, action) {
 
   case ADD_SURROUNDING_NODES:
     return Graph.addSurroundingNodes(state, action.centerId, action.nodes);
+
+  case ADD_INTERLOCKS:
+    return Graph.addInterlocks(state, action.node1Id, action.node2Id, action.data);
 
   case DELETE_NODE:
     return Graph.deleteNode(state, action.nodeId);

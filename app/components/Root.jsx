@@ -12,6 +12,7 @@ import { loadGraph, showGraph,
          addNode, addEdge, addCaption,
          updateNode, updateEdge, updateCaption,
          deleteAll, addSurroundingNodes,
+         fetchInterlocks,
          toggleEditTools, toggleAddForm,
          setNodeResults, setTitle,
          loadAnnotations, showAnnotation, createAnnotation,
@@ -131,6 +132,12 @@ class Root extends Component {
 
     let showAnnotations = this.showAnnotations();
 
+    let fetchInterlocksCallback = (node1Id, node2Id) => {
+      let nodeIds = Object.keys(that.props.graph.nodes);
+      let apiCall = this.props.dataSource.getInterlocks.bind(this.props.dataSource);
+      this.props.dispatch(fetchInterlocks(node1Id, node2Id, nodeIds, apiCall));
+    }
+
     return (
       <div id="oligrapherContainer" style={{ height: '100%' }}>
         <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={keyHandlers}>
@@ -168,7 +175,8 @@ class Root extends Component {
                     setNodeResults={(nodes) => dispatch(setNodeResults(nodes))}
                     toggleAddForm={(form) => dispatch(toggleAddForm(form))}
                     undo={() => dispatch(ActionCreators.undo())}
-                    redo={() => dispatch(ActionCreators.redo())} />
+                    redo={() => dispatch(ActionCreators.redo())} 
+                    fetchInterlocks={fetchInterlocksCallback} />
                 }
 
                 <div id="oligrapherMetaButtons">
@@ -219,12 +227,12 @@ class Root extends Component {
   }
 
   componentDidMount() {
-    let { dispatch, data, settings } = this.props;
+    let { dispatch, data, settings, isEditor } = this.props;
 
     this.loadData(data);
 
-    if (!data || !data.graph) {
-      // show edit tools if there's no initial graph
+    if (isEditor && (!data || !data.graph)) {
+      // show edit tools if isEditor and there's no initial graph
       this.toggleEditTools(true);
     }
 
@@ -237,7 +245,7 @@ class Root extends Component {
     let { selection, graph, onSelection } = this.props;
 
     if (JSON.stringify(prevProps.selection) !== JSON.stringify(selection)) {
-      // fire selection callback with glorified selection state if selection changed
+      // if selection changed, fire selection callback with glorified selection state
       if (onSelection) {
         onSelection(selection);
       }

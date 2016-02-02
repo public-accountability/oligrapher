@@ -95,6 +95,19 @@
         options,
         callback
       );
+    },
+
+    getInterlocks: function(node1Id, node2Id, nodeIds, options, callback) {
+      options = options || {};
+      options.node1_id = node1Id;
+      options.node2_id = node2Id;
+      options.node_ids = nodeIds;
+
+      get(
+        this.baseUrl + '/maps/interlocks',
+        options,
+        callback
+      );
     }
   };
 

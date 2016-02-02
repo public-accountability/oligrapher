@@ -24,6 +24,7 @@ export const ADD_NODE = 'ADD_NODE';
 export const ADD_EDGE = 'ADD_EDGE';
 export const ADD_CAPTION = 'ADD_CAPTION';
 export const ADD_SURROUNDING_NODES = 'ADD_SURROUNDING_NODES';
+export const ADD_INTERLOCKS = 'ADD_INTERLOCKS';
 export const DELETE_NODE = 'DELETE_NODE';
 export const DELETE_EDGE = 'DELETE_EDGE';
 export const DELETE_CAPTION = 'DELETE_CAPTION';
@@ -129,6 +130,18 @@ export function addCaption(caption) {
 
 export function addSurroundingNodes(centerId, nodes) {
   return { type: ADD_SURROUNDING_NODES, centerId, nodes };
+}
+
+export function fetchInterlocks(node1Id, node2Id, nodeIds, apiCall) {
+  return dispatch => {
+    return apiCall(node1Id, node2Id, nodeIds, {}, (data) => {
+      dispatch(addInterlocks(node1Id, node2Id, data));
+    });
+  };
+};
+
+export function addInterlocks(node1Id, node2Id, data) {
+  return { type: ADD_INTERLOCKS, node1Id, node2Id, data };
 }
 
 export function deleteNode(nodeId) {

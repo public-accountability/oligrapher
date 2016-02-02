@@ -3,6 +3,7 @@ import { render } from 'react-dom';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import createLogger from 'redux-logger';
+import thunk from 'redux-thunk';
 import Root from './components/Root';
 import reducers from './reducers';
 import { loadGraph, showGraph, newGraph, 
@@ -32,12 +33,15 @@ class Oligrapher {
 
     this.rootElement = config.root;
 
+    let createStoreWithMiddleware;
+
     if (config.logActions) {
-      const logger = createLogger();
-      const createStoreWithMiddleware = applyMiddleware(logger)(createStore);
-      this.store = createStoreWithMiddleware(reducers);      
+      let logger = createLogger();
+      createStoreWithMiddleware = applyMiddleware(thunk, logger)(createStore);
+      this.store = createStoreWithMiddleware(reducers);
     } else {
-      this.store = createStore(reducers);
+      createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
+      this.store = createStoreWithMiddleware(reducers);
     }
 
     this.providerInstance = render(
