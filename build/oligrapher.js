@@ -30680,7 +30680,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var addForm = _computeEditForms2.addForm;
 
 	      var fetchInterlocks = function fetchInterlocks() {};
-	      var showInterlocksButton = this.props.dataSource.getInterlocks && formData && formData.length == 2;
+	      var showInterlocksButton = this.props.isEditor && this.props.dataSource && this.props.dataSource.getInterlocks && formData && formData.length == 2;
 
 	      if (showInterlocksButton) {
 	        (function () {

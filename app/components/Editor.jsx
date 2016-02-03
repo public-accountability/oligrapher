@@ -49,7 +49,9 @@ export default class Editor extends BaseComponent {
     let { currentForm, formData, addForm } = this._computeEditForms(this.props.selection);
 
     let fetchInterlocks = () => {};
-    let showInterlocksButton = (this.props.dataSource.getInterlocks && formData && formData.length == 2);
+    let showInterlocksButton = (
+      this.props.isEditor && this.props.dataSource && this.props.dataSource.getInterlocks && formData && formData.length == 2
+    );
 
     if (showInterlocksButton) {
       let node1Id = formData[0].id;
