@@ -14,8 +14,7 @@ export default class EditButtons extends Component {
           source={this.props.source} 
           nodes={this.props.nodes}
           results={this.props.nodeResults}
-          setNodeResults={this.props.setNodeResults}
-          ref="addNodeInput" />
+          setNodeResults={this.props.setNodeResults} />
         <button className="btn btn-sm btn-default" onClick={this.props.toggleAddEdgeForm}>add edge</button>
         { this.props.showInterlocksButton &&
           <button id="addInterlocksButton" className="btn btn-sm btn-default" onClick={this.props.fetchInterlocks}>add interlocks</button>

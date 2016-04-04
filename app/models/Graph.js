@@ -66,9 +66,11 @@ class Graph {
     return merge({}, newGraph, { captions });
   }
 
-  static prepareEdges(graph) {
+  static prepareEdges(graph, edges) {
+    edges = edges || values(graph.edges);
+
     return merge({}, graph, { 
-      edges: values(graph.edges).reduce((result, edge) => { 
+      edges: edges.reduce((result, edge) => { 
         return merge({}, result, { [edge.id]: this.updateEdgePosition(Edge.setDefaults(edge), graph) });
       }, {}) 
     });
@@ -174,16 +176,25 @@ class Graph {
   // CONTENT UPDATING API
 
   static moveNode(graph, nodeId, x, y) {
-    // first update the node
+    // calculate deltas for updating edges later
+    let startX = graph.nodes[nodeId].display.x;
+    let startY = graph.nodes[nodeId].display.y;
+    let deltaX = x - startX;
+    let deltaY = y - startY;
+
+    // update the node
     graph = merge({}, graph, { nodes: { [nodeId]: { display: { x, y } } } });
 
     let edges = this.edgesConnectedToNode(graph, nodeId);
 
     // then update the edges
     return merge({}, graph, { edges: edges.reduce((result, edge) => {
-      return merge({}, result, { [edge.id]: this.updateEdgePosition(edge, graph) });
+      // move control point by half of the node move then update
+      let movedEdge = merge({}, edge, { 
+        [edge.id]: this.moveEdge(graph, edge.id, edge.display.x + deltaX/2, edge.display.y + deltaY/2) 
+      });
+      return merge({}, result, { [edge.id]: this.updateEdgePosition(movedEdge, graph) });
     }, {}) });
-
   }
 
   static moveEdge(graph, edgeId, cx, cy) {

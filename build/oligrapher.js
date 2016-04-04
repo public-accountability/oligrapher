@@ -22061,11 +22061,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }, {
 	    key: 'prepareEdges',
-	    value: function prepareEdges(graph) {
+	    value: function prepareEdges(graph, edges) {
 	      var _this = this;
 
+	      edges = edges || (0, _lodashObjectValues2['default'])(graph.edges);
+
 	      return (0, _lodashObjectMerge2['default'])({}, graph, {
-	        edges: (0, _lodashObjectValues2['default'])(graph.edges).reduce(function (result, edge) {
+	        edges: edges.reduce(function (result, edge) {
 	          return (0, _lodashObjectMerge2['default'])({}, result, _defineProperty({}, edge.id, _this.updateEdgePosition(_Edge2['default'].setDefaults(edge), graph)));
 	        }, {})
 	      });
@@ -22190,14 +22192,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function moveNode(graph, nodeId, x, y) {
 	      var _this2 = this;
 
-	      // first update the node
+	      // calculate deltas for updating edges later
+	      var startX = graph.nodes[nodeId].display.x;
+	      var startY = graph.nodes[nodeId].display.y;
+	      var deltaX = x - startX;
+	      var deltaY = y - startY;
+
+	      // update the node
 	      graph = (0, _lodashObjectMerge2['default'])({}, graph, { nodes: _defineProperty({}, nodeId, { display: { x: x, y: y } }) });
 
 	      var edges = this.edgesConnectedToNode(graph, nodeId);
 
 	      // then update the edges
 	      return (0, _lodashObjectMerge2['default'])({}, graph, { edges: edges.reduce(function (result, edge) {
-	          return (0, _lodashObjectMerge2['default'])({}, result, _defineProperty({}, edge.id, _this2.updateEdgePosition(edge, graph)));
+	          // move control point by half of the node move then update
+	          var movedEdge = (0, _lodashObjectMerge2['default'])({}, edge, _defineProperty({}, edge.id, _this2.moveEdge(graph, edge.id, edge.display.x + deltaX / 2, edge.display.y + deltaY / 2)));
+	          return (0, _lodashObjectMerge2['default'])({}, result, _defineProperty({}, edge.id, _this2.updateEdgePosition(movedEdge, graph)));
 	        }, {}) });
 	    }
 	  }, {
@@ -29062,7 +29072,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 
 	module.exports = {
-	  curveStrength: 0.1,
+	  curveStrength: 0.5,
 	  lineColor: {
 	    normal: "#999",
 	    highlighted: "#999",
@@ -34323,8 +34333,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          source: this.props.source,
 	          nodes: this.props.nodes,
 	          results: this.props.nodeResults,
-	          setNodeResults: this.props.setNodeResults,
-	          ref: 'addNodeInput' }),
+	          setNodeResults: this.props.setNodeResults }),
 	        _react2['default'].createElement(
 	          'button',
 	          { className: 'btn btn-sm btn-default', onClick: this.props.toggleAddEdgeForm },
@@ -35751,7 +35760,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        "SHIFT+CLICK to select mutiple nodes, edges, or captions.",
 	        _react2["default"].createElement("br", null),
 	        _react2["default"].createElement("br", null),
-	        "Select a single node, edge, or caption to view an editing form in the top-right corner of the map. Changes you make in the form will upate the item immediately.",
+	        "Select a single node, edge, or caption to view an editing form in the top-right corner of the map. Changes you make in the form will upate the item immediately. Selecting two nodes will display a form to add an edge between them.",
+	        this.props.source && this.props.source.getInterlocks && "Selecting two nodes will also display a button to add interlocks, meaning nodes that they are both connected to.",
 	        _react2["default"].createElement("br", null),
 	        _react2["default"].createElement("br", null),
 	        "The CIRCLE button arranges nodes in a circle.",
@@ -44829,7 +44839,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    case _actions.UPDATE_NODE:
 	      // update connected edges to ensure that endpoints are correct in case node scale changed
-	      return _modelsGraph2['default'].prepareEdges(_modelsGraph2['default'].updateNode(state, action.nodeId, action.data));
+	      return _modelsGraph2['default'].prepareEdges(_modelsGraph2['default'].updateNode(state, action.nodeId, action.data), _modelsGraph2['default'].edgesConnectedToNode(state, action.nodeId));
 
 	    case _actions.UPDATE_EDGE:
 	      return _modelsGraph2['default'].updateEdge(state, action.edgeId, action.data);
@@ -45131,7 +45141,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var indexes = (0, _lodashUtilityRange2['default'])(Math.max(fromIndex, toIndex, state.currentIndex) + 1);
 	      indexes.splice(toIndex, 0, indexes.splice(fromIndex, 1)[0]);
 
-	      return (0, _lodashObjectMerge2['default'])({}, state, {
+	      return (0, _lodashObjectAssign2['default'])({}, state, {
 	        list: annotations,
 	        currentIndex: indexes.indexOf(state.currentIndex)
 	      });

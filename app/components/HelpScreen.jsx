@@ -23,7 +23,9 @@ export default class HelpScreen extends Component {
         CLICK a node, edge, or caption to select or deselect it.<br />
         SHIFT+CLICK to select mutiple nodes, edges, or captions.<br />
         <br />
-        Select a single node, edge, or caption to view an editing form in the top-right corner of the map. Changes you make in the form will upate the item immediately.<br />
+        Select a single node, edge, or caption to view an editing form in the top-right corner of the map. Changes you make in the form will upate the item immediately. Selecting two nodes will display a form to add an edge between them.
+        { this.props.source && this.props.source.getInterlocks && `Selecting two nodes will also display a button to add interlocks, meaning nodes that they are both connected to.` }
+        <br />
         <br />
         The CIRCLE button arranges nodes in a circle.<br />
         The PRUNE button removes unconnected nodes.<br />

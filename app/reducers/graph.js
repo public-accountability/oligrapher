@@ -80,7 +80,8 @@ function graph(state = null, action) {
   case UPDATE_NODE:
     // update connected edges to ensure that endpoints are correct in case node scale changed
     return Graph.prepareEdges(
-      Graph.updateNode(state, action.nodeId, action.data)
+      Graph.updateNode(state, action.nodeId, action.data), 
+      Graph.edgesConnectedToNode(state, action.nodeId)
     );
 
   case UPDATE_EDGE:

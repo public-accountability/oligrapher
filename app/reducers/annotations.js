@@ -53,7 +53,7 @@ export default function annotations(state = initState, action) {
     let indexes = range(Math.max(fromIndex, toIndex, state.currentIndex) + 1);
     indexes.splice(toIndex, 0, indexes.splice(fromIndex, 1)[0]);
 
-    return merge({}, state, { 
+    return assign({}, state, { 
       list: annotations,
       currentIndex: indexes.indexOf(state.currentIndex)
     });
