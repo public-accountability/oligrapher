@@ -176,24 +176,16 @@ class Graph {
   // CONTENT UPDATING API
 
   static moveNode(graph, nodeId, x, y) {
-    // calculate deltas for updating edges later
-    let startX = graph.nodes[nodeId].display.x;
-    let startY = graph.nodes[nodeId].display.y;
-    let deltaX = x - startX;
-    let deltaY = y - startY;
+    let edges = this.edgesConnectedToNode(graph, nodeId);
 
     // update the node
     graph = merge({}, graph, { nodes: { [nodeId]: { display: { x, y } } } });
 
-    let edges = this.edgesConnectedToNode(graph, nodeId);
-
     // then update the edges
     return merge({}, graph, { edges: edges.reduce((result, edge) => {
-      // move control point by half of the node move then update
-      let movedEdge = merge({}, edge, { 
-        [edge.id]: this.moveEdge(graph, edge.id, edge.display.x + deltaX/2, edge.display.y + deltaY/2) 
-      });
-      return merge({}, result, { [edge.id]: this.updateEdgePosition(movedEdge, graph) });
+      let nodeNum = edge.node1_id == nodeId ? 1 : 2;
+      let newEdge = this.moveEdgeNode(edge, nodeNum, x, y);
+      return merge({}, result, { [edge.id]: this.updateEdgePosition(newEdge, graph) });
     }, {}) });
   }
 
@@ -586,6 +578,26 @@ class Graph {
     );
 
     return Math.max.apply(null, dists);
+  }
+
+  static calculateEdgeAngle(edge) {
+    let { x1, y1, x2, y2 } = edge.display;
+    return Math.atan2(y2 - y1, x2 - x1);
+  }
+
+  static moveEdgeNode(edge, nodeNum, x, y) {
+    let angle = this.calculateEdgeAngle(edge);
+    let newEdge = merge({}, edge, { display: (nodeNum == 1 ? { x1: x, y1: y } : { x2: x, y2: y }) });
+    let newAngle = this.calculateEdgeAngle(newEdge);
+    let deltaAngle = newAngle - angle;
+    let rotatedPoint = this.rotatePoint(edge.display.cx, edge.display.cy, deltaAngle);
+    return merge(newEdge, { display: { cx: rotatedPoint.x, cy: rotatedPoint.y } });
+  }
+
+  static rotatePoint(x, y, angle) {
+    let cos = Math.cos(angle);
+    let sin = Math.sin(angle);
+    return { x: x * cos - y * sin, y: x * sin + y * cos };
   }
 }
 

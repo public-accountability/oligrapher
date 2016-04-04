@@ -60,7 +60,7 @@ export default class Node extends BaseComponent {
     };
   }
 
-  // node position is updated only in state, not store
+  // while dragging node and its edges are updated only in state, not store
   _handleDrag(e, ui) {
     if (this.props.isLocked) return;
 
@@ -77,13 +77,10 @@ export default class Node extends BaseComponent {
     // update state of connecting edges
     let edges = Graph.edgesConnectedToNode(this.props.graph, n.id);
 
-    edges.forEach((edge) => {
+    edges.forEach(edge => {
       let thisNodeNum = edge.node1_id == n.id ? 1 : 2;
-      let otherNode = this.props.graph.nodes[thisNodeNum == 1 ? edge.node2_id : edge.node1_id];
-      let x1, y1, x2, y2;
-
-      let newState = (thisNodeNum == 1) ? { x1: x, y1: y } : { x2: x, y2: y };
-      this.graph.edges[edge.id].setState(newState);
+      let newEdge = Graph.moveEdgeNode(edge, thisNodeNum, x, y);
+      this.graph.edges[edge.id].setState(newEdge.display);
     });
   }
 
