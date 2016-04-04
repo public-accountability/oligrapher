@@ -22192,22 +22192,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function moveNode(graph, nodeId, x, y) {
 	      var _this2 = this;
 
-	      // calculate deltas for updating edges later
-	      var startX = graph.nodes[nodeId].display.x;
-	      var startY = graph.nodes[nodeId].display.y;
-	      var deltaX = x - startX;
-	      var deltaY = y - startY;
+	      var edges = this.edgesConnectedToNode(graph, nodeId);
 
 	      // update the node
 	      graph = (0, _lodashObjectMerge2['default'])({}, graph, { nodes: _defineProperty({}, nodeId, { display: { x: x, y: y } }) });
 
-	      var edges = this.edgesConnectedToNode(graph, nodeId);
-
 	      // then update the edges
 	      return (0, _lodashObjectMerge2['default'])({}, graph, { edges: edges.reduce(function (result, edge) {
-	          // move control point by half of the node move then update
-	          var movedEdge = (0, _lodashObjectMerge2['default'])({}, edge, _defineProperty({}, edge.id, _this2.moveEdge(graph, edge.id, edge.display.x + deltaX / 2, edge.display.y + deltaY / 2)));
-	          return (0, _lodashObjectMerge2['default'])({}, result, _defineProperty({}, edge.id, _this2.updateEdgePosition(movedEdge, graph)));
+	          var nodeNum = edge.node1_id == nodeId ? 1 : 2;
+	          var newEdge = _this2.moveEdgeNode(edge, nodeNum, x, y);
+	          return (0, _lodashObjectMerge2['default'])({}, result, _defineProperty({}, edge.id, _this2.updateEdgePosition(newEdge, graph)));
 	        }, {}) });
 	    }
 	  }, {
@@ -22699,6 +22693,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	      });
 
 	      return Math.max.apply(null, dists);
+	    }
+	  }, {
+	    key: 'calculateEdgeAngle',
+	    value: function calculateEdgeAngle(edge) {
+	      var _edge$display = edge.display;
+	      var x1 = _edge$display.x1;
+	      var y1 = _edge$display.y1;
+	      var x2 = _edge$display.x2;
+	      var y2 = _edge$display.y2;
+
+	      return Math.atan2(y2 - y1, x2 - x1);
+	    }
+	  }, {
+	    key: 'moveEdgeNode',
+	    value: function moveEdgeNode(edge, nodeNum, x, y) {
+	      var angle = this.calculateEdgeAngle(edge);
+	      var newEdge = (0, _lodashObjectMerge2['default'])({}, edge, { display: nodeNum == 1 ? { x1: x, y1: y } : { x2: x, y2: y } });
+	      var newAngle = this.calculateEdgeAngle(newEdge);
+	      var deltaAngle = newAngle - angle;
+	      var rotatedPoint = this.rotatePoint(edge.display.cx, edge.display.cy, deltaAngle);
+	      return (0, _lodashObjectMerge2['default'])(newEdge, { display: { cx: rotatedPoint.x, cy: rotatedPoint.y } });
+	    }
+	  }, {
+	    key: 'rotatePoint',
+	    value: function rotatePoint(x, y, angle) {
+	      var cos = Math.cos(angle);
+	      var sin = Math.sin(angle);
+	      return { x: x * cos - y * sin, y: x * sin + y * cos };
 	    }
 	  }]);
 
@@ -26936,7 +26958,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      };
 	    }
 
-	    // node position is updated only in state, not store
+	    // while dragging node and its edges are updated only in state, not store
 	  }, {
 	    key: '_handleDrag',
 	    value: function _handleDrag(e, ui) {
@@ -26959,14 +26981,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      edges.forEach(function (edge) {
 	        var thisNodeNum = edge.node1_id == n.id ? 1 : 2;
-	        var otherNode = _this.props.graph.nodes[thisNodeNum == 1 ? edge.node2_id : edge.node1_id];
-	        var x1 = undefined,
-	            y1 = undefined,
-	            x2 = undefined,
-	            y2 = undefined;
-
-	        var newState = thisNodeNum == 1 ? { x1: x, y1: y } : { x2: x, y2: y };
-	        _this.graph.edges[edge.id].setState(newState);
+	        var newEdge = _modelsGraph2['default'].moveEdgeNode(edge, thisNodeNum, x, y);
+	        _this.graph.edges[edge.id].setState(newEdge.display);
 	      });
 	    }
 
