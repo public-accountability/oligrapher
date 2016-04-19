@@ -6,7 +6,7 @@
   background-color: #f8f8f8;
 }
 
-#oligrapherEditorContainer button {
+#oligrapherEditorContainer button:not(#nodeColorInputClearer) {
   background-color: #f8f8f8;
 }
 
@@ -56,11 +56,13 @@ button#toggleEditTools {
   position: absolute;
   top: 15px;
   left: 60px;
+  width:250px;
 }
 
 #buttons .buttonGroup {
   display: inline-block;
   margin-right: 10px;
+  margin-bottom: 10px;
 }
 
 #addNodeInput {
@@ -101,6 +103,7 @@ button#toggleEditTools {
 
 #addConnectedNodes {
   margin-top: 80px;
+  z-index: 2;
 }
 
 #addConnectedNodesNum {
@@ -148,14 +151,57 @@ button#toggleEditTools {
   margin-top: 0;
 }
 
-.updateForm div {
+.updateForm .form-control {
   margin-bottom: 10px;
 }
 
 #nodeUrlInput {
   width: 363px;
+  float: right;
+}
+
+#nodeColorInput {
+  width: 50px;
+  padding: 1px 4px;
+  cursor: pointer;
+}
+
+#nodeColorPickerWrapper{
+  position: absolute;
+  right: 0px;
+}
+
+#color{
+    width: 22px;
+    height: 22px;
+    border-radius: 22px;
+    margin-top: -1px;
+    margin-left: -5px;
+    cursor: pointer;
+}
+
+#nodeColorInputClearer{
+  background: none;
+  border: none;
+  position: absolute;
+  right: -2px;
+  line-height: 29px;
+  top: 0px;
+}
+
+#nodeColorInputWrapper{
+  position: relative;
+  display: inline-block;
 }
 
 #edgeUrlInput {
   width: 337px;
 }
+
+#swatch{
+  width: 50px;
+  position: relative;
+  display: inline-block;
+}
+
+

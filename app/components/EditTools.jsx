@@ -24,16 +24,6 @@ export default class EditTools extends Component {
     return (
       <div id="editTools">
         <div id="buttons">
-          <UndoButtons 
-            undo={this.props.undo}
-            redo={this.props.redo} 
-            canUndo={this.props.canUndo}
-            canRedo={this.props.canRedo} />
-          <LayoutButtons 
-            prune={prune} 
-            circleLayout={circleLayout} 
-            clearGraph={clearGraph} />
-          { this.props.hideHelp ? null : <button id="helpButton" className="btn btn-sm btn-default buttonGroup" onClick={toggleHelpScreen}>help</button> }
           <EditButtons
             ref="editButtons"
             addNode={addNode}
@@ -46,6 +36,18 @@ export default class EditTools extends Component {
             toggleAddEdgeForm={toggleAddEdgeForm}
             showInterlocksButton={this.props.showInterlocksButton}
             fetchInterlocks={this.props.fetchInterlocks} />
+          <LayoutButtons 
+            prune={prune} 
+            circleLayout={circleLayout} 
+            clearGraph={clearGraph} />
+          <UndoButtons 
+            undo={this.props.undo}
+            redo={this.props.redo} 
+            canUndo={this.props.canUndo}
+            canRedo={this.props.canRedo} />
+         
+          { this.props.hideHelp ? null : <button id="helpButton" className="btn btn-sm btn-default buttonGroup" onClick={toggleHelpScreen}>help</button> }
+
         </div>
 
         { addForm == 'AddEdgeForm' && 
