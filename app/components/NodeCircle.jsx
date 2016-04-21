@@ -65,24 +65,14 @@ export default class NodeCircle extends BaseComponent {
          clip-path="${clipPath}">
        </image>`
     };
-    if (image){
-      return <g dangerouslySetInnerHTML={innerHTML} />;
-    } else {
-      if (color){
-        return <circle 
+
+    return image ? 
+      <g dangerouslySetInnerHTML={innerHTML} /> : 
+      <circle 
         className="handle" 
         r={r}
-        fill={color}
+        fill={color ? color : ds.circleColor[status]}
         opacity={ds.circleOpacity[status]}>
-        </circle>;
-      } else {
-        return <circle 
-        className="handle" 
-        r={r}
-        fill={ds.circleColor[status]}
-        opacity={ds.circleOpacity[status]}>
-        </circle>;
-      }
-    }
+      </circle>;
   }
 }
