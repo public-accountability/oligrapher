@@ -4,6 +4,7 @@ import GraphTitleForm from './GraphTitleForm';
 import GraphByLine from './GraphByLine';
 import GraphLinks from './GraphLinks';
 
+
 export default class GraphHeader extends Component {
 
   render() {
@@ -11,15 +12,15 @@ export default class GraphHeader extends Component {
 
     return (
       <div id="oligrapherHeader">
-        { isEditor ? 
-          <GraphTitleForm title={title} updateTitle={updateTitle} /> : 
+        { isEditor ?
+          <GraphTitleForm title={title} updateTitle={updateTitle} /> :
           <GraphTitle title={title} url={url} /> }
-        { user || date ? 
+        { user || date ?
           <GraphByLine user={user} date={date} /> : null }
-        { links ? 
+        { links ?
           <GraphLinks links={links} /> : null}
       </div>
-
     );
   }
 }
+
