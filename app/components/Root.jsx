@@ -41,11 +41,12 @@ import filter from 'lodash/collection/filter';
 class Root extends Component {
   constructor(props) {
     super(props);
-    this.state = { shiftKey: false };
+    this.state = { shiftKey: false, isEditor: props.isEditor };
   }
 
   render() {
-    let { dispatch, graph, selection, isEditor, isLocked, title,
+    let { isEditor } = this.state;
+    let { dispatch, graph, selection, isLocked, title,
           showEditTools, showSaveButton, showHelpScreen, 
           hasSettings, graphSettings, showSettings, onSave,
           currentIndex, annotation, annotations, visibleAnnotations } = this.props;
@@ -285,6 +286,7 @@ class Root extends Component {
   }
 
   toggleEditor(value) {
+    value = typeof value === "undefined" ? !this.state.isEditor : value;
     this.setState({ isEditor: value });
     this.props.dispatch(deselectAll(this.props.graph.id));
   }
