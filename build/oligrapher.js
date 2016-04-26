@@ -77,6 +77,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reactDom = __webpack_require__(154);
 
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
 	var _redux = __webpack_require__(155);
 
 	var _reactRedux = __webpack_require__(164);
@@ -107,6 +109,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
 
+	var _lodashObjectAssign = __webpack_require__(242);
+
+	var _lodashObjectAssign2 = _interopRequireDefault(_lodashObjectAssign);
+
 	var _lodashArrayDifference = __webpack_require__(262);
 
 	var _lodashArrayDifference2 = _interopRequireDefault(_lodashArrayDifference);
@@ -115,8 +121,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var Oligrapher = (function () {
 	  function Oligrapher() {
-	    var _this = this;
-
 	    var config = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
 	    _classCallCheck(this, Oligrapher);
@@ -142,34 +146,54 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.store = createStoreWithMiddleware(_reducers2['default']);
 	    }
 
-	    this.providerInstance = (0, _reactDom.render)(_react2['default'].createElement(
-	      _reactRedux.Provider,
-	      { store: this.store },
-	      _react2['default'].createElement(_componentsRoot2['default'], _extends({}, config, {
-	        ref: function (c) {
-	          return _this.root = c;
-	        } }))
-	    ), this.rootElement);
-
-	    this.Root = _componentsRoot2['default'];
+	    this._render(config);
 
 	    return this;
 	  }
 
 	  _createClass(Oligrapher, [{
+	    key: '_render',
+	    value: function _render(props) {
+	      var _this = this;
+
+	      this.props = props;
+
+	      _reactDom2['default'].render(_react2['default'].createElement(
+	        _reactRedux.Provider,
+	        { store: this.store },
+	        _react2['default'].createElement(_componentsRoot2['default'], _extends({}, props, {
+	          ref: function (c) {
+	            return _this.root = c;
+	          } }))
+	      ), this.rootElement);
+	    }
+	  }, {
+	    key: '_currentProps',
+	    value: function _currentProps() {
+	      return this.root.getWrappedInstance().props;
+	    }
+	  }, {
+	    key: 'update',
+	    value: function update(newProps) {
+	      var props = (0, _lodashObjectAssign2['default'])({}, this.props, newProps);
+	      this._render(props);
+	    }
+	  }, {
 	    key: 'toggleEditTools',
 	    value: function toggleEditTools(value) {
-	      this.root.getWrappedInstance().toggleEditTools(value);
+	      this.root.dispatchProps.dispatch((0, _actions.toggleEditTools)(value));
 	    }
 	  }, {
 	    key: 'toggleEditor',
 	    value: function toggleEditor(value) {
-	      this.root.getWrappedInstance().toggleEditor(value);
+	      value = typeof value === "undefined" ? !this._currentProps().isEditor : value;
+	      this.update({ isEditor: value });
 	    }
 	  }, {
 	    key: 'toggleLocked',
 	    value: function toggleLocked(value) {
-	      this.root.getWrappedInstance().toggleLocked(value);
+	      value = typeof value === "undefined" ? !this._currentProps().isLocked : value;
+	      this.update({ isLocked: value });
 	    }
 	  }, {
 	    key: 'import',
@@ -20741,7 +20765,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _classCallCheck(this, Root);
 
 	    _get(Object.getPrototypeOf(Root.prototype), 'constructor', this).call(this, props);
-	    this.state = { shiftKey: false, isEditor: props.isEditor };
+	    this.state = { shiftKey: false };
 	  }
 
 	  _createClass(Root, [{
@@ -20749,11 +20773,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function render() {
 	      var _this = this;
 
-	      var isEditor = this.state.isEditor;
 	      var _props = this.props;
 	      var dispatch = _props.dispatch;
 	      var graph = _props.graph;
 	      var selection = _props.selection;
+	      var isEditor = _props.isEditor;
 	      var isLocked = _props.isLocked;
 	      var title = _props.title;
 	      var showEditTools = _props.showEditTools;

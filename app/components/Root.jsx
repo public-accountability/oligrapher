@@ -41,12 +41,11 @@ import filter from 'lodash/collection/filter';
 class Root extends Component {
   constructor(props) {
     super(props);
-    this.state = { shiftKey: false, isEditor: props.isEditor };
+    this.state = { shiftKey: false };
   }
 
   render() {
-    let { isEditor } = this.state;
-    let { dispatch, graph, selection, isLocked, title,
+    let { dispatch, graph, selection, isEditor, isLocked, title,
           showEditTools, showSaveButton, showHelpScreen, 
           hasSettings, graphSettings, showSettings, onSave,
           currentIndex, annotation, annotations, visibleAnnotations } = this.props;

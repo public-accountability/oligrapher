@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'react-dom';
+import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import createLogger from 'redux-logger';
@@ -14,9 +14,11 @@ import { loadGraph, showGraph, newGraph,
          updateNode, updateEdge, updateCaption,
          pruneGraph, layoutCircle,
          setHighlights, clearHighlights,
-         loadAnnotations, setTitle } from './actions';
+         loadAnnotations, setTitle,
+         toggleEditTools } from './actions';
 import Graph from './models/Graph';
 import merge from 'lodash/object/merge';
+import assign from 'lodash/object/assign';
 import difference from 'lodash/array/difference';
 require ('./styles/oligrapher.css');
 
@@ -44,30 +46,45 @@ class Oligrapher {
       this.store = createStoreWithMiddleware(reducers);
     }
 
-    this.providerInstance = render(
-      <Provider store={this.store}>
-        <Root 
-          {...config}
-          ref={(c) => this.root = c} />
-      </Provider>,
-      this.rootElement
-    );
-
-    this.Root = Root;
+    this._render(config);
 
     return this;
   }
 
+  _render(props) {
+    this.props = props;
+
+    ReactDOM.render(
+      <Provider store={this.store}>
+        <Root 
+          {...props}
+          ref={(c) => this.root = c} />
+      </Provider>,
+      this.rootElement
+    );
+  }
+
+  _currentProps() {
+    return this.root.getWrappedInstance().props;
+  }
+
+  update(newProps) {
+    let props = assign({}, this.props, newProps);
+    this._render(props);
+  }
+
   toggleEditTools(value) {
-    this.root.getWrappedInstance().toggleEditTools(value);
+    this.root.dispatchProps.dispatch(toggleEditTools(value));
   }
 
   toggleEditor(value) {
-    this.root.getWrappedInstance().toggleEditor(value);
+    value = typeof value === "undefined" ? !this._currentProps().isEditor : value;
+    this.update({ isEditor: value });
   }
 
   toggleLocked(value) {
-    this.root.getWrappedInstance().toggleLocked(value);
+    value = typeof value === "undefined" ? !this._currentProps().isLocked : value;
+    this.update({ isLocked: value });
   }
 
   import(data) {
