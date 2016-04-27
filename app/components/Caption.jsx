@@ -54,6 +54,10 @@ export default class Caption extends BaseComponent {
   }
 
   _setRectWidths() {
+    if (this.props.skipSetRectWidths) {
+      return;
+    }
+
     let element = ReactDOM.findDOMNode(this);
     let text = element.querySelector(".handle");
     let highlightRect = this.refs.highlightRect;
