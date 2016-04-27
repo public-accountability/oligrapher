@@ -9,9 +9,8 @@ import { LOAD_GRAPH, SHOW_GRAPH, NEW_GRAPH,
          SET_HIGHLIGHTS, TOGGLE_EDIT_TOOLS } from '../actions';
 import Graph from '../models/Graph';
 import Edge from '../models/Edge';
-import undoable, { excludeAction, distinctState } from 'redux-undo';
 
-function graph(state = null, action) {
+export default function graph(state = null, action) {
   let newState, graph;
 
   switch (action.type) {
@@ -103,10 +102,3 @@ function graph(state = null, action) {
     return state;
   }
 }
-
-// export default undoable(graphs, { filter: excludeAction([LOAD_GRAPH, SHOW_GRAPH, TOGGLE_EDIT_TOOLS]) });
-// export default undoable(graphs, { filter: distinctState() });
-export default undoable(graph, { filter: function filterState(action, currentState, previousState) {
-  // only add to history if not initializing graph and state changed
-  return ([LOAD_GRAPH, SHOW_GRAPH].indexOf(action.type) === -1) && (currentState !== previousState);
-} });

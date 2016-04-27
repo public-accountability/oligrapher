@@ -4,6 +4,7 @@ import { HotKeys } from 'react-hotkeys';
 import BaseComponent from './BaseComponent';
 import ZoomButtons from './ZoomButtons';
 import EditTools from './EditTools';
+import { toggleHelpScreen } from "../actions";
 import merge from 'lodash/object/merge';
 import values from 'lodash/object/values';
 import cloneDeep from 'lodash/lang/cloneDeep';
@@ -12,6 +13,10 @@ require('../styles/bootstrap-3.3.6.css');
 require('../styles/oligrapher.editor.css');
 
 export default class Editor extends BaseComponent {
+  constructor(props) {
+    super(props);
+    this.state = { helpScreen: false };
+  }
 
   render() {
     let zoomIn, zoomOut, resetZoom;
@@ -148,7 +153,7 @@ export default class Editor extends BaseComponent {
   }
 
   _toggleHelpScreen() {
-    this.setState({ addForm: null, helpScreen: !this.state.helpScreen });
+    this.props.toggleHelpScreen()
   }
 
   _clearGraph() {

@@ -9,37 +9,26 @@ export default class NodeLabel extends Component {
     let r = ds.circleRadius * scale;
     let textOffsetY = ds.textMarginTop + r;
     let textLines = this._textLines(name);
-    let linkAttributes = `xlink:href="${url}" target="_blank"`;
+    
+    let tspans = textLines.map((line, i) =>
+      <tspan
+        key={i}
+        className="nodeLabelText"
+        x="0"
+        dy={i == 0 ? textOffsetY : ds.lineHeight}
+        fill={ds.textColor[status]}
+        opacity={ds.textOpacity[status]}>
+        {line}
+      </tspan>
+    );
 
-    let tspans = url ?
-      <g dangerouslySetInnerHTML={ { __html: (`<a class="nodeLabel" ${linkAttributes}><text text-anchor="middle">` + 
-          textLines.map((line, i) => {
-             let dy = (i == 0 ? textOffsetY : ds.lineHeight);
-             return `<tspan class="nodeLabelText" x="0" dy="${dy}" fill="${ds.textColor[status]}" opacity="${ds.textOpacity[status]}">${line}</tspan>`;
-           }).join("") + `</text></a>`)
-      } } /> 
-      : 
-      (<a className="nodeLabel"><text textAnchor="middle">
-        { textLines.map(
-           (line, i) => {
-             let dy = (i == 0 ? textOffsetY : ds.lineHeight);
-             return <tspan 
-                      key={i} 
-                      className="nodeLabelText" 
-                      x="0" dy={dy} 
-                      fill={ds.textColor[status]} 
-                      opacity={ds.textOpacity[status]}>{line}</tspan>;
-           }) }
-      </text></a>);
-
-    let rects = textLines.map(
-      (line, i) => {
+    let rects = textLines.map((line, i) => {
         let width = line.length * 8;
         let height = ds.lineHeight;
         let y = r + 4 + (i * ds.lineHeight);
-        return (<rect 
-                  className="nodeLabelRect"
+        return <rect
                   key={i}
+                  className="nodeLabelRect"
                   fill="#fff"
                   opacity="0.8"
                   rx={ds.cornerRadius}
@@ -47,13 +36,17 @@ export default class NodeLabel extends Component {
                   x={-width/2}
                   width={width}
                   height={height}
-                  y={y} />);
+                  y={y} />;
     });
 
     return (
       <g className="nodeLabel">
         {rects}
-        {tspans}
+        <a className="nodeLabel" xlinkHref={url} target="_blank">
+          <text textAnchor="middle"> 
+            { tspans }
+          </text>
+        </a>
       </g>
     );
   }

@@ -1,18 +1,18 @@
-jest.dontMock('../Graph'); 
-jest.dontMock('../Node'); 
-jest.dontMock('../Edge'); 
-jest.dontMock('../Caption'); 
-jest.dontMock('../Helpers');
-jest.dontMock('springy');
+jest.unmock('../Graph');
+jest.unmock('../Node');
+jest.unmock('../Edge');
+jest.unmock('../Caption');
+jest.unmock('../Helpers');
+jest.unmock('springy');
 
-const Graph = require('../Graph'); 
-const Edge = require('../Edge'); 
-const Caption = require('../Caption'); 
-const merge = require('lodash/object/merge');
-const values = require('lodash/object/values'); 
-const uniq = require('lodash/array/uniq'); 
-const range = require('lodash/utility/range');
-const pick = require('lodash/object/pick'); 
+import Graph from '../Graph';
+import Edge from '../Edge';
+import Caption from '../Caption';
+import merge from 'lodash/object/merge';
+import values from 'lodash/object/values';
+import uniq from 'lodash/array/uniq';
+import range from 'lodash/utility/range';
+import pick from 'lodash/object/pick';
 
 describe("Graph", () => {
 

@@ -1,13 +1,13 @@
-jest.dontMock('../BaseComponent');
-jest.dontMock('../Node');
-jest.dontMock('../NodeLabel');
-jest.dontMock('../NodeCircle');
-jest.dontMock('react-draggable');
+jest.unmock('../BaseComponent');
+jest.unmock('../Node');
+jest.unmock('../NodeLabel');
+jest.unmock('../NodeCircle');
+jest.unmock('react-draggable');
 
 import React from 'react'; 
 import ReactDOM from 'react-dom'; 
 import TestUtils from 'react-addons-test-utils';
-const Node = require('../Node');
+import Node from '../Node';
 
 describe("Node Component", () => {
 

@@ -1,10 +1,10 @@
-jest.dontMock('../BaseComponent');
-jest.dontMock('../Edge');
+jest.unmock('../BaseComponent');
+jest.unmock('../Edge');
 
 import React from 'react'; 
 import ReactDOM from 'react-dom'; 
 import TestUtils from 'react-addons-test-utils';
-const Edge = require('../Edge');
+import Edge from '../Edge';
 
 describe("Edge Component", () => {
 
