@@ -174,6 +174,7 @@ class Root extends Component {
                     hideHelp={true} 
                     setNodeResults={(nodes) => dispatch(setNodeResults(nodes))}
                     toggleAddForm={(form) => dispatch(toggleAddForm(form))}
+                    toggleHelpScreen={() => dispatch(toggleHelpScreen())}
                     undo={() => dispatch(ActionCreators.undo())}
                     redo={() => dispatch(ActionCreators.redo())} 
                     fetchInterlocks={fetchInterlocksCallback} />
