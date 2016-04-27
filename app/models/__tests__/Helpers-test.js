@@ -1,6 +1,6 @@
-jest.dontMock('../Helpers'); 
+jest.unmock('../Helpers'); 
 
-const Helpers = require('../Helpers');
+import Helpers from '../Helpers';
 
 describe("Helpers", () => {
 
