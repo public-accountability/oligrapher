@@ -148,7 +148,7 @@ export default class Editor extends BaseComponent {
   }
 
   _toggleHelpScreen() {
-    this.setState({ addForm: null, helpScreen: !this.state.helpScreen });
+    this.props.toggleHelpScreen();
   }
 
   _clearGraph() {
