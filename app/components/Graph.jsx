@@ -18,7 +18,7 @@ export default class Graph extends BaseComponent {
     this.nodes = {};
     this.edges = {};
     this.mounted = false;
-    let viewBox = this._computeViewbox(props.graph, props.zoom);
+    let viewBox = this._computeViewbox(props.graph, props.zoom, props.viewOnlyHighlighted);
     this.state = { x: 0, y: 0, viewBox, height: props.height };
   }
 
@@ -53,7 +53,7 @@ export default class Graph extends BaseComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    this._updateViewbox(nextProps.graph, nextProps.zoom);
+    this._updateViewbox(nextProps.graph, nextProps.zoom, nextProps.viewOnlyHighlighted);
   }
 
   // RENDERING
@@ -105,8 +105,8 @@ export default class Graph extends BaseComponent {
 
   // VIEWBOX AND ZOOM
 
-  _updateViewbox(graph, zoom) {
-    let viewBox = this._computeViewbox(graph, zoom);
+  _updateViewbox(graph, zoom, viewOnlyHighlighted) {
+    let viewBox = this._computeViewbox(graph, zoom, viewOnlyHighlighted);
     let changed = (viewBox !== this.state.viewBox);
     let oldViewBox = changed ? this.state.viewBox : null;
     this.setState({ viewBox, oldViewBox });
@@ -130,9 +130,8 @@ export default class Graph extends BaseComponent {
     }
   }
 
-  _computeViewbox(graph, zoom = 1.2) {
-    let onlyHighlighted = this.props.viewOnlyHighlighted;
-    let rect = this._computeRect(graph, onlyHighlighted);
+  _computeViewbox(graph, zoom = 1.2, viewOnlyHighlighted = true) {
+    let rect = this._computeRect(graph, viewOnlyHighlighted);
     let w = rect.w / zoom;
     let h = rect.h / zoom;
     let x = rect.x + rect.w/2 - (w/2);
