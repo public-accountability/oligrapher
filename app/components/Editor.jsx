@@ -4,7 +4,6 @@ import { HotKeys } from 'react-hotkeys';
 import BaseComponent from './BaseComponent';
 import ZoomButtons from './ZoomButtons';
 import EditTools from './EditTools';
-import { toggleHelpScreen } from "../actions";
 import merge from 'lodash/object/merge';
 import values from 'lodash/object/values';
 import cloneDeep from 'lodash/lang/cloneDeep';
