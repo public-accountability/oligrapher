@@ -150,11 +150,17 @@ describe("Graph", () => {
       expect(ys).toBeArrayOfNumbers;
     });
 
-    it("doesn't alter already-positioned cpations", () => {
-      let graph2 = merge({}, basicGraph, { captions: { 1: { display: { x: -100, y: -100 } } } });
-      let graph3 = Graph.prepareCaptions(Graph.prepareLayout(graph2, 'circleLayout'));
+    it("doesn't alter already-positioned captions", () => {
+      let graph2 = merge({}, basicGraph, { captions: { 1: { display: { 
+        scale: 2, 
+        status: "highlighted", 
+        x: -100, 
+        y: -100 
+      } } } });
+      let graph3 = Graph.prepareLayout(graph2, 'circleLayout');
+      let graph4 = Graph.prepareCaptions(graph3);
 
-      expect(graph2.captions[1]).toEqual(graph3.captions[1]);
+      expect(graph3.captions[1]).toEqual(graph4.captions[1]);
     });
   });
 
