@@ -153,7 +153,7 @@ export default class Editor extends BaseComponent {
   }
 
   _toggleHelpScreen() {
-    this.props.toggleHelpScreen()
+    this.props.toggleHelpScreen();
   }
 
   _clearGraph() {
