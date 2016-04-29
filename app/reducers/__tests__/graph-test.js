@@ -1,23 +1,23 @@
-jest.dontMock('../graphs');
-jest.dontMock('../../models/Graph');
-jest.dontMock('../../models/Node');
-jest.dontMock('../../models/Edge');
-jest.dontMock('../../models/Helpers');
+jest.unmock("../graph");
+jest.unmock("../../models/Graph");
+jest.unmock("../../models/Node");
+jest.unmock("../../models/Edge");
+jest.unmock("../../models/Helpers");
 
-const reducer = require('../graphs');
-const Graph = require('../../models/Graph'); 
-const Node = require('../../models/Node'); 
-const Edge = require('../../models/Edge'); 
-const Helpers = require('../../models/Helpers'); 
-const merge = require('lodash/object/merge');
-const assign = require('lodash/object/assign');
-const values = require('lodash/object/values'); 
-const uniq = require('lodash/array/uniq'); 
-const keys = require('lodash/object/keys');
+import reducer from "../graph";
+import Graph from '../../models/Graph';
+import Node from '../../models/Node';
+import Edge from '../../models/Edge';
+import Helpers from '../../models/Helpers';
+import merge from 'lodash/object/merge';
+import assign from 'lodash/object/assign';
+import values from 'lodash/object/values';
+import uniq from 'lodash/array/uniq';
+import keys from 'lodash/object/keys';
 
 describe("graph reducer", () => {
 
-  const basicGraph = {
+  const graph = {
     id: "someid",
     nodes: {
       1: { id: 1, display: { name: "Node 1" } },
@@ -33,30 +33,26 @@ describe("graph reducer", () => {
     }
   };
 
-  const graphs = { [basicGraph.id]: basicGraph };
-
   it("should return the initial state", () => {
-    expect(reducer(undefined, {})).toEqual({});
+    expect(reducer(undefined, {})).toEqual(null);
   });
 
   describe("ADD_NODE", () => {
 
     it("should add a node with only a name", () => { 
-      let newGraph = reducer(graphs, {
+      let newGraph = reducer(graph, {
         type: 'ADD_NODE',
-        graphId: basicGraph.id,
         node: { display: { name: "Dick Cheney" } }
-      })[basicGraph.id];
+      });
 
-      expect(values(newGraph.nodes).length).toBe(values(basicGraph.nodes).length + 1);
+      expect(values(newGraph.nodes).length).toBe(values(graph.nodes).length + 1);
     }); 
 
     it("should preserve the id of the added node", () => {
-      let newGraph = reducer(graphs, { 
+      let newGraph = reducer(graph, { 
         type: 'ADD_NODE',
-        graphId: basicGraph.id,
         node: { id: "angler", display: { name: "Dick Cheney" } }
-      })[basicGraph.id];
+      });
       let newNode = newGraph.nodes["angler"];
 
       expect(newNode.display.name).toBe("Dick Cheney");
@@ -64,11 +60,10 @@ describe("graph reducer", () => {
     });
 
     it("should set position coordinates for the new node if not provided", () => {
-      let newGraph = reducer(graphs, { 
+      let newGraph = reducer(graph, { 
         type: 'ADD_NODE',
-        graphId: basicGraph.id,
         node: { id: "angler", display: { name: "Dick Cheney" } }
-      })[basicGraph.id];
+      });
       let newNode = newGraph.nodes["angler"];
 
       expect(newNode.display.x).toEqual(jasmine.any(Number));
@@ -79,33 +74,30 @@ describe("graph reducer", () => {
   describe("ADD_EDGE", () => {
 
     it("should add an edge with only two node ids and a label", () => {
-      let newGraph = reducer(graphs, {
+      let newGraph = reducer(graph, {
         type: 'ADD_EDGE',
-        graphId: basicGraph.id,
         edge: { node1_id: 1, node2_id: 2, display: { label: "best friend" } }
-      })[basicGraph.id];
+      });
 
-      expect(values(newGraph.edges).length).toBe(values(basicGraph.edges).length + 1);
+      expect(values(newGraph.edges).length).toBe(values(graph.edges).length + 1);
     });
 
-    it("should preserve the id of the added node", () => {
-      let newGraph = reducer(graphs, {
+    it("should preserve the id of the added edge", () => {
+      let newGraph = reducer(graph, {
         type: 'ADD_EDGE',
-        graphId: basicGraph.id,
         edge: { id: "someid", node1_id: 1, node2_id: 2, display: { label: "best friend" } }
-      })[basicGraph.id];
+      });
       let newEdge = newGraph.edges["someid"];
 
       expect(newEdge.display.label).toBe("best friend");
     });
 
-    it("should give endpoint coordinates to the added node", () => {
-      let graph = Graph.prepare(basicGraph);
-      let newGraph = reducer(graphs, {
+    it("should give endpoint coordinates to the added edge", () => {
+      let preparedGraph = Graph.prepare(graph);
+      let newGraph = reducer(preparedGraph, {
         type: 'ADD_EDGE',
-        graphId: basicGraph.id,
         edge: { id: "someid", node1_id: 1, node2_id: 2, display: { label: "best friend" } }
-      })[basicGraph.id];
+      });
 
       let node1 = newGraph.nodes[1];
       let node2 = newGraph.nodes[2];
@@ -123,20 +115,19 @@ describe("graph reducer", () => {
     const nodeId = 2;
     const action = {
       type: 'DELETE_NODE',
-      graphId: basicGraph.id,
       nodeId: nodeId
     };
 
     it("should remove the node from the graph", () => {
-      let newGraph = reducer(graphs, action)[basicGraph.id];
+      let newGraph = reducer(graph, action);
 
-      expect(values(newGraph.nodes).length).toBe(values(basicGraph.nodes).length - 1);
+      expect(values(newGraph.nodes).length).toBe(values(graph.nodes).length - 1);
       expect(newGraph.nodes[nodeId]).toBeUndefined();
     });
 
     it("should remove all of the node's edges", () => {
-      let newGraph = reducer(graphs, action)[basicGraph.id];
-      let edges = Graph.edgesConnectedToNode(basicGraph, nodeId);
+      let newGraph = reducer(graph, action);
+      let edges = Graph.edgesConnectedToNode(graph, nodeId);
       let newEdges = edges.map(edge => newGraph.edges[edge.id]);
 
       expect(uniq(newEdges)).toEqual([undefined]);
@@ -148,21 +139,20 @@ describe("graph reducer", () => {
     const edgeId = 2;
     const action = {
       type: 'DELETE_EDGE',
-      graphId: basicGraph.id,
       edgeId: edgeId
     };
 
     it("should remove the edge from the graph", () => {
-      let newGraph = reducer(graphs, action)[basicGraph.id];
+      let newGraph = reducer(graph, action);
 
-      expect(values(newGraph.edges).length).toBe(values(basicGraph.edges).length - 1);
+      expect(values(newGraph.edges).length).toBe(values(graph.edges).length - 1);
       expect(newGraph.edges[edgeId]).toBeUndefined();
     });
 
     it("should not remove any nodes from the graph", () => {
-      let newGraph = reducer(graphs, action)[basicGraph.id];
+      let newGraph = reducer(graph, action);
 
-      expect(values(newGraph.nodes).length).toBe(values(basicGraph.nodes).length);
+      expect(values(newGraph.nodes).length).toBe(values(graph.nodes).length);
     });
   });
 
@@ -175,12 +165,11 @@ describe("graph reducer", () => {
     };
     const action = {
       type: 'DELETE_SELECTION',
-      graphId: basicGraph.id,
       selection: selection
     };
 
     it("should delete the selection and any edges connected to it", () => {
-      let newGraph = reducer(graphs, action)[basicGraph.id];
+      let newGraph = reducer(graph, action);
 
       expect(keys(newGraph.nodes)).toEqual(['2', '3']);
       expect(keys(newGraph.edges)).toEqual([]);
@@ -201,14 +190,13 @@ describe("graph reducer", () => {
     };
     const action = {
       type: 'UPDATE_NODE',
-      graphId: basicGraph.id,
       nodeId: nodeId,
       data: update
     };
     let newGraph;
 
     beforeEach(() => {
-      newGraph = reducer(graphs, action)[basicGraph.id];
+      newGraph = reducer(graph, action);
     });
 
     it("should update the node's display and data objects with new data", () => {
@@ -224,8 +212,7 @@ describe("graph reducer", () => {
     it("should remove data when provided null values", () => {
       let update2 = { display: { image: null } };
       let action2 = assign({}, action, { data: update2 });
-      let graphs2 = assign({}, graphs, { [basicGraph.id]: newGraph });
-      let newGraph2 = reducer(graphs2, action2)[basicGraph.id];
+      let newGraph2 = reducer(newGraph, action2);
 
       expect(newGraph2.nodes[nodeId].display.image).toBeUndefined();
     })
@@ -233,8 +220,7 @@ describe("graph reducer", () => {
     it("should revert to default values when required fields are removed", () => {
       let update2 = { display: { scale: null } };
       let action2 = assign({}, action, { data: update2 });
-      let graphs2 = assign({}, graphs, { [basicGraph.id]: newGraph });
-      let newGraph2 = reducer(graphs2, action2)[basicGraph.id];
+      let newGraph2 = reducer(newGraph, action2);
       let defaults = Node.defaults();
 
       expect(newGraph2.nodes[nodeId].display.scale).toBe(defaults.display.scale);
@@ -255,14 +241,13 @@ describe("graph reducer", () => {
     };
     const action = {
       type: 'UPDATE_EDGE',
-      graphId: basicGraph.id,
       edgeId: edgeId,
       data: update
     };
     let newGraph;
 
     beforeEach(() => {
-      newGraph = reducer(graphs, action)[basicGraph.id];
+      newGraph = reducer(graph, action);
     });
 
     it("should update the edge's display and data objects with new data", () => {
@@ -279,8 +264,7 @@ describe("graph reducer", () => {
     it("should remove data when provided null values", () => {
       let update2 = { display: { url: null } };
       let action2 = assign({}, action, { data: update2 });
-      let graphs2 = assign({}, graphs, { [basicGraph.id]: newGraph });
-      let newGraph2 = reducer(graphs2, action2)[basicGraph.id];
+      let newGraph2 = reducer(newGraph, action2);
 
       expect(newGraph2.edges[edgeId].display.url).toBeUndefined();
     })
@@ -288,8 +272,7 @@ describe("graph reducer", () => {
     it("should revert to default values when required fields are removed", () => {
       let update2 = { display: { scale: null } };
       let action2 = assign({}, action, { data: update2 });
-      let graphs2 = assign({}, graphs, { [basicGraph.id]: newGraph });
-      let newGraph2 = reducer(graphs2, action2)[basicGraph.id];
+      let newGraph2 = reducer(newGraph, action2);
       let defaults = Edge.defaults();
 
       expect(newGraph2.edges[edgeId].display.scale).toBe(defaults.display.scale);
@@ -300,30 +283,23 @@ describe("graph reducer", () => {
 
     const deleteAction = {
       type: 'DELETE_EDGE',
-      graphId: basicGraph.id,
       edgeId: 1
     };
 
     const pruneAction = {
       type: 'PRUNE_GRAPH',
-      graphId: basicGraph.id
     };
 
-    let graphs2, graphs3, graph3;
+    let graph2, graph3;
 
     beforeEach(() => {
-      graphs2 = reducer(graphs, deleteAction);
-      graphs3 = reducer(graphs2, pruneAction);
-      graph3 = graphs3[basicGraph.id];
+      graph2 = reducer(graph, deleteAction);
+      graph3 = reducer(graph2, pruneAction);
     });
 
     it("should remove all unconnected nodes", () => {
       expect(graph3.nodes[1]).toBeUndefined();
       expect(graph3.nodes[2]).not.toBeUndefined();
     });
-  });
-
-  describe("LAYOUT_CIRCLE", () => {
-
   });
 });

@@ -1,18 +1,18 @@
-jest.dontMock('../Graph'); 
-jest.dontMock('../Node'); 
-jest.dontMock('../Edge'); 
-jest.dontMock('../Caption'); 
-jest.dontMock('../Helpers');
-jest.dontMock('springy');
+jest.unmock('../Graph');
+jest.unmock('../Node');
+jest.unmock('../Edge');
+jest.unmock('../Caption');
+jest.unmock('../Helpers');
+jest.unmock('springy');
 
-const Graph = require('../Graph'); 
-const Edge = require('../Edge'); 
-const Caption = require('../Caption'); 
-const merge = require('lodash/object/merge');
-const values = require('lodash/object/values'); 
-const uniq = require('lodash/array/uniq'); 
-const range = require('lodash/utility/range');
-const pick = require('lodash/object/pick'); 
+import Graph from '../Graph';
+import Edge from '../Edge';
+import Caption from '../Caption';
+import merge from 'lodash/object/merge';
+import values from 'lodash/object/values';
+import uniq from 'lodash/array/uniq';
+import range from 'lodash/utility/range';
+import pick from 'lodash/object/pick';
 
 describe("Graph", () => {
 
@@ -150,11 +150,17 @@ describe("Graph", () => {
       expect(ys).toBeArrayOfNumbers;
     });
 
-    it("doesn't alter already-positioned cpations", () => {
-      let graph2 = merge({}, basicGraph, { captions: { 1: { display: { x: -100, y: -100 } } } });
-      let graph3 = Graph.prepareCaptions(Graph.prepareLayout(graph2, 'circleLayout'));
+    it("doesn't alter already-positioned captions", () => {
+      let graph2 = merge({}, basicGraph, { captions: { 1: { display: { 
+        scale: 2, 
+        status: "highlighted", 
+        x: -100, 
+        y: -100 
+      } } } });
+      let graph3 = Graph.prepareLayout(graph2, 'circleLayout');
+      let graph4 = Graph.prepareCaptions(graph3);
 
-      expect(graph2.captions[1]).toEqual(graph3.captions[1]);
+      expect(graph3.captions[1]).toEqual(graph4.captions[1]);
     });
   });
 

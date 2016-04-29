@@ -39,13 +39,15 @@
     "titleize": "^1.0.0"
   },
   "devDependencies": {
-    "babel": "^5.4.7",
-    "babel-core": "^5.4.7",
-    "babel-jest": "^5.3.0",
-    "babel-loader": "^5.1.3",
+    "babel-core": "^6.7.7",
+    "babel-jest": "^12.0.1",
+    "babel-loader": "^6.2.4",
+    "babel-polyfill": "^6.7.4",
+    "babel-preset-es2015": "^6.6.0",
+    "babel-preset-react": "^6.5.0",
     "css-loader": "^0.23.1",
-    "jasmine-expect": "^1.22.3",
-    "jest-cli": "^0.7.1",
+    "enzyme": "^2.2.0",
+    "jest-cli": "^12.0.1",
     "react-addons-test-utils": "^0.14.8",
     "react-hot-loader": "^1.2.7",
     "redux-logger": "^2.3.1",
@@ -58,20 +60,15 @@
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
     "moduleFileExtensions": [
       "js",
-      "jsx"
+      "jsx",
+      "json"
     ],
     "testFileExtensions": [
       "js",
       "jsx"
     ],
     "unmockedModulePathPatterns": [
-      "<rootDir>/node_modules/react",
-      "<rootDir>/node_modules/react-dom",
-      "<rootDir>/node_modules/react-addons-test-utils",
-      "<rootDir>/node_modules/fbjs",
-      "<rootDir>/node_modules/lodash",
-      "<rootDir>/node_modules/shortid",
-      "<rootDir>/node_modules/react-draggable"
+      "<rootDir>/node_modules/"
     ]
   }
 }

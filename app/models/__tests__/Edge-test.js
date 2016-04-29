@@ -1,6 +1,6 @@
-jest.dontMock('../Edge'); 
+jest.unmock('../Edge'); 
 
-const Edge = require('../Edge');
+import Edge from '../Edge';
 
 describe("Edge", () => {
 

@@ -1,13 +1,14 @@
-jest.dontMock('../BaseComponent');
-jest.dontMock('../Node');
-jest.dontMock('../NodeLabel');
-jest.dontMock('../NodeCircle');
-jest.dontMock('react-draggable');
+jest.unmock('../BaseComponent');
+jest.unmock('../Node');
+jest.unmock('../NodeLabel');
+jest.unmock('../NodeCircle');
+jest.unmock('react-draggable');
 
 import React from 'react'; 
-import ReactDOM from 'react-dom'; 
-import TestUtils from 'react-addons-test-utils';
-const Node = require('../Node');
+import { shallow } from "enzyme";
+import Node from '../Node';
+import NodeCircle from "../NodeCircle";
+import NodeLabel from "../NodeLabel";
 
 describe("Node Component", () => {
 
@@ -25,58 +26,56 @@ describe("Node Component", () => {
   };
 
   it("should have an svg transform", () => {
-    let node = TestUtils.renderIntoDocument(
+    let wrapper = shallow(
       <Node node={data} />
     );
-    let element = ReactDOM.findDOMNode(node);
+    let element = wrapper.find("g.node");
     let { x, y } = data.display;
 
-    expect(element.getAttribute("transform")).toBe(`translate(${x}, ${y})`);
+    expect(element.props().transform).toBe(`translate(${x}, ${y})`);
   });
 
-  it("should display a name", () => {
-    let node = TestUtils.renderIntoDocument(
-      <Node node={data} />
+  it("should display a NodeCircle", () => {
+    let wrapper = shallow(
+      <Node node={data} selected={true} />
     );
-    let element = ReactDOM.findDOMNode(node);
-    let text = element.querySelector("text");
+    let circle = wrapper.find(NodeCircle);
 
-    expect(text.textContent).toBe(data.display.name);
+    expect(circle.props().node).toBe(data);
+    expect(circle.props().selected).toBe(true);
   });
 
-  it("should display an image if provided an image url", () => {
-    let node = TestUtils.renderIntoDocument(
-      <Node node={data} />
+  it("should display a NodeLabel", () => {
+    let wrapper = shallow(
+      <Node node={data} selected={true} />
     );
-    let element = ReactDOM.findDOMNode(node);
-    let image = element.querySelector("img"); // for some reason we have to select "img" instead of "image"
+    let label = wrapper.find(NodeLabel);
 
-    expect(image.getAttribute("xlink:href")).toBe(data.display.image);
+    expect(label.props().node).toBe(data);
   });
 
   it("should call click callback if clicked", () => {
     let clickNode = jest.genMockFunction();
-    let node = TestUtils.renderIntoDocument(
+    let wrapper = shallow(
       <Node node={data} graph={{id: "someid"}} clickNode={clickNode} />
     );
-    let element = ReactDOM.findDOMNode(node);
+    let element = wrapper.find("g.node");
+    element.simulate("click");
 
-    TestUtils.Simulate.click(element);
-    expect(clickNode.mock.calls[0][0]).toBe("someid");
-    expect(clickNode.mock.calls[0][1]).toBe(data.id);
+    expect(clickNode.mock.calls[0][0]).toBe(data.id);
   });
 
-  // NOT WORKING: EVENT HANDLERS ARENT TRIGGERED FOR SOME REASON
+  // NOT WORKING: TO FIND .handle WE NEED FULL RENDER, WHICH ISN'T WORKING FOR SVG
   xit("can be dragged to a new position", () => {
     let moveNode = jest.genMockFunction();
-    let node = TestUtils.renderIntoDocument(
+    let wrapper = shallow(
       <Node node={data} moveNode={moveNode} />
     );
-    let element = ReactDOM.findDOMNode(node);
-    let handle = element.querySelector(".handle");
+    let handle = wrapper.find(".handle");
 
-    TestUtils.Simulate.mouseDown(handle);
-    TestUtils.Simulate.mouseUp(handle);
+    handle.simulate("dragStart");
+    handle.simulate("drag");
+    handle.simulate("dragEnd");
 
     expect(moveNode.mock.calls.length).toBe(1);
   });

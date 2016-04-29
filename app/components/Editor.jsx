@@ -12,6 +12,10 @@ require('../styles/bootstrap-3.3.6.css');
 require('../styles/oligrapher.editor.css');
 
 export default class Editor extends BaseComponent {
+  constructor(props) {
+    super(props);
+    this.state = { helpScreen: false };
+  }
 
   render() {
     let zoomIn, zoomOut, resetZoom;

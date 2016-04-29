@@ -1,10 +1,10 @@
-jest.dontMock('../BaseComponent');
-jest.dontMock('../Edge');
+jest.unmock('../BaseComponent');
+jest.unmock('../Edge');
 
 import React from 'react'; 
 import ReactDOM from 'react-dom'; 
 import TestUtils from 'react-addons-test-utils';
-const Edge = require('../Edge');
+import Edge from '../Edge';
 
 describe("Edge Component", () => {
 
@@ -70,7 +70,6 @@ describe("Edge Component", () => {
     let select = element.querySelector(".edgeSelect");
 
     TestUtils.Simulate.click(select);
-    expect(clickEdge.mock.calls[0][0]).toBe("someid");
-    expect(clickEdge.mock.calls[0][1]).toBe(data.id);
+    expect(clickEdge.mock.calls[0][0]).toBe(data.id);
   });
 });
