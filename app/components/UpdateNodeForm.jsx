@@ -29,8 +29,6 @@ export default class UpdateNodeForm extends BaseComponent {
       [3, "3x"]
     ];
 
-    console.log(display.color);
-
     return (
       <div className="editForm updateForm form-inline">
         <HotKeys keyMap={keyMap} handlers={keyHandlers}>
@@ -86,7 +84,7 @@ export default class UpdateNodeForm extends BaseComponent {
     if (this.props.data) {
       let name = this.refs.name.value;
       let image = this.refs.image.value.trim();
-      let color = newColor || null;
+      let color = newColor || this.refs.color.state.color;
       let scale = parseFloat(this.refs.scale.value);
       let url = this.refs.url.value.trim();
       this.props.updateNode(this.props.data.id, { display: { name, image, color, scale, url } });

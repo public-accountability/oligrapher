@@ -38,17 +38,17 @@ export default class ChangeColorInput extends BaseComponent {
 
   render() {
     return (
-      <div id= "nodeColorInputWrapper">
-        <div id="swatch"  className="input-sm form-control">
-           <div id="color" style={{background: this.state.color }} onClick={ this.handleClick }/>
-           <button id="nodeColorInputClearer" onClick={ this.handleClearClick }>
+      <div className="nodeColorInputWrapper">
+        <div className="input-sm form-control nodeColorInput">
+           <div className="nodeColorInputSwatch" style={{ background: this.state.color }} onClick={ this.handleClick }/>
+           <button className="nodeColorInputClearer" onClick={ this.handleClearClick }>
              <span className="glyphicon glyphicon-remove-sign"></span>
            </button>
         </div>
-        <div id= "nodeColorPickerWrapper">
+        <div className="nodeColorPickerWrapper">
             { this.state.displayColorPicker && 
               <div is="popover">
-                <div is="cover" onClick={ this.handleClose }/>
+                <div className="nodeColorPickerCover" onClick={ this.handleClose }/>
                 <CompactPicker color={ this.state.color }  onChange={ this.handleValueChange } />
               </div>
             }
