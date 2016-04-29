@@ -29,8 +29,6 @@ export default class UpdateNodeForm extends BaseComponent {
       [3, "3x"]
     ];
 
-    console.log(display.color);
-
     return (
       <div className="editForm updateForm form-inline">
         <HotKeys keyMap={keyMap} handlers={keyHandlers}>

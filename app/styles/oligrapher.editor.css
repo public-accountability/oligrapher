@@ -6,7 +6,7 @@
   background-color: #f8f8f8;
 }
 
-#oligrapherEditorContainer button:not(#nodeColorInputClearer) {
+#oligrapherEditorContainer button:not(.nodeColorInputClearer) {
   background-color: #f8f8f8;
 }
 
@@ -160,27 +160,29 @@ button#toggleEditTools {
   float: right;
 }
 
-#nodeColorInput {
+.nodeColorInputWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.nodeColorInputWrapper .nodeColorInput {
   width: 50px;
-  padding: 1px 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+}
+
+.nodeColorInputSwatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 22px;
+  margin-top: -1px;
+  margin-left: -5px;
   cursor: pointer;
 }
 
-#nodeColorPickerWrapper{
-  position: absolute;
-  right: 0px;
-}
-
-#color{
-    width: 22px;
-    height: 22px;
-    border-radius: 22px;
-    margin-top: -1px;
-    margin-left: -5px;
-    cursor: pointer;
-}
-
-#nodeColorInputClearer{
+.nodeColorInputClearer {
   background: none;
   border: none;
   position: absolute;
@@ -189,19 +191,11 @@ button#toggleEditTools {
   top: 0px;
 }
 
-#nodeColorInputWrapper{
-  position: relative;
-  display: inline-block;
+.nodeColorPickerWrapper {
+  position: absolute;
+  right: 0px;
 }
 
 #edgeUrlInput {
   width: 337px;
 }
-
-#swatch{
-  width: 50px;
-  position: relative;
-  display: inline-block;
-}
-
-
