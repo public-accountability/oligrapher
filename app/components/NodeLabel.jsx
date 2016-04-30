@@ -66,6 +66,8 @@ export default class NodeLabel extends Component {
     let texts = element.querySelectorAll(".nodeLabelText");
     let rects = element.querySelectorAll(".nodeLabelRect");
 
+    console.log(texts[0]);
+
     for (var i = 0; i < rects.length; i++) {
       let textWidth = texts[i].getComputedTextLength();
       let width = textWidth + 10;
@@ -76,7 +78,7 @@ export default class NodeLabel extends Component {
 
   _textLines(text){
     const maxWidth = text.length > 40 ? 25 : 18;
-    let words = text.trim().split(" "),
+    let words = text.trim().split(/\s+/g),
         word,
         lines = [],
         lineNumber = 1,
