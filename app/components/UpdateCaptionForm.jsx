@@ -28,7 +28,7 @@ export default class UpdateCaptionForm extends BaseComponent {
       <div className="editForm form-inline">
         <HotKeys keyMap={keyMap} handlers={keyHandlers}>
           <input 
-            type="text" 
+            type="text"
             className="form-control input-sm"
             placeholder="text" 
             ref="text" 
