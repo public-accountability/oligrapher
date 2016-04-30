@@ -30,7 +30,7 @@ export default class UpdateCaptionForm extends BaseComponent {
           <input 
             type="text" 
             className="form-control input-sm"
-            placeholder="name" 
+            placeholder="text" 
             ref="text" 
             value={display.text} 
             onChange={() => this.apply()} />
