@@ -17,7 +17,7 @@ export default class GraphNavButtons extends Component {
           <button
             id="oligrapherHideAnnotationsButton"
             className="btn btn-lg btn-default"
-            onClick={() => this.props.swapAnnotations()}>
+            onClick={this.props.swapAnnotations}>
             <span className="glyphicon glyphicon-font"></span>
           </button>
         </div>
