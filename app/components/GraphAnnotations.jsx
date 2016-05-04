@@ -1,11 +1,16 @@
 import React, { Component, PropTypes } from 'react';
+import BaseComponent from "./BaseComponent";
 import GraphNavButtons from './GraphNavButtons';
 import GraphAnnotationList from './GraphAnnotationList';
 import GraphAnnotation from './GraphAnnotation';
 import GraphAnnotationForm from './GraphAnnotationForm';
 require('../styles/oligrapher.annotations.css');
 
-export default class GraphAnnotations extends Component {
+export default class GraphAnnotations extends BaseComponent {
+  constructor(props) {
+    super(props);
+    this.bindAll('_remove', '_update');
+  }
 
   render() {
     let { prevClick, nextClick, isEditor, editForm, navList, 
@@ -18,7 +23,10 @@ export default class GraphAnnotations extends Component {
     );
 
     let formComponent = (
-      <GraphAnnotationForm {...this.props} />
+      <GraphAnnotationForm 
+        annotation={this.props.annotation}
+        remove={this._remove} 
+        update={this._update} />
     );
 
     let annotationComponent = (
@@ -36,5 +44,13 @@ export default class GraphAnnotations extends Component {
         { annotation && (isEditor ? formComponent : annotationComponent) }
       </div>
     );
+  }
+
+  _remove() {
+    this.props.remove(this.props.currentIndex);
+  }
+
+  _update(data) {
+    this.props.update(this.props.currentIndex, data);
   }
 }

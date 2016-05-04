@@ -8,7 +8,6 @@ export default class GraphAnnotationForm extends BaseComponent {
   constructor(props) {
     super(props);
     this.bindAll('_handleHeaderChange', '_handleTextChange', '_handleRemove');
-    this.state = pick(this.props.annotation, ['header', 'text']);
   }
 
   render() {
@@ -26,14 +25,16 @@ export default class GraphAnnotationForm extends BaseComponent {
         <textarea
           id="oligrapherGraphAnnotationFormHeader"
           ref="header"
+          name="header"
           className="form-control input-lg" 
           placeholder="annotation header"
           value={this.props.annotation.header}
           onChange={this._handleHeaderChange}></textarea>
         <Editor
-          ref="editor"
           id="oligrapherGraphAnnotationFormText"
-          text={this.state.text}
+          name="text"
+          ref="text"
+          text={this.props.annotation.text}
           options={editorOptions}
           onChange={this._handleTextChange} />
         <button 
@@ -43,43 +44,17 @@ export default class GraphAnnotationForm extends BaseComponent {
     );
   }
 
-  componentDidMount() {
-    this.refs.editor.medium.subscribe("blur", () => {
-      this.saveText();
-    });
-  }
-
-  componentWillReceiveProps(props) {
-    this.setState(merge({ header: null, text: null }, pick(props.annotation, ['header', 'text'])));
-  }
-
   _handleRemove() {
     if (confirm("Are you sure you want to delete this annotation?")) {
-      this.props.remove(this.props.currentIndex);
+      this.props.remove();
     }
   }
 
-  _handleHeaderChange(event) {
-    this.setState({ header: event.target.value });
-    this.props.update(this.props.currentIndex, { header: event.target.value, text: this.state.text });
+  _handleHeaderChange() {
+    this.props.update({ header: this.refs.header.value });
   }
 
-  _handleTextChange(value, medium) {
-    this.setState({ text: value });
-  }
-
-  saveText() {
-    this.props.update(this.props.currentIndex, this.state);
-  }
-
-  _handleChange(field, value) {
-    this.setState({ [field]: value });
-    this._apply();
-  }
-
-  _apply() {
-    let header = this.refs.header.value;
-    let text = this.refs.text.value;
-    this.props.update(this.props.currentIndex, { header, text });
+  _handleTextChange(text) {
+    this.props.update({ text });
   }
 }

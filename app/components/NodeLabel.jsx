@@ -66,8 +66,6 @@ export default class NodeLabel extends Component {
     let texts = element.querySelectorAll(".nodeLabelText");
     let rects = element.querySelectorAll(".nodeLabelRect");
 
-    console.log(texts[0]);
-
     for (var i = 0; i < rects.length; i++) {
       let textWidth = texts[i].getComputedTextLength();
       let width = textWidth + 10;
