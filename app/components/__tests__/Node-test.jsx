@@ -9,6 +9,8 @@ import { shallow } from "enzyme";
 import Node from '../Node';
 import NodeCircle from "../NodeCircle";
 import NodeLabel from "../NodeLabel";
+import TestUtils from 'react-addons-test-utils';
+
 
 describe("Node Component", () => {
 
@@ -78,5 +80,15 @@ describe("Node Component", () => {
     handle.simulate("dragEnd");
 
     expect(moveNode.mock.calls.length).toBe(1);
+  });
+
+  it("should be removed when delete hotkey is pressed", () => {
+    let deleteNode = jest.genMockFunction();
+    let wrapper = shallow(
+      <Node node={data} graph={{id: "someid"}} clickNode={deleteNode} />
+    );
+    let element = wrapper.find("g.node");
+    TestUtils.Simulate.keyDown(element, {key: "Delete", keyCode: 46, which: 46});
+    expect(deleteNode.mock.calls[0]).toBeUndefined();
   });
 });

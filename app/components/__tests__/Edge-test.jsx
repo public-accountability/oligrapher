@@ -72,4 +72,14 @@ describe("Edge Component", () => {
     TestUtils.Simulate.click(select);
     expect(clickEdge.mock.calls[0][0]).toBe(data.id);
   });
+
+  it("should be removed when delete hotkey is pressed", () => {
+    let deleteEdge = jest.genMockFunction();
+    let edge = TestUtils.renderIntoDocument(
+      <Edge edge={data} graphId="someid" clickEdge={deleteEdge} />
+    );
+    let element = ReactDOM.findDOMNode(edge);
+    TestUtils.Simulate.keyDown(element, {key: "Delete", keyCode: 46, which: 46});
+    expect(deleteEdge.mock.calls[0]).toBeUndefined();
+  });
 });
