@@ -73,7 +73,10 @@ class Root extends Component {
       'resetZoom': () => dispatch(resetZoom()),
       'shiftDown': () => this.setState({ shiftKey: true }),
       'shiftUp': () => this.setState({ shiftKey: false }),
-      'delete': (event) => dispatch(deleteSelection(event, selection))
+      'delete': (event) => {
+        event.preventDefault();
+        dispatch(deleteSelection(selection));
+      }
     };
 
     let graphApi = {

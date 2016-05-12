@@ -201,8 +201,8 @@ class Oligrapher {
     this.root.dispatchProps.dispatch(deselectAll());
   }
 
-  deleteSelection(event) {
-    this.root.dispatchProps.dispatch(deleteSelection(event, this.getSelection()));
+  deleteSelection() {
+    this.root.dispatchProps.dispatch(deleteSelection(this.getSelection()));
   }
 
   updateNode(nodeId, data) {

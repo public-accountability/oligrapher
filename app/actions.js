@@ -156,8 +156,7 @@ export function deleteCaption(captionId) {
   return { type: DELETE_CAPTION, captionId };
 }
 
-export function deleteSelection(event, selection) {
-  event.preventDefault();
+export function deleteSelection(selection) {
   return { type: DELETE_SELECTION, selection };
 }
 

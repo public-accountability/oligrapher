@@ -81,14 +81,4 @@ describe("Node Component", () => {
 
     expect(moveNode.mock.calls.length).toBe(1);
   });
-
-  it("should be removed when delete hotkey is pressed", () => {
-    let deleteNode = jest.genMockFunction();
-    let wrapper = shallow(
-      <Node node={data} graph={{id: "someid"}} clickNode={deleteNode} />
-    );
-    let element = wrapper.find("g.node");
-    TestUtils.Simulate.keyDown(element, {key: "Delete", keyCode: 46, which: 46});
-    expect(deleteNode.mock.calls[0]).toBeUndefined();
-  });
 });
