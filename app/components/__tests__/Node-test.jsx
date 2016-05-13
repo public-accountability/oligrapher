@@ -9,6 +9,8 @@ import { shallow } from "enzyme";
 import Node from '../Node';
 import NodeCircle from "../NodeCircle";
 import NodeLabel from "../NodeLabel";
+import TestUtils from 'react-addons-test-utils';
+
 
 describe("Node Component", () => {
 
