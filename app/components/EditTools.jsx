@@ -36,6 +36,14 @@ export default class EditTools extends Component {
             toggleAddEdgeForm={toggleAddEdgeForm}
             showInterlocksButton={this.props.showInterlocksButton}
             fetchInterlocks={this.props.fetchInterlocks} />
+          { currentForm == 'UpdateCaptionForm' && 
+          <UpdateCaptionForm 
+            updateCaption={updateCaption} 
+            data={data}
+            deselect={deselectAll} /> }
+          { currentForm != 'UpdateCaptionForm' && 
+             <AddCaptionForm 
+            addCaption={addCaption}  /> }
           <LayoutButtons 
             prune={prune} 
             circleLayout={circleLayout} 
@@ -56,10 +64,6 @@ export default class EditTools extends Component {
             nodes={graph.nodes}
             closeAddForm={closeAddForm} 
             data={data} /> }
-        { addForm == 'AddCaptionForm' && 
-          <AddCaptionForm 
-            addCaption={addCaption} 
-            closeAddForm={closeAddForm} /> }
         { currentForm == 'UpdateNodeForm' && 
           <UpdateNodeForm 
             updateNode={updateNode} 
@@ -69,11 +73,6 @@ export default class EditTools extends Component {
           <UpdateEdgeForm 
             updateEdge={updateEdge} 
             getGraph={getGraph} 
-            data={data}
-            deselect={deselectAll} /> }
-        { currentForm == 'UpdateCaptionForm' && 
-          <UpdateCaptionForm 
-            updateCaption={updateCaption} 
             data={data}
             deselect={deselectAll} /> }
         { currentForm == 'UpdateNodeForm' && source && source.getConnectedNodes && 

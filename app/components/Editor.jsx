@@ -31,7 +31,6 @@ export default class Editor extends BaseComponent {
       'altO': ['alt+o', 'ctrl+o'],
       'altN': ['alt+n', 'ctrl+n'],
       'altE': ['alt+e', 'ctrl+e'],
-      'altC': ['alt+c', 'ctrl+c'],
       'altH': ['alt+h', 'ctrl+h'],
       'altR': ['alt+r', 'ctrl+r'],
       'esc': 'esc'
@@ -42,7 +41,6 @@ export default class Editor extends BaseComponent {
       'altO': () => this.props.graphApi.circleLayout(),
       'altN': () => this._focusAddNodeInput(),
       'altE': () => this._toggleAddEdgeForm(),
-      'altC': () => this._toggleAddCaptionForm(),
       'altH': () => this._toggleHelpScreen(),
       'altR': () => this._toggleAddConnectedNodesForm(),
       'esc': () => this._clearForms()

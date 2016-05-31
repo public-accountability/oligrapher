@@ -8,26 +8,21 @@ export default class UpdateCaptionForm extends BaseComponent {
   render() {
     let { display } = this.props.data;
 
-    const keyMap = { 
-      'esc': 'esc'
-    };
-
-    const keyHandlers = {
-      'esc': () => this.props.deselect()
-    };
-
     const scales = [
       [null, "Scale"],
       [1, "1x"],
+      [1.25, "1.25x"],
       [1.5, "1.5x"],
       [2, "2x"],
-      [3, "3x"]
+      [2.5, "2.5x"],
+      [3, "3x"],
+      [4, "4x"],
+      [5, "5x"]
     ];
 
     return (
-      <div className="editForm form-inline">
-        <HotKeys keyMap={keyMap} handlers={keyHandlers}>
-          <input 
+      <div className="form-inline buttonGroup">
+        <input 
             type="text"
             className="form-control input-sm"
             placeholder="text" 
@@ -42,8 +37,7 @@ export default class UpdateCaptionForm extends BaseComponent {
             { scales.map((scale, i) =>
               <option key={scale[1]} value={scale[0]}>{scale[1]}</option>
             ) }
-          </select>
-        </HotKeys>
+        </select>
       </div>
     );
   }
