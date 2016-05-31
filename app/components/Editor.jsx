@@ -33,7 +33,8 @@ export default class Editor extends BaseComponent {
       'altE': ['alt+e', 'ctrl+e'],
       'altH': ['alt+h', 'ctrl+h'],
       'altR': ['alt+r', 'ctrl+r'],
-      'esc': 'esc'
+      'esc': 'esc',
+      'enter': 'enter'
     };
 
     const keyHandlers = {
@@ -43,7 +44,8 @@ export default class Editor extends BaseComponent {
       'altE': () => this._toggleAddEdgeForm(),
       'altH': () => this._toggleHelpScreen(),
       'altR': () => this._toggleAddConnectedNodesForm(),
-      'esc': () => this._clearForms()
+      'esc': () => this._clearForms(),
+      'enter': () => this._clearForms()
     };
 
     let _closeAddForm = () => this.props.toggleAddForm(null);
