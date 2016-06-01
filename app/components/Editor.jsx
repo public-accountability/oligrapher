@@ -91,7 +91,8 @@ export default class Editor extends BaseComponent {
               addForm={addForm}
               currentForm={currentForm}
               showInterlocksButton={showInterlocksButton}
-              fetchInterlocks={fetchInterlocks} />
+              fetchInterlocks={fetchInterlocks}
+              delete={this.props.delete} />
           }       
         </HotKeys>
       </div>

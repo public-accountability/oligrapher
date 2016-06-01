@@ -1,16 +1,24 @@
 import React, { Component, PropTypes } from 'react';
+import BaseComponent from './BaseComponent';
 import UndoButtons from './UndoButtons';
 import LayoutButtons from './LayoutButtons';
 import EditButtons from './EditButtons';
 import AddEdgeForm from './AddEdgeForm';
 import AddCaptionForm from './AddCaptionForm';
 import AddConnectedNodesForm from './AddConnectedNodesForm';
+import DeleteSelected from './DeleteSelected';
 import UpdateNodeForm from './UpdateNodeForm';
 import UpdateEdgeForm from './UpdateEdgeForm';
 import UpdateCaptionForm from './UpdateCaptionForm';
 import HelpScreen from './HelpScreen';
 
-export default class EditTools extends Component {
+export default class EditTools extends BaseComponent {
+
+  constructor(props) {
+    super(props);
+    this.bindAll('_handleDelete');
+
+  }
 
   render() {
     let { graphApi, source, data, graph, addForm, currentForm, helpScreen,
@@ -65,10 +73,10 @@ export default class EditTools extends Component {
             closeAddForm={closeAddForm} 
             data={data} /> }
         { currentForm == 'UpdateNodeForm' && 
-          <UpdateNodeForm 
-            updateNode={updateNode} 
-            data={data} 
-            deselect={deselectAll} /> }
+            <UpdateNodeForm 
+              updateNode={updateNode} 
+              data={data} 
+              deselect={deselectAll} /> }
         { currentForm == 'UpdateEdgeForm' && 
           <UpdateEdgeForm 
             updateEdge={updateEdge} 
@@ -82,9 +90,17 @@ export default class EditTools extends Component {
             closeAddForm={closeAddForm} 
             graph={graph}
             addSurroundingNodes={addSurroundingNodes} 
-            addEdge={addEdge} /> }
+            addEdge={addEdge} /> }        
+          { (currentForm == 'UpdateNodeForm' || currentForm == 'UpdateEdgeForm') &&
+          <DeleteSelected 
+            currentForm = {currentForm}
+            doDelete = {() => this._handleDelete()} /> }
         { helpScreen && !this.props.hideHelp ? <HelpScreen source={source} /> : null }
       </div>
     );
+  }
+
+  _handleDelete() {
+    this.props.delete();
   }
 }

@@ -79,6 +79,18 @@ button#toggleEditTools {
   display: block;
 }
 
+#deleteSelected {
+  position: absolute;
+}
+
+.editForm.nodeDelete {
+  margin-top: 120px;
+}
+
+.editForm.edgeDelete {
+  margin-top: 80px;
+}
+
 .editForm {
   position: absolute;
   display: inline-block;

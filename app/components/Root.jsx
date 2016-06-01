@@ -171,6 +171,7 @@ class Root extends Component {
                 { graph &&
                   <Editor 
                     {...this.props}
+                    delete={() => dispatch(deleteSelection(selection))}
                     graphApi={graphApi}
                     isEditor={isEditor} 
                     showEditButton={false} 
