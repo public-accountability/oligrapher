@@ -18,6 +18,7 @@ export default class DeleteSelected extends BaseComponent {
         marginTop = "120px">
         <button
           className="btn btn-sm btn-default"
+          title="delete selected"
           onClick = {this.props.doDelete}>
           Delete Selected
         </button>

@@ -26,6 +26,7 @@ export default class GraphAnnotationForm extends BaseComponent {
           id="oligrapherGraphAnnotationFormHeader"
           ref="header"
           name="header"
+          title="edit annotation title"
           className="form-control input-lg" 
           placeholder="annotation header"
           value={this.props.annotation.header}
@@ -34,10 +35,12 @@ export default class GraphAnnotationForm extends BaseComponent {
           id="oligrapherGraphAnnotationFormText"
           name="text"
           ref="text"
+          title="edit annotation body"
           text={this.props.annotation.text}
           options={editorOptions}
           onChange={this._handleTextChange} />
         <button 
+          title="remove selected annotation"
           className="btn btn-danger btn-sm" 
           onClick={this._handleRemove}>Remove</button>
       </div>

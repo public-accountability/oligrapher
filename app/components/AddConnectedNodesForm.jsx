@@ -24,11 +24,12 @@ export default class AddConnectedNodesForm extends BaseComponent {
           <input 
             id="addConnectedNodesNum" 
             type="text" 
+            title="maximum number of nodes to add"
             className="form-control input-sm" 
             defaultValue="5" 
             ref="num" />
           { this._renderOptions() }
-          &nbsp;<button onClick={this._handleSubmit} className="btn btn-sm btn-default">Add Connections</button>
+          &nbsp;<button onClick={this._handleSubmit} title="search for given number of nodes" className="btn btn-sm btn-default">Add Connections</button>
         </HotKeys>
       </div>
     );
@@ -37,7 +38,7 @@ export default class AddConnectedNodesForm extends BaseComponent {
   _renderOptions() {
     let options = this.props.source.getConnectedNodesOptions;
     return options ? Object.keys(options).map(key => {
-      return (<select key={key} className="form-control input-sm" ref={key}>
+      return (<select key={key} title="type of connections to search for" className="form-control input-sm" ref={key}>
         { Object.keys(options[key]).map(val => {
           return <option key={val} value={val}>{options[key][val]}</option>
         }) }

@@ -29,8 +29,9 @@ export default class AddCaptionForm extends BaseComponent {
     return (
       <div id="addCaption" className="form-inline buttonGroup">
         <form onSubmit={this._handleSubmit}>
-          <input type="text" className="form-control input-sm" placeholder="add caption" ref="text" />
+          <input type="text" className="form-control input-sm" title="add caption" placeholder="add caption" ref="text" />
           &nbsp;<select 
+            title="text size for new caption"
             value={this.state.scale} 
             className="form-control input-sm" 
             ref="scale" 
