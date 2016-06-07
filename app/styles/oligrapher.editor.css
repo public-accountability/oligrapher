@@ -57,12 +57,14 @@ button#toggleEditTools {
   top: 15px;
   left: 60px;
   width:250px;
+  pointer-events: none;
 }
 
 #buttons .buttonGroup {
   display: inline-block;
   margin-right: 10px;
   margin-bottom: 10px;
+  pointer-events: all;
 }
 
 #addNodeInput {
