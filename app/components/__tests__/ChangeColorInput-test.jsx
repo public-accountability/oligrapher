@@ -62,7 +62,7 @@ describe("ChangeColorInput", () => {
     wrapper.setState({ displayColorPicker: true });
     let picker = wrapper.find(CompactPicker);
     let pickerOnChange = picker.props().onChange;
-    pickerOnChange({ hex: "def" });
+    pickerOnChange({ hex: "#def" });
 
     expect(onChange.mock.calls.length).toBe(1);
     expect(onChange.mock.calls[0][0]).toBe("#def");
