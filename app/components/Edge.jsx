@@ -86,6 +86,7 @@ export default class Edge extends BaseComponent {
   }
 
   _handleDragStart(event, ui) {
+    event.preventDefault();
     this._startDrag = ui.position;
     this._startPosition = {
       x: this.state.cx,

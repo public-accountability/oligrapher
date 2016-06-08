@@ -79,6 +79,7 @@ export default class Caption extends BaseComponent {
   }
 
   _handleDragStart(e, ui) {
+    e.preventDefault();
     this._startDrag = ui.position;
     this._startPosition = {
       x: this.state.x,
