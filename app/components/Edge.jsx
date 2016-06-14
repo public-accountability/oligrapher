@@ -17,6 +17,8 @@ export default class Edge extends BaseComponent {
   }
 
   render() {
+    console.log(this.state);
+
     let e = this.props.edge;
     let sp = this._getSvgParams(e);
     let width = 1 + (e.display.scale - 1) * 5;

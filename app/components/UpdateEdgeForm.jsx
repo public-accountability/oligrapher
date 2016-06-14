@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import BaseComponent from './BaseComponent';
+import EdgeDropdown from './EdgeDropdown';
 import { HotKeys } from 'react-hotkeys';
 import values from 'lodash/values';
 import sortBy from 'lodash/sortBy'; 
@@ -25,6 +26,7 @@ export default class UpdateEdgeForm extends BaseComponent {
       [2, "2x"],
       [3, "3x"]
     ];
+    
 
     return (
       <div className="editForm updateForm form-inline">
@@ -67,6 +69,9 @@ export default class UpdateEdgeForm extends BaseComponent {
               value={display.url}
               onChange={() => this.apply()} />
           </div>
+          <EdgeDropdown
+            arrow={display.arrow}
+            dash={display.dash}/>
         </HotKeys>
       </div>
     );
