@@ -69,7 +69,21 @@ export default class Graph extends BaseComponent {
         selected={this.props.selection && includes(this.props.selection.edgeIds, e.id)}
         clickEdge={this.props.clickEdge}
         moveEdge={this.props.moveEdge} 
-        isLocked={this.props.isLocked} />);
+        isLocked={this.props.isLocked}
+        getArrow={(is_reverse) => this._getArrowDirection(is_reverse, e)}
+        updateArrow={() => this._updateArrowState(e)} />);
+  }
+
+  _getArrowDirection(is_reverse, edge){
+      if (!is_reverse){
+        edge.display.arrow = "left";
+      } else {
+        edge.display.arrow = "right";
+      }
+  }
+
+  _updateArrowState(edge){
+    this.props.graphApi.updateEdge(edge.id, { display: edge.display });
   }
 
   _renderNodes() {

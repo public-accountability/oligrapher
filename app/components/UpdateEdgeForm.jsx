@@ -19,6 +19,7 @@ export default class UpdateEdgeForm extends BaseComponent {
       'esc': () => this.props.deselect()
     };
 
+
     const scales = [
       [null, "Scale"],
       [1, "1x"],
@@ -26,23 +27,12 @@ export default class UpdateEdgeForm extends BaseComponent {
       [2, "2x"],
       [3, "3x"]
     ];
-    
 
     return (
       <div className="editForm updateForm form-inline">
         <HotKeys keyMap={keyMap} handlers={keyHandlers}>
           <div>
             <input 
-              type="checkbox" 
-              ref="arrow" 
-              checked={display.arrow} 
-              onChange={() => this.apply()} /> arrow
-            &nbsp;&nbsp;<input 
-              type="checkbox" 
-              ref="dash" 
-              checked={display.dash} 
-              onChange={() => this.apply()} /> dash
-            &nbsp;&nbsp;<input 
               type="text" 
               className="form-control input-sm"
               placeholder="label" 
@@ -70,21 +60,21 @@ export default class UpdateEdgeForm extends BaseComponent {
               onChange={() => this.apply()} />
           </div>
           <EdgeDropdown
+            ref="edgeDropdown"
             arrow={display.arrow}
-            dash={display.dash}/>
+            dash={display.dash}
+            onChange={(arrow, dash) => this.apply(arrow, dash)}/>
         </HotKeys>
       </div>
     );
   }
 
-  apply() {
-    if (this.props.data) {
+  apply(whichArrow, isDashed) {
       let label = this.refs.label.value;
-      let arrow = this.refs.arrow.checked;
-      let dash = this.refs.dash.checked;
+      let arrow = whichArrow || this.refs.edgeDropdown.props.whichArrow;
+      let dash = isDashed;
       let scale = parseFloat(this.refs.scale.value);
       let url = this.refs.url.value.trim();
       this.props.updateEdge(this.props.data.id, { display: { label, arrow, dash, scale, url } });
-    }
   }
 }
