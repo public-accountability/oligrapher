@@ -100,6 +100,7 @@ button#toggleEditTools {
   top: 15px;
   right: 15px;
   margin: 0 auto;
+  text-align: right;
 }
 
 .editForm h3 {
@@ -230,7 +231,7 @@ button#toggleEditTools {
 }
 
 .strokeMain{
-  width:80%;
+  width:50%;
   margin-right: 2%;
   margin-left: 2%;
 }
@@ -238,9 +239,10 @@ button#toggleEditTools {
 .arrowHead{
   width:8%;
 }
+
 .strokeDropdowns{
-  display: block;
-  position: absolute;
+  display: inline-block;
+  width:300px;
 }
 
 .dropdownHolder{
@@ -249,7 +251,7 @@ button#toggleEditTools {
 
 .svgDropdown li, .svgDropdown div{
   width: 100%;
-  height: 20px; 
+  height: 29px; 
   list-style: none;
 }
 
@@ -294,4 +296,10 @@ button#toggleEditTools {
 .edgeDropdownOptions{
   position: absolute;
   width: inherit;
+  margin-top: 80px;
+}
+
+.oligrapherEdgeWidthDropdown{
+  width: auto;
+  text-align: right;
 }
