@@ -4,6 +4,8 @@ import React from "react";
 import { mount } from "enzyme";
 
 import UpdateEdgeForm from "../UpdateEdgeForm";
+import EdgeDropdown from "../EdgeDropdown";
+
 
 describe("UpdateEdgeForm", () => {
   let wrapper;
@@ -16,7 +18,7 @@ describe("UpdateEdgeForm", () => {
       label: "Edge",
       url: "http://example.com/node",
       scale: 3,
-      arrow: true,
+      arrow: "right",
       dash: false,
       status: "highlighted"
     }
@@ -33,22 +35,18 @@ describe("UpdateEdgeForm", () => {
   });
 
   describe("rendering", () => {
-    it("shows arrow input", () => {
-      let input = wrapper.ref("arrow");
-      expect(input.length).toBe(1);
-      expect(input.props().checked).toBe(data.display.arrow);
-    });
-
-    it("shows dash input", () => {
-      let input = wrapper.ref("dash");
-      expect(input.length).toBe(1);
-      expect(input.props().checked).toBe(data.display.dash);
-    });
 
     it("shows label input", () => {
       let input = wrapper.ref("label");
       expect(input.length).toBe(1);
       expect(input.props().value).toBe(data.display.label);
+    });
+
+    it("shows a dropdown menu that reflects the selected edge's appearance", () => {
+      let edgeDropdown = wrapper.ref("edgeDropdown");
+      expect(edgeDropdown.length).toBe(1);
+      expect(edgeDropdown.props().arrow).toBe(data.display.arrow);
+      expect(edgeDropdown.props().dash).toBe(data.display.dash);
     });
 
     it("shows scale dropdown with selected option", () => {
@@ -69,23 +67,6 @@ describe("UpdateEdgeForm", () => {
   });
 
   describe("behavior", () => {
-    it("passes updated arrow to updateEdge", () => {
-      let input = wrapper.ref("arrow");
-      input.get(0).checked = !data.display.arrow;
-      input.props().onChange();
-
-      expect(updateEdge.mock.calls.length).toBe(1);
-      expect(updateEdge.mock.calls[0][1].display.arrow).toBe(!data.display.arrow);
-    });
-
-    it("passes updated dash to updateEdge", () => {
-      let input = wrapper.ref("dash");
-      input.get(0).checked = !data.display.dash;
-      input.props().onChange();
-
-      expect(updateEdge.mock.calls.length).toBe(1);
-      expect(updateEdge.mock.calls[0][1].display.dash).toBe(!data.display.dash);
-    });
 
     it("passes updated scale to updateEdge", () => {
       let select = wrapper.ref("scale");
@@ -105,5 +86,16 @@ describe("UpdateEdgeForm", () => {
       expect(updateEdge.mock.calls.length).toBe(1);
       expect(updateEdge.mock.calls[0][1].display.url).toBe(newUrl.trim());
     });
+
+    it("passes updated edge appearance to updateEdge", () => {
+      let edgeDropdown = wrapper.ref("edgeDropdown");
+      let dropdownOnChange = edgeDropdown.props().onChange;
+      dropdownOnChange("left", true);
+
+      expect(updateEdge.mock.calls.length).toBe(1);
+      expect(updateEdge.mock.calls[0][1].display.arrow).toBe("left");
+      expect(updateEdge.mock.calls[0][1].display.dash).toBe(true);
+    });
+
   });
 });

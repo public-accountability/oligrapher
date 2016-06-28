@@ -28,8 +28,9 @@ describe("Edge Component", () => {
   };
 
   it("should render a curve with a control point", () => {
+    let getArrow = jest.genMockFunction();
     let edge = TestUtils.renderIntoDocument(
-      <Edge edge={data} />
+      <Edge edge={data} getArrow={getArrow}/>
     );
     let element = ReactDOM.findDOMNode(edge);
     let curve = element.querySelector(".edge-line");
@@ -38,8 +39,9 @@ describe("Edge Component", () => {
   });
 
   it("should render a label", () => {
+    let getArrow = jest.genMockFunction();
     let edge = TestUtils.renderIntoDocument(
-      <Edge edge={data} />
+      <Edge edge={data} getArrow={getArrow} />
     );
     let element = ReactDOM.findDOMNode(edge);
     let label = element.querySelector("text");
@@ -47,9 +49,16 @@ describe("Edge Component", () => {
     expect(label.textContent).toBe(data.display.label);
   });
 
+  /*not sure of most effective way of testing arrow rendering*/
   it("should render an arrow", () => {
+    let getArrow = jest.genMockFunction().mockImplementation(function () {
+          data["display"]["arrow"] = "left"
+          return data;
+        });
+    let updateArrow = jest.genMockFunction();
+
     let edge = TestUtils.renderIntoDocument(
-      <Edge edge={data} />
+      <Edge edge={data} getArrow={getArrow()} updateArrow={updateArrow} />
     );
     let element = ReactDOM.findDOMNode(edge);
     let curve = element.querySelector(".edge-line");
@@ -59,9 +68,11 @@ describe("Edge Component", () => {
   });
 
   it("should call click callback if clicked", () => {
+    let getArrow = jest.genMockFunction();
+    let updateArrow = jest.genMockFunction();
     let clickEdge = jest.genMockFunction();
     let edge = TestUtils.renderIntoDocument(
-      <Edge edge={data} graphId="someid" clickEdge={clickEdge} />
+      <Edge edge={data} graphId="someid" clickEdge={clickEdge} getArrow={getArrow} updateArrow={updateArrow} />
     );
     let element = ReactDOM.findDOMNode(edge);
     let select = element.querySelector(".edgeSelect");
