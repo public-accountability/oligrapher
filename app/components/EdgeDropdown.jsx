@@ -32,7 +32,7 @@ export default class EdgeDropdown extends BaseComponent {
   	}
   	var hasLeft = (this.props.arrow == "left" || this.props.arrow == "both") ? true : false;
     var hasRight = (this.props.arrow == "right" || this.props.arrow == "both") ? true : false;
-	
+
 	if (this.state.leftSideArrow != hasLeft){
 		this.setState({"leftSideArrow": hasLeft});
 	}
@@ -57,7 +57,7 @@ export default class EdgeDropdown extends BaseComponent {
   				</div>
   				{ this.state.leftSideOpen &&
 		  			<ul className={"svgDropdown edgeDropdownOptions"}>
-		  				<li 
+		  				<li className="svgDropdownLeftNoArrow"
 		  					onClick={() => this._toggleView("leftSideOpen", ["leftSideArrow", false])}>
 		  					<svg><line x1="75%" y1="50%" x2="25%" y2="50%" /></svg>
 		  				</li>
@@ -77,7 +77,7 @@ export default class EdgeDropdown extends BaseComponent {
   				</div>
 	  			{ this.state.centerOpen &&
 		  			<ul className={"svgDropdown edgeDropdownOptions"}>
-		  				<li
+		  				<li className="svgDropdownUndashed"
 		  					onClick={() => this._toggleView("centerOpen", ["centerDashed", false])}>
 		  					<svg><line x1="98%" y1="50%" x2="2%" y2="50%" /></svg>
 		  				</li>
@@ -97,7 +97,7 @@ export default class EdgeDropdown extends BaseComponent {
   				</div>
 				{ this.state.rightSideOpen &&
 	  			<ul className={"svgDropdown edgeDropdownOptions"}>
-	  				<li
+	  				<li className="svgDropdownRightNoArrow"
 	  					onClick={() => this._toggleView("rightSideOpen", ["rightSideArrow", false])}>
 	  					<svg><line x1="75%" y1="50%" x2="25%" y2="50%" /></svg>
 	  				</li>
@@ -113,19 +113,19 @@ export default class EdgeDropdown extends BaseComponent {
 
   }
 
-  _handleChange(){
-  	var whichArrow;
-  	if (this.state.leftSideArrow && this.state.rightSideArrow){
-  		whichArrow = "both";
-  	} else if (!this.state.leftSideArrow && !this.state.rightSideArrow) {
-  		whichArrow = null;
-  	} else if (this.state.leftSideArrow){
-  		whichArrow = "left";
-  	} else {
-  		whichArrow = "right";
+  	_handleChange(){
+	  	var whichArrow;
+	  	if (this.state.leftSideArrow && this.state.rightSideArrow){
+	  		whichArrow = "both";
+	  	} else if (!this.state.leftSideArrow && !this.state.rightSideArrow) {
+	  		whichArrow = "none";
+	  	} else if (this.state.leftSideArrow){
+	  		whichArrow = "left";
+	  	} else {
+	  		whichArrow = "right";
+	  	}
+	  	this.props.onChange(whichArrow, this.state.centerDashed);
   	}
-  	this.props.onChange(whichArrow, this.state.centerDashed);
-  }
 
 	_toggleView(whichView, whichProperty){
 		if (this.state[whichView]){

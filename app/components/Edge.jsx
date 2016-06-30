@@ -25,7 +25,7 @@ export default class Edge extends BaseComponent {
   }
 
   componentDidMount(){
-     if (includes(["left", "right", "both"], this.props.edge.display.arrow)){
+    if (includes(["left", "right", "both"], this.props.edge.display.arrow)){
       this.props.updateArrow(this.props.edge);
     }
   }
