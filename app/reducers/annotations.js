@@ -59,7 +59,7 @@ export default function annotations(state = initState, action) {
     });
 
   case TOGGLE_ANNOTATIONS:
-    let visible = typeof action.value == "undefined" ? !state.visible : action.value;
+    let visible = !state.visible;
     return merge({}, state, { visible });
 
   case SWAP_NODE_HIGHLIGHT:
