@@ -6,12 +6,14 @@ import { shallow, mount } from "enzyme";
 import GraphNavButtons from "../GraphNavButtons";
 
 describe("GraphNavButtons", () => {
-  let wrapper;
 
   describe("rendering", () => {
+    let wrapper;
+
     beforeEach(() => {
       wrapper = mount(
-        <GraphNavButtons 
+        <GraphNavButtons
+          isEditor={true} 
           canClickPrev={true}
           canClickNext={true}
           prevClick={jest.genMockFunction()}
@@ -42,16 +44,20 @@ describe("GraphNavButtons", () => {
       let hide = wrapper.find("#oligrapherHideAnnotationsButton");
       expect(hide.length).toBe(1);
     });
+
+
   });
 
   describe("behavior", () => {
     let prevClick = jest.genMockFunction();
     let nextClick = jest.genMockFunction();
     let swapAnnotations = jest.genMockFunction();
+    let wrapper;
 
     beforeEach(() => {
       wrapper = shallow(
         <GraphNavButtons 
+          isEditor={true} 
           canClickPrev={true}
           canClickNext={true}
           prevClick={prevClick}
