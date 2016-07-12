@@ -70,6 +70,10 @@
     ],
     "unmockedModulePathPatterns": [
       "<rootDir>/node_modules/"
-    ]
+    ],
+    "moduleNameMapper": {
+      "^.+\\.(css|less)$": "<rootDir>/noTestMocks/styleMock.js",    
+      "^.+\\.(gif|ttf|eot|svg)$": "<rootDir>/noTestMocks/fileMock.js"
+    }
   }
 }

@@ -117,6 +117,7 @@ class Root extends Component {
       (isLocked ? null : dispatch(swapCaptionHighlight(captionId)))
     }
 
+console.log(this.props);
     // annotations stuff
 
     let prevIndex = this.prevIndex();
