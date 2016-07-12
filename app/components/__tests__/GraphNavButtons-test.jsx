@@ -48,6 +48,43 @@ describe("GraphNavButtons", () => {
 
   });
 
+  describe("alternateRendering", () => {
+    let wrapper;
+     let annotations = [
+      { id: 1, header: "Annotation 1", text: "<p>annotation text 1</p>" }
+    ];
+
+    beforeEach(() => {
+      wrapper = mount(
+        <GraphNavButtons
+          annotations={annotations}
+          isEditor={false} 
+          canClickPrev={true}
+          canClickNext={true}
+          prevClick={jest.genMockFunction()}
+          nextClick={jest.genMockFunction()}
+          swapAnnotations={jest.genMockFunction()} />
+      );
+    });
+
+    it("doesn't show prev button", () => {
+      let prev = wrapper.find("button").filterWhere(button => button.text() == "Prev");
+      expect(prev.length).toBe(0);
+    });
+
+    it("shows next button", () => {
+      let next = wrapper.find("button").filterWhere(button => button.text() == "Next");
+      expect(next.length).toBe(0);
+    });
+
+    it("shows hide button", () => {
+      let hide = wrapper.find("#oligrapherHideAnnotationsButton");
+      expect(hide.length).toBe(1);
+    });
+
+
+  });
+
   describe("behavior", () => {
     let prevClick = jest.genMockFunction();
     let nextClick = jest.genMockFunction();
