@@ -165,7 +165,6 @@ export default class Editor extends BaseComponent {
   _clearForms() {
     this.props.toggleAddForm(null);
     this.props.graphApi.deselectAll();
-    console.log(this.refs);
     this.refs.editTools.refs.editButtons.refs.addNodeInput.clear();
   }
 
