@@ -6,7 +6,7 @@ import EditButtons from './EditButtons';
 import AddEdgeForm from './AddEdgeForm';
 import AddCaptionForm from './AddCaptionForm';
 import AddConnectedNodesForm from './AddConnectedNodesForm';
-import DeleteSelected from './DeleteSelected';
+import DeleteSelectedButton from './DeleteSelectedButton';
 import UpdateNodeForm from './UpdateNodeForm';
 import UpdateEdgeForm from './UpdateEdgeForm';
 import UpdateCaptionForm from './UpdateCaptionForm';
@@ -92,9 +92,9 @@ export default class EditTools extends BaseComponent {
             addSurroundingNodes={addSurroundingNodes} 
             addEdge={addEdge} /> }        
           { (currentForm == 'UpdateNodeForm' || currentForm == 'UpdateEdgeForm') &&
-          <DeleteSelected 
+          <DeleteSelectedButton 
             currentForm = {currentForm}
-            doDelete = {() => this._handleDelete()} /> }
+            doDelete = {this._handleDelete} /> }
         { helpScreen && !this.props.hideHelp ? <HelpScreen source={source} /> : null }
       </div>
     );

@@ -3,7 +3,7 @@ import BaseComponent from './BaseComponent';
 import { HotKeys } from 'react-hotkeys';
 import mapKeys from 'lodash/object/mapKeys';
 
-export default class DeleteSelected extends BaseComponent {
+export default class DeleteSelectedButton extends BaseComponent {
   constructor(props) {
     super(props);
   }
