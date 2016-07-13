@@ -44,8 +44,7 @@ export default class Editor extends BaseComponent {
       'altE': () => this._toggleAddEdgeForm(),
       'altH': () => this._toggleHelpScreen(),
       'altR': () => this._toggleAddConnectedNodesForm(),
-      'esc': () => this._clearForms(),
-      'enter': () => this._clearForms()
+      'esc': () => this._clearForms()
     };
 
     let _closeAddForm = () => this.props.toggleAddForm(null);
@@ -166,6 +165,7 @@ export default class Editor extends BaseComponent {
   _clearForms() {
     this.props.toggleAddForm(null);
     this.props.graphApi.deselectAll();
+    console.log(this.refs);
     this.refs.editTools.refs.editButtons.refs.addNodeInput.clear();
   }
 
