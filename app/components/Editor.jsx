@@ -31,10 +31,10 @@ export default class Editor extends BaseComponent {
       'altO': ['alt+o', 'ctrl+o'],
       'altN': ['alt+n', 'ctrl+n'],
       'altE': ['alt+e', 'ctrl+e'],
-      'altC': ['alt+c', 'ctrl+c'],
       'altH': ['alt+h', 'ctrl+h'],
       'altR': ['alt+r', 'ctrl+r'],
-      'esc': 'esc'
+      'esc': 'esc',
+      'enter': 'enter'
     };
 
     const keyHandlers = {
@@ -42,7 +42,6 @@ export default class Editor extends BaseComponent {
       'altO': () => this.props.graphApi.circleLayout(),
       'altN': () => this._focusAddNodeInput(),
       'altE': () => this._toggleAddEdgeForm(),
-      'altC': () => this._toggleAddCaptionForm(),
       'altH': () => this._toggleHelpScreen(),
       'altR': () => this._toggleAddConnectedNodesForm(),
       'esc': () => this._clearForms()
@@ -91,7 +90,8 @@ export default class Editor extends BaseComponent {
               addForm={addForm}
               currentForm={currentForm}
               showInterlocksButton={showInterlocksButton}
-              fetchInterlocks={fetchInterlocks} />
+              fetchInterlocks={fetchInterlocks}
+              delete={this.props.delete} />
           }       
         </HotKeys>
       </div>
@@ -165,6 +165,7 @@ export default class Editor extends BaseComponent {
   _clearForms() {
     this.props.toggleAddForm(null);
     this.props.graphApi.deselectAll();
+    console.log(this.refs);
     this.refs.editTools.refs.editButtons.refs.addNodeInput.clear();
   }
 

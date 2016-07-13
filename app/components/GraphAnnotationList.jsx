@@ -28,6 +28,7 @@ export default class GraphAnnotationList extends BaseComponent {
         </ul>
         { this.props.isEditor ? 
           <button 
+            title="add annotation"
             id="oligrapherCreateGraphAnnotationButton"
             className="btn btn-sm btn-default" 
             onClick={this.props.create}>

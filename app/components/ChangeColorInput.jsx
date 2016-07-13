@@ -28,7 +28,7 @@ export default class ChangeColorInput extends BaseComponent {
   }
 
   handleValueChange(color) {
-    this.onChange("#" + color.hex);
+    this.onChange(color.hex);
   }
 
   onChange(newColor) {

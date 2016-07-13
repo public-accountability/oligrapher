@@ -35,6 +35,7 @@ export default class UpdateNodeForm extends BaseComponent {
           <div>
             <input 
               type="text" 
+              title="change node title"
               className="form-control input-sm"
               placeholder="name" 
               ref="name" 
@@ -43,6 +44,7 @@ export default class UpdateNodeForm extends BaseComponent {
             &nbsp;
             <input 
               type="text" 
+              title="input image URL"
               className="form-control input-sm"
               placeholder="image URL" 
               ref="image" 
@@ -55,7 +57,8 @@ export default class UpdateNodeForm extends BaseComponent {
               status={display.status}
               onChange={(color) => this.apply(color)} />
             &nbsp;
-            <select 
+            <select
+              title="change node size" 
               value={display.scale} 
               className="form-control input-sm" 
               ref="scale"
@@ -69,6 +72,7 @@ export default class UpdateNodeForm extends BaseComponent {
             <input
               id="nodeUrlInput"
               type="text"
+              title="edit node link"
               className="form-control input-sm"
               placeholder="link URL"
               ref="url"

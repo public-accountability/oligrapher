@@ -26,7 +26,7 @@ export default class AddNodeInput extends BaseComponent {
       <div id="addNodeInput">
         <HotKeys keyMap={keyMap} handlers={keyHandlers}>
           <form onSubmit={this._handleSubmit}>
-            <input type="text" className="form-control input-sm" placeholder="add node" ref="name" onChange={this._handleSearch} /><br />
+            <input type="text" className="form-control input-sm" title="add new node" placeholder="add node" ref="name" onChange={this._handleSearch} /><br />
             { this.props.source ? 
               <ul className="addNodeResults dropdown-menu" style={{ display: results.length > 0 ? "block" : "none" }} ref="results">
                 { results.map((node, i) =>

@@ -202,6 +202,7 @@ class Oligrapher {
   }
 
   deleteSelection() {
+    console.log("hey");
     this.root.dispatchProps.dispatch(deleteSelection(this.getSelection()));
   }
 

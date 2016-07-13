@@ -1,16 +1,24 @@
 import React, { Component, PropTypes } from 'react';
+import BaseComponent from './BaseComponent';
 import UndoButtons from './UndoButtons';
 import LayoutButtons from './LayoutButtons';
 import EditButtons from './EditButtons';
 import AddEdgeForm from './AddEdgeForm';
 import AddCaptionForm from './AddCaptionForm';
 import AddConnectedNodesForm from './AddConnectedNodesForm';
+import DeleteSelectedButton from './DeleteSelectedButton';
 import UpdateNodeForm from './UpdateNodeForm';
 import UpdateEdgeForm from './UpdateEdgeForm';
 import UpdateCaptionForm from './UpdateCaptionForm';
 import HelpScreen from './HelpScreen';
 
-export default class EditTools extends Component {
+export default class EditTools extends BaseComponent {
+
+  constructor(props) {
+    super(props);
+    this.bindAll('_handleDelete');
+
+  }
 
   render() {
     let { graphApi, source, data, graph, addForm, currentForm, helpScreen,
@@ -36,6 +44,14 @@ export default class EditTools extends Component {
             toggleAddEdgeForm={toggleAddEdgeForm}
             showInterlocksButton={this.props.showInterlocksButton}
             fetchInterlocks={this.props.fetchInterlocks} />
+          { currentForm == 'UpdateCaptionForm' && 
+          <UpdateCaptionForm 
+            updateCaption={updateCaption} 
+            data={data}
+            deselect={deselectAll} /> }
+          { currentForm != 'UpdateCaptionForm' && 
+             <AddCaptionForm 
+            addCaption={addCaption}  /> }
           <LayoutButtons 
             prune={prune} 
             circleLayout={circleLayout} 
@@ -56,24 +72,15 @@ export default class EditTools extends Component {
             nodes={graph.nodes}
             closeAddForm={closeAddForm} 
             data={data} /> }
-        { addForm == 'AddCaptionForm' && 
-          <AddCaptionForm 
-            addCaption={addCaption} 
-            closeAddForm={closeAddForm} /> }
         { currentForm == 'UpdateNodeForm' && 
-          <UpdateNodeForm 
-            updateNode={updateNode} 
-            data={data} 
-            deselect={deselectAll} /> }
+            <UpdateNodeForm 
+              updateNode={updateNode} 
+              data={data} 
+              deselect={deselectAll} /> }
         { currentForm == 'UpdateEdgeForm' && 
           <UpdateEdgeForm 
             updateEdge={updateEdge} 
             getGraph={getGraph} 
-            data={data}
-            deselect={deselectAll} /> }
-        { currentForm == 'UpdateCaptionForm' && 
-          <UpdateCaptionForm 
-            updateCaption={updateCaption} 
             data={data}
             deselect={deselectAll} /> }
         { currentForm == 'UpdateNodeForm' && source && source.getConnectedNodes && 
@@ -83,9 +90,17 @@ export default class EditTools extends Component {
             closeAddForm={closeAddForm} 
             graph={graph}
             addSurroundingNodes={addSurroundingNodes} 
-            addEdge={addEdge} /> }
+            addEdge={addEdge} /> }        
+          { (currentForm == 'UpdateNodeForm' || currentForm == 'UpdateEdgeForm') &&
+          <DeleteSelectedButton 
+            currentForm = {currentForm}
+            doDelete = {this._handleDelete} /> }
         { helpScreen && !this.props.hideHelp ? <HelpScreen source={source} /> : null }
       </div>
     );
+  }
+
+  _handleDelete() {
+    this.props.delete();
   }
 }

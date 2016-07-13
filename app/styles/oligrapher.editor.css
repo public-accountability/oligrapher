@@ -57,12 +57,14 @@ button#toggleEditTools {
   top: 15px;
   left: 60px;
   width:250px;
+  pointer-events: none;
 }
 
 #buttons .buttonGroup {
   display: inline-block;
   margin-right: 10px;
   margin-bottom: 10px;
+  pointer-events: all;
 }
 
 #addNodeInput {
@@ -77,6 +79,18 @@ button#toggleEditTools {
 
 .addNodeResults {
   display: block;
+}
+
+#deleteSelected {
+  position: absolute;
+}
+
+.editForm.nodeDelete {
+  margin-top: 120px;
+}
+
+.editForm.edgeDelete {
+  margin-top: 80px;
 }
 
 .editForm {
