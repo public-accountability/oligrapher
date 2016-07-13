@@ -9,13 +9,12 @@ export default class DeleteSelectedButton extends BaseComponent {
   }
 
   render() {
-    var whichClass = this.props.currentForm == "UpdateNodeForm" ? "nodeDelete" : "edgeDelete";
+    const whichClass = this.props.currentForm === "UpdateNodeForm" ? "nodeDelete" : "edgeDelete";
 
     return (
       <div 
         className = {"editForm form-inline " + whichClass}
-        id = "deleteSelected"
-        marginTop = "120px">
+        id = "deleteSelected">
         <button
           className="btn btn-sm btn-default"
           title="delete selected"
