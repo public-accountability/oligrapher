@@ -38,7 +38,7 @@ import isNumber from 'lodash/lang/isNumber';
 import keys from 'lodash/object/keys';
 import filter from 'lodash/collection/filter';
 
-class Root extends Component {
+export class Root extends Component {
   constructor(props) {
     super(props);
     this.state = { shiftKey: false };
