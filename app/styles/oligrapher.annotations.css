@@ -217,7 +217,7 @@
   position: absolute;
   display: inline-block;
   z-index: 20;
-  top: 15px;
+  bottom: 15px;
   right: 15px;
   margin: 0 auto;
   text-align: right;

@@ -103,10 +103,6 @@ export default class Editor extends BaseComponent {
     let formData = null;
     let addForm = this.props.addForm;
 
-    if (this.props.showSettings) {
-      return { currentForm, formData, addForm: null };
-    }
-
     let { nodeIds, edgeIds, captionIds } = this.props.selection;
     let graph = this.props.graph;
     let nodes = pick(graph.nodes, nodeIds);
