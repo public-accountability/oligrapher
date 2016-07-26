@@ -389,7 +389,7 @@ class Graph {
   static prune(graph) {
     let newGraph = cloneDeep(graph);
     let connectedNodeIds = flatten(values(newGraph.edges).map(edge => [edge.node1_id, edge.node2_id]));
-    let orphanNodeIds = difference(Object.keys(newGraph.nodes).map(nodeId => parseInt(nodeId)), connectedNodeIds);
+    let orphanNodeIds = difference(Object.keys(newGraph.nodes).map(nodeId => nodeId.toString()), connectedNodeIds.map(nodeId => nodeId.toString()));
     orphanNodeIds.forEach(nodeId => delete newGraph.nodes[nodeId]);
     return newGraph;
   }
