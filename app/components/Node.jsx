@@ -28,7 +28,7 @@ export default class Node extends BaseComponent {
         moveOnStartChange={false}
         onStart={this._handleDragStart}
         onDrag={this._handleDrag}
-        onStop={this._handleDragStop}>
+        onStop={this._handleDragStop} >
         <g 
           id={groupId} 
           className="node" 
@@ -53,6 +53,7 @@ export default class Node extends BaseComponent {
 
   // keep initial position for comparison with drag position
   _handleDragStart(e, ui) {
+    e.preventDefault();
     this._startDrag = ui.position;
     this._startPosition = {
       x: this.state.x,
