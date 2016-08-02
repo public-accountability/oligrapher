@@ -193,7 +193,7 @@ class Root extends Component {
                     <HelpButton toggleHelpScreen={() => dispatch(toggleHelpScreen())} /> }
                 </div>
 
-                { isEditor && showSettings && hasSettings && showEditTools && <GraphSettingsForm settings={graphSettings} updateSettings={updateSettings} /> }
+                { (isEditor && showSettings && hasSettings) &&  <GraphSettingsForm settings={graphSettings} updateSettings={updateSettings} /> }
               </div>
             </div>
             { showAnnotations &&
