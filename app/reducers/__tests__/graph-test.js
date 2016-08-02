@@ -33,6 +33,23 @@ describe("graph reducer", () => {
     }
   };
 
+  /*graph with mixed alphanumeric and numeric ids to test prune after bug fix*/
+  const alphaNumericGraph = {
+    id: "altid",
+    nodes: {
+      1: { id: "node_one", display: { name: "Node 1" } },
+      2: { id: 2, display: { name: "Node 2" } },
+      3: { id: "x3", display: { name: "Node 3" } }
+    },
+    edges: {
+      1: { id: 1, node1_id: "node_one", node2_id: 2, display: { label: "Edge 1" } },
+      2: { id: 2, node1_id: 2, node2_id: "x3", display: { label: "Edge 2" } }
+    },
+    captions: {
+      1: { id: 1, display: { text: "Caption 1"} }
+    }
+  };
+
   it("should return the initial state", () => {
     expect(reducer(undefined, {})).toEqual(null);
   });
@@ -291,15 +308,23 @@ describe("graph reducer", () => {
     };
 
     let graph2, graph3;
+    let graphAlphanumeric2, graphAlphanumeric3;
 
     beforeEach(() => {
       graph2 = reducer(graph, deleteAction);
       graph3 = reducer(graph2, pruneAction);
+      graphAlphanumeric2 = reducer(graph, deleteAction);
+      graphAlphanumeric3 = reducer(graphAlphanumeric2, pruneAction);
     });
 
-    it("should remove all unconnected nodes", () => {
+    it("should remove all unconnected nodes in the graph with all numeric ids", () => {
       expect(graph3.nodes[1]).toBeUndefined();
       expect(graph3.nodes[2]).not.toBeUndefined();
+    });
+
+    it("should remove all unconnected nodes in the graph with mixed ids", () => {
+      expect(graphAlphanumeric3.nodes[1]).toBeUndefined();
+      expect(graphAlphanumeric3.nodes[2]).not.toBeUndefined();
     });
   });
 });
