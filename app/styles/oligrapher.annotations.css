@@ -106,6 +106,10 @@
   border: 1px solid #f8f8f8;
 }
 
+#oligrapherAnnotationsNavHolder {
+  display: inline-block;
+}
+
 #oligrapherNavButtons {
   margin-top: 5px;
   margin-bottom: 25px;

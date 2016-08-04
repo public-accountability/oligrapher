@@ -62,7 +62,9 @@ class Root extends Component {
       'resetZoom': 'ctrl+0',
       'shiftDown': { sequence: 'shift', action: 'keydown' },
       'shiftUp': { sequence: 'shift', action: 'keyup' },
-      'delete': ['alt+d', 'ctrl+d', 'command+d', 'del', 'backspace']
+      'delete': ['alt+d', 'ctrl+d', 'command+d', 'del', 'backspace'],
+      'left': 'left',
+      'right': 'right'
     };
 
     const keyHandlers = {
@@ -76,7 +78,9 @@ class Root extends Component {
       'delete': (event) => {
         event.preventDefault();
         dispatch(deleteSelection(selection));
-      }
+      },
+      'left': () => {dispatch(showAnnotation(prevIndex))},
+      'right': () => {dispatch(showAnnotation(nextIndex))}
     };
 
     let graphApi = {
