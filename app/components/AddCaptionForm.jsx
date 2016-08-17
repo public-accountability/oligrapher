@@ -45,11 +45,6 @@ export default class AddCaptionForm extends BaseComponent {
     );
   }
 
-  componentDidMount() {
-    // need to wait a moment before focusing so that alt+c doesn't end up in the input
-    setTimeout(() => this.refs.text.focus(), 50);
-  }
-
   _handleScaleChange() {
     this.setState({scaleValue: this.refs.scale.value})
   }
