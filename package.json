@@ -6,6 +6,7 @@
   "scripts": {
     "dev-build": "webpack-dev-server --devtool eval --progress --history-api-fallback --colors --hot --content-base build --port 8090 --config webpack.dev.config",
     "prod-build": "NODE_ENV=production webpack --display-modules --config webpack.prod.config.js --output-filename=oligrapher.js",
+    "watch": "webpack --watch --config webpack.prod.config.js --output-filename=oligrapher.js",
     "min-build": "NODE_ENV=production webpack -p --optimize-dedupe --display-modules --config webpack.prod.config.js --output-filename=oligrapher.min.js",
     "build-all": "npm run prod-build && npm run min-build",
     "test": "jest",
