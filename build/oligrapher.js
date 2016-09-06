@@ -118,6 +118,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	__webpack_require__(611);
+	__webpack_require__(613);
+	__webpack_require__(615);
 
 	var Oligrapher = function () {
 	  function Oligrapher() {
@@ -92227,7 +92229,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'render',
 	    value: function render() {
 	      var tag = this.props.tag;
-	      var props = (0, _blacklist2.default)(this.props, 'tag', 'contentEditable', 'dangerouslySetInnerHTML');
+	      var props = (0, _blacklist2.default)(this.props, 'options', 'text', 'tag', 'contentEditable', 'dangerouslySetInnerHTML');
 
 	      (0, _objectAssign2.default)(props, {
 	        dangerouslySetInnerHTML: { __html: this.state.text }
@@ -93805,11 +93807,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 
 	        cleanupTags: function (el, tags) {
-	            tags.forEach(function (tag) {
-	                if (el.nodeName.toLowerCase() === tag) {
-	                    el.parentNode.removeChild(el);
-	                }
-	            });
+	            if (tags.indexOf(el.nodeName.toLowerCase()) !== -1) {
+	                el.parentNode.removeChild(el);
+	            }
+	        },
+
+	        unwrapTags: function (el, tags) {
+	            if (tags.indexOf(el.nodeName.toLowerCase()) !== -1) {
+	                MediumEditor.util.unwrap(el, document);
+	            }
 	        },
 
 	        // get the closest parent
@@ -94840,7 +94846,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // Helpers for event handling
 
 	        attachDOMEvent: function (targets, event, listener, useCapture) {
-	            targets = MediumEditor.util.isElement(targets) || [window, document].indexOf(targets) > -1 ? [targets] : targets;
+	            var win = this.base.options.contentWindow,
+	                doc = this.base.options.ownerDocument;
+
+	            targets = MediumEditor.util.isElement(targets) || [win, doc].indexOf(targets) > -1 ? [targets] : targets;
 
 	            Array.prototype.forEach.call(targets, function (target) {
 	                target.addEventListener(event, listener, useCapture);
@@ -94849,8 +94858,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 
 	        detachDOMEvent: function (targets, event, listener, useCapture) {
-	            var index, e;
-	            targets = MediumEditor.util.isElement(targets) || [window, document].indexOf(targets) > -1 ? [targets] : targets;
+	            var index, e,
+	                win = this.base.options.contentWindow,
+	                doc = this.base.options.ownerDocument;
+
+	            targets = MediumEditor.util.isElement(targets) || [win, doc].indexOf(targets) > -1 ? [targets] : targets;
 
 	            Array.prototype.forEach.call(targets, function (target) {
 	                index = this.indexOfListener(target, event, listener, useCapture);
@@ -95018,23 +95030,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            // Helper method to call all listeners to execCommand
 	            var callListeners = function (args, result) {
-	                    if (doc.execCommand.listeners) {
-	                        doc.execCommand.listeners.forEach(function (listener) {
-	                            listener({
-	                                command: args[0],
-	                                value: args[2],
-	                                args: args,
-	                                result: result
-	                            });
+	                if (doc.execCommand.listeners) {
+	                    doc.execCommand.listeners.forEach(function (listener) {
+	                        listener({
+	                            command: args[0],
+	                            value: args[2],
+	                            args: args,
+	                            result: result
 	                        });
-	                    }
-	                },
+	                    });
+	                }
+	            },
 
-	            // Create a wrapper method for execCommand which will:
-	            // 1) Call document.execCommand with the correct arguments
-	            // 2) Loop through any listeners and notify them that execCommand was called
-	            //    passing extra info on the call
-	            // 3) Return the result
+	                // Create a wrapper method for execCommand which will:
+	                // 1) Call document.execCommand with the correct arguments
+	                // 2) Loop through any listeners and notify them that execCommand was called
+	                //    passing extra info on the call
+	                // 3) Return the result
 	                wrapper = function () {
 	                    var result = doc.execCommand.orig.apply(this, arguments);
 
@@ -95209,10 +95221,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // For clicks, we need to know if the mousedown that caused the click happened inside the existing focused element
 	            // or one of the extension elements.  If so, we don't want to focus another element
 	            if (hadFocus &&
-	                    eventObj.type === 'click' &&
-	                    this.lastMousedownTarget &&
-	                    (MediumEditor.util.isDescendant(hadFocus, this.lastMousedownTarget, true) ||
-	                     isElementDescendantOfExtension(this.base.extensions, this.lastMousedownTarget))) {
+	                eventObj.type === 'click' &&
+	                this.lastMousedownTarget &&
+	                (MediumEditor.util.isDescendant(hadFocus, this.lastMousedownTarget, true) ||
+	                    isElementDescendantOfExtension(this.base.extensions, this.lastMousedownTarget))) {
 	                toFocus = hadFocus;
 	            }
 
@@ -95230,7 +95242,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            // Check if the target is external (not part of the editor, toolbar, or any other extension)
 	            var externalEvent = !MediumEditor.util.isDescendant(hadFocus, target, true) &&
-	                                !isElementDescendantOfExtension(this.base.extensions, target);
+	                !isElementDescendantOfExtension(this.base.extensions, target);
 
 	            if (toFocus !== hadFocus) {
 	                // If element has focus, and focus is going outside of editor
@@ -96233,7 +96245,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // Matches any alphabetical characters followed by ://
 	            // Matches protocol relative "//"
 	            // Matches common external protocols "mailto:" "tel:" "maps:"
-	            var urlSchemeRegex = /^([a-z]+:)?\/\/|^(mailto|tel|maps):/i,
+	            // Matches relative hash link, begins with "#"
+	            var urlSchemeRegex = /^([a-z]+:)?\/\/|^(mailto|tel|maps):|^\#/i,
 	            // var te is a regex for checking if the string is a telephone number
 	            telRegex = /^\+?\s?\(?(?:\d\s?\-?\)?){3,20}$/;
 	            if (telRegex.test(value)) {
@@ -96435,13 +96448,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        positionPreview: function (activeAnchor) {
 	            activeAnchor = activeAnchor || this.activeAnchor;
-	            var buttonHeight = this.anchorPreview.offsetHeight,
+	            var containerWidth = this.window.innerWidth,
+	                buttonHeight = this.anchorPreview.offsetHeight,
 	                boundary = activeAnchor.getBoundingClientRect(),
-	                middleBoundary = (boundary.left + boundary.right) / 2,
 	                diffLeft = this.diffLeft,
 	                diffTop = this.diffTop,
-	                halfOffsetWidth,
-	                defaultLeft;
+	                elementsContainer = this.getEditorOption('elementsContainer'),
+	                elementsContainerAbsolute = ['absolute', 'fixed'].indexOf(window.getComputedStyle(elementsContainer).getPropertyValue('position')) > -1,
+	                relativeBoundary = {},
+	                halfOffsetWidth, defaultLeft, middleBoundary, elementsContainerBoundary, top;
 
 	            halfOffsetWidth = this.anchorPreview.offsetWidth / 2;
 	            var toolbarExtension = this.base.getExtensionByName('toolbar');
@@ -96451,12 +96466,35 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            defaultLeft = diffLeft - halfOffsetWidth;
 
-	            this.anchorPreview.style.top = Math.round(buttonHeight + boundary.bottom - diffTop + this.window.pageYOffset - this.anchorPreview.offsetHeight) + 'px';
+	            // If container element is absolute / fixed, recalculate boundaries to be relative to the container
+	            if (elementsContainerAbsolute) {
+	                elementsContainerBoundary = elementsContainer.getBoundingClientRect();
+	                ['top', 'left'].forEach(function (key) {
+	                    relativeBoundary[key] = boundary[key] - elementsContainerBoundary[key];
+	                });
+
+	                relativeBoundary.width = boundary.width;
+	                relativeBoundary.height = boundary.height;
+	                boundary = relativeBoundary;
+
+	                containerWidth = elementsContainerBoundary.width;
+
+	                // Adjust top position according to container scroll position
+	                top = elementsContainer.scrollTop;
+	            } else {
+	                // Adjust top position according to window scroll position
+	                top = this.window.pageYOffset;
+	            }
+
+	            middleBoundary = boundary.left + boundary.width / 2;
+	            top += buttonHeight + boundary.top + boundary.height - diffTop - this.anchorPreview.offsetHeight;
+
+	            this.anchorPreview.style.top = Math.round(top) + 'px';
 	            this.anchorPreview.style.right = 'initial';
 	            if (middleBoundary < halfOffsetWidth) {
 	                this.anchorPreview.style.left = defaultLeft + halfOffsetWidth + 'px';
 	                this.anchorPreview.style.right = 'initial';
-	            } else if ((this.window.innerWidth - middleBoundary) < halfOffsetWidth) {
+	            } else if ((containerWidth - middleBoundary) < halfOffsetWidth) {
 	                this.anchorPreview.style.left = 'auto';
 	                this.anchorPreview.style.right = 0;
 	            } else {
@@ -97443,13 +97481,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            [new RegExp(/<br class="Apple-interchange-newline">/g), '<br>'],
 
 	            // replace google docs italics+bold with a span to be replaced once the html is inserted
-	            [new RegExp(/<span[^>]*(font-style:italic;font-weight:bold|font-weight:bold;font-style:italic)[^>]*>/gi), '<span class="replace-with italic bold">'],
+	            [new RegExp(/<span[^>]*(font-style:italic;font-weight:(bold|700)|font-weight:(bold|700);font-style:italic)[^>]*>/gi), '<span class="replace-with italic bold">'],
 
 	            // replace google docs italics with a span to be replaced once the html is inserted
 	            [new RegExp(/<span[^>]*font-style:italic[^>]*>/gi), '<span class="replace-with italic">'],
 
 	            //[replace google docs bolds with a span to be replaced once the html is inserted
-	            [new RegExp(/<span[^>]*font-weight:bold[^>]*>/gi), '<span class="replace-with bold">'],
+	            [new RegExp(/<span[^>]*font-weight:(bold|700)[^>]*>/gi), '<span class="replace-with bold">'],
 
 	             // replace manually entered b/i/a tags with real ones
 	            [new RegExp(/&lt;(\/?)(i|b|a)&gt;/gi), '<$1$2>'],
@@ -97544,6 +97582,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * calling `cleanPaste(text)` or `pasteHTML(html, options)` helper methods.
 	         */
 	        cleanTags: ['meta'],
+
+	        /* unwrapTags: [Array]
+	         * list of element tag names to unwrap (remove the element tag but retain its child elements)
+	         * during paste when __cleanPastedHTML__ is `true` or when
+	         * calling `cleanPaste(text)` or `pasteHTML(html, options)` helper methods.
+	         */
+	        unwrapTags: [],
 
 	        init: function () {
 	            MediumEditor.Extension.prototype.init.apply(this, arguments);
@@ -97828,7 +97873,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        pasteHTML: function (html, options) {
 	            options = MediumEditor.util.defaults({}, options, {
 	                cleanAttrs: this.cleanAttrs,
-	                cleanTags: this.cleanTags
+	                cleanTags: this.cleanTags,
+	                unwrapTags: this.unwrapTags
 	            });
 
 	            var elList, workEl, i, fragmentBody, pasteBlock = this.document.createDocumentFragment();
@@ -97850,6 +97896,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	                MediumEditor.util.cleanupAttrs(workEl, options.cleanAttrs);
 	                MediumEditor.util.cleanupTags(workEl, options.cleanTags);
+	                MediumEditor.util.unwrapTags(workEl, options.unwrapTags);
 	            }
 
 	            MediumEditor.util.insertHTMLCommand(this.document, fragmentBody.innerHTML.replace(/&nbsp;/g, ' '));
@@ -98681,35 +98728,66 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 
-	            var windowWidth = this.window.innerWidth,
-	                middleBoundary = (boundary.left + boundary.right) / 2,
+	            var containerWidth = this.window.innerWidth,
 	                toolbarElement = this.getToolbarElement(),
 	                toolbarHeight = toolbarElement.offsetHeight,
 	                toolbarWidth = toolbarElement.offsetWidth,
 	                halfOffsetWidth = toolbarWidth / 2,
 	                buttonHeight = 50,
-	                defaultLeft = this.diffLeft - halfOffsetWidth;
+	                defaultLeft = this.diffLeft - halfOffsetWidth,
+	                elementsContainer = this.getEditorOption('elementsContainer'),
+	                elementsContainerAbsolute = ['absolute', 'fixed'].indexOf(window.getComputedStyle(elementsContainer).getPropertyValue('position')) > -1,
+	                positions = {},
+	                relativeBoundary = {},
+	                middleBoundary, elementsContainerBoundary;
+
+	            // If container element is absolute / fixed, recalculate boundaries to be relative to the container
+	            if (elementsContainerAbsolute) {
+	                elementsContainerBoundary = elementsContainer.getBoundingClientRect();
+	                ['top', 'left'].forEach(function (key) {
+	                    relativeBoundary[key] = boundary[key] - elementsContainerBoundary[key];
+	                });
+
+	                relativeBoundary.width = boundary.width;
+	                relativeBoundary.height = boundary.height;
+	                boundary = relativeBoundary;
+
+	                containerWidth = elementsContainerBoundary.width;
+
+	                // Adjust top position according to container scroll position
+	                positions.top = elementsContainer.scrollTop;
+	            } else {
+	                // Adjust top position according to window scroll position
+	                positions.top = this.window.pageYOffset;
+	            }
+
+	            middleBoundary = boundary.left + boundary.width / 2;
+	            positions.top += boundary.top - toolbarHeight;
 
 	            if (boundary.top < buttonHeight) {
 	                toolbarElement.classList.add('medium-toolbar-arrow-over');
 	                toolbarElement.classList.remove('medium-toolbar-arrow-under');
-	                toolbarElement.style.top = buttonHeight + boundary.bottom - this.diffTop + this.window.pageYOffset - toolbarHeight + 'px';
+	                positions.top += buttonHeight + boundary.height - this.diffTop;
 	            } else {
 	                toolbarElement.classList.add('medium-toolbar-arrow-under');
 	                toolbarElement.classList.remove('medium-toolbar-arrow-over');
-	                toolbarElement.style.top = boundary.top + this.diffTop + this.window.pageYOffset - toolbarHeight + 'px';
+	                positions.top += this.diffTop;
 	            }
 
 	            if (middleBoundary < halfOffsetWidth) {
-	                toolbarElement.style.left = defaultLeft + halfOffsetWidth + 'px';
-	                toolbarElement.style.right = 'initial';
-	            } else if ((windowWidth - middleBoundary) < halfOffsetWidth) {
-	                toolbarElement.style.left = 'auto';
-	                toolbarElement.style.right = 0;
+	                positions.left = defaultLeft + halfOffsetWidth;
+	                positions.right = 'initial';
+	            } else if ((containerWidth - middleBoundary) < halfOffsetWidth) {
+	                positions.left = 'auto';
+	                positions.right = 0;
 	            } else {
-	                toolbarElement.style.left = defaultLeft + middleBoundary + 'px';
-	                toolbarElement.style.right = 'initial';
+	                positions.left = defaultLeft + middleBoundary;
+	                positions.right = 'initial';
 	            }
+
+	            ['top', 'left', 'right'].forEach(function (key) {
+	                toolbarElement.style[key] = positions[key] + (isNaN(positions[key]) ? '' : 'px');
+	            });
 	        }
 	    });
 
@@ -98916,6 +98994,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // then pressing backspace key should change the <blockquote> to a <p> tag
 	            event.preventDefault();
 	            MediumEditor.util.execFormatBlock(this.options.ownerDocument, 'p');
+	        } else if (MediumEditor.util.isKey(event, MediumEditor.util.keyCode.ENTER) &&
+	                (MediumEditor.util.getClosestTag(node, 'blockquote') !== false) &&
+	                MediumEditor.selection.getCaretOffsets(node).right === 0) {
+
+	            // when cursor is at the end of <blockquote>,
+	            // then pressing enter key should create <p> tag, not <blockquote>
+	            p = this.options.ownerDocument.createElement('p');
+	            p.innerHTML = '<br>';
+	            node.parentElement.insertBefore(p, node.nextSibling);
+
+	            // move the cursor into the new paragraph
+	            MediumEditor.selection.moveCursor(this.options.ownerDocument, p);
+
+	            event.preventDefault();
+	        } else if (MediumEditor.util.isKey(event, MediumEditor.util.keyCode.BACKSPACE) &&
+	                MediumEditor.util.isMediumEditorElement(node.parentElement) &&
+	                !node.previousElementSibling &&
+	                node.nextElementSibling &&
+	                isEmpty.test(node.innerHTML)) {
+
+	            // when cursor is in the first element, it's empty and user presses backspace,
+	            // do delete action instead to get rid of the first element and move caret to 2nd
+	            event.preventDefault();
+	            MediumEditor.selection.moveCursor(this.options.ownerDocument, node.nextSibling);
+	            node.parentElement.removeChild(node);
 	        }
 	    }
 
@@ -100072,7 +100175,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	MediumEditor.version = MediumEditor.parseVersionString.call(this, ({
 	    // grunt-bump looks for this:
-	    'version': '5.21.0'
+	    'version': '5.22.0'
 	}).version);
 
 	    return MediumEditor;
@@ -101432,6 +101535,86 @@ return /******/ (function(modules) { // webpackBootstrap
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
+			module.hot.accept("!!./../../../css-loader/index.js!./medium-editor.css", function() {
+				var newContent = require("!!./../../../css-loader/index.js!./medium-editor.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 612 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(566)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "@-webkit-keyframes medium-editor-image-loading {\n  0% {\n    -webkit-transform: scale(0);\n            transform: scale(0); }\n  100% {\n    -webkit-transform: scale(1);\n            transform: scale(1); } }\n\n@keyframes medium-editor-image-loading {\n  0% {\n    -webkit-transform: scale(0);\n            transform: scale(0); }\n  100% {\n    -webkit-transform: scale(1);\n            transform: scale(1); } }\n\n@-webkit-keyframes medium-editor-pop-upwards {\n  0% {\n    opacity: 0;\n    -webkit-transform: matrix(0.97, 0, 0, 1, 0, 12);\n            transform: matrix(0.97, 0, 0, 1, 0, 12); }\n  20% {\n    opacity: .7;\n    -webkit-transform: matrix(0.99, 0, 0, 1, 0, 2);\n            transform: matrix(0.99, 0, 0, 1, 0, 2); }\n  40% {\n    opacity: 1;\n    -webkit-transform: matrix(1, 0, 0, 1, 0, -1);\n            transform: matrix(1, 0, 0, 1, 0, -1); }\n  100% {\n    -webkit-transform: matrix(1, 0, 0, 1, 0, 0);\n            transform: matrix(1, 0, 0, 1, 0, 0); } }\n\n@keyframes medium-editor-pop-upwards {\n  0% {\n    opacity: 0;\n    -webkit-transform: matrix(0.97, 0, 0, 1, 0, 12);\n            transform: matrix(0.97, 0, 0, 1, 0, 12); }\n  20% {\n    opacity: .7;\n    -webkit-transform: matrix(0.99, 0, 0, 1, 0, 2);\n            transform: matrix(0.99, 0, 0, 1, 0, 2); }\n  40% {\n    opacity: 1;\n    -webkit-transform: matrix(1, 0, 0, 1, 0, -1);\n            transform: matrix(1, 0, 0, 1, 0, -1); }\n  100% {\n    -webkit-transform: matrix(1, 0, 0, 1, 0, 0);\n            transform: matrix(1, 0, 0, 1, 0, 0); } }\n\n.medium-editor-anchor-preview {\n  font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n  font-size: 16px;\n  left: 0;\n  line-height: 1.4;\n  max-width: 280px;\n  position: absolute;\n  text-align: center;\n  top: 0;\n  word-break: break-all;\n  word-wrap: break-word;\n  visibility: hidden;\n  z-index: 2000; }\n  .medium-editor-anchor-preview a {\n    color: #fff;\n    display: inline-block;\n    margin: 5px 5px 10px; }\n\n.medium-editor-anchor-preview-active {\n  visibility: visible; }\n\n.medium-editor-dragover {\n  background: #ddd; }\n\n.medium-editor-image-loading {\n  -webkit-animation: medium-editor-image-loading 1s infinite ease-in-out;\n          animation: medium-editor-image-loading 1s infinite ease-in-out;\n  background-color: #333;\n  border-radius: 100%;\n  display: inline-block;\n  height: 40px;\n  width: 40px; }\n\n.medium-editor-placeholder {\n  position: relative; }\n  .medium-editor-placeholder:after {\n    content: attr(data-placeholder) !important;\n    font-style: italic;\n    position: absolute;\n    left: 0;\n    top: 0;\n    white-space: pre;\n    padding: inherit;\n    margin: inherit; }\n\n.medium-editor-placeholder-relative {\n  position: relative; }\n  .medium-editor-placeholder-relative:after {\n    content: attr(data-placeholder) !important;\n    font-style: italic;\n    position: relative;\n    white-space: pre;\n    padding: inherit;\n    margin: inherit; }\n\n.medium-toolbar-arrow-under:after, .medium-toolbar-arrow-over:before {\n  border-style: solid;\n  content: '';\n  display: block;\n  height: 0;\n  left: 50%;\n  margin-left: -8px;\n  position: absolute;\n  width: 0; }\n\n.medium-toolbar-arrow-under:after {\n  border-width: 8px 8px 0 8px; }\n\n.medium-toolbar-arrow-over:before {\n  border-width: 0 8px 8px 8px;\n  top: -8px; }\n\n.medium-editor-toolbar {\n  font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n  font-size: 16px;\n  left: 0;\n  position: absolute;\n  top: 0;\n  visibility: hidden;\n  z-index: 2000; }\n  .medium-editor-toolbar ul {\n    margin: 0;\n    padding: 0; }\n  .medium-editor-toolbar li {\n    float: left;\n    list-style: none;\n    margin: 0;\n    padding: 0; }\n    .medium-editor-toolbar li button {\n      box-sizing: border-box;\n      cursor: pointer;\n      display: block;\n      font-size: 14px;\n      line-height: 1.33;\n      margin: 0;\n      padding: 15px;\n      text-decoration: none; }\n      .medium-editor-toolbar li button:focus {\n        outline: none; }\n    .medium-editor-toolbar li .medium-editor-action-underline {\n      text-decoration: underline; }\n    .medium-editor-toolbar li .medium-editor-action-pre {\n      font-family: Consolas, \"Liberation Mono\", Menlo, Courier, monospace;\n      font-size: 12px;\n      font-weight: 100;\n      padding: 15px 0; }\n\n.medium-editor-toolbar-active {\n  visibility: visible; }\n\n.medium-editor-sticky-toolbar {\n  position: fixed;\n  top: 1px; }\n\n.medium-editor-relative-toolbar {\n  position: relative; }\n\n.medium-editor-toolbar-active.medium-editor-stalker-toolbar {\n  -webkit-animation: medium-editor-pop-upwards 160ms forwards linear;\n          animation: medium-editor-pop-upwards 160ms forwards linear; }\n\n.medium-editor-action-bold {\n  font-weight: bolder; }\n\n.medium-editor-action-italic {\n  font-style: italic; }\n\n.medium-editor-toolbar-form {\n  display: none; }\n  .medium-editor-toolbar-form input,\n  .medium-editor-toolbar-form a {\n    font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif; }\n  .medium-editor-toolbar-form .medium-editor-toolbar-form-row {\n    line-height: 14px;\n    margin-left: 5px;\n    padding-bottom: 5px; }\n  .medium-editor-toolbar-form .medium-editor-toolbar-input,\n  .medium-editor-toolbar-form label {\n    border: none;\n    box-sizing: border-box;\n    font-size: 14px;\n    margin: 0;\n    padding: 6px;\n    width: 316px;\n    display: inline-block; }\n    .medium-editor-toolbar-form .medium-editor-toolbar-input:focus,\n    .medium-editor-toolbar-form label:focus {\n      -webkit-appearance: none;\n         -moz-appearance: none;\n              appearance: none;\n      border: none;\n      box-shadow: none;\n      outline: 0; }\n  .medium-editor-toolbar-form a {\n    display: inline-block;\n    font-size: 24px;\n    font-weight: bolder;\n    margin: 0 10px;\n    text-decoration: none; }\n\n.medium-editor-toolbar-form-active {\n  display: block; }\n\n.medium-editor-toolbar-actions:after {\n  clear: both;\n  content: \"\";\n  display: table; }\n\n.medium-editor-element {\n  word-wrap: break-word;\n  min-height: 30px; }\n  .medium-editor-element img {\n    max-width: 100%; }\n  .medium-editor-element sub {\n    vertical-align: sub; }\n  .medium-editor-element sup {\n    vertical-align: super; }\n\n.medium-editor-hidden {\n  display: none; }\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 613 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(614);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(568)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../../css-loader/index.js!./default.css", function() {
+				var newContent = require("!!./../../../../css-loader/index.js!./default.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 614 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(566)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".medium-toolbar-arrow-under:after {\n  border-color: #242424 transparent transparent transparent;\n  top: 50px; }\n\n.medium-toolbar-arrow-over:before {\n  border-color: transparent transparent #242424 transparent;\n  top: -8px; }\n\n.medium-editor-toolbar {\n  background-color: #242424;\n  background: -webkit-linear-gradient(top, #242424, rgba(36, 36, 36, 0.75));\n  background: linear-gradient(to bottom, #242424, rgba(36, 36, 36, 0.75));\n  border: 1px solid #000;\n  border-radius: 5px;\n  box-shadow: 0 0 3px #000; }\n  .medium-editor-toolbar li button {\n    background-color: #242424;\n    background: -webkit-linear-gradient(top, #242424, rgba(36, 36, 36, 0.89));\n    background: linear-gradient(to bottom, #242424, rgba(36, 36, 36, 0.89));\n    border: 0;\n    border-right: 1px solid #000;\n    border-left: 1px solid #333;\n    border-left: 1px solid rgba(255, 255, 255, 0.1);\n    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);\n    color: #fff;\n    height: 50px;\n    min-width: 50px;\n    -webkit-transition: background-color .2s ease-in;\n            transition: background-color .2s ease-in; }\n    .medium-editor-toolbar li button:hover {\n      background-color: #000;\n      color: yellow; }\n  .medium-editor-toolbar li .medium-editor-button-first {\n    border-bottom-left-radius: 5px;\n    border-top-left-radius: 5px; }\n  .medium-editor-toolbar li .medium-editor-button-last {\n    border-bottom-right-radius: 5px;\n    border-top-right-radius: 5px; }\n  .medium-editor-toolbar li .medium-editor-button-active {\n    background-color: #000;\n    background: -webkit-linear-gradient(top, #242424, rgba(0, 0, 0, 0.89));\n    background: linear-gradient(to bottom, #242424, rgba(0, 0, 0, 0.89));\n    color: #fff; }\n\n.medium-editor-toolbar-form {\n  background: #242424;\n  border-radius: 5px;\n  color: #999; }\n  .medium-editor-toolbar-form .medium-editor-toolbar-input {\n    background: #242424;\n    box-sizing: border-box;\n    color: #ccc;\n    height: 50px; }\n  .medium-editor-toolbar-form a {\n    color: #fff; }\n\n.medium-editor-toolbar-anchor-preview {\n  background: #242424;\n  border-radius: 5px;\n  color: #fff; }\n\n.medium-editor-placeholder:after {\n  color: #b3b3b1; }\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 615 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(616);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(568)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
 			module.hot.accept("!!./../../node_modules/css-loader/index.js!./oligrapher.css", function() {
 				var newContent = require("!!./../../node_modules/css-loader/index.js!./oligrapher.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
@@ -101443,7 +101626,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 612 */
+/* 616 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(566)();

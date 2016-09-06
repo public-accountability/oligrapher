@@ -20,6 +20,9 @@ import Graph from './models/Graph';
 import merge from 'lodash/object/merge';
 import assign from 'lodash/object/assign';
 import difference from 'lodash/array/difference';
+
+require('medium-editor/dist/css/medium-editor.css');
+require('medium-editor/dist/css/themes/default.css');
 require ('./styles/oligrapher.css');
 
 class Oligrapher {
