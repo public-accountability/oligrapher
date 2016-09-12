@@ -70,7 +70,10 @@
       "jsx"
     ],
     "unmockedModulePathPatterns": [
-      "<rootDir>/node_modules/"
-    ]
+        "<rootDir>/node_modules/"
+    ],
+    "moduleNameMapper": {
+      "^.+\\.(css)$": "<rootDir>/app/styles/test/styleMock.js"
+    }
   }
 }
