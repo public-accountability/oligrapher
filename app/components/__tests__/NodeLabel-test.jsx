@@ -1,6 +1,3 @@
-jest.unmock("../NodeLabel");
-jest.unmock("../../NodeDisplaySettings");
-
 import React from "react";
 import { shallow } from "enzyme";
 import NodeLabel from "../NodeLabel";

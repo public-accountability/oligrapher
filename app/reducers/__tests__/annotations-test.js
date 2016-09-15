@@ -1,8 +1,3 @@
-jest.unmock("../annotations");
-jest.unmock('../../actions');
-jest.unmock("../../models/Annotation");
-jest.unmock("lodash");
-
 import reducer from "../annotations";
 import {loadAnnotations, toggleAnnotations} from '../../actions';
 

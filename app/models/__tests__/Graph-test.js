@@ -1,10 +1,3 @@
-jest.unmock('../Graph');
-jest.unmock('../Node');
-jest.unmock('../Edge');
-jest.unmock('../Caption');
-jest.unmock('../Helpers');
-jest.unmock('springy');
-
 import Graph from '../Graph';
 import Edge from '../Edge';
 import Caption from '../Caption';

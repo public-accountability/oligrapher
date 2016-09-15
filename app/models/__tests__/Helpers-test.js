@@ -1,5 +1,3 @@
-jest.unmock('../Helpers'); 
-
 import Helpers from '../Helpers';
 
 describe("Helpers", () => {

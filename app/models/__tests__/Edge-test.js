@@ -1,5 +1,3 @@
-jest.unmock('../Edge'); 
-
 import Edge from '../Edge';
 
 describe("Edge", () => {

@@ -1,5 +1,3 @@
-jest.dontMock('../Caption'); 
-
 const Caption = require('../Caption');
 
 describe("Caption", () => {

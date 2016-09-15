@@ -1,9 +1,3 @@
-jest.unmock("../graph");
-jest.unmock("../../models/Graph");
-jest.unmock("../../models/Node");
-jest.unmock("../../models/Edge");
-jest.unmock("../../models/Helpers");
-
 import reducer from "../graph";
 import Graph from '../../models/Graph';
 import Node from '../../models/Node';
