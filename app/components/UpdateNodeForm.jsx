@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import BaseComponent from './BaseComponent';
 import ChangeColorInput from './ChangeColorInput'
 import { HotKeys } from 'react-hotkeys';
-import merge from 'lodash/object/merge';
+import merge from 'lodash/merge';
 import ds from '../NodeDisplaySettings';
 
 export default class UpdateNodeForm extends BaseComponent {

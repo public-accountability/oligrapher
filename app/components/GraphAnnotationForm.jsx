@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import BaseComponent from './BaseComponent';
-import merge from 'lodash/object/merge';
-import pick from 'lodash/object/pick';
+import merge from 'lodash/merge';
+import pick from 'lodash/pick';
 import Editor from 'react-medium-editor';
 
 export default class GraphAnnotationForm extends BaseComponent {

@@ -3,12 +3,12 @@ import { LOAD_ANNOTATIONS, UPDATE_ANNOTATION, DELETE_ANNOTATION,
          CREATE_ANNOTATION, MOVE_ANNOTATION, TOGGLE_ANNOTATIONS,
          SHOW_ANNOTATION, SWAP_NODE_HIGHLIGHT, SWAP_EDGE_HIGHLIGHT, 
          SWAP_CAPTION_HIGHLIGHT, DELETE_ALL } from '../actions';
-import merge from 'lodash/object/merge';
-import range from 'lodash/utility/range';
-import assign from 'lodash/object/assign'; 
-import keys from 'lodash/object/keys';
-import cloneDeep from 'lodash/lang/cloneDeep';
-import isNumber from 'lodash/lang/isNumber';
+import merge from 'lodash/merge';
+import range from 'lodash/range';
+import assign from 'lodash/assign'; 
+import keys from 'lodash/keys';
+import cloneDeep from 'lodash/cloneDeep';
+import isNumber from 'lodash/isNumber';
 
 const initState = { list: [], visible: true, currentIndex: 0 };
 

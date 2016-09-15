@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import BaseComponent from './BaseComponent';
 import { HotKeys } from 'react-hotkeys';
-import mapKeys from 'lodash/object/mapKeys';
+import mapKeys from 'lodash/mapKeys';
 
 export default class AddConnectedNodesForm extends BaseComponent {
   constructor(props) {

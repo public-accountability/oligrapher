@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import BaseComponent from './BaseComponent';
 import { DraggableCore } from 'react-draggable';
 import ds from '../CaptionDisplaySettings';
-import merge from 'lodash/object/merge';
+import merge from 'lodash/merge';
 
 export default class Caption extends BaseComponent {
   constructor(props) {

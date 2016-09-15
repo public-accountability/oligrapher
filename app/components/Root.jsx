@@ -31,12 +31,12 @@ import GraphSettingsForm from './GraphSettingsForm';
 import SaveButton from './SaveButton';
 import GraphModel from '../models/Graph';
 import { HotKeys } from 'react-hotkeys';
-import pick from 'lodash/object/pick';
-import merge from 'lodash/object/merge';
-import cloneDeep from 'lodash/lang/cloneDeep';
-import isNumber from 'lodash/lang/isNumber';
-import keys from 'lodash/object/keys';
-import filter from 'lodash/collection/filter';
+import pick from 'lodash/pick';
+import merge from 'lodash/merge';
+import cloneDeep from 'lodash/cloneDeep';
+import isNumber from 'lodash/isNumber';
+import keys from 'lodash/keys';
+import filter from 'lodash/filter';
 
 export class Root extends Component {
   constructor(props) {

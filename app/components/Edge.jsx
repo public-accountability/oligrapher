@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import BaseComponent from './BaseComponent';
 import { DraggableCore } from 'react-draggable';
-import merge from 'lodash/object/merge';
+import merge from 'lodash/merge';
 import eds from '../EdgeDisplaySettings';
 import nds from '../NodeDisplaySettings';
 import classNames from 'classnames';

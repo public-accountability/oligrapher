@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import BaseComponent from './BaseComponent';
-import values from 'lodash/object/values';
-import sortBy from 'lodash/collection/sortBy';
+import values from 'lodash/values';
+import sortBy from 'lodash/sortBy';
 import { HotKeys } from 'react-hotkeys';
 
 export default class AddEdgeForm extends BaseComponent {

@@ -6,10 +6,10 @@ import Edge from './Edge';
 import Caption from './Caption';
 import GraphModel from '../models/Graph';
 import { DraggableCore } from 'react-draggable';
-import values from 'lodash/object/values';
-import min from 'lodash/collection/min';
-import max from 'lodash/collection/max';
-import includes from 'lodash/collection/includes';
+import values from 'lodash/values';
+import min from 'lodash/min';
+import max from 'lodash/max';
+import includes from 'lodash/includes';
 
 export default class Graph extends BaseComponent {
   constructor(props) {

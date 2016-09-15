@@ -1,5 +1,5 @@
 import { SHOW_GRAPH, LOAD_GRAPH, NEW_GRAPH } from '../actions';
-import merge from 'lodash/object/merge';
+import merge from 'lodash/merge';
 
 const initState = { 
   currentId: null
