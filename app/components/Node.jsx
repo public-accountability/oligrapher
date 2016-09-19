@@ -25,7 +25,6 @@ export default class Node extends BaseComponent {
     return (
       <DraggableCore
         handle=".handle"
-        moveOnStartChange={false}
         onStart={this._handleDragStart}
         onDrag={this._handleDrag}
         onStop={this._handleDragStop} >
@@ -52,27 +51,29 @@ export default class Node extends BaseComponent {
   }
 
   // keep initial position for comparison with drag position
-  _handleDragStart(e, ui) {
+  _handleDragStart(e, data) {
     e.preventDefault();
-    this._startDrag = ui.position;
-    this._startPosition = {
-      x: this.state.x,
-      y: this.state.y
-    };
+      this._startDrag = data;
+      this._startPosition = {
+          x: this.state.x,
+          y: this.state.y
+      }
   }
 
   // while dragging node and its edges are updated only in state, not store
-  _handleDrag(e, ui) {
+  _handleDrag(e, data) {
     if (this.props.isLocked) return;
 
     this._dragging = true; // so that _handleClick knows it's not just a click
 
     let n = this.props.node;
-    let deltaX = (ui.position.clientX - this._startDrag.clientX) / this.graph.state.actualZoom;
-    let deltaY = (ui.position.clientY - this._startDrag.clientY) / this.graph.state.actualZoom;
+    
+    let deltaX = (data.x - this._startDrag.x) / this.graph.state.actualZoom;
+    let deltaY = (data.y - this._startDrag.y) / this.graph.state.actualZoom;
+    
     let x = this._startPosition.x + deltaX;
     let y = this._startPosition.y + deltaY;
-
+    
     this.setState({ x, y });
 
     // update state of connecting edges
@@ -86,7 +87,7 @@ export default class Node extends BaseComponent {
   }
 
   // store updated once dragging is done
-  _handleDragStop(e, ui) {
+  _handleDragStop(e, data) {
     // event fires every mouseup so we check for actual drag before updating store
     if (this._dragging) {
       this.props.moveNode(this.props.node.id, this.state.x, this.state.y);
