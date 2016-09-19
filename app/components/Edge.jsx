@@ -5,6 +5,7 @@ import merge from 'lodash/merge';
 import eds from '../EdgeDisplaySettings';
 import nds from '../NodeDisplaySettings';
 import classNames from 'classnames';
+import { calculateDeltas } from  '../helpers';
 
 export default class Edge extends BaseComponent {
   constructor(props) {
@@ -26,7 +27,6 @@ export default class Edge extends BaseComponent {
       <DraggableCore
         ref={(c) => this.draggable = c}
         handle=".handle"
-        moveOnStartChange={false}
         onStart={this._handleDragStart}
         onDrag={this._handleDrag}
         onStop={this._handleDragStop}>
@@ -85,30 +85,25 @@ export default class Edge extends BaseComponent {
            JSON.stringify(nextState) !== JSON.stringify(this.state);
   }
 
-  _handleDragStart(event, ui) {
+  _handleDragStart(event, data) {
     event.preventDefault();
-    this._startDrag = ui.position;
+    this._startDrag = data;
     this._startPosition = {
       x: this.state.cx,
       y: this.state.cy
     }
   }
 
-  _handleDrag(event, ui) {
+  _handleDrag(event, data) {
     if (this.props.isLocked) return;
-
     this._dragging = true; // so that _handleClick knows it's not just a click
 
-    let e = this.props.edge;
-    let deltaX = (ui.position.clientX - this._startDrag.clientX) / this.graph.state.actualZoom;
-    let deltaY = (ui.position.clientY - this._startDrag.clientY) / this.graph.state.actualZoom;
-    let cx = this._startPosition.x + deltaX;
-    let cy = this._startPosition.y + deltaY;
-
+    let { x, y } = calculateDeltas(data, this._startPosition, this._startDrag, this.graph.state.actualZoom);
+    let [ cx, cy ] = [ x, y ];
     this.setState({ cx, cy });
   }
 
-  _handleDragStop(e, ui) {
+  _handleDragStop(e, data) {
     // event fires every mouseup so we check for actual drag before updating store
     if (this._dragging) {
       this.props.moveEdge(this.props.edge.id, this.state.cx, this.state.cy);
