@@ -1,4 +1,4 @@
-import merge from 'lodash/object/merge';
+import merge from 'lodash/merge';
 import Helpers from './Helpers';
 
 export default class Edge {

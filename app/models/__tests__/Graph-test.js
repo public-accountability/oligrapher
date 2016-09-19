@@ -1,18 +1,11 @@
-jest.unmock('../Graph');
-jest.unmock('../Node');
-jest.unmock('../Edge');
-jest.unmock('../Caption');
-jest.unmock('../Helpers');
-jest.unmock('springy');
-
 import Graph from '../Graph';
 import Edge from '../Edge';
 import Caption from '../Caption';
-import merge from 'lodash/object/merge';
-import values from 'lodash/object/values';
-import uniq from 'lodash/array/uniq';
-import range from 'lodash/utility/range';
-import pick from 'lodash/object/pick';
+import merge from 'lodash/merge';
+import values from 'lodash/values';
+import uniq from 'lodash/uniq';
+import range from 'lodash/range';
+import pick from 'lodash/pick';
 
 describe("Graph", () => {
 

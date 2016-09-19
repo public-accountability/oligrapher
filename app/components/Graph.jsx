@@ -6,10 +6,11 @@ import Edge from './Edge';
 import Caption from './Caption';
 import GraphModel from '../models/Graph';
 import { DraggableCore } from 'react-draggable';
-import values from 'lodash/object/values';
-import min from 'lodash/collection/min';
-import max from 'lodash/collection/max';
-import includes from 'lodash/collection/includes';
+import values from 'lodash/values';
+import min from 'lodash/min';
+import max from 'lodash/max';
+import includes from 'lodash/includes';
+import { calculateDeltas } from '../helpers';
 
 export default class Graph extends BaseComponent {
   constructor(props) {
@@ -29,7 +30,6 @@ export default class Graph extends BaseComponent {
       <svg id="svg" version="1.1" xmlns="http://www.w3.org/2000/svg" className="Graph" width="100%" height={height} viewBox={viewBox} preserveAspectRatio="xMidYMid">
         <DraggableCore
           handle="#zoom-handle"
-          moveOnStartChange={false}
           onStart={this._handleDragStart}
           onDrag={this._handleDrag}
           onStop={this._handleDragStop}>
@@ -182,37 +182,40 @@ export default class Graph extends BaseComponent {
 
   // GRAPH DRAGGING
 
-  _handleDragStart(e, ui) {
-    this._startDrag = ui.position;
+  _handleDragStart(e, data) {
+    this._startDrag = data;
     this._startPosition = {
       x: this.state.x,
       y: this.state.y
     };
   }
 
-  _handleDrag(e, ui) {
+  _handleDrag(e, data) {
     this._dragging = true;
-    let { x, y } = this._calculateDeltas(e, ui);
+    let { x, y } = calculateDeltas(data, this._startPosition, this._startDrag, this.state.actualZoom);
     // in order to avoid rerendering state isn't updated until drag is finished
     ReactDOM.findDOMNode(this).querySelector("#zoom").setAttribute("transform", `translate(${x}, ${y})`);
   }
 
-  _handleDragStop(e, ui) {
+  _handleDragStop(e, data) {
     // event fires every mouseup so we check for actual drag before updating state
     if (this._dragging) {
-      let { x, y } = this._calculateDeltas(e, ui);
+      let { x, y } = calculateDeltas(data, this._startPosition, this._startDrag, this.state.actualZoom);
       this.setState({ x, y });
       this._dragging = false;
     }
   }
 
-  _calculateDeltas(e, ui) {
-    let deltaX = (ui.position.clientX - this._startDrag.clientX) / this.state.actualZoom;
-    let deltaY = (ui.position.clientY - this._startDrag.clientY) / this.state.actualZoom;
-    let x = deltaX + this._startPosition.x;
-    let y = deltaY + this._startPosition.y;
-    return { x, y };
-  }
+  // _calculateDeltas(e, ui) {
+  //   let deltaX = (data.x - this._startDrag.x) / this.graph.state.actualZoom;
+  //   let deltaY = (data.y - this._startDrag.y) / this.graph.state.actualZoom;
+  //   // let deltaX = (ui.position.clientX - this._startDrag.clientX) / this.state.actualZoom;
+  //   // let deltaY = (ui.position.clientY - this._startDrag.clientY) / this.state.actualZoom;
+    
+  //   let x = deltaX + this._startPosition.x;
+  //   let y = deltaY + this._startPosition.y;
+  //   return { x, y };
+  // }
 
   // TRANSITION ANIMATION
 

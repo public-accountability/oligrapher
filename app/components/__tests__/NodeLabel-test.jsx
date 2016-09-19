@@ -1,11 +1,8 @@
-jest.unmock("../NodeLabel");
-jest.unmock("../../NodeDisplaySettings");
-
 import React from "react";
 import { shallow } from "enzyme";
 import NodeLabel from "../NodeLabel";
 import ds from "../../NodeDisplaySettings";
-import merge from "lodash/object/merge";
+import merge from "lodash/merge";
 
 describe("NodeLabel", () => {
   let wrapper;

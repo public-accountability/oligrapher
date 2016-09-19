@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import BaseComponent from './BaseComponent';
 import { DraggableCore } from 'react-draggable';
 import ds from '../CaptionDisplaySettings';
-import merge from 'lodash/object/merge';
+import merge from 'lodash/merge';
+import { calculateDeltas } from '../helpers';
 
 export default class Caption extends BaseComponent {
   constructor(props) {
@@ -20,7 +21,6 @@ export default class Caption extends BaseComponent {
     return (
       <DraggableCore
         handle=".handle"
-        moveOnStartChange={false}
         onStart={this._handleDragStart}
         onDrag={this._handleDrag}
         onStop={this._handleDragStop}>
@@ -78,29 +78,23 @@ export default class Caption extends BaseComponent {
     }
   }
 
-  _handleDragStart(e, ui) {
+  _handleDragStart(e, data) {
     e.preventDefault();
-    this._startDrag = ui.position;
+    this._startDrag = data;
     this._startPosition = {
       x: this.state.x,
       y: this.state.y
     };
   }
 
-  _handleDrag(e, ui) {
+  _handleDrag(e, data) {
     if (this.props.isLocked) return;
-
     this._dragging = true;
-
-    let deltaX = (ui.position.clientX - this._startDrag.clientX) / this.graph.state.actualZoom;
-    let deltaY = (ui.position.clientY - this._startDrag.clientY) / this.graph.state.actualZoom;
-    let x = this._startPosition.x + deltaX;
-    let y = this._startPosition.y + deltaY;
-
+    let { x, y } = calculateDeltas(data, this._startPosition, this._startDrag, this.graph.state.actualZoom);
     this.setState({ x, y });
   }
 
-  _handleDragStop(e, ui) {
+  _handleDragStop(e, data) {
     // event fires every mouseup so we check for actual drag before updating store
     if (this._dragging) {
       this.props.moveCaption(this.props.caption.id, this.state.x, this.state.y);

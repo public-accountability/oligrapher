@@ -8,7 +8,7 @@ export default class GraphTitleForm extends Component {
         <input 
           ref="title"
           id="oligrapherTitleInput" 
-          value={this.props.title}
+          value={this.props.title || '' }
           placeholder="title"
           onChange={(event) => this._handleChange(event)} />
       </h1>

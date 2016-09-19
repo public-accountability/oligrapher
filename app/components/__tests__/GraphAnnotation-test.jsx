@@ -1,8 +1,5 @@
-jest.unmock("../GraphAnnotation");
-
 import React from "react";
 import { shallow } from "enzyme";
-
 import GraphAnnotation from "../GraphAnnotation";
 
 describe("GraphAnnotation", () => {
@@ -15,7 +12,7 @@ describe("GraphAnnotation", () => {
   beforeEach(() => {
     wrapper = shallow(
       <GraphAnnotation annotation={annotation} />
-    )
+    );
   });
 
   it("shows header", () => {

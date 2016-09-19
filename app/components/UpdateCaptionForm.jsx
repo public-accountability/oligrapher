@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import BaseComponent from './BaseComponent';
 import { HotKeys } from 'react-hotkeys';
-import merge from 'lodash/object/merge';
+import merge from 'lodash/merge';
 
 export default class UpdateCaptionForm extends BaseComponent {
 

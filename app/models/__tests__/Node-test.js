@@ -1,5 +1,3 @@
-jest.dontMock('../Node'); 
-
 const Node = require('../Node');
 
 describe("Node", () => {

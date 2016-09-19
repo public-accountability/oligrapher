@@ -1,9 +1,3 @@
-jest.unmock('../Graph');
-jest.unmock('../Node');
-jest.unmock('../Edge');
-jest.unmock('../Caption');
-jest.unmock('classnames');
-
 import React from 'react'; 
 import { shallow } from "enzyme";
 import Graph from '../Graph';

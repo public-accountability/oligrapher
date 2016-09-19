@@ -1,11 +1,11 @@
 import shortid from 'shortid';
-import clone from 'lodash/lang/clone';
-import each from 'lodash/collection/each';
-import isEmpty from 'lodash/lang/isEmpty';
-import isNumber from 'lodash/lang/isNumber';
-import isBoolean from 'lodash/lang/isBoolean';
-import isArray from 'lodash/lang/isArray';
-import isPlainObject from 'lodash/lang/isPlainObject';
+import clone from 'lodash/clone';
+import each from 'lodash/each';
+import isEmpty from 'lodash/isEmpty';
+import isNumber from 'lodash/isNumber';
+import isBoolean from 'lodash/isBoolean';
+import isArray from 'lodash/isArray';
+import isPlainObject from 'lodash/isPlainObject';
 
 const compact = (o) => {
   let cloned = clone(o);

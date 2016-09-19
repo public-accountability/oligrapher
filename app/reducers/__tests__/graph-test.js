@@ -1,19 +1,13 @@
-jest.unmock("../graph");
-jest.unmock("../../models/Graph");
-jest.unmock("../../models/Node");
-jest.unmock("../../models/Edge");
-jest.unmock("../../models/Helpers");
-
 import reducer from "../graph";
 import Graph from '../../models/Graph';
 import Node from '../../models/Node';
 import Edge from '../../models/Edge';
 import Helpers from '../../models/Helpers';
-import merge from 'lodash/object/merge';
-import assign from 'lodash/object/assign';
-import values from 'lodash/object/values';
-import uniq from 'lodash/array/uniq';
-import keys from 'lodash/object/keys';
+import merge from 'lodash/merge';
+import assign from 'lodash/assign';
+import values from 'lodash/values';
+import uniq from 'lodash/uniq';
+import keys from 'lodash/keys';
 
 describe("graph reducer", () => {
 

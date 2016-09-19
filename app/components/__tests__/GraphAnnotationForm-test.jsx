@@ -1,9 +1,5 @@
-jest.unmock("../BaseComponent");
-jest.unmock("../GraphAnnotationForm");
-
 import React from "react";
 import { shallow, mount } from "enzyme";
-
 import GraphAnnotationForm from "../GraphAnnotationForm";
 import Editor from "react-medium-editor";
 

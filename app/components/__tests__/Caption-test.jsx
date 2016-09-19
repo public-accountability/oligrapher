@@ -1,7 +1,3 @@
-jest.unmock('../BaseComponent');
-jest.unmock('../Caption');
-jest.unmock('react-draggable');
-
 import React from 'react'; 
 import { shallow } from "enzyme";
 import Caption from '../Caption';

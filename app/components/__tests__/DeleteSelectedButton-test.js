@@ -1,5 +1,3 @@
-jest.unmock('../DeleteSelectedButton');
-
 import React from "react";
 import { shallow } from "enzyme";
 import DeleteSelectedButton from '../DeleteSelectedButton';

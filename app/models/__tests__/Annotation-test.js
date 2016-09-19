@@ -1,5 +1,3 @@
-jest.unmock('../Annotation');
-
 import Annotation from '../Annotation';
 
 describe('Annotation', ()=>{

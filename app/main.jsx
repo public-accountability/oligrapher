@@ -17,9 +17,9 @@ import { loadGraph, showGraph, newGraph,
          loadAnnotations, setTitle,
          toggleEditTools } from './actions';
 import Graph from './models/Graph';
-import merge from 'lodash/object/merge';
-import assign from 'lodash/object/assign';
-import difference from 'lodash/array/difference';
+import merge from 'lodash/merge';
+import assign from 'lodash/assign';
+import difference from 'lodash/difference';
 
 require('medium-editor/dist/css/medium-editor.css');
 require('medium-editor/dist/css/themes/default.css');

@@ -4,10 +4,10 @@ import { HotKeys } from 'react-hotkeys';
 import BaseComponent from './BaseComponent';
 import ZoomButtons from './ZoomButtons';
 import EditTools from './EditTools';
-import merge from 'lodash/object/merge';
-import values from 'lodash/object/values';
-import cloneDeep from 'lodash/lang/cloneDeep';
-import pick from 'lodash/object/pick';
+import merge from 'lodash/merge';
+import values from 'lodash/values';
+import cloneDeep from 'lodash/cloneDeep';
+import pick from 'lodash/pick';
 require('../styles/bootstrap-3.3.6.css');
 require('../styles/oligrapher.editor.css');
 

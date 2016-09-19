@@ -1,4 +1,4 @@
-import merge from 'lodash/object/merge';
+import merge from 'lodash/merge';
 import shortid from 'shortid';
 
 export default class Annotation {

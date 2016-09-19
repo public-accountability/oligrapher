@@ -1,5 +1,5 @@
-import merge from 'lodash/object/merge';
-import isNumber from 'lodash/lang/isNumber';
+import merge from 'lodash/merge';
+import isNumber from 'lodash/isNumber';
 import Helpers from './Helpers';
 
 class Node {
