@@ -8,6 +8,7 @@ import Graph from '../models/Graph';
 import merge from 'lodash/merge';
 import classNames from 'classnames';
 import Helpers from '../models/Helpers';
+import { calculateDeltas } from '../helpers';
 
 export default class Node extends BaseComponent {
   constructor(props) {
@@ -67,13 +68,8 @@ export default class Node extends BaseComponent {
     this._dragging = true; // so that _handleClick knows it's not just a click
 
     let n = this.props.node;
-    
-    let deltaX = (data.x - this._startDrag.x) / this.graph.state.actualZoom;
-    let deltaY = (data.y - this._startDrag.y) / this.graph.state.actualZoom;
-    
-    let x = this._startPosition.x + deltaX;
-    let y = this._startPosition.y + deltaY;
-    
+
+    let { x, y } = calculateDeltas(data, this._startPosition, this._startDrag, this.graph.state.actualZoom);
     this.setState({ x, y });
 
     // update state of connecting edges
