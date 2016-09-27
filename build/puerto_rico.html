@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8"/><meta charset="UTF-8">
+        <title>Oligrapher Demo</title>
+        <script src="http://localhost:8090/webpack-dev-server.js"></script>
+        <script src="http://localhost:8090/build/vendors.js"></script>
+        <script src="http://localhost:8090/build/oligrapher.min.js"></script>
+        <script src="LsDataSource.js"></script>
+        <script src="puerto-rico-sample-data.js"></script>
+        <style>
+         body {
+             margin: 10px;
+         }
+        </style>
+    </head>
+    <body>
+        <div id="oligrapher"></div>
+        <script>
+         var elem = document.getElementById('oligrapher');
+         elem.style.height = window.innerHeight - 100 + "px";
+
+         var oli = new Oligrapher({ 
+             root: elem,
+             isEditor: false,
+             isLocked: false,
+             logActions: false,
+             viewOnlyHighlighted: true,
+             dataSource: LsDataSource,
+             data: puertoRico,
+             user: { name: "LittleSis", url: "http://example.com/user/UserName" },
+             date: "August 30, 2015",
+             startAnnotation: 0,
+             showSaveButton: true,
+             onSave: function(data) { console.log(data); },
+             onNav: function(index) { console.log("navigating to annotation " + String(index)); },
+             links: [
+                 { text: "some", url: "http://some.net" },
+                 { id: "exampleLink", text: "example", url: "http://example.com" },
+                 { method: "POST", text: "clone", url: "http://example.com/clone" }
+             ],
+             settings: {
+                 is_private: false,
+                 is_featured: false
+             }
+         });
+        </script>
+    </body>
+</html>
