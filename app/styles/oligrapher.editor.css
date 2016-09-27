@@ -231,18 +231,19 @@ button#toggleEditTools {
 }
 
 .strokeMain{
-  width:50%;
+  width:25%;
   margin-right: 2%;
   margin-left: 2%;
 }
 
 .arrowHead{
-  width:8%;
+  width:20%;
 }
 
 .strokeDropdowns{
   display: inline-block;
-  width:300px;
+  width:200px;
+  margin-right: 120px;
 }
 
 .dropdownHolder{
