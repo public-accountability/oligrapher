@@ -243,7 +243,7 @@ button#toggleEditTools {
 .strokeDropdowns{
   display: inline-block;
   width:200px;
-  margin-right: 120px;
+  margin-right: 145px;
 }
 
 .dropdownHolder{
@@ -296,7 +296,7 @@ button#toggleEditTools {
 
 .edgeDropdownOptions{
   position: absolute;
-  width: inherit;
+  width: 20%;
   margin-top: 80px;
 }
 
