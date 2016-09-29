@@ -17,7 +17,6 @@ export default class EditTools extends BaseComponent {
   constructor(props) {
     super(props);
     this.bindAll('_handleDelete');
-
   }
 
   render() {

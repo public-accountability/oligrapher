@@ -2,21 +2,36 @@ import React, { Component, PropTypes } from 'react';
 import BaseComponent from './BaseComponent';
 import { DraggableCore } from 'react-draggable';
 import merge from 'lodash/merge';
+import includes from 'lodash/includes';
 import eds from '../EdgeDisplaySettings';
 import nds from '../NodeDisplaySettings';
 import classNames from 'classnames';
 import { calculateDeltas } from  '../helpers';
+
+const noUpdateValues = [false, 0, null, "left", "right", "both"];
 
 export default class Edge extends BaseComponent {
   constructor(props) {
     super(props);
     this.bindAll('_handleDragStart', '_handleDrag', '_handleDragStop', '_handleClick', '_handleTextClick');
     // need control point immediately for dragging
-    let { cx, cy } = this._calculateGeometry(props.edge.display);
+    let { cx, cy, is_reverse } = this._calculateGeometry(props.edge.display);
+    if (!includes(noUpdateValues, this.props.edge.display.arrow)){
+      this.props.getArrow(is_reverse, this.props.edge);
+    }
+
     this.state = merge({}, props.edge.display, { cx, cy });
+
+  }
+
+  componentDidMount(){
+    if (includes(["left", "right", "both"], this.props.edge.display.arrow)){
+      this.props.updateArrow(this.props.edge);
+    }
   }
 
   render() {
+
     let e = this.props.edge;
     let sp = this._getSvgParams(e);
     let width = 1 + (e.display.scale - 1) * 5;
@@ -78,6 +93,7 @@ export default class Edge extends BaseComponent {
   componentWillReceiveProps(props) {
     let newState = merge({ label: null, url: null }, props.edge.display);
     this.setState(newState);
+
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -129,7 +145,6 @@ export default class Edge extends BaseComponent {
     let e = edge;
     let { label, scale, arrow, dash, status } = this.state;
     let { x, y, cx, cy, xa, ya, xb, yb, is_reverse } = this._calculateGeometry(this.state);
-
     const pathId = `path-${e.id}`;
     const fontSize = 10 * Math.sqrt(scale);
 
@@ -141,8 +156,8 @@ export default class Edge extends BaseComponent {
       fontSize: fontSize,
       dy: -6 * Math.sqrt(scale),
       textPath: { __html: `<textPath class="labelpath" startOffset="50%" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#${pathId}" font-size="${fontSize}">${label}</textPath>` },
-      markerStart: (arrow && is_reverse) ? "url(#marker2)" : "",
-      markerEnd: (arrow && !is_reverse) ? "url(#marker1)" : "",
+      markerStart: (arrow == "left" || arrow == "both") ? "url(#marker2)" : "",
+      markerEnd: (arrow == "right" || arrow == "both") ? "url(#marker1)" : "",
       lineColor: eds.lineColor[status],
       textColor: eds.textColor[status],
       bgColor: eds.bgColor[status],

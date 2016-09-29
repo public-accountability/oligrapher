@@ -254,4 +254,22 @@ describe("Graph", () => {
       expect(scales).toBeArrayOfNumbers;
     });
   });
+
+  describe('updateEdge', ()=> {
+    
+    it('changes label', () => {
+      let new_graph = Graph.updateEdge(basicGraph, 1, {display: { label: "This is a better label for edge 1" }});
+      expect(new_graph.edges['1'].display.label).toEqual("This is a better label for edge 1" );
+    });
+
+    it('can merge nested proprieties', () => {
+      let new_graph = Graph.updateEdge(basicGraph, 1, {display: { label: "This is a better label for edge 1" }});
+      let new_graph2 = Graph.updateEdge(new_graph, 1, {display: { dash: true } });
+      expect(new_graph2.edges['1'].display.label).toEqual("This is a better label for edge 1" );
+      expect(new_graph2.edges['1'].display.dash).toEqual(true);
+    });
+
+  });
+
+
 });

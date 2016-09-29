@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import BaseComponent from './BaseComponent';
+import EdgeDropdown from './EdgeDropdown';
 import { HotKeys } from 'react-hotkeys';
 import values from 'lodash/values';
 import sortBy from 'lodash/sortBy'; 
@@ -9,7 +10,6 @@ export default class UpdateEdgeForm extends BaseComponent {
 
   render() {
     let { display } = this.props.data;
-
     const keyMap = { 
       'esc': 'esc'
     };
@@ -17,6 +17,7 @@ export default class UpdateEdgeForm extends BaseComponent {
     const keyHandlers = {
       'esc': () => this.props.deselect()
     };
+
 
     const scales = [
       [null, "Scale"],
@@ -31,16 +32,6 @@ export default class UpdateEdgeForm extends BaseComponent {
         <HotKeys keyMap={keyMap} handlers={keyHandlers}>
           <div>
             <input 
-              type="checkbox" 
-              ref="arrow" 
-              checked={display.arrow} 
-              onChange={() => this.apply()} /> arrow
-            &nbsp;&nbsp;<input 
-              type="checkbox" 
-              ref="dash" 
-              checked={display.dash} 
-              onChange={() => this.apply()} /> dash
-            &nbsp;&nbsp;<input 
               type="text" 
               className="form-control input-sm"
               placeholder="label" 
@@ -67,19 +58,24 @@ export default class UpdateEdgeForm extends BaseComponent {
               value={display.url}
               onChange={() => this.apply()} />
           </div>
+          <EdgeDropdown
+            ref="edgeDropdown"
+            arrow={display.arrow}
+             dash={display.dash}
+            edgeId={this.props.data.id}
+            updateEdge={this.props.updateEdge}
+            onChange={(arrow, dash) => this.apply(arrow, dash)}/>
         </HotKeys>
       </div>
     );
   }
 
-  apply() {
-    if (this.props.data) {
+  apply(whichArrow, isDashed) {
       let label = this.refs.label.value;
-      let arrow = this.refs.arrow.checked;
-      let dash = this.refs.dash.checked;
+      let arrow = whichArrow || this.refs.edgeDropdown.props.whichArrow;
+      let dash = isDashed;
       let scale = parseFloat(this.refs.scale.value);
       let url = this.refs.url.value.trim();
       this.props.updateEdge(this.props.data.id, { display: { label, arrow, dash, scale, url } });
-    }
   }
 }

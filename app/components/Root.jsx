@@ -161,6 +161,7 @@ export class Root extends Component {
                   <Graph 
                     ref={(c) => { this.graph = c; if (c) { c.root = this; } }}
                     {...this.props}
+                    graphApi={graphApi}
                     graph={annotatedGraph ? annotatedGraph : graph}
                     isEditor={isEditor}
                     isLocked={isLocked}

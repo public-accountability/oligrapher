@@ -100,6 +100,7 @@ button#toggleEditTools {
   top: 15px;
   right: 15px;
   margin: 0 auto;
+  text-align: right;
 }
 
 .editForm h3 {
@@ -212,4 +213,94 @@ button#toggleEditTools {
 
 #edgeUrlInput {
   width: 337px;
+}
+
+.svgDropdown{
+  height: auto;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075); 
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075); 
+  -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s; 
+  -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+  list-style-type: none;
+  padding:0px;
+  margin:0px;
+  top:0px;
+}
+
+.strokeMain{
+  width:25%;
+  margin-right: 2%;
+  margin-left: 2%;
+}
+
+.arrowHead{
+  width:20%;
+}
+
+.strokeDropdowns{
+  display: inline-block;
+  width:200px;
+  margin-right: 145px;
+}
+
+.dropdownHolder{
+  display: inline-block;
+}
+
+.svgDropdown li, .svgDropdown div{
+  width: 100%;
+  height: 29px; 
+  list-style: none;
+}
+
+.svgDropdown li:not(:last-child){
+  border-bottom: 1px solid #ccc; 
+}
+
+/*displays oddly in chrome if there is no border on last element for some reason*/
+.svgDropdown li:last-child, .svgDropdown div{
+  border-bottom: 1px solid rgba(0,0,0,0);
+}
+
+.svgDropdown li svg, .svgDropdown div svg{
+  width: 100%;
+  height: 100%;
+  shape-rendering: crispEdges;
+  cursor: pointer;
+}
+
+.svgDropdown li:hover{
+  background-color: yellow;
+}
+
+.svgDropdown li svg line, .svgDropdown div svg line{
+  stroke:#aaa;
+  stroke-width:1px;
+  stroke-linecap: butt;
+}
+
+.svgDropdownDashed svg line{
+  stroke-dasharray: 5, 3;
+}
+
+.svgDropdownLeftArrow svg line{
+  marker-end: url(#marker1);
+}
+
+.svgDropdownRightArrow svg line{
+  marker-start: url(#marker2);
+}
+
+.edgeDropdownOptions{
+  position: absolute;
+  width: 20%;
+  margin-top: 80px;
+}
+
+.oligrapherEdgeWidthDropdown{
+  width: auto;
+  text-align: right;
 }
