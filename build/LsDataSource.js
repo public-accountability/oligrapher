@@ -20,18 +20,25 @@
     }
 
     return parts.join("&");
-  }
+  };
 
   var get = function(url, data, onSucess, onFail) {
     var httpRequest = new XMLHttpRequest();
 
     if (!httpRequest) {
-      alert('Giving up :( Cannot create an XMLHTTP instance');
+      console.error('Giving up :( Cannot create an XMLHTTP instance');
+      return false;
+    }
+
+    if (data) {
+      var fullUrl = url + "?" + toQueryString(data);
+    } else {
+      console.error('Cannot make a request without data!');
       return false;
     }
 
     httpRequest.onreadystatechange = function() {
-      if (httpRequest.readyState === XMLHttpRequest.DONE) {
+      if (httpRequest.readyState === 4) {
         if (httpRequest.status === 200) {
           onSucess(JSON.parse(httpRequest.responseText));
         } else {
@@ -41,8 +48,6 @@
         }
       }
     };
-
-    var fullUrl = url + (data ? "?" + toQueryString(data) : "")
 
     httpRequest.open('GET', fullUrl);
     httpRequest.send();
@@ -114,7 +119,7 @@
   LsDataSource.noConflict = function() {
     root.LsDataSource = previous_LsDataSource;
     return LsDataSource;
-  }
+  };
 
   if (typeof exports !== 'undefined') {
     if (typeof module !== 'undefined' && module.exports) {

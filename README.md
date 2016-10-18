@@ -108,7 +108,7 @@ The ```id``` of the graph itself is optional, Oligrapher will generate it if not
   - ```url:``` optional source URL
   - ```scale:``` relative thickness of edge (```1``` is default, ```2``` is twice as thick, etc)
   - ```status:```  default is ```normal```, can also be ```highlighted``` or ```faded```
-  - ```arrow:``` whether the edge has an arrow indicating a direction (default is ```false```)
+  - ```arrow:``` Direction of the arrow: ``` 'left', 'right', 'both' or false ```  (default is ```false```)
   - ```dash:``` the kind of dash displayed in edge's line (default is ```null```, a solid line)
   - ```cx:``` x-coordinate of the control point for the edge's quadratic [Bezier curve](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Bezier_Curves), *relative to the midpoint of the straight line between the two nodes* (if not specified, this is computed to display a slight curve)
   - ```cy:``` y-coordinate of the control point for the edge's quadratic [Bezier curve](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Bezier_Curves), *relative to the midpoint of the straight line between the two nodes* (if not specified, this is computed to display a slight curve)fa
