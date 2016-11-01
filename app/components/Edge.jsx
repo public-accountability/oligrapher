@@ -16,22 +16,10 @@ export default class Edge extends BaseComponent {
     this.bindAll('_handleDragStart', '_handleDrag', '_handleDragStop', '_handleClick', '_handleTextClick');
     // need control point immediately for dragging
     let { cx, cy, is_reverse } = this._calculateGeometry(props.edge.display);
-    if (!includes(noUpdateValues, this.props.edge.display.arrow)){
-      this.props.getArrow(is_reverse, this.props.edge);
-    }
-
     this.state = merge({}, props.edge.display, { cx, cy });
-
   }
-
-  componentDidMount(){
-    if (includes(["left", "right", "both"], this.props.edge.display.arrow)){
-      this.props.updateArrow(this.props.edge);
-    }
-  }
-
+  
   render() {
-
     let e = this.props.edge;
     let sp = this._getSvgParams(e);
     let width = 1 + (e.display.scale - 1) * 5;
@@ -156,14 +144,48 @@ export default class Edge extends BaseComponent {
       fontSize: fontSize,
       dy: -6 * Math.sqrt(scale),
       textPath: { __html: `<textPath class="labelpath" startOffset="50%" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#${pathId}" font-size="${fontSize}">${label}</textPath>` },
-      markerStart: (arrow == "left" || arrow == "both") ? "url(#marker2)" : "",
-      markerEnd: (arrow == "right" || arrow == "both") ? "url(#marker1)" : "",
+      markerStart: this._markerStartArrow(arrow, is_reverse),
+      markerEnd: this._markerEndArrow(arrow, is_reverse),
       lineColor: eds.lineColor[status],
       textColor: eds.textColor[status],
       bgColor: eds.bgColor[status],
       bgOpacity: eds.bgOpacity[status]
     };
   }
+
+    
+    // Arrows indicate directionaly.
+    // if an arrow is '1->2' it means that the arrows goes from "node1" to "node2"
+    // and therefore the marker should be placed at the end of the path.
+    // However, if the path is reversed (meaning node 2 is to the left of node 1)
+    // then the arrow shoudld be placed at the start.
+    // Possible arrow values: '1->2', '2->1', 'both'
+    
+    // str, boolean -> str
+    _markerStartArrow(arrow, is_reverse) {
+        if (arrow === "1->2" && is_reverse) {
+            return "url(#marker2)";
+        } else if (arrow === "2->1" && !is_reverse) {
+            return "url(#marker2)";
+        } else if (arrow === 'both') {
+            return "url(#marker2)";
+        } else {
+            return "";
+        }
+    }
+
+    // str, boolean -> str
+    _markerEndArrow(arrow, is_reverse) {
+        if (arrow === "1->2" && !is_reverse) {
+            return "url(#marker1)";
+        } else if (arrow === "2->1" && is_reverse) {
+            return "url(#marker1)";
+        } else if (arrow === 'both') {
+            return "url(#marker1)";
+        } else {
+            return "";
+        }
+    }
 
   _calculateGeometry(state) {
     // let edge = this.props.edge;
