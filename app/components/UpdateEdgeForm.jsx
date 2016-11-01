@@ -61,7 +61,8 @@ export default class UpdateEdgeForm extends BaseComponent {
           <EdgeDropdown
             ref="edgeDropdown"
             arrow={display.arrow}
-             dash={display.dash}
+            dash={display.dash}
+            getGraph={this.props.getGraph}
             edgeId={this.props.data.id}
             updateEdge={this.props.updateEdge}
             onChange={(arrow, dash) => this.apply(arrow, dash)}/>

@@ -37,6 +37,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import isNumber from 'lodash/isNumber';
 import keys from 'lodash/keys';
 import filter from 'lodash/filter';
+import { legacyEdgesConverter } from '../helpers';
 
 export class Root extends Component {
   constructor(props) {
@@ -275,7 +276,9 @@ export class Root extends Component {
     let { dispatch, startAnnotation } = this.props;
 
     // data provided from outside
-    let graph = (data && data.graph) ? GraphModel.setDefaults(data.graph) : GraphModel.defaults();
+    let graphData = (data && data.graph) ? merge(data.graph, {edges: legacyEdgesConverter(data.graph.edges)}) : null;
+    let graph = (graphData) ? GraphModel.setDefaults(graphData) : GraphModel.defaults();
+      
     dispatch(loadGraph(graph));
 
     if (data && data.title) {

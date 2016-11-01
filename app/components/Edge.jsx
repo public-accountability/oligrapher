@@ -154,11 +154,11 @@ export default class Edge extends BaseComponent {
   }
 
     
-    // Arrows indicate directionaly.
+    // Arrows indicate directionality.
     // if an arrow is '1->2' it means that the arrows goes from "node1" to "node2"
     // and therefore the marker should be placed at the end of the path.
     // However, if the path is reversed (meaning node 2 is to the left of node 1)
-    // then the arrow shoudld be placed at the start.
+    // then the arrow should be placed at the start.
     // Possible arrow values: '1->2', '2->1', 'both'
     
     // str, boolean -> str

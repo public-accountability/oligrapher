@@ -1,4 +1,6 @@
 import includes from 'lodash/includes';
+import merge from 'lodash/merge';
+import mapValues from 'lodash/mapValues';
 
 /**
  * Calculates New Position for Draggable Components
@@ -17,53 +19,63 @@ export const calculateDeltas = (draggableData, startPosition, startDrag, actualZ
 };
 
 /**
- * Previously arrow could only go in one direction. This converts a true value into 'left'
+ * Previously arrow could only go in one direction 
  * @param {string|boolean|null} arrow
  */
 export const legacyArrowConverter = arrow => {
-  if (includes(['left', 'right', 'both'], arrow)) {
+  if (includes(['1->2', '2->1', 'both'], arrow)){
     return arrow;
+  } else if (arrow === true) {
+    return '1->2';
+  } else if (arrow === 'left') {
+    return '2->1';
+  } else if (arrow === 'right') {
+    return '1->2';
   } else {
-    return arrow ? 'left' : false;
+    return false;
   }
 };
 
-// Determines new state of arrow: 
-// input: string, string, boolean
-// output: string | false;
-// used by EdgeArrowSelector
+
+export const legacyEdgesConverter = edges => {
+  mapValues(edges, edge => merge(edge, {display: {arrow: legacyArrowConverter(edge.display.arrow)}} ) );
+};
+
+
 export const newArrowState = (oldArrowState, arrowSide, showArrow) => {
-  const rightSide = (arrowSide === 'right');
-  const leftSide = (arrowSide === 'left');
+
+  // By convention, Node 1 is the arrow on the left side 
+  // and Node 2 is the arrow on the right.
+  const node1 = (arrowSide === 'left');
+  const node2 = (arrowSide === 'right');
   
-  
-  if(oldArrowState === 'left') {
-    if (rightSide && showArrow) {
+  if(oldArrowState === '1->2') {
+    if (node1 && showArrow) {
       return 'both';
     }
-    if (leftSide && !showArrow) {
+    if (node2 && !showArrow) {
       return false;
     }
-  } else if (oldArrowState === 'right') {
-    if (leftSide && showArrow) {
+  } else if (oldArrowState === '2->1') {
+    if (node1 && !showArrow) {
+      return false;
+    }
+    if (node2 && showArrow) {
       return 'both';
-    }
-    if (rightSide && !showArrow) {
-      return false;
     }
   } else if (oldArrowState === 'both') {
-    if (leftSide && !showArrow) {
-      return 'right';
+    if (node1 && !showArrow) {
+      return '1->2';
     }
-    if (rightSide && !showArrow) {
-      return 'left';
+    if (node2 && !showArrow) {
+      return '2->1';
     }
   } else if (oldArrowState === false) {
-    if (leftSide && showArrow) {
-      return 'left';
+    if (node1 && showArrow) {
+      return '2->1';
     }
-    if (rightSide && showArrow) {
-      return 'right';
+    if (node2 && showArrow) {
+      return '1->2';
     }
   }
   // default case

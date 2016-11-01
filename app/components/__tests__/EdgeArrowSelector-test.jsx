@@ -11,19 +11,19 @@ describe('EdgeArrowSelector', () => {
   it('has dropDownHolder', () => expect(element().find('.dropdownHolder').length).toEqual(1));
   it('has selectedEdgeDisplay', () => expect(element().find('.selectedEdgeDisplay').length).toEqual(1));
   it('sets correct class name for left-left', () =>{
-    let e = shallow(<EdgeArrowSelector updateEdge={jest.fn()} edgeId="x" arrowSide="left" arrow="left" />);
+    let e = shallow(<EdgeArrowSelector updateEdge={jest.fn()} edgeId="x" arrowSide="left" arrow="2->1" />);
     expect(e.find('.svgDropdownLeftArrow').length).toEqual(1);
   });
   it('sets correct class name for left-right', () =>{
-    let e = shallow(<EdgeArrowSelector updateEdge={jest.fn()} edgeId="x" arrowSide="left" arrow="right" />);
+    let e = shallow(<EdgeArrowSelector updateEdge={jest.fn()} edgeId="x" arrowSide="left" arrow="1->2" />);
     expect(e.find('.svgDropdownLeftArrow').length).toEqual(0);
   });
   it('sets correct class name for right-right', () =>{
-    let e = shallow(<EdgeArrowSelector updateEdge={jest.fn()} edgeId="x" arrowSide="right" arrow="right" />);
+    let e = shallow(<EdgeArrowSelector updateEdge={jest.fn()} edgeId="x" arrowSide="right" arrow="1->2" />);
     expect(e.find('.svgDropdownRightArrow').length).toEqual(1);
   });
   it('sets correct class name for right-left', () =>{
-    let e = shallow(<EdgeArrowSelector updateEdge={jest.fn()} edgeId="x" arrowSide="right" arrow="left" />);
+    let e = shallow(<EdgeArrowSelector updateEdge={jest.fn()} edgeId="x" arrowSide="right" arrow="2->1" />);
     expect(e.find('.svgDropdownRightArrow').length).toEqual(0);
   });
   it('sets correct class name for right-both', () =>{
@@ -46,7 +46,7 @@ describe('EdgeArrowSelector', () => {
 
   it('updates Edge with new arrow setting', () => {
     let updateEdgeMock = jest.fn();
-    let e = shallow(<EdgeArrowSelector updateEdge={updateEdgeMock} edgeId="x" arrowSide="left" arrow="left" />);
+    let e = shallow(<EdgeArrowSelector updateEdge={updateEdgeMock} edgeId="x" arrowSide="left" arrow="2->1" />);
     e.find('.selectedEdgeDisplay').simulate('click');
     e.find('.svgDropdownLeftNoArrow').simulate('click');
     expect(e.state().isOpen).toBe(false);
@@ -59,22 +59,24 @@ describe('EdgeArrowSelector', () => {
 
 describe('newArrowState()', ()=>{
      
-  it('when current state is left', ()=> {
-    expect(newArrowState('left', 'left', false)).toEqual(false);
-    expect(newArrowState('left', 'left', true)).toEqual('left');
-    expect(newArrowState('left', 'right', false)).toEqual('left');
-    expect(newArrowState('left', 'right', true)).toEqual('both');
+  it('when current state is "1->2"', () =>{
+      expect(newArrowState('1->2', 'left', false)).toEqual('1->2');
+      expect(newArrowState('1->2', 'left', true)).toEqual('both');
+      expect(newArrowState('1->2', 'right', false)).toEqual(false);
+      expect(newArrowState('1->2', 'right', true)).toEqual('1->2');
   });
-  it('when current state is right', ()=> {
-    expect(newArrowState('right', 'left', false)).toEqual('right');
-    expect(newArrowState('right', 'left', true)).toEqual('both');
-    expect(newArrowState('right', 'right', false)).toEqual(false);
-    expect(newArrowState('right', 'right', true)).toEqual('right');
+
+  it('when current state is "2->1"', ()=> {
+    expect(newArrowState('2->1', 'left', false)).toEqual(false);
+    expect(newArrowState('2->1', 'left', true)).toEqual('2->1');
+    expect(newArrowState('2->1', 'right', false)).toEqual('2->1');
+    expect(newArrowState('2->1', 'right', true)).toEqual('both');
   });
+
   it('when current state is both', ()=> {
-    expect(newArrowState('both', 'left', false)).toEqual('right');
+    expect(newArrowState('both', 'left', false)).toEqual('1->2');
     expect(newArrowState('both', 'left', true)).toEqual('both');
-    expect(newArrowState('both', 'right', false)).toEqual('left');
+    expect(newArrowState('both', 'right', false)).toEqual('2->1');
     expect(newArrowState('both', 'right', true)).toEqual('both');
   });
 
