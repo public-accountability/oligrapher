@@ -38,9 +38,8 @@ export const legacyArrowConverter = arrow => {
 
 
 export const legacyEdgesConverter = edges => {
-  mapValues(edges, edge => merge(edge, {display: {arrow: legacyArrowConverter(edge.display.arrow)}} ) );
+  return mapValues(edges, edge => merge(edge, {display: {arrow: legacyArrowConverter(edge.display.arrow)}} ) );
 };
-
 
 export const newArrowState = (oldArrowState, arrowSide, showArrow) => {
 

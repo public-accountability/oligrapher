@@ -1,11 +1,7 @@
-jest.disableAutomock();
-
 import React from "react";
-import { mount } from "enzyme";
-
+import { shallow } from "enzyme";
 import UpdateEdgeForm from "../UpdateEdgeForm";
 import EdgeDropdown from "../EdgeDropdown";
-
 
 describe("UpdateEdgeForm", () => {
   let wrapper;
@@ -16,7 +12,7 @@ describe("UpdateEdgeForm", () => {
     node2_id: 2,
     display: { 
       label: "Edge",
-      url: "http://example.com/node",
+      url: "url",
       scale: 3,
       arrow: "right",
       dash: false,
@@ -26,76 +22,51 @@ describe("UpdateEdgeForm", () => {
 
   beforeEach(() => {
     updateEdge = jest.genMockFunction();
-    wrapper = mount(
+    wrapper = shallow(
       <UpdateEdgeForm 
-        updateEdge={updateEdge} 
-        data={data} 
-        deselect={jest.genMockFunction()} />
+         updateEdge={updateEdge} 
+         data={data}
+         getGraph={jest.genMockFunction()}
+         deselect={jest.genMockFunction()} />
     );
   });
 
   describe("rendering", () => {
 
-    it("shows label input", () => {
-      let input = wrapper.ref("label");
-      expect(input.length).toBe(1);
-      expect(input.props().value).toBe(data.display.label);
+    it("shows 2 inputs", () => {
+      expect(wrapper.find('input').length).toBe(2);
+    });
+    
+    it('shows input with value label', () => {
+      expect(wrapper.find('input[value="Edge"]').length).toBe(1);
+      
     });
 
-    it("shows a dropdown menu that reflects the selected edge's appearance", () => {
-      let edgeDropdown = wrapper.ref("edgeDropdown");
-      expect(edgeDropdown.length).toBe(1);
-      expect(edgeDropdown.props().arrow).toBe(data.display.arrow);
-      expect(edgeDropdown.props().dash).toBe(data.display.dash);
+    it('shows input with value url', () => {
+      expect(wrapper.find('input[value="url"]').length).toBe(1);
+    });
+
+    it('renders EdgeDropDown', () => {
+      expect(wrapper.find(EdgeDropdown).length).toBe(1);
+    });
+
+    it('passes correct props to EdgeDrop down', () => {
+      let edgeProps = wrapper.find(EdgeDropdown).props();
+      expect(edgeProps.arrow).toBe(data.display.arrow);
+      expect(edgeProps.dash).toBe(data.display.dash);  
+    });
+
+    it('shows <select>', ()=>{
+      expect(wrapper.find('select').length).toBe(1);
     });
 
     it("shows scale dropdown with selected option", () => {
-      let select = wrapper.ref("scale");
-      expect(select.length).toBe(1);
+      let select = wrapper.find("select");
       expect(select.props().value).toBe(data.display.scale);
-
       let option = select.children().findWhere(child => child.props().value === data.display.scale);
       expect(option.length).toBe(1);
       expect(option.text()).toBe(data.display.scale + "x");
     });
-
-    it("shows url input", () => {
-      let input = wrapper.ref("url");
-      expect(input.length).toBe(1);
-      expect(input.props().value).toBe(data.display.url);
-    });
   });
 
-  describe("behavior", () => {
-
-    it("passes updated scale to updateEdge", () => {
-      let select = wrapper.ref("scale");
-      select.get(0).value = 1.5;
-      select.props().onChange();
-
-      expect(updateEdge.mock.calls.length).toBe(1);
-      expect(updateEdge.mock.calls[0][1].display.scale).toBe(1.5);
-    });
-
-    it("passes updated url to updateEdge", () => {
-      let input = wrapper.ref("url");
-      let newUrl = "htt://example.com/noder ";
-      input.get(0).value = newUrl;
-      input.props().onChange();
-
-      expect(updateEdge.mock.calls.length).toBe(1);
-      expect(updateEdge.mock.calls[0][1].display.url).toBe(newUrl.trim());
-    });
-
-    it("passes updated edge appearance to updateEdge", () => {
-      let edgeDropdown = wrapper.ref("edgeDropdown");
-      let dropdownOnChange = edgeDropdown.props().onChange;
-      dropdownOnChange("left", true);
-
-      expect(updateEdge.mock.calls.length).toBe(1);
-      expect(updateEdge.mock.calls[0][1].display.arrow).toBe("left");
-      expect(updateEdge.mock.calls[0][1].display.dash).toBe(true);
-    });
-
-  });
 });

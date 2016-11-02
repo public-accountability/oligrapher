@@ -70,7 +70,6 @@ export default class Graph extends BaseComponent {
         clickEdge={this.props.clickEdge}
         moveEdge={this.props.moveEdge} 
         isLocked={this.props.isLocked}
-        getArrow={(is_reverse) => this._getArrowDirection(is_reverse, e)}
         updateArrow={() => this._updateArrowState(e)} />);
   }
 
