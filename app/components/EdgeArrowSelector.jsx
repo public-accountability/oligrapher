@@ -14,7 +14,7 @@ export default class EdgeArrowSelector extends BaseComponent {
    render() {
        let { arrowSide }  = this.props;
        return(
-            <div className="dropdownHolder arrowHead">
+            <div className={`dropdownHolder arrowHead dropdownHolder-${arrowSide}`}>
                 <div className="selectedEdgeDisplay svgDropdown"
                      onClick={ () => this.setState({isOpen: true})} >
                     <div className = {this._arrowClass()}>

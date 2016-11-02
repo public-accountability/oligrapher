@@ -83,6 +83,7 @@ button#toggleEditTools {
 
 #deleteSelected {
   position: absolute;
+  z-index: 1; 
 }
 
 .editForm.nodeDelete {
@@ -264,7 +265,7 @@ button#toggleEditTools {
 
 .strokeDropdowns{
   width: 300px;
-  /* white-space: nowrap; */
+  height: 54px;
 }
 
 
@@ -309,4 +310,12 @@ button#toggleEditTools {
 .arrow-node-name {
   float: left;
   width: 70px;
+}
+
+.dropdownHolder-left {
+  margin-left: 25px;
+}
+
+.dropdownHolder-right {
+  margin-right: -80px;
 }
