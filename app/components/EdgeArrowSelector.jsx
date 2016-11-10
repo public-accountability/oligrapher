@@ -14,8 +14,8 @@ export default class EdgeArrowSelector extends BaseComponent {
    render() {
        let { arrowSide }  = this.props;
        return(
-            <div className ="dropdownHolder arrowHead">
-                <div className ="selectedEdgeDisplay svgDropdown"
+            <div className={`dropdownHolder arrowHead dropdownHolder-${arrowSide}`}>
+                <div className="selectedEdgeDisplay svgDropdown"
                      onClick={ () => this.setState({isOpen: true})} >
                     <div className = {this._arrowClass()}>
                         <svg><line x1="75%" y1="50%" x2="25%" y2="50%" /></svg>
@@ -37,7 +37,7 @@ export default class EdgeArrowSelector extends BaseComponent {
 
     _arrowClass() {
         let { arrow, arrowSide } = this.props;
-        if (arrow === arrowSide || arrow === 'both'){
+        if (this._displayArrow(arrowSide, arrow)) {
             return `svgDropdown${capitalize(arrowSide)}Arrow`
         } else {
             return '';
@@ -54,6 +54,32 @@ export default class EdgeArrowSelector extends BaseComponent {
         this.setState({isOpen: false});
     }
 
+    _sideToNode(side) {
+        if (side === 'left') {
+            return 'node1'
+        } else if (side === 'right') {
+            return 'node2'
+        } else {
+            console.error('sideToNode only accepts left or right')
+            return '';
+        }
+    }
+
+    _displayArrow(arrowSide, arrowState) {
+        let node = this._sideToNode(arrowSide);
+        let node1 = (node === 'node1');
+        let node2 = (node === 'node2');
+        if (arrowState === 'both') {
+            return true;
+        }
+        if (node1 && arrowState === '2->1') {
+            return true;
+        } else if (node2 && arrowState === '1->2') {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 
 /* 

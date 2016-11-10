@@ -9,6 +9,7 @@
     "watch": "webpack --watch --config webpack.prod.config.js --output-filename=oligrapher.js",
     "min-build": "NODE_ENV=production webpack -p --optimize-dedupe --display-modules --config webpack.prod.config.js --output-filename=oligrapher.min.js",
     "build-all": "npm run prod-build && npm run min-build",
+    "dev-package": "cat build/oligrapher.min.js build/LsDataSource.js build/LsDataConverter.js > build/oligrapher-dev.js",
     "test": "jest",
     "test:watch": "jest --watch"
   },

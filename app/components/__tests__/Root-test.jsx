@@ -13,6 +13,8 @@ import GraphSettingsForm from '../GraphSettingsForm';
 import GraphAnnotations from '../GraphAnnotations';
 import SaveButton from '../SaveButton';
 import HelpScreen from '../HelpScreen';
+import { legacyArrowConverter, legacyEdgesConverter  } from '../../helpers';
+
 
 // helpers //
 const hasComponent = (root, c) => expect(root.find(c).length).toEqual(1);
@@ -125,6 +127,94 @@ describe('<Root />', ()=>{
       it('does not show <HelpScreen> if showHelpScreen is false', () => {
         const root = rootWithProps({showHelpScreen: false});
         hasNoComponent(root,HelpScreen);
+      });
+    });
+
+    describe('legacyArrowConverter', () => {
+      it('preserves valid values', () => {
+        expect(legacyArrowConverter('1->2')).toEqual('1->2');
+        expect(legacyArrowConverter('2->1')).toEqual('2->1');
+        expect(legacyArrowConverter('both')).toEqual('both');
+      });
+
+      it('converts true into 1->2', () => expect(legacyArrowConverter(true)).toEqual('1->2'));
+      it('converts left into 2->1', () => expect(legacyArrowConverter('left')).toEqual('2->1'));
+      it('converts right into 1->2', () => expect(legacyArrowConverter('right')).toEqual('1->2'));
+      it('returns false otherwise', () => expect(legacyArrowConverter('x')).toBe(false)); 
+    });
+
+    describe('legacyEdgesConverter', () => {
+      it('replaces all legacy edge arrow values', ()=>{
+        const oldEdges = {
+          "SyGW-SSw": {
+            "id": "SyGW-SSw",
+            "display": {
+              "scale": 1,
+              "arrow": true,
+              "label": "connection",
+              "x1": -2.208952806482037e-14,
+              "y1": -120.24979000856933,
+              "x2": -120.24979000856933,
+              "y2": 1.472635204321358e-14,
+              "s1": 1,
+              "s2": 1
+            },
+            "node1_id": "rylk-HBv",
+            "node2_id": "rJE0gSrw"
+          },
+          "HkJfWBBD": {
+            "id": "HkJfWBBD",
+            "display": {
+              "scale": 1,
+              "arrow": 'both',
+              "label": "love/hate",
+              "x1": -2.208952806482037e-14,
+              "y1": -120.24979000856933,
+              "x2": 120.24979000856933,
+              "y2": 0,
+              "s1": 1,
+              "s2": 1
+            },
+            "node1_id": "rylk-HBv",
+            "node2_id": "rJe0eHrw"
+          }
+        };
+        const newEdges = {
+          "SyGW-SSw": {
+            "id": "SyGW-SSw",
+            "display": {
+              "scale": 1,
+              "arrow": '1->2',
+              "label": "connection",
+              "x1": -2.208952806482037e-14,
+              "y1": -120.24979000856933,
+              "x2": -120.24979000856933,
+              "y2": 1.472635204321358e-14,
+              "s1": 1,
+              "s2": 1
+            },
+            "node1_id": "rylk-HBv",
+            "node2_id": "rJE0gSrw"
+          },
+          "HkJfWBBD": {
+            "id": "HkJfWBBD",
+            "display": {
+              "scale": 1,
+              "arrow": 'both',
+              "label": "love/hate",
+              "x1": -2.208952806482037e-14,
+              "y1": -120.24979000856933,
+              "x2": 120.24979000856933,
+              "y2": 0,
+              "s1": 1,
+              "s2": 1
+            },
+            "node1_id": "rylk-HBv",
+            "node2_id": "rJe0eHrw"
+          }
+        };
+
+        expect(legacyEdgesConverter(oldEdges)).toEqual(newEdges);
       });
     });
   });

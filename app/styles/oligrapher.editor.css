@@ -83,6 +83,7 @@ button#toggleEditTools {
 
 #deleteSelected {
   position: absolute;
+  z-index: 1; 
 }
 
 .editForm.nodeDelete {
@@ -90,7 +91,7 @@ button#toggleEditTools {
 }
 
 .editForm.edgeDelete {
-  margin-top: 80px;
+  margin-top: 140px;
 }
 
 .editForm {
@@ -240,14 +241,11 @@ button#toggleEditTools {
   width:20%;
 }
 
-.strokeDropdowns{
-  display: inline-block;
-  width:200px;
-  margin-right: 145px;
-}
-
 .dropdownHolder{
-  display: inline-block;
+  /* display: inline-block; */
+  margin-top: 10px;
+  width: 45px;
+  float: left;
 }
 
 .svgDropdown li, .svgDropdown div{
@@ -264,6 +262,12 @@ button#toggleEditTools {
 .svgDropdown li:last-child, .svgDropdown div{
   border-bottom: 1px solid rgba(0,0,0,0);
 }
+
+.strokeDropdowns{
+  width: 300px;
+  height: 54px;
+}
+
 
 .svgDropdown li svg, .svgDropdown div svg{
   width: 100%;
@@ -295,12 +299,23 @@ button#toggleEditTools {
 }
 
 .edgeDropdownOptions{
-  position: absolute;
-  width: 20%;
-  margin-top: 80px;
+  width: 100%;
 }
 
 .oligrapherEdgeWidthDropdown{
   width: auto;
   text-align: right;
+}
+
+.arrow-node-name {
+  float: left;
+  width: 70px;
+}
+
+.dropdownHolder-left {
+  margin-left: 25px;
+}
+
+.dropdownHolder-right {
+  margin-right: -80px;
 }

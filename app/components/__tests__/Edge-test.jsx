@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom'; 
 import TestUtils from 'react-addons-test-utils';
 import Edge from '../Edge';
+import merge from 'lodash/merge';
 
 describe("Edge Component", () => {
 
@@ -52,7 +53,7 @@ describe("Edge Component", () => {
   /*not sure of most effective way of testing arrow rendering*/
   it("should render an arrow", () => {
     let getArrow = jest.genMockFunction().mockImplementation(function () {
-          data["display"]["arrow"] = "left"
+      data["display"]["arrow"] = "1->2";
           return data;
         });
     let updateArrow = jest.genMockFunction();
@@ -80,4 +81,25 @@ describe("Edge Component", () => {
     TestUtils.Simulate.click(select);
     expect(clickEdge.mock.calls[0][0]).toBe(data.id);
   });
+
+  it('should calculate correct arrow attribute for markerStart', () => {
+    let edge = TestUtils.renderIntoDocument(<Edge edge={data}  /> );
+    expect(edge._markerStartArrow('1->2', false)).toEqual('');
+    expect(edge._markerStartArrow('1->2', true)).toEqual("url(#marker2)");
+    expect(edge._markerStartArrow('2->1', false)).toEqual("url(#marker2)");
+    expect(edge._markerStartArrow('2->1', true)).toEqual("");
+    expect(edge._markerStartArrow('both', true)).toEqual("url(#marker2)");
+    expect(edge._markerStartArrow('both', false)).toEqual("url(#marker2)");
+  });
+  
+  it('should calculate correct arrow attribute for markerEnd', () => {
+    let edge = TestUtils.renderIntoDocument(<Edge edge={data}  /> );
+    expect(edge._markerEndArrow('1->2', false)).toEqual('url(#marker1)');
+    expect(edge._markerEndArrow('1->2', true)).toEqual('');
+    expect(edge._markerEndArrow('2->1', false)).toEqual('');
+    expect(edge._markerEndArrow('2->1', true)).toEqual('url(#marker1)');
+    expect(edge._markerEndArrow('both', true)).toEqual("url(#marker1)");
+    expect(edge._markerEndArrow('both', false)).toEqual("url(#marker1)");
+  });
+
 });
