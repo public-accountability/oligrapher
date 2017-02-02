@@ -46,7 +46,7 @@ export class Root extends Component {
   }
 
   render() {
-    let { dispatch, graph, selection, isEditor, isLocked, title,
+    let { dispatch, graph, selection, isEditor, isLocked, isEmbedded, title,
           showEditTools, showSaveButton, showHelpScreen, 
           hasSettings, graphSettings, showSettings, onSave,
           currentIndex, annotation, annotations, visibleAnnotations } = this.props;
@@ -149,8 +149,10 @@ export class Root extends Component {
     return (
       <div id="oligrapherContainer" style={{ height: '100%' }}>
         <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={keyHandlers}>
-          <div className="row">
-            <div id="oligrapherGraphCol" className={showAnnotations ? "col-md-8" : "col-md-12"}>
+            <div className="row">
+	    {/* Create a column for annotations if it's in editor mode or has annotations and they are visible.
+		For 'embedded mode' the annotations will appear below the graph and we can use a full column here. */}
+            <div id="oligrapherGraphCol" className={ (showAnnotations && !isEmbedded) ? "col-md-8" : "col-md-12"}>
               { (isEditor || title) && 
                 <GraphHeader
                   {...this.props}
@@ -331,7 +333,13 @@ export class Root extends Component {
   }
 
   showAnnotations() {
-    return this.props.visibleAnnotations && this.enableAnnotations();
+      return this.props.visibleAnnotations && this.enableAnnotations();
+    
+    if (isEmbedded) {
+      return false
+    } else {
+      
+    }
   }
 
   graphWithoutHighlights() {

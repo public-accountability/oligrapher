@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/><meta charset="UTF-8">
+    <title>Oligrapher Demo</title>
+    <script src="http://localhost:8090/webpack-dev-server.js"></script>
+    <script src="http://localhost:8090/build/vendors.js"></script>
+    <script src="http://localhost:8090/build/oligrapher.min.js"></script>
+    <script src="LsDataSource.js"></script>
+    <script src="oligrapher-demo-data.js"></script>
+    <style>
+      body {
+        margin: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="oligrapher"></div>
+    <script>
+     var elem = document.getElementById('oligrapher');
+     
+     elem.style.height = "500px"
+
+      var oli = new Oligrapher({ 
+        root: elem,
+        isEditor: false,
+          isLocked: true,
+	  isEmbedded: true,
+        data: oligrapherDemoData,
+        user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },
+        date: "August 30, 2015",
+        startAnnotation: 0,
+      });
+
+     var windowHeight = window.innerHeight;
+     var annotations = document.getElementById('oligrapherGraphAnnotations');
+     var annotationsHeight = annotations ? annotations.offsetHeight : 0;
+     var headerHeight = document.getElementById('oligrapherHeader').offsetHeight;
+     var graphHeight = windowHeight - annotationsHeight - headerHeight + 25;
+     document.querySelector('#oligrapherContainer svg').setAttribute('height', graphHeight)
+    </script>
+  </body>
+</html>
+
+
+<!-- <iframe height="600" width="600" scrolling="no" style="border: 0px; overflow: hidden;" src="https://littlesis.org/maps/1634-who-s-banking-on-the-dakota-access-pipeline/embedded"></iframe><div style="padding: 5px;"><a href="https://littlesis.org/maps/1634-who-s-banking-on-the-dakota-access-pipeline">view this map on LittleSis</a></div> -->

@@ -165,6 +165,7 @@ var config = {
   data: data,   // initial graph data to load and display (null by default)
   isEditor: true,   // if true, clicking nodes or edges selects them; if false, clicking highlights (false by defaut)
   isLocked: false,   // if true, nodes and edges cannot be dragged by the user
+  isEmbedded: false, false // if true, the oligrapher is set to be in 'embedded' mode
   viewOnlyHighlighted: false,   // center viewbox around highlighted content
   dataSource: LsDataSource,   // API wrapper for importing nodes and edges from a data source, see build/LsDataSource.js for an example
   user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },   // optional author data to display

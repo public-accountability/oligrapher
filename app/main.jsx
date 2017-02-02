@@ -30,7 +30,8 @@ class Oligrapher {
 
     config = merge({ 
       isEditor: false, 
-      isLocked: true, 
+      isLocked: true,
+      isEmbedded: false,
       logActions: false, 
       viewOnlyHighlighted: true 
     }, config);
