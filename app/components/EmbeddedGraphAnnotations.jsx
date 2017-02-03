@@ -10,12 +10,14 @@ export default class EmbeddedGraphAnnotations extends BaseComponent {
   render () {
     return (
       <div className="row">
-	  <EmbeddedNavBar 
-	      annotationCount={this.props.annotationCount}
-	      currentIndex={this.props.currentIndex}
-	      prevClick={this.props.prevClick}
-	      nextClick={this.props.nextClick}
-	  />
+	  <div className="col-sm-12">
+	      <EmbeddedNavBar 
+		  annotationCount={this.props.annotationCount}
+		  currentIndex={this.props.currentIndex}
+		  prevClick={this.props.prevClick}
+		  nextClick={this.props.nextClick}
+	      />
+	  </div>
       </div>
     )
   }
