@@ -13,6 +13,7 @@ import GraphSettingsForm from '../GraphSettingsForm';
 import GraphAnnotations from '../GraphAnnotations';
 import SaveButton from '../SaveButton';
 import HelpScreen from '../HelpScreen';
+import EmbeddedGraphAnnotations from '../EmbeddedGraphAnnotations';
 import { legacyArrowConverter, legacyEdgesConverter  } from '../../helpers';
 
 
@@ -73,6 +74,11 @@ describe('<Root />', ()=>{
         hasNoComponent(root, GraphAnnotations);  
       });
       
+      it('does not have <EmbeddedGraphAnnotations> by default', () => {
+	hasNoComponent(rootWithProps({visibleAnnotations: true}), EmbeddedGraphAnnotations);
+	hasNoComponent(rootWithProps({visibleAnnotations: true, isEmbedded: false}), EmbeddedGraphAnnotations);
+      });
+
       describe('#oligrapherShowAnnotations', () => {
         const root = rootWithProps({visibleAnnotations: false, isEditor: true});
         it('Creates div#oligrapherShowAnnotations if showAnnoations is false and enableAnnotations() returns true', () => {
@@ -217,5 +223,10 @@ describe('<Root />', ()=>{
         expect(legacyEdgesConverter(oldEdges)).toEqual(newEdges);
       });
     });
-  });
+
+    describe('Embedded mode', () => {
+      const root = rootWithProps({isEmbedded: true});
+      it('has EmbeddedGraphAnnotations', () => hasComponent(root, EmbeddedGraphAnnotations));
+    });
+  }); /* end Describe render() */
 });

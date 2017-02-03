@@ -23,6 +23,7 @@ import Graph from './Graph';
 import Editor from './Editor';
 import GraphHeader from './GraphHeader';
 import GraphAnnotations from './GraphAnnotations';
+import EmbeddedGraphAnnotations from './EmbeddedGraphAnnotations';
 import EditButton from './EditButton';
 import HelpButton from './HelpButton';
 import HelpScreen from './HelpScreen';
@@ -82,7 +83,7 @@ export class Root extends Component {
       },
       'left': () => {dispatch(showAnnotation(prevIndex))},
       'right': () => {dispatch(showAnnotation(nextIndex))}
-    };
+    }
 
     let graphApi = {
       getGraph: () => this.props.graph,
@@ -202,9 +203,9 @@ export class Root extends Component {
                 </div>
 
                 { (isEditor && showSettings && hasSettings) &&  <GraphSettingsForm settings={graphSettings} updateSettings={updateSettings} /> }
-              </div>
-            </div>
-            { showAnnotations &&
+              </div> {/* end div#oligrapherGraphContainer */}
+            </div> {/* end div#oligrapherGraphCol */}
+            { !isEmbedded && showAnnotations &&
               <GraphAnnotations 
                 isEditor={isEditor}
                 navList={isEditor}
@@ -224,7 +225,11 @@ export class Root extends Component {
                 editForm={true}
                 hideEditTools={() => dispatch(toggleEditTools(false))} />
             }
-          </div>
+           </div> {/* end div.row */}
+	   { isEmbedded && showAnnotations &&
+	     <EmbeddedGraphAnnotations />
+	   }
+	    
           { !showAnnotations && this.enableAnnotations() &&
             <div id="oligrapherShowAnnotations">
               <button onClick={() => swapAnnotations()} className="btn btn-lg btn-default">
@@ -235,7 +240,7 @@ export class Root extends Component {
           { showSaveButton && isEditor && onSave && <SaveButton save={() => this.handleSave()} /> }
           { showHelpScreen && <HelpScreen source={this.props.dataSource} close={() => dispatch(toggleHelpScreen(false))} /> }
         </HotKeys>
-      </div>
+      </div> 
     );
   }
 
@@ -333,13 +338,7 @@ export class Root extends Component {
   }
 
   showAnnotations() {
-      return this.props.visibleAnnotations && this.enableAnnotations();
-    
-    if (isEmbedded) {
-      return false
-    } else {
-      
-    }
+   return this.props.visibleAnnotations && this.enableAnnotations();
   }
 
   graphWithoutHighlights() {
