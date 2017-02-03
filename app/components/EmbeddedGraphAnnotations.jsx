@@ -12,6 +12,9 @@ export default class EmbeddedGraphAnnotations extends BaseComponent {
       <div className="row">
 	  <EmbeddedNavBar 
 	      annotationCount={this.props.annotationCount}
+	      currentIndex={this.props.currentIndex}
+	      prevClick={this.props.prevClick}
+	      nextClick={this.props.nextClick}
 	  />
       </div>
     )
@@ -19,5 +22,8 @@ export default class EmbeddedGraphAnnotations extends BaseComponent {
 }
 
 EmbeddedGraphAnnotations.propTypes = {
-  annotationCount: PropTypes.number
+  annotationCount: PropTypes.number.isRequired,
+  currentIndex: PropTypes.number.isRequired,
+  nextClick: PropTypes.func,
+  prevClick: PropTypes.func
 }

@@ -55,13 +55,16 @@
     "react-addons-test-utils": "^15.4.2",
     "react-hot-loader": "^1.2.7",
     "redux-logger": "^2.3.1",
+    "sinon": "^1.17.7",
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.2",
     "webpack-dev-server": "^1.16.1"
   },
   "jest": {
-    "transform": {".*": "<rootDir>/node_modules/babel-jest"},
+    "transform": {
+      ".*": "<rootDir>/node_modules/babel-jest"
+    },
     "moduleFileExtensions": [
       "js",
       "jsx",
@@ -70,6 +73,6 @@
     "moduleNameMapper": {
       "^.+\\.(css)$": "<rootDir>/app/styles/test/styleMock.js"
     },
-   "testRegex": "(/__tests__/(?!support).*|\\.(test|spec))\\.jsx?$"
+    "testRegex": "(/__tests__/(?!support).*|\\.(test|spec))\\.jsx?$"
   }
 }

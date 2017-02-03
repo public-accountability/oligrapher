@@ -231,6 +231,8 @@ export class Root extends Component {
 	     <EmbeddedGraphAnnotations
                  currentIndex={currentIndex}
 		 annotationCount={isArray(annotations) ? annotations.length : 0}
+		 prevClick={prevClick}
+                 nextClick={nextClick}
 	     />
 	   }
 	    
