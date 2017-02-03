@@ -227,6 +227,10 @@ describe('<Root />', ()=>{
     describe('Embedded mode', () => {
       const root = rootWithProps({isEmbedded: true});
       it('has EmbeddedGraphAnnotations', () => hasComponent(root, EmbeddedGraphAnnotations));
+      it('does not have GraphAnnotations', () => hasNoComponent(root, GraphAnnotations));
+      it('sets correct col div#oligrapherGraphCol', () => {
+	expect(root.find('#oligrapherGraphCol').hasClass('col-md-12')).toEqual(true);
+      });
     });
   }); /* end Describe render() */
 });

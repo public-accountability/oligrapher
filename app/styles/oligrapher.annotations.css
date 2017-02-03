@@ -130,6 +130,12 @@
   background-color: #fff;
 }
 
+/* Embedded  */
+#oligrapherNavButtonsEmbedded {
+
+}
+
+
 .clickplz:enabled:not(:focus) {
   animation: clickplz 3s;
   -webkit-animation: clickplz 3s;
@@ -244,6 +250,7 @@
   right: 20px;
   color: #888;
 }
+
 
 
 /* MEDIUM EDITOR */

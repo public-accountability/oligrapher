@@ -36,6 +36,7 @@ import pick from 'lodash/pick';
 import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';
 import isNumber from 'lodash/isNumber';
+import isArray from 'lodash/isArray';
 import keys from 'lodash/keys';
 import filter from 'lodash/filter';
 import { legacyEdgesConverter } from '../helpers';
@@ -227,7 +228,10 @@ export class Root extends Component {
             }
            </div> {/* end div.row */}
 	   { isEmbedded && showAnnotations &&
-	     <EmbeddedGraphAnnotations />
+	     <EmbeddedGraphAnnotations
+                 currentIndex={currentIndex}
+		 annotationCount={isArray(annotations) ? annotations.length : 0}
+	     />
 	   }
 	    
           { !showAnnotations && this.enableAnnotations() &&
