@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import BaseComponent from "./BaseComponent";
 import EmbeddedNavBar from './EmbeddedNavBar';
+import EmbeddedGraphAnnotation from './EmbeddedGraphAnnotation';
 
 export default class EmbeddedGraphAnnotations extends BaseComponent {
   constructor(props) {
@@ -18,6 +19,9 @@ export default class EmbeddedGraphAnnotations extends BaseComponent {
 		  nextClick={this.props.nextClick}
 	      />
 	  </div>
+	  <div classname="col-sm-12">
+	      <EmbeddedGraphAnnotation annotation={this.props.annotion} />
+	  </div>
       </div>
     )
   }
@@ -26,6 +30,7 @@ export default class EmbeddedGraphAnnotations extends BaseComponent {
 EmbeddedGraphAnnotations.propTypes = {
   annotationCount: PropTypes.number.isRequired,
   currentIndex: PropTypes.number.isRequired,
+  annotation: PropTypes.object,
   nextClick: PropTypes.func,
   prevClick: PropTypes.func
 }

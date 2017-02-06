@@ -233,6 +233,7 @@ export class Root extends Component {
 		 annotationCount={isArray(annotations) ? annotations.length : 0}
 		 prevClick={prevClick}
                  nextClick={nextClick}
+		 annotation={annotation}
 	     />
 	   }
 	    

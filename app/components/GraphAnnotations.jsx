@@ -28,7 +28,7 @@ export default class GraphAnnotations extends BaseComponent {
         remove={this._remove} 
         update={this._update} />
     );
-
+    
     let annotationComponent = (
       <GraphAnnotation {...this.props} />
     );
