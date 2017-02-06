@@ -18,9 +18,9 @@
   <body>
     <div id="oligrapher"></div>
     <script>
+     var windowHeight = window.innerHeight;
      var elem = document.getElementById('oligrapher');
-     
-     elem.style.height = "500px"
+     elem.style.height = windowHeight.toString() + 'px';
 
       var oli = new Oligrapher({ 
         root: elem,
@@ -33,11 +33,12 @@
         startAnnotation: 0,
       });
 
-     var windowHeight = window.innerHeight;
+
      var annotations = document.getElementById('oligrapherGraphAnnotations');
      var annotationsHeight = annotations ? annotations.offsetHeight : 0;
      var headerHeight = document.getElementById('oligrapherHeader').offsetHeight;
      var graphHeight = windowHeight - annotationsHeight - headerHeight + 25;
+
      document.querySelector('#oligrapherContainer svg').setAttribute('height', graphHeight)
     </script>
   </body>

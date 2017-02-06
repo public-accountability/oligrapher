@@ -5,6 +5,7 @@
   "main": "app/main.jsx",
   "scripts": {
     "dev-build": "webpack-dev-server --devtool eval --progress --history-api-fallback --colors --hot --content-base build --port 8090 --config webpack.dev.config",
+     "fake-news-server" : "cd build && python3 -m http.server 8091",
     "prod-build": "NODE_ENV=production webpack --display-modules --config webpack.prod.config.js --output-filename=oligrapher.js",
     "watch": "webpack --watch --config webpack.prod.config.js --output-filename=oligrapher.js",
     "min-build": "NODE_ENV=production webpack -p --optimize-dedupe --display-modules --config webpack.prod.config.js --output-filename=oligrapher.min.js",
