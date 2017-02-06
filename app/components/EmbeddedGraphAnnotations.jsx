@@ -19,8 +19,8 @@ export default class EmbeddedGraphAnnotations extends BaseComponent {
 		  nextClick={this.props.nextClick}
 	      />
 	  </div>
-	  <div classname="col-sm-12">
-	      <EmbeddedGraphAnnotation annotation={this.props.annotion} />
+	  <div className="col-sm-12">
+	      <EmbeddedGraphAnnotation annotation={this.props.annotation} />
 	  </div>
       </div>
     )

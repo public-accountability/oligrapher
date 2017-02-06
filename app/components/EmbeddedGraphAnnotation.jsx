@@ -4,11 +4,20 @@ import BaseComponent from "./BaseComponent";
 export default class EmbeddedGraphAnnotation extends BaseComponent {
   constructor(props) {
     super(props);
-    /* this.bindAll('_annotation');*/
   }
 
   render() {
-    return (<span>{this.props.annotation.header}</span>);
+    let { header, text } = this.props.annotation;
+    
+    return (
+      <div id="oligrapherEmbeddedGraphAnnotation">
+	  <h3>{header}</h3>
+	  <div id="oligrapherEmbeddedGraphAnnotationText"
+	       dangerouslySetInnerHTML={{ __html: this.props.annotation.text }}>
+	  </div>
+      </div>
+      
+    );
   }
 
 }
