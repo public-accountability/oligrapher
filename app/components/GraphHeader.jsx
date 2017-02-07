@@ -15,7 +15,7 @@ export default class GraphHeader extends Component {
 	   style={ isEmbedded ? {height: embedded.headerSize} : {} } >
         { isEditor ?
           <GraphTitleForm title={title} updateTitle={updateTitle} /> :
-          <GraphTitle title={title} url={url} isEmbedded={isEmbedded} /> }
+          <GraphTitle title={title} url={url} isEmbedded={isEmbedded} embedded={embedded} /> }
         { user || date ?
           <GraphByLine user={user} date={date} /> : null }
         { links ?
