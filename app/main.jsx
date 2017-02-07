@@ -17,6 +17,7 @@ import { loadGraph, showGraph, newGraph,
          loadAnnotations, setTitle,
          toggleEditTools } from './actions';
 import Graph from './models/Graph';
+import { configureEmbedded } from './helpers';
 import merge from 'lodash/merge';
 import assign from 'lodash/assign';
 import difference from 'lodash/difference';
@@ -32,10 +33,16 @@ class Oligrapher {
       isEditor: false, 
       isLocked: true,
       isEmbedded: false,
-      logActions: false, 
+      embedded: null,
+      logActions: false,
       viewOnlyHighlighted: true 
     }, config);
     config.height = config.graphHeight || config.root.offsetHeight;
+    
+    if (config.isEmbedded) {
+      // set defaults and perform height calculations
+      config.embedded = configureEmbedded(config);
+    }
 
     this.rootElement = config.root;
 

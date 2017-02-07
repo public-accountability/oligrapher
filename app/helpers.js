@@ -1,6 +1,8 @@
 import includes from 'lodash/includes';
 import merge from 'lodash/merge';
 import mapValues from 'lodash/mapValues';
+import round from 'lodash/round';
+import isNil from 'lodash/isNil';
 
 /**
  * Calculates New Position for Draggable Components
@@ -79,4 +81,27 @@ export const newArrowState = (oldArrowState, arrowSide, showArrow) => {
   }
   // default case
   return oldArrowState;
+};
+
+const pxStr = num => num.toString() + 'px';
+
+// {options} -> {embedded}
+export const configureEmbedded = configOptions => {
+  const pctDefaults = {headerPct: 10, annotationPct: 25};
+  
+  let embedded = isNil(configOptions.embedded) ? {} : configOptions.embedded;
+  let height = configOptions.height;
+  embedded = merge(pctDefaults, embedded);
+
+  let headerHeight = height * (embedded.headerPct / 100);
+  let annotationHeight = height * (embedded.annotationPct / 100);
+  let graphHeight = height - (headerHeight + annotationHeight);
+
+  embedded.headerSize = pxStr(headerHeight);
+  embedded.headerFontSize = pxStr(round(headerHeight * 0.5));
+  embedded.annotationSize = pxStr(annotationHeight);
+  embedded.graphHeight = graphHeight;
+  embedded.graphSize = pxStr(graphHeight);
+
+  return embedded;
 };

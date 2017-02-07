@@ -8,10 +8,11 @@ import GraphLinks from './GraphLinks';
 export default class GraphHeader extends Component {
 
   render() {
-    let { user, date, links, title, isEditor, updateTitle, url, isEmbedded } = this.props;
+    let { user, date, links, title, isEditor, updateTitle, url, isEmbedded, embedded } = this.props;
 
     return (
-      <div id="oligrapherHeader">
+      <div id="oligrapherHeader"
+	   style={ isEmbedded ? {height: embedded.headerSize} : {} } >
         { isEditor ?
           <GraphTitleForm title={title} updateTitle={updateTitle} /> :
           <GraphTitle title={title} url={url} isEmbedded={isEmbedded} /> }
@@ -23,4 +24,3 @@ export default class GraphHeader extends Component {
     );
   }
 }
-

@@ -48,8 +48,8 @@ export class Root extends Component {
   }
 
   render() {
-    let { dispatch, graph, selection, isEditor, isLocked, isEmbedded, title,
-          showEditTools, showSaveButton, showHelpScreen, 
+    let { dispatch, graph, selection, isEditor, isLocked, isEmbedded, embedded,
+	  title, showEditTools, showSaveButton, showHelpScreen, 
           hasSettings, graphSettings, showSettings, onSave,
           currentIndex, annotation, annotations, visibleAnnotations } = this.props;
     let that = this;
@@ -229,6 +229,7 @@ export class Root extends Component {
            </div> {/* end div.row */}
 	   { isEmbedded && showAnnotations &&
 	     <EmbeddedGraphAnnotations
+		 embedded={embedded}
                  currentIndex={currentIndex}
 		 annotationCount={isArray(annotations) ? annotations.length : 0}
 		 prevClick={prevClick}
