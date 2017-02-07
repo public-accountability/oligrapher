@@ -7,9 +7,9 @@ export default class EmbeddedGraphAnnotation extends Component {
     
     return (
       <div id="oligrapherEmbeddedGraphAnnotation">
-	  <div class="row">
+	  <div className="row">
 	      <h3>{header}</h3>
-	      <div class="col-sm-8">
+	      <div className="col-sm-8">
 		  <div id="oligrapherEmbeddedGraphAnnotationText"
 		       dangerouslySetInnerHTML={{ __html: this.props.annotation.text }}>
 		  </div>

@@ -32,6 +32,15 @@
   width: 100%;
 }
 
+/* 
+  When isEmbedded is true
+  This style overrides #oligrapherTitle 
+*/
+
+h1.embeddedTitle {
+  font-size: 25px !important;;
+}
+
 #oligrapherByLine {
   margin-right: 18px;
 }

@@ -19,27 +19,36 @@
     <div id="oligrapher"></div>
     <script>
      var windowHeight = window.innerHeight;
+     // set wrapper div to be same height as window
      var elem = document.getElementById('oligrapher');
      elem.style.height = windowHeight.toString() + 'px';
 
       var oli = new Oligrapher({ 
         root: elem,
         isEditor: false,
-          isLocked: true,
-	  isEmbedded: true,
+        isLocked: true,
+	isEmbedded: true,
+	embedded: {
+	  height: 500,
+	  width: 500
+	},
         data: oligrapherDemoData,
         user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },
         date: "August 30, 2015",
         startAnnotation: 0,
       });
 
-
-     var annotations = document.getElementById('oligrapherGraphAnnotations');
+     var annotations = document.getElementById('oligrapherEmbeddedGraphAnnotations');
+     // find height of annotations or set to zero if there are no annotations
      var annotationsHeight = annotations ? annotations.offsetHeight : 0;
+     // get height of header
      var headerHeight = document.getElementById('oligrapherHeader').offsetHeight;
-     var graphHeight = windowHeight - annotationsHeight - headerHeight + 25;
+     /* var graphHeight = windowHeight - annotationsHeight - headerHeight + 25;*/
 
-     document.querySelector('#oligrapherContainer svg').setAttribute('height', graphHeight)
+     // Subtract the annoatations and header height from the window height
+     var graphHeight = windowHeight - annotationsHeight - headerHeight;
+     document.querySelector('#oligrapherContainer svg').setAttribute('height', graphHeight);
+     
     </script>
   </body>
 </html>

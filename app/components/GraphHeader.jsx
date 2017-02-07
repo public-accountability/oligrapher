@@ -8,13 +8,13 @@ import GraphLinks from './GraphLinks';
 export default class GraphHeader extends Component {
 
   render() {
-    let { user, date, links, title, isEditor, updateTitle, url } = this.props;
+    let { user, date, links, title, isEditor, updateTitle, url, isEmbedded } = this.props;
 
     return (
       <div id="oligrapherHeader">
         { isEditor ?
           <GraphTitleForm title={title} updateTitle={updateTitle} /> :
-          <GraphTitle title={title} url={url} /> }
+          <GraphTitle title={title} url={url} isEmbedded={isEmbedded} /> }
         { user || date ?
           <GraphByLine user={user} date={date} /> : null }
         { links ?
