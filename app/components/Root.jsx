@@ -151,20 +151,22 @@ export class Root extends Component {
     let containerRowStyle = (isEmbedded && showAnnotations) ? {maxHeight: embedded.graphContainerSize} : null;
 
     return (
-      <div id="oligrapherContainer" style={{ height: '100%' }}>
+      <div id="oligrapherContainer" style={{ height: '100%' }} className="container-fluid">
         <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={keyHandlers}>
-            <div className="row" style={containerRowStyle}>
+          <div className="row"> {/* main container row */}
 	    {/* Create a column for annotations if it's in editor mode or has annotations and they are visible.
 		For 'embedded mode' the annotations will appear below the graph and we can use a full column here. */}
-            <div id="oligrapherGraphCol" className={ (showAnnotations && !isEmbedded) ? "col-md-8" : "col-md-12"}>
-              { (isEditor || title) && 
-                <GraphHeader
-                  {...this.props}
-                  updateTitle={updateTitle}
-                  isEditor={isEditor} /> }
+	    <div id="oligrapherGraphCol" className={ (showAnnotations && !isEmbedded) ? "col-md-8" : "col-md-12"}>
+	      { (isEditor || title) &&
+	        <div className="row" id="oligrapherHeaderRow">
+                  <GraphHeader
+		      {...this.props}
+		      updateTitle={updateTitle}
+		      isEditor={isEditor} />
+		</div>}
 
-              <div id="oligrapherGraphContainer">
-                { graph && 
+            <div className="row"  id="oligrapherGraphContainer">
+              { graph && 
                   <Graph 
                     ref={(c) => { this.graph = c; if (c) { c.root = this; } }}
                     {...this.props}
