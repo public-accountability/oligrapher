@@ -100,6 +100,7 @@ export const configureEmbedded = configOptions => {
   
   embedded.headerSize = pxStr(headerHeight);
   embedded.headerFontSize = pxStr(round(headerHeight * 0.5));
+  embedded.annotationHeight = annotationHeight;
   embedded.annotationSize = pxStr(annotationHeight);
   embedded.graphContainerHeight = graphContainerHeight;
   embedded.graphContainerSize = pxStr(graphContainerHeight);

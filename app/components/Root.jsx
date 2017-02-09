@@ -230,14 +230,14 @@ export class Root extends Component {
             }
            </div> {/* end div.row */}
 	   { isEmbedded && showAnnotations &&
-	     <EmbeddedGraphAnnotations
-		 embedded={embedded}
-                 currentIndex={currentIndex}
-		 annotationCount={isArray(annotations) ? annotations.length : 0}
-		 prevClick={prevClick}
-                 nextClick={nextClick}
-		 annotation={annotation}
-	     />
+		 <EmbeddedGraphAnnotations
+		     embedded={embedded}
+                     currentIndex={currentIndex}
+		     annotationCount={isArray(annotations) ? annotations.length : 0}
+		     prevClick={prevClick}
+                     nextClick={nextClick}
+		     annotation={annotation}
+		 />
 	   }
 	    
           { !showAnnotations && this.enableAnnotations() &&

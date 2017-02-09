@@ -5,7 +5,7 @@
   "main": "app/main.jsx",
   "scripts": {
     "dev-build": "webpack-dev-server --devtool eval --progress --history-api-fallback --colors --hot --content-base build --port 8090 --config webpack.dev.config",
-     "fake-news-server" : "cd build && python3 -m http.server 8091",
+    "fake-news-server": "cd build && python3 -m http.server 8091",
     "prod-build": "NODE_ENV=production webpack --display-modules --config webpack.prod.config.js --output-filename=oligrapher.js",
     "watch": "webpack --watch --config webpack.prod.config.js --output-filename=oligrapher.js",
     "min-build": "NODE_ENV=production webpack -p --optimize-dedupe --display-modules --config webpack.prod.config.js --output-filename=oligrapher.min.js",
@@ -30,6 +30,7 @@
     "react": "^15.4.2",
     "react-anything-sortable": "^1.6.1",
     "react-color": "^2.11.1",
+    "react-custom-scrollbars": "^4.0.1",
     "react-dom": "^15.4.2",
     "react-draggable": "^2.2.2",
     "react-hotkeys": "^0.9.0",
