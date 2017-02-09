@@ -8,10 +8,11 @@ describe('EmbeddedGraphAnnotation', () => {
     header: "Header",
     text: "<p>A modest amount of <strong>annotation text</strong>."
   };
+  let embedded = {annotationHeight: 100}
 
-  beforeEach( () => wrapper = shallow(<EmbeddedGraphAnnotation annotation={annotation} />) )
+  beforeEach( () => wrapper = shallow(<EmbeddedGraphAnnotation annotation={annotation} embedded={embedded} />) )
 
-  it('shows title', () =>  expect(wrapper.find('h3').text()).toEqual('Header') );
+  it('shows title', () =>  expect(wrapper.find('strong').text()).toEqual('Header') );
 
   it('shows text', () => {
     expect(wrapper.find('#oligrapherEmbeddedGraphAnnotationText').render().text()).toEqual("A modest amount of annotation text.");

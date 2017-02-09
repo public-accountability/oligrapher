@@ -4,14 +4,14 @@ import { Scrollbars } from 'react-custom-scrollbars';
 // this 'magic' number is the hight of the embeddedNavBar (set via css)
 const TRACKER_OFFSET = 30;
 // bootstrap adds negative margins of -15
-const MARGIN_OFFESET = 15;
+const MARGIN_OFFSET = 15;
 
 export default class EmbeddedGraphAnnotation extends Component {
 
   render() {
     let { header, text } = this.props.annotation;
     let { annotationHeight } = this.props.embedded;
-    let height = annotationHeight - TRACKER_OFFSET - MARGIN_OFFESET;
+    let height = annotationHeight - TRACKER_OFFSET - MARGIN_OFFSET;
     
     let divStyle = { 
       height: height, 
