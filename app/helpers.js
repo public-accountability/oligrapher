@@ -96,10 +96,13 @@ export const configureEmbedded = configOptions => {
   let headerHeight = height * (embedded.headerPct / 100);
   let annotationHeight = height * (embedded.annotationPct / 100);
   let graphHeight = height - (headerHeight + annotationHeight);
-
+  let graphContainerHeight = graphHeight + headerHeight;
+  
   embedded.headerSize = pxStr(headerHeight);
   embedded.headerFontSize = pxStr(round(headerHeight * 0.5));
   embedded.annotationSize = pxStr(annotationHeight);
+  embedded.graphContainerHeight = graphContainerHeight;
+  embedded.graphContainerSize = pxStr(graphContainerHeight);
   embedded.graphHeight = graphHeight;
   embedded.graphSize = pxStr(graphHeight);
 

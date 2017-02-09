@@ -148,10 +148,12 @@ export class Root extends Component {
       this.props.dispatch(fetchInterlocks(node1Id, node2Id, nodeIds, apiCall));
     }
 
+    let containerRowStyle = (isEmbedded && showAnnotations) ? {maxHeight: embedded.graphContainerSize} : null;
+
     return (
       <div id="oligrapherContainer" style={{ height: '100%' }}>
         <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={keyHandlers}>
-            <div className="row">
+            <div className="row" style={containerRowStyle}>
 	    {/* Create a column for annotations if it's in editor mode or has annotations and they are visible.
 		For 'embedded mode' the annotations will appear below the graph and we can use a full column here. */}
             <div id="oligrapherGraphCol" className={ (showAnnotations && !isEmbedded) ? "col-md-8" : "col-md-12"}>
