@@ -4,18 +4,22 @@ import EmbeddedGraphAnnotation from './EmbeddedGraphAnnotation';
 
 export default class EmbeddedGraphAnnotations extends Component {
   render () {
+    let hasTracker = this.props.annotationCount > 1;
+    
     return (
       <div id="oligrapherEmbeddedGraphAnnotations" style={{height: this.props.embedded.annotationSize}} >
-	  <div className="row" >
-	      <div className="col-sm-10">
-		  <EmbeddedNavBar 
-		      annotationCount={this.props.annotationCount}
-		      currentIndex={this.props.currentIndex}
-		      prevClick={this.props.prevClick}
-		      nextClick={this.props.nextClick}
-		  />
-	      </div>
-	  </div>
+	  { hasTracker && 
+	    <div className="row" >
+		<div className="col-sm-10">
+		    <EmbeddedNavBar 
+			annotationCount={this.props.annotationCount}
+			currentIndex={this.props.currentIndex}
+			prevClick={this.props.prevClick}
+			nextClick={this.props.nextClick}
+		    />
+		</div>
+	    </div>
+	  }
 	  <div className="row">
 	      <EmbeddedGraphAnnotation annotation={this.props.annotation} embedded={this.props.embedded} />
 	  </div>

@@ -10,8 +10,9 @@ export default class EmbeddedGraphAnnotation extends Component {
 
   render() {
     let { header, text } = this.props.annotation;
+    let hasTracker = this.props.hasTracker;
     let { annotationHeight } = this.props.embedded;
-    let height = annotationHeight - TRACKER_OFFSET - MARGIN_OFFSET;
+    let height = annotationHeight - MARGIN_OFFSET - (hasTracker ? TRACKER_OFFSET : 0);
     
     let divStyle = { 
       height: height, 
@@ -40,5 +41,6 @@ export default class EmbeddedGraphAnnotation extends Component {
 
 EmbeddedGraphAnnotation.propTypes = {
   annotation: PropTypes.object,
-  embedded: PropTypes.object
+  embedded: PropTypes.object,
+  hasTracker: PropTypes.bool
 }

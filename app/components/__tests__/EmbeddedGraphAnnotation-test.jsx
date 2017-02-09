@@ -10,12 +10,22 @@ describe('EmbeddedGraphAnnotation', () => {
   };
   let embedded = {annotationHeight: 100}
 
-  beforeEach( () => wrapper = shallow(<EmbeddedGraphAnnotation annotation={annotation} embedded={embedded} />) )
+  describe('layout', () => {
+    beforeEach( () => wrapper = shallow(<EmbeddedGraphAnnotation annotation={annotation} embedded={embedded} hasTracker={true} />) )
+    it('shows title', () =>  expect(wrapper.find('strong').text()).toEqual('Header') );
+    it('shows text', () => {
+      expect(wrapper.find('#oligrapherEmbeddedGraphAnnotationText').render().text()).toEqual("A modest amount of annotation text.");
+    });
+  })
 
-  it('shows title', () =>  expect(wrapper.find('strong').text()).toEqual('Header') );
-
-  it('shows text', () => {
-    expect(wrapper.find('#oligrapherEmbeddedGraphAnnotationText').render().text()).toEqual("A modest amount of annotation text.");
+  describe('tracker option', () => {
+    it('sets height correctly if there is a tracker', () => {
+      let element = shallow(<EmbeddedGraphAnnotation annotation={annotation} embedded={embedded} hasTracker={true} />); 
+      expect(element.find('#oligrapherEmbeddedGraphAnnotation').prop('style').height).toEqual(55);
+    });
+    it('sets height correctly if there is not a tracker', () => {
+      let element = shallow(<EmbeddedGraphAnnotation annotation={annotation} embedded={embedded} hasTracker={false} />); 
+      expect(element.find('#oligrapherEmbeddedGraphAnnotation').prop('style').height).toEqual(85);
+    });
   });
-  
 });
