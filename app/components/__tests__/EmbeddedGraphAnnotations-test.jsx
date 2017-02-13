@@ -1,6 +1,7 @@
 import React from "react";
 import { shallow } from "enzyme";
 import noop from 'lodash/noop';
+import merge from 'lodash/merge';
 import EmbeddedGraphAnnotations from '../EmbeddedGraphAnnotations';
 import EmbeddedNavBar from '../EmbeddedNavBar';
 import EmbeddedGraphAnnotation from '../EmbeddedGraphAnnotation';
@@ -27,6 +28,17 @@ describe('EmbeddedGraphAnnotations', () => {
   it('should have EmbeddedGraphAnnotation', () => {
     let wrapper = shallow(<EmbeddedGraphAnnotations annotationCount={5} currentIndex={0} prevClick={noop} nextClick={noop} embedded={embedded} />);
     expect(wrapper.find(EmbeddedGraphAnnotation).length).toEqual(1);
+  });
+
+  it('should have img if provided logoUrl', () => {
+    let e = merge(embedded, {logoUrl: '/logo.png'})
+    let wrapper = shallow(<EmbeddedGraphAnnotations annotationCount={5} currentIndex={0} prevClick={noop} nextClick={noop} embedded={e} />);
+    expect(wrapper.find('img').length).toEqual(1);
+  });
+
+  it('should not have img if there is no provided logoUrl', () => {
+    let wrapper = shallow(<EmbeddedGraphAnnotations annotationCount={5} currentIndex={0} prevClick={noop} nextClick={noop} embedded={embedded} />);
+    expect(wrapper.find('img').length).toEqual(1);
   });
 
 });

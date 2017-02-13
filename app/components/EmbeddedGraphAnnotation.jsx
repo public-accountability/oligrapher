@@ -16,7 +16,7 @@ export default class EmbeddedGraphAnnotation extends Component {
     
 
     let divStyle = { 
-      width: '95%',
+      
       marginTop: '10px'
     }
 

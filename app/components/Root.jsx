@@ -238,7 +238,7 @@ export class Root extends Component {
             }
            
 	   { isEmbedded && showAnnotations &&
-	     <div className="col-sm-10" style={annotationsContainerSyle}>
+	     <div className="col-sm-12" style={annotationsContainerSyle}>
 		 <EmbeddedGraphAnnotations
 		     embedded={embedded}
                      currentIndex={currentIndex}

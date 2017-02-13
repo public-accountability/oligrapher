@@ -83,15 +83,15 @@ export const newArrowState = (oldArrowState, arrowSide, showArrow) => {
   return oldArrowState;
 };
 
-const pxStr = num => num.toString() + 'px';
+export const pxStr = num => num.toString() + 'px';
 
 // {options} -> {embedded}
 export const configureEmbedded = configOptions => {
-  const pctDefaults = {headerPct: 10, annotationPct: 25};
+  const defaults = {headerPct: 10, annotationPct: 25, logoUrl: null};
   
   let embedded = isNil(configOptions.embedded) ? {} : configOptions.embedded;
   let height = configOptions.height;
-  embedded = merge(pctDefaults, embedded);
+  embedded = merge(defaults, embedded);
   
   let headerHeight = height * (embedded.headerPct / 100);
   let annotationHeight = height * (embedded.annotationPct / 100);
