@@ -1,6 +1,9 @@
 import React from "react";
 import { shallow } from "enzyme";
+
 import EmbeddedGraphAnnotation from "../EmbeddedGraphAnnotation";
+import { Scrollbars } from 'react-custom-scrollbars';
+
 
 describe('EmbeddedGraphAnnotation', () => {
   let wrapper;
@@ -15,17 +18,18 @@ describe('EmbeddedGraphAnnotation', () => {
     it('shows title', () =>  expect(wrapper.find('strong').text()).toEqual('Header') );
     it('shows text', () => {
       expect(wrapper.find('#oligrapherEmbeddedGraphAnnotationText').render().text()).toEqual("A modest amount of annotation text.");
-    });
+    })
+    it('has Scrollbars', () => expect(wrapper.find(Scrollbars).length).toEqual(1));
   })
 
   describe('tracker option', () => {
     it('sets height correctly if there is a tracker', () => {
       let element = shallow(<EmbeddedGraphAnnotation annotation={annotation} embedded={embedded} hasTracker={true} />); 
-      expect(element.find('#oligrapherEmbeddedGraphAnnotation').prop('style').height).toEqual(55);
+      expect(element.find(Scrollbars).prop('style').height).toEqual(45);
     });
     it('sets height correctly if there is not a tracker', () => {
       let element = shallow(<EmbeddedGraphAnnotation annotation={annotation} embedded={embedded} hasTracker={false} />); 
-      expect(element.find('#oligrapherEmbeddedGraphAnnotation').prop('style').height).toEqual(85);
+      expect(element.find(Scrollbars).prop('style').height).toEqual(85);
     });
   });
 });

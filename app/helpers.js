@@ -92,20 +92,26 @@ export const configureEmbedded = configOptions => {
   let embedded = isNil(configOptions.embedded) ? {} : configOptions.embedded;
   let height = configOptions.height;
   embedded = merge(pctDefaults, embedded);
-
+  
   let headerHeight = height * (embedded.headerPct / 100);
   let annotationHeight = height * (embedded.annotationPct / 100);
   let graphHeight = height - (headerHeight + annotationHeight);
   let graphContainerHeight = graphHeight + headerHeight;
   
+  // size of overall container -- all elements
+  embedded.containerSize = pxStr(height);
+  // size of header
   embedded.headerSize = pxStr(headerHeight);
-  embedded.headerFontSize = pxStr(round(headerHeight * 0.5));
-  embedded.annotationHeight = annotationHeight;
-  embedded.annotationSize = pxStr(annotationHeight);
-  embedded.graphContainerHeight = graphContainerHeight;
-  embedded.graphContainerSize = pxStr(graphContainerHeight);
+  embedded.headerFontSize = pxStr(round(headerHeight * 0.4));
+  // size of graph column (includes header)
+  embedded.graphColumnHeight = graphContainerHeight;
+  embedded.graphColumnSize = pxStr(graphContainerHeight);
+  // size of graph
   embedded.graphHeight = graphHeight;
   embedded.graphSize = pxStr(graphHeight);
-
+  // size of annotation section, including tracker
+  embedded.annotationHeight = annotationHeight;
+  embedded.annotationSize = pxStr(annotationHeight);
+  
   return embedded;
 };

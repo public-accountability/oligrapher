@@ -148,24 +148,28 @@ export class Root extends Component {
       this.props.dispatch(fetchInterlocks(node1Id, node2Id, nodeIds, apiCall));
     }
 
-    let containerRowStyle = (isEmbedded && showAnnotations) ? {maxHeight: embedded.graphContainerSize} : null;
-
+    let containerRowStyle = (isEmbedded && showAnnotations) ? {maxHeight: embedded.containerSize} : null;
+    let headerRowStyle = (isEmbedded && showAnnotations) ? {maxHeight: embedded.headerSize} : null;
+    let graphColumnStyle = (isEmbedded && showAnnotations) ? {maxHeight: embedded.graphColumnSize} : null;
+    let graphContainerStyle = (isEmbedded && showAnnotations) ? {maxHeight: embedded.graphSize} : null;
+    let annotationsContainerSyle = (isEmbedded && showAnnotations) ? {height: embedded.annotationSize} : null;
+    
     return (
       <div id="oligrapherContainer" style={{ height: '100%' }} className="container-fluid">
         <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={keyHandlers}>
-          <div className="row"> {/* main container row */}
+          <div className="row" style={containerRowStyle} > {/* main container row */}
 	    {/* Create a column for annotations if it's in editor mode or has annotations and they are visible.
 		For 'embedded mode' the annotations will appear below the graph and we can use a full column here. */}
-	    <div id="oligrapherGraphCol" className={ (showAnnotations && !isEmbedded) ? "col-md-8" : "col-md-12"}>
+	      <div id="oligrapherGraphCol" className={ (showAnnotations && !isEmbedded) ? "col-md-8" : "col-md-12 col-sm-12"} style={graphColumnStyle} >
 	      { (isEditor || title) &&
-	        <div className="row" id="oligrapherHeaderRow">
+	        <div className="row" id="oligrapherHeaderRow" style={headerRowStyle}>
                   <GraphHeader
 		      {...this.props}
 		      updateTitle={updateTitle}
 		      isEditor={isEditor} />
 		</div>}
 
-            <div className="row"  id="oligrapherGraphContainer">
+            <div className="row"  id="oligrapherGraphContainer" style={graphContainerStyle} >
               { graph && 
                   <Graph 
                     ref={(c) => { this.graph = c; if (c) { c.root = this; } }}
@@ -211,27 +215,30 @@ export class Root extends Component {
               </div> {/* end div#oligrapherGraphContainer */}
             </div> {/* end div#oligrapherGraphCol */}
             { !isEmbedded && showAnnotations &&
-              <GraphAnnotations 
-                isEditor={isEditor}
-                navList={isEditor}
-                prevClick={prevClick}
-                nextClick={nextClick}
-                canClickPrev={canClickPrev}
-                canClickNext={canClickNext}
-                swapAnnotations={swapAnnotations}
-                annotation={annotation}
-                annotations={annotations}
-                currentIndex={currentIndex}
-                show={show}
-                create={create}
-                update={update}
-                move={move}
-                remove={remove}
-                editForm={true}
-                hideEditTools={() => dispatch(toggleEditTools(false))} />
+	      <div className="col-md-4">
+		  <GraphAnnotations 
+                      isEditor={isEditor}
+                      navList={isEditor}
+                      prevClick={prevClick}
+                      nextClick={nextClick}
+                      canClickPrev={canClickPrev}
+                      canClickNext={canClickNext}
+                      swapAnnotations={swapAnnotations}
+                      annotation={annotation}
+                      annotations={annotations}
+                      currentIndex={currentIndex}
+                      show={show}
+                      create={create}
+                      update={update}
+                      move={move}
+                      remove={remove}
+                      editForm={true}
+                      hideEditTools={() => dispatch(toggleEditTools(false))} />
+	      </div>
             }
-           </div> {/* end div.row */}
+           
 	   { isEmbedded && showAnnotations &&
+	     <div className="col-sm-10" style={annotationsContainerSyle}>
 		 <EmbeddedGraphAnnotations
 		     embedded={embedded}
                      currentIndex={currentIndex}
@@ -240,8 +247,9 @@ export class Root extends Component {
                      nextClick={nextClick}
 		     annotation={annotation}
 		 />
+	     </div>
 	   }
-	    
+	  </div> {/* end div.row */} 
           { !showAnnotations && this.enableAnnotations() &&
             <div id="oligrapherShowAnnotations">
               <button onClick={() => swapAnnotations()} className="btn btn-lg btn-default">

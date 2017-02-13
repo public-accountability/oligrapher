@@ -38,7 +38,7 @@ export default class GraphAnnotations extends BaseComponent {
     );
 
     return (
-      <div id="oligrapherGraphAnnotations" className="col-md-4">
+      <div id="oligrapherGraphAnnotations">
         { (annotation || isEditor) && navComponent }
         { isEditor && navList && navListComponent }
         { annotation && (isEditor ? formComponent : annotationComponent) }

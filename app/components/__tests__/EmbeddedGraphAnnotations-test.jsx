@@ -9,14 +9,14 @@ import EmbeddedGraphAnnotation from '../EmbeddedGraphAnnotation';
 describe('EmbeddedGraphAnnotations', () => {
   const embedded = {annotationSize: '100px'};
   
-  it('sets div height', () => {
-    let wrapper = shallow(<EmbeddedGraphAnnotations annotationCount={5} currentIndex={0} prevClick={noop} nextClick={noop} embedded={embedded} />);
-    expect(wrapper.find('#oligrapherEmbeddedGraphAnnotations').prop('style').height).toEqual('100px');
-  });
-
   it('should have EmbeddedNavbar', () => {
     let wrapper = shallow(<EmbeddedGraphAnnotations annotationCount={10} currentIndex={0} prevClick={noop} nextClick={noop} embedded={embedded} />);
     expect(wrapper.find(EmbeddedNavBar).length).toEqual(1);
+  });
+
+  it('should have tracker column', () => {
+    let wrapper = shallow(<EmbeddedGraphAnnotations annotationCount={10} currentIndex={0} prevClick={noop} nextClick={noop} embedded={embedded} />);
+    expect(wrapper.find('div.col-sm-12').length).toEqual(1);
   });
 
   it('should not have EmbeddedNavbar if annotation count is 1', () => {
