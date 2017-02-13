@@ -5,19 +5,21 @@ import { Scrollbars } from 'react-custom-scrollbars';
 const TRACKER_OFFSET = 40;
 // bootstrap adds negative margins of -15
 const MARGIN_OFFSET = 15;
+const LINK_OFFSET = 30;
 
 export default class EmbeddedGraphAnnotation extends Component {
 
   render() {
     let { header, text } = this.props.annotation;
     let hasTracker = this.props.hasTracker;
-    let { annotationHeight } = this.props.embedded;
-    let height = annotationHeight - MARGIN_OFFSET - (hasTracker ? TRACKER_OFFSET : 0);
-    
+    let { annotationHeight, linkUrl, linkText } = this.props.embedded;
+    let hasLink = Boolean(linkUrl && linkText);
 
+    let height = annotationHeight - MARGIN_OFFSET - (hasTracker ? TRACKER_OFFSET : 0) - (hasLink ? LINK_OFFSET : 0);
+    
     let divStyle = { 
-      
       marginTop: '10px'
+      
     }
 
     let scrollbarStyle = {

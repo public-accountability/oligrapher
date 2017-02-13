@@ -11,7 +11,7 @@ describe('EmbeddedGraphAnnotation', () => {
     header: "Header",
     text: "<p>A modest amount of <strong>annotation text</strong>."
   };
-  let embedded = {annotationHeight: 100}
+  let embedded = {annotationHeight: 100, linkUrl: null, linkText: null};
 
   describe('layout', () => {
     beforeEach( () => wrapper = shallow(<EmbeddedGraphAnnotation annotation={annotation} embedded={embedded} hasTracker={true} />) )
@@ -32,4 +32,13 @@ describe('EmbeddedGraphAnnotation', () => {
       expect(element.find(Scrollbars).prop('style').height).toEqual(85);
     });
   });
+  
+  describe('link offset', () => {
+    let embedded = {annotationHeight: 100, linkUrl: 'map.com', linkText: 'view this map'};
+    it('sets link offset if link is provided', () => {
+      let element = shallow(<EmbeddedGraphAnnotation annotation={annotation} embedded={embedded} hasTracker={false} />); 
+      expect(element.find(Scrollbars).prop('style').height).toEqual(55);
+    });
+  });
+
 });

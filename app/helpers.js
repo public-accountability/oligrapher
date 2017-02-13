@@ -87,7 +87,13 @@ export const pxStr = num => num.toString() + 'px';
 
 // {options} -> {embedded}
 export const configureEmbedded = configOptions => {
-  const defaults = {headerPct: 10, annotationPct: 25, logoUrl: null};
+  const defaults = {
+    headerPct: 10, 
+    annotationPct: 25, 
+    logoUrl: null,
+    linkUrl: null,
+    linkText: null
+  };
   
   let embedded = isNil(configOptions.embedded) ? {} : configOptions.embedded;
   let height = configOptions.height;

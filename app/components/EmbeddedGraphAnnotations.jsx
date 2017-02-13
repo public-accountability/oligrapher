@@ -8,9 +8,9 @@ const TRACKER_OFFSET = 30;
 export default class EmbeddedGraphAnnotations extends Component {
   render () {
     let hasTracker = this.props.annotationCount > 1;
-    let { logoUrl, annotationHeight } = this.props.embedded;
+    let { logoUrl, annotationHeight, linkUrl, linkText } = this.props.embedded;
     let imgContainerHeight = annotationHeight - 15 - (hasTracker ? TRACKER_OFFSET : 0);
-    
+
     return (
       <div id="oligrapherEmbeddedGraphAnnotations"  className="row" style={{height: '100%'}} >
 	  <div className="col-sm-12">
@@ -39,6 +39,16 @@ export default class EmbeddedGraphAnnotations extends Component {
 		</div>
 	    </div>
 	  }
+
+	  
+      { linkUrl && linkText &&
+	<div style={{position: 'relative', height: '100%', pointerEvents: 'none' }}>
+	    <div style={{position: 'absolute', bottom: 0, paddingLeft: '15px', pointerEvents: 'auto' }}>
+		<p><a href={linkUrl}>{linkText}</a></p>
+	    </div>
+	</div>
+      }
+
       </div>
     );
   }
