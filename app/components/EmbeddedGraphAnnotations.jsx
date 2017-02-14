@@ -12,6 +12,7 @@ export default class EmbeddedGraphAnnotations extends Component {
       position: 'absolute',
       bottom: 10,
       right: 0,
+      opacity: 0.9,
       marginRight: '5px',
       maxWidth: logoWidth
     };

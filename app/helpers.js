@@ -120,7 +120,7 @@ export const configureEmbedded = configOptions => {
   embedded.annotationHeight = annotationHeight;
   embedded.annotationSize = pxStr(annotationHeight);
   // max width of logo
-  embedded.logoWidth = window.innerWidth / 10;
+  embedded.logoWidth = window.innerWidth / 9;
   
   return embedded;
 };
