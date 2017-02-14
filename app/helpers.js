@@ -85,6 +85,7 @@ export const newArrowState = (oldArrowState, arrowSide, showArrow) => {
 
 export const pxStr = num => num.toString() + 'px';
 
+
 // {options} -> {embedded}
 export const configureEmbedded = configOptions => {
   const defaults = {
@@ -118,6 +119,9 @@ export const configureEmbedded = configOptions => {
   // size of annotation section, including tracker
   embedded.annotationHeight = annotationHeight;
   embedded.annotationSize = pxStr(annotationHeight);
+  // max width of logo
+  embedded.logoWidth = window.innerWidth / 10;
   
   return embedded;
 };
+

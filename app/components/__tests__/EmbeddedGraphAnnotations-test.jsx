@@ -15,9 +15,9 @@ describe('EmbeddedGraphAnnotations', () => {
     expect(wrapper.find(EmbeddedNavBar).length).toEqual(1);
   });
 
-  it('should have tracker column', () => {
+  it('should have two columns if there is a tracker', () => {
     let wrapper = shallow(<EmbeddedGraphAnnotations annotationCount={10} currentIndex={0} prevClick={noop} nextClick={noop} embedded={embedded} />);
-    expect(wrapper.find('div.col-sm-12').length).toEqual(1);
+    expect(wrapper.find('div.col-sm-12').length).toEqual(2);
   });
 
   it('should not have EmbeddedNavbar if annotation count is 1', () => {
