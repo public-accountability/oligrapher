@@ -25,6 +25,8 @@ import difference from 'lodash/difference';
 require('medium-editor/dist/css/medium-editor.css');
 require('medium-editor/dist/css/themes/default.css');
 require ('./styles/oligrapher.css');
+require('./styles/oligrapher.annotations.css');
+require('./styles/oligrapher.embedded.css');
 
 class Oligrapher {
   constructor(config = {}) {

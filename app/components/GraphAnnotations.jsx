@@ -4,7 +4,6 @@ import GraphNavButtons from './GraphNavButtons';
 import GraphAnnotationList from './GraphAnnotationList';
 import GraphAnnotation from './GraphAnnotation';
 import GraphAnnotationForm from './GraphAnnotationForm';
-require('../styles/oligrapher.annotations.css');
 
 export default class GraphAnnotations extends BaseComponent {
   constructor(props) {

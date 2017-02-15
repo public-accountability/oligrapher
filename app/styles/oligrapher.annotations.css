@@ -130,37 +130,6 @@
   background-color: #fff;
 }
 
-/* Embedded  */
-
-#embeddedNavBar {
-    height: 30px;
-}
-
-#annotationsTracker {
-    display: inline-block;
-    float: left;
-    margin-right: 10px;
-}
-
-.tracker-circle {
-    margin-right: 2px;
-    display: inline-block;
-    border: 1px solid #000;
-    border-radius: 50%;
-    width: 12px;
-    height: 12px; 
-}
-
-.btn-annotation-next {
-    margin-left: 5px;
-}
-
-.tracker-circle-selected {
-  background-color: #008;
-}
-
-/* -- end embedded --  */
-
 .clickplz:enabled:not(:focus) {
   animation: clickplz 3s;
   -webkit-animation: clickplz 3s;
