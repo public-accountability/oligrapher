@@ -8,15 +8,6 @@ export default class EmbeddedGraphAnnotations extends Component {
     let hasTracker = this.props.annotationCount > 1;
     let { logoUrl, annotationHeight, linkUrl, linkText, logoWidth } = this.props.embedded;
 
-    let imgStyle = {
-      position: 'absolute',
-      bottom: 10,
-      right: 0,
-      opacity: 0.9,
-      marginRight: '5px',
-      maxWidth: logoWidth
-    };
-    
     return (
       <div id="oligrapherEmbeddedGraphAnnotations"  className="row" style={{height: '100%'}} >
 	  <div className="col-sm-12">
@@ -34,13 +25,13 @@ export default class EmbeddedGraphAnnotations extends Component {
 	  </div>
 
 	  { (logoUrl || (linkUrl && linkText) ) && 
-	    <div style={{position: 'relative', height: '100%', pointerEvents: 'none' }}>  
+	    <div className="embedded-footer-wrapper">  
 	       { linkUrl && linkText &&
-		<div style={{position: 'absolute', bottom: 0, paddingLeft: '15px', pointerEvents: 'auto' }}>
+		<div className="embedded-link-wrapper">
 		    <p><a href={linkUrl}>{linkText}</a></p>
 		</div> }
 	       { logoUrl && 
-		 <img src={logoUrl} className="img-responsive" alt="Oligrapher Logo" style={imgStyle} />  }
+		 <img src={logoUrl} className="img-responsive embedded-logo" alt="Oligrapher Logo" style={{maxWidth: logoWidth}} />  }
 	    </div> }
       </div>
     );

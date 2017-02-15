@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 
-// this 'magic' number is the hight of the embeddedNavBar (set via css) + container margin offset
-const TRACKER_OFFSET = 40;
+// some magic numbers: 
+// the hight of the embeddedNavBar (set via css) + container margin offset
+const TRACKER_OFFSET = 38;
 // bootstrap adds negative margins of -15
 const MARGIN_OFFSET = 15;
 const LINK_OFFSET = 30;

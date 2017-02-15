@@ -17,16 +17,14 @@ describe('EmbeddedNavButtons', () => {
     expect(wrapper.find('button.btn-annotation-next').length).toEqual(1);
   });
 
-
-  it('has back button and not the next button when current index is the last', () => {
+  it('has back button and next button is invisible when current index is the last', () => {
     let wrapper = shallow(<EmbeddedNavButtons annotationCount={3} currentIndex={2} nextClick={noop} prevClick={noop}  />);
-    expect(wrapper.find('button').length).toEqual(1);
+    expect(wrapper.find('button').length).toEqual(2);
     expect(wrapper.find('button.btn-annotation-back').prop('disabled')).toEqual(false);
-    expect(wrapper.find('button.btn-annotation-next').length).toEqual(0);
+    expect(wrapper.find('button.btn-annotation-next').hasClass('invisible')).toEqual(true);
   });
 
   describe('clicking', () => {
-    
     it('triggers prevClick', () => {
       let spy = sinon.spy();
       let wrapper = shallow(<EmbeddedNavButtons annotationCount={10} currentIndex={1} nextClick={noop} prevClick={spy} />);
@@ -40,5 +38,5 @@ describe('EmbeddedNavButtons', () => {
       wrapper.find('button.btn-annotation-next').simulate('click');
       expect(spy.calledOnce).toEqual(true);
     });
-  })
+  });
 });

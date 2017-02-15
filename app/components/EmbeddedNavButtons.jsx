@@ -4,7 +4,7 @@ import BaseComponent from "./BaseComponent";
 export default class EmbeddedNavButtons extends BaseComponent {
   constructor(props) {
     super(props);
-    this.bindAll('_isBackButtonDisabled', '_showNextButton');
+    this.bindAll('_isBackButtonDisabled', '_nextButtonClass');
   }
   render () {
     return (
@@ -15,12 +15,10 @@ export default class EmbeddedNavButtons extends BaseComponent {
 		onClick={this.props.prevClick} 
 		className="btn btn-sm btn-default btn-annotation-back">Back</button> 
 
-	  { this._showNextButton() &&
 	    <button
 		title="next annotation"
-		onClick={this.props.nextClick} 
-		className="btn btn-sm btn-primary btn-annotation-next">Next</button> 
-	  }
+		onClick={this.props.nextClick}
+		className={`btn btn-sm btn-primary btn-annotation-next ${this._nextButtonClass()}`} >Next</button> 
       </div>
     )
   }
@@ -28,12 +26,15 @@ export default class EmbeddedNavButtons extends BaseComponent {
   _isBackButtonDisabled() {
     return this.props.currentIndex === 0;
   }
-
-  _showNextButton() {
-    return !((this.props.currentIndex + 1) === this.props.annotationCount);
+  
+  _nextButtonClass() {
+    if ( (this.props.currentIndex + 1) === this.props.annotationCount) {
+      return 'invisible';
+    } else {
+      return '';
+    }
   }
 
-  
 }
 
 EmbeddedNavButtons.propTypes = {

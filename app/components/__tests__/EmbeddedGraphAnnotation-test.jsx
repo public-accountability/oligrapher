@@ -25,7 +25,7 @@ describe('EmbeddedGraphAnnotation', () => {
   describe('tracker option', () => {
     it('sets height correctly if there is a tracker', () => {
       let element = shallow(<EmbeddedGraphAnnotation annotation={annotation} embedded={embedded} hasTracker={true} />); 
-      expect(element.find(Scrollbars).prop('style').height).toEqual(45);
+      expect(element.find(Scrollbars).prop('style').height).toEqual(47);
     });
     it('sets height correctly if there is not a tracker', () => {
       let element = shallow(<EmbeddedGraphAnnotation annotation={annotation} embedded={embedded} hasTracker={false} />); 

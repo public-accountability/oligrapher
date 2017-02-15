@@ -10,15 +10,15 @@ export default class EmbeddedNavBar extends BaseComponent {
   render () {
     return (
       <div id="embeddedNavBar">
-        <AnnotationsTracker 
-          annotationCount={this.props.annotationCount}
-          currentIndex={this.props.currentIndex}
-        />
         <EmbeddedNavButtons 
 	      annotationCount={this.props.annotationCount}
 	      currentIndex={this.props.currentIndex}
 	      nextClick={this.props.nextClick}
 	      prevClick={this.props.prevClick}  />
+	<AnnotationsTracker 
+          annotationCount={this.props.annotationCount}
+          currentIndex={this.props.currentIndex}
+        />
       </div>
     )
   }
