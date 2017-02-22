@@ -165,6 +165,7 @@ var config = {
   data: data,   // initial graph data to load and display (null by default)
   isEditor: true,   // if true, clicking nodes or edges selects them; if false, clicking highlights (false by defaut)
   isLocked: false,   // if true, nodes and edges cannot be dragged by the user
+  isEmbedded: false // if true, the oligrapher is set to be in 'embedded' mode
   viewOnlyHighlighted: false,   // center viewbox around highlighted content
   dataSource: LsDataSource,   // API wrapper for importing nodes and edges from a data source, see build/LsDataSource.js for an example
   user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },   // optional author data to display
@@ -327,3 +328,37 @@ CTRL+"-" zooms out.
 CTRL+0 resets zoom.
 
 ESC closes all forms and deselects graph content.
+
+Embedded-mode
+-----------
+
+This is a display-only mode intended to be used inside an iFrame. You can use some of the same options as the normal oligrapher mode. To enable embedded mode, you include the option:``` isEmbbedded = true ``` .
+
+There are additional embedded-specific configurations that can be included in an options objects. If not included, defaults will be used. See example configuration:
+
+#### `constructor(config)`
+
+Returns an Oligrapher instance within a specified ```root``` DOM element and accepts other configuration options.
+```javascript
+var config = { 
+  root: document.getElementById('#oligrapher'),   // DOM element to mount Oligrapher within
+  data: getDataFromSomeWhere(),   // graph data to load and display
+  isEditor: false 
+  isLocked: true,
+  showSaveButton: false,
+  isEmbedded: true // set this to true to enable embedded mode
+  user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },   // optional author data to display
+  date: "August 30, 2015",
+  startAnnotation: 0,
+  embedded: {
+	  headerPct: 10, // percentage of height taken up by the header
+	  annotationPct: 25, // percentage of width taken up by the annoations
+	  logoUrl: 'https://link_to_logo' // optional logo to display in right hand corner
+	  linkUrl: 'https://link_to_view_on_littlesis', // optional link & text to display at bottom
+	  linkText: 'View this map on LittleSis.org'
+	}
+}
+
+var oli = new Oligrapher(config);
+```
+

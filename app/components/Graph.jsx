@@ -20,7 +20,8 @@ export default class Graph extends BaseComponent {
     this.edges = {};
     this.mounted = false;
     let viewBox = this._computeViewbox(props.graph, props.zoom, props.viewOnlyHighlighted);
-    this.state = { x: 0, y: 0, viewBox, height: props.height };
+    let height = props.isEmbedded ? props.embedded.graphHeight : props.height;
+    this.state = { x: 0, y: 0, viewBox, height };
   }
 
   render() {

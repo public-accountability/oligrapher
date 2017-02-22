@@ -4,7 +4,6 @@ import GraphNavButtons from './GraphNavButtons';
 import GraphAnnotationList from './GraphAnnotationList';
 import GraphAnnotation from './GraphAnnotation';
 import GraphAnnotationForm from './GraphAnnotationForm';
-require('../styles/oligrapher.annotations.css');
 
 export default class GraphAnnotations extends BaseComponent {
   constructor(props) {
@@ -28,7 +27,7 @@ export default class GraphAnnotations extends BaseComponent {
         remove={this._remove} 
         update={this._update} />
     );
-
+    
     let annotationComponent = (
       <GraphAnnotation {...this.props} />
     );
@@ -38,7 +37,7 @@ export default class GraphAnnotations extends BaseComponent {
     );
 
     return (
-      <div id="oligrapherGraphAnnotations" className="col-md-4">
+      <div id="oligrapherGraphAnnotations">
         { (annotation || isEditor) && navComponent }
         { isEditor && navList && navListComponent }
         { annotation && (isEditor ? formComponent : annotationComponent) }

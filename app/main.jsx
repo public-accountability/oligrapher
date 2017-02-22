@@ -17,6 +17,7 @@ import { loadGraph, showGraph, newGraph,
          loadAnnotations, setTitle,
          toggleEditTools } from './actions';
 import Graph from './models/Graph';
+import { configureEmbedded } from './helpers';
 import merge from 'lodash/merge';
 import assign from 'lodash/assign';
 import difference from 'lodash/difference';
@@ -24,17 +25,26 @@ import difference from 'lodash/difference';
 require('medium-editor/dist/css/medium-editor.css');
 require('medium-editor/dist/css/themes/default.css');
 require ('./styles/oligrapher.css');
+require('./styles/oligrapher.annotations.css');
+require('./styles/oligrapher.embedded.css');
 
 class Oligrapher {
   constructor(config = {}) {
 
     config = merge({ 
       isEditor: false, 
-      isLocked: true, 
-      logActions: false, 
+      isLocked: true,
+      isEmbedded: false,
+      embedded: null,
+      logActions: false,
       viewOnlyHighlighted: true 
     }, config);
     config.height = config.graphHeight || config.root.offsetHeight;
+    
+    if (config.isEmbedded) {
+      // set defaults and perform height calculations
+      config.embedded = configureEmbedded(config);
+    }
 
     this.rootElement = config.root;
 

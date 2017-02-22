@@ -23,6 +23,7 @@ import Graph from './Graph';
 import Editor from './Editor';
 import GraphHeader from './GraphHeader';
 import GraphAnnotations from './GraphAnnotations';
+import EmbeddedGraphAnnotations from './EmbeddedGraphAnnotations';
 import EditButton from './EditButton';
 import HelpButton from './HelpButton';
 import HelpScreen from './HelpScreen';
@@ -35,6 +36,7 @@ import pick from 'lodash/pick';
 import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';
 import isNumber from 'lodash/isNumber';
+import isArray from 'lodash/isArray';
 import keys from 'lodash/keys';
 import filter from 'lodash/filter';
 import { legacyEdgesConverter } from '../helpers';
@@ -46,8 +48,8 @@ export class Root extends Component {
   }
 
   render() {
-    let { dispatch, graph, selection, isEditor, isLocked, title,
-          showEditTools, showSaveButton, showHelpScreen, 
+    let { dispatch, graph, selection, isEditor, isLocked, isEmbedded, embedded,
+	  title, showEditTools, showSaveButton, showHelpScreen, 
           hasSettings, graphSettings, showSettings, onSave,
           currentIndex, annotation, annotations, visibleAnnotations } = this.props;
     let that = this;
@@ -82,7 +84,7 @@ export class Root extends Component {
       },
       'left': () => {dispatch(showAnnotation(prevIndex))},
       'right': () => {dispatch(showAnnotation(nextIndex))}
-    };
+    }
 
     let graphApi = {
       getGraph: () => this.props.graph,
@@ -145,20 +147,31 @@ export class Root extends Component {
       let apiCall = this.props.dataSource.getInterlocks.bind(this.props.dataSource);
       this.props.dispatch(fetchInterlocks(node1Id, node2Id, nodeIds, apiCall));
     }
-
+    
+    let containerStyle = isEmbedded ? {height: '100%', borderTop: '1px dotted #ccc', borderBottom: '1px dotted #ccc'} : {height: '100%'};
+    let containerRowStyle = (isEmbedded && showAnnotations) ? {maxHeight: embedded.containerSize} : null;
+    let headerRowStyle = (isEmbedded && showAnnotations) ? {maxHeight: embedded.headerSize} : null;
+    let graphColumnStyle = (isEmbedded && showAnnotations) ? {maxHeight: embedded.graphColumnSize} : null;
+    let graphContainerStyle = (isEmbedded && showAnnotations) ? {maxHeight: embedded.graphSize} : null;
+    let annotationsContainerSyle = (isEmbedded && showAnnotations) ? {height: embedded.annotationSize} : null;
+    
     return (
-      <div id="oligrapherContainer" style={{ height: '100%' }}>
+      <div id="oligrapherContainer" style={containerStyle} className="container-fluid">
         <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={keyHandlers}>
-          <div className="row">
-            <div id="oligrapherGraphCol" className={showAnnotations ? "col-md-8" : "col-md-12"}>
-              { (isEditor || title) && 
-                <GraphHeader
-                  {...this.props}
-                  updateTitle={updateTitle}
-                  isEditor={isEditor} /> }
+          <div className="row" style={containerRowStyle} > {/* main container row */}
+	    {/* Create a column for annotations if it's in editor mode or has annotations and they are visible.
+		For 'embedded mode' the annotations will appear below the graph and we can use a full column here. */}
+	      <div id="oligrapherGraphCol" className={ (showAnnotations && !isEmbedded) ? "col-md-8" : "col-md-12 col-sm-12"} style={graphColumnStyle} >
+	      { (isEditor || title) &&
+	        <div className="row" id="oligrapherHeaderRow" style={headerRowStyle}>
+                  <GraphHeader
+		      {...this.props}
+		      updateTitle={updateTitle}
+		      isEditor={isEditor} />
+		</div>}
 
-              <div id="oligrapherGraphContainer">
-                { graph && 
+            <div className="row"  id="oligrapherGraphContainer" style={graphContainerStyle} >
+              { graph && 
                   <Graph 
                     ref={(c) => { this.graph = c; if (c) { c.root = this; } }}
                     {...this.props}
@@ -200,29 +213,44 @@ export class Root extends Component {
                 </div>
 
                 { (isEditor && showSettings && hasSettings) &&  <GraphSettingsForm settings={graphSettings} updateSettings={updateSettings} /> }
-              </div>
-            </div>
-            { showAnnotations &&
-              <GraphAnnotations 
-                isEditor={isEditor}
-                navList={isEditor}
-                prevClick={prevClick}
-                nextClick={nextClick}
-                canClickPrev={canClickPrev}
-                canClickNext={canClickNext}
-                swapAnnotations={swapAnnotations}
-                annotation={annotation}
-                annotations={annotations}
-                currentIndex={currentIndex}
-                show={show}
-                create={create}
-                update={update}
-                move={move}
-                remove={remove}
-                editForm={true}
-                hideEditTools={() => dispatch(toggleEditTools(false))} />
+              </div> {/* end div#oligrapherGraphContainer */}
+            </div> {/* end div#oligrapherGraphCol */}
+            { !isEmbedded && showAnnotations &&
+	      <div className="col-md-4">
+		  <GraphAnnotations 
+                      isEditor={isEditor}
+                      navList={isEditor}
+                      prevClick={prevClick}
+                      nextClick={nextClick}
+                      canClickPrev={canClickPrev}
+                      canClickNext={canClickNext}
+                      swapAnnotations={swapAnnotations}
+                      annotation={annotation}
+                      annotations={annotations}
+                      currentIndex={currentIndex}
+                      show={show}
+                      create={create}
+                      update={update}
+                      move={move}
+                      remove={remove}
+                      editForm={true}
+                      hideEditTools={() => dispatch(toggleEditTools(false))} />
+	      </div>
             }
-          </div>
+           
+	   { isEmbedded && showAnnotations &&
+	     <div className="col-sm-12" style={annotationsContainerSyle}>
+		 <EmbeddedGraphAnnotations
+		     embedded={embedded}
+                     currentIndex={currentIndex}
+		     annotationCount={isArray(annotations) ? annotations.length : 0}
+		     prevClick={prevClick}
+                     nextClick={nextClick}
+		     annotation={annotation}
+		 />
+	     </div>
+	   }
+	  </div> {/* end div.row */} 
           { !showAnnotations && this.enableAnnotations() &&
             <div id="oligrapherShowAnnotations">
               <button onClick={() => swapAnnotations()} className="btn btn-lg btn-default">
@@ -233,7 +261,7 @@ export class Root extends Component {
           { showSaveButton && isEditor && onSave && <SaveButton save={() => this.handleSave()} /> }
           { showHelpScreen && <HelpScreen source={this.props.dataSource} close={() => dispatch(toggleHelpScreen(false))} /> }
         </HotKeys>
-      </div>
+      </div> 
     );
   }
 
@@ -331,7 +359,7 @@ export class Root extends Component {
   }
 
   showAnnotations() {
-    return this.props.visibleAnnotations && this.enableAnnotations();
+   return this.props.visibleAnnotations && this.enableAnnotations();
   }
 
   graphWithoutHighlights() {

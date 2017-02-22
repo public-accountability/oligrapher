@@ -32,6 +32,13 @@ props.hasSettings = true;
 props.showHelpScreen =  false;
 props.showSettings = false;
 
+props.height = 500;
+props.embedded = {
+  headerSize: '100px',
+  headerFontSize: '20px',
+  annotationSize: '100px'
+};
+
 props.graph =  {
   "nodes": {
     "r11ooVSP": {

@@ -1,0 +1,59 @@
+#embeddedNavBar {
+    height: 28px;
+}
+
+#oligrapher.embedded h1 {
+    font-color: rgb(51, 51, 51);
+} 
+
+#annotationsTracker {
+    display: inline-block;
+}
+
+.tracker-circle {
+    margin-right: 2px;
+    display: inline-block;
+    
+    background-color: #ccc;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px; 
+}
+
+#oligrapherNavButtonsEmbedded {
+    display: inline;
+    margin-right: 10px;
+}
+
+#oligrapherNavButtonsEmbedded button {
+    font-size: 10.5px;
+}
+
+.btn-annotation-next {
+    margin-left: 5px;
+}
+
+.tracker-circle-selected {
+  background-color: #337ab7;
+}
+
+.embedded-footer-wrapper  {
+    position: relative;
+    height: 100%;
+    pointer-events: none;
+}
+
+.embedded-link-wrapper {
+    position: absolute; 
+    bottom: 0; 
+    padding-left: 15px; 
+    pointer-events: auto;
+}
+
+img.embedded-logo {
+    position: absolute;
+    bottom: 10px;
+    right: 0;
+    opacity: 0.6;
+    margin-right: 5px;
+}

@@ -1,6 +1,8 @@
 import includes from 'lodash/includes';
 import merge from 'lodash/merge';
 import mapValues from 'lodash/mapValues';
+import round from 'lodash/round';
+import isNil from 'lodash/isNil';
 
 /**
  * Calculates New Position for Draggable Components
@@ -80,3 +82,46 @@ export const newArrowState = (oldArrowState, arrowSide, showArrow) => {
   // default case
   return oldArrowState;
 };
+
+export const pxStr = num => num.toString() + 'px';
+
+
+// {options} -> {embedded}
+export const configureEmbedded = configOptions => {
+  const defaults = {
+    headerPct: 8, 
+    annotationPct: 25, 
+    logoUrl: null,
+    linkUrl: null,
+    linkText: null
+  };
+  
+  let embedded = isNil(configOptions.embedded) ? {} : configOptions.embedded;
+  let height = configOptions.height;
+  embedded = merge(defaults, embedded);
+  
+  let headerHeight = height * (embedded.headerPct / 100);
+  let annotationHeight = height * (embedded.annotationPct / 100);
+  let graphHeight = height - (headerHeight + annotationHeight);
+  let graphContainerHeight = graphHeight + headerHeight;
+  
+  // size of overall container -- all elements
+  embedded.containerSize = pxStr(height);
+  // size of header
+  embedded.headerSize = pxStr(headerHeight);
+  embedded.headerFontStyle = { fontSize: pxStr(round(headerHeight * 0.6)), lineHeight: pxStr(headerHeight * 0.9) };
+    // size of graph column (includes header)
+  embedded.graphColumnHeight = graphContainerHeight;
+  embedded.graphColumnSize = pxStr(graphContainerHeight);
+  // size of graph
+  embedded.graphHeight = graphHeight;
+  embedded.graphSize = pxStr(graphHeight);
+  // size of annotation section, including tracker
+  embedded.annotationHeight = annotationHeight;
+  embedded.annotationSize = pxStr(annotationHeight);
+  // max width of logo
+  embedded.logoWidth = window.innerWidth / 9;
+  
+  return embedded;
+};
+
