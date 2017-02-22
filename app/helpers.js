@@ -89,7 +89,7 @@ export const pxStr = num => num.toString() + 'px';
 // {options} -> {embedded}
 export const configureEmbedded = configOptions => {
   const defaults = {
-    headerPct: 10, 
+    headerPct: 8, 
     annotationPct: 25, 
     logoUrl: null,
     linkUrl: null,
@@ -109,8 +109,8 @@ export const configureEmbedded = configOptions => {
   embedded.containerSize = pxStr(height);
   // size of header
   embedded.headerSize = pxStr(headerHeight);
-  embedded.headerFontSize = pxStr(round(headerHeight * 0.4));
-  // size of graph column (includes header)
+  embedded.headerFontStyle = { fontSize: pxStr(round(headerHeight * 0.6)), lineHeight: pxStr(headerHeight * 0.9) };
+    // size of graph column (includes header)
   embedded.graphColumnHeight = graphContainerHeight;
   embedded.graphColumnSize = pxStr(graphContainerHeight);
   // size of graph

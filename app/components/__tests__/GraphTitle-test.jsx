@@ -9,7 +9,7 @@ describe('GraphTitle', () => {
   });
   
   it('does not have fontSize set when isEmedded is false', () => {
-    let graphTitle = shallow(<GraphTitle title="title" isEmbedded={false} embedded={{headerFontSize: '20px'}} />)
+    let graphTitle = shallow(<GraphTitle title="title" isEmbedded={false} embedded={{headerFontStyle: {fontSize: '20px'}}} />)
     expect(graphTitle.find('h1').prop('style').fontSize).toBeUndefined();
   });
 
@@ -19,7 +19,7 @@ describe('GraphTitle', () => {
   });
 
   it('has fontSize set when isEmedded', () => {
-    let graphTitle = shallow(<GraphTitle title="title" isEmbedded={true} embedded={{headerFontSize: '20px'}} />)
+    let graphTitle = shallow(<GraphTitle title="title" isEmbedded={true} embedded={{headerFontStyle: {fontSize: '20px'}}} />)
     expect(graphTitle.find('h1').prop('style').fontSize).toEqual('20px');
   })
 
