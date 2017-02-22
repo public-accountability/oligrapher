@@ -147,7 +147,8 @@ export class Root extends Component {
       let apiCall = this.props.dataSource.getInterlocks.bind(this.props.dataSource);
       this.props.dispatch(fetchInterlocks(node1Id, node2Id, nodeIds, apiCall));
     }
-
+    
+    let containerStyle = isEmbedded ? {height: '100%', borderTop: '1px dotted #ccc', borderBottom: '1px dotted #ccc'} : {height: '100%'};
     let containerRowStyle = (isEmbedded && showAnnotations) ? {maxHeight: embedded.containerSize} : null;
     let headerRowStyle = (isEmbedded && showAnnotations) ? {maxHeight: embedded.headerSize} : null;
     let graphColumnStyle = (isEmbedded && showAnnotations) ? {maxHeight: embedded.graphColumnSize} : null;
@@ -155,7 +156,7 @@ export class Root extends Component {
     let annotationsContainerSyle = (isEmbedded && showAnnotations) ? {height: embedded.annotationSize} : null;
     
     return (
-      <div id="oligrapherContainer" style={{ height: '100%' }} className="container-fluid">
+      <div id="oligrapherContainer" style={containerStyle} className="container-fluid">
         <HotKeys focused={true} attach={window} keyMap={keyMap} handlers={keyHandlers}>
           <div className="row" style={containerRowStyle} > {/* main container row */}
 	    {/* Create a column for annotations if it's in editor mode or has annotations and they are visible.

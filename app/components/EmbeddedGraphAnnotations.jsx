@@ -25,7 +25,7 @@ export default class EmbeddedGraphAnnotations extends Component {
 	  </div>
 
 	  { (logoUrl || (linkUrl && linkText) ) && 
-	    <div className="embedded-footer-wrapper">  
+	    <div>  
 	       { linkUrl && linkText &&
 		<div className="embedded-link-wrapper">
 		    <p><a href={linkUrl}>{linkText}</a></p>
