@@ -9,19 +9,22 @@ describe('EmbeddedNavButtons', () => {
   it('should have 2 buttons', () => {
     let wrapper = shallow(<EmbeddedNavButtons annotationCount={10} currentIndex={1} nextClick={noop} prevClick={noop} />);
     expect(wrapper.find('button').length).toEqual(2);
+    expect(wrapper.find('button.btn-annotation-next').prop('disabled')).toEqual(false);
+    expect(wrapper.find('button.btn-annotation-back').prop('disabled')).toEqual(false);
   });
 
   it('has next button and back button is disabled when current index is 0', () => {
     let wrapper = shallow(<EmbeddedNavButtons annotationCount={3} currentIndex={0} nextClick={noop} prevClick={noop} />);
     expect(wrapper.find('button.btn-annotation-back').prop('disabled')).toEqual(true);
+    expect(wrapper.find('button.btn-annotation-next').prop('disabled')).toEqual(false);
     expect(wrapper.find('button.btn-annotation-next').length).toEqual(1);
   });
 
-  it('has back button and next button is invisible when current index is the last', () => {
+  it('has back button and next button is disabled when current index is the last', () => {
     let wrapper = shallow(<EmbeddedNavButtons annotationCount={3} currentIndex={2} nextClick={noop} prevClick={noop}  />);
     expect(wrapper.find('button').length).toEqual(2);
     expect(wrapper.find('button.btn-annotation-back').prop('disabled')).toEqual(false);
-    expect(wrapper.find('button.btn-annotation-next').hasClass('invisible')).toEqual(true);
+    expect(wrapper.find('button.btn-annotation-next').prop('disabled')).toEqual(true);
   });
 
   describe('clicking', () => {
