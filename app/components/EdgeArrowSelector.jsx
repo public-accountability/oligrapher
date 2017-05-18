@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import BaseComponent from './BaseComponent';
 import { newArrowState } from '../helpers';
 import capitalize from 'lodash/capitalize';

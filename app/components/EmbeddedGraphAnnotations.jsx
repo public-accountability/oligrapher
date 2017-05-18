@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import EmbeddedNavBar from './EmbeddedNavBar';
 import EmbeddedGraphAnnotation from './EmbeddedGraphAnnotation';
 import { pxStr } from '../helpers';

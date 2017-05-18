@@ -27,6 +27,7 @@
   "dependencies": {
     "classnames": "^2.2.0",
     "lodash": "^4.17.4",
+    "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-anything-sortable": "^1.7.2",
     "react-color": "^2.11.7",

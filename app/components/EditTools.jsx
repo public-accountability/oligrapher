@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import BaseComponent from './BaseComponent';
 import UndoButtons from './UndoButtons';
 import LayoutButtons from './LayoutButtons';

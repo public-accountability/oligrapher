@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import BaseComponent from './BaseComponent';
 import { CompactPicker } from 'react-color';
 import ds from '../NodeDisplaySettings';
@@ -60,4 +61,4 @@ export default class ChangeColorInput extends BaseComponent {
   componentWillReceiveProps(props) {
     this.setState({ color: props.value || ds.circleColor[props.status] });
   }
-};
+}

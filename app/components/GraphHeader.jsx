@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import GraphTitle from './GraphTitle';
 import GraphTitleForm from './GraphTitleForm';
 import GraphByLine from './GraphByLine';

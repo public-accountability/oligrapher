@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import BaseComponent from './BaseComponent';
 import { legacyArrowConverter } from '../helpers';
 import EdgeArrowSelector from './EdgeArrowSelector';
@@ -49,5 +49,5 @@ export default class EdgeDropdown extends Component {
     }
    }
     
-};
+}
 

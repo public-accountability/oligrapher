@@ -1,9 +1,10 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import BaseComponent from './BaseComponent';
 import EdgeDropdown from './EdgeDropdown';
 import { HotKeys } from 'react-hotkeys';
 import values from 'lodash/values';
-import sortBy from 'lodash/sortBy'; 
+import sortBy from 'lodash/sortBy';
 import merge from 'lodash/merge';
 
 export default class UpdateEdgeForm extends BaseComponent {
