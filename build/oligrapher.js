@@ -137,6 +137,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      isEmbedded: false,
 	      embedded: null,
 	      logActions: false,
+	      url: null,
 	      viewOnlyHighlighted: true
 	    }, config);
 	    config.height = config.graphHeight || config.root.offsetHeight;
@@ -37281,8 +37282,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    headerPct: 8,
 	    annotationPct: 25,
 	    logoUrl: null,
-	    linkUrl: null,
-	    linkText: null
+	    linkUrl: null
 	  };
 
 	  var embedded = (0, _isNil2.default)(configOptions.embedded) ? {} : configOptions.embedded;
@@ -61971,8 +61971,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _EmbeddedGraphAnnotation2 = _interopRequireDefault(_EmbeddedGraphAnnotation);
 
-	var _helpers = __webpack_require__(425);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -61997,8 +61995,6 @@ return /******/ (function(modules) { // webpackBootstrap
 							var _props$embedded = this.props.embedded,
 							    logoUrl = _props$embedded.logoUrl,
 							    annotationHeight = _props$embedded.annotationHeight,
-							    linkUrl = _props$embedded.linkUrl,
-							    linkText = _props$embedded.linkText,
 							    logoWidth = _props$embedded.logoWidth;
 
 
@@ -62020,23 +62016,10 @@ return /******/ (function(modules) { // webpackBootstrap
 											{ className: 'col-sm-12' },
 											_react2.default.createElement(_EmbeddedGraphAnnotation2.default, { annotation: this.props.annotation, embedded: this.props.embedded, hasTracker: hasTracker })
 									),
-									(logoUrl || linkUrl && linkText) && _react2.default.createElement(
+									logoUrl && _react2.default.createElement(
 											'div',
 											null,
-											linkUrl && linkText && _react2.default.createElement(
-													'div',
-													{ className: 'embedded-link-wrapper' },
-													_react2.default.createElement(
-															'p',
-															null,
-															_react2.default.createElement(
-																	'a',
-																	{ href: linkUrl },
-																	linkText
-															)
-													)
-											),
-											logoUrl && _react2.default.createElement('img', { src: logoUrl, className: 'img-responsive embedded-logo', alt: 'Oligrapher Logo', style: { maxWidth: logoWidth } })
+											_react2.default.createElement('img', { src: logoUrl, className: 'img-responsive embedded-logo', alt: 'Oligrapher Logo', style: { maxWidth: logoWidth } })
 									)
 							);
 					}
@@ -62404,7 +62387,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var TRACKER_OFFSET = 38;
 	// bootstrap adds negative margins of -15
 	var MARGIN_OFFSET = 15;
-	var LINK_OFFSET = 30;
 
 	var EmbeddedGraphAnnotation = function (_Component) {
 	  _inherits(EmbeddedGraphAnnotation, _Component);
@@ -62423,18 +62405,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	          text = _props$annotation.text;
 
 	      var hasTracker = this.props.hasTracker;
-	      var _props$embedded = this.props.embedded,
-	          annotationHeight = _props$embedded.annotationHeight,
-	          linkUrl = _props$embedded.linkUrl,
-	          linkText = _props$embedded.linkText;
+	      var annotationHeight = this.props.embedded.annotationHeight;
 
-	      var hasLink = Boolean(linkUrl && linkText);
-
-	      var height = annotationHeight - MARGIN_OFFSET - (hasTracker ? TRACKER_OFFSET : 0) - (hasLink ? LINK_OFFSET : 0);
+	      var height = annotationHeight - MARGIN_OFFSET - (hasTracker ? TRACKER_OFFSET : 0);
 
 	      var divStyle = {
 	        marginTop: '10px'
-
 	      };
 
 	      var scrollbarStyle = {
