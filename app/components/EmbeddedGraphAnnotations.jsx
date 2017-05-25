@@ -2,12 +2,11 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import EmbeddedNavBar from './EmbeddedNavBar';
 import EmbeddedGraphAnnotation from './EmbeddedGraphAnnotation';
-import { pxStr } from '../helpers';
 
 export default class EmbeddedGraphAnnotations extends Component {
   render () {
     let hasTracker = this.props.annotationCount > 1;
-    let { logoUrl, annotationHeight, linkUrl, linkText, logoWidth } = this.props.embedded;
+    let { logoUrl, annotationHeight, logoWidth } = this.props.embedded;
 
     return (
       <div id="oligrapherEmbeddedGraphAnnotations"  className="row" style={{height: '100%'}} >

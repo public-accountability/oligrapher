@@ -13,9 +13,7 @@ export default class EmbeddedGraphAnnotation extends Component {
   render() {
     let { header, text } = this.props.annotation;
     let hasTracker = this.props.hasTracker;
-    let { annotationHeight, linkUrl, linkText } = this.props.embedded;
-    let hasLink = Boolean(linkUrl && linkText);
-
+    let { annotationHeight  } = this.props.embedded;
     let height = annotationHeight - MARGIN_OFFSET - (hasTracker ? TRACKER_OFFSET : 0);    
     
     let divStyle = { 
