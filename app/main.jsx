@@ -37,6 +37,7 @@ class Oligrapher {
       isEmbedded: false,
       embedded: null,
       logActions: false,
+      url: null,
       viewOnlyHighlighted: true 
     }, config);
     config.height = config.graphHeight || config.root.offsetHeight;

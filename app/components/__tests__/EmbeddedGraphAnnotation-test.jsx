@@ -32,13 +32,5 @@ describe('EmbeddedGraphAnnotation', () => {
       expect(element.find(Scrollbars).prop('style').height).toEqual(85);
     });
   });
-  
-  describe('link offset', () => {
-    let embedded = {annotationHeight: 100, linkUrl: 'map.com', linkText: 'view this map'};
-    it('sets link offset if link is provided', () => {
-      let element = shallow(<EmbeddedGraphAnnotation annotation={annotation} embedded={embedded} hasTracker={false} />); 
-      expect(element.find(Scrollbars).prop('style').height).toEqual(55);
-    });
-  });
 
 });

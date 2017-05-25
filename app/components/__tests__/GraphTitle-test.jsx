@@ -23,4 +23,15 @@ describe('GraphTitle', () => {
     expect(graphTitle.find('h1').prop('style').fontSize).toEqual('20px');
   })
 
+  it('does not have a link by default', () => {
+    let graphTitle = shallow(<GraphTitle title="title" isEmbedded={true} embedded={{headerFontStyle: {fontSize: '20px'}}} />)
+    expect(graphTitle.find('a').exists()).toEqual(false);
+  })
+
+  it('create link when provided url as prop', () => {
+    let graphTitle = shallow(<GraphTitle title="title" isEmbedded={false} url="http://example.com"  />)
+    expect(graphTitle.find('a').exists()).toEqual(true);
+  })
+
+
 });

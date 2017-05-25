@@ -170,6 +170,7 @@ var config = {
   dataSource: LsDataSource,   // API wrapper for importing nodes and edges from a data source, see build/LsDataSource.js for an example
   user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },   // optional author data to display
   date: "August 30, 2015",   // optional date data to display
+  url: "https://example.com", // optional url for the graph title to link to
   startAnnotation: 0,   // index of annotation to load initially
   showSaveButton: true,   // show a save button
   onSave: function(data) { console.log(data); },   // callback triggered by save button
@@ -354,8 +355,7 @@ var config = {
 	  headerPct: 10, // percentage of height taken up by the header
 	  annotationPct: 25, // percentage of width taken up by the annoations
 	  logoUrl: 'https://link_to_logo' // optional logo to display in right hand corner
-	  linkUrl: 'https://link_to_view_on_littlesis', // optional link & text to display at bottom
-	  linkText: 'View this map on LittleSis.org'
+	  linkUrl: 'https://link_to_view_on_littlesis' // optional link & text to display at bottom
 	}
 }
 

@@ -2,12 +2,11 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import EmbeddedNavBar from './EmbeddedNavBar';
 import EmbeddedGraphAnnotation from './EmbeddedGraphAnnotation';
-import { pxStr } from '../helpers';
 
 export default class EmbeddedGraphAnnotations extends Component {
   render () {
     let hasTracker = this.props.annotationCount > 1;
-    let { logoUrl, annotationHeight, linkUrl, linkText, logoWidth } = this.props.embedded;
+    let { logoUrl, annotationHeight, logoWidth } = this.props.embedded;
 
     return (
       <div id="oligrapherEmbeddedGraphAnnotations"  className="row" style={{height: '100%'}} >
@@ -25,15 +24,11 @@ export default class EmbeddedGraphAnnotations extends Component {
 	    <EmbeddedGraphAnnotation annotation={this.props.annotation} embedded={this.props.embedded} hasTracker={hasTracker} />
 	  </div>
 
-	  { (logoUrl || (linkUrl && linkText) ) && 
+	  { logoUrl &&
 	    <div>  
-	       { linkUrl && linkText &&
-		<div className="embedded-link-wrapper">
-		    <p><a href={linkUrl}>{linkText}</a></p>
-		</div> }
-	       { logoUrl && 
-		 <img src={logoUrl} className="img-responsive embedded-logo" alt="Oligrapher Logo" style={{maxWidth: logoWidth}} />  }
-	    </div> }
+		<img src={logoUrl} className="img-responsive embedded-logo" alt="Oligrapher Logo" style={{maxWidth: logoWidth}} />
+	    </div>
+	  }
       </div>
     );
   }
