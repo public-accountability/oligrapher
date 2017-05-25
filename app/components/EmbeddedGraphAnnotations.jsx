@@ -25,15 +25,11 @@ export default class EmbeddedGraphAnnotations extends Component {
 	    <EmbeddedGraphAnnotation annotation={this.props.annotation} embedded={this.props.embedded} hasTracker={hasTracker} />
 	  </div>
 
-	  { (logoUrl || (linkUrl && linkText) ) && 
+	  { logoUrl &&
 	    <div>  
-	       { linkUrl && linkText &&
-		<div className="embedded-link-wrapper">
-		    <p><a href={linkUrl}>{linkText}</a></p>
-		</div> }
-	       { logoUrl && 
-		 <img src={logoUrl} className="img-responsive embedded-logo" alt="Oligrapher Logo" style={{maxWidth: logoWidth}} />  }
-	    </div> }
+		<img src={logoUrl} className="img-responsive embedded-logo" alt="Oligrapher Logo" style={{maxWidth: logoWidth}} />
+	    </div>
+	  }
       </div>
     );
   }

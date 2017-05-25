@@ -354,8 +354,7 @@ var config = {
 	  headerPct: 10, // percentage of height taken up by the header
 	  annotationPct: 25, // percentage of width taken up by the annoations
 	  logoUrl: 'https://link_to_logo' // optional logo to display in right hand corner
-	  linkUrl: 'https://link_to_view_on_littlesis', // optional link & text to display at bottom
-	  linkText: 'View this map on LittleSis.org'
+	  linkUrl: 'https://link_to_view_on_littlesis' // optional link & text to display at bottom
 	}
 }
 
