@@ -1,16 +1,13 @@
 {
   "name": "oligrapher2",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "network graph visualizer",
   "main": "app/main.jsx",
   "scripts": {
-    "dev-build": "webpack-dev-server --devtool eval --progress --history-api-fallback --colors --hot --content-base build --port 8090 --config webpack.dev.config",
-    "fake-news-server": "cd build && python3 -m http.server 8091",
-    "prod-build": "NODE_ENV=production webpack --display-modules --config webpack.prod.config.js --output-filename=oligrapher.js",
-    "watch": "webpack --watch --config webpack.prod.config.js --output-filename=oligrapher.js",
-    "min-build": "NODE_ENV=production webpack -p --optimize-dedupe --display-modules --config webpack.prod.config.js --output-filename=oligrapher.min.js",
-    "build-all": "npm run prod-build && npm run min-build",
-    "dev-package": "cat build/oligrapher.min.js build/LsDataSource.js build/LsDataConverter.js > build/oligrapher-dev.js",
+    "dev": "webpack-dev-server --color --progress --config webpack.dev.js",
+    "fake-news-server": "http-server ./build -p 8091",
+    "build": "webpack -p --display-modules --config webpack.prod.js",
+    "dev-package": "cat build/oligrapher.js build/LsDataSource.js build/LsDataConverter.js > build/oligrapher-dev.js",
     "test": "jest",
     "test:watch": "jest --watch"
   },
@@ -47,13 +44,14 @@
   "devDependencies": {
     "babel-core": "^6.24.1",
     "babel-jest": "^20.0.3",
-    "babel-loader": "^6.2.5",
+    "babel-loader": "^7.1.1",
     "babel-polyfill": "^6.23.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
-    "css-loader": "^0.26.1",
+    "css-loader": "^0.28.9",
     "enzyme": "^2.8.2",
-    "file-loader": "^0.9.0",
+    "file-loader": "^1.1.6",
+    "http-server": "^0.11.1",
     "jest-cli": "^20.0.3",
     "react-addons-test-utils": "^15.5.1",
     "react-dom": "^15.5.4",
@@ -62,9 +60,11 @@
     "redux-logger": "^2.10.2",
     "sinon": "^1.17.7",
     "style-loader": "^0.13.0",
-    "url-loader": "^0.5.7",
-    "webpack": "^1.13.2",
-    "webpack-dev-server": "^1.16.1"
+    "uglifyjs-webpack-plugin": "^1.1.8",
+    "url-loader": "^0.6.2",
+    "webpack": "^3.11.0",
+    "webpack-dev-server": "^2.11.1",
+    "webpack-merge": "^4.1.1"
   },
   "jest": {
     "transform": {
