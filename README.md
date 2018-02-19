@@ -2,11 +2,10 @@
 
 Oligrapher is a JavaScript app for visualizing network graphs. It allows a user to design a nice-looking network graph using a combination of imported or manually entered data, and to create a collection of annotations for a graph.
 
-Oligrapher was originally developed by [LittleSis](http://littlesis.org) before it was separated into a standalone library. LittleSis has a large collection of [maps created with Oligrapher](http://littlesis.org/oligrapher). 
+Oligrapher was originally developed by [LittleSis](https://littlesis.org) before it was separated into a standalone library. LittleSis has a large collection of [maps created with Oligrapher](https://littlesis.org/oligrapher). 
 
 Oligrapher 2 is built with [React](http://reactjs.com) and [Redux](http://rackt.org/redux) and is bundled into a single JavaScript file that is easy to run on any web page.
 
-- [Demo](http://oli2.littlesis.org)
 - [Features](#features)
 - [Install](#install)
 - [Development](#development)
@@ -31,10 +30,10 @@ Features
 Install
 -------
 
-To run Oligrapher app in a web page, include [oligrapher.min.js](build/oligrapher.min.js) in your page and mount the app in an HTML element:
+To run Oligrapher app in a web page, include [oligrapher.js](build/oligrapher.js) in your page and mount the app in an HTML element:
 
 ```html
-<script src="oligrapher.min.js"></script>
+<script src="oligrapherjs"></script>
 <script>
 var elem = document.getElementById('oligrapher');
 var oli = new Oligrapher({ 
@@ -51,13 +50,13 @@ Development
 To run this app in development mode:
 
 ```
-cd /var/www/
-clone https://github.com/skomputer/oligrapher2.git
+git clone https://github.com/public-accountability/oligrapher
+cd oligrapher
 npm install
 npm run dev-build
 ```
 
-Then point your browser to the repository's [build/dev.html](build/dev.html) to view a demo graph with annotations in edit mode. In development mode the React application is served by webpack with hot loading.
+Then point your browser to [localhost:8090/webpack-dev-server/dev.html](http://localhost:8090/webpack-dev-server/dev.html) to view a demo graph with annotations in edit mode. In development mode the React application is served by webpack with hot loading.
 
 To include Oligrapher in a Node.js application, include the `oligrapher2` node module in the app's [package.json](package.json) and then `require` it in the application code.
 

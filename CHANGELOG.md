@@ -1,5 +1,25 @@
 # Oligrapher CHANGELOG
 
+## [0.3.1] - 2018-02-19
+### changed
+- moved all tests to ` test/ ` folder instead of using __test__
+- removed depreciated testing package
+- added ` npm run profile `
+
+## [0.3.0] - 2018-02-15
+### breaking change
+- removed compiled version oligrapher.min.js. oligrapher.js is now the minimized version
+
+### added
+- `npm run build` also generates a source map: oligrapher.js.map
+- added jshint configuration file
+
+### changed
+- removed npm scripts `build-all` and `build-min`. replaced with `build`
+- upgraded to webpack 3.
+
+
+
 ## [0.2.1] - 2017-05-25
 ### added
 - url option to configuration to enable linkable title
