@@ -69,6 +69,7 @@
     "transform": {
       ".*": "<rootDir>/node_modules/babel-jest"
     },
+    "modulePaths": [ "<rootDir>/app/" ],
     "moduleFileExtensions": [
       "js",
       "jsx",
@@ -77,6 +78,7 @@
     "moduleNameMapper": {
       "^.+\\.(css)$": "<rootDir>/app/styles/test/styleMock.js"
     },
-    "testRegex": "(/__tests__/(?!support).*|\\.(test|spec))\\.jsx?$"
+    "roots": [ "test" ],
+    "testRegex": "(.*)\\.test\\.jsx?$"
   }
 }
