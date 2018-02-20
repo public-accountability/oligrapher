@@ -35,7 +35,8 @@ export default class UpdateNodeForm extends BaseComponent {
         <HotKeys keyMap={keyMap} handlers={keyHandlers}>
           <div>
             <input 
-              type="text" 
+              type="text"
+	      id="updateNodeFormName"
               title="change node title"
               className="form-control input-sm"
               placeholder="name" 
@@ -44,7 +45,8 @@ export default class UpdateNodeForm extends BaseComponent {
               onChange={() => this.apply()} />
             &nbsp;
             <input 
-              type="text" 
+              type="text"
+	      id="updateNodeFormImage"
               title="input image URL"
               className="form-control input-sm"
               placeholder="image URL" 

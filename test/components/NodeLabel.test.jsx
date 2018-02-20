@@ -21,7 +21,8 @@ describe("NodeLabel", () => {
 
   beforeEach(() => {
     wrapper = shallow(
-      <NodeLabel node={data} />
+      <NodeLabel node={data} />,
+      {disableLifecycleMethods: true}
     );
   });
 

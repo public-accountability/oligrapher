@@ -7,9 +7,7 @@ describe("Caption Component", () => {
   const data = { id: 1, display: { text: "Here's an interesting fact!" } };
 
   it("should have an svg transform", () => {
-    let wrapper = shallow(
-      <Caption caption={data} />
-    );
+    let wrapper = shallow(<Caption caption={data} />,  {disableLifecycleMethods: true});
     let element = wrapper.find("g.caption");
     let { x, y } = data.display;
 
@@ -17,9 +15,7 @@ describe("Caption Component", () => {
   });
 
   it("should display text", () => {
-    let wrapper = shallow(
-      <Caption caption={data} />
-    );
+    let wrapper = shallow(<Caption caption={data} />,  {disableLifecycleMethods: true});
     let text = wrapper.find("text");
 
     expect(text.text()).toBe(data.display.text);
@@ -28,7 +24,8 @@ describe("Caption Component", () => {
   it("should call click callback if clicked", () => {
     let clickCaption = jest.genMockFunction();
     let wrapper = shallow(
-      <Caption caption={data} graphId="someid" clickCaption={clickCaption} altKey={true} skipSetRectWidths={true} />
+      <Caption caption={data} graphId="someid" clickCaption={clickCaption} altKey={true} skipSetRectWidths={true} />,
+      {disableLifecycleMethods: true}
     );
     let element = wrapper.find("g.caption");
     element.simulate("click");

@@ -31,13 +31,13 @@ describe("UpdateCaptionForm", () => {
 
   describe("rendering", () => {
     it("shows text input", () => {
-      let input = wrapper.ref("text");
+      let input = wrapper.find('input[type="text"]');
       expect(input.length).toBe(1);
       expect(input.props().value).toBe(data.display.text);
     });
 
     it("shows scale dropdown with selected option", () => {
-      let select = wrapper.ref("scale");
+      let select = wrapper.find('select.form-control')
       expect(select.length).toBe(1);
       expect(select.props().value).toBe(data.display.scale);
 
@@ -49,8 +49,8 @@ describe("UpdateCaptionForm", () => {
 
   describe("behavior", () => {
     it("passes updated text to updateCaption", () => {
-      let input = wrapper.ref("text");
-      input.get(0).value = "Caption 2 ";
+      let input = wrapper.find('input[type="text"]');
+      input.at(0).instance().value = "Caption 2 ";
       input.props().onChange();
 
       expect(updateCaption.mock.calls.length).toBe(1);
@@ -58,8 +58,8 @@ describe("UpdateCaptionForm", () => {
     });
 
     it("passes updated scale to updateCaption", () => {
-      let select = wrapper.ref("scale");
-      select.get(0).value = 1.5;
+      let select = wrapper.find('select.form-control');
+      select.at(0).instance().value = 1.5;
       select.props().onChange();
 
       expect(updateCaption.mock.calls.length).toBe(1);

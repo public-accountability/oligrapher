@@ -33,13 +33,13 @@ describe("UpdateNodeForm", () => {
 
   describe("rendering", () => {
     it("shows name input", () => {
-      let input = wrapper.ref("name");
+      let input = wrapper.find('#updateNodeFormName')
       expect(input.length).toBe(1);
       expect(input.props().value).toBe(data.display.name);
     });
 
     it("shows image input", () => {
-      let input = wrapper.ref("image");
+      let input = wrapper.find('#updateNodeFormImage');
       expect(input.length).toBe(1);
       expect(input.props().value).toBe(data.display.image);
     });
@@ -52,7 +52,7 @@ describe("UpdateNodeForm", () => {
     });
 
     it("shows scale dropdown with selected option", () => {
-      let select = wrapper.ref("scale");
+      let select = wrapper.find('select')
       expect(select.length).toBe(1);
       expect(select.props().value).toBe(data.display.scale);
 
@@ -62,7 +62,7 @@ describe("UpdateNodeForm", () => {
     });
 
     it("shows url input", () => {
-      let input = wrapper.ref("url");
+      let input = wrapper.find('#nodeUrlInput')
       expect(input.length).toBe(1);
       expect(input.props().value).toBe(data.display.url);
     });
@@ -70,8 +70,8 @@ describe("UpdateNodeForm", () => {
 
   describe("behavior", () => {
     it("passes updated name to updateNode", () => {
-      let input = wrapper.ref("name");
-      input.get(0).value = "Noder";
+      let input = wrapper.find('#updateNodeFormName')
+      input.at(0).instance().value = "Noder";
       input.props().onChange();
 
       expect(updateNode.mock.calls.length).toBe(1);
@@ -79,8 +79,8 @@ describe("UpdateNodeForm", () => {
     });
 
     it("passes updated image to updateNode", () => {
-      let input = wrapper.ref("image");
-      input.get(0).value = " ";
+      let input = wrapper.find('#updateNodeFormImage');
+      input.at(0).instance().value = " ";
       input.props().onChange();
 
       expect(updateNode.mock.calls.length).toBe(1);
@@ -97,8 +97,8 @@ describe("UpdateNodeForm", () => {
     });
 
     it("passes updated scale to updateNode", () => {
-      let select = wrapper.ref("scale");
-      select.get(0).value = 1.5;
+      let select = wrapper.find('select')
+      select.at(0).instance().value = 1.5;
       select.props().onChange();
 
       expect(updateNode.mock.calls.length).toBe(1);
@@ -106,9 +106,9 @@ describe("UpdateNodeForm", () => {
     });
 
     it("passes updated url to updateNode", () => {
-      let input = wrapper.ref("url");
+      let input = wrapper.find('#nodeUrlInput')
       let newUrl = "htt://example.com/noder ";
-      input.get(0).value = newUrl;
+      input.at(0).instance().value = newUrl;
       input.props().onChange();
 
       expect(updateNode.mock.calls.length).toBe(1);

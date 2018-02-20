@@ -11,9 +11,9 @@ export default class GraphTitle extends Component {
   }
 }
 
-GraphTitle.PropTypes = {
+GraphTitle.propTypes = {
   url: PropTypes.string,
   title: PropTypes.string,
-  isEmbedded: PropTypes.boolean,
+  isEmbedded: PropTypes.bool,
   embedded: PropTypes.object
 }

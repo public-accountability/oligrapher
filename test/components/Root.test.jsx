@@ -20,13 +20,13 @@ import { legacyArrowConverter, legacyEdgesConverter  } from 'helpers';
 // helpers //
 const hasComponent = (root, c) => expect(root.find(c).length).toEqual(1);
 const hasNoComponent = (root, c) => expect(root.find(c).length).toEqual(0);
-const rootWithProps = newProps => shallow(<Root {...Object.assign({}, props, newProps) } />);
+const rootWithProps = newProps => shallow(<Root {...Object.assign({}, props, newProps) } />,  {disableLifecycleMethods: true});
 
 describe('<Root />', ()=>{
   describe('render', ()=>{
 
     describe('Components', () => {
-      const root = shallow(<Root {...props} />);
+      const root = shallow(<Root {...props} />,  {disableLifecycleMethods: true});
       it('contains <GraphHeader>', () => hasComponent(root, GraphHeader) );
       it('contains <Graph>', () => hasComponent(root, Graph) );
       it('contains <Editor>', () => hasComponent(root, Editor));

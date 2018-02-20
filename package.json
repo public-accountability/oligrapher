@@ -1,6 +1,6 @@
 {
   "name": "oligrapher2",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "network graph visualizer",
   "main": "app/main.jsx",
   "scripts": {
@@ -26,15 +26,15 @@
     "classnames": "^2.2.0",
     "lodash": "^4.17.4",
     "prop-types": "^15.5.10",
-    "react": "^15.6.2",
+    "react": "^16.2.0",
     "react-anything-sortable": "^1.7.2",
     "react-color": "^2.11.7",
     "react-custom-scrollbars": "^4.1.2",
-    "react-dom": "^15.6.2",
-    "react-draggable": "^2.2.6",
+    "react-dom": "^16.2.0",
+    "react-draggable": "^3.0.5",
     "react-hotkeys": "^0.10.0",
     "react-medium-editor": "^1.8.1",
-    "react-redux": "^5.0.5",
+    "react-redux": "^5.0.7",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
     "redux-undo": "^0.6.0",
@@ -44,33 +44,37 @@
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
-    "babel-jest": "^20.0.3",
+    "babel-jest": "^22.4.0",
     "babel-loader": "^7.1.1",
     "babel-polyfill": "^6.23.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "css-loader": "^0.28.9",
-    "enzyme": "^2.8.2",
-    "file-loader": "^1.1.6",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "file-loader": "^1.1.8",
     "http-server": "^0.11.1",
-    "jest-cli": "^20.0.3",
-    "react-dom": "^15.5.4",
-    "react-hot-loader": "^1.2.7",
-    "react-test-renderer": "^15.5.4",
-    "redux-logger": "^2.10.2",
-    "sinon": "^1.17.7",
-    "style-loader": "^0.13.0",
-    "uglifyjs-webpack-plugin": "^1.1.8",
+    "jest-cli": "^22.4.0",
+    "react-test-renderer": "^16.2.0",
+    "redux-logger": "^3.0.6",
+    "sinon": "^4.3.0",
+    "style-loader": "^0.20.0",
+    "uglifyjs-webpack-plugin": "^1.2.0",
     "url-loader": "^0.6.2",
     "webpack": "^3.11.0",
     "webpack-dev-server": "^2.11.1",
     "webpack-merge": "^4.1.1"
   },
   "jest": {
+    "setupFiles": [
+      "<rootDir>/test/setup.js"
+    ],
     "transform": {
       ".*": "<rootDir>/node_modules/babel-jest"
     },
-    "modulePaths": [ "<rootDir>/app/" ],
+    "modulePaths": [
+      "<rootDir>/app/"
+    ],
     "moduleFileExtensions": [
       "js",
       "jsx",
@@ -79,7 +83,9 @@
     "moduleNameMapper": {
       "^.+\\.(css)$": "<rootDir>/app/styles/test/styleMock.js"
     },
-    "roots": [ "test" ],
+    "roots": [
+      "test"
+    ],
     "testRegex": "(.*)\\.test\\.jsx?$"
   }
 }
