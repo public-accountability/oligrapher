@@ -20,22 +20,30 @@ describe("GraphNavButtons", () => {
       );
     });
 
+    const getButton = (wrapper, text) => wrapper.find("button").filterWhere(button => button.text() == text);
+
     it("shows prev button", () => {
-      let prev = wrapper.find("button").filterWhere(button => button.text() == "Prev");
-      expect(prev.length).toBe(1);
-      expect(prev.get(0).disabled).toBe(false);
+      let prevCanClick = getButton(wrapper, 'Prev');
+      
+      expect(prevCanClick.length).toBe(1);
+      expect(prevCanClick.get(0).props.disabled).toBe(false);
 
       wrapper.setProps({ canClickPrev: false });
-      expect(prev.get(0).disabled).toBe(true);
+      let prevCanNotClick = getButton(wrapper, 'Prev')
+      expect(prevCanNotClick.get(0).props.disabled).toBe(true);
     });
 
-    it("shows next button", () => {
-      let next = wrapper.find("button").filterWhere(button => button.text() == "Next");
+    it("shows next button when canClickNext is false", () => {
+      let next = getButton(wrapper, 'Next');
       expect(next.length).toBe(1);
-      expect(next.get(0).disabled).toBe(false);
+      expect(next.get(0).props.disabled).toBe(false);
+    });
 
+    it("shows next button when canClickNext is true", () => {
       wrapper.setProps({ canClickNext: false });
-      expect(next.get(0).disabled).toBe(true);
+      let next = getButton(wrapper, 'Next');
+      expect(next.length).toBe(1);
+      expect(next.get(0).props.disabled).toBe(true);
     });
 
     it("shows hide button", () => {

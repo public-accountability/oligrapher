@@ -25,8 +25,7 @@ describe("GraphAnnotationForm", () => {
 
   describe("rendering", () => {
     it("shows header input", () => {
-      let header = wrapper.ref("header");
-      expect(header.props().value).toBe(annotation.header);
+      expect(wrapper.ref("header").value).toEqual(annotation.header);
     });
 
     it("shows text editor", () => {
@@ -42,16 +41,17 @@ describe("GraphAnnotationForm", () => {
 
   describe("behavior", () => {
     it("updates annotation with new header", () => {
-      let header = wrapper.ref("header");
-      header.get(0).value = "New Header";
-      header.simulate("change");
+      let header = wrapper.find('#oligrapherGraphAnnotationFormHeader')
+      
+      header.at(0).instance().value = 'New Header'
+      header.simulate('change');
 
       expect(update.mock.calls.length).toBe(1);
       expect(update.mock.calls[0][0].header).toBe("New Header");
     });
 
     it("updates annotation with new text", () => {
-      let editor = wrapper.ref("text");
+      let editor = wrapper.find('#oligrapherGraphAnnotationFormText')
       let newText = "This is some EDITED text to test.";
       editor.get(0).props.onChange(newText);
 
