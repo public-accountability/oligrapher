@@ -1,5 +1,9 @@
 # Oligrapher CHANGELOG
 
+## [0.3.2] - 2018-02-20
+### changed
+- upgrade react to 16.2
+
 ## [0.3.1] - 2018-02-19
 ### changed
 - moved all tests to ` test/ ` folder instead of using __test__
