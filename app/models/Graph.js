@@ -277,7 +277,7 @@ class Graph {
 
     nodes = nodes.reduce((result, node, i) => {
       node.display.x = midX + Math.cos(angle) * (-(num-1)*spacing/2 + i*spacing);
-      node.display.y = midY + Math.sin(angle) * (-(num-1)*spacing/2 + i*spacing)
+      node.display.y = midY + Math.sin(angle) * (-(num-1)*spacing/2 + i*spacing);
       assign(result, { [node.id]: Node.setDefaults(node) });
       return result;
     }, {});
@@ -586,10 +586,11 @@ class Graph {
 
   static moveEdgeNode(edge, nodeNum, x, y) {
     let angle = this.calculateEdgeAngle(edge);
-    let newEdge = merge({}, edge, { display: (nodeNum == 1 ? { x1: x, y1: y } : { x2: x, y2: y }) });
+    let { cx, cy } = Edge.calculateGeometry(edge.display);
+    let newEdge = merge({}, edge, { display: (nodeNum == 1 ? { x1: x, y1: y } : { x2: x, y2: y }) }, { cx, cy });
     let newAngle = this.calculateEdgeAngle(newEdge);
     let deltaAngle = newAngle - angle;
-    let rotatedPoint = this.rotatePoint(edge.display.cx, edge.display.cy, deltaAngle);
+    let rotatedPoint = this.rotatePoint(newEdge.cx, newEdge.cy, deltaAngle);
     return merge(newEdge, { display: { cx: rotatedPoint.x, cy: rotatedPoint.y } });
   }
 
