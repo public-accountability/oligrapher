@@ -1,5 +1,10 @@
 # Oligrapher CHANGELOG
 
+## [0.3.3] - 2018-02-21
+### fixed
+- problem where using 'add interlocks' would create edges that cannot be moved (#4)
+
+
 ## [0.3.2] - 2018-02-20
 ### changed
 - upgrade react to 16.2
