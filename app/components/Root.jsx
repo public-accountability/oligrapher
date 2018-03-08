@@ -266,6 +266,8 @@ export class Root extends Component {
     );
   }
 
+
+
   componentDidMount() {
     let { dispatch, data, settings, isEditor } = this.props;
 
@@ -279,6 +281,10 @@ export class Root extends Component {
     if (settings) {
       dispatch(setSettings(settings));
     }
+
+    //to handle browser history events
+    window.history.pushState({}, '', '/');
+    window.onpopstate = this.handleBrowserBack.bind(this);
   }
 
   componentDidUpdate(prevProps) {
@@ -298,6 +304,19 @@ export class Root extends Component {
       if (this.props.onUpdate) {      
           this.props.onUpdate(this.props.graph);
       }
+    }
+  }
+
+  handleBrowserBack() {
+    let { dispatch } = this.props;
+    if(this.props.currentIndex) {
+      //Reduce current index if current index is not 0
+      dispatch(showAnnotation(this.props.currentIndex?(this.props.currentIndex - 1):0));
+      window.history.pushState({}, '', '/');
+    }
+    else{
+      //redirect to back page if current index is not 0
+      window.history.back()
     }
   }
 
