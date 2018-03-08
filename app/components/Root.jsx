@@ -128,8 +128,17 @@ export class Root extends Component {
     let canClickPrev = !!prevIndex || prevIndex === 0;
     let canClickNext = !!nextIndex;
 
-    let prevClick = () => dispatch(showAnnotation(prevIndex));
-    let nextClick = () => dispatch(showAnnotation(nextIndex));
+    let prevClick = () => {
+      let url = window.parent.location.pathname + "?annotation=" + prevIndex.toString();
+      window.parent.history.pushState(null, null, url);
+      dispatch(showAnnotation(prevIndex));
+    }
+    let nextClick = () => {
+      let url = window.parent.location.pathname + "?annotation=" + nextIndex.toString();
+      window.parent.history.pushState(null, null, url);
+      dispatch(showAnnotation(nextIndex));
+    }
+
     let update = (index, data) => dispatch(updateAnnotation(index, data));
     let remove = (index) => dispatch(deleteAnnotation(index));
     let show = (index) => dispatch(showAnnotation(index));
@@ -283,8 +292,7 @@ export class Root extends Component {
     }
 
     //to handle browser history events
-    window.history.pushState({}, '', '/');
-    window.onpopstate = this.handleBrowserBack.bind(this);
+    window.parent.onpopstate = this.handleBrowserBack.bind(this);
   }
 
   componentDidUpdate(prevProps) {
@@ -308,15 +316,16 @@ export class Root extends Component {
   }
 
   handleBrowserBack() {
-    let { dispatch } = this.props;
+    let { dispatch, currentIndex } = this.props;
     if(this.props.currentIndex) {
-      //Reduce current index if current index is not 0
+      //Reduce current index if current index is not 0  
+      let url = window.parent.location.pathname + "?annotation=" + (currentIndex - 1).toString();
+      window.parent.parent.history.pushState({}, '', url);
       dispatch(showAnnotation(this.props.currentIndex?(this.props.currentIndex - 1):0));
-      window.history.pushState({}, '', '/');
     }
     else{
       //redirect to back page if current index is not 0
-      window.history.back()
+      window.parent.history.go(-1)
     }
   }
 
