@@ -42,10 +42,32 @@ import keys from 'lodash/keys';
 import filter from 'lodash/filter';
 import { legacyEdgesConverter } from '../helpers';
 
+const annotationUrlIndex = {
+  '#The_Fed_has_a_role_to_play_in_Puerto_Rico': 0,
+  '#But_Fed_action_would_result_in_losses_for_hedge_funds': 1,
+  '#Hedge_fund_managers_active': 2,
+  '#Four_former_Fed_governors_have_ties_to_hedge_funds': 3,
+  '#Hedge_fund_managers_active_in_PR_also_sit_on_a_little-known_Fed_advisory_committee': 4,
+  '#Notably_the_CEO_of_Popular_sits_on_the_New_York_Fed_board': 5
+}
+
+const annotationIndexUrl = [
+  '?#The_Fed_has_a_role_to_play_in_Puerto_Rico',
+  '?#But_Fed_action_would_result_in_losses_for_hedge_funds',
+  '?#Hedge_fund_managers_active',
+  '?#Four_former_Fed_governors_have_ties_to_hedge_funds',
+  '?#Hedge_fund_managers_active_in_PR_also_sit_on_a_little-known_Fed_advisory_committee',
+  '?#Notably_the_CEO_of_Popular_sits_on_the_New_York_Fed_board'
+]
+
 export class Root extends Component {
   constructor(props) {
     super(props);
     this.state = { shiftKey: false };
+    //Set state depending upon the url search
+    if(annotationUrlIndex[window.parent.location.hash]){
+      this.props.dispatch(showAnnotation(parseInt(annotationUrlIndex[window.parent.location.hash])))
+    }
   }
 
   render() {
@@ -129,12 +151,12 @@ export class Root extends Component {
     let canClickNext = !!nextIndex;
 
     let prevClick = () => {
-      let url = window.parent.location.pathname + "?annotation=" + prevIndex.toString();
+      let url = window.parent.location.pathname + annotationIndexUrl[prevIndex];
       window.parent.history.pushState(null, null, url);
       dispatch(showAnnotation(prevIndex));
     }
     let nextClick = () => {
-      let url = window.parent.location.pathname + "?annotation=" + nextIndex.toString();
+      let url = window.parent.location.pathname + annotationIndexUrl[nextIndex];
       window.parent.history.pushState(null, null, url);
       dispatch(showAnnotation(nextIndex));
     }
@@ -319,8 +341,8 @@ export class Root extends Component {
     let { dispatch, currentIndex } = this.props;
     if(this.props.currentIndex) {
       //Reduce current index if current index is not 0  
-      let url = window.parent.location.pathname + "?annotation=" + (currentIndex - 1).toString();
-      window.parent.parent.history.pushState({}, '', url);
+      let url = window.parent.location.pathname + annotationIndexUrl[currentIndex - 1];
+      window.parent.history.pushState({}, '', url);
       dispatch(showAnnotation(this.props.currentIndex?(this.props.currentIndex - 1):0));
     }
     else{
