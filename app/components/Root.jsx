@@ -42,32 +42,11 @@ import keys from 'lodash/keys';
 import filter from 'lodash/filter';
 import { legacyEdgesConverter } from '../helpers';
 
-const annotationUrlIndex = {
-  '#The_Fed_has_a_role_to_play_in_Puerto_Rico': 0,
-  '#But_Fed_action_would_result_in_losses_for_hedge_funds': 1,
-  '#Hedge_fund_managers_active': 2,
-  '#Four_former_Fed_governors_have_ties_to_hedge_funds': 3,
-  '#Hedge_fund_managers_active_in_PR_also_sit_on_a_little-known_Fed_advisory_committee': 4,
-  '#Notably_the_CEO_of_Popular_sits_on_the_New_York_Fed_board': 5
-}
-
-const annotationIndexUrl = [
-  '?#The_Fed_has_a_role_to_play_in_Puerto_Rico',
-  '?#But_Fed_action_would_result_in_losses_for_hedge_funds',
-  '?#Hedge_fund_managers_active',
-  '?#Four_former_Fed_governors_have_ties_to_hedge_funds',
-  '?#Hedge_fund_managers_active_in_PR_also_sit_on_a_little-known_Fed_advisory_committee',
-  '?#Notably_the_CEO_of_Popular_sits_on_the_New_York_Fed_board'
-]
-
 export class Root extends Component {
   constructor(props) {
     super(props);
     this.state = { shiftKey: false };
-    //Set state depending upon the url search
-    if(annotationUrlIndex[window.parent.location.hash]){
-      this.props.dispatch(showAnnotation(parseInt(annotationUrlIndex[window.parent.location.hash])))
-    }
+    window.parent.history.pushState('', '', null);
   }
 
   render() {
@@ -150,16 +129,8 @@ export class Root extends Component {
     let canClickPrev = !!prevIndex || prevIndex === 0;
     let canClickNext = !!nextIndex;
 
-    let prevClick = () => {
-      let url = window.parent.location.pathname + annotationIndexUrl[prevIndex];
-      window.parent.history.pushState(null, null, url);
-      dispatch(showAnnotation(prevIndex));
-    }
-    let nextClick = () => {
-      let url = window.parent.location.pathname + annotationIndexUrl[nextIndex];
-      window.parent.history.pushState(null, null, url);
-      dispatch(showAnnotation(nextIndex));
-    }
+    let prevClick = () => dispatch(showAnnotation(prevIndex));
+    let nextClick = () => dispatch(showAnnotation(nextIndex));
 
     let update = (index, data) => dispatch(updateAnnotation(index, data));
     let remove = (index) => dispatch(deleteAnnotation(index));
@@ -318,7 +289,7 @@ export class Root extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    let { selection, graph, onSelection } = this.props;
+    let { selection, graph, onSelection, dispatch, currentIndex } = this.props;
 
     if (JSON.stringify(prevProps.selection) !== JSON.stringify(selection)) {
       // if selection changed, fire selection callback with glorified selection state
@@ -335,14 +306,29 @@ export class Root extends Component {
           this.props.onUpdate(this.props.graph);
       }
     }
+
+    //match url to state
+    if(window.parent.history.state === ""){//when user refreshes that page
+      let annotationString = document.getElementById('oligrapherAnnotationListItems').getElementsByTagName("LI")
+      let urlIndex = 0
+      for(let i=0; i<annotationString.length; i++){
+        if('?' + annotationString[i].innerHTML.replace(/\ /g, '_') === window.parent.location.search){
+          urlIndex = i
+        }
+      }
+      window.parent.history.replaceState('updated', '', null);
+      dispatch(showAnnotation(urlIndex))
+    }
+    else{//when user navigates to some other tab
+      let url = window.parent.location.pathname + '?' + document.getElementById('oligrapherAnnotationListItems').getElementsByTagName("LI")[currentIndex].innerHTML.replace(/\ /g, '_');
+      window.parent.history.replaceState('updated', '', url);
+    }
   }
 
   handleBrowserBack() {
     let { dispatch, currentIndex } = this.props;
     if(this.props.currentIndex) {
       //Reduce current index if current index is not 0  
-      let url = window.parent.location.pathname + annotationIndexUrl[currentIndex - 1];
-      window.parent.history.pushState({}, '', url);
       dispatch(showAnnotation(this.props.currentIndex?(this.props.currentIndex - 1):0));
     }
     else{
