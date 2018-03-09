@@ -46,6 +46,7 @@ export class Root extends Component {
   constructor(props) {
     super(props);
     this.state = { shiftKey: false };
+    window.parent.history.pushState('', '', null);
   }
 
   render() {
@@ -130,6 +131,7 @@ export class Root extends Component {
 
     let prevClick = () => dispatch(showAnnotation(prevIndex));
     let nextClick = () => dispatch(showAnnotation(nextIndex));
+
     let update = (index, data) => dispatch(updateAnnotation(index, data));
     let remove = (index) => dispatch(deleteAnnotation(index));
     let show = (index) => dispatch(showAnnotation(index));
@@ -266,6 +268,8 @@ export class Root extends Component {
     );
   }
 
+
+
   componentDidMount() {
     let { dispatch, data, settings, isEditor } = this.props;
 
@@ -279,10 +283,13 @@ export class Root extends Component {
     if (settings) {
       dispatch(setSettings(settings));
     }
+
+    //to handle browser history events
+    window.parent.onpopstate = this.handleBrowserBack.bind(this);
   }
 
   componentDidUpdate(prevProps) {
-    let { selection, graph, onSelection } = this.props;
+    let { selection, graph, onSelection, dispatch, currentIndex } = this.props;
 
     if (JSON.stringify(prevProps.selection) !== JSON.stringify(selection)) {
       // if selection changed, fire selection callback with glorified selection state
@@ -298,6 +305,34 @@ export class Root extends Component {
       if (this.props.onUpdate) {      
           this.props.onUpdate(this.props.graph);
       }
+    }
+
+    //match url to state
+    if(window.parent.history.state === ""){//when user refreshes that page
+      let urlIndex = 0
+      for(let i=0; i<this.props.annotations.length; i++){
+        if('?' + this.props.annotations[i].header.replace(/\ /g, '_') === window.parent.location.search){
+          urlIndex = i
+        }
+      }
+      window.parent.history.replaceState('updated', '', null);
+      dispatch(showAnnotation(urlIndex))
+    }
+    else{//when user navigates to some other tab
+      let url = window.parent.location.pathname + '?' + this.props.annotations[currentIndex].header.replace(/\ /g, '_');
+      window.parent.history.replaceState('updated', '', url);
+    }
+  }
+
+  handleBrowserBack() {
+    let { dispatch, currentIndex } = this.props;
+    if(this.props.currentIndex) {
+      //Reduce current index if current index is not 0  
+      dispatch(showAnnotation(this.props.currentIndex?(this.props.currentIndex - 1):0));
+    }
+    else{
+      //redirect to back page if current index is not 0
+      window.parent.history.go(-1)
     }
   }
 
