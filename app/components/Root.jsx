@@ -309,10 +309,9 @@ export class Root extends Component {
 
     //match url to state
     if(window.parent.history.state === ""){//when user refreshes that page
-      let annotationString = document.getElementById('oligrapherAnnotationListItems').getElementsByTagName("LI")
       let urlIndex = 0
-      for(let i=0; i<annotationString.length; i++){
-        if('?' + annotationString[i].innerHTML.replace(/\ /g, '_') === window.parent.location.search){
+      for(let i=0; i<this.props.annotations.length; i++){
+        if('?' + this.props.annotations[i].header.replace(/\ /g, '_') === window.parent.location.search){
           urlIndex = i
         }
       }
@@ -320,7 +319,7 @@ export class Root extends Component {
       dispatch(showAnnotation(urlIndex))
     }
     else{//when user navigates to some other tab
-      let url = window.parent.location.pathname + '?' + document.getElementById('oligrapherAnnotationListItems').getElementsByTagName("LI")[currentIndex].innerHTML.replace(/\ /g, '_');
+      let url = window.parent.location.pathname + '?' + this.props.annotations[currentIndex].header.replace(/\ /g, '_');
       window.parent.history.replaceState('updated', '', url);
     }
   }
