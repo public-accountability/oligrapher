@@ -38,6 +38,7 @@ import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';
 import isNumber from 'lodash/isNumber';
 import isArray from 'lodash/isArray';
+import isEmpty from 'lodash/isEmpty';
 import keys from 'lodash/keys';
 import filter from 'lodash/filter';
 import { legacyEdgesConverter } from '../helpers';
@@ -268,8 +269,6 @@ export class Root extends Component {
     );
   }
 
-
-
   componentDidMount() {
     let { dispatch, data, settings, isEditor } = this.props;
 
@@ -300,35 +299,42 @@ export class Root extends Component {
 
     if (JSON.stringify(prevProps.graph) !== JSON.stringify(this.props.graph)) {
       // this.updateAnnotationHighlights();
-
       // fire update callback if graph changed
       if (this.props.onUpdate) {      
           this.props.onUpdate(this.props.graph);
       }
     }
 
+    this.updateWindowHistory();
+  }
+
+  updateWindowHistory() {
     //match url to state
-    if(window.parent.history.state === ""){//when user refreshes that page
-      let urlIndex = 0;
-      for(let i=0; i<this.props.annotations.length; i++){
-        if('?' + this.props.annotations[i].header.replace(/\ /g, '_') === window.parent.location.search){
-          urlIndex = i;
+    let { dispatch, currentIndex, annotations, visibleAnnotations } = this.props;
+    if (isEmpty(window.parent.history.state)) { //when user refreshes that page
+      for (let i = 0; i < annotations.length; i++) {
+        if ('?' + annotations[i].header.replace(/\ /g, '_') === window.parent.location.search) {
+          let urlIndex = i;
+	  dispatch(showAnnotation(urlIndex));
+	  window.parent.history.replaceState('updated', '', null);
+	  return;
         }
       }
-      window.parent.history.replaceState('updated', '', null);
-      dispatch(showAnnotation(urlIndex));
     }
-    else{//when user navigates to some other tab
-      let url = window.parent.location.pathname + '?' + this.props.annotations[currentIndex].header.replace(/\ /g, '_');
+
+    // when user navigates to some other tab
+    if (visibleAnnotations) {
+      let url = window.parent.location.pathname + '?' + annotations[currentIndex].header.replace(/\ /g, '_');
       window.parent.history.replaceState('updated', '', url);
+      dispatch(showAnnotation(currentIndex));
     }
   }
 
   handleBrowserBack() {
     let { dispatch, currentIndex } = this.props;
-    if(this.props.currentIndex) {
+    if(currentIndex) {
       //Reduce current index if current index is not 0  
-      dispatch(showAnnotation(this.props.currentIndex?(this.props.currentIndex - 1):0));
+      dispatch(showAnnotation(currentIndex ? (currentIndex - 1) : 0));
     }
     else{
       //redirect to back page if current index is not 0

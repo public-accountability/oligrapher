@@ -60,6 +60,12 @@ export default function annotations(state = initState, action) {
 
   case TOGGLE_ANNOTATIONS:
     let visible = !state.visible;
+
+    if (!visible) {
+      // update history api to remove query path 
+      window.parent.history.pushState('hide-annotations', '', window.parent.location.pathname);
+    }
+
     return merge({}, state, { visible });
 
   case SWAP_NODE_HIGHLIGHT:
