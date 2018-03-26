@@ -309,14 +309,14 @@ export class Root extends Component {
 
     //match url to state
     if(window.parent.history.state === ""){//when user refreshes that page
-      let urlIndex = 0
+      let urlIndex = 0;
       for(let i=0; i<this.props.annotations.length; i++){
         if('?' + this.props.annotations[i].header.replace(/\ /g, '_') === window.parent.location.search){
-          urlIndex = i
+          urlIndex = i;
         }
       }
       window.parent.history.replaceState('updated', '', null);
-      dispatch(showAnnotation(urlIndex))
+      dispatch(showAnnotation(urlIndex));
     }
     else{//when user navigates to some other tab
       let url = window.parent.location.pathname + '?' + this.props.annotations[currentIndex].header.replace(/\ /g, '_');
@@ -332,7 +332,7 @@ export class Root extends Component {
     }
     else{
       //redirect to back page if current index is not 0
-      window.parent.history.go(-1)
+      window.parent.history.go(-1);
     }
   }
 
