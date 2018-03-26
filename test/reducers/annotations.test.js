@@ -1,8 +1,12 @@
+import sinon from 'sinon';
 import reducer from "reducers/annotations";
 import {loadAnnotations, toggleAnnotations} from 'actions';
 
 describe("annotations reducer", ()=>{
-  
+  beforeAll(function(){
+    sinon.stub(window.parent.history, "pushState");
+  });
+
   it("should return initial state", () => {
     expect(reducer(undefined, {})).toEqual({list:[], visible: true, currentIndex: 0});
   });

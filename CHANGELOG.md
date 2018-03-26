@@ -1,5 +1,10 @@
 # Oligrapher CHANGELOG
 
+## [0.3.4] - 2018-03-26
+### added
+- change url when navigating between tabs
+
+
 ## [0.3.3] - 2018-02-21
 ### fixed
 - problem where using 'add interlocks' would create edges that cannot be moved (#4)
@@ -26,7 +31,6 @@
 ### changed
 - removed npm scripts `build-all` and `build-min`. replaced with `build`
 - upgraded to webpack 3.
-
 
 
 ## [0.2.1] - 2017-05-25
