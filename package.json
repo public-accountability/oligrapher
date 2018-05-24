@@ -24,7 +24,7 @@
   "homepage": "https://github.com/skomputer/oligrapher2/",
   "dependencies": {
     "classnames": "^2.2.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.10",
     "prop-types": "^15.6.1",
     "react": "^16.2.0",
     "react-anything-sortable": "^1.7.4",
