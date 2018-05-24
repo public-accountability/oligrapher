@@ -4,6 +4,7 @@ const common = require('./webpack.common.js');
 const webpack = require('webpack');
 
 var config = {
+  mode: 'development',
   devServer: {
     contentBase: './build',
     publicPath: 'http://localhost:8090/build/',
