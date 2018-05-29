@@ -1,5 +1,11 @@
 # Oligrapher CHANGELOG
 
+## [0.3.5] - 2018-05-29
+### changed
+- don't modify urls when in editor mode
+- upgrade libraries. Use React 16.4 and Webpack 4
+
+
 ## [0.3.4] - 2018-03-26
 ### added
 - change url when navigating between tabs
