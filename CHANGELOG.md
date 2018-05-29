@@ -1,6 +1,6 @@
 # Oligrapher CHANGELOG
 
-## [0.3.5] - 2018-05-29
+## [0.3.6] - 2018-05-29
 ### changed
 - don't modify urls when in editor mode
 - upgrade libraries. Use React 16.4 and Webpack 4

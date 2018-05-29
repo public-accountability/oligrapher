@@ -327,7 +327,7 @@ export class Root extends Component {
     }
 
     // when user navigates to some other tab
-    if (visibleAnnotations) {
+    if (visibleAnnotations && annotations.length > 0) {
       let url = window.parent.location.pathname + '?' + annotations[currentIndex].header.replace(/\ /g, '_');
       window.parent.history.replaceState('updated', '', url);
       dispatch(showAnnotation(currentIndex));
