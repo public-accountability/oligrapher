@@ -1,5 +1,11 @@
 # Oligrapher CHANGELOG
 
+## [0.3.7] - 2018-06-05
+### fixed
+- due to iFrame security issues, modifying the url
+  via window.parent is disabled for embedded maps
+
+
 ## [0.3.6] - 2018-05-29
 ### changed
 - don't modify urls when in editor mode
