@@ -47,7 +47,10 @@ export class Root extends Component {
   constructor(props) {
     super(props);
     this.state = { shiftKey: false };
-    window.parent.history.pushState('', '', null);
+
+    if (!props.isEmbedded) {
+      window.parent.history.pushState('', '', null);
+    }
   }
 
   render() {
@@ -270,7 +273,7 @@ export class Root extends Component {
   }
 
   componentDidMount() {
-    let { dispatch, data, settings, isEditor } = this.props;
+    let { dispatch, data, settings, isEditor, isEmbedded } = this.props;
 
     this.loadData(data);
 
@@ -283,8 +286,10 @@ export class Root extends Component {
       dispatch(setSettings(settings));
     }
 
-    //to handle browser history events
-    window.parent.onpopstate = this.handleBrowserBack.bind(this);
+    if (!isEditor && !isEmbedded) {
+      //to handle browser history events
+      window.parent.onpopstate = this.handleBrowserBack.bind(this);
+    }
   }
 
   componentDidUpdate(prevProps) {
