@@ -288,7 +288,7 @@ export class Root extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    let { selection, graph, onSelection, dispatch, currentIndex, isEditor } = this.props;
+    let { selection, graph, onSelection, dispatch, currentIndex, isEditor, isEmbedded } = this.props;
 
     if (JSON.stringify(prevProps.selection) !== JSON.stringify(selection)) {
       // if selection changed, fire selection callback with glorified selection state
@@ -305,8 +305,8 @@ export class Root extends Component {
       }
     }
 
-    // don't use nicer urls in editor mode
-    if (!isEditor) {
+    // don't use nicer urls when in editor mode or embedded
+    if (!isEditor && !isEmbedded) {
       this.updateWindowHistory();
     }
     
