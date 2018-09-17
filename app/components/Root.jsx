@@ -49,7 +49,7 @@ export class Root extends Component {
     this.state = { shiftKey: false };
 
     if (!props.isEmbedded) {
-      window.parent.history.pushState('', '', null);
+      window.top.history.pushState('', '', null);
     }
   }
 
@@ -288,7 +288,7 @@ export class Root extends Component {
 
     if (!isEditor && !isEmbedded) {
       //to handle browser history events
-      window.parent.onpopstate = this.handleBrowserBack.bind(this);
+      window.top.onpopstate = this.handleBrowserBack.bind(this);
     }
   }
 
@@ -320,12 +320,12 @@ export class Root extends Component {
   updateWindowHistory() {
     //match url to state
     let { dispatch, currentIndex, annotations, visibleAnnotations } = this.props;
-    if (isEmpty(window.parent.history.state)) { //when user refreshes that page
+    if (isEmpty(window.top.history.state)) { //when user refreshes that page
       for (let i = 0; i < annotations.length; i++) {
-        if ('?' + annotations[i].header.replace(/\ /g, '_') === window.parent.location.search) {
+        if ('?' + annotations[i].header.replace(/\ /g, '_') === window.top.location.search) {
           let urlIndex = i;
 	  dispatch(showAnnotation(urlIndex));
-	  window.parent.history.replaceState('updated', '', null);
+	  window.top.history.replaceState('updated', '', null);
 	  return;
         }
       }
@@ -333,8 +333,8 @@ export class Root extends Component {
 
     // when user navigates to some other tab
     if (visibleAnnotations && annotations.length > 0) {
-      let url = window.parent.location.pathname + '?' + annotations[currentIndex].header.replace(/\ /g, '_');
-      window.parent.history.replaceState('updated', '', url);
+      let url = window.top.location.pathname + '?' + annotations[currentIndex].header.replace(/\ /g, '_');
+      window.top.history.replaceState('updated', '', url);
       dispatch(showAnnotation(currentIndex));
     }
   }
@@ -347,7 +347,7 @@ export class Root extends Component {
     }
     else{
       //redirect to back page if current index is not 0
-      window.parent.history.go(-1);
+      window.top.history.go(-1);
     }
   }
 
