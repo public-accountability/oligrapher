@@ -2,6 +2,7 @@
 
 ## [0.3.8] - 2018-09-17
 ### changed
+- use window.top instead of window.parent when modifying url
 - update packages
 
 ## [0.3.7] - 2018-06-05
