@@ -1,5 +1,9 @@
 # Oligrapher CHANGELOG
 
+## [0.3.8] - 2018-09-17
+### changed
+- update packages
+
 ## [0.3.7] - 2018-06-05
 ### fixed
 - due to iFrame security issues, modifying the url
