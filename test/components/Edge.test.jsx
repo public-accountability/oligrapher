@@ -29,7 +29,7 @@ describe("Edge Component", () => {
   };
 
   it("should render a curve with a control point", () => {
-    let getArrow = jest.genMockFunction();
+    let getArrow = jest.fn();
     let edge = TestUtils.renderIntoDocument(
       <Edge edge={data} getArrow={getArrow}/>
     );
@@ -40,7 +40,7 @@ describe("Edge Component", () => {
   });
 
   it("should render a label", () => {
-    let getArrow = jest.genMockFunction();
+    let getArrow = jest.fn();
     let edge = TestUtils.renderIntoDocument(
       <Edge edge={data} getArrow={getArrow} />
     );
@@ -52,11 +52,11 @@ describe("Edge Component", () => {
 
   /*not sure of most effective way of testing arrow rendering*/
   it("should render an arrow", () => {
-    let getArrow = jest.genMockFunction().mockImplementation(function () {
+    let getArrow = jest.fn().mockImplementation(function () {
       data["display"]["arrow"] = "1->2";
           return data;
         });
-    let updateArrow = jest.genMockFunction();
+    let updateArrow = jest.fn();
 
     let edge = TestUtils.renderIntoDocument(
       <Edge edge={data} getArrow={getArrow()} updateArrow={updateArrow} />
@@ -69,9 +69,9 @@ describe("Edge Component", () => {
   });
 
   it("should call click callback if clicked", () => {
-    let getArrow = jest.genMockFunction();
-    let updateArrow = jest.genMockFunction();
-    let clickEdge = jest.genMockFunction();
+    let getArrow = jest.fn();
+    let updateArrow = jest.fn();
+    let clickEdge = jest.fn();
     let edge = TestUtils.renderIntoDocument(
       <Edge edge={data} graphId="someid" clickEdge={clickEdge} getArrow={getArrow} updateArrow={updateArrow} />
     );

@@ -22,12 +22,12 @@ describe("UpdateNodeForm", () => {
   };
 
   beforeEach(() => {
-    updateNode = jest.genMockFunction();
+    updateNode = jest.fn();
     wrapper = mount(
       <UpdateNodeForm 
         updateNode={updateNode} 
         data={data} 
-        deselect={jest.genMockFunction()} />
+        deselect={jest.fn()} />
     );
   });
 

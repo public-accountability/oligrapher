@@ -12,7 +12,7 @@ describe("ChangeColorInput", () => {
   let onChange;
 
   beforeEach(() => {
-    onChange = jest.genMockFunction();
+    onChange = jest.fn();
     wrapper = shallow(
       <ChangeColorInput
         value="#abc"

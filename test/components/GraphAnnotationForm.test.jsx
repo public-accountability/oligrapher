@@ -13,8 +13,8 @@ describe("GraphAnnotationForm", () => {
   let update;
 
   beforeEach(() => {
-    remove = jest.genMockFunction();
-    update = jest.genMockFunction();
+    remove = jest.fn();
+    update = jest.fn();
     wrapper = mount(
       <GraphAnnotationForm
         annotation={annotation}

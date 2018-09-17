@@ -14,9 +14,9 @@ describe("GraphNavButtons", () => {
           isEditor={true} 
           canClickPrev={true}
           canClickNext={true}
-          prevClick={jest.genMockFunction()}
-          nextClick={jest.genMockFunction()}
-          swapAnnotations={jest.genMockFunction()} />
+          prevClick={jest.fn()}
+          nextClick={jest.fn()}
+          swapAnnotations={jest.fn()} />
       );
     });
 
@@ -67,9 +67,9 @@ describe("GraphNavButtons", () => {
           isEditor={false} 
           canClickPrev={true}
           canClickNext={true}
-          prevClick={jest.genMockFunction()}
-          nextClick={jest.genMockFunction()}
-          swapAnnotations={jest.genMockFunction()} />
+          prevClick={jest.fn()}
+          nextClick={jest.fn()}
+          swapAnnotations={jest.fn()} />
       );
     });
 
@@ -92,9 +92,9 @@ describe("GraphNavButtons", () => {
   });
 
   describe("behavior", () => {
-    let prevClick = jest.genMockFunction();
-    let nextClick = jest.genMockFunction();
-    let swapAnnotations = jest.genMockFunction();
+    let prevClick = jest.fn();
+    let nextClick = jest.fn();
+    let swapAnnotations = jest.fn();
     let wrapper;
 
     beforeEach(() => {

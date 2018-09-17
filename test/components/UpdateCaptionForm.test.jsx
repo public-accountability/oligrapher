@@ -1,7 +1,7 @@
 jest.disableAutomock();
 
 import React from "react";
-import { mount } from "enzyme";
+import { mount, shallow } from "enzyme";
 
 import UpdateCaptionForm from "components/UpdateCaptionForm";
 
@@ -20,12 +20,12 @@ describe("UpdateCaptionForm", () => {
   };
 
   beforeEach(() => {
-    updateCaption = jest.genMockFunction();
+    updateCaption = jest.fn();
     wrapper = mount(
       <UpdateCaptionForm 
         updateCaption={updateCaption} 
         data={data} 
-        deselect={jest.genMockFunction()} />
+        deselect={jest.fn()} />
     );
   });
 

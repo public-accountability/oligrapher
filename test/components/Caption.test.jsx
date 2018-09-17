@@ -22,7 +22,7 @@ describe("Caption Component", () => {
   });
 
   it("should call click callback if clicked", () => {
-    let clickCaption = jest.genMockFunction();
+    let clickCaption = jest.fn();
     let wrapper = shallow(
       <Caption caption={data} graphId="someid" clickCaption={clickCaption} altKey={true} skipSetRectWidths={true} />,
       {disableLifecycleMethods: true}

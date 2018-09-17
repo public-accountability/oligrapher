@@ -50,7 +50,7 @@ describe("Node Component", () => {
   });
 
   it("should call click callback if clicked", () => {
-    let clickNode = jest.genMockFunction();
+    let clickNode = jest.fn();
     let wrapper = shallow(
       <Node node={data} graph={{id: "someid"}} clickNode={clickNode} />
     );
@@ -62,7 +62,7 @@ describe("Node Component", () => {
 
   // NOT WORKING: TO FIND .handle WE NEED FULL RENDER, WHICH ISN'T WORKING FOR SVG
   xit("can be dragged to a new position", () => {
-    let moveNode = jest.genMockFunction();
+    let moveNode = jest.fn();
     let wrapper = shallow(
       <Node node={data} moveNode={moveNode} />
     );

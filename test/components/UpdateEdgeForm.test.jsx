@@ -21,13 +21,13 @@ describe("UpdateEdgeForm", () => {
   };
 
   beforeEach(() => {
-    updateEdge = jest.genMockFunction();
+    updateEdge = jest.fn();
     wrapper = shallow(
       <UpdateEdgeForm 
          updateEdge={updateEdge} 
          data={data}
-         getGraph={jest.genMockFunction()}
-         deselect={jest.genMockFunction()} />
+         getGraph={jest.fn()}
+         deselect={jest.fn()} />
     );
   });
 

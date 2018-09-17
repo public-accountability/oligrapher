@@ -22,10 +22,10 @@ describe("GraphAnnotationList", () => {
           annotations={annotations}
           currentIndex={currentIndex}
           isEditor={true}
-          create={jest.genMockFunction()}
-          show={jest.genMockFunction()}
-          move={jest.genMockFunction()}
-          hideEditTools={jest.genMockFunction()} />
+          create={jest.fn()}
+          show={jest.fn()}
+          move={jest.fn()}
+          hideEditTools={jest.fn()} />
       );
     });
 
@@ -53,10 +53,10 @@ describe("GraphAnnotationList", () => {
     let create, show, move, hideEditTools;
 
     beforeEach(() => {
-      create = jest.genMockFunction();
-      show = jest.genMockFunction();
-      move = jest.genMockFunction();
-      hideEditTools = jest.genMockFunction();
+      create = jest.fn();
+      show = jest.fn();
+      move = jest.fn();
+      hideEditTools = jest.fn();
       wrapper = mount(
         <GraphAnnotationList 
           annotations={annotations}
