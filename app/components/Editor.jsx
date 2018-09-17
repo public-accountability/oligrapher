@@ -9,8 +9,6 @@ import merge from 'lodash/merge';
 import values from 'lodash/values';
 import cloneDeep from 'lodash/cloneDeep';
 import pick from 'lodash/pick';
-require('../styles/bootstrap-3.3.6.css');
-require('../styles/oligrapher.editor.css');
 
 export default class Editor extends BaseComponent {
   constructor(props) {
