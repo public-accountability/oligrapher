@@ -1,5 +1,11 @@
 # Oligrapher CHANGELOG
 
+## [0.3.9] - 2018-09-18
+### changed
+- use bootstrap 4
+- use github's octicons instead of glyicons
+
+
 ## [0.3.8] - 2018-09-17
 ### changed
 - use window.top instead of window.parent when modifying url

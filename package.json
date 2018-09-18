@@ -1,6 +1,6 @@
 {
   "name": "oligrapher2",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "description": "network graph visualizer",
   "main": "app/main.jsx",
   "scripts": {
@@ -14,14 +14,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/skomputer/oligrapher2.git"
+    "url": "https://github.com/public-accountability/oligrapher"
   },
   "author": "skomputer",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/skomputer/oligrapher2/issues"
+    "url": "https://github.com/public-accountability/oligrapher/issues"
   },
-  "homepage": "https://github.com/skomputer/oligrapher2/",
+  "homepage": "https://littlesis.org/oligrapher",
   "dependencies": {
     "@githubprimer/octicons-react": "^8.1.0",
     "classnames": "^2.2.0",
