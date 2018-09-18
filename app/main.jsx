@@ -24,8 +24,8 @@ import difference from 'lodash/difference';
 
 require('medium-editor/dist/css/medium-editor.css');
 require('medium-editor/dist/css/themes/default.css');
-// require('./styles/bootstrap-4.1.3.css');
-require('./styles/bootstrap-3.3.6.css');
+require('./styles/bootstrap-4.1.3.css');
+//require('./styles/bootstrap-3.3.6.css');
 require('./styles/oligrapher.css');
 require('./styles/oligrapher.editor.css');
 require('./styles/oligrapher.annotations.css');

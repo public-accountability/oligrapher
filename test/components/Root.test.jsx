@@ -88,7 +88,8 @@ describe('<Root />', ()=>{
         it('has button', () => {
           expect(root.find('#oligrapherShowAnnotations').find('button').length).toEqual(1);
           expect(root.find('#oligrapherShowAnnotations').find('button').find('span').length).toEqual(1);
-          expect(root.find('#oligrapherShowAnnotations').find('button').find('span').hasClass('glyphicon')).toBeTruthy();
+          expect(root.find('#oligrapherShowAnnotations').find('button').find('span').hasClass('show-hide-annotations-button')).toBeTruthy();
+          expect(root.find('#oligrapherShowAnnotations').find('button').find('span').text()).toEqual('A');
         });
 
         it('does not creates div#oligrapherShowAnnotations if showAnnoations is false and enableAnnotations() returns true', () => {

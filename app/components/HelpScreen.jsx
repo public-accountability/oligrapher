@@ -1,12 +1,16 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import Octicon, {X} from '@githubprimer/octicons-react';
 
 export default class HelpScreen extends Component {
 
   render() {
     return (
       <div id="oligrapherHelpScreen">
-        <div id="oligrapherHelpScreenCloseButton"><span className="glyphicon glyphicon-remove" onClick={this.props.close}></span></div>
+        <div id="oligrapherHelpScreenCloseButton">
+          <span style={{ cursor: 'pointer'}} onClick={this.props.close}>
+            <Octicon icon={X} />
+          </span></div>
         <h3>User Guide</h3>
         Use this editor to create a network graph along with an optional series of annotations overlaying the graph. Annotations consists of a title, a text body, and a highlighted section of the graph.<br />
         <br />

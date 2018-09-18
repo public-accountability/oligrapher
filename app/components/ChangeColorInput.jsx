@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import BaseComponent from './BaseComponent';
 import { CompactPicker } from 'react-color';
 import ds from '../NodeDisplaySettings';
+import Octicon, {X} from '@githubprimer/octicons-react';
 
 export default class ChangeColorInput extends BaseComponent {
 
@@ -43,7 +44,7 @@ export default class ChangeColorInput extends BaseComponent {
         <div className="input-sm form-control nodeColorInput">
            <div className="nodeColorInputSwatch" style={{ background: this.state.color }} onClick={ this.handleClick }/>
            <button className="nodeColorInputClearer" onClick={ this.handleClearClick }>
-             <span className="glyphicon glyphicon-remove-sign"></span>
+             <Octicon icon={X}/>
            </button>
         </div>
         <div className="nodeColorPickerWrapper">

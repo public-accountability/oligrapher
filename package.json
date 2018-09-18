@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/skomputer/oligrapher2/",
   "dependencies": {
+    "@githubprimer/octicons-react": "^8.1.0",
     "classnames": "^2.2.0",
     "lodash": "^4.17.11",
     "prop-types": "^15.6.2",

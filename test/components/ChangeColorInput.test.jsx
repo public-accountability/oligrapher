@@ -28,9 +28,9 @@ describe("ChangeColorInput", () => {
 
   it("shows a clear button", () => {
     let clearer = wrapper.find(".nodeColorInputClearer");
-    let glyph = wrapper.find(".glyphicon-remove-sign");
+    let icon = wrapper.find(".octicon");
     expect(clearer.length).toBe(1);
-    expect(glyph.length).toBe(1);
+    expect(icon.length).toBe(1);
   });
 
   it("clears color and hides picker when clear button is clicked", () => {

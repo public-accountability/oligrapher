@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import Octicon, { Gear } from '@githubprimer/octicons-react';
 
 export default class SettingsButton extends Component {
 
@@ -10,7 +11,7 @@ export default class SettingsButton extends Component {
         className="btn btn-sm btn-default" 
         title="edit settings"
         onClick={() => this.props.toggleSettings()}>
-        <span className="glyphicon glyphicon-cog"></span>
+        <Octicon icon={Gear} />
       </button>
     );
   }

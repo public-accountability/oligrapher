@@ -261,7 +261,7 @@ export class Root extends Component {
           { !showAnnotations && this.enableAnnotations() &&
             <div id="oligrapherShowAnnotations">
               <button onClick={() => swapAnnotations()} className="btn btn-lg btn-default">
-                <span className="glyphicon glyphicon-font"></span>
+                <span className="show-hide-annotations-button">A</span>
               </button>
             </div> 
           }

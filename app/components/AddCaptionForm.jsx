@@ -34,7 +34,7 @@ export default class AddCaptionForm extends BaseComponent {
           &nbsp;<select 
             title="text size for new caption"
             value={this.state.scale} 
-            className="form-control input-sm" 
+            className="form-control input-sm mt-2" 
             ref="scale" 
             onChange={this._handleScaleChange}>
             { scales.map((scale, i) =>

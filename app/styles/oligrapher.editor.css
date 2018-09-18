@@ -82,8 +82,9 @@ button#toggleEditTools {
 }
 
 #deleteSelected {
-  position: absolute;
-  z-index: 1; 
+    top: 32px;
+    position: absolute;
+    z-index: 1; 
 }
 
 .editForm.nodeDelete {
@@ -118,7 +119,7 @@ button#toggleEditTools {
 }
 
 #addConnectedNodes {
-  margin-top: 80px;
+  margin-top: 93px;
   z-index: 2;
 }
 

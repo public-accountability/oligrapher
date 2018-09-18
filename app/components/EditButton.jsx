@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import Octicon, {Pencil} from '@githubprimer/octicons-react';
 
 export default class EditButton extends Component {
 
@@ -10,7 +11,7 @@ export default class EditButton extends Component {
         className={"btn btn-sm btn-default " + (this.props.showEditTools ? "editContentMode" : "editAnnotationsMode")}
         title={this.props.showEditTools ? "disable graph editor" : "enable graph editor"}
         onClick={this.props.toggle}>
-        <span className="glyphicon glyphicon-pencil"></span>
+        <Octicon icon={Pencil}/>
       </button>
     );
   }

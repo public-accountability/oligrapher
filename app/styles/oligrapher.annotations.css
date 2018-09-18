@@ -244,3 +244,12 @@
   right: 20px;
   color: #888;
 }
+
+#oligrapherShowAnnotations button,
+#oligrapherHideAnnotationsButton button {
+    padding: 0.3rem 1rem;
+}
+
+.show-hide-annotations-button {
+    font-size: 30px;
+}

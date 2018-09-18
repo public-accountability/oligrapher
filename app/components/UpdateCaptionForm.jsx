@@ -44,7 +44,7 @@ export default class UpdateCaptionForm extends BaseComponent {
               onChange={() => this.apply()} />
             &nbsp;<select 
               value={display.scale} 
-              className="form-control input-sm" 
+              className="form-control input-sm mt-2" 
               ref="scale" 
               onChange={() => this.apply()}>
               { scales.map((scale, i) =>

@@ -95,3 +95,11 @@ a.nodeLabel text tspan {
 #oligrapherGraphLinks form {
   display: inline-block;
 }
+
+.nodeColorInputClearer {
+    cursor: pointer;
+}
+
+.btn-default {
+    border-color: #ccc;
+}

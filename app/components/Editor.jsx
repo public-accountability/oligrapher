@@ -9,6 +9,7 @@ import merge from 'lodash/merge';
 import values from 'lodash/values';
 import cloneDeep from 'lodash/cloneDeep';
 import pick from 'lodash/pick';
+import Octicon, {Pencil} from '@githubprimer/octicons-react';
 
 export default class Editor extends BaseComponent {
   constructor(props) {
@@ -73,7 +74,7 @@ export default class Editor extends BaseComponent {
               id="toggleEditTools" 
               className="btn btn-sm btn-default" 
               onClick={() => this.props.toggleEditTools()}>
-              <span className="glyphicon glyphicon-pencil"></span>
+              <Octicon icon={Pencil}/>
             </button>
           }
           { this.props.showEditTools && 

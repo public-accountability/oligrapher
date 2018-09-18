@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import Octicon, { Question } from '@githubprimer/octicons-react';
 
 export default class HelpButton extends Component {
 
@@ -10,7 +11,7 @@ export default class HelpButton extends Component {
         className="btn btn-sm btn-default"
         title="show user guide"
         onClick={this.props.toggleHelpScreen}>
-        <span className="glyphicon glyphicon-question-sign"></span>
+        <Octicon icon={Question}/>
       </button>
     );
   }
