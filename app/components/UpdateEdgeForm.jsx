@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import BaseComponent from './BaseComponent';
+import { BaseComponent } from './BaseComponent';
 import EdgeDropdown from './EdgeDropdown';
 import { HotKeys } from 'react-hotkeys';
 import values from 'lodash/values';

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import BaseComponent from './BaseComponent';
+import { BaseComponent } from './BaseComponent';
 import { CompactPicker } from 'react-color';
 import ds from '../NodeDisplaySettings';
 import Octicon, {X} from '@githubprimer/octicons-react';

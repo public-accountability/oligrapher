@@ -1,4 +1,4 @@
-const Node = require('models/Node');
+import { Node } from 'models/Node';
 
 describe("Node", () => {
 

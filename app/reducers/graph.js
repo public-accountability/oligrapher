@@ -7,8 +7,8 @@ import { LOAD_GRAPH, SHOW_GRAPH, NEW_GRAPH,
          UPDATE_NODE, UPDATE_EDGE, UPDATE_CAPTION,
          PRUNE_GRAPH, LAYOUT_CIRCLE,
          SET_HIGHLIGHTS, TOGGLE_EDIT_TOOLS } from '../actions';
-import Graph from '../models/Graph';
-import Edge from '../models/Edge';
+import { Graph } from '../models/Graph';
+import { Edge } from '../models/Edge';
 
 export default function graph(state = null, action) {
   let newState, graph;

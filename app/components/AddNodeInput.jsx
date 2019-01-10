@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import BaseComponent from './BaseComponent';
+import { BaseComponent } from './BaseComponent';
 import AddNodeResult from './AddNodeResult';
 import { HotKeys } from 'react-hotkeys';
 

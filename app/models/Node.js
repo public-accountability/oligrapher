@@ -2,7 +2,7 @@ import merge from 'lodash/merge';
 import isNumber from 'lodash/isNumber';
 import Helpers from './Helpers';
 
-class Node {
+export class Node {
   static defaults() {
     return {
       id: Helpers.generateId(),
@@ -23,5 +23,3 @@ class Node {
     return isNumber(node.display.x) && isNumber(node.display.y);
   }
 }
-
-module.exports = Node;

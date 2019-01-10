@@ -1,4 +1,4 @@
-import Edge from 'models/Edge';
+import { Edge } from 'models/Edge';
 
 describe("Edge", () => {
 

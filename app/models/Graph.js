@@ -1,6 +1,6 @@
-import Node from './Node';
-import Edge from './Edge';
-import Caption from './Caption';
+import { Node } from './Node';
+import { Edge } from './Edge';
+import { Caption } from './Caption';
 import Helpers from './Helpers';
 import merge from 'lodash/merge';
 import assign from 'lodash/assign';
@@ -16,7 +16,7 @@ import includes from 'lodash/includes';
 import isNumber from 'lodash/isNumber';
 import Springy from "springy";
 
-class Graph {
+export class Graph {
   static defaults() {
     return {
       nodes: {},
@@ -600,5 +600,3 @@ class Graph {
     return { x: x * cos - y * sin, y: x * sin + y * cos };
   }
 }
-
-module.exports = Graph;

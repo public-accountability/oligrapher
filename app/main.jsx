@@ -16,7 +16,7 @@ import { loadGraph, showGraph, newGraph,
          setHighlights, clearHighlights,
          loadAnnotations, setTitle,
          toggleEditTools } from './actions';
-import Graph from './models/Graph';
+import { Graph } from './models/Graph';
 import { configureEmbedded } from './helpers';
 import merge from 'lodash/merge';
 import assign from 'lodash/assign';
@@ -32,7 +32,7 @@ require('./styles/oligrapher.annotations.css');
 require('./styles/oligrapher.embedded.css');
 
 
-class Oligrapher {
+export default class Oligrapher {
   constructor(config = {}) {
 
     config = merge({ 
@@ -246,6 +246,3 @@ class Oligrapher {
     this.root.dispatchProps.dispatch(layoutCircle());
   }
 };
-
-module.exports = Oligrapher;
-

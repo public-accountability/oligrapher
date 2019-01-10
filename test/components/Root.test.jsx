@@ -4,7 +4,7 @@ import { Root } from 'components/Root';
 import { props } from './support';
 
 import GraphHeader from 'components/GraphHeader';
-import Graph from 'components/Graph';
+import { Graph } from 'components/Graph';
 import Editor from 'components/Editor';
 import EditButton from 'components/EditButton';
 import HelpButton from 'components/HelpButton';

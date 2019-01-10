@@ -6,6 +6,7 @@ module.exports = {
     path: path.resolve(__dirname, 'build'),
     library: 'Oligrapher',
     libraryTarget: 'umd',
+    libraryExport: "default",
     filename: 'oligrapher.js'
   },
   module: {
@@ -22,10 +23,7 @@ module.exports = {
 	    loader: 'style-loader'
 	  },
 	  {
-	    loader: 'css-loader',
-	    options: {
-	      minimize: true
-	    }
+	    loader: 'css-loader'
 	  }
 	]
       },

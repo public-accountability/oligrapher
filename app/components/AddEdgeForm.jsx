@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import BaseComponent from './BaseComponent';
+import { BaseComponent } from './BaseComponent';
 import values from 'lodash/values';
 import sortBy from 'lodash/sortBy';
 import { HotKeys } from 'react-hotkeys';

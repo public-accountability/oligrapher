@@ -1,17 +1,17 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import BaseComponent from './BaseComponent';
+import { BaseComponent } from './BaseComponent';
 import NodeLabel from './NodeLabel';
 import NodeCircle from './NodeCircle';
 import ds from '../NodeDisplaySettings';
 import { DraggableCore } from 'react-draggable';
-import Graph from '../models/Graph';
+import { Graph } from '../models/Graph';
 import merge from 'lodash/merge';
 import classNames from 'classnames';
 import Helpers from '../models/Helpers';
 import { calculateDeltas } from '../helpers';
 
-export default class Node extends BaseComponent {
+export class Node extends BaseComponent {
   constructor(props) {
     super(props);
     this.bindAll('_handleDragStart', '_handleDrag', '_handleDragStop', '_handleClick');
