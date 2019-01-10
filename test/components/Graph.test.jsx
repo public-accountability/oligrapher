@@ -1,9 +1,9 @@
 import React from 'react'; 
 import { shallow } from "enzyme";
-import Graph from 'components/Graph';
-import Node from "components/Node";
-import Edge from "components/Edge";
-import Caption from "components/Caption";
+import { Graph } from 'components/Graph';
+import { Node } from "components/Node";
+import { Edge } from "components/Edge";
+import { Caption } from "components/Caption";
 
 describe("Graph Component",  () => {
 

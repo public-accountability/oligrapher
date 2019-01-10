@@ -1,7 +1,7 @@
 import reducer from "reducers/graph";
-import Graph from 'models/Graph';
-import Node from 'models/Node';
-import Edge from 'models/Edge';
+import { Graph } from 'models/Graph';
+import { Node } from 'models/Node';
+import { Edge } from 'models/Edge';
 import Helpers from 'models/Helpers';
 import merge from 'lodash/merge';
 import assign from 'lodash/assign';

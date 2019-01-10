@@ -1,6 +1,6 @@
-import Graph from 'models/Graph';
-import Edge from 'models/Edge';
-import Caption from 'models/Caption';
+import { Graph } from 'models/Graph';
+import { Edge } from 'models/Edge';
+import { Caption } from 'models/Caption';
 import merge from 'lodash/merge';
 import values from 'lodash/values';
 import uniq from 'lodash/uniq';

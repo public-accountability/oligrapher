@@ -1,6 +1,6 @@
 import React from 'react'; 
 import { shallow } from "enzyme";
-import Caption from 'components/Caption';
+import { Caption } from 'components/Caption';
 
 describe("Caption Component", () => {
 

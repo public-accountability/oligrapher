@@ -1,7 +1,7 @@
 import React from 'react'; 
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
-import Edge from 'components/Edge';
+import { Edge } from 'components/Edge';
 import merge from 'lodash/merge';
 
 describe("Edge Component", () => {

@@ -1,4 +1,4 @@
-const Caption = require('models/Caption');
+const { Caption } = require('models/Caption');
 
 describe("Caption", () => {
 

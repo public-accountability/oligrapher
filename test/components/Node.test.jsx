@@ -1,6 +1,6 @@
 import React from 'react'; 
 import { shallow } from "enzyme";
-import Node from 'components/Node';
+import { Node } from 'components/Node';
 import NodeCircle from "components/NodeCircle";
 import NodeLabel from "components/NodeLabel";
 import TestUtils from 'react-dom/test-utils';
