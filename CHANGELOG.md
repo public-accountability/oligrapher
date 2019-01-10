@@ -1,5 +1,11 @@
 # Oligrapher CHANGELOG
 
+## [0.4.0] - 2019-01-10
+### changed
+- Update dependencies
+- Use babel 7
+
+
 ## [0.3.9] - 2018-09-18
 ### changed
 - use bootstrap 4
