@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { HotKeys } from 'react-hotkeys';
-import BaseComponent from './BaseComponent';
+import { BaseComponent } from './BaseComponent';
 import ZoomButtons from './ZoomButtons';
 import EditTools from './EditTools';
 import merge from 'lodash/merge';

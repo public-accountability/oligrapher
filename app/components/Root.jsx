@@ -20,7 +20,7 @@ import { loadGraph, showGraph,
          toggleAnnotations, updateAnnotation,
          deleteAnnotation, moveAnnotation,
          toggleHelpScreen, setSettings, toggleSettings } from '../actions';
-import Graph from './Graph';
+import { Graph } from './Graph';
 import Editor from './Editor';
 import GraphHeader from './GraphHeader';
 import GraphAnnotations from './GraphAnnotations';
@@ -31,7 +31,7 @@ import HelpScreen from './HelpScreen';
 import SettingsButton from './SettingsButton';
 import GraphSettingsForm from './GraphSettingsForm';
 import SaveButton from './SaveButton';
-import GraphModel from '../models/Graph';
+import { Graph as GraphModel } from '../models/Graph';
 import { HotKeys } from 'react-hotkeys';
 import pick from 'lodash/pick';
 import merge from 'lodash/merge';
@@ -465,4 +465,5 @@ function select(state) {
   };
 }
 
-export default connect(select, null, null, { withRef: true })(Root);
+// export default connect(select, null, null, { withRef: true })(Root);
+export default connect(select, null, null, { forwardRef: true })(Root);

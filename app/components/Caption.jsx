@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import BaseComponent from './BaseComponent';
+import { BaseComponent } from './BaseComponent';
 import { DraggableCore } from 'react-draggable';
 import ds from '../CaptionDisplaySettings';
 import merge from 'lodash/merge';
 import { calculateDeltas } from '../helpers';
 
-export default class Caption extends BaseComponent {
+export class Caption extends BaseComponent {
   constructor(props) {
     super(props);
     this.bindAll('_handleDragStart', '_handleDrag', '_handleDragStop', '_handleClick');

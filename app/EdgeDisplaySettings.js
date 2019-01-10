@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   curveStrength: 0.5,
   lineColor: {
     normal: "#999",

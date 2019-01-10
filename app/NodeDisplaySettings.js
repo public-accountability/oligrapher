@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   circleRadius: 25,
   circleSpacing: 4,
   textMarginTop: 20,

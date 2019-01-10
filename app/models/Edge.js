@@ -3,7 +3,7 @@ import Helpers from './Helpers';
 import eds from '../EdgeDisplaySettings';
 import nds from '../NodeDisplaySettings';
 
-export default class Edge {
+export class Edge {
   static defaults() {
     return {
       id: Helpers.generateId(),

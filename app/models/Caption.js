@@ -1,7 +1,7 @@
 import merge from 'lodash/merge';
 import Helpers from './Helpers';
 
-class Caption {
+export class Caption {
   static defaults() {
     return {
       id: Helpers.generateId(),
@@ -19,5 +19,3 @@ class Caption {
     return merge({}, this.defaults(), caption);
   }
 }
-
-module.exports = Caption;

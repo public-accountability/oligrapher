@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import BaseComponent from './BaseComponent';
+import { BaseComponent } from './BaseComponent';
 import { DraggableCore } from 'react-draggable';
 import merge from 'lodash/merge';
 import includes from 'lodash/includes';
@@ -8,11 +8,11 @@ import eds from '../EdgeDisplaySettings';
 import nds from '../NodeDisplaySettings';
 import classNames from 'classnames';
 import { calculateDeltas } from  '../helpers';
-import EdgeModel from '../models/Edge';
+import { Edge as EdgeModel } from '../models/Edge';
 
 const noUpdateValues = [false, 0, null, "left", "right", "both"];
 
-export default class Edge extends BaseComponent {
+export class Edge extends BaseComponent {
   constructor(props) {
     super(props);
     this.bindAll('_handleDragStart', '_handleDrag', '_handleDragStop', '_handleClick', '_handleTextClick');

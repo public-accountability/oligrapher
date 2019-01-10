@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   lineHeight: 20,
   cornerRadius: 5,
   highlightFillColor: "#ff0",

@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import BaseComponent from './BaseComponent';
-import Node from './Node';
-import Edge from './Edge';
-import Caption from './Caption';
-import GraphModel from '../models/Graph';
+import { BaseComponent } from './BaseComponent';
+import { Node } from './Node';
+import { Edge } from './Edge';
+import { Caption } from './Caption';
+import { Graph as GraphModel } from '../models/Graph';
 import { DraggableCore } from 'react-draggable';
 import values from 'lodash/values';
 import min from 'lodash/min';
@@ -13,7 +13,7 @@ import max from 'lodash/max';
 import includes from 'lodash/includes';
 import { calculateDeltas } from '../helpers';
 
-export default class Graph extends BaseComponent {
+export class Graph extends BaseComponent {
   constructor(props) {
     super(props);
     this.bindAll('_handleDragStart', '_handleDrag', '_handleDragStop');

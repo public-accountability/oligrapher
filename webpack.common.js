@@ -6,6 +6,7 @@ module.exports = {
     path: path.resolve(__dirname, 'build'),
     library: 'Oligrapher',
     libraryTarget: 'umd',
+    libraryExport: "default",
     filename: 'oligrapher.js'
   },
   module: {
