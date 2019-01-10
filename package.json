@@ -24,7 +24,6 @@
   "homepage": "https://littlesis.org/oligrapher",
   "dependencies": {
     "@githubprimer/octicons-react": "^8.3.0",
-    "babel-core": "^7.0.0-bridge.0",
     "classnames": "^2.2.0",
     "lodash": "^4.17.11",
     "prop-types": "^15.6.2",
