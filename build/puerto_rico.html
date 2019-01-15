@@ -22,11 +22,11 @@
 
          var oli = new Oligrapher({ 
              root: elem,
-             isEditor: false,
+             isEditor: true,
              isLocked: false,
              logActions: false,
              viewOnlyHighlighted: true,
-             dataSource: LsDataSource,
+             dataSource: LsDataSource({ "baseUrl": "http://127.0.0.1:8080" }),
              data: puertoRico,
 	     url: "https://example.com",
              user: { name: "LittleSis", url: "http://example.com/user/UserName" },

@@ -166,7 +166,7 @@ var config = {
   isLocked: false,   // if true, nodes and edges cannot be dragged by the user
   isEmbedded: false // if true, the oligrapher is set to be in 'embedded' mode
   viewOnlyHighlighted: false,   // center viewbox around highlighted content
-  dataSource: LsDataSource,   // API wrapper for importing nodes and edges from a data source, see build/LsDataSource.js for an example
+  dataSource: LsDataSource({"baseUrl": "https://littlesis.org"}),   // API wrapper for importing nodes and edges from a data source, see build/LsDataSource.js for an example
   user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },   // optional author data to display
   date: "August 30, 2015",   // optional date data to display
   url: "https://example.com", // optional url for the graph title to link to

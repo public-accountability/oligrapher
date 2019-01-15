@@ -1,5 +1,9 @@
 # Oligrapher CHANGELOG
 
+## [0.4.1] - 2019-01-15
+### changed
+- LsDataSource is now a function and can be initialized with configuration options
+
 ## [0.4.0] - 2019-01-10
 ### changed
 - Update dependencies

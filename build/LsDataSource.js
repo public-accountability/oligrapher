@@ -53,67 +53,85 @@
     httpRequest.send();
   };
 
-  var LsDataSource = {
-    name: 'LittleSis',
-    baseUrl: '//littlesis.org',
+  /**
+   *  LsDataSource Factory
+   *
+   * @param {Object} configuration
+   * @returns {Object}
+   */
+  var LsDataSource = function(userConfig) {
+    var config = {
+      "baseUrl": 'https://littlesis.org',
+      "name": 'LittleSis',
+    };
 
-    findNodes: function(text, callback) {
-      get(
-        this.baseUrl + '/maps/find_nodes', 
-        { num: 12, desc: true, with_ids: true, q: text },
-        callback
-      );
-    },
+    if (typeof userConfig == 'object') {
+      Object.assign(config, userConfig);
+    };
 
-    getNodeWithEdges: function(nodeId, nodeIds, callback) {
-      get(
-        this.baseUrl + '/maps/node_with_edges',
-        { node_id: nodeId, node_ids: nodeIds },
-        callback
-      );
-    },
+    return {
+      name: config.name,
+      baseUrl: config.baseUrl,
 
-    getConnectedNodesOptions: {
-      category_id: {
-        1: "Position",
-        2: "Education",
-        3: "Membership",
-        4: "Family",
-        5: "Donation",
-        6: "Transaction",
-        7: "Lobbying",
-        8: "Social",
-        9: "Professional",
-        10: "Ownership",
-        11: "Hierarchy",
-        12: "Generic"
+      findNodes: function(text, callback) {
+	get(
+          this.baseUrl + '/maps/find_nodes', 
+          { num: 12, desc: true, with_ids: true, q: text },
+          callback
+	);
+      },
+
+      getNodeWithEdges: function(nodeId, nodeIds, callback) {
+	get(
+          this.baseUrl + '/maps/node_with_edges',
+          { node_id: nodeId, node_ids: nodeIds },
+          callback
+	);
+      },
+
+      getConnectedNodesOptions: {
+	category_id: {
+          1: "Position",
+          2: "Education",
+          3: "Membership",
+          4: "Family",
+          5: "Donation",
+          6: "Transaction",
+          7: "Lobbying",
+          8: "Social",
+          9: "Professional",
+          10: "Ownership",
+          11: "Hierarchy",
+          12: "Generic"
+	}
+      },
+
+      getConnectedNodes: function(nodeId, nodeIds, options, callback) {
+	options = options || {};
+	options.node_id = nodeId;
+	options.node_ids = nodeIds;
+
+	get(
+          this.baseUrl + '/maps/edges_with_nodes',
+          options,
+          callback
+	);
+      },
+
+      getInterlocks: function(node1Id, node2Id, nodeIds, options, callback) {
+	options = options || {};
+	options.node1_id = node1Id;
+	options.node2_id = node2Id;
+	options.node_ids = nodeIds;
+
+	get(
+          this.baseUrl + '/maps/interlocks',
+          options,
+          callback
+	);
       }
-    },
+    };
 
-    getConnectedNodes: function(nodeId, nodeIds, options, callback) {
-      options = options || {};
-      options.node_id = nodeId;
-      options.node_ids = nodeIds;
-      
-      get(
-        this.baseUrl + '/maps/edges_with_nodes',
-        options,
-        callback
-      );
-    },
-
-    getInterlocks: function(node1Id, node2Id, nodeIds, options, callback) {
-      options = options || {};
-      options.node1_id = node1Id;
-      options.node2_id = node2Id;
-      options.node_ids = nodeIds;
-
-      get(
-        this.baseUrl + '/maps/interlocks',
-        options,
-        callback
-      );
-    }
   };
 
   LsDataSource.noConflict = function() {
