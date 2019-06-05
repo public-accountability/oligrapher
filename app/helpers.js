@@ -1,3 +1,4 @@
+import capitalize from 'lodash/capitalize';
 import includes from 'lodash/includes';
 import merge from 'lodash/merge';
 import mapValues from 'lodash/mapValues';
@@ -124,3 +125,8 @@ export const configureEmbedded = configOptions => {
   return embedded;
 };
 
+export const titleize = str => str
+  .trim()
+  .split(' ')
+  .map(capitalize)
+  .join(' ');
