@@ -93,7 +93,8 @@ export const configureEmbedded = configOptions => {
     headerPct: 8, 
     annotationPct: 25, 
     logoUrl: null,
-    linkUrl: null
+    linkUrl: null,
+    border: true
   };
   
   let embedded = isNil(configOptions.embedded) ? {} : configOptions.embedded;
