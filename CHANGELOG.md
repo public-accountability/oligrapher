@@ -1,5 +1,12 @@
 # Oligrapher CHANGELOG
 
+## [0.4.3] - 2019-06-12
+### added
+- embedded configuration option -- embedded.border -- toggles presence of border around the entire map
+
+### changed
+- Update dev dependencies
+
 ## [0.4.2] - 2019-06-05
 ### changed
 - Update dependencies
