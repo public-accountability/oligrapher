@@ -355,6 +355,7 @@ var config = {
 	  annotationPct: 25, // percentage of width taken up by the annoations
 	  logoUrl: 'https://link_to_logo' // optional logo to display in right hand corner
 	  linkUrl: 'https://link_to_view_on_littlesis' // optional link & text to display at bottom
+	  border: true // show top and bottom border. default: true 
 	}
 }
 
