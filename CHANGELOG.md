@@ -1,5 +1,10 @@
 # Oligrapher CHANGELOG
 
+## [0.4.5] - 2019-07-10
+### fixed
+- bugfix for annotation data path
+
+
 ## [0.4.4] - 2019-07-10
 ### fixed
 - sets annotation pct to 0 when there are no annotations
