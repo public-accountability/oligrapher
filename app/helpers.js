@@ -101,7 +101,7 @@ export const configureEmbedded = configOptions => {
   let height = configOptions.height;
 
   // Don't show annotations if there are none, regardless of the configured pct
-  if (isNil(configOptions.annotations) || configOptions.annotations.length === 0) {
+  if (isNil(configOptions.data.annotations) || configOptions.data.annotations.length === 0) {
     embedded.annotationPct = 0;
   }
 
