@@ -99,6 +99,12 @@ export const configureEmbedded = configOptions => {
   
   let embedded = isNil(configOptions.embedded) ? {} : configOptions.embedded;
   let height = configOptions.height;
+
+  // Don't show annotations if there are none, regardless of the configured pct
+  if (isNil(configOptions.annotations) || configOptions.annotations.length === 0) {
+    embedded.annotationPct = 0;
+  }
+
   embedded = merge(defaults, embedded);
   
   let headerHeight = height * (embedded.headerPct / 100);
