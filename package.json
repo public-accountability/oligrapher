@@ -1,6 +1,6 @@
 {
   "name": "oligrapher2",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "network graph visualizer",
   "main": "app/main.jsx",
   "scripts": {
