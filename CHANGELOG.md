@@ -1,9 +1,13 @@
 # Oligrapher CHANGELOG
 
+## [0.4.6] - 2019-09-10
+### changed
+- Updated dependencies
+- Use React 16.9
+
 ## [0.4.5] - 2019-07-10
 ### fixed
 - bugfix for annotation data path
-
 
 ## [0.4.4] - 2019-07-10
 ### fixed
