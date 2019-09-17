@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "webpack-dev-server --color --progress --config webpack.dev.js",
     "fake-news-server": "http-server ./build -p 8091",
-    "build": "webpack -p --display-modules --config webpack.prod.js",
-    "build-bin": "bin/build",
+    "build": "bin/build",
     "dev-package": "cat build/oligrapher.js build/LsDataSource.js > build/oligrapher-dev.js",
     "test": "jest",
     "test:watch": "jest --watch",

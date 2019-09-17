@@ -1,0 +1,32 @@
+#!/usr/bin/env nodejs
+/*
+  This build script does the following:
+    - use webpack to compile the oligrapher library to build/oligrapher.js
+    - copies build/oligrapher to dist/ with the version appended (i.e. oligrapher-0.4.5.js)
+    - prints sha256sum
+*/
+const { createHash } = require('crypto');
+const { resolve } = require('path');
+const { readFileSync, copyFileSync, existsSync, mkdirSync } = require('fs');
+const { execSync } = require('child_process');
+
+const distFolder = resolve('./dist');
+const webpackConfigFile = resolve('./webpack.prod.js');
+const webpackConfig = require(webpackConfigFile);
+const oligrapherBuildFile = resolve(webpackConfig.output.path, webpackConfig.output.filename);
+const webpackBuildCmd = `webpack -p --display-modules --config ${webpackConfigFile}`;
+const oligrapherVersion = require('../package.json').version;
+const oligrapherLabeledDistFile = resolve(distFolder, `oligrapher-${oligrapherVersion}.js`);
+
+const sha256sum = filePath => createHash("sha256")
+      .update(readFileSync(filePath))
+      .digest("hex");
+
+!existsSync(distFolder) && mkdirSync(distFolder);              // create dist folder
+execSync(webpackBuildCmd, { stdio: 'inherit' });               // run webpack
+copyFileSync(oligrapherBuildFile, oligrapherLabeledDistFile);  // copy build/oligrapher.js to dist/ labeled with version
+
+console.log(`
+version:          ${oligrapherVersion}
+sha256:           ${sha256sum(oligrapherBuildFile)}
+`);
