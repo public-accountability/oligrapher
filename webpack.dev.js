@@ -1,20 +1,16 @@
 const path = require('path');
 const merge = require('webpack-merge');
-const common = require('./webpack.common.js');
-const webpack = require('webpack');
+const commonConfig = require('./webpack.common.js');
 
-var config = {
+const devConfig = {
   mode: 'development',
-  devServer: {
-    contentBase: './build',
-    publicPath: 'http://localhost:8090/build/',
-    port: 8090,
-    historyApiFallback: true,
-    hot: true
+  devtool: 'inline-source-map',
+  output: {
+    filename: 'oligrapher-dev.js'
   },
-  plugins: [
-    new webpack.HotModuleReplacementPlugin()
-  ]
+  optimization: {
+    minimize: false
+  }
 };
 
-module.exports = merge(common, config);
+module.exports = merge(commonConfig, devConfig);
