@@ -53,12 +53,14 @@ To run this app in development mode:
 git clone https://github.com/public-accountability/oligrapher
 cd oligrapher
 yarn
-yarn run dev
+yarn run dev-server
 ```
 
 Then point your browser to [localhost:8090/webpack-dev-server/dev.html](http://localhost:8090/webpack-dev-server/dev.html) to view a demo graph with annotations in edit mode. In development mode the React application is served by webpack with hot loading.
 
-To include Oligrapher in a Node.js application, include the `oligrapher2` node module in the app's [package.json](package.json) and then `require` it in the application code.
+Development build: `yarn run build-dev`
+
+Production build: `yarn run build-prod`
 
 Data Schema
 -----------

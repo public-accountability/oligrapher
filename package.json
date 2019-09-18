@@ -5,12 +5,13 @@
   "main": "app/main.jsx",
   "scripts": {
     "dev-server": "webpack-dev-server --color --progress --config webpack.devServer.js",
-    "serve": "http-server ./build -p 8091",
-    "build": "webpack -p --display-modules --config webpack.prod.js",
-    "build-dev": "webpack -p --display-modules --config webpack.dev.js",
-    "test": "jest",
+    "serve":      "http-server ./build -p 8091",
+    "build":      "yarn run build-dev && yarn run build-prod",
+    "build-prod": "webpack -p --config webpack.prod.js",
+    "build-dev":  "webpack --config webpack.dev.js",
+    "test":       "jest",
     "test:watch": "jest --watch",
-    "profile": "webpack --profile --display-modules --config webpack.prod.js"
+    "profile":    "webpack --profile --display-modules --config webpack.prod.js"
   },
   "repository": {
     "type": "git",
