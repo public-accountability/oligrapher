@@ -88,5 +88,12 @@
       "test"
     ],
     "testRegex": "(.*)\\.test\\.jsx?$"
-  }
+  },
+  "browserslist": [
+    "last 2 chrome versions",
+    "last 2 firefox versions",
+    "> 2%",
+    "Firefox ESR",
+    "not dead"
+  ]
 }
