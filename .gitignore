@@ -1,5 +1,4 @@
 logs
 *.log
 node_modules
-build/oligrapher-dev.js
 dist/
