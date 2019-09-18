@@ -1,14 +1,13 @@
 {
-  "name": "oligrapher2",
-  "version": "0.4.5",
-  "description": "network graph visualizer",
+  "name": "oligrapher",
+  "version": "0.5.0",
+  "description": "Network graph visualizer built for LittleSis",
   "main": "app/main.jsx",
   "scripts": {
     "dev-server": "webpack-dev-server --color --progress --config webpack.devServer.js",
     "serve": "http-server ./build -p 8091",
     "build": "webpack -p --display-modules --config webpack.prod.js",
     "build-dev": "webpack -p --display-modules --config webpack.dev.js",
-    "dev-package": "cat build/oligrapher.js build/LsDataSource.js > build/oligrapher-dev.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "profile": "webpack --profile --display-modules --config webpack.prod.js"
@@ -17,7 +16,7 @@
     "type": "git",
     "url": "https://github.com/public-accountability/oligrapher"
   },
-  "author": "skomputer",
+  "author": "Public Accountability Initiative",
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/public-accountability/oligrapher/issues"
