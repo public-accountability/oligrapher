@@ -14,25 +14,25 @@ module.exports = {
       {
 	test: /\.jsx?$/,
 	exclude: /node_modules/,
-	use: [ 'babel-loader' ]
+	use: [
+	  { loader: 'babel-loader' }
+	]
       },
       {
 	test: /\.css$/,
 	use: [
-	  {
-	    loader: 'style-loader'
-	  },
-	  {
-	    loader: 'css-loader'
-	  }
+	  { loader: 'style-loader' },
+	  { loader: 'css-loader' }
 	]
       },
       {
 	test: /\.(woff2?|ttf|eot|svg)$/,
-	use:  [{
-	  loader: 'url-loader',
-	  options: { limit: 30000 }
-	}]
+	use:  [
+	  {
+	    loader: 'url-loader',
+	    options: { limit: 30000 }
+	  }
+	]
       }
     ]
   },
