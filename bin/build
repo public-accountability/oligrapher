@@ -18,9 +18,7 @@ const webpackBuildCmd = `webpack -p --display-modules --config ${webpackConfigFi
 const oligrapherVersion = require('../package.json').version;
 const oligrapherLabeledDistFile = resolve(distFolder, `oligrapher-${oligrapherVersion}.js`);
 
-const sha256sum = filePath => createHash("sha256")
-      .update(readFileSync(filePath))
-      .digest("hex");
+const sha256sum = filePath => createHash("sha256").update(readFileSync(filePath)).digest("hex");
 
 !existsSync(distFolder) && mkdirSync(distFolder);              // create dist folder
 execSync(webpackBuildCmd, { stdio: 'inherit' });               // run webpack

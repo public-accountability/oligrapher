@@ -1,22 +1,23 @@
 {
-  "name": "oligrapher2",
-  "version": "0.4.5",
-  "description": "network graph visualizer",
+  "name": "oligrapher",
+  "version": "0.5.0",
+  "description": "Network graph visualizer built for LittleSis",
   "main": "app/main.jsx",
   "scripts": {
-    "dev": "webpack-dev-server --color --progress --config webpack.dev.js",
-    "fake-news-server": "http-server ./build -p 8091",
-    "build": "bin/build",
-    "dev-package": "cat build/oligrapher.js build/LsDataSource.js > build/oligrapher-dev.js",
-    "test": "jest",
+    "dev-server": "webpack-dev-server --color --progress --config webpack.devServer.js",
+    "serve":      "http-server ./build -p 8091",
+    "build":      "yarn run build-dev && yarn run build-prod",
+    "build-prod": "webpack -p --config webpack.prod.js",
+    "build-dev":  "webpack --config webpack.dev.js",
+    "test":       "jest",
     "test:watch": "jest --watch",
-    "profile": "webpack --profile --display-modules --config webpack.prod.js"
+    "profile":    "webpack --profile --display-modules --config webpack.prod.js"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/public-accountability/oligrapher"
   },
-  "author": "skomputer",
+  "author": "Public Accountability Initiative",
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/public-accountability/oligrapher/issues"
@@ -25,6 +26,7 @@
   "dependencies": {
     "@githubprimer/octicons-react": "^8.5.0",
     "classnames": "^2.2.6",
+    "core-js": "3",
     "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
@@ -48,11 +50,9 @@
     "@babel/preset-react": "^7.0.0",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
-    "babel-polyfill": "^6.26.0",
     "css-loader": "^3.2.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
-    "file-loader": "^4.2.0",
     "http-server": "^0.11.1",
     "jest": "^24.9.0",
     "react-test-renderer": "^16.9.0",
@@ -60,7 +60,6 @@
     "regenerator-runtime": "^0.13.3",
     "sinon": "^7.4.2",
     "style-loader": "^1.0.0",
-    "uglifyjs-webpack-plugin": "^2.2.0",
     "url-loader": "^2.1.0",
     "webpack": "^4.39.3",
     "webpack-cli": "^3.3.8",
@@ -89,5 +88,12 @@
       "test"
     ],
     "testRegex": "(.*)\\.test\\.jsx?$"
-  }
+  },
+  "browserslist": [
+    "last 2 chrome versions",
+    "last 2 firefox versions",
+    "> 2%",
+    "Firefox ESR",
+    "not dead"
+  ]
 }
