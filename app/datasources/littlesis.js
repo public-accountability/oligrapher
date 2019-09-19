@@ -1,8 +1,7 @@
 import { client } from "@public-accountability/littlesis-api"
 import merge from 'lodash/merge';
 
-// const api = client('https://littlesis.org');
-const api = client('http://localhost:8081');
+const api = client(API_URL);
 
 export const getConnectedNodesOptions = {
   category_id: {

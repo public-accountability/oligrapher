@@ -3,7 +3,9 @@ const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
 const webpack = require('webpack');
 
-var config = {
+const localAPIUrl = 'http://localhost:8081';
+
+var devServerConfig = {
   mode: 'development',
   devServer: {
     contentBase: './build',
@@ -17,4 +19,12 @@ var config = {
   ]
 };
 
-module.exports = merge(common, config);
+const config = merge(common, devServerConfig);
+
+config.plugins.unshift(
+  new webpack.DefinePlugin({
+    'API_URL': JSON.stringify(localAPIUrl)
+  })
+);
+
+module.exports = config;

@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   entry: path.resolve(__dirname, 'app/main.jsx'),
@@ -36,6 +37,13 @@ module.exports = {
       }
     ]
   },
+
+  plugins: [
+    new webpack.DefinePlugin({
+      'API_URL': JSON.stringify('https://littlesis.org')
+    })
+  ],
+
   resolve: {
     extensions: ['.js', '.jsx']
   }
