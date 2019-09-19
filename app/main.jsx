@@ -95,9 +95,7 @@ export default class Oligrapher {
 
     ReactDOM.render(
       <Provider store={this.store}>
-        <Root 
-          {...props}
-          ref={(c) => this.root = c} />
+        <Root {...props} />
       </Provider>,
       props.root
     );
