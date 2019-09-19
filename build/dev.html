@@ -4,9 +4,7 @@
     <meta http-equiv="Content-type" content="text/html; charset=utf-8"/><meta charset="UTF-8">
     <title>Oligrapher Demo</title>
     <script src="http://localhost:8090/webpack-dev-server.js"></script>
-    <!-- <script src="http://localhost:8090/build/vendors.js"></script> -->
     <script src="http://localhost:8090/build/oligrapher.js"></script>
-    <script src="LsDataSource.js"></script>
     <script src="oligrapher-demo-data.js"></script>
     <style>
       body {
@@ -17,8 +15,10 @@
 
   <body>
     <div id="oligrapher"></div>
+
     <script>
-      var elem = document.getElementById('oligrapher');
+      var elem = document.getElementById("oligrapher");
+
       elem.style.height = window.innerHeight - 100 + "px";
 
       var oli = new Oligrapher({ 
@@ -27,7 +27,7 @@
         isLocked: false,
         logActions: false,
         viewOnlyHighlighted: false,
-        dataSource: LsDataSource(),
+        dataSource: 'littlesis',
         data: oligrapherDemoData,
         user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },
         date: "August 30, 2015",
