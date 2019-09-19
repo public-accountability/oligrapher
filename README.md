@@ -159,7 +159,7 @@ API
 ### `constructor(config)`
 Returns an Oligrapher instance within a specified ```root``` DOM element and accepts other configuration options.
 ```javascript
-var elem = document.getElementById('#oligrapher');
+var elem = document.getElementById('oligrapher');
 var data = getDataFromSomeWhere();
 var config = { 
   root: elem,   // DOM element to mount Oligrapher within
@@ -168,7 +168,7 @@ var config = {
   isLocked: false,   // if true, nodes and edges cannot be dragged by the user
   isEmbedded: false // if true, the oligrapher is set to be in 'embedded' mode
   viewOnlyHighlighted: false,   // center viewbox around highlighted content
-  dataSource: LsDataSource({"baseUrl": "https://littlesis.org"}),   // API wrapper for importing nodes and edges from a data source, see build/LsDataSource.js for an example
+  dataSource: 'littlesis',   // API wrapper for importing nodes and edges from a data source, see datasources/littlesis.js for an example
   user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },   // optional author data to display
   date: "August 30, 2015",   // optional date data to display
   url: "https://example.com", // optional url for the graph title to link to

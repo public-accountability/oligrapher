@@ -1,5 +1,15 @@
 # Oligrapher CHANGELOG
 
+## [0.5.1] - 2019-09-19
+### changed
+- LsDataSource is now incorporated directly in Oligrapher's source
+
+## [0.5.0] - 2019-09-18
+### changed
+- Use yarn
+- Updated build script
+- Publish as package (@public-accountability/oligrapher)
+
 ## [0.4.6] - 2019-09-10
 ### changed
 - Updated dependencies

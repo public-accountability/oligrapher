@@ -21,6 +21,8 @@ import { configureEmbedded } from './helpers';
 import merge from 'lodash/merge';
 import assign from 'lodash/assign';
 import difference from 'lodash/difference';
+import isString from 'lodash/isString';
+import isNil from 'lodash/isNil';
 
 require('medium-editor/dist/css/medium-editor.css');
 require('medium-editor/dist/css/themes/default.css');
@@ -31,6 +33,7 @@ require('./styles/oligrapher.editor.css');
 require('./styles/oligrapher.annotations.css');
 require('./styles/oligrapher.embedded.css');
 
+import LittlesisDataSource from './datasources/littlesis';
 
 export default class Oligrapher {
   constructor(config = {}) {
@@ -51,7 +54,25 @@ export default class Oligrapher {
       config.embedded = configureEmbedded(config);
     }
 
-    this.rootElement = config.root;
+    // Setup dataSource, which is an object oligrapher uses to send API requests
+    // to find nodes and interlocks.
+    //
+    // Any object that implements the API of datasources/littlesis.js in theory should work.
+    // We used to keep the LsDataSource in a separate file, but it was moved inside oligrapher's source.
+    //
+    // The legacy method of providing an object is still supported, although
+    // right now there are no other working datasources besides littlesis.
+    //
+    // If dataSource is a string, we will instantiate the data source, otherwise
+    // it will assume it is already the correct object.
+
+    if (isString(config.dataSource)) {
+      if (config.dataSource.toLowerCase() === 'littlesis') {
+	config.dataSource = LittlesisDataSource;
+      } else {
+	throw "Invalid named data source";
+      }
+    }
 
     let createStoreWithMiddleware;
 
@@ -74,11 +95,9 @@ export default class Oligrapher {
 
     ReactDOM.render(
       <Provider store={this.store}>
-        <Root 
-          {...props}
-          ref={(c) => this.root = c} />
+        <Root {...props} />
       </Provider>,
-      this.rootElement
+      props.root
     );
   }
 
