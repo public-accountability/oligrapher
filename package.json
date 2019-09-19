@@ -5,13 +5,13 @@
   "main": "app/main.jsx",
   "scripts": {
     "dev-server": "webpack-dev-server --color --progress --config webpack.devServer.js",
-    "serve":      "http-server ./build -p 8091",
-    "build":      "yarn run build-dev && yarn run build-prod",
+    "serve": "http-server ./build -p 8091",
+    "build": "yarn run build-dev && yarn run build-prod",
     "build-prod": "webpack -p --config webpack.prod.js",
-    "build-dev":  "webpack --config webpack.dev.js",
-    "test":       "jest",
+    "build-dev": "webpack --config webpack.dev.js",
+    "test": "jest",
     "test:watch": "jest --watch",
-    "profile":    "webpack --profile --display-modules --config webpack.prod.js"
+    "profile": "webpack --profile --display-modules --config webpack.prod.js"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
   "homepage": "https://littlesis.org/oligrapher",
   "dependencies": {
     "@githubprimer/octicons-react": "^8.5.0",
+    "@public-accountability/littlesis-api": "^0.0.3",
     "classnames": "^2.2.6",
     "core-js": "3",
     "lodash": "^4.17.15",
@@ -73,6 +74,9 @@
     "transform": {
       "^.+\\.jsx?$": "babel-jest"
     },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(@public-accountability.*?\\.js$))"
+    ],
     "modulePaths": [
       "<rootDir>/app/"
     ],

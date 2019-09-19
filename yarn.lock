@@ -871,6 +871,13 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
+"@public-accountability/littlesis-api@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@public-accountability/littlesis-api/-/littlesis-api-0.0.3.tgz#858176d7acf23e6852fea43fb392249cc1aeebcb"
+  integrity sha512-ua1vHprtepBtlQdsL/qZ81RYk1pkbmcR3uYnL253cAUuCL29DXKcJ2CSCCCGXZ+Y7jMq2zjBWUAAAfShw1Pfvw==
+  dependencies:
+    lodash "^4.17.15"
+
 "@sinonjs/commons@^1", "@sinonjs/commons@^1.3.0", "@sinonjs/commons@^1.4.0":
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.6.0.tgz#ec7670432ae9c8eb710400d112c201a362d83393"
