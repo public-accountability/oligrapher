@@ -27,7 +27,6 @@ test('has name attribute', () => {
   expect(LittlesisDataSource.name).toEqual('LittleSis');
 });
 
-
 test('findNodes requests nodes from server', done => {
   fetch.mockResponseOnce(JSON.stringify(responses.findNodes))
 
