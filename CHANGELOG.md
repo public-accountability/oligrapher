@@ -1,5 +1,10 @@
 # Oligrapher CHANGELOG
 
+## [0.5.2] - 2019-09-24
+### changed
+- Use package @public-accountability/littlesis-api
+- Use localhost url while running webpack dev server
+
 ## [0.5.1] - 2019-09-19
 ### changed
 - LsDataSource is now incorporated directly in Oligrapher's source
