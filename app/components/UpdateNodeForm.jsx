@@ -33,7 +33,7 @@ export default class UpdateNodeForm extends Component {
       <div className="editForm updateForm form-inline">
         <HotKeys keyMap={keyMap} handlers={keyHandlers}>
           <div>
-            <input 
+            <input
               type="text"
 	      id="updateNodeFormName"
               title="change node title"
@@ -42,7 +42,6 @@ export default class UpdateNodeForm extends Component {
               ref="name" 
               value={display.name}
               onChange={() => this.apply()} />
-            &nbsp;
             <input 
               type="text"
 	      id="updateNodeFormImage"
@@ -52,13 +51,11 @@ export default class UpdateNodeForm extends Component {
               ref="image" 
               value={display.image}
               onChange={() => this.apply()} />
-            &nbsp;
             <ChangeColorInput
               ref="color"
               value={display.color}
               status={display.status}
               onChange={(color) => this.apply(color)} />
-            &nbsp;
             <select
               title="change node size" 
               value={display.scale} 
