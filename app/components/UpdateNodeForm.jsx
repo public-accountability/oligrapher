@@ -1,12 +1,11 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { BaseComponent } from './BaseComponent';
 import ChangeColorInput from './ChangeColorInput';
 import { HotKeys } from 'react-hotkeys';
 import merge from 'lodash/merge';
 import ds from '../NodeDisplaySettings';
 
-export default class UpdateNodeForm extends BaseComponent {
+export default class UpdateNodeForm extends Component {
 
   render() {
     let { display } = this.props.data;
