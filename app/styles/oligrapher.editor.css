@@ -172,6 +172,10 @@ button#toggleEditTools {
   margin-bottom: 10px;
 }
 
+.updateForm input, .updateForm .nodeColorInputWrapper {
+    margin-right: 0.25em;
+}
+
 #nodeUrlInput {
   width: 363px;
   float: right;
