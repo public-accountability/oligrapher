@@ -1,5 +1,10 @@
 # Oligrapher CHANGELOG
 
+## [0.5.3] - 2019-09-30
+### changed
+- React-hotkeys v2, minor refactor
+- add .eslintrc
+
 ## [0.5.2] - 2019-09-24
 ### changed
 - Use package @public-accountability/littlesis-api
