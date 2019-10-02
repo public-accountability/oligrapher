@@ -2,7 +2,7 @@
   "name": "@public-accountability/oligrapher",
   "version": "0.5.3",
   "description": "Network graph visualizer built for LittleSis",
-  "main": "app/main2.jsx",
+  "main": "app/Oligrapher.jsx",
   "scripts": {
     "dev-server": "webpack-dev-server --color --progress --config webpack.devServer.js",
     "serve": "http-server ./build -p 8091",
@@ -79,7 +79,7 @@
     "file": [
       "test/setup.js"
     ],
-    "spec": "./test/*.test.js?(x)"
+    "spec": "./test/**/*.test.js?(x)"
   },
   "jest": {
     "setupFiles": [

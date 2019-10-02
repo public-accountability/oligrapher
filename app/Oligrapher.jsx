@@ -1,6 +1,7 @@
 import merge from 'lodash/merge';
 import { getElementById } from './helpers';
-import { storeWithMiddleware, renderNewApplication } from './util/render';
+import { storeWithMiddleware,
+         renderNewApplication } from './util/render';
 
 const configDefaults = {
   'domId': "oligrapher",
