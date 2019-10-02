@@ -9,7 +9,7 @@
     "build": "yarn run build-dev && yarn run build-prod",
     "build-prod": "webpack -p --config webpack.prod.js",
     "build-dev": "webpack --config webpack.dev.js",
-    "test": "jest",
+    "test": "mocha",
     "test:watch": "jest --watch",
     "profile": "webpack --profile --display-modules --config webpack.prod.js"
   },
@@ -49,14 +49,17 @@
     "@babel/core": "^7.6.2",
     "@babel/preset-env": "^7.6.2",
     "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.6.2",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
+    "chai": "^4.2.0",
     "css-loader": "^3.2.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
     "http-server": "^0.11.1",
     "jest": "^24.9.0",
     "jest-fetch-mock": "^2.1.2",
+    "mocha": "^6.2.1",
     "react-test-renderer": "^16.10.1",
     "redux-logger": "^3.0.6",
     "regenerator-runtime": "^0.13.3",
@@ -65,8 +68,18 @@
     "url-loader": "^2.1.0",
     "webpack": "^4.41.0",
     "webpack-cli": "^3.3.8",
-    "webpack-dev-server": "^3.8.0",
+    "webpack-dev-server": "^3.8.2",
     "webpack-merge": "^4.2.2"
+  },
+  "mocha": {
+    "require": [
+      "@babel/register",
+      "chai/register-expect"
+    ],
+    "file": [
+      "test/setup.js"
+    ],
+    "spec": "./test/*.test.js?(x)"
   },
   "jest": {
     "setupFiles": [

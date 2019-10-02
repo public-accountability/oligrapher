@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
-  entry: path.resolve(__dirname, 'app/main.jsx'),
+  entry: path.resolve(__dirname, 'app/Oligrapher.jsx'),
   output: {
     path: path.resolve(__dirname, 'build'),
     library: 'Oligrapher',

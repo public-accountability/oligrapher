@@ -8,10 +8,10 @@ import isNil from 'lodash/isNil';
 /**
  * Calculates New Position for Draggable Components
  * @param {object} draggableData - data from react-draggable callback
- * @param {object} startPosition - initial x & y position 
+ * @param {object} startPosition - initial x & y position
  * @param {object} startDrag - initial draggableData from start of drag
  * @param {number} actualZoom - zoom value
- * @returns {object} = x, y 
+ * @returns {object} = x, y
  */
 export const calculateDeltas = (draggableData, startPosition, startDrag, actualZoom) => {
   let deltaX = (draggableData.x - startDrag.x) / actualZoom;
@@ -22,7 +22,7 @@ export const calculateDeltas = (draggableData, startPosition, startDrag, actualZ
 };
 
 /**
- * Previously arrow could only go in one direction 
+ * Previously arrow could only go in one direction
  * @param {string|boolean|null} arrow
  */
 export const legacyArrowConverter = arrow => {
@@ -46,11 +46,11 @@ export const legacyEdgesConverter = edges => {
 
 export const newArrowState = (oldArrowState, arrowSide, showArrow) => {
 
-  // By convention, Node 1 is the arrow on the left side 
+  // By convention, Node 1 is the arrow on the left side
   // and Node 2 is the arrow on the right.
   const node1 = (arrowSide === 'left');
   const node2 = (arrowSide === 'right');
-  
+
   if(oldArrowState === '1->2') {
     if (node1 && showArrow) {
       return 'both';
@@ -90,13 +90,13 @@ export const pxStr = num => num.toString() + 'px';
 // {options} -> {embedded}
 export const configureEmbedded = configOptions => {
   const defaults = {
-    headerPct: 8, 
-    annotationPct: 25, 
+    headerPct: 8,
+    annotationPct: 25,
     logoUrl: null,
     linkUrl: null,
     border: true
   };
-  
+
   let embedded = isNil(configOptions.embedded) ? {} : configOptions.embedded;
   let height = configOptions.height;
 
@@ -106,12 +106,12 @@ export const configureEmbedded = configOptions => {
   }
 
   embedded = merge(defaults, embedded);
-  
+
   let headerHeight = height * (embedded.headerPct / 100);
   let annotationHeight = height * (embedded.annotationPct / 100);
   let graphHeight = height - (headerHeight + annotationHeight);
   let graphContainerHeight = graphHeight + headerHeight;
-  
+
   // size of overall container -- all elements
   embedded.containerSize = pxStr(height);
   // size of header
@@ -128,7 +128,7 @@ export const configureEmbedded = configOptions => {
   embedded.annotationSize = pxStr(annotationHeight);
   // max width of logo
   embedded.logoWidth = window.innerWidth / 9;
-  
+
   return embedded;
 };
 
@@ -137,3 +137,19 @@ export const titleize = str => str
   .split(' ')
   .map(capitalize)
   .join(' ');
+
+
+/**
+ * works the same as document.getElementById,
+ * except it throws an error if the element does not exist.
+ */
+export const getElementById = id => {
+  let element = document.getElementById(id);
+
+  if (element) {
+    return element;
+  } else {
+    let error = new Error(`Document is missing the element with id ${id}`);
+    throw error;
+  }
+}
