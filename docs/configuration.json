@@ -1,0 +1,38 @@
+{
+  "mode": "view|edit|embedded",
+  "dataSource": "littlesis",
+  "domId": "oligrapher",
+  "debug": false,
+  "display": {
+    "draggableNodes": true,
+    "draggableEdges": true
+  },
+  "hooks": {
+    "onSave": function(data) {},
+    "onNav": function(index) {},
+  },
+  "attributes": {
+    "title": "The Power Broker",
+    "subtitle": "Robert Moses and his cronies",
+    "date": "August 30, 2015",
+    "links": [
+      { text: "some", url: "http://some.net" },
+      { id: "exampleLink", text: "example", url: "http://example.com" },
+      { method: "POST", text: "clone", url: "http://lilsis.local/maps/118-satoshi/clone" }
+    ],
+    "user": {
+      "name": "Kevin",
+      "url": "http://littlesis.org/user/kevin"
+    },
+    "settings": {
+      "private": false,
+      "cloneable": true
+    }
+  },
+  "graph": {
+    "id": 123,
+    "nodes": [],
+    "edges": [],
+    "captions": []
+  }
+}

@@ -1,4 +1,3 @@
-import merge from 'lodash/merge'
 import { getElementById } from './helpers'
 import { storeWithMiddleware, renderNewApplication } from './util/render'
 import configuration from './util/configuration'
@@ -6,9 +5,11 @@ import configuration from './util/configuration'
 /*
   Main entry point of Oligrapher.
 
-  This object is how to initialize a map and interact with oligrapher from javascript
+  This is how to initialize a new map on a page:
 
-  var oli = new Oligrapher(your Configuration)
+     var oli = new Oligrapher(your Configuration)`
+
+  See app/util/configuration or docs/configuration.js for a list of variables
 */
 export default class Oligrapher {
   constructor(config = {}) {
