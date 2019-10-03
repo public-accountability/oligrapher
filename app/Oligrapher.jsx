@@ -1,12 +1,7 @@
-import merge from 'lodash/merge';
-import { getElementById } from './helpers';
-import { storeWithMiddleware,
-         renderNewApplication } from './util/render';
-
-const configDefaults = {
-  'domId': "oligrapher",
-  'logActions': false
-}
+import merge from 'lodash/merge'
+import { getElementById } from './helpers'
+import { storeWithMiddleware, renderNewApplication } from './util/render'
+import configuration from './util/configuration'
 
 /*
   Main entry point of Oligrapher.
@@ -17,9 +12,9 @@ const configDefaults = {
 */
 export default class Oligrapher {
   constructor(config = {}) {
-    this.config = merge(configDefaults, config)
-    this.rootElement = getElementById(this.config.domId);
-    this.store = storeWithMiddleware(this.config.logActions);
-    renderNewApplication(this.store, this.rootElement);
+    this.config = configuration(config)
+    this.rootElement = getElementById(this.config.domId)
+    this.store = storeWithMiddleware(this.config.logActions)
+    renderNewApplication(this.store, this.rootElement)
   }
 }
