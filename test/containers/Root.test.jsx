@@ -1,5 +1,5 @@
 import React from 'react'
-import Root from '../../app/containers/Root'
+import { Root } from '../../app/containers/Root'
 import Header from '../../app/containers/Header'
 import Graph from '../../app/containers/Graph'
 
