@@ -1,11 +1,11 @@
 import React from 'react'
 import Title from '../../app/components/Title'
 
-describe("<Title />", function() {
+describe("<Title>", function() {
   let component
 
   beforeEach(function(){
-    component = shallow(<Title title="abc" />)
+    component = shallow(<Title title="abc" subtitle="xyz"/>)
   })
 
   it("renders wrapper div", function(){
@@ -13,8 +13,12 @@ describe("<Title />", function() {
       .to.equal(1)
   })
 
-  it("renders H1", function(){
+  it("renders title into h1", function(){
     expect(component.find('h1').html()).to.equal("<h1>abc</h1>")
+  })
+
+  it("renders subtitle into h2", function(){
+    expect(component.find('h2').html()).to.equal("<h2>xyz</h2>")
   })
 
 })
