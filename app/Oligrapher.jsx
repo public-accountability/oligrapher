@@ -14,7 +14,7 @@ import configuration from './util/configuration'
 export default class Oligrapher {
   constructor(config = {}) {
     this.config = configuration(config)
-    this.rootElement = getElementById(this.config.domId)
+    this.rootElement = getElementById(this.config.settings.domId)
     this.store = createOligrapherStore(this.config)
     renderNewApplication(this.store, this.rootElement)
   }
