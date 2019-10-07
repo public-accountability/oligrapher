@@ -1,21 +1,26 @@
-import * as helpers from '../app/helpers';
-import * as render from '../app/util/render';
+import * as helpers from '../app/helpers'
+import * as render from '../app/util/render'
 import Oligrapher from '../app/Oligrapher'
 
 describe('main', function() {
   beforeEach(function() {
     sinon.stub(render, 'renderNewApplication')
-    sinon.stub(helpers, 'getElementById')
-  });
+    sinon.stub(helpers, 'getElementById').returns("FakeElement")
+  })
 
   afterEach(function() {
-    render.renderNewApplication.restore();
-    helpers.getElementById.restore();
-  });
+    render.renderNewApplication.restore()
+    helpers.getElementById.restore()
+  })
 
-  it("merges configuration together", function() {
-    let oli = new Oligrapher({ "logActions": true})
-    expect(oli.config.domId).to.equal('oligrapher');
-    expect(oli.config.logActions).to.equal(true);
+  it("sets the rootElement", function() {
+    let oli = new Oligrapher()
+    expect(oli.rootElement).to.equal("FakeElement")
+  })
+
+
+  it("merges the configuration together", function() {
+    let oli = new Oligrapher({ "settings": { "debug": true } })
+    expect(oli.config.settings.debug).to.equal(true)
   })
 })

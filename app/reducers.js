@@ -1,22 +1,16 @@
-import { combineReducers } from 'redux';
-import graph from './reducers/undoable-graph';
-import selection from './reducers/selection';
-import zoom from './reducers/zoom';
-import editTools from './reducers/editTools';
-import title from './reducers/title';
-import annotations from './reducers/annotations';
-import settings from './reducers/settings';
-import showHelpScreen from './reducers/showHelpScreen';
-import showSettings from './reducers/showSettings';
+import { combineReducers } from 'redux'
+import graph from './reducers/undoable-graph'
+import display from './reducers/display'
+import selection from './reducers/selection'
+import settings from './reducers/settings'
+import hooks from './reducers/hooks'
+import attributes from './reducers/attributes.js'
 
 export default combineReducers({
   graph,
+  display,
   selection,
-  zoom,
-  editTools,
-  title,
-  annotations,
   settings,
-  showHelpScreen,
-  showSettings
-});
+  hooks,
+  attributes
+})

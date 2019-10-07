@@ -15,10 +15,9 @@ describe('configuration', function(){
     expect(c.attributes.user.url).to.equal(null)
   })
 
-
-  it("throws if map mode is invalid", function(){
-    expect(
-      () => configuration({mode: "invalidMode"})
-    ).to.throw();
-  })
+  // it("throws if map mode is invalid", function(){
+  //   expect(
+  //     () => configuration({mode: "invalidMode"})
+  //   ).to.throw();
+  // })
 })

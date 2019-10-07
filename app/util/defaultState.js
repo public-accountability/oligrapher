@@ -5,7 +5,9 @@ export default {
     nodes: {},
     edges: {},
     captions: {},
-    annotations: []
+    annotations: [],
+    zoom: 1,
+    center: [0, 0]
   },
 
   // Graph attributes and metadata
@@ -26,13 +28,13 @@ export default {
     settings:{}
   },
 
-  // How the map looks. Display information for individual nodes and edges
+  // Display information for individual nodes and edges
   // are on the `.display` attribute of those objects.
+  // This section of the state is not sync'd with the server;
+  // it mostly used internally to implement the editor UI.
+  // Many actions trigger a reconfiguration of these meneus
   display: {
     zoom: 1,
-    story: false,
-    embedded: false,
-    editor: false,
     highlight: {
       nodes: [],
       edges: [],
@@ -42,37 +44,37 @@ export default {
       nodes: [],
       edges: [],
       captions: []
+    },
+    components: {
+      header: null,
+      map: null,
+      annotations: null,
+      editor: null,
+      modeToggle: null,
+      nodeMenu: null,
+      popup: null,
+      settings: null
     }
   },
 
-  // Menu layout
-  // This section of the state is not sync'd with the server;
-  // it mostly used internally to implement the editor UI.
-  // Many actions trigger a reconfiguration of these meneus
-  layout: {
-    annotations: null,
-    editor: null,
-    header: true,
-    map: true,
-    modeToggle: null,
-    nodeMenu: null,
-    popup: null,
-    settings: null
-  },
   // Global settings
   // Unlike attributes and display settings, there are no actions available
-  // to change these. They are designed to be set once when the Oligrapher object
+  // to change these.
+  // They are designed to be set once when the Oligrapher object
   // is initialized.
   settings: {
     dataSource: 'littlesis',
     debug: false,
     domId: 'oligrapher',
+    embedded: false,
     editable: true,
     saveable: true,
+    storyable: true,
     draggableNodes: true,
     draggableEdges: true
   },
-  // Hook avaiable to trigger code external to Oligrapher.
+
+  // Hooks available to trigger code external to Oligrapher.
   // `onSave` is used by LittleSis.org to sync the graph with the LittleSis server
   hooks: {
     onSave: function(state)  { null },

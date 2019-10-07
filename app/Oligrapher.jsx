@@ -1,5 +1,5 @@
 import { getElementById } from './helpers'
-import { storeWithMiddleware, renderNewApplication } from './util/render'
+import { createOligrapherStore, renderNewApplication } from './util/render'
 import configuration from './util/configuration'
 
 /*
@@ -15,7 +15,7 @@ export default class Oligrapher {
   constructor(config = {}) {
     this.config = configuration(config)
     this.rootElement = getElementById(this.config.domId)
-    this.store = storeWithMiddleware(this.config.logActions)
+    this.store = createOligrapherStore(this.config)
     renderNewApplication(this.store, this.rootElement)
   }
 }
