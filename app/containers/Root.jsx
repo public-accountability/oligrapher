@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
-// import { connect } from 'react-redux'
+import { connect } from 'react-redux'
 import Header from './Header'
 import Graph from './Graph'
 
-export default class Root extends Component {
+export class Root extends Component {
   render() {
-    return <div id="oligrapher-container">
+    return <div id="oligrapher-container">
              <Header />
              <Graph />
-           </div>;
+           </div>
   }
 }
 
 
-// export default connect()(Root);
+export default connect()(Root)
