@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Header from './Header'
 import Graph from './Graph'
-import Story form './Story'
+// import Story form './Story'
 
 /*
   This is the root container

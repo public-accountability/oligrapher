@@ -1,7 +1,16 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
-export default class Graph extends Component {
+export class Graph extends Component {
   render () {
-    return <h1>Graph</h1>
+    return <div id="oligrapher-graph">
+           </div>
   }
 }
+
+
+// const mapStateToProps = function(state) {
+}
+
+export default connect()(Graph)

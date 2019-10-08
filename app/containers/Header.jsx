@@ -30,11 +30,11 @@ Header.propTypes = {
                                   "url":  PropTypes.string })
 }
 
-const mapStateToProps = state => ({
-  "title": state.attributes.title,
-  "subtitle": state.attributes.subtitle,
-  "user":state.attributes.user
-})
+const mapStateToProps = function(state) {
+  return { "title": state.attributes.title,
+           "subtitle": state.attributes.subtitle,
+           "user":state.attributes.user }
+}
 
 
 export default connect(mapStateToProps)(Header)
