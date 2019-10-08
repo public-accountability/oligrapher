@@ -3,10 +3,12 @@
   Otherwise classes are used.
 
   SCSS nesting is used here, even when not necessary,
-  to help us nativated understand which elements are nested.
+  to help us navigate the DOM tree.
 */
 
-#oligrapher {}
+$font_color: black;
+$header_menu_item_color: $font_color;
+$header_menu_item_color_hover: #a6cee3;
 
 /*
    This is our outermost div.
@@ -18,15 +20,23 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
 }
 
-
+/*
+  This div is both a flex child from #oligrapher-container
+  and the flex parent of  #oligrapher-header-left-wrapper and #oligrapher-header-right-wrapper
+*/
 #oligrapher-header {
-    background-color: lightblue;
+    margin-bottom: 1em;
     height: 200px;
+
+    display: flex;
+    flex-direction: row;
 }
 
 #oligrapher-header-left-wrapper {
+    flex-grow: 1;
     #oligrapher-header-title-wrapper {}
     #oligrapher-header-attributions-wrapper {
         #oligrapher-header-attribution-user {}
@@ -35,17 +45,30 @@
 }
 
 #oligrapher-header-right-wrapper {
+    flex-grow: 0;
+    margin-right: 1em;
+    margin-left: 1em;
+
     #oligrapher-header-menu-wrapper {
         ul {
+            list-style-type: none;
+            padding: 0;
             li {
-                a {}
+                a {
+                    text-decoration: none;
+                    color: $header_menu_item_color;
+                    &:hover {
+                        color: $header_menu_item_color_hover;
+                    }
+                }
+
+
             }
         }
     }
 }
 
 #oligrapher-graph {
-    background-color: lightgoldenrodyellow;
-    height: 400px;
+    height: 100%;
     width: 100%;
 }
