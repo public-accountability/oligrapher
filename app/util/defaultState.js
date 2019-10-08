@@ -21,6 +21,7 @@ export default {
       name: null,
       url: null
     },
+    // These are rendered in the Header Menu
     links: [],
     // attributes.settings are optional checkboxes that
     // will be displayed in editor mode. It is used by LittleSis.org

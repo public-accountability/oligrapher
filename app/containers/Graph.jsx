@@ -10,7 +10,6 @@ export class Graph extends Component {
 }
 
 
-// const mapStateToProps = function(state) {
-}
+// const mapStateToProps = function(state) {}
 
 export default connect()(Graph)
