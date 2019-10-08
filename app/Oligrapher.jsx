@@ -2,7 +2,7 @@ import { getElementById } from './helpers'
 import { createOligrapherStore, renderNewApplication } from './util/render'
 import configuration from './util/configuration'
 
-require('./oligrapher.scss')
+import './oligrapher.scss'
 
 /*
   Main entry point of Oligrapher.

@@ -1,5 +1,5 @@
-const path = require('path');
-const webpack = require('webpack');
+const path = require('path')
+const webpack = require('webpack')
 
 module.exports = {
   entry: path.resolve(__dirname, 'app/Oligrapher.jsx'),
@@ -16,23 +16,24 @@ module.exports = {
 	test: /\.jsx?$/,
 	exclude: /node_modules\/(?!(@public-accountability.*?\\.js$))/,
 	use: [
-	  { loader: 'babel-loader' }
+          { loader: 'babel-loader' }
 	]
       },
       {
-	test: /\.css$/,
+	test: /\.scss$/,
 	use: [
-	  { loader: 'style-loader' },
-	  { loader: 'css-loader' }
+          { loader: 'style-loader'},
+          { loader: 'css-loader' },
+          { loader: 'sass-loader' }
 	]
       },
       {
 	test: /\.(woff2?|ttf|eot|svg)$/,
 	use:  [
-	  {
-	    loader: 'url-loader',
-	    options: { limit: 30000 }
-	  }
+          {
+            loader: 'url-loader',
+            options: { limit: 30000 }
+          }
 	]
       }
     ]
@@ -47,4 +48,4 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx']
   }
-};
+}

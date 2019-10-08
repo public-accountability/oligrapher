@@ -1,12 +1,26 @@
+/*
+  Oligrapher uses IDs for components that have only one.
+  Otherwise classes are used.
+
+  SCSS nesting is used here, even when not necessary,
+  to help us nativated understand which elements are nested.
+*/
+
 #oligrapher {}
 
 #oligrapher-container {}
 
-#oligrapher-header-title-wrapper {}
+#oligrapher-header-title-wrapper {
 
-#oligrapher-header-attributions-wrapper {}
+}
 
-#oligrapher-header-attribution-user {}
+#oligrapher-header-attributions-wrapper {
 
+    #oligrapher-header-attribution-user {
 
-#oligrapher-header-attribution-date {}
+    }
+
+    #oligrapher-header-attribution-date {
+
+    }
+}
