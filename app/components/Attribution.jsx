@@ -16,7 +16,7 @@ const renderUser = function(user) {
 }
 
 
-const renderDate = function(date){
+const renderDate = function(date) {
   if (date) {
     return <div id="oligrapher-header-attribution-date">
              {date}

@@ -1,7 +1,7 @@
 import React from 'react'
 import Attribution from '../../app/components/Attribution'
 
-describe("Attribution", function(){
+describe("<Attribution>", function(){
   it("has wrapper div", function(){
     expect(
       shallow(<Attribution />)

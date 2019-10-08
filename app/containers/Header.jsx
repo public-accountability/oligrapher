@@ -2,16 +2,24 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import Title from '../components/Title'
 import Attribution from '../components/Attribution'
+import Title from '../components/Title'
 
 
+/*
+
+  |------------------------------------------------------------|
+  |  Title                              One of:                |
+  |  Subtitle                              HeaderMenu          |
+  |  Attribution                           HeaderButtons       |
+  |------------------------------------------------------------|
+*/
 export class Header extends Component {
   render () {
-    return <>
+    return <div id="oligrapher-header">
              <Title title={this.props.title} subtitle={this.props.subtitle} />
              <Attribution user={this.props.user} />
-           </>
+           </div>
   }
 }
 
