@@ -8,29 +8,44 @@
 
 #oligrapher {}
 
-#oligrapher-container {}
+/*
+   This is our outermost div.
 
-#oligrapher-header {
-
-    #oligrapher-header-title-wrapper {}
-
-    #oligrapher-header-attributions-wrapper {
-
-        #oligrapher-header-attribution-user {}
-        #oligrapher-header-attribution-date {}
-
-
-    }
+   It's a flex container with two children: #oligrapher-header and #oligrapher-graph
+*/
+#oligrapher-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 
-#oligrapher-header-menu-wrapper {
-    ul {
-        li {
-            a {}
+#oligrapher-header {
+    background-color: lightblue;
+    height: 200px;
+}
+
+#oligrapher-header-left-wrapper {
+    #oligrapher-header-title-wrapper {}
+    #oligrapher-header-attributions-wrapper {
+        #oligrapher-header-attribution-user {}
+        #oligrapher-header-attribution-date {}
+    }
+}
+
+#oligrapher-header-right-wrapper {
+    #oligrapher-header-menu-wrapper {
+        ul {
+            li {
+                a {}
+            }
         }
     }
 }
 
 #oligrapher-graph {
+    background-color: lightgoldenrodyellow;
+    height: 400px;
+    width: 100%;
 }

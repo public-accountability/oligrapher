@@ -39,7 +39,7 @@ Header.propTypes = {
 const mapStateToProps = function(state) {
   return { "title": state.attributes.title,
            "subtitle": state.attributes.subtitle,
-           "user":state.attributes.user,
+           "user": state.attributes.user,
            "headerMenuItems": state.attributes.links }
 }
 
