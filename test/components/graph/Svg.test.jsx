@@ -22,10 +22,9 @@ describe('<Svg>', function() {
     expect(svg.prop('xmlns')).to.exist
   })
 
-  it('setes width & height', function(){
+  it('sets width & height', function() {
     let svg = shallow(<Svg  {...props}><div></div></Svg>)
     expect(svg.prop('width')).to.equal(10)
     expect(svg.prop('height')).to.equal(10)
-
   })
 })

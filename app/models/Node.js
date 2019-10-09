@@ -1,25 +1,17 @@
-import merge from 'lodash/merge';
-import isNumber from 'lodash/isNumber';
-import Helpers from './Helpers';
+import { generate as generateId } from 'shortid'
+import { setAttributes } from './'
 
-export class Node {
-  static defaults() {
-    return {
-      id: Helpers.generateId(),
-      display: {
-        x: 0,
-        y: 0,
-        scale: 1,
-        status: "normal"
-      }
-    };    
-  }
+export default class Node {
+  id = null
+  x = null
+  y = null
+  scale = 1
 
-  static setDefaults(node) {
-    return merge({}, this.defaults(), node);
-  }
+  constructor(attributes) {
+    setAttributes(this, attributes)
 
-  static hasPosition(node) {
-    return isNumber(node.display.x) && isNumber(node.display.y);
+    if (!this.id) {
+      this.id = generateId()
+    }
   }
 }
