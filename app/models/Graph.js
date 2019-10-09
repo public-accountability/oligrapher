@@ -11,22 +11,17 @@ export default class Graph {
   captions = {}
   annoations = []
   zoom =  1
-  center = [0,0]
+  center = [0, 0]
 
   constructor(attributes) {
-    setAttributes(this, attributes, ['zoom', 'center'])
+    setAttributes(this, attributes)
 
-    if (attributes.nodes) {
+    if (attributes?.nodes) {
       this.nodes = mapValues(attributes.nodes, n => new Node(n))
     }
 
-    // if (attributes.edges) {
-    //   this.edges = mapValues(attributes.edges, e => new Edge(e))
-    // }
-
-    // if (attributes.captions) {
-    //   this.captions = mapValues(attributes.captions, c => new Caption(c))
-    // }
+    // this.edges = mapValues(attributes.edges, e => new Edge(e))
+     // .captions = mapValues(attributes.captions, c => new Caption(c))
   }
 }
 

@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import graph from './reducers/undoable-graph'
+import graph from './reducers/graph'
 import display from './reducers/display'
 import selection from './reducers/selection'
 import settings from './reducers/settings'

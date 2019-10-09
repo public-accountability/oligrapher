@@ -13,11 +13,10 @@ describe('main', function() {
     helpers.getElementById.restore()
   })
 
-  it("sets the rootElement", function() {
+  it("sets the store", function() {
     let oli = new Oligrapher()
-    expect(oli.rootElement).to.equal("FakeElement")
+    expect(oli.store).to.exist
   })
-
 
   it("merges the configuration together", function() {
     let oli = new Oligrapher({ "settings": { "debug": true } })

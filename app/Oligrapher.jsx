@@ -1,4 +1,4 @@
-import { getElementById } from './helpers'
+import omit from 'lodash/omit'
 import { createOligrapherStore, renderNewApplication } from './util/render'
 import configuration from './util/configuration'
 
@@ -14,10 +14,10 @@ import './oligrapher.scss'
   See app/util/configuration or docs/configuration.js for a list of variables
 */
 export default class Oligrapher {
-  constructor(config = {}) {
-    this.config = configuration(config)
-    this.rootElement = getElementById(this.config.settings.domId)
-    this.store = createOligrapherStore(this.config)
+  constructor(userConfig = {}) {
+    let config = configuration(userConfig)
+    this.config = omit(config, 'graph')
+    this.store = createOligrapherStore(config)
     renderNewApplication(this.store, this.rootElement)
   }
 }

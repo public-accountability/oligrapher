@@ -1,5 +1,6 @@
 import merge from 'lodash/merge'
 import omit from 'lodash/omit'
+import { getElementById } from '../helpers'
 
 import defaultState from './defaultState'
 import Graph from '../models/Graph'
@@ -13,7 +14,12 @@ import Graph from '../models/Graph'
   This configuration becomes the initial redux store state.
 */
 export default function(userConfig) {
-  return merge({ graph: new Graph(userConfig.graph) },
-               omit(userConfig, 'graph'),
-               omit(defaultState, 'graph'))
+  // Merge user provided configuration with default state
+  let config = merge({}, omit(defaultState, 'graph'), omit(userConfig, 'graph'))
+  // Fetch the DOM element and store it
+  config.settings.rootElement = getElementById(config.settings.domId)
+  // Set the graph model.
+  //  This will create a new blank graph if it doesn't yet exist
+  config.graph = new Graph(config.graph)
+  return config
 }

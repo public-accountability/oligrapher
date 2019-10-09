@@ -67,6 +67,7 @@ export default {
     dataSource: 'littlesis',
     debug: false,
     domId: 'oligrapher',
+    rootElement: null,
     embedded: false,
     editable: true,
     saveable: true,
