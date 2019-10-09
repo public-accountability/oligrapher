@@ -18,6 +18,6 @@ export default class Oligrapher {
     let config = configuration(userConfig)
     this.config = omit(config, 'graph')
     this.store = createOligrapherStore(config)
-    renderNewApplication(this.store, this.rootElement)
+    renderNewApplication(this.store, this.config.settings.rootElement)
   }
 }
