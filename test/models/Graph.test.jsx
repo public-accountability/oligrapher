@@ -10,4 +10,8 @@ describe("Graph (model)", function() {
     expect(graph.zoom).to.eql(1)
     expect(graph.center).to.eql([0,0])
   })
+
+  it("that's [object Graph] to you", function() {
+    expect(new Graph().toString()).to.eql('[object Graph]')
+  })
 })

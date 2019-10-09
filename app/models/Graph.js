@@ -23,6 +23,11 @@ export default class Graph {
     // this.edges = mapValues(attributes.edges, e => new Edge(e))
      // .captions = mapValues(attributes.captions, c => new Caption(c))
   }
+
+
+  get [Symbol.toStringTag]() {
+    return 'Graph'
+  }
 }
 
 
