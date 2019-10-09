@@ -1,75 +1,19 @@
 import merge from 'lodash/merge'
-import defaultState from './defaultState.js'
+import omit from 'lodash/omit'
 
-
-
-
-
-// const blankGraph = {
-//   id: null,
-//   nodes: {},
-//   edges: {},
-//   captions: {}
-// }
-
-// const defaultAttributes = {
-//   "title": "",
-//   "subtitle": "",
-//   "date": null,
-//   "links": [],
-//   "user": {
-//     "name": null,
-//     "url": null
-//   },
-//   "settings": {
-//     "private": false,
-//     "cloneable": true
-//   }
-// }
-
-// const defaultHooks = {
-//   "onSave": function(data) {
-//     console.error("No onSave hook defined")
-//   },
-//   "onNav": function(index) {}
-// }
-
-// const defaultDisplay = {
-//   "draggableNodes": true,
-//   "draggableEdges": true
-// }
-
-// const defaults = {
-//   "mode": "view",
-//   "dataSource": "littlesis",
-//   "domId": "oligrapher",
-//   "hooks": defaultHooks,
-//   "attributes": defaultAttributes,
-//   "display": defaultDisplay,
-//   "annotations": [],
-//   "graph": blankGraph
-// }
-
-
-// const validateMode = mode => {
-//   const modes = ['view', 'edit', 'embedded']
-
-//   if (!modes.includes(mode)) {
-//     throw new Error(`invalid mode: ${mode}`)
-//   }
-// }
-
+import defaultState from './defaultState'
+import Graph from '../models/Graph'
 
 /*
   This function takes a configuration object provided by the user,
   merges it with the default value and validates it.
 
-  Right now there is only one simple validation function,
-  but it would be nice to do validation for other elements.
+  `new Graph()` converts the plain object into a Graph model (see models/Graph)
 
   This configuration becomes the initial redux store state.
 */
 export default function(userConfig) {
-  let configuration = merge({}, defaultState, userConfig)
-  return configuration
+  return merge({ graph: new Graph(userConfig.graph) },
+               omit(userConfig, 'graph'),
+               omit(defaultState, 'graph'))
 }

@@ -1,6 +1,6 @@
-export function setAttributes(model, attributes) {
+export function setAttributes(model, attributes, keys = null) {
   if (attributes) {
-    Object.keys(model).forEach(key => {
+    (keys || Object.keys(model)).forEach(key => {
       model[key] = attributes[key]
     })
   }
