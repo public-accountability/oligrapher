@@ -72,3 +72,20 @@ $header_menu_item_color_hover: #a6cee3;
     height: 100%;
     width: 100%;
 }
+
+
+/*
+
+NODES
+
+g.oligrapher-node.react-draggable
+    g.node-circle-group
+        circle.node-circle
+*/
+
+
+.oligrapher-node {
+    .node-circle-group {
+        .node-circle {}
+    }
+}

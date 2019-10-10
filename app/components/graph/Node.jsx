@@ -34,7 +34,7 @@ export default class Node extends React.Component {
     let nodeDomId = "node-" + this.props.node.id
 
     return <Draggable onDrag={handleDrag} >
-             <g id={nodeDomId} className="node-group">
+             <g id={nodeDomId} className="oligrapher-node">
                { renderNode(this.props.node) }
              </g>
            </Draggable>

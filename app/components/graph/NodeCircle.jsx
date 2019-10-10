@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-// import NodeModel from '../../models/Node'
 import { node as nodeDefaults } from '../../displayDefaults'
 
 const CLASS_NAME = "node-circle"
@@ -23,7 +22,7 @@ NodeCircle.propTypes = {
   radius:     PropTypes.number.isRequired,
   coords:     PropTypes.arrayOf(PropTypes.number).isRequired,
   bgColor:    PropTypes.string.isRequired,
-  draggable:   PropTypes.bool.isRequired
+  draggable:  PropTypes.bool.isRequired
 }
 
 NodeCircle.defaultProps = {
