@@ -37,7 +37,6 @@ Header.propTypes = {
 }
 
 const mapStateToProps = function(state) {
-  console.log(state)
   return { "title": state.attributes.title,
            "subtitle": state.attributes.subtitle,
            "user": state.attributes.user,

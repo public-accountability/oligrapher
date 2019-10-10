@@ -1,14 +1,14 @@
 import { generate as generateId } from 'shortid'
 import { setAttributes } from './'
 
-const SOURCES = ['custom', 'littlesis']
+export const nodeTypes = new Set(['circle', 'image', 'triangle'])
 
 export default class Node {
   id = null
   x = null
   y = null
   scale = 1
-  source = null
+  type = 'circle'
 
   constructor(attributes) {
     setAttributes(this, attributes)

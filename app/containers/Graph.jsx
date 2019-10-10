@@ -2,12 +2,12 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Svg from '../components/graph/Svg'
+import Node from '../components/graph/Node'
 import GraphModel from '../models/Graph'
 
-const renderNode = function(node) {
-  return <circle r="50" cx={node.x} cy={node.y} />
-}
 
+const renderNodes = nodes => Object.values(nodes)
+                                   .map(n => <Node key={n.id} node={n} />)
 
 export class Graph extends Component {
   static propTypes = {
@@ -18,7 +18,7 @@ export class Graph extends Component {
   render() {
     return <div id="oligrapher-graph">
              <Svg {...this.props.svgAttributes}>
-               { Object.values(this.props.graph.nodes).map(renderNode) }
+               { renderNodes(this.props.graph.nodes) }
              </Svg>
            </div>
   }
@@ -30,7 +30,7 @@ export class Graph extends Component {
 
 const mapStateToProps = function(state) {
   let divSize = [400, 600]
-  // console.log(state.graph)
+
   return {
     "graph": state.graph,
     "svgAttributes": {

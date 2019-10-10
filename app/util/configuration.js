@@ -20,6 +20,6 @@ export default function(userConfig) {
   config.settings.rootElement = getElementById(config.settings.domId)
   // Set the graph model.
   //  This will create a new blank graph if it doesn't yet exist
-  config.graph = new Graph(config.graph)
+  config.graph = new Graph(userConfig?.graph)
   return config
 }
