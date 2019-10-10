@@ -4,8 +4,9 @@ import NodeModel from '../../models/Node'
 import NodeCircle from './NodeCircle'
 import Draggable from 'react-draggable'
 
+
 const renderNode = function(node) {
-  return <NodeCircle />
+  return <NodeCircle node={node}/>
 }
 
 // const renderNode = function(node) {

@@ -9,6 +9,16 @@ describe("Node", function() {
     expect(node.scale).to.eql(1)
   })
 
+  it("get circle return attributes for <NodeCircle>", function(){
+    let node = new Node({x: 1, y: 2, scale: 1.5})
+    expect(node.circle).to.eql({
+      cx: 1,
+      cy: 2,
+      r: 37.5,
+      fill: '#ccc'
+    })
+  })
+
   it("Generates shortId", function() {
     let node = new Node()
     expect(node.id).to.be.a('string')

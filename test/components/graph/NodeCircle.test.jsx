@@ -1,12 +1,13 @@
 import React from 'react'
+import Node from '../../../app/models/Node'
 import NodeCircle from '../../../app/components/graph/NodeCircle'
 
 describe('<NodeCircle>', function() {
-  let coords = [20,30]
+  let node = new Node({x: 20, y: 30})
   let nodeCircle
 
   beforeEach(function(){
-    nodeCircle  = shallow(<NodeCircle coords={coords} />)
+    nodeCircle  = shallow(<NodeCircle node={node} />)
   })
 
   it("renders <g>", function(){
