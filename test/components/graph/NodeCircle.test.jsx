@@ -1,7 +1,6 @@
 import React from 'react'
 import NodeCircle from '../../../app/components/graph/NodeCircle'
 
-
 describe('<NodeCircle>', function() {
   let coords = [20,30]
   let nodeCircle
