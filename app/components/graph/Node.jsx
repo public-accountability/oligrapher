@@ -6,7 +6,7 @@ import Draggable from 'react-draggable'
 
 
 const renderNode = function(node) {
-  return <NodeCircle node={node}/>
+  return <NodeCircle node={node} />
 }
 
 // const renderNode = function(node) {
@@ -21,10 +21,9 @@ const renderNode = function(node) {
 //   }
 // }
 
-const handleDrag = (event, data) => {
-  // console.log('event', event)
-  // console.log('data', data)
-}
+const handleStart = function(event ,data)  {}
+const handleEnd = function(event, data) {}
+const handleDrag = function(event, data) {}
 
 export default class Node extends React.Component {
   static propTypes = {
