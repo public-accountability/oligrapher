@@ -3,11 +3,15 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Svg from '../components/graph/Svg'
 import Node from '../components/graph/Node'
+import Edge from '../components/graph/Edge'
 import GraphModel from '../models/Graph'
 
 
 const renderNodes = nodes => Object.values(nodes)
                                    .map(n => <Node key={n.id} node={n} />)
+
+const renderEdges = edges => Object.values(edges)
+                                    .map(e => <Edge key={e.id} edge={e} />)
 
 export class Graph extends Component {
   static propTypes = {
@@ -19,6 +23,7 @@ export class Graph extends Component {
     return <div id="oligrapher-graph">
              <Svg {...this.props.svgAttributes}>
                { renderNodes(this.props.graph.nodes) }
+               { renderEdges(this.props.graph.edges) }
              </Svg>
            </div>
   }

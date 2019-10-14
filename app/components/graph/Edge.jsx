@@ -8,8 +8,16 @@ export default class Edge extends React.Component {
   }
 
   render() {
-    return <g className="edge">
-           </g>
+    let pathAttributes = {
+      className: 'edge-path',
+      id: `path-${this.props.edge.id}`,
+      d: "M0,0 L100,100",
+      stroke: 'black'
+    }
 
+    return <g className="edge-group">
+             <path {...pathAttributes} >
+             </path>
+           </g>
   }
 }
