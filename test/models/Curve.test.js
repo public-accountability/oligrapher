@@ -2,7 +2,7 @@ import Curve from '../../app/models/Curve.js'
 
 describe('Curve', function() {
   let start = { x: 0, y: 0 }
-  let end =  { x: 10, y: 0}
+  let end =  { x: 10, y: 0 }
 
   it('sets start & end attributes', function() {
     const c = new Curve({ start, end })

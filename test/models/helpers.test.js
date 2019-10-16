@@ -13,8 +13,7 @@ describe('setAttributes', function() {
   })
 })
 
-
-describe.only('maybeSetValues', function() {
+describe('maybeSetValues', function() {
   it("does nothing is src or dest is not defined", function() {
     expect(() => maybeSetValues(undefined, {}, 'foo','bar'))
       .to.not.throw()
