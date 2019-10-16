@@ -1,6 +1,5 @@
-import omit from 'lodash/omit'
 import { createOligrapherStore, renderNewApplication } from './util/render'
-import configuration from './util/configuration'
+import stateInitalizer from './util/stateInitalizer'
 
 import './oligrapher.scss'
 
@@ -11,13 +10,21 @@ import './oligrapher.scss'
 
      var oli = new Oligrapher(your Configuration)`
 
-  See app/util/configuration or docs/configuration.js for a list of variables
+     The configuration option takes four optional keys:
+     hooks, graph, settings, initialState.
+
+
+  See app/util/defaultState for a list of variables
 */
 export default class Oligrapher {
   constructor(userConfig = {}) {
-    let config = configuration(userConfig)
-    this.config = omit(config, 'graph')
-    this.store = createOligrapherStore(config)
-    renderNewApplication(this.store, this.config.settings.rootElement)
+
+    let initialState = userConfig?.initialState || {}
+    initialState.settings = userConfig?.settings || {}
+    initialState.hooks = userConfig?.hooks || {}
+    initialState.graph = userConfig?.graph || {}
+
+    this.store = createOligrapherStore(stateInitalizer(initialState))
+    renderNewApplication(this.store, this.store.getState().settings.rootElement)
   }
 }
