@@ -11,7 +11,7 @@ import './oligrapher.scss'
      var oli = new Oligrapher(your Configuration)`
 
      The configuration option takes four optional keys:
-     hooks, graph, settings, initialState.
+     hooks, graph, attributes, settings, initialState.
 
 
   See app/util/defaultState for a list of variables
@@ -23,6 +23,7 @@ export default class Oligrapher {
     initialState.settings = userConfig?.settings || {}
     initialState.hooks = userConfig?.hooks || {}
     initialState.graph = userConfig?.graph || {}
+    initialState.attributes = userConfig?.attributes || {}
 
     this.store = createOligrapherStore(stateInitalizer(initialState))
     renderNewApplication(this.store, this.store.getState().settings.rootElement)

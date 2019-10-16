@@ -29,14 +29,14 @@ $header_menu_item_color_hover: #a6cee3;
 */
 #oligrapher-header {
     margin-bottom: 1em;
-    height: 200px;
+    height: 230px;
 
     display: flex;
     flex-direction: row;
 }
 
 #oligrapher-header-left-wrapper {
-    flex-grow: 1;
+    flex-grow: 2;
     #oligrapher-header-title-wrapper {}
     #oligrapher-header-attributions-wrapper {
         #oligrapher-header-attribution-user {}

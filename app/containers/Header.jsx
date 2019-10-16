@@ -19,7 +19,7 @@ export class Header extends Component {
     return <div id="oligrapher-header">
              <div id="oligrapher-header-left-wrapper">
                <Title title={this.props.title} subtitle={this.props.subtitle} />
-               <Attribution user={this.props.user} />
+               <Attribution user={this.props.user} date={this.props.date} />
              </div>
              <div id="oligrapher-header-right-wrapper">
                <HeaderMenu items={this.props.headerMenuItems} />
@@ -31,6 +31,7 @@ export class Header extends Component {
 Header.propTypes = {
   "title":      PropTypes.string,
   "subtitle":   PropTypes.string,
+  "date":       PropTypes.string,
   "user":       PropTypes.shape({ "name": PropTypes.string,
                                   "url":  PropTypes.string }),
   "headerMenuItems":  PropTypes.array
@@ -40,6 +41,7 @@ const mapStateToProps = function(state) {
   return { "title": state.attributes.title,
            "subtitle": state.attributes.subtitle,
            "user": state.attributes.user,
+           "date": state.attributes.date,
            "headerMenuItems": state.attributes.links }
 }
 
