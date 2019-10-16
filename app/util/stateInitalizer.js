@@ -33,11 +33,10 @@ const loadEdge = function(attributes, nodes) {
 
 */
 export default function stateInitalizer(serializedState) {
-  return produce(serializedState, draft => {
-    merge(draft, defaultState)
-    draft.graph.nodes = mapValues(draft.graph.nodes, n => new Node(n))
-    draft.graph.edges = mapValues(draft.graph.edges, e => loadEdge(e, draft.graph.nodes))
-    draft.graph = new Graph(draft.graph)
-    draft.settings.rootElement = getElementById(draft.settings.domId)
-  })
+  let state = merge({}, defaultState, serializedState)
+  state.graph.nodes = mapValues(state.graph.nodes, n => new Node(n))
+  state.graph.edges = mapValues(state.graph.edges, e => loadEdge(e, state.graph.nodes))
+  state.graph = new Graph(state.graph)
+  state.settings.rootElement = getElementById(state.settings.domId)
+  return state
 }
