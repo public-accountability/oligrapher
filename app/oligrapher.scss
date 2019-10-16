@@ -30,13 +30,13 @@ $header_menu_item_color_hover: #a6cee3;
 #oligrapher-header {
     margin-bottom: 1em;
     height: 230px;
-
     display: flex;
     flex-direction: row;
 }
 
 #oligrapher-header-left-wrapper {
     flex-grow: 2;
+    max-width: 60%;
     #oligrapher-header-title-wrapper {}
     #oligrapher-header-attributions-wrapper {
         #oligrapher-header-attribution-user {}
@@ -47,7 +47,7 @@ $header_menu_item_color_hover: #a6cee3;
 #oligrapher-header-right-wrapper {
     flex-grow: 0;
     margin-right: 1em;
-    margin-left: 1em;
+    margin-left: auto; /* This pushes the flex item to the right */
 
     #oligrapher-header-menu-wrapper {
         ul {
