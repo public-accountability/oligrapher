@@ -9,3 +9,13 @@ export function setAttributes(model, attributes) {
     }
   }
 }
+
+export function maybeSetValues(src, dest, ...keys) {
+  if (!(src && dest)) { return }
+
+  for (let key in keys) {
+    if (key in src) {
+      dest[key] = src[key]
+    }
+  }
+}

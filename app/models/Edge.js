@@ -1,15 +1,16 @@
 import { generate as generateId } from 'shortid'
 import { setAttributes } from './'
+import Curve from './Curve'
+
 
 export default class Edge {
   id = null
-  node1_id = null
-  node2_id = null
-  scale = 1
+  node1 = null
+  node2 = null
+  control = null
+  curve = null
   arrow = null
   dash = null
-  x = null
-  y = null
 
   constructor(attributes) {
     setAttributes(this, attributes)
@@ -17,8 +18,13 @@ export default class Edge {
     if (!this.id) {
       this.id = generateId()
     }
-  }
 
+    if (!this.curve) {
+      this.curve = new Curve({ start: this.node1,
+                               end: this.node2,
+                               control: this.control })
+    }
+  }
 
   get [Symbol.toStringTag]() {
     return 'Edge'

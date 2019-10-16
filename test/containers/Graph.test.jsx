@@ -3,7 +3,7 @@ import GraphModel from '../../app/models/Graph'
 import { Graph } from '../../app/containers/Graph'
 
 describe('<Graph>', function(){
-  const graph = new GraphModel();
+  const graph = new GraphModel()
   const svgAttributes = {
     viewPortWidth: 400,
     viewPortHeight: 600,

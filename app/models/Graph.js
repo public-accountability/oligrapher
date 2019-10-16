@@ -1,9 +1,23 @@
-import { setAttributes } from './'
+import { setAttributes, maybeSetValues } from './'
+import Edge from './Edge'
 import mapValues from 'lodash/mapValues'
+import produce from 'immer'
 
 import Node from './Node'
 // import Edge from './Edge'
 // import Caption from './Caption'
+
+const toEdge = function(attributes, nodes) {
+  if (attributes instanceof Edge) {
+    return attributes
+  }
+
+  return new Edge(produce(attributes, draftState => {
+    draftState['node1'] = nodes[draftState.node1_id]
+    draftState['node2'] = nodes[draftState.node2_id]
+  }))
+
+}
 
 export default class Graph {
   nodes = {}
@@ -14,16 +28,19 @@ export default class Graph {
   center = [0, 0]
 
   constructor(attributes) {
-    setAttributes(this, attributes)
-
     if (attributes?.nodes) {
       this.nodes = mapValues(attributes.nodes, n => new Node(n))
     }
 
-    // this.edges = mapValues(attributes.edges, e => new Edge(e))
-     // .captions = mapValues(attributes.captions, c => new Caption(c))
-  }
+    if (attributes?.edges) {
+      this.edges = mapValues(attributes.edges, e => toEdge(e, this.nodes))
+    }
 
+    if (attributes) {
+      maybeSetValues(attributes, this, 'annotations', 'zoom', 'center')
+    }
+
+  }
 
   get [Symbol.toStringTag]() {
     return 'Graph'
