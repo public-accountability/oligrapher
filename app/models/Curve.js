@@ -70,11 +70,11 @@ export default class Curve {
 
   // The string for the "d" attribute of an SVG Path
   get d() {
-    let start = `${this.start.x}, ${this.start.y}`
-    let control = `${this.control.x}, ${this.control.y}`
-    let end = `${this.end.x}, ${this.end.y}`
+    let start = `${this.start.x},${this.start.y}`
+    let control = `${this.control.x},${this.control.y}`
+    let end = `${this.end.x},${this.end.y}`
 
-    return `M ${start} Q ${control},${end}`
+    return `M ${start} Q ${control} ${end}`
   }
 }
 
@@ -82,8 +82,6 @@ export default class Curve {
 //     this.control = cacluateBezier(this.start, this.end, this.strength)
 //   }
 // }
-
-
 /*
 
 
