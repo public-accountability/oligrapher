@@ -4,10 +4,12 @@ import PropTypes from 'prop-types'
 export default function HeaderButtons({saveAction, discardAction}) {
   return <div className="oligrapher-header-buttons-wrapper">
 
-           <button className="oligrapher-save-btn" onClick={saveAction} >
+           <button name="save" onClick={saveAction} >
+             Save
            </button>
 
-           <button className="oligrapher-discard-btn" onClick={discardAction} >
+           <button name="discard" onClick={discardAction} >
+             Discard
            </button>
 
          </div>
