@@ -4,28 +4,41 @@ import { connect } from 'react-redux'
 
 import Attribution from '../components/Attribution'
 import Title from '../components/Title'
+import Subtitle from '../components/Subtitle'
 import HeaderMenu from '../components/HeaderMenu'
 
 /*
 
   |------------------------------------------------------------|
-  |  Title                              One of:                |
+  |  Title (#oligrapher-header-top)                            |                                  |
+  |------------------------------------------------------------|
+  | #oligrapher-header-bottom
+  |
+                                        One of:              ||
   |  Subtitle                              HeaderMenu          |
   |  Attribution                           HeaderButtons       |
   |------------------------------------------------------------|
 */
-export class Header extends Component {
-  render() {
+export function Header(props) {
     return <div id="oligrapher-header">
-             <div id="oligrapher-header-left-wrapper">
-               <Title title={this.props.title} subtitle={this.props.subtitle} />
-               <Attribution user={this.props.user} date={this.props.date} />
+
+             <div id="oligrapher-header-top">
+               <Title text={props.title} />
              </div>
-             <div id="oligrapher-header-right-wrapper">
-               <HeaderMenu items={this.props.headerMenuItems} />
+
+             <div id="oligrapher-header-bottom">
+
+               <div id="oligrapher-header-left-wrapper">
+                 <Subtitle text={props.subtitle} />
+                 <Attribution user={props.user} date={props.date} />
+               </div>
+
+               <div id="oligrapher-header-right-wrapper">
+                 <HeaderMenu items={props.headerMenuItems} />
+               </div>
+
              </div>
            </div>
-  }
 }
 
 Header.propTypes = {

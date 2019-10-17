@@ -13,15 +13,6 @@ $header_menu_item_color_hover: $link_color;
 $header_spacing_between_header: 0.5em;
 $header_bottom_border_color: #6e89a1;
 
-@mixin headerlink {
-    text-decoration: none;
-    color: $header_menu_item_color;
-
-    &:hover {
-        color: $header_menu_item_color_hover;
-    }
-}
-
 /*
    This is our outermost div.
 
@@ -37,11 +28,10 @@ $header_bottom_border_color: #6e89a1;
 }
 
 #oligrapher-header {
-    height: 230px;
+    /* height: 230px; */
     display: flex;
     flex-direction: column;
     font-family: sans-serif;
-
     padding-bottom: 1.2em;
     border-bottom: 1.75px solid $header_bottom_border_color;
 
@@ -83,7 +73,7 @@ $header_bottom_border_color: #6e89a1;
         #oligrapher-header-attribution-wrapper {
 
             a {
-                color: #2c63c8;
+                color: $link_color;
                 text-decoration: none;
                 &:hover {
                     text-decoration: underline;
@@ -109,7 +99,6 @@ $header_bottom_border_color: #6e89a1;
                 font-size: 10px;
                 font-weight: bold;
 
-
                 li {
                     line-height: 3em;
                     a {
@@ -124,7 +113,6 @@ $header_bottom_border_color: #6e89a1;
             }
         }
     }
-
 }
 
 #oligrapher-graph {
