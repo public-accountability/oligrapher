@@ -7,8 +7,20 @@
 */
 
 $font_color: black;
+$link_color: #2c63c8;
 $header_menu_item_color: $font_color;
-$header_menu_item_color_hover: #a6cee3;
+$header_menu_item_color_hover: $link_color;
+$header_spacing_between_header: 0.5em;
+$header_bottom_border_color: #6e89a1;
+
+@mixin headerlink {
+    text-decoration: none;
+    color: $header_menu_item_color;
+
+    &:hover {
+        color: $header_menu_item_color_hover;
+    }
+}
 
 /*
    This is our outermost div.
@@ -16,56 +28,103 @@ $header_menu_item_color_hover: #a6cee3;
    It's a flex container with two children: #oligrapher-header and #oligrapher-graph
 */
 #oligrapher-container {
+    margin: 0 auto;
     height: 100%;
-    width: 100%;
+    width: 90%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
-/*
-  This div is both a flex child from #oligrapher-container
-  and the flex parent of  #oligrapher-header-left-wrapper and #oligrapher-header-right-wrapper
-*/
 #oligrapher-header {
-    margin-bottom: 1em;
     height: 230px;
     display: flex;
-    flex-direction: row;
-}
+    flex-direction: column;
+    font-family: sans-serif;
 
-#oligrapher-header-left-wrapper {
-    flex-grow: 2;
-    max-width: 60%;
-    #oligrapher-header-title-wrapper {}
-    #oligrapher-header-attributions-wrapper {
-        #oligrapher-header-attribution-user {}
-        #oligrapher-header-attribution-date {}
+    padding-bottom: 1.2em;
+    border-bottom: 1.75px solid $header_bottom_border_color;
+
+    /* title and subtitle*/
+    h1 {
+        font-size: 42px;
+        margin-bottom: $header_spacing_between_header / 2;
+    }
+
+    h2 {
+        font-weight: normal;
+        font-size: 19px;
+        margin-top: $header_spacing_between_header / 2;
     }
 }
 
-#oligrapher-header-right-wrapper {
-    flex-grow: 0;
-    margin-right: 1em;
-    margin-left: auto; /* This pushes the flex item to the right */
+#oligrapher-header-top {}
 
-    #oligrapher-header-menu-wrapper {
-        ul {
-            list-style-type: none;
-            padding: 0;
-            li {
-                a {
-                    text-decoration: none;
-                    color: $header_menu_item_color;
-                    &:hover {
-                        color: $header_menu_item_color_hover;
+#oligrapher-header-bottom {
+    display: flex;
+    flex-direction: row;
+
+    #oligrapher-header-left-wrapper {
+        flex-grow: 2;
+        padding-right: 1.5em;
+
+        @media (min-width: 600px) {
+            padding-right: 0;
+            max-width: 70%;
+        }
+
+        @media (min-width: 900px) {
+            padding-right: 0;
+            max-width: 60%;
+        }
+
+        #oligrapher-header-title-wrapper {}
+
+        #oligrapher-header-attribution-wrapper {
+
+            a {
+                color: #2c63c8;
+                text-decoration: none;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+
+            #oligrapher-header-attribution-user {}
+            #oligrapher-header-attribution-date {}
+        }
+    }
+
+    #oligrapher-header-right-wrapper {
+        flex-grow: 0;
+        margin-right: 1em;
+        margin-left: auto; /* This pushes the flex item to the right */
+
+
+        #oligrapher-header-menu-wrapper {
+            ul {
+                list-style-type: none;
+                padding: 0;
+                text-transform: uppercase;
+                font-size: 10px;
+                font-weight: bold;
+
+
+                li {
+                    line-height: 3em;
+                    a {
+                        text-decoration: none;
+                        color: $header_menu_item_color;
+
+                        &:hover {
+                            color: $header_menu_item_color_hover;
+                        }
                     }
                 }
-
-
             }
         }
     }
+
 }
 
 #oligrapher-graph {
