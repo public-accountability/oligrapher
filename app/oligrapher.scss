@@ -90,6 +90,11 @@ $header_bottom_border_color: #6e89a1;
         margin-right: 1em;
         margin-left: auto; /* This pushes the flex item to the right */
 
+        .oligrapher-header-buttons-wrapper {
+            button {
+            }
+        }
+
 
         #oligrapher-header-menu-wrapper {
             ul {

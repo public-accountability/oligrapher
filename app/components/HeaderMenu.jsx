@@ -7,6 +7,7 @@ export default function HeaderMenu(props) {
            <ul>{
              props.items.map(item => <HeaderMenuItem key={item.text}
                                                      text={item.text}
+                                                     action={item.action}
                                                      url={item.url} />)
            }
            </ul>

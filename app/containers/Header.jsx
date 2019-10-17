@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
@@ -14,7 +14,7 @@ import HeaderMenu from '../components/HeaderMenu'
   |------------------------------------------------------------|
   | #oligrapher-header-bottom
   |
-                                        One of:              ||
+  |                                      One of:               |
   |  Subtitle                              HeaderMenu          |
   |  Attribution                           HeaderButtons       |
   |------------------------------------------------------------|
@@ -57,6 +57,5 @@ const mapStateToProps = function(state) {
            "date": state.attributes.date,
            "headerMenuItems": state.attributes.links }
 }
-
 
 export default connect(mapStateToProps)(Header)
