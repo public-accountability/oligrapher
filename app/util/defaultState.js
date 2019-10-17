@@ -33,7 +33,7 @@ export default {
   // are on the `.display` attribute of those objects.
   // This section of the state is not sync'd with the server;
   // it mostly used internally to implement the editor UI.
-  // Many actions trigger a reconfiguration of these meneus
+  // Many actions trigger a reconfiguration of these menus
   display: {
     zoom: 1,
     highlight: {
@@ -46,17 +46,22 @@ export default {
       edges: [],
       captions: []
     },
-    components: {
-      header: null,
-      map: null,
-      annotations: null,
-      editor: null,
-      modeToggle: null,
-      nodeMenu: null,
-      popup: null,
-      settings: null
+    modes: {
+      editor: false,
+      story: false
     }
   },
+
+  // {
+  //     header: null,
+  //     map: null,
+  //     annotations: null,
+  //     editor: null,
+  //     modeToggle: null,
+  //     nodeMenu: null,
+  //     popup: null,
+  //     settings: null
+  //   }
 
   // Global settings
   // Unlike attributes and display settings, there are no actions available

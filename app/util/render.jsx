@@ -12,19 +12,18 @@ import Root from '../containers/Root'
   Returns an Redux store initialized configured oligrapher state
   See util/configuration for the default values.
 
-  If preloadedState.debug is true, redux's logger is enabled.
+  If preloadedState.settings.debug is true, redux's logger is enabled.
 */
 export const createOligrapherStore = preloadedState => {
   let middleware = [thunk]
 
-  if (preloadedState.debug) {
+  if (preloadedState.settings.debug) {
     middleware.push(createLogger())
   }
 
   return createStore(reducers,
                      preloadedState,
                      applyMiddleware(...middleware))
-
 }
 
 export const renderNewApplication = (store, element) => {

@@ -3,6 +3,7 @@ import { Header } from '../../app/containers/Header'
 import Attribution from '../../app/components/Attribution'
 import Title from '../../app/components/Title'
 import HeaderMenu from '../../app/components/HeaderMenu'
+import HeaderRight from '../../app/containers/HeaderRight'
 
 describe('<Header>', function() {
   let header
@@ -11,9 +12,7 @@ describe('<Header>', function() {
     header = shallow(<Header
                        title="Example Title"
                        subtitle="Example Subtitle"
-                       user={{"name": "Example UserName", "url": "https://example.com"}}
-                       menuItems={[ { text: "Edit", "url": "https://example.com/edit" } ]}
-                   />)
+                       user={{"name": "Example UserName", "url": "https://example.com"}}/>)
   })
 
   it('has container div', function()  {
@@ -28,8 +27,8 @@ describe('<Header>', function() {
     expect(header.find(Attribution).length).to.equal(1)
   })
 
-  it('has menu headers', function(){
-    expect(header.find(HeaderMenu).length).to.equal(1)
+  it('has HeaderRight', function(){
+    expect(header.find(HeaderRight).length).to.equal(1)
   })
 
   it('has left/right wrappers', function() {
