@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import curry from 'lodash/curry'
 import { generate as generateId } from 'shortid'
 import { setAttributes } from './'
 import { node as nodeDefaults } from '../../app/displayDefaults'
@@ -13,12 +13,15 @@ export default class Node {
   type = 'circle'
 
   constructor(attributes) {
-    setAttributes(this, attributes)
+    this.setAttributes = curry(setAttributes)(this)
+
+    this.setAttributes(attributes)
 
     if (!this.id) {
       this.id = generateId()
     }
   }
+
 
   get circle() {
     return {
@@ -29,12 +32,11 @@ export default class Node {
     }
   }
 
-  /* Static Methods */
-
-  // Helper that for component PropTypes
-  static get propType() {
-    return PropTypes.instanceOf(this)
+  get [Symbol.toStringTag]() {
+    return 'Node'
   }
+
+  /* Static Methods */
 
   // return set of all possible nodes
   static get nodeTypes() {
