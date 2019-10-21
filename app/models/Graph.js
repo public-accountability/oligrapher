@@ -1,14 +1,8 @@
-import { setAttributes, maybeSetValues } from './'
-import Edge from './Edge'
-import mapValues from 'lodash/mapValues'
-import produce from 'immer'
+import { setAttributes  } from './'
+import values from 'lodash/values'
+import filter from 'lodash/filter'
 
 const missingNodeError= id => new Error(`Could not find node with id ${id}`)
-
-
-import Node from './Node'
-// import Edge from './Edge'
-// import Caption from './Caption'
 
 export default class Graph {
   nodes = {}
@@ -32,12 +26,17 @@ export default class Graph {
     this.nodes[id].setAttributes(data)
   }
 
+  edgesOf(nodeId) {
+    return filter(
+      values(this.edges),
+      edge => edge.node1.id === nodeId || edge.node2.id === nodeId
+    )
+  }
+
   get [Symbol.toStringTag]() {
     return 'Graph'
   }
 }
-
-
 
 
 // import { Node } from './Node';
