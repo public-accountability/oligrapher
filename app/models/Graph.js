@@ -3,6 +3,9 @@ import Edge from './Edge'
 import mapValues from 'lodash/mapValues'
 import produce from 'immer'
 
+const missingNodeError= id => new Error(`Could not find node with id ${id}`)
+
+
 import Node from './Node'
 // import Edge from './Edge'
 // import Caption from './Caption'
@@ -19,6 +22,14 @@ export default class Graph {
     if (attributes) {
       setAttributes(this, attributes)
     }
+  }
+
+  // String, Object
+  updateNode(id, data) {
+    if (!this.nodes[id]) {
+      throw missingNodeError(id)
+    }
+    this.nodes[id].setAttributes(data)
   }
 
   get [Symbol.toStringTag]() {
