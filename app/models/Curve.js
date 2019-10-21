@@ -3,7 +3,7 @@ import { maybeSetValues } from './'
 
 // (Node, Node) --> Node
 function leftNode(a, b) {
-  if (a.x < b.x) {
+  if (a.x <= b.x) {
     return a
   } else {
     return b
