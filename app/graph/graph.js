@@ -46,12 +46,17 @@ export const newGraph = function(attributes = {}) {
 }
 
 export function api(graph) {
+  if (!graph) {
+    graph = newGraph()
+  }
+
   return {
-    graph:      () => clone(graph),
-    addNode:    addNode(graph),
-    removeNode: removeNode(graph),
-    updateNode: updateNode(graph),
-    addEdge:    addEdge(graph),
+    graph:      () => graph,
+    addNode:    (node) => api(addNode(graph, node)),
+    removeNode: (node) => api(removeNode(graph, node)),
+    updateNode: (node) => api(updateNode(graph, node)),
+    addEdge:    (edge) => api(addEdge(graph, edge)),
+    removeEdge: (edge) => api(removeEdge(graph, edge)),
     edgesOf:    edgesOf(graph)
   }
 }
