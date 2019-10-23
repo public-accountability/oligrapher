@@ -1,9 +1,8 @@
-import clone from 'lodash/clone'
 import curry from 'lodash/curry'
-import values from 'lodash/values'
 import filter from 'lodash/filter'
 import merge from 'lodash/merge'
 import produce from 'immer'
+import values from 'lodash/values'
 
 const defaultGraph = {
   nodes: {},
@@ -51,13 +50,15 @@ export function api(graph) {
   }
 
   return {
+    // These functions stop api from being able to be chained
     graph:      () => graph,
+    edgesOf:    edgesOf(graph),
+    // Updates the graph and returns a new copy, still wrapped with api()
     addNode:    (node) => api(addNode(graph, node)),
     removeNode: (node) => api(removeNode(graph, node)),
     updateNode: (node) => api(updateNode(graph, node)),
     addEdge:    (edge) => api(addEdge(graph, edge)),
-    removeEdge: (edge) => api(removeEdge(graph, edge)),
-    edgesOf:    edgesOf(graph)
+    removeEdge: (edge) => api(removeEdge(graph, edge))
   }
 }
 

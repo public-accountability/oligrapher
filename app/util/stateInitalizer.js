@@ -21,16 +21,12 @@ const loadEdge = function(attributes, nodes) {
 
 
 /*
-  Transforms oligrapher's serialized state (plain json)
-  into correct format and/or converts legacy data.
+  Transforms oligrapher's serialized state (plain json) into correct format
+  and/or converts legacy data. Serialization here just means some objects,
+  particularly graph elements, are turned into our custom classes.
 
-  Serialization really just means some objects, particularly
-  graph elements, are turned into our custom classes.
-
-  This looks a lot like a reducer, but it's intended
-  to be called once upon initialization from
-  an external data source
-
+  This looks a lot like a reducer, but it's intended to be called once upon
+  initialization from an external data source.
 */
 export default function stateInitalizer(serializedState) {
   let state = merge({}, defaultState, serializedState)
