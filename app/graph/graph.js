@@ -14,16 +14,24 @@ const defaultGraph = {
   center: [0, 0]
 }
 
-export const addNode = produce((graph, node) => {
+export const addNode = produce( (graph, node) => {
   graph.nodes[node.id] = node
 })
 
-export const removeNode = produce((graph, node) => {
+export const removeNode = produce( (graph, node) => {
   delete graph.nodes[node.id]
 })
 
-export const updateNode = produce((graph, node) => {
+export const updateNode = produce( (graph, node) => {
   graph.nodes[node.id] = merge(graph.nodes[node.id], node)
+})
+
+export const addEdge = produce( (graph, edge) => {
+  graph.edges[edge.id] = edge
+})
+
+export const removeEdge = produce( (graph, edge) => {
+  delete graph.edges[edge.id]
 })
 
 export const edgesOf = curry( (graph, nodeId) => {
@@ -43,15 +51,18 @@ export function api(graph) {
     addNode:    addNode(graph),
     removeNode: removeNode(graph),
     updateNode: updateNode(graph),
+    addEdge:    addEdge(graph),
     edgesOf:    edgesOf(graph)
   }
 }
 
 export default {
-  "new": newGraph,
-  "api": api,
-  "addNode": addNode,
+  "new":        newGraph,
+  "api":        api,
+  "addNode":    addNode,
   "removeNode": removeNode,
   "updateNode": updateNode,
-  "edgesOf": edgesOf
+  "addEdge":    addEdge,
+  "removeEdge": removeEdge,
+  "edgesOf":    edgesOf
 }

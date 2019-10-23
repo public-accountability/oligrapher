@@ -6,6 +6,7 @@ describe('Node', function() {
     it("sets id", function() {
       expect(Node.new().id).to.be.ok
     })
+
     it("merges in values", function() {
       let n = Node.new({display: { x: 1, y: 2}})
       expect(n.display.x).to.eql(1)
