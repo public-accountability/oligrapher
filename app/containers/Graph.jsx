@@ -2,28 +2,19 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Svg from '../components/graph/Svg'
-import Node from '../components/graph/Node'
-import Edge from '../components/graph/Edge'
-import GraphModel from '../models/Graph'
-
-
-const renderNodes = nodes => Object.values(nodes)
-                                   .map(n => <Node key={n.id} node={n} />)
-
-const renderEdges = edges => Object.values(edges)
-                                    .map(e => <Edge key={e.id} edge={e} />)
+import Nodes from './Nodes'
+import Edges from './Edges'
 
 export class Graph extends Component {
   static propTypes = {
-    graph: PropTypes.instanceOf(GraphModel).isRequired,
     svgAttributes: PropTypes.object.isRequired
   }
 
   render() {
     return <div id="oligrapher-graph">
-             <Svg {...this.props.svgAttributes}>
-               { renderNodes(this.props.graph.nodes) }
-               { renderEdges(this.props.graph.edges) }
+             <Svg {...this.props.svgAttributes} >
+               <Nodes />
+               <Edges />
              </Svg>
            </div>
   }
@@ -35,14 +26,14 @@ export class Graph extends Component {
 
 const mapStateToProps = function(state) {
   let divSize = [400, 600]
+   let center = state.graph.center
 
   return {
-    "graph": state.graph,
     "svgAttributes": {
       viewPortWidth: divSize[0],
       viewPortHeight: divSize[1],
-      viewBoxMinX: state.graph.center[0],
-      viewBoxMinY: state.graph.center[1],
+      viewBoxMinX: center[0],
+      viewBoxMinY: center[1],
       viewBoxWidth: divSize[0],
       viewBoxHeight: divSize[1],
       outermost: true
@@ -50,6 +41,18 @@ const mapStateToProps = function(state) {
   }
 
 }
+
+// const mapDispatchToProps = function(dispatch) {
+//   return {
+//     moveNodeAction: (nodeId, delta) => {
+//       dispatch({
+//         type: 'MOVE_NODE',
+//         id: nodeId,
+//         delta: delta
+//       })
+//     }
+//   }
+// }
 
 export default connect(mapStateToProps)(Graph)
 

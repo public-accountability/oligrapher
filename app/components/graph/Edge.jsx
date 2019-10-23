@@ -1,17 +1,16 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import EdgeModel from '../../models/Edge'
-
 import EdgeLine from './EdgeLine'
 
-export default class Edge extends Component {
-  static propTypes = {
-    edge: PropTypes.instanceOf(EdgeModel).isRequired
-  }
+export default function Edge({edge, curve}) {
+  let edgeDomId = `edge-${edge.id}`
 
-  render() {
-    return <g className="edge-group">
-             <EdgeLine curve={this.props.edge.curve} />
-           </g>
-  }
+  return <g className="edge-group" id={edgeDomId}>
+           <EdgeLine curve={curve} />
+         </g>
+}
+
+Edge.propTypes = {
+    edge: PropTypes.object.isRequired,
+    curve: PropTypes.string.isRequired
 }

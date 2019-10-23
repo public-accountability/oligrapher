@@ -1,6 +1,7 @@
 import merge from 'lodash/merge'
+import pick from 'lodash/pick'
 import { generate } from 'shortid'
-import { curveString } from '../util/curve'
+import { curveString, calculateCurve } from '../util/curve'
 
 const edgeDefaults = {
   id: null,
@@ -18,6 +19,15 @@ const edgeDefaults = {
   }
 }
 
+// Edge ---> {x, y} || null
+function controlPoint(edge) {
+  if (edge.display.cx && edge.display.cy) {
+    return { x: edge.display.cx, y: edge.display.cy }
+  } else {
+    return null
+  }
+}
+
 export function newEdge(attributes = {}) {
   let edge = merge({}, edgeDefaults, attributes)
 
@@ -28,25 +38,15 @@ export function newEdge(attributes = {}) {
   return edge
 }
 
-export function curve(nodes, edge) {
+export function edgeProps(nodes, edge) {
+  let key = edge.id
   let node1 = nodes[edge.node1_id]
   let node2 = nodes[edge.node2_id]
-  let control = { x: edge.display.cx, y: edge.display.cy }
-  return curveString(node1, node2, control)
-}
-
-
-export function edgeProps(graph, edge) {
-  return {
-    key: edge.id,
-    edge: edge,
-    curve: curve(graph.nodes, edge),
-    node1: graph.nodes[edge.node1_id],
-    node2: graph.nodes[edge.node2_id]
-  }
+  let curve = calculateCurve(node1, node2, controlPoint(edge))
+  return { key, edge, node1, node2, curve }
 }
 
 export default {
   "new": newEdge,
-  "curve": curve
+  "edgeProps": edgeProps
 }
