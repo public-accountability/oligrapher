@@ -1,10 +1,13 @@
 import { setAttributes  } from './'
+import {immerable} from "immer"
 import values from 'lodash/values'
 import filter from 'lodash/filter'
 
 const missingNodeError= id => new Error(`Could not find node with id ${id}`)
 
 export default class Graph {
+  [immerable] = true
+
   nodes = {}
   edges = {}
   captions = {}
@@ -18,12 +21,20 @@ export default class Graph {
     }
   }
 
+  addNode(node) {
+    this.nodes[node.id] = node
+  }
+
   // String, Object
   updateNode(id, data) {
-    if (!this.nodes[id]) {
-      throw missingNodeError(id)
-    }
+    if (!this.nodes[id]) { throw missingNodeError(id) }
     this.nodes[id].setAttributes(data)
+  }
+
+  // Moves a node and it's connected edges
+  moveNode(id, delta) {
+    this.nodes[id].move(delta)
+    this.edgesOf(id).forEach(e => this.edges[e.id].updateNode(this.nodes[id]))
   }
 
   edgesOf(nodeId) {

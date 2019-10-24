@@ -1,14 +1,14 @@
 import { generate as generateId } from 'shortid'
 import { setAttributes } from './'
 import Curve from './Curve'
-
+import { immerable } from "immer"
 
 export default class Edge {
+  [immerable] = true
   id = null
-  node1 = null
-  node2 = null
+  node1_id = null
+  node2_id = null
   control = null
-  curve = null
   arrow = null
   dash = null
 
@@ -17,12 +17,6 @@ export default class Edge {
 
     if (!this.id) {
       this.id = generateId()
-    }
-
-    if (!this.curve) {
-      this.curve = new Curve({ start: this.node1,
-                               end: this.node2,
-                               control: this.control })
     }
   }
 

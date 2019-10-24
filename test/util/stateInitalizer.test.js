@@ -1,6 +1,7 @@
+import values from 'lodash/values'
 import * as helpers from '../../app/helpers'
+import Node from '../../app/graph/node'
 import stateInitalizer from '../../app/util/stateInitalizer'
-import Graph from '../../app/models/Graph'
 
 describe('stateInitalizer', function() {
   const fakeElement = { height: 100, width: 100 }
@@ -13,21 +14,19 @@ describe('stateInitalizer', function() {
     helpers.getElementById.restore()
   })
 
+  let node = Node.new()
 
   let serializedState = {
     graph: {
       nodes: {
-        'test1': {
-          x: 1,
-          y: 1,
-          id: 'test1'
-        }
+        [node.id]: node
       }
     }
   }
 
   it('initializes the graph', function(){
     let initialState = stateInitalizer(serializedState)
-    expect(initialState.graph).to.be.an.instanceOf(Graph)
+    expect(values(initialState.graph.nodes)).to.have.lengthOf(1)
+    expect(initialState.graph.edges).to.eql({})
   })
 })

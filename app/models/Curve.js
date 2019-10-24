@@ -44,6 +44,12 @@ function defaultControlPoint(node1, node2) {
 
 }
 
+
+// export default function curve(node1, node2, control = null) {
+
+// }
+
+
 /*
   This class represents the curve used by the <path> element to draw edges
   The curve is a Quadratic Bezier curve.
@@ -58,7 +64,7 @@ function defaultControlPoint(node1, node2) {
 export default class Curve {
   start = null
   end = null
-  control = null  // a default control point is calculated if not provided
+  control = null
 
   constructor(attributes) {
     maybeSetValues(attributes, this, 'start', 'end', 'control')

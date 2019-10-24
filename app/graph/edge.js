@@ -1,7 +1,6 @@
 import merge from 'lodash/merge'
-import pick from 'lodash/pick'
 import { generate } from 'shortid'
-import { curveString, calculateCurve } from '../util/curve'
+import { calculateCurve } from '../util/curve'
 
 const edgeDefaults = {
   id: null,

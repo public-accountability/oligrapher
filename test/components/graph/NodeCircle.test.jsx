@@ -1,9 +1,10 @@
 import React from 'react'
+import { newNode } from '../../../app/graph/node'
 import Node from '../../../app/models/Node'
 import NodeCircle from '../../../app/components/graph/NodeCircle'
 
 describe('<NodeCircle>', function() {
-  let node = new Node({x: 20, y: 30})
+  let node = newNode({display: {x: 20, y: 30}})
   let nodeCircle
 
   beforeEach(function(){
