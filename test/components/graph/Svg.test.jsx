@@ -3,13 +3,15 @@ import Svg from '../../../app/components/graph/Svg'
 
 describe('<Svg>', function() {
   let props = {
-      viewPortWidth: 10,
-      viewPortHeight: 10,
-      viewBoxMinX: 1,
-      viewBoxMinY: 2,
-      viewBoxWidth: 3,
-      viewBoxHeight: 4
+    width: 10,
+    height: 10,
+    viewBox: {
+      minX: 1,
+      minY: 2,
+      w: 3,
+      h: 4
     }
+  }
 
   it('sets viewBox string', function() {
     let svg = shallow(<Svg  {...props}><div></div></Svg>)

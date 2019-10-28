@@ -156,9 +156,13 @@ g.oligrapher-node.react-draggable
         circle.node-circle
 */
 
-
 .oligrapher-node {
     .node-circle-group {
         .node-circle {}
     }
+}
+
+
+.react-draggable-dragging {
+    cursor: grabbing;
 }

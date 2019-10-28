@@ -63,6 +63,51 @@ export function api(graph) {
   }
 }
 
+export function computeViewBox(nodes = [], zoom = 1) {
+  const defaultViewBox = { minX: 0, minY: 0,  w: 600, h: 600 }
+  const padding = 100
+
+    if (nodes.length === 0) {
+    return defaultViewBox
+  }
+
+  // Get the X and Y values of all the nodes
+  const xValues = nodes.map(n => n.display.x)
+  const yValues = nodes.map(n => n.display.y)
+  // Calculate the maximum and minimum X/Y values
+  const minNodeX = Math.min(...xValues)
+  const minNodeY = Math.min(...yValues)
+  const maxNodeX = Math.max(...xValues)
+  const maxNodeY = Math.max(...yValues)
+
+  // Subtract padding and calculate ViewBox
+  const minX = minNodeX - padding
+  const minY = minNodeY - padding
+  const w = maxNodeX - minNodeX + (padding * 2)
+  const h = maxNodeY - minNodeY + (padding * 2)
+
+  const viewBox = { minX, minY, w, h }
+
+  // We can return here if the zoom is 1
+  if (zoom === 1) {
+    return viewBox
+  }
+
+  // Update viewBox according to zoom settings
+  const zoomW = w / zoom
+  const zoomH = h / zoom
+  const zoomMinX = minX + (w / 2) - (zoomW / 2)
+  const zoomMinY = minY + (h / 2) - (zoomH / 2)
+
+  return {
+    minX: zoomMinX,
+    minY: zoomMinY,
+    w: zoomW,
+    h: zoomH
+  }
+}
+
+
 export default {
   "new":        newGraph,
   "api":        api,
