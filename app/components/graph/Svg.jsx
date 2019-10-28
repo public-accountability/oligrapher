@@ -6,12 +6,12 @@ import PropTypes from 'prop-types'
 */
 export default function Svg(props) {
   let svgAttributes = {
-    height: props.viewPortHeight,
-    width: props.viewPortWidth
+    height: props.height,
+    width: props.width,
   }
 
   svgAttributes.viewBox = [
-    props.viewBoxMinX, props.viewBoxMinY, props.viewBoxWidth, props.viewBoxHeight
+    props.viewBox.minX, props.viewBox.minY, props.viewBox.w, props.viewBox.h
   ].join(' ')
 
   if (props.outermost) {
@@ -24,19 +24,21 @@ export default function Svg(props) {
 }
 
 Svg.propTypes = {
-  viewPortWidth:  PropTypes.number.isRequired,
-  viewPortHeight: PropTypes.number.isRequired,
-  viewBoxMinX:    PropTypes.number.isRequired,
-  viewBoxMinY:    PropTypes.number.isRequired,
-  viewBoxWidth:   PropTypes.number.isRequired,
-  viewBoxHeight:  PropTypes.number.isRequired,
+  viewBox: PropTypes.shape({
+    minX: PropTypes.number.isRequired,
+    minY: PropTypes.number.isRequired,
+    w: PropTypes.number.isRequired,
+    h: PropTypes.number.isRequired
+  }),
+  height: PropTypes.string.isRequired,
+  width: PropTypes.string.isRequired,
   outermost:      PropTypes.bool.isRequired,
   children:       PropTypes.node.isRequired
 }
 
 
 Svg.defaultProps = {
-  viewBoxMinX: 0,
-  viewBoxMinY: 0,
+  height: '500px',
+  width: '100%',
   outermost: false
 }

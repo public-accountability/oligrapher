@@ -42,6 +42,7 @@ export function edgeProps(nodes, edge) {
   let node1 = nodes[edge.node1_id]
   let node2 = nodes[edge.node2_id]
   let curve = calculateCurve(node1, node2, controlPoint(edge))
+  console.log({ key, edge, node1, node2, curve })
   return { key, edge, node1, node2, curve }
 }
 

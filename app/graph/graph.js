@@ -50,10 +50,11 @@ export function api(graph) {
   }
 
   return {
-    // These functions stop api from being able to be chained
+    // These functions stop the api from being able to be chained
     graph:      () => graph,
     edgesOf:    edgesOf(graph),
     // Updates the graph and returns a new copy, still wrapped with api()
+    // call .graph() to get the graph
     addNode:    (node) => api(addNode(graph, node)),
     removeNode: (node) => api(removeNode(graph, node)),
     updateNode: (node) => api(updateNode(graph, node)),
