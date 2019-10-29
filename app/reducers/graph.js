@@ -1,19 +1,47 @@
-import { LOAD_GRAPH, SHOW_GRAPH, NEW_GRAPH,
-         MOVE_NODE, MOVE_EDGE, MOVE_CAPTION,
-         SWAP_NODE_HIGHLIGHT, SWAP_EDGE_HIGHLIGHT, SWAP_CAPTION_HIGHLIGHT,
-         ADD_NODE, ADD_EDGE, ADD_CAPTION, ADD_SURROUNDING_NODES,
-         ADD_INTERLOCKS,
-         DELETE_NODE, DELETE_EDGE, DELETE_CAPTION, DELETE_SELECTION, DELETE_ALL,
-         UPDATE_NODE, UPDATE_EDGE, UPDATE_CAPTION,
-         PRUNE_GRAPH, LAYOUT_CIRCLE,
-         SET_HIGHLIGHTS, TOGGLE_EDIT_TOOLS } from '../actions';
+import Graph from '../graph/graph'
+// import Graph from '../models/Graph'
+
+// {
+//   type: 'UPDATE_NODE'
+//   id: '<nodeid>'
+//   data: {}
+// }
+
+// {
+//   type: 'MOVE_NODE'
+//   id: '<nodeid>'
+//   delta: { x: Number, y: Number}
+// }
+
+export default function(graph = null, action) {
+  switch(action.type) {
+  case 'MOVE_NODE':
+    return Graph.moveNode(graph, action.id, action.delta)
+  default:
+    return graph
+  }
+}
+
+
+
+
+
+// import { LOAD_GRAPH, SHOW_GRAPH, NEW_GRAPH,
+//          MOVE_NODE, MOVE_EDGE, MOVE_CAPTION,
+//          SWAP_NODE_HIGHLIGHT, SWAP_EDGE_HIGHLIGHT, SWAP_CAPTION_HIGHLIGHT,
+//          ADD_NODE, ADD_EDGE, ADD_CAPTION, ADD_SURROUNDING_NODES,
+//          ADD_INTERLOCKS,
+//          DELETE_NODE, DELETE_EDGE, DELETE_CAPTION, DELETE_SELECTION, DELETE_ALL,
+//          UPDATE_NODE, UPDATE_EDGE, UPDATE_CAPTION,
+//          PRUNE_GRAPH, LAYOUT_CIRCLE,
+//          SET_HIGHLIGHTS, TOGGLE_EDIT_TOOLS } from '../actions';
 // import { Graph } from '../models/Graph';
 // import { Edge } from '../models/Edge';
 
 
-export default function graph(state = null, action) {
-  return state;
-}
+// export default function graph(state = null, action) {
+//   return state;
+// }
 // export default function graph(state = null, action) {
 //   let newState, graph;
 
