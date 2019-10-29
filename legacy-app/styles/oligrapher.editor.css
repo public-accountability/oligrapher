@@ -1,0 +1,326 @@
+#oligrapherEditorContainer:focus, 
+#oligrapherEditorContainer div:focus, 
+#oligrapherEditorContainer button:not(#zoomIn, #zoomOut):focus,
+#oligrapherEditorContainer input[type="checkbox"]:focus {
+  outline: none;
+  background-color: #f8f8f8;
+}
+
+#oligrapherEditorContainer button:not(.nodeColorInputClearer) {
+  background-color: #f8f8f8;
+}
+
+#zoomButtons {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+#zoomOut {
+  margin-top: 5px;
+}
+
+#zoomButtons button {
+  display: block;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0);
+  border: 0px solid #ddd;
+  cursor: pointer;
+  padding: 0px;
+  color: #666;
+  font-size: 16px;
+}
+
+#zoomButtons button:focus {
+  outline: none;
+}
+
+button#toggleEditTools {
+  position: absolute;
+  top: 85px;
+  left: 15px;
+  border: 1px solid #ccc;
+  background-color: #fff;  
+  padding-top: 7px;
+  width: 32px;
+  outline: none;
+}
+
+#buttons {
+  position: absolute;
+  top: 15px;
+  left: 60px;
+  width:250px;
+  pointer-events: none;
+}
+
+#buttons .buttonGroup {
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  pointer-events: all;
+}
+
+#addNodeInput {
+  position: relative;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+#addInterlocksButton {
+  margin-left: 10px;
+}
+
+.addNodeResults {
+  display: block;
+}
+
+#deleteSelected {
+    top: 32px;
+    position: absolute;
+    z-index: 1; 
+}
+
+.editForm.nodeDelete {
+  margin-top: 120px;
+}
+
+.editForm.edgeDelete {
+  margin-top: 140px;
+}
+
+.editForm {
+  position: absolute;
+  display: inline-block;
+  z-index: 20;
+  top: 15px;
+  right: 15px;
+  margin: 0 auto;
+  text-align: right;
+}
+
+.editForm h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.editForm input:not([type='checkbox']), .editForm select {
+  width: 150px;
+}
+
+#addEdgeForm input, #addEdgeForm select {
+  margin-bottom: 10px;
+}
+
+#addConnectedNodes {
+  margin-top: 93px;
+  z-index: 2;
+}
+
+#addConnectedNodesNum {
+  width: 40px;
+}
+
+#addConnectedNodes select {
+  margin-left: 5px;
+}
+
+.addNodeInput {
+  margin-bottom: 5px;
+}
+
+.addNodeResult {
+  margin-top: 3px;
+}
+
+.addNodeResult {
+  color: #008;
+  cursor: pointer;
+}
+
+#addEdgeForm {
+}
+
+#addEdgeForm input, #addEdgeForm select {
+  margin-bottom: 5px;
+}
+
+#helpScreen {
+  background: white;
+  width: 400px;
+  padding: 20px;
+  border-radius: 5px;
+  position: absolute;
+  z-index: 20;
+  top: 20px;
+  right: 20px;
+  margin: 0 auto;
+  box-shadow: 0px 0px 20px #888;
+}
+
+#helpScreen h3 {
+  margin-top: 0;
+}
+
+.updateForm .form-control {
+  margin-bottom: 10px;
+}
+
+.updateForm input, .updateForm .nodeColorInputWrapper {
+    margin-right: 0.25em;
+}
+
+#nodeUrlInput {
+  width: 363px;
+  float: right;
+}
+
+.nodeColorInputWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.nodeColorInputWrapper .nodeColorInput {
+  width: 50px;
+  padding: 4px 8px;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+}
+
+.nodeColorInputSwatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 22px;
+  margin-top: -1px;
+  margin-left: -5px;
+  cursor: pointer;
+}
+
+.nodeColorInputClearer {
+  background: none;
+  border: none;
+  position: absolute;
+  right: -2px;
+  line-height: 29px;
+  top: 0px;
+}
+
+.nodeColorPickerWrapper {
+  position: absolute;
+  right: 0px;
+}
+
+#edgeUrlInput {
+  width: 337px;
+}
+
+.svgDropdown{
+  height: auto;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075); 
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075); 
+  -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s; 
+  -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+  list-style-type: none;
+  padding:0px;
+  margin:0px;
+  top:0px;
+}
+
+.strokeMain{
+  width:25%;
+  margin-right: 2%;
+  margin-left: 2%;
+}
+
+.arrowHead{
+  width:20%;
+}
+
+.dropdownHolder{
+  /* display: inline-block; */
+  margin-top: 10px;
+  width: 45px;
+  float: left;
+}
+
+.svgDropdown li, .svgDropdown div{
+  width: 100%;
+  height: 29px; 
+  list-style: none;
+}
+
+.svgDropdown li:not(:last-child){
+  border-bottom: 1px solid #ccc; 
+}
+
+/*displays oddly in chrome if there is no border on last element for some reason*/
+.svgDropdown li:last-child, .svgDropdown div{
+  border-bottom: 1px solid rgba(0,0,0,0);
+}
+
+.strokeDropdowns{
+  width: 300px;
+  height: 54px;
+}
+
+
+.svgDropdown li svg, .svgDropdown div svg{
+  width: 100%;
+  height: 100%;
+  shape-rendering: crispEdges;
+  cursor: pointer;
+}
+
+.svgDropdown li:hover{
+  background-color: yellow;
+}
+
+.svgDropdown li svg line, .svgDropdown div svg line{
+  stroke:#aaa;
+  stroke-width:1px;
+  stroke-linecap: butt;
+}
+
+.svgDropdownDashed svg line{
+  stroke-dasharray: 5, 3;
+}
+
+.svgDropdownLeftArrow svg line{
+  marker-end: url(#marker1);
+}
+
+.svgDropdownRightArrow svg line{
+  marker-start: url(#marker2);
+}
+
+.edgeDropdownOptions{
+  width: 100%;
+}
+
+.oligrapherEdgeWidthDropdown{
+  width: auto;
+  text-align: right;
+}
+
+.arrow-node-name {
+  float: left;
+  width: 70px;
+}
+
+.dropdownHolder-left {
+  margin-left: 25px;
+}
+
+.dropdownHolder-right {
+  margin-right: -80px;
+}
