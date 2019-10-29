@@ -1,77 +1,51 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import Svg from '../components/graph/Svg'
-import ZoomBox from '../components/graph/ZoomBox'
 
-import Draggable from 'react-draggable'
+import noop from 'lodash/noop'
+import Graph from '../components/graph/Graph'
+import LegacyGraph from '../../legacy-app/components/Graph'
 
-import Nodes from './Nodes'
-import Edges from './Edges'
-import { computeViewBox } from '../graph/graph'
+const USE_LEGACY = false
 
-import values from 'lodash/values'
-
-
-
-export class Graph extends Component {
-  static propTypes = {
-    nodes: PropTypes.object
-  }
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      viewBox: computeViewBox(values(props.nodes)),
-
+// Toggle between Legacy Graph and new graph implementation
+export function GraphProxy(props) {
+  if (USE_LEGACY) {
+    const legacyGraphProps = {
+      graph: props.graph,
+      zoom: 1.2,
+      viewOnlyHighlighted: false,
+      isEditor: false,
+      graphApi: noop,
+      isLocked: false,
+      clickNode: noop,
+      clickCaption: noop,
+      moveNode: noop,
+      moveEdge: noop,
+      moveCaption: noop
     }
+
+    return <LegacyGraph {...legacyGraphProps} />
+  } else {
+    return <Graph {...props} />
   }
 
-
-  render() {
-    return <div id="oligrapher-graph">
-             <Svg viewBox={this.state.viewBox} outermost={true}>
-               <ZoomBox>
-                 <g id="oligrapher-outer-svg-group">
-                   <Nodes />
-                   <Edges />
-                 </g>
-               </ZoomBox>
-             </Svg>
-           </div>
-  }
 }
 
-
-// "outerDivSize": [ state.settings.rootElement.width,
-//                       state.settings.rootElement.height],
+Graph.propTypes = {
+  graph: PropTypes.object.isRequired
+}
 
 const mapStateToProps = function(state) {
-  return {
-    nodes: state.graph.nodes
-  }
+  return { graph: state.graph }
 }
 
-// const mapDispatchToProps = function(dispatch) {
-//   return {
-//     moveNodeAction: (nodeId, delta) => {
-//       dispatch({
-//         type: 'MOVE_NODE',
-//         id: nodeId,
-//         delta: delta
-//       })
-//     }
-//   }
-// }
-
-export default connect(mapStateToProps)(Graph)
-
+export default connect(mapStateToProps)(GraphProxy)
 
 
 /*
 
 
-__________________
 |div
 | _____
 | | Svg

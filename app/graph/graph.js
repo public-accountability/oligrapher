@@ -7,10 +7,7 @@ import values from 'lodash/values'
 const defaultGraph = {
   nodes: {},
   edges: {},
-  captions: {},
-  annotations: [],
-  zoom: 1,
-  center: [0, 0]
+  captions: {}
 }
 
 export const addNode = produce( (graph, node) => {
@@ -31,6 +28,12 @@ export const addEdge = produce( (graph, edge) => {
 
 export const removeEdge = produce( (graph, edge) => {
   delete graph.edges[edge.id]
+})
+
+export const moveNode = produce ( (graph, nodeId, delta) => {
+  let n = graph.nodes[nodeId]
+  graph.nodes[nodeId].x = n.x + delta.x
+  graph.nodes[nodeId].y = n.y + delta.y
 })
 
 export const edgesOf = curry( (graph, nodeId) => {
@@ -107,13 +110,13 @@ export function computeViewBox(nodes = [], zoom = 1) {
   }
 }
 
-
 export default {
   "new":        newGraph,
   "api":        api,
   "addNode":    addNode,
   "removeNode": removeNode,
   "updateNode": updateNode,
+  "moveNode":   moveNode,
   "addEdge":    addEdge,
   "removeEdge": removeEdge,
   "edgesOf":    edgesOf

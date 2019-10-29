@@ -1,15 +1,17 @@
 import React from 'react'
 import Draggable from 'react-draggable'
-import NodeModel from '../../../app/models/Node'
-
 import { newNode } from '../../../app/graph/node'
 import Node from '../../../app/components/graph/Node'
 import NodeCircle from '../../../app/components/graph/NodeCircle'
 
 describe('<Node>', function() {
-  let nodeData = newNode({dislay: {x: 1, y: 2}})
+  let nodeData
 
-  xit('renders Draggable', function() {
+  beforeEach(function() {
+    nodeData = newNode({display: {x: 1, y: 2}})
+  })
+
+  it('renders Draggable', function() {
     let node = shallow(<Node node={nodeData} />)
     expect(node.find(Draggable)).to.have.lengthOf(1)
   })

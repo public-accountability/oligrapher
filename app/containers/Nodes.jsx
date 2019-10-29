@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import Node from '../components/graph/Node'
+// import Node from '../components/graph/Node'
+import Node from './Node'
 
 export class Nodes extends Component {
   static propTypes = {
@@ -10,7 +11,7 @@ export class Nodes extends Component {
   }
 
   render() {
-    return this.props.nodes.map(n => <Node key={n.id} node={n} />)
+    return this.props.nodes.map(n => <Node key={n.id} nodeId={n.id} />)
   }
 }
 
@@ -20,6 +21,5 @@ const mapStateToProps = function(state) {
     "nodes": Object.values(state.graph.nodes)
   }
 }
-
 
 export default connect(mapStateToProps)(Nodes)

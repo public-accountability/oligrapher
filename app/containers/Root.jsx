@@ -23,10 +23,8 @@ export class Root extends Component {
     return <div id="oligrapher-container">
              <Header />
              <Graph />
-             {/* <Story> */}
            </div>
   }
 }
-
 
 export default connect()(Root)

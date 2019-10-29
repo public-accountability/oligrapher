@@ -1,13 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import Draggable from 'react-draggable'
 import NodeCircle from './NodeCircle'
 
 export default function Node({node}) {
   let nodeDomId = "node-" + node.id
 
-  return <g id={nodeDomId} className="oligrapher-node">
-           <NodeCircle node={node} />
-         </g>
+  return <Draggable>
+           <g id={nodeDomId} className="oligrapher-node">
+             <NodeCircle node={node} />
+           </g>
+         </Draggable>
 }
 
 
