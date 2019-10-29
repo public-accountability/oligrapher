@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { newGraph } from '../../graph/graph'
 
@@ -33,10 +33,10 @@ function Captions(props) {
   Update()
 
 */
-export default  class Graph extends Component {
+export default class Graph extends React.Component {
   static propTypes = {
     changed: PropTypes.func.isRequired,
-    graph: PropTypes.object
+    graph: PropTypes.object.isRequired
   }
 
   static defaultProps = {
@@ -47,6 +47,7 @@ export default  class Graph extends Component {
   constructor(props) {
     super(props)
   }
+
 
   render() {
     return <GraphContainer>
