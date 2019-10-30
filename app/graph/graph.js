@@ -70,7 +70,7 @@ export function computeViewBox(nodes = [], zoom = 1) {
   const defaultViewBox = { minX: 0, minY: 0,  w: 600, h: 600 }
   const padding = 100
 
-    if (nodes.length === 0) {
+  if (nodes.length === 0) {
     return defaultViewBox
   }
 

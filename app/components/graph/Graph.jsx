@@ -5,23 +5,13 @@ import { computeViewBox } from '../../util/dimensions'
 
 import GraphContainer from './GraphContainer'
 import Edges from './Edges'
+import Nodes from './Nodes'
 
 function ZoomBox(props) {
   return <>{props.children}</>
 }
 
-// function Edges(props) {
-//   console.log(props.edges)
-//   return <></>
-// }
-
-function Nodes(props) {
-  console.log(props.nodes)
-  return <></>
-}
-
 function Captions(props) {
-  console.log(props.captions)
   return <></>
 }
 
@@ -61,7 +51,7 @@ export default class Graph extends React.Component {
     return <GraphContainer viewBox={this.state.viewBox} height={this.props.height}>
              <ZoomBox>
                <Edges edges={this.props.graph.edges} zoom={this.props.zoom} />
-               <Nodes nodes={this.props.graph.nodes} />
+               <Nodes graph={this.props.graph} />
                <Captions captions={this.props.graph.captions} />
                <h1>Graph</h1>
              </ZoomBox>

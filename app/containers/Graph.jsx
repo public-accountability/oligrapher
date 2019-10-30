@@ -45,7 +45,6 @@ export default connect(mapStateToProps)(GraphProxy)
 
 /*
 
-
 |div
 | _____
 | | Svg
