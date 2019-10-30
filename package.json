@@ -10,7 +10,7 @@
     "build-prod": "webpack -p --config webpack.prod.js",
     "build-dev": "webpack --config webpack.dev.js",
     "test": "mocha",
-    "test:watch": "jest --watch",
+    "test:watch": "mocha --watch",
     "profile": "webpack --profile --display-modules --config webpack.prod.js",
     "lint": "yarn run lint:js && yarn run lint:scss",
     "lint:js": "eslint app",

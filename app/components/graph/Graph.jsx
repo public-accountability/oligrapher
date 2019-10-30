@@ -1,10 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { newGraph } from '../../graph/graph'
+import { computeViewBox } from '../../util/dimensions'
 
-function GraphContainer(props) {
-  return <>{props.children}</>
-}
+import GraphContainer from './GraphContainer'
 
 function ZoomBox(props) {
   return <>{props.children}</>
@@ -26,7 +25,7 @@ function Captions(props) {
 }
 
 /*
-  renders the core graph visual (no controls)
+  Renders the core graph visual (no controls)
 
   It calls `props.changed` with two arguments: oldGraph and currentGraph
 
@@ -36,21 +35,29 @@ function Captions(props) {
 export default class Graph extends React.Component {
   static propTypes = {
     changed: PropTypes.func.isRequired,
-    graph: PropTypes.object.isRequired
+    graph: PropTypes.object,
+    zoom: PropTypes.number.isRequired
   }
 
   static defaultProps = {
     changed: (oldGraph, currentGraph) => {},
-    graph: newGraph()
+    graph: newGraph(),
+    zoom: 1
   }
 
   constructor(props) {
     super(props)
+    this.state = {
+      viewBox: computeViewBox(props.graph, props.zoom)
+    }
   }
 
 
   render() {
-    return <GraphContainer>
+    let viewBox = { minX: 0, minY: 0, w: 1200, h: 900 }
+
+
+    return <GraphContainer viewBox={viewBox} >
              <ZoomBox>
                <Edges edges={this.props.graph.edges} />
                <Nodes nodes={this.props.graph.nodes} />
