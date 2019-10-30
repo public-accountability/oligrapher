@@ -5,7 +5,7 @@ import values from 'lodash/values'
 import noop from 'lodash/noop'
 
 import { Node as LegacyNode } from '../../../legacy-app/components/Node'
-
+import Node from './Node'
 
 function legacyNode(node, graph, zoom) {
   return <LegacyNode ref={noop}
@@ -19,9 +19,12 @@ function legacyNode(node, graph, zoom) {
                      isLocked={false} />
 }
 
+
+
 export default function Nodes({graph, zoom }) {
   return <g className="nodes">
-           { values(graph.nodes).map(node => legacyNode(node, graph, zoom)) }
+           {/* values(graph.nodes).map(node => legacyNode(node, graph, zoom)) */}
+           { values(graph.nodes).map(node => <Node key={node.id} node={node} zoom={zoom} />) }
          </g>
 }
 

@@ -3,11 +3,16 @@ import PropTypes from 'prop-types'
 import Draggable from 'react-draggable'
 import NodeCircle from './NodeCircle'
 
-export default function Node({node}) {
+function clickNode(event) {
+  console.log("You clicked on a node!")
+}
+
+export default function Node({node, zoom}) {
   let nodeDomId = "node-" + node.id
 
-  return <Draggable>
-           <g id={nodeDomId} className="oligrapher-node">
+  return <Draggable scale={zoom}>
+           <g id={nodeDomId} className="oligrapher-node"
+              onClick={clickNode}>
              <NodeCircle node={node} />
            </g>
          </Draggable>
@@ -15,7 +20,8 @@ export default function Node({node}) {
 
 
 Node.propTypes = {
-  node: PropTypes.object.isRequired
+  node: PropTypes.object.isRequired,
+  zoom: PropTypes.object.isRequired
 }
 
 

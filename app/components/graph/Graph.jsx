@@ -6,14 +6,10 @@ import { computeViewBox } from '../../util/dimensions'
 import GraphContainer from './GraphContainer'
 import Edges from './Edges'
 import Nodes from './Nodes'
+import Pannable from './Pannable'
+import Zoomable from './Zoomable'
 
-function ZoomBox(props) {
-  return <>{props.children}</>
-}
-
-function Captions(props) {
-  return <></>
-}
+function Captions(props) { return <></> }
 
 /*
   Renders the core graph visual (no controls)
@@ -43,18 +39,20 @@ export default class Graph extends React.Component {
     this.state = {
       viewBox: computeViewBox(props.graph, props.zoom)
     }
+    // this.zoomTranslate = [0, 0]
     // this.state = { x: 0, y: 0, viewBox, height };
   }
 
 
   render() {
     return <GraphContainer viewBox={this.state.viewBox} height={this.props.height}>
-             <ZoomBox>
-               <Edges edges={this.props.graph.edges} zoom={this.props.zoom} />
-               <Nodes graph={this.props.graph} />
-               <Captions captions={this.props.graph.captions} />
-               <h1>Graph</h1>
-             </ZoomBox>
+             <Zoomable zoom={this.props.zoom} >
+               <Pannable zoom={this.props.zoom}>
+                 <Edges edges={this.props.graph.edges} zoom={this.props.zoom} />
+                 <Nodes graph={this.props.graph} zoom={this.props.zoom}/>
+                 <Captions captions={this.props.graph.captions} />
+               </Pannable>
+             </Zoomable>
            </GraphContainer>
   }
 
