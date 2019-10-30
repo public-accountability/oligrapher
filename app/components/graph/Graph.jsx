@@ -4,15 +4,16 @@ import { newGraph } from '../../graph/graph'
 import { computeViewBox } from '../../util/dimensions'
 
 import GraphContainer from './GraphContainer'
+import Edges from './Edges'
 
 function ZoomBox(props) {
   return <>{props.children}</>
 }
 
-function Edges(props) {
-  console.log(props.edges)
-  return <></>
-}
+// function Edges(props) {
+//   console.log(props.edges)
+//   return <></>
+// }
 
 function Nodes(props) {
   console.log(props.nodes)
@@ -36,13 +37,15 @@ export default class Graph extends React.Component {
   static propTypes = {
     changed: PropTypes.func.isRequired,
     graph: PropTypes.object,
-    zoom: PropTypes.number.isRequired
+    zoom: PropTypes.number.isRequired,
+    height: PropTypes.string.isRequired
   }
 
   static defaultProps = {
     changed: (oldGraph, currentGraph) => {},
     graph: newGraph(),
-    zoom: 1
+    zoom: 1,
+    height: '500px'
   }
 
   constructor(props) {
@@ -50,16 +53,14 @@ export default class Graph extends React.Component {
     this.state = {
       viewBox: computeViewBox(props.graph, props.zoom)
     }
+    // this.state = { x: 0, y: 0, viewBox, height };
   }
 
 
   render() {
-    let viewBox = { minX: 0, minY: 0, w: 1200, h: 900 }
-
-
-    return <GraphContainer viewBox={viewBox} >
+    return <GraphContainer viewBox={this.state.viewBox} height={this.props.height}>
              <ZoomBox>
-               <Edges edges={this.props.graph.edges} />
+               <Edges edges={this.props.graph.edges} zoom={this.props.zoom} />
                <Nodes nodes={this.props.graph.nodes} />
                <Captions captions={this.props.graph.captions} />
                <h1>Graph</h1>
