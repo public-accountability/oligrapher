@@ -1,12 +1,31 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-export default function EdgeLine({curve}) {
+// <path
+//             id={sp.pathId}
+//             className="edge-line"
+//             d={sp.curve}
+//             stroke={sp.lineColor}
+//             strokeDasharray={sp.dash}
+//             strokeWidth={width}
+//             fill="none"
+//             markerStart={sp.markerStart}
+//             markerEnd={sp.markerEnd}></path>
+
+export default function EdgeLine(props) {
+  const svgParams = props.svgParams
+  const width = 1 + (props.scale - 1) * 5
+
   const pathAttributes = {
+    id: svgParams.pathId,
     className: 'edge-path',
-    d: curve,
-    fill: 'none',
-    stroke: 'black'
+    d: svgParams.curve,
+    stroke: svgParams.lineColor,
+    strokeDasharray: svgParams.dash,
+    strokeWidth: width,
+    fill: "none",
+    markerStart: svgParams.markerStart,
+    markerEnd: svgParams.markerEnd
   }
 
   return <g className="edge-group">
@@ -16,5 +35,7 @@ export default function EdgeLine({curve}) {
 }
 
 EdgeLine.propTypes = {
-  curve: PropTypes.string.isRequired
+  svgParams: PropTypes.object.isRequired,
+  scale:     PropTypes.number.isRequired
+
 }

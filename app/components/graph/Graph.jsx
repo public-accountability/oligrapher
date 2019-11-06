@@ -9,6 +9,9 @@ import Nodes from './Nodes'
 import Pannable from './Pannable'
 import Zoomable from './Zoomable'
 
+import curry from 'lodash/curry'
+import produce from 'immer'
+
 function Captions(props) { return <></> }
 
 /*
@@ -36,21 +39,38 @@ export default class Graph extends React.Component {
 
   constructor(props) {
     super(props)
+
     this.state = {
-      viewBox: computeViewBox(props.graph, props.zoom)
+      viewBox: computeViewBox(props.graph, props.zoom),
+      graph: props.graph
     }
+
     // this.zoomTranslate = [0, 0]
     // this.state = { x: 0, y: 0, viewBox, height };
   }
 
 
   render() {
+    let graph = this.state.graph
+    let zoom = this.props.zoom
+
+    // let updateEdge = (edge) => {
+    //   this.setState({
+    //     graph: produce(graph, draft => {
+    //       draft.edges[edge.id] = edge
+    //     })
+    //   })
+    // }
+
+    let edgesProps = { edges: graph.edges}
+    let nodesProps = { graph, zoom }
+
     return <GraphContainer viewBox={this.state.viewBox} height={this.props.height}>
-             <Zoomable zoom={this.props.zoom} >
-               <Pannable zoom={this.props.zoom}>
-                 <Edges edges={this.props.graph.edges} zoom={this.props.zoom} />
-                 <Nodes graph={this.props.graph} zoom={this.props.zoom}/>
-                 <Captions captions={this.props.graph.captions} />
+             <Zoomable zoom={zoom} >
+               <Pannable zoom={zoom}>
+                 <Edges {...edgesProps} />
+                 <Nodes {...nodesProps} />
+                 <Captions captions={graph.captions} />
                </Pannable>
              </Zoomable>
            </GraphContainer>
