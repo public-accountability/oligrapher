@@ -82,14 +82,52 @@ describe.only('Graph', function() {
       expect(g.nodes[n.id]).not.to.be.ok
     })
 
-    specify("updateNode")
+    specify("updateNode", function() {
+      let n = Node.new()
+      let g = Graph.new()
+      Graph.addNode(g, n)
+      expect(g.nodes[n.id].display.scale).to.eql(1)
+      Graph.updateNode(g, n.id, { scale: 2 })
+      expect(g.nodes[n.id].display.scale).to.eql(2)
+    })
+
     specify("moveNode")
   })
 
   describe("Edges", function() {
-    specify("addEdge")
-    specify("removeEdge")
-    specify("updateEdge")
+    let n1, n2, n3, g, edge
+
+    beforeEach(function() {
+      n1 = Node.new()
+      n2 = Node.new()
+      n3 = Node.new()
+      g = Graph.new()
+      Graph.addNodes(g, [n1, n2, n3])
+      edge = Edge.new({ node1_id: n1.id, node2_id: n2.id })
+    })
+
+    specify("addEdge", function() {
+      expect(g.edges).to.eql({})
+      Graph.addEdge(g, edge)
+      expect(g.edges).to.eql({ [edge.id]: edge })
+    })
+
+    specify("removeEdge", function() {
+      Graph.addEdge(g, edge)
+      expect(g.edges).to.eql({ [edge.id]: edge })
+      Graph.removeEdge(g, edge)
+      expect(g.edges).to.eql({})
+    })
+
+    specify("updateEdge", function() {
+      Graph.addEdge(g, edge)
+      expect(g.edges[edge.id].display.url).to.eql(null)
+      expect(g.edges[edge.id].display.label).to.eql(null)
+      Graph.updateEdge(g, edge.id, { url: 'http://example.com', label: 'example label'})
+      expect(g.edges[edge.id].display.url).to.eql('http://example.com')
+      expect(g.edges[edge.id].display.label).to.eql('example label')
+    })
+
     specify("moveEdgeNode")
   })
 

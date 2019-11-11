@@ -1,8 +1,5 @@
-import each from 'lodash/each'
-import curry from 'lodash/curry'
 import filter from 'lodash/filter'
 import merge from 'lodash/merge'
-import produce from 'immer'
 import values from 'lodash/values'
 
 const defaultGraph = {
@@ -90,21 +87,36 @@ export function addNodes(graph, nodes) {
   return graph
 }
 
-// export function addNodes(graph, nodes) {
-//   each(nodes, n => addNode(graph, n))
-//     }
-
 export function removeNode(graph, node) {
   delete graph.nodes[getId(node)]
   return graph
 }
 
-export function addEdge(graph, edge) {}
-export function removeEdge(graph, edge) {}
-export function updateNode(graph, node) {}
-export function updateEdge(graph, node) {}
 
-// Dragging functionality
+// Updates the ".display" object of a node.
+export function updateNode(graph, node, attributes) {
+  merge(graph.nodes[getId(node)].display, attributes)
+  return graph
+}
+
+
+export function addEdge(graph, edge) {
+  graph.edges[edge.id] = edge
+  return graph
+}
+
+export function removeEdge(graph, edge) {
+  delete graph.edges[getId(edge)]
+  return graph
+}
+
+// Updates the ".display" object of a edge
+export function updateEdge(graph, edge, attributes) {
+  merge(graph.edges[getId(edge)].display, attributes)
+  return graph
+}
+
+// Dragging Functions
 
 export function moveNode(graph, nodeId, deltas) {}
 export function moveEdgeNode(graph, nodeId, deltas) {}
@@ -207,10 +219,14 @@ export function onEdgeDrag(graph, edge) {}
 
 export default {
   "new":             newGraph,
+  "stats":           stats,
   "addNode":         addNode,
   "addNodes":        addNodes,
   "removeNode":      removeNode,
-  "stats":           stats
+  "updateNode":      updateNode,
+  "addEdge":         addEdge,
+  "removeEdge":      removeEdge,
+  "updateEdge":      updateEdge
   // "api":        api,
   // "addNode":    addNode,
   // "removeNode": removeNode,
