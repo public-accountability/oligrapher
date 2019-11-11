@@ -222,30 +222,11 @@ function rotatePoint(x, y, angle) {
 }
 
 
-
-
-/**
- * Calculates New Position for Draggable Components
- * @param {object} draggableData - data from react-draggable callback
- * @param {object} startPosition - initial x & y position
- * @param {object} startDrag - initial draggableData from start of drag
- * @param {number} actualZoom - zoom value
- * @returns {object} = x, y
- */
-export function calculateDeltas(draggableData, startPosition, startDrag, zoom) {
-  const deltaX = (draggableData.x - startDrag.x) / zoom
-  const deltaY = (draggableData.y - startDrag.y) / zoom
-  const x = deltaX + startPosition.x
-  const y = deltaY + startPosition.y
-  return { x, y }
-}
-
 /*
-  Returns an new edge updated with new coordinates according to the x, y
-  of the provided node.
+  Returns an new edge updated with new coordinates according to the x, y of the provided node.
 
-  input: Object (Edge), Object (Node), Object ({x, y})
-  output: Object (Edge)
+  Input: Object (Edge), Object (Node), Object ({x, y})
+  Output: Object (Edge)
 */
 export function moveEdgeNode(edge, node, coords) {
   const { x, y } = coords
