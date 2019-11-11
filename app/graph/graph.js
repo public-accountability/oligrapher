@@ -1,3 +1,4 @@
+import at from 'lodash/at'
 import filter from 'lodash/filter'
 import merge from 'lodash/merge'
 import values from 'lodash/values'
@@ -68,14 +69,13 @@ export function edgesOf(graph, node) {
 }
 
 export function nodesOf(graph, edge) {
-  const nodeIds = [edge.node1_id, edge.node2_id]
+  const nodeIds = at(graph.edges[getId(edge)], ['node1_id', 'node2_id'])
   return nodeIds.map(nodeId => graph.nodes[nodeId])
 }
 
 
 // Basic Graph Actions: Adding/Removing Components
-// These all return a modifyed graph
-
+// These all return a modified graph
 
 export function addNode(graph, node) {
   graph.nodes[getId(node)] = node
@@ -105,6 +105,12 @@ export function addEdge(graph, edge) {
   return graph
 }
 
+export function addEdges(graph, edges) {
+  edges.forEach(edge => addEdge(graph, edge))
+  return graph
+}
+
+
 export function removeEdge(graph, edge) {
   delete graph.edges[getId(edge)]
   return graph
@@ -124,35 +130,6 @@ export function onNodeDrag(graph, nodeId, deltas) {}
 export function onEdgeDrag(graph, edge) {}
 
 
-
-// export const updateNode = produce( (graph, node) => {
-//   graph.nodes[node.id] = merge(graph.nodes[node.id], node)
-// })
-
-// export const addEdge = produce( (graph, edge) => {
-//   graph.edges[edge.id] = edge
-// })
-
-// export const removeEdge = produce( (graph, edge) => {
-//   delete graph.edges[edge.id]
-// })
-
-// export const moveNode = produce ( (graph, nodeId, delta) => {
-//   let n = graph.nodes[nodeId]
-//   graph.nodes[nodeId].x = n.x + delta.x
-//   graph.nodes[nodeId].y = n.y + delta.y
-// })
-
-// export const edgesOf = curry( (graph, nodeId) => {
-//   return filter(
-//     values(graph.edges),
-//     edge => edge.node1_id === nodeId || edge.node2_id === nodeId
-//   )
-// })
-
-// export const newGraph = function(attributes = {}) {
-//   return merge({}, defaultGraph, attributes)
-// }
 
 // export function api(graph) {
 //   if (!graph) {
@@ -220,11 +197,14 @@ export function onEdgeDrag(graph, edge) {}
 export default {
   "new":             newGraph,
   "stats":           stats,
+  "edgesOf":         edgesOf,
+  "nodesOf":         nodesOf,
   "addNode":         addNode,
   "addNodes":        addNodes,
   "removeNode":      removeNode,
   "updateNode":      updateNode,
   "addEdge":         addEdge,
+  "addEdges":        addEdges,
   "removeEdge":      removeEdge,
   "updateEdge":      updateEdge
   // "api":        api,

@@ -1,9 +1,10 @@
+import curry from 'lodash/curry'
 import values from 'lodash/values'
 import Graph, { getId } from '../../app/graph/graph'
 import Node from '../../app/graph/node'
 import Edge from '../../app/graph/edge'
 
-describe.only('Graph', function() {
+describe('Graph', function() {
   describe("Helpers", function() {
     specify('getId', function() {
       expect(getId('one')).to.eql('one')
@@ -22,8 +23,33 @@ describe.only('Graph', function() {
   })
 
   describe("Getters", function() {
-    specify("edgesOf")
-    specify("nodesOf")
+    let n1, n2, n3, n4, graph, e1, e2
+
+    beforeEach(function() {
+      n1 = Node.new({ display: { x: -10, y: 30 } })
+      n2 = Node.new({ display: { x: 0, y: -30 } })
+      n3 = Node.new({ display: { x: 10, y: 0 } })
+      n4 = Node.new({ display: { x: 0, y: 0 } })
+      e1 = Edge.newEdgeFromNodes(n1, n2)
+      e2 = Edge.newEdgeFromNodes(n2, n3)
+      graph = Graph.new()
+      Graph.addNodes(graph, [n1, n2, n3, n4])
+      Graph.addEdges(graph, [e1, e2])
+    })
+
+    specify("edgesOf", function() {
+      let edgesOf = curry(Graph.edgesOf)(graph)
+      expect(edgesOf(n1.id)).to.have.lengthOf(1)
+      expect(edgesOf(n2.id)).to.have.lengthOf(2)
+      expect(edgesOf(n3.id)).to.have.lengthOf(1)
+      expect(edgesOf(n4.id)).to.have.lengthOf(0)
+    })
+
+    specify("nodesOf", function() {
+      let nodesOf = curry(Graph.nodesOf)(graph)
+      expect(nodesOf(e1)).to.eql([n1, n2])
+      expect(nodesOf(e2.id)).to.eql([n2, n3])
+    })
   })
 
   describe("Stats", function() {
@@ -33,12 +59,18 @@ describe.only('Graph', function() {
       let n1 = Node.new({ display: { x: -10, y: 30 } })
       let n2 = Node.new({ display: { x: 0, y: -30 } })
       let n3 = Node.new({ display: { x: 10, y: 0 } })
+      let edge = Edge.newEdgeFromNodes(n1, n2)
       graph = Graph.new()
       Graph.addNodes(graph, [n1, n2, n3])
+      Graph.addEdge(graph, edge)
     })
 
     specify("nodeCount", function() {
       expect(Graph.stats(graph).nodeCount).to.eql(3)
+    })
+
+    specify("edgeCount", function() {
+      expect(Graph.stats(graph).edgeCount).to.eql(1)
     })
 
     specify("min and max node XY values", function() {
@@ -111,6 +143,20 @@ describe.only('Graph', function() {
       Graph.addEdge(g, edge)
       expect(g.edges).to.eql({ [edge.id]: edge })
     })
+
+    specify("addEdges", function() {
+      expect(g.edges).to.eql({})
+      Graph.addEdge(g, edge)
+      expect(g.edges).to.eql({ [edge.id]: edge })
+    })
+
+    specify("addEdges", function() {
+      expect(g.edges).to.eql({})
+      let edges = [Edge.new(), Edge.new()]
+      Graph.addEdges(g, edges)
+      expect(values(g.edges)).to.have.lengthOf(2)
+    })
+
 
     specify("removeEdge", function() {
       Graph.addEdge(g, edge)
