@@ -37,6 +37,12 @@ export function newEdge(attributes = {}) {
   return edge
 }
 
+export function newEdgeFromNodes(n1, n2) {
+  let edge = newEdge()
+  edge.node1_id = n1.id
+  edge.node2_id = n2.id
+  return edge
+}
 
 export function edgeProps(nodes, edge) {
   return {
@@ -45,7 +51,6 @@ export function edgeProps(nodes, edge) {
     node2:  nodes[edge.node2_id],
     curve:  calculateCurve(nodes[edge.node1_id], nodes[edge.node2_id], controlPoint(edge))
   }
-
 }
 
 
@@ -250,6 +255,7 @@ export function moveEdgeNode(edge, node, coords) {
 
 export default {
   "new": newEdge,
+  "newEdgeFromNodes": newEdgeFromNodes,
   "moveEdgeNode": moveEdgeNode,
   "edgeProps": edgeProps
 }
