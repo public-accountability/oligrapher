@@ -3,10 +3,15 @@ import filter from 'lodash/filter'
 import merge from 'lodash/merge'
 import values from 'lodash/values'
 
-const defaultGraph = {
+const GRAPH_PADDING = 100
+const DEFAULT_VIEWBOX = { minX: -200, minY: -200, w: 400, h: 400 }
+
+const DEFAULT_GRAPH = {
   nodes: {},
   edges: {},
-  captions: {}
+  captions: {},
+  viewBox: null,
+  zoom: 1
 }
 
 /// helper functions
@@ -27,17 +32,9 @@ export function getId(thing) {
   }
 }
 
-// Create a new graph object
-// Available as Graph.new() and typically used to create a new empty graph
-
-export function newGraph(attributes = {}) {
-  return merge({}, defaultGraph, attributes)
-}
-
 // All of the functions take `graph` as the first argument.
-// Most modify the graph object and return it.
 
-// Stats & Getters
+// Stats, Getters, and Calculations
 
 const minNodeX = nodes => Math.min(...nodes.map(n => n.display.x))
 const minNodeY = nodes => Math.min(...nodes.map(n => n.display.y))
@@ -58,6 +55,39 @@ export function stats(graph) {
     maxNodeY:  maxNodeY(nodes)
   }
 }
+
+export function calculateViewBox(graph) {
+  const zoom = graph.zoom
+  const graphStats = stats(graph)
+
+  if (graphStats.nodeCount === 0) {
+    return DEFAULT_VIEWBOX
+  }
+
+  const minX = graphStats.minNodeX - GRAPH_PADDING
+  const minY = graphStats.minNodeY - GRAPH_PADDING
+  const w = (graphStats.maxNodeX - graphStats.minNodeX) + (GRAPH_PADDING * 2)
+  const h = (graphStats.maxNodeY - graphStats.minNodeY) + (GRAPH_PADDING * 2)
+
+  // We can return here if the zoom is 1
+  if (zoom === 1) {
+    return { minX, minY, w, h }
+  }
+
+  // Update viewBox according to zoom settings
+  const zoomW = w / zoom
+  const zoomH = h / zoom
+  const zoomMinX = minX + (w / 2) - (zoomW / 2)
+  const zoomMinY = minY + (h / 2) - (zoomH / 2)
+
+  return {
+    minX: zoomMinX,
+    minY: zoomMinY,
+    w: zoomW,
+    h: zoomH
+  }
+}
+
 
 // Graph Getters
 
@@ -126,93 +156,52 @@ export function updateEdge(graph, edge, attributes) {
 
 export function moveNode(graph, nodeId, deltas) {}
 export function moveEdgeNode(graph, nodeId, deltas) {}
-export function onNodeDrag(graph, nodeId, deltas) {}
-export function onEdgeDrag(graph, edge) {}
+export function dragNode(graph, nodeId, deltas) {}
+export function dragEdge(graph, edge) {}
 
 
+// View Box
+export function updateViewBox(graph) {
+  graph.viewBox = calculateViewBox(graph)
+  return graph
+}
 
-// export function api(graph) {
-//   if (!graph) {
-//     graph = newGraph()
-//   }
+// Zoom
 
-//   return {
-//     // These functions stop the api from being able to be chained
-//     graph:      () => graph,
-//     edgesOf:    edgesOf(graph),
-//     // Updates the graph and returns a new copy, still wrapped with api()
-//     // call .graph() to get the graph
-//     addNode:    (node) => api(addNode(graph, node)),
-//     removeNode: (node) => api(removeNode(graph, node)),
-//     updateNode: (node) => api(updateNode(graph, node)),
-//     addEdge:    (edge) => api(addEdge(graph, edge)),
-//     removeEdge: (edge) => api(removeEdge(graph, edge))
-//   }
-// }
+export function setZoom(graph, zoomLevel) {
+  throw new Error("Not Yet Implemented")
+}
 
-// export function computeViewBox(nodes = [], zoom = 1) {
-//   const defaultViewBox = { minX: 0, minY: 0,  w: 600, h: 600 }
-//   const padding = 100
 
-//   if (nodes.length === 0) {
-//     return defaultViewBox
-//   }
+// Create a new graph object
+// Available as Graph.new() and typically used to create a new empty graph
 
-//   // Get the X and Y values of all the nodes
-//   const xValues = nodes.map(n => n.display.x)
-//   const yValues = nodes.map(n => n.display.y)
-//   // Calculate the maximum and minimum X/Y values
-//   const minNodeX = Math.min(...xValues)
-//   const minNodeY = Math.min(...yValues)
-//   const maxNodeX = Math.max(...xValues)
-//   const maxNodeY = Math.max(...yValues)
+export function newGraph(attributes = {}) {
+  let g = merge({}, DEFAULT_GRAPH, attributes)
+  updateViewBox(g)
+  return g
+}
 
-//   // Subtract padding and calculate ViewBox
-//   const minX = minNodeX - padding
-//   const minY = minNodeY - padding
-//   const w = maxNodeX - minNodeX + (padding * 2)
-//   const h = maxNodeY - minNodeY + (padding * 2)
 
-//   const viewBox = { minX, minY, w, h }
-
-//   // We can return here if the zoom is 1
-//   if (zoom === 1) {
-//     return viewBox
-//   }
-
-//   // Update viewBox according to zoom settings
-//   const zoomW = w / zoom
-//   const zoomH = h / zoom
-//   const zoomMinX = minX + (w / 2) - (zoomW / 2)
-//   const zoomMinY = minY + (h / 2) - (zoomH / 2)
-
-//   return {
-//     minX: zoomMinX,
-//     minY: zoomMinY,
-//     w: zoomW,
-//     h: zoomH
-//   }
-// }
 
 export default {
-  "new":             newGraph,
-  "stats":           stats,
-  "edgesOf":         edgesOf,
-  "nodesOf":         nodesOf,
-  "addNode":         addNode,
-  "addNodes":        addNodes,
-  "removeNode":      removeNode,
-  "updateNode":      updateNode,
-  "addEdge":         addEdge,
-  "addEdges":        addEdges,
-  "removeEdge":      removeEdge,
-  "updateEdge":      updateEdge
-  // "api":        api,
-  // "addNode":    addNode,
-  // "removeNode": removeNode,
-  // "updateNode": updateNode,
-  // "moveNode":   moveNode,
-  // "addEdge":    addEdge,
-  // "removeEdge": removeEdge,
-  // "edgesOf":    edgesOf
+  "new":               newGraph,
+  "stats":             stats,
+  "edgesOf":           edgesOf,
+  "nodesOf":           nodesOf,
+  "calculateViewBox":  calculateViewBox,
+  "addNode":           addNode,
+  "addNodes":          addNodes,
+  "removeNode":        removeNode,
+  "updateNode":        updateNode,
+  "addEdge":           addEdge,
+  "addEdges":          addEdges,
+  "removeEdge":        removeEdge,
+  "updateEdge":        updateEdge,
+  "moveNode":          moveNode,
+  "moveEdgeNode":      moveEdgeNode,
+  "dragNode":          dragNode,
+  "dragEdge":          dragEdge,
+  "updateViewBox":     updateViewBox,
+  "setZoom":           setZoom
 }
