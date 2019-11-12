@@ -1,25 +1,24 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import isEqual from 'lodash/isEqual'
 
-// import Node from '../components/graph/Node'
 import Node from './Node'
 
-export class Nodes extends Component {
-  static propTypes = {
-    nodes: PropTypes.array.isRequired
-  }
-
-  render() {
-    return this.props.nodes.map(n => <Node key={n.id} nodeId={n.id} />)
-  }
+export function Nodes(props) {
+  return <g className="nodes">
+           { props.nodes.map( nodeId => <Node key={nodeId} id={nodeId} /> )  }
+         </g>
 }
 
+Nodes.propTypes = {
+  nodes: PropTypes.arrayOf(PropTypes.string)
+}
 
 const mapStateToProps = function(state) {
   return {
-    "nodes": Object.values(state.graph.nodes)
+    nodes: Object.keys(state.graph.nodes)
   }
 }
 
-export default connect(mapStateToProps)(Nodes)
+export default connect(mapStateToProps, null, null, { areStatePropsEqual: isEqual })(Nodes)

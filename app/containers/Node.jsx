@@ -1,51 +1,42 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import Draggable from 'react-draggable'
-import curry from 'lodash/curry'
-import pick from 'lodash/pick'
 import { connect } from 'react-redux'
-import { edgesOf } from '../graph/graph'
-import NodeCircle from '../components/graph/NodeCircle'
+import PropTypes from 'prop-types'
 
-const translateFromData = draggableData => `translate(${draggableData.x}, ${draggableData.y})`
+import NodeCircle from './../components/graph/NodeCircle'
 
-const getEdgeInDom = edge => document.getElementById(`edge-${edge.id}`)
+import merge from 'lodash/merge'
+import pick from 'lodash/pick'
 
-// function onDrag(moveNode, event, draggableData)  {
-//   let delta = pick(draggableData, ['x', 'y'])
-//   moveNode(delta)
-// }
+const DEFAULT_COLOR = "#ccc"
 
 export function Node(props) {
-  let nodeDomId = "node-" + props.node.id
-  return <Draggable onDrag={props.moveNode} >
-           <g id={nodeDomId} className="oligrapher-node">
-             <NodeCircle node={props.node} />
-           </g>
-         </Draggable>
+  return <g id={"node" + props.id} className="oligrapher-node">
+           <NodeCircle {...pick(props, ['x', 'y', 'scale', 'color'])} />
+         </g>
 }
-
 
 Node.propTypes = {
-  node:   PropTypes.object.isRequired,
-  edges:  PropTypes.array.isRequired,
-  moveNode: PropTypes.func.isRequired
+  id: PropTypes.string.isRequired,
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+  scale: PropTypes.number.isRequired,
+  name: PropTypes.string,
+  url: PropTypes.string,
+  color: PropTypes.string,
+  status: PropTypes.string.isRequired
 }
 
-const mapStateToProps = function(state, ownProps) {
-  return {
-    "node": state.graph.nodes[ownProps.nodeId],
-    "edges": edgesOf(state.graph, ownProps.nodeId)
-  }
+Node.defaultProps = {
+  color: DEFAULT_COLOR
 }
 
-const mapDispatchToProps = function(dispatch, ownProps) {
-  return {
-    moveNode: (event, draggableData) => {
-      let delta = pick(draggableData, ['x', 'y'])
-      dispatch({ type: 'MOVE_NODE', id: ownProps.nodeId, delta: delta })
-    }
-  }
+
+const mapStateToProps = (state, ownProps) => {
+  const id = ownProps.id.toString()
+  const node = state.graph.nodes[id]
+
+  return merge({id: id}, node.display)
+
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Node)
+export default connect(mapStateToProps)(Node)

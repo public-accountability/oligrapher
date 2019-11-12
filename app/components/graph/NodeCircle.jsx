@@ -1,14 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { circle } from '../../graph/node'
 
+const DEFAULT_RADIUS = 25
 
-export default function NodeCircle({node}) {
-  return <g className="node-circle-group">
-           <circle {...circle(node)} className="node-circle" />
-         </g>
+export function NodeCircle(props) {
+  return <circle className="node-circle"
+                 cx={props.x}
+                 cy={props.y}
+                 r={DEFAULT_RADIUS * props.scale}
+                 fill={props.color} />
 }
 
 NodeCircle.propTypes = {
-  node: PropTypes.object.isRequired
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+  scale: PropTypes.number.isRequired,
+  color: PropTypes.string.isRequired
 }
+
+export default React.memo(NodeCircle)

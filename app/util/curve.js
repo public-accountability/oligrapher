@@ -57,9 +57,9 @@ export function curveString(p1, p2, p3) {
 
   node1 and node2 are required. If the control point is not provided a default value will be calculated.
 */
-export function calculateCurve(node1, node2, control = null) {
+export function calculateCurve(node1, node2) {
   const p1 = pick(leftNode(node1, node2).display, ['x', 'y'])
-  const p2 = control || defaultControlPoint(node1, node2)
+  const p2 = defaultControlPoint(node1, node2)
   const p3 = pick(rightNode(node1, node2).display, ['x', 'y'])
   return curveString(p1, p2, p3)
 }

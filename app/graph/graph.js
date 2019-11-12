@@ -16,6 +16,10 @@ const DEFAULT_GRAPH = {
 
 /// helper functions
 
+// Allows functions to accpet a NODE or an ID that can either be
+// an object with field "ID" or the ID itself.
+// For example ` this.graph.nodes[getId(node)] `
+// 400, "400", and { id: 400 } all return "400"
 export function getId(thing) {
   if (typeof thing === 'string') {
     return thing
@@ -56,6 +60,10 @@ export function stats(graph) {
   }
 }
 
+// output: { minX, minY, w, h }
+// These values are used to create the viewBox attribute for the outermost SVG
+// Unless we are zoomed in or out, it the extent is a box + padding where
+// all the nodes are visible
 export function calculateViewBox(graph) {
   const zoom = graph.zoom
   const graphStats = stats(graph)
@@ -87,7 +95,6 @@ export function calculateViewBox(graph) {
     h: zoomH
   }
 }
-
 
 // Graph Getters
 
@@ -154,8 +161,9 @@ export function updateEdge(graph, edge, attributes) {
 
 // Dragging Functions
 
+export function moveEdgeNode(graph, edge, nodeId, deltas) {}
 export function moveNode(graph, nodeId, deltas) {}
-export function moveEdgeNode(graph, nodeId, deltas) {}
+
 export function dragNode(graph, nodeId, deltas) {}
 export function dragEdge(graph, edge) {}
 

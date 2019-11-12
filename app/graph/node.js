@@ -1,15 +1,6 @@
 import merge from 'lodash/merge'
 import { generate } from 'shortid'
 
-// const nodeTypes = new Set(['circle', 'image', 'triangle'])
-
-const displayDefaults = {
-  circle: {
-    radius: 25,
-    color: "#ccc"
-  }
-}
-
 const nodeDefaults = {
   id: null,
   display: {
@@ -34,14 +25,6 @@ export function newNode(attributes = {}) {
   return node
 }
 
-export function circle(node) {
-  return { cx: node.display.x,
-           cy: node.display.y,
-           r: displayDefaults.circle.radius * node.display.scale,
-           fill: displayDefaults.circle.color }
-}
-
 export default {
-  "new": newNode,
-  "circle": circle
+  "new": newNode
 }

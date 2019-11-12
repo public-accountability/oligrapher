@@ -1,46 +1,40 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import noop from 'lodash/noop'
-import Graph from '../components/graph/Graph'
-import LegacyGraph from '../../legacy-app/components/Graph'
+import GraphContainer from '../components/graph/GraphContainer'
+import Edges from './Edges'
+import Nodes from './Nodes'
+import Pannable from '../components/graph/Pannable'
+import Zoomable from '../components/graph/Zoomable'
 
-const USE_LEGACY = false
+// import Graph from '../components/graph/Graph'
+// <Nodes />
+// <Edges />
+export function Graph(props) {
+  let zoom = 1
 
-// Toggle between Legacy Graph and new graph implementation
-export function GraphProxy(props) {
-  if (USE_LEGACY) {
-    const legacyGraphProps = {
-      graph: props.graph,
-      zoom: 1.2,
-      viewOnlyHighlighted: false,
-      isEditor: false,
-      graphApi: noop,
-      isLocked: false,
-      clickNode: noop,
-      clickCaption: noop,
-      moveNode: noop,
-      moveEdge: noop,
-      moveCaption: noop
-    }
-
-    return <LegacyGraph {...legacyGraphProps} />
-  } else {
-    return <Graph {...props} />
-  }
-
+  return <GraphContainer viewBox={props.viewBox} height="100%">
+             <Zoomable zoom={zoom}>
+               <Pannable zoom={zoom }>
+                 <Nodes />
+                 <Edges />
+                 { /* <Captions /> */ }
+               </Pannable>
+             </Zoomable>
+         </GraphContainer>
 }
 
+
 Graph.propTypes = {
-  graph: PropTypes.object.isRequired
+  viewBox: PropTypes.object.isRequired
 }
 
 const mapStateToProps = function(state) {
-  return { graph: state.graph }
+  return { viewBox: state.graph.viewBox }
 }
 
-export default connect(mapStateToProps)(GraphProxy)
+export default connect(mapStateToProps)(Graph)
 
 
 /*

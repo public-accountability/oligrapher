@@ -1,6 +1,31 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+const DASH_PARAMS = "5, 2"
+
+const DISPLAY =  {
+  lineColor: {
+    normal: "#999",
+    highlighted: "#999",
+    faded: "#ddd"
+  },
+  textColor: {
+    normal: "#999",
+    highlighted: "#444",
+    faded: "#ddd"
+  },
+  bgColor: {
+    normal: "#fff",
+    highlighted: "#ff0",
+    faded: "#fff"
+  },
+  bgOpacity: {
+    normal: 0,
+    highlighted: 0.5,
+    faded: 0
+  }
+}
+
 // <path
 //             id={sp.pathId}
 //             className="edge-line"
@@ -12,30 +37,40 @@ import PropTypes from 'prop-types'
 //             markerStart={sp.markerStart}
 //             markerEnd={sp.markerEnd}></path>
 
-export default function EdgeLine(props) {
-  const svgParams = props.svgParams
-  const width = 1 + (props.scale - 1) * 5
+// markerStart: svgParams.markerStart,
+// markerEnd: svgParams.markerEnd
 
-  const pathAttributes = {
-    id: svgParams.pathId,
+export function EdgeLine(props) {
+  const width = 1 + (props.scale - 1) * 5
+  const dy = -6 * Math.sqrt(props.scale)
+  const strokeDasharray = props.dash ? DASH_PARAMS : ''
+
+  const attributes = {
+    id: `path-${props.id}`,
     className: 'edge-path',
-    d: svgParams.curve,
-    stroke: svgParams.lineColor,
-    strokeDasharray: svgParams.dash,
+    d: props.curve,
+    dy: dy,
     strokeWidth: width,
-    fill: "none",
-    markerStart: svgParams.markerStart,
-    markerEnd: svgParams.markerEnd
+    strokeDasharray: strokeDasharray,
+    stroke: DISPLAY.lineColor[props.status],
+    lineColor: DISPLAY.lineColor[props.status],
+    textColor: DISPLAY.textColor[props.status],
+    bgColor: DISPLAY.bgColor[props.status],
+    bgOpacity: DISPLAY.bgOpacity[props.status],
+    fill: "none"
   }
 
-  return <g className="edge-group">
-           <path {...pathAttributes}></path>
-         </g>
-
+  return <path {...attributes}></path>
 }
+
 
 EdgeLine.propTypes = {
-  svgParams: PropTypes.object.isRequired,
-  scale:     PropTypes.number.isRequired
-
+  id:       PropTypes.string.isRequired,
+  curve:    PropTypes.string.isRequired,
+  scale:    PropTypes.number.isRequired,
+  dash:     PropTypes.bool.isRequired,
+  status:   PropTypes.string.isRequired
 }
+
+
+export default React.memo(EdgeLine)

@@ -1,26 +1,24 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import curry from 'lodash/curry'
-import { edgeProps } from '../graph/edge'
-import Edge from '../components/graph/Edge'
+import isEqual from 'lodash/isEqual'
 
-const renderEdge = function(nodes, edge) {
-  return <Edge {...edgeProps(nodes, edge)} />
-}
+import Edge from './Edge'
 
-export function Edges({nodes, edges}) {
-  return edges.map(curry(renderEdge)(nodes))
+export function Edges(props) {
+  return <g className="edges">
+           { props.edges.map(id => <Edge key={id} id={id} />) }
+         </g>
 }
 
 Edges.propTypes = {
-  edges: PropTypes.array.isRequired,
-  nodes: PropTypes.object.isRequired
+  edges: PropTypes.arrayOf(PropTypes.string).isRequired
 }
 
 const mapStateToProps = function(state) {
-  return { "nodes": state.graph.nodes,
-           "edges": Object.values(state.graph.edges) }
+  return {
+    edges: Object.keys(state.graph.edges)
+  }
 }
 
-export default connect(mapStateToProps)(Edges)
+export default connect(mapStateToProps, null, null, { areStatePropsEqual: isEqual })(Edges)
