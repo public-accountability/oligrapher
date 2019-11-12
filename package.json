@@ -14,7 +14,8 @@
     "profile": "webpack --profile --display-modules --config webpack.prod.js",
     "lint": "yarn run lint:js && yarn run lint:scss",
     "lint:js": "eslint app",
-    "lint:scss": "stylelint app"
+    "lint:scss": "stylelint app",
+    "repl": "babel-node"
   },
   "repository": {
     "type": "git",
@@ -30,7 +31,7 @@
     "@githubprimer/octicons-react": "^8.5.0",
     "@public-accountability/littlesis-api": "^0.0.5",
     "classnames": "^2.2.6",
-    "core-js": "3.3.6",
+    "core-js": "3.4.0",
     "immer": "^5.0.0",
     "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
@@ -50,7 +51,7 @@
     "springy": "^2.8.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.0",
+    "@babel/core": "^7.7.2",
     "@babel/node": "^7.7.0",
     "@babel/plugin-proposal-class-properties": "^7.7.0",
     "@babel/plugin-proposal-optional-chaining": "^7.6.0",
