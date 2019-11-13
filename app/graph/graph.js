@@ -2,6 +2,7 @@ import at from 'lodash/at'
 import filter from 'lodash/filter'
 import merge from 'lodash/merge'
 import values from 'lodash/values'
+import { xy,  translatePoint } from '../util/helpers'
 
 const GRAPH_PADDING = 100
 const DEFAULT_VIEWBOX = { minX: -200, minY: -200, w: 400, h: 400 }
@@ -37,6 +38,7 @@ export function getId(thing) {
 }
 
 // All of the functions take `graph` as the first argument.
+// Unless the function is derriving state, all these functions mutate `graph`
 
 // Stats, Getters, and Calculations
 
@@ -162,7 +164,14 @@ export function updateEdge(graph, edge, attributes) {
 // Dragging Functions
 
 export function moveEdgeNode(graph, edge, nodeId, deltas) {}
-export function moveNode(graph, nodeId, deltas) {}
+
+export function moveNode(graph, node, deltas) {
+  let id = getId(node)
+  let currentPosition = xy(graph.nodes[id].display)
+  let newPosition = translatePoint(currentPosition, deltas)
+  merge(graph.nodes[id].display, newPosition)
+  return graph
+}
 
 export function dragNode(graph, nodeId, deltas) {}
 export function dragEdge(graph, edge) {}

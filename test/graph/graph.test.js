@@ -3,6 +3,7 @@ import values from 'lodash/values'
 import Graph, { getId } from '../../app/graph/graph'
 import Node from '../../app/graph/node'
 import Edge from '../../app/graph/edge'
+import { xy } from '../../app/util/helpers'
 
 describe('Graph', function() {
   describe("Helpers", function() {
@@ -123,7 +124,14 @@ describe('Graph', function() {
       expect(g.nodes[n.id].display.scale).to.eql(2)
     })
 
-    specify("moveNode")
+    specify("moveNode", function() {
+      let n = Node.new({display: { x: 1, y: 2}})
+      let g = Graph.new()
+      Graph.addNode(g, n)
+      expect(xy(g.nodes[n.id].display)).to.eql({x: 1, y: 2})
+      Graph.moveNode(g, n.id, {x: 2, y: 4})
+      expect(xy(g.nodes[n.id].display)).to.eql({x: 3, y: 6})
+    })
   })
 
   describe("Edges", function() {

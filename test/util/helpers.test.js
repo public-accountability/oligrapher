@@ -1,6 +1,5 @@
 import * as helpers from '../../app/util/helpers'
 
-
 describe("Helpers", function() {
   describe("xy", function() {
     specify("object with xy", function() {
@@ -12,5 +11,12 @@ describe("Helpers", function() {
       let obj = { foo: 'bar' }
       expect(helpers.xy(obj)).to.eql({})
     })
+  })
+
+  specify("translatePoint", function() {
+    let point = { x: 10, y: 10 }
+    let deltas = { x: -10, y: 10 }
+    let result = { x: 0, y: 20 }
+    expect(helpers.translatePoint(point, deltas)).to.eql(result)
   })
 })

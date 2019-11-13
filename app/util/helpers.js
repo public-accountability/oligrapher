@@ -17,3 +17,10 @@ export function getElementById(id) {
 export function xy(obj) {
   return pick(obj, ['x', 'y'])
 }
+
+export function translatePoint(start, deltas) {
+  return {
+    x: start.x + deltas.x,
+    y: start.y + deltas.y
+  }
+}
