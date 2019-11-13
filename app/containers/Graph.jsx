@@ -8,33 +8,77 @@ import Nodes from './Nodes'
 import Pannable from '../components/graph/Pannable'
 import Zoomable from '../components/graph/Zoomable'
 
-// import Graph from '../components/graph/Graph'
-// <Nodes />
-// <Edges />
-export function Graph(props) {
-  let zoom = 1
+import { computeActualZoom } from '../util/dimensions'
 
-  return <GraphContainer viewBox={props.viewBox} height="100%">
+/*
+  The core component that displays the graph
+*/
+export class Graph extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.containerRef = React.createRef()
+  }
+
+  componentDidMount() {
+    const actualZoom = computeActualZoom(this.props.viewBox, this.containerRef.current)
+    this.props.setActualZoom(actualZoom)
+  }
+
+  render() {
+    let zoom = 1
+
+    let containerProps = {
+      viewBox: this.props.viewBox,
+      height: "100%",
+      ref: this.containerRef
+    }
+
+    return <GraphContainer {...containerProps} >
              <Zoomable zoom={zoom}>
                <Pannable zoom={zoom }>
                  <Nodes />
                  <Edges />
-                 { /* <Captions /> */ }
                </Pannable>
              </Zoomable>
-         </GraphContainer>
+           </GraphContainer>
+
+  }
+
 }
 
 
+// export function Graph(props) {
+//   let zoom = 1
+
+//   return <GraphContainer viewBox={props.viewBox} height="100%">
+//              <Zoomable zoom={zoom}>
+//                <Pannable zoom={zoom }>
+//                  <Nodes />
+//                  <Edges />
+//                  { /* <Captions /> */ }
+//                </Pannable>
+//              </Zoomable>
+//          </GraphContainer>
+// }
+
+
 Graph.propTypes = {
-  viewBox: PropTypes.object.isRequired
+  viewBox: PropTypes.object.isRequired,
+  setActualZoom: PropTypes.func.isRequired
 }
 
 const mapStateToProps = function(state) {
   return { viewBox: state.graph.viewBox }
 }
 
-export default connect(mapStateToProps)(Graph)
+const mapDispatchToProps = function(dispatch) {
+  return {
+    setActualZoom: (actualZoom) => dispatch({ type: 'SET_ACTUAL_ZOOM', actualZoom })
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Graph)
 
 
 /*

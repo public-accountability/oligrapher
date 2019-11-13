@@ -2,7 +2,7 @@ import at from 'lodash/at'
 import filter from 'lodash/filter'
 import merge from 'lodash/merge'
 import values from 'lodash/values'
-import { xy,  translatePoint } from '../util/helpers'
+import { xy, translatePoint } from '../util/helpers'
 
 const GRAPH_PADDING = 100
 const DEFAULT_VIEWBOX = { minX: -200, minY: -200, w: 400, h: 400 }
@@ -12,6 +12,7 @@ const DEFAULT_GRAPH = {
   edges: {},
   captions: {},
   viewBox: null,
+  actualZoom: null,
   zoom: 1
 }
 
@@ -165,10 +166,12 @@ export function updateEdge(graph, edge, attributes) {
 
 export function moveEdgeNode(graph, edge, nodeId, deltas) {}
 
+// Moves a node to new position,
+// transforming the deltas according to `graph.actualZoom`
 export function moveNode(graph, node, deltas) {
-  let id = getId(node)
-  let currentPosition = xy(graph.nodes[id].display)
-  let newPosition = translatePoint(currentPosition, deltas)
+  const id = getId(node)
+  const currentPosition = xy(graph.nodes[id].display)
+  const newPosition = translatePoint(currentPosition, deltas)
   merge(graph.nodes[id].display, newPosition)
   return graph
 }

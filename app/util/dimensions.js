@@ -2,10 +2,10 @@ import values from 'lodash/values'
 import min from 'lodash/min'
 import max from 'lodash/max'
 /*
-|------ User Svg ---
-|  aspectRatio: 16 / 9
-|   [0,0, 800, 450]
-|
+  |------ User Svg ---
+  |  aspectRatio: 16 / 9
+  |   [0,0, 800, 450]
+  |
 */
 export function legacyComputeViewBox(graph, zoom, onlyHighlighted = true) {
   let rect
@@ -104,5 +104,12 @@ export function computeViewBox(graph, zoom) {
     h: zoomH
   }
 
+}
 
+
+export function computeActualZoom(viewBox, domNode) {
+  const { width, height } = domNode.getBoundingClientRect()
+  const xFactor = width / viewBox.w
+  const yFactor = height / viewBox.h
+  return Math.min(xFactor, yFactor)
 }
