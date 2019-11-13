@@ -10,7 +10,7 @@ import pick from 'lodash/pick'
 const DEFAULT_COLOR = "#ccc"
 
 export function Node(props) {
-  return <g id={"node" + props.id} className="oligrapher-node">
+  return <g id={"node-" + props.id} className="oligrapher-node">
            <NodeCircle {...pick(props, ['x', 'y', 'scale', 'color'])} />
          </g>
 }

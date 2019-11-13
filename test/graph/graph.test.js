@@ -4,7 +4,7 @@ import Graph, { getId } from '../../app/graph/graph'
 import Node from '../../app/graph/node'
 import Edge from '../../app/graph/edge'
 
-describe.only('Graph', function() {
+describe('Graph', function() {
   describe("Helpers", function() {
     specify('getId', function() {
       expect(getId('one')).to.eql('one')
