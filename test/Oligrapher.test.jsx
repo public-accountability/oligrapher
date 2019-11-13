@@ -1,4 +1,4 @@
-import * as helpers from '../app/helpers'
+import * as helpers from '../app/util/helpers'
 import * as render from '../app/util/render'
 import Oligrapher from '../app/Oligrapher'
 

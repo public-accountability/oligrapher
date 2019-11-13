@@ -1,5 +1,5 @@
 import values from 'lodash/values'
-import * as helpers from '../../app/helpers'
+import * as helpers from '../../app/util/helpers'
 import Node from '../../app/graph/node'
 import stateInitalizer from '../../app/util/stateInitalizer'
 

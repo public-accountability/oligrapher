@@ -1,4 +1,4 @@
-import { getElementById } from '../helpers'
+import { getElementById } from './helpers'
 import defaultState from './defaultState'
 import Graph from '../graph/graph'
 import Curve from '../graph/curve'
