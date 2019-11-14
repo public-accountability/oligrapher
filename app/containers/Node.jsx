@@ -1,16 +1,15 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import pick from 'lodash/pick'
 
 import DraggableNode from './../components/graph/DraggableNode'
 import NodeCircle from './../components/graph/NodeCircle'
 
-import pick from 'lodash/pick'
-
 const DEFAULT_COLOR = "#ccc"
 
 export function Node(props) {
-  return <DraggableNode onStop={props.onStop} actualZoom={props.actualZoom} >
+  return <DraggableNode onStop={props.onStop} onDrag={props.onDrag} actualZoom={props.actualZoom} >
            <g id={"node-" + props.id} className="oligrapher-node">
              <NodeCircle {...pick(props, ['x', 'y', 'scale', 'color'])} />
            </g>
@@ -25,8 +24,10 @@ Node.propTypes = {
   name: PropTypes.string,
   url: PropTypes.string,
   color: PropTypes.string,
+  edgeIds: PropTypes.array.isRequired,
   status: PropTypes.string.isRequired,
   onStop: PropTypes.func.isRequired,
+  onDrag: PropTypes.func.isRequired,
   actualZoom: PropTypes.number
 }
 
@@ -47,7 +48,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const id = ownProps.id.toString()
 
   return {
-    onStop: (deltas) => dispatch({ type: 'MOVE_NODE', id: id, deltas: deltas })
+    onStop: (deltas) => dispatch({ type: 'MOVE_NODE', id: id, deltas: deltas }),
+    onDrag: (deltas) => dispatch({ type: 'DRAG_NODE', id: id, deltas: deltas })
   }
 }
 

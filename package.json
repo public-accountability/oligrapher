@@ -15,7 +15,8 @@
     "lint": "yarn run lint:js && yarn run lint:scss",
     "lint:js": "eslint app",
     "lint:scss": "stylelint app",
-    "repl": "babel-node"
+    "repl": "babel-node",
+    "upgrade": "yarn upgrade-interactive --latest"
   },
   "repository": {
     "type": "git",

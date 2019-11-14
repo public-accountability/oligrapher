@@ -18,9 +18,20 @@ export function xy(obj) {
   return pick(obj, ['x', 'y'])
 }
 
-export function translatePoint(start, deltas) {
+export function xyArray(obj) {
+  return [ obj.x, obj.y ]
+}
+
+export function xyFromArray(arr) {
   return {
-    x: start.x + deltas.x,
-    y: start.y + deltas.y
+    x: arr[0],
+    y: arr[1]
+  }
+}
+
+export function translatePoint(point, deltas) {
+  return {
+    x: point.x + deltas.x,
+    y: point.y + deltas.y
   }
 }

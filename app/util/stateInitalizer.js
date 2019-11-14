@@ -8,19 +8,20 @@ import pick from 'lodash/pick'
 
 
 // Oligrapher 2 used to store these properties: { cx, cy, x1, y1, x2, y2, s1, s2 } on the `display` elements.
-// It was replaced with the `curve` field
+// It was replaced with the `curve` and `isReverse` field
 function transformEdge(legacyEdge) {
   // return early if already in new format
   if (legacyEdge.display.curve) {
     return legacyEdge
   }
-
-  const curve = Curve.from.legacyEdge(legacyEdge.display)
+  const geometry = Curve.util.calculateGeometry(legacyEdge.display)
+  const curve = Curve.from.geometry(geometry)
+  const isReverse = geometry.is_reverse
 
   return merge(
     pick(legacyEdge, ['id', 'node1_id', 'node2_id']),
     { display: pick(legacyEdge.display, ['status', 'label', 'scale', 'arrow', 'dash', 'url']) },
-    { display: { curve: curve } }
+    { display: { curve, isReverse } }
   )
 }
 

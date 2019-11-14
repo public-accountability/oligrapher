@@ -2,7 +2,8 @@ import at from 'lodash/at'
 import filter from 'lodash/filter'
 import merge from 'lodash/merge'
 import values from 'lodash/values'
-import { xy, translatePoint } from '../util/helpers'
+import { xy, xyArray, distance, translatePoint } from '../util/helpers'
+import { parseCurveString, moveCurvePoint } from './curve'
 
 const GRAPH_PADDING = 100
 const DEFAULT_VIEWBOX = { minX: -200, minY: -200, w: 400, h: 400 }
@@ -38,6 +39,26 @@ export function getId(thing) {
   }
 }
 
+// const nodePoint = xyArray(node.display)
+//   const [ curveStart, _, curveEnd ] = parseCurveString(edge.display.curve)
+//   const distanceToStart = distance(...nodePoint.concat(curveStart))
+//   const distanceToEnd = distance(...nodePoint.concat(curveEnd))
+
+
+// Determines if the node at the 'start' or 'end' of curve
+export function nodeSide({node, edge}) {
+  let side = (edge.node1_id == node.id) ? 'START' : 'END'
+
+  if (edge.display.isReverse) {
+    if (side === 'START') {
+      return 'END'
+    } else {
+      return 'START'
+    }
+  } else {
+    return side
+  }
+}
 // All of the functions take `graph` as the first argument.
 // Unless the function is derriving state, all these functions mutate `graph`
 
@@ -104,7 +125,7 @@ export function calculateViewBox(graph) {
 export function edgesOf(graph, node) {
   return filter(
     values(graph.edges),
-    edge => edge.node1_id === getId(node) || edge.node2_id === getId(node)
+    edge => edge.node1_id == getId(node) || edge.node2_id == getId(node)
   )
 }
 
@@ -115,7 +136,7 @@ export function nodesOf(graph, edge) {
 
 
 // Basic Graph Actions: Adding/Removing Components
-// These all return a modified graph
+// These all *mutate* graph and then it
 
 export function addNode(graph, node) {
   graph.nodes[getId(node)] = node
@@ -164,7 +185,18 @@ export function updateEdge(graph, edge, attributes) {
 
 // Dragging Functions
 
-export function moveEdgeNode(graph, edge, nodeId, deltas) {}
+// Updates the associated
+export function moveEdgesOfNode(graph, nodeId, deltas) {
+  const node = graph.nodes[getId(nodeId)]
+
+  edgesOf(graph, node).forEach(edge => {
+    const side = nodeSide({node, edge})
+    const newCurveString = moveCurvePoint(edge.display.curve, side, deltas)
+    graph.edges[edge.id].display.curve = newCurveString
+  })
+  return graph
+}
+
 
 // Moves a node to new position,
 // transforming the deltas according to `graph.actualZoom`
@@ -219,7 +251,7 @@ export default {
   "removeEdge":        removeEdge,
   "updateEdge":        updateEdge,
   "moveNode":          moveNode,
-  "moveEdgeNode":      moveEdgeNode,
+  "moveEdgesOfNode":   moveEdgesOfNode,
   "dragNode":          dragNode,
   "dragEdge":          dragEdge,
   "updateViewBox":     updateViewBox,

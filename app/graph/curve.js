@@ -1,5 +1,8 @@
-import pick from 'lodash'
+import toNumber from 'lodash/toNumber'
 import mapValues from 'lodash/mapValues'
+import chunk from  'lodash/chunk'
+
+import { xy, xyFromArray, translatePoint } from '../util/helpers'
 
 const curveStrength = 0.5
 const circleRadius = 25
@@ -22,14 +25,14 @@ function rightNode(a, b) {
   }
 }
 
-function midpoint(start, end) {
+export function midpoint(start, end) {
   let x = (start.display.x + end.display.x) / 2
   let y = (start.display.y + end.display.y) / 2
   return {x, y}
 }
 
 // Node, Node, Number ---> { x: number, y: number }
-function defaultOffset(leftNode, rightNode, curveStrength = 0.5) {
+export function defaultOffset(leftNode, rightNode, curveStrength = 0.5) {
   const midP = midpoint(leftNode, rightNode)
   const x = -(leftNode.display.y - midP.y)
   const y = leftNode.display.x  - midP.x
@@ -49,7 +52,13 @@ export function defaultControlPoint(node1, node2) {
 }
 
 export function curveString(p1, p2, p3) {
-  return `M ${p1.x},${p1.y} Q ${p2.x},${p2.y} ${p3.x},${p3.y}`
+  return `M ${p1.x} ${p1.y} Q ${p2.x} ${p2.y} ${p3.x} ${p3.y}`
+}
+
+
+// string --> [ [int, int] ]
+export function parseCurveString(str) {
+  return chunk(str.replace(/(M|Q)/g, '').trim().split(/[ ]+/).map(toNumber), 2)
 }
 
 /*
@@ -62,10 +71,36 @@ export function curveString(p1, p2, p3) {
   node1 and node2 are required. If the control point is not provided a default value will be calculated.
 */
 export function calculateCurve(node1, node2) {
-  const p1 = pick(leftNode(node1, node2).display, ['x', 'y'])
+  const p1 = xy(leftNode(node1, node2).display)
   const p2 = defaultControlPoint(node1, node2)
-  const p3 = pick(rightNode(node1, node2).display, ['x', 'y'])
+  const p3 = xy(rightNode(node1, node2).display)
   return curveString(p1, p2, p3)
+}
+
+
+/*
+  input: curveString, side (START or END), deleats
+
+*/
+export function moveCurvePoint(curve, side, deltas) {
+  const [p1, p2, p3] = parseCurveString(curve)
+
+  if (side === 'START') {
+    return curveString(
+      translatePoint(xyFromArray(p1), deltas),
+      xyFromArray(p2),
+      xyFromArray(p3)
+    )
+  } else if (side === 'END') {
+    return curveString(
+      xyFromArray(p1),
+      xyFromArray(p2),
+      translatePoint(xyFromArray(p3), deltas)
+    )
+  } else {
+    throw new Error("Invalid side")
+  }
+
 }
 
 export function calculateGeometry(edgeDisplay) {
@@ -137,7 +172,7 @@ export function curveFromGeometry(geometry) {
   const start = [geometry.xa, geometry.ya]
   const control = [(geometry.x + geometry.cx), (geometry.y + geometry.cy)]
   const end = [geometry.xb, geometry.yb]
-  return "M " + start.join(',') + " Q " + control.concat(end).join(',')
+  return "M " + start.join(' ') + " Q " + control.concat(end).join(' ')
 }
 
 export function curveFromLegacyEdge(edgeDisplay) {
@@ -145,7 +180,16 @@ export function curveFromLegacyEdge(edgeDisplay) {
 }
 
 
+
+
 export default {
+  util: {
+    midpoint: midpoint,
+    defaultControlPoint: defaultControlPoint,
+    defaultOffset: defaultOffset,
+    parseCurveString: parseCurveString,
+    calculateGeometry: calculateGeometry
+  },
   from: {
     geometry: curveFromGeometry,
     legacyEdge: curveFromLegacyEdge,

@@ -1,5 +1,7 @@
 import Graph from '../graph/graph'
 import produce from 'immer'
+
+import values from 'lodash/values'
 /*
 
   action.type      |  fields
@@ -27,14 +29,10 @@ export default produce( (draft, action) => {
     Graph.updateNode(draft, action.id, action.attributes)
     return
   case 'MOVE_NODE':
-
     Graph.moveNode(draft, action.id, action.deltas)
     return
   case 'DRAG_NODE':
-    Graph.moveNode(draft, action.id, action.deltas)
-    Graph.edgesOf(draft, action.id).forEach(edge => {
-      Graph.moveEdgeNode(draft, edge, action.id, action.deltas)
-    })
+    Graph.moveEdgesOfNode(draft, action.id, action.deltas)
     return
   }
 }, null)
