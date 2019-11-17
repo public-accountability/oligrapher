@@ -58,7 +58,7 @@ export class Graph {
     }, {});
 
     // set defaults
-    let newGraph = merge({}, graph, { 
+    let newGraph = merge({}, graph, {
       captions: values(graph.captions).reduce((result, caption) => {
         return merge({}, result, { [caption.id]: Caption.setDefaults(caption) });
       }, {})
@@ -70,10 +70,10 @@ export class Graph {
   static prepareEdges(graph, edges) {
     edges = edges || values(graph.edges);
 
-    return merge({}, graph, { 
-      edges: edges.reduce((result, edge) => { 
+    return merge({}, graph, {
+      edges: edges.reduce((result, edge) => {
         return merge({}, result, { [edge.id]: this.updateEdgePosition(Edge.setDefaults(edge), graph) });
-      }, {}) 
+      }, {})
     });
   }
 
@@ -99,13 +99,13 @@ export class Graph {
   static arrangeNodesInCircle(nodes, x, y, radius) {
     return values(nodes).reduce((result, node, i) => {
       let angle = (2 * Math.PI) * (i / values(nodes).length);
-      return merge({}, result, { 
-        [node.id]: merge({}, node, { display: { 
-          x: x + Math.cos(angle) * radius, 
-          y: y + Math.sin(angle) * radius 
-        } }) 
+      return merge({}, result, {
+        [node.id]: merge({}, node, { display: {
+          x: x + Math.cos(angle) * radius,
+          y: y + Math.sin(angle) * radius
+        } })
       });
-    }, {});    
+    }, {});
   }
 
   static forceLayout(graph, steps = 500) {
@@ -154,7 +154,7 @@ export class Graph {
     let damping = 0.5;
     let minEnergyThreshold = 0.1;
 
-    return new Springy.Layout.ForceDirected(gr, stiffness, repulsion, damping, minEnergyThreshold);    
+    return new Springy.Layout.ForceDirected(gr, stiffness, repulsion, damping, minEnergyThreshold);
   }
 
   static updateEdgePosition(edge, graph) {
@@ -162,7 +162,7 @@ export class Graph {
     let n1 = graph.nodes[edge.node1_id];
     let n2 = graph.nodes[edge.node2_id];
 
-    return merge({}, edge, { display: { 
+    return merge({}, edge, { display: {
       x1: n1.display.x,
       y1: n1.display.y,
       x2: n2.display.x,
@@ -269,7 +269,7 @@ export class Graph {
     let x2 = n2.display.x;
     let y2 = n2.display.y;
 
-    let midX = (x1 + x2)/2;  
+    let midX = (x1 + x2)/2;
     let midY = (y1 + y2)/2;
     let angle = Math.atan2(x1 - x2, y2 - y1);
     let num = Object.keys(nodes).length;
@@ -511,7 +511,7 @@ export class Graph {
 
     values(newGraph.captions).forEach(caption => {
       delete newGraph.captions[caption.id].display.status;
-    });    
+    });
 
     return newGraph;
   }
@@ -521,7 +521,7 @@ export class Graph {
   // groups multiple edges between the same nodes (regardless of direction) into one edge
   static bundleEdges(graph) {
     let edges = values(graph.edges).reduce((result, edge) => {
-      let idHash = [edge.node1_id, edge.node2_id].sort()[0].toString() + ":" + 
+      let idHash = [edge.node1_id, edge.node2_id].sort()[0].toString() + ":" +
                    [edge.node1_id, edge.node2_id].sort()[1].toString();
       result[idHash] = edge; // Edge.combine(edge, result[idHash]);
       return result;
@@ -554,9 +554,9 @@ export class Graph {
     }
 
     let nodes = values(graph.nodes)
-      .map(node => merge({}, node, { display: { 
+      .map(node => merge({}, node, { display: {
         x: node.display.x - center.x,
-        y: node.display.y - center.y 
+        y: node.display.y - center.y
       } })).reduce((result, node) => {
         result[node.id] = node;
         return result;
@@ -572,7 +572,7 @@ export class Graph {
 
     let center = this.calculateCenter(graph);
     let nodes = values(graph.nodes).filter(n => Node.hasPosition(n));
-    let dists = nodes.map(i => 
+    let dists = nodes.map(i =>
       Math.sqrt(Math.pow(i.display.x - center.x, 2) + Math.pow(i.display.y - center.y, 2))
     );
 

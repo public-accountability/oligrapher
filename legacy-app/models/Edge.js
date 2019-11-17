@@ -7,11 +7,11 @@ export class Edge {
   static defaults() {
     return {
       id: Helpers.generateId(),
-      display: { 
+      display: {
         scale: 1,
         arrow: false,
         status: "normal"
-      }      
+      }
     };
   }
 
@@ -36,8 +36,8 @@ export class Edge {
 
   static combineStatuses(status1, status2) {
     if (status1 == status2) {
-      return status1;      
-    } 
+      return status1;
+    }
     else if (status1 == "highlighted" || status2 == "highlighted") {
       return "highlighted";
     }
@@ -112,5 +112,5 @@ export class Edge {
 
     return { x, y, cx, cy, xa, ya, xb, yb, is_reverse };
   }
-  
+
 }

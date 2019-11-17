@@ -2,8 +2,8 @@ import at from 'lodash/at'
 import filter from 'lodash/filter'
 import merge from 'lodash/merge'
 import values from 'lodash/values'
-import { xy, xyArray, distance, translatePoint } from '../util/helpers'
-import { parseCurveString, moveCurvePoint } from './curve'
+import { xy, translatePoint } from '../util/helpers'
+import { moveCurvePoint } from './curve'
 
 const GRAPH_PADDING = 100
 const DEFAULT_VIEWBOX = { minX: -200, minY: -200, w: 400, h: 400 }
@@ -17,10 +17,10 @@ const DEFAULT_GRAPH = {
   zoom: 1
 }
 
-/// helper functions
+/// Helper Functions
 
-// Allows functions to accpet a NODE or an ID that can either be
-// an object with field "ID" or the ID itself.
+// Allows functions to accept a node or an id.
+// Both object with field "ID" or the ID itself.
 // For example ` this.graph.nodes[getId(node)] `
 // 400, "400", and { id: 400 } all return "400"
 export function getId(thing) {
@@ -38,12 +38,6 @@ export function getId(thing) {
     throw new Error("getId() only accepts Strings, Objects, and numbers")
   }
 }
-
-// const nodePoint = xyArray(node.display)
-//   const [ curveStart, _, curveEnd ] = parseCurveString(edge.display.curve)
-//   const distanceToStart = distance(...nodePoint.concat(curveStart))
-//   const distanceToEnd = distance(...nodePoint.concat(curveEnd))
-
 
 // Determines if the node at the 'start' or 'end' of curve
 export function nodeSide({node, edge}) {

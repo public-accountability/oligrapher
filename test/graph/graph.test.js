@@ -1,6 +1,6 @@
 import curry from 'lodash/curry'
 import values from 'lodash/values'
-import Graph, { getId } from '../../app/graph/graph'
+import Graph, { getId, nodeSide } from '../../app/graph/graph'
 import Node from '../../app/graph/node'
 import Edge from '../../app/graph/edge'
 import { xy } from '../../app/util/helpers'
@@ -20,6 +20,15 @@ describe('Graph', function() {
       expect(g.nodes).to.eql({})
       expect(g.edges).to.eql({})
       expect(Graph.new()).not.to.eq(Graph.new())
+    })
+
+    specify("nodeSide", function() {
+      let n1 = Node.new()
+      let n2 = Node.new()
+      let edge = Edge.newEdgeFromNodes(n1, n2)
+
+      expect(nodeSide({node: n1, edge})).to.eql('START')
+      expect(nodeSide({node: n2, edge})).to.eql('END')
     })
   })
 

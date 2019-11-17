@@ -25,6 +25,11 @@ Edge.propTypes = {
   curve:      PropTypes.string.isRequired
 }
 
+Edge.defaultProps = {
+  dash: false
+}
+
+
 const mapStateToProps = (state, ownProps) => {
   let id = ownProps.id.toString()
   let edge = state.graph.edges[id]
