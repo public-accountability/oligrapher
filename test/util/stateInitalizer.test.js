@@ -3,7 +3,7 @@ import * as helpers from '../../app/util/helpers'
 import Node from '../../app/graph/node'
 import stateInitalizer, { flatten } from '../../app/util/stateInitalizer'
 
-describe.only('stateInitalizer', function() {
+describe('stateInitalizer', function() {
   const fakeElement = { height: 100, width: 100 }
 
   beforeEach(function() {

@@ -6,15 +6,20 @@ const edgeDefaults = {
   id: null,
   node1_id: null,
   node2_id: null,
-  display: {
-    status: "normal",
-    label: null,
-    scale: 1,
-    arrow: null,
-    dash: null,
-    url: null,
-    curve: null
-  }
+  status: "normal",
+  label: null,
+  scale: 1,
+  arrow: null,
+  dash: null,
+  url: null,
+  x1: null,
+  y1: null,
+  x2: null,
+  y2: null,
+  cx: null,
+  cy: null,
+  s1: null,
+  s2: null
 }
 
 export function newEdge(attributes = {}) {
@@ -32,9 +37,9 @@ export function newEdgeFromNodes(n1, n2) {
   edge.node1_id = n1.id
   edge.node2_id = n2.id
 
-  if (n1.display.x && n1.display.y) {
-    edge.display.curve = Curve.from.nodes(n1, n2)
-  }
+  // if (n1.display.x && n1.display.y) {
+  //   edge.display.curve = Curve.from.nodes(n1, n2)
+  // }
 
   return edge
 }

@@ -3,16 +3,14 @@ import { generate } from 'shortid'
 
 const nodeDefaults = {
   id: null,
-  display: {
-    name: null,
-    x: null,
-    y: null,
-    scale: 1,
-    status: "normal",
-    type: "circle",
-    image: null,
-    url: null
-  }
+  name: null,
+  x: null,
+  y: null,
+  scale: 1,
+  status: "normal",
+  type: "circle",
+  image: null,
+  url: null
 }
 
 export function newNode(attributes = {}) {
