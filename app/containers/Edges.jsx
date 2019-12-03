@@ -7,17 +7,17 @@ import Edge from './Edge'
 
 export function Edges(props) {
   return <g className="edges">
-           { props.edges.map(id => <Edge key={id} id={id} />) }
+           { props.edgeIds.map(id => <Edge key={id} id={id} />) }
          </g>
 }
 
 Edges.propTypes = {
-  edges: PropTypes.arrayOf(PropTypes.string).isRequired
+  edgeIds: PropTypes.arrayOf(PropTypes.string).isRequired
 }
 
 const mapStateToProps = function(state) {
   return {
-    edges: Object.keys(state.graph.edges)
+    edgeIds: Object.keys(state.graph.edges)
   }
 }
 

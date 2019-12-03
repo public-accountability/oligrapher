@@ -41,7 +41,7 @@ export function flatten(obj) {
 */
 export default function stateInitalizer(serializedState) {
   let state = merge({}, defaultState, serializedState)
-  state.graph = Graph.new(serializedState.graph)
+
 
   Object.keys(state.graph.edges).forEach(edgeId => {
     let edge = state.graph.edges[edgeId]
@@ -54,5 +54,6 @@ export default function stateInitalizer(serializedState) {
   })
 
   state.settings.rootElement = getElementById(state.settings.domId)
+  state.graph = Graph.new(state.graph)
   return state
 }

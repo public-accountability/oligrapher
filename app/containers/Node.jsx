@@ -24,7 +24,6 @@ Node.propTypes = {
   name: PropTypes.string,
   url: PropTypes.string,
   color: PropTypes.string,
-  edgeIds: PropTypes.array.isRequired,
   status: PropTypes.string.isRequired,
   onStop: PropTypes.func.isRequired,
   onDrag: PropTypes.func.isRequired,
@@ -38,10 +37,10 @@ Node.defaultProps = {
 
 const mapStateToProps = (state, ownProps) => {
   const id = ownProps.id.toString()
-  const nodeDisplay = state.graph.nodes[id].display
+  const node = state.graph.nodes[id]
   const actualZoom = state.graph.actualZoom
 
-  return { ...nodeDisplay, id, actualZoom }
+  return { ...node, id, actualZoom }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {

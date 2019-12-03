@@ -7,17 +7,17 @@ import Node from './Node'
 
 export function Nodes(props) {
   return <g className="nodes">
-           { props.nodes.map( nodeId => <Node key={nodeId} id={nodeId} /> )  }
+           { props.nodeIds.map( id => <Node key={id} id={id} /> )  }
          </g>
 }
 
 Nodes.propTypes = {
-  nodes: PropTypes.arrayOf(PropTypes.string)
+  nodeIds: PropTypes.arrayOf(PropTypes.string)
 }
 
 const mapStateToProps = function(state) {
   return {
-    nodes: Object.keys(state.graph.nodes)
+    nodeIds: Object.keys(state.graph.nodes)
   }
 }
 

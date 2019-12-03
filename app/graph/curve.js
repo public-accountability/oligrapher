@@ -1,5 +1,4 @@
 /*
-
 data store
 --------------------------------------------
 x1, y1           Node1 (center of node)
@@ -13,19 +12,10 @@ s1 & s2          Scale of Nodes 1 & 2
 geometry
 ----------------------------------------------
 x, y              midpoint
-cx, cy            curve offset* (stored in)
 xa, ya            Left (point0 of Quadratic Curve)
 xb, yb            Right (point2 of Quadratic Curve)
+cx, cy            curve offset (stored in)
 is_reverse
-{ x, y,
- cx, cy,
- xa, ya,
- xb, yb,
- is_reverse }
-
-
-
-
 */
 
 import toNumber from 'lodash/toNumber'
@@ -35,16 +25,13 @@ import clone from 'lodash/clone'
 
 import { xy, xyFromArray, translatePoint } from '../util/helpers'
 
-
-
-
 const curveStrength = 0.5
 const circleRadius = 25
 const circleSpacing = 4
 
 // (Node, Node) --> Node
 function leftNode(a, b) {
-  if (a.display.x <= b.display.x) {
+  if (a.x <= b.x) {
     return a
   } else {
     return b
@@ -60,34 +47,34 @@ function rightNode(a, b) {
 }
 
 export function midpoint(start, end) {
-  let x = (start.display.x + end.display.x) / 2
-  let y = (start.display.y + end.display.y) / 2
+  let x = (start.x + end.x) / 2
+  let y = (start.y + end.y) / 2
   return {x, y}
 }
 
 // Node, Node, Number ---> { x: number, y: number }
-export function defaultOffset(leftNode, rightNode, curveStrength = 0.5) {
-  const midP = midpoint(leftNode, rightNode)
-  const x = -(leftNode.display.y - midP.y)
-  const y = leftNode.display.x  - midP.x
+// export function defaultOffset(leftNode, rightNode, curveStrength = 0.5) {
+//   const midP = midpoint(leftNode, rightNode)
+//   const x = -(leftNode.display.y - midP.y)
+//   const y = leftNode.display.x  - midP.x
 
-  return mapValues({ x, y }, n => n * curveStrength)
-}
+//   return mapValues({ x, y }, n => n * curveStrength)
+// }
 
-export function defaultControlPoint(node1, node2) {
-  const nodeL = leftNode(node1, node2)
-  const nodeR = rightNode(node1, node2)
-  const midP = midpoint(nodeL, nodeR)
-  const offset = defaultOffset(nodeL, nodeR)
+// export function defaultControlPoint(node1, node2) {
+//   const nodeL = leftNode(node1, node2)
+//   const nodeR = rightNode(node1, node2)
+//   const midP = midpoint(nodeL, nodeR)
+//   const offset = defaultOffset(nodeL, nodeR)
 
-  return { x: midP.x + offset.x,
-           y: midP.y + offset.y }
+//   return { x: midP.x + offset.x,
+//            y: midP.y + offset.y }
 
-}
+// }
 
-export function curveString(p1, p2, p3) {
-  return `M ${p1.x} ${p1.y} Q ${p2.x} ${p2.y} ${p3.x} ${p3.y}`
-}
+// export function curveString(p1, p2, p3) {
+//   return `M ${p1.x} ${p1.y} Q ${p2.x} ${p2.y} ${p3.x} ${p3.y}`
+// }
 
 
 // string --> [ [int, int] ]
@@ -104,72 +91,70 @@ export function parseCurveString(str) {
 
   node1 and node2 are required. If the control point is not provided a default value will be calculated.
 */
-export function calculateCurve(node1, node2) {
-  const p1 = xy(leftNode(node1, node2).display)
-  const p2 = defaultControlPoint(node1, node2)
-  const p3 = xy(rightNode(node1, node2).display)
-  return curveString(p1, p2, p3)
-}
+// export function calculateCurve(node1, node2) {
+//   const p1 = xy(leftNode(node1, node2).display)
+//   const p2 = defaultControlPoint(node1, node2)
+//   const p3 = xy(rightNode(node1, node2).display)
+//   return curveString(p1, p2, p3)
+// }
 
 
 /*
   input: curveString, side (START or END), deleats
 
 */
-export function moveCurvePointOld(curve, side, deltas) {
-  const [p1, p2, p3] = parseCurveString(curve)
+// export function moveCurvePointOld(curve, side, deltas) {
+//   const [p1, p2, p3] = parseCurveString(curve)
 
-  if (side === 'START') {
-    return curveString(
-      translatePoint(xyFromArray(p1), deltas),
-      xyFromArray(p2),
-      xyFromArray(p3)
-    )
-  } else if (side === 'END') {
-    return curveString(
-      xyFromArray(p1),
-      xyFromArray(p2),
-      translatePoint(xyFromArray(p3), deltas)
-    )
-  } else {
-    throw new Error("Invalid side")
-  }
+//   if (side === 'START') {
+//     return curveString(
+//       translatePoint(xyFromArray(p1), deltas),
+//       xyFromArray(p2),
+//       xyFromArray(p3)
+//     )
+//   } else if (side === 'END') {
+//     return curveString(
+//       xyFromArray(p1),
+//       xyFromArray(p2),
+//       translatePoint(xyFromArray(p3), deltas)
+//     )
+//   } else {
+//     throw new Error("Invalid side")
+//   }
 
-}
+// }
 
-function angleBetweenPoints(a, b) {
-  return Math.atan2(b.y - a.y, b.x - a.x)
-}
+// function angleBetweenPoints(a, b) {
+//   return Math.atan2(b.y - a.y, b.x - a.x)
+// }
 
-function rotatePoint(point, angle) {
-  const cos = Math.cos(angle)
-  const sin = Math.sin(angle)
+// function rotatePoint(point, angle) {
+//   const cos = Math.cos(angle)
+//   const sin = Math.sin(angle)
 
-  return { x: point.x * cos - point.y * sin,
-           y: point.x * sin + point.y * cos }
-}
+//   return { x: point.x * cos - point.y * sin,
+//            y: point.x * sin + point.y * cos }
+// }
 
-export function moveCurvePoint(curveString, side, deltas) {
-  const curve = parseCurveString(curveString).map(xyFromArray)
-  const futureCurve = clone(curve)
+// export function moveCurvePoint(curveString, side, deltas) {
+//   const curve = parseCurveString(curveString).map(xyFromArray)
+//   const futureCurve = clone(curve)
 
-  if (side === 'START') {
-    futureCurve[0] = translatePoint(curve[0], deltas)
-  } else {
-    futureCurve[2] = translatePoint(curve[2], deltas)
-  }
+//   if (side === 'START') {
+//     futureCurve[0] = translatePoint(curve[0], deltas)
+//   } else {
+//     futureCurve[2] = translatePoint(curve[2], deltas)
+//   }
 
-  const deltaAngle = angleBetweenPoints(futureCurve[0], futureCurve[2]) - angleBetweenPoints(curve[0], curve[2])
+//   const deltaAngle = angleBetweenPoints(futureCurve[0], futureCurve[2]) - angleBetweenPoints(curve[0], curve[2])
 
-  futureCurve[1] = rotatePoint(curve[1], deltaAngle)
+//   futureCurve[1] = rotatePoint(curve[1], deltaAngle)
 
-  return curveString(...futureCurve)
+//   return curveString(...futureCurve)
 
-}
-
-
-export function calculateGeometry(edgeDisplay) {
-  let { cx, cy, x1, y1, x2, y2, s1, s2 } = edgeDisplay
+// }
+export function calculateGeometry(edge) {
+  let { cx, cy, x1, y1, x2, y2, s1, s2 } = edge
   let r1 = s1 * circleRadius
   let r2 = s2 * circleRadius
 
@@ -205,7 +190,6 @@ export function calculateGeometry(edgeDisplay) {
   let my = cy + y
 
   // curves should not reach the centers of nodes but rather stop at their edges, so we:
-
   // calculate spacing between curve endpoint and node center
   let sa = is_reverse ? s2 : s1
   let sb = is_reverse ? s1 : s2
@@ -240,24 +224,24 @@ export function curveFromGeometry(geometry) {
   return "M " + start.join(' ') + " Q " + control.concat(end).join(' ')
 }
 
-export function curveFromLegacyEdge(edgeDisplay) {
-  return curveFromGeometry(calculateGeometry(edgeDisplay))
-}
-
-
-
+// export function curveFromLegacyEdge(edgeDisplay) {
+//   return curveFromGeometry(calculateGeometry(edgeDisplay))
+// }
+// util: {
+  //   midpoint: midpoint,
+  //   // defaultControlPoint: defaultControlPoint,
+  //   // defaultOffset: defaultOffset,
+  //   parseCurveString: parseCurveString,
+  //   calculateGeometry: calculateGeometry
+  // },
+  // from: {
+  //   geometry: curveFromGeometry,
+  //   // legacyEdge: curveFromLegacyEdge,
+  //   // nodes: calculateCurve
+  // }
 
 export default {
-  util: {
-    midpoint: midpoint,
-    defaultControlPoint: defaultControlPoint,
-    defaultOffset: defaultOffset,
-    parseCurveString: parseCurveString,
-    calculateGeometry: calculateGeometry
-  },
-  from: {
-    geometry: curveFromGeometry,
-    legacyEdge: curveFromLegacyEdge,
-    nodes: calculateCurve
-  }
+  calculateGeometry: calculateGeometry,
+  curveFromGeometry: curveFromGeometry
+
 }

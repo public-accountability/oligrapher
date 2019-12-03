@@ -40,34 +40,33 @@ export function getId(thing) {
 }
 
 // Determines if the node at the 'start' or 'end' of curve
-export function nodeSide({node, edge}) {
-  let side = (edge.node1_id == node.id) ? 'START' : 'END'
+// export function nodeSide({node, edge}) {
+//   let side = (edge.node1_id == node.id) ? 'START' : 'END'
 
-  if (edge.display.isReverse) {
-    if (side === 'START') {
-      return 'END'
-    } else {
-      return 'START'
-    }
-  } else {
-    return side
-  }
-}
+//   if (edge.is_reverse) {
+//     if (side === 'START') {
+//       return 'END'
+//     } else {
+//       return 'START'
+//     }
+//   } else {
+//     return side
+//   }
+// }
 // All of the functions take `graph` as the first argument.
 // Unless the function is derriving state, all these functions mutate `graph`
 
 // Stats, Getters, and Calculations
 
-const minNodeX = nodes => Math.min(...nodes.map(n => n.display.x))
-const minNodeY = nodes => Math.min(...nodes.map(n => n.display.y))
-const maxNodeX = nodes => Math.max(...nodes.map(n => n.display.x))
-const maxNodeY = nodes => Math.max(...nodes.map(n => n.display.y))
+const minNodeX = nodes => Math.min(...nodes.map(n => n.x))
+const minNodeY = nodes => Math.min(...nodes.map(n => n.y))
+const maxNodeX = nodes => Math.max(...nodes.map(n => n.x))
+const maxNodeY = nodes => Math.max(...nodes.map(n => n.y))
 
 // TODO: Nodes with LittleSis IDs
 
 export function stats(graph) {
   const nodes = values(graph.nodes)
-
   return {
     nodeCount: nodes.length,
     edgeCount: values(graph.edges).length,
@@ -135,7 +134,6 @@ export function nodesOf(graph, edge) {
 
 // Basic Graph Actions: Adding/Removing Components
 // These all *mutate* graph and then it
-
 export function addNode(graph, node) {
   graph.nodes[getId(node)] = node
   return graph
@@ -151,9 +149,9 @@ export function removeNode(graph, node) {
   return graph
 }
 
-// Updates the ".display" object of a node.
+// Updates the attributes object of a node.
 export function updateNode(graph, node, attributes) {
-  merge(graph.nodes[getId(node)].display, attributes)
+  merge(graph.nodes[getId(node)], attributes)
   return graph
 }
 
@@ -172,9 +170,8 @@ export function removeEdge(graph, edge) {
   return graph
 }
 
-// Updates the ".display" object of a edge
 export function updateEdge(graph, edge, attributes) {
-  merge(graph.edges[getId(edge)].display, attributes)
+  merge(graph.edges[getId(edge)], attributes)
   return graph
 }
 
@@ -195,9 +192,9 @@ export function moveEdgesOfNode(graph, nodeId, deltas) {
 // transforming the deltas according to `graph.actualZoom`
 export function moveNode(graph, node, deltas) {
   const id = getId(node)
-  const currentPosition = xy(graph.nodes[id].display)
+  const currentPosition = xy(graph.nodes[id])
   const newPosition = translatePoint(currentPosition, deltas)
-  merge(graph.nodes[id].display, newPosition)
+  merge(graph.nodes[id], newPosition)
   return graph
 }
 

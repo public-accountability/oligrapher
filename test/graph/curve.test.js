@@ -5,8 +5,8 @@ describe('Curve', function() {
   let n1, n2
 
   beforeEach(function() {
-    n1 = Node.new({display: {x: 0, y: 0 }})
-    n2 = Node.new({display: {x: 10, y: 10 }})
+    n1 = Node.new({x: 0, y: 0 })
+    n2 = Node.new({x: 10, y: 10 })
   })
 
   specify('midpoint()', function() {
