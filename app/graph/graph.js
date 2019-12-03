@@ -116,6 +116,10 @@ export function calculateViewBox(graph) {
 
 // Graph Getters
 
+export const getNode = (graph, nodeId) => graph.nodes[getId(nodeId)]
+export const getEdge = (graph, edgeId) => graph.nodes[getId(edgeId)]
+
+
 export function edgesOf(graph, node) {
   return filter(
     values(graph.edges),
@@ -147,13 +151,11 @@ export function removeNode(graph, node) {
   return graph
 }
 
-
 // Updates the ".display" object of a node.
 export function updateNode(graph, node, attributes) {
   merge(graph.nodes[getId(node)].display, attributes)
   return graph
 }
-
 
 export function addEdge(graph, edge) {
   graph.edges[edge.id] = edge
@@ -164,7 +166,6 @@ export function addEdges(graph, edges) {
   edges.forEach(edge => addEdge(graph, edge))
   return graph
 }
-
 
 export function removeEdge(graph, edge) {
   delete graph.edges[getId(edge)]
@@ -179,9 +180,8 @@ export function updateEdge(graph, edge, attributes) {
 
 // Dragging Functions
 
-// Updates the associated
 export function moveEdgesOfNode(graph, nodeId, deltas) {
-  const node = graph.nodes[getId(nodeId)]
+  const node = getNode(graph, nodeId)
 
   edgesOf(graph, node).forEach(edge => {
     const side = nodeSide({node, edge})
@@ -190,7 +190,6 @@ export function moveEdgesOfNode(graph, nodeId, deltas) {
   })
   return graph
 }
-
 
 // Moves a node to new position,
 // transforming the deltas according to `graph.actualZoom`
@@ -213,21 +212,17 @@ export function updateViewBox(graph) {
 }
 
 // Zoom
-
 export function setZoom(graph, zoomLevel) {
   throw new Error("Not Yet Implemented")
 }
 
-
 // Create a new graph object
 // Available as Graph.new() and typically used to create a new empty graph
-
 export function newGraph(attributes = {}) {
   let g = merge({}, DEFAULT_GRAPH, attributes)
   updateViewBox(g)
   return g
 }
-
 
 
 export default {

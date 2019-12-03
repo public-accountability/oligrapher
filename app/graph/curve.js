@@ -1,8 +1,42 @@
+/*
+
+data store
+--------------------------------------------
+x1, y1           Node1 (center of node)
+x2, y2           Node2 (center of node)
+cx, cy           curve offset (from midpoint)
+s1 & s2          Scale of Nodes 1 & 2
+
+{ x, y, cx, cy, xa, ya, xb, yb, is_reverse }
+
+// `M ${xa}, ${ya} Q ${x + cx}, ${y + cy}, ${xb}, ${yb}`
+geometry
+----------------------------------------------
+x, y              midpoint
+cx, cy            curve offset* (stored in)
+xa, ya            Left (point0 of Quadratic Curve)
+xb, yb            Right (point2 of Quadratic Curve)
+is_reverse
+{ x, y,
+ cx, cy,
+ xa, ya,
+ xb, yb,
+ is_reverse }
+
+
+
+
+*/
+
 import toNumber from 'lodash/toNumber'
 import mapValues from 'lodash/mapValues'
 import chunk from  'lodash/chunk'
+import clone from 'lodash/clone'
 
 import { xy, xyFromArray, translatePoint } from '../util/helpers'
+
+
+
 
 const curveStrength = 0.5
 const circleRadius = 25
@@ -82,7 +116,7 @@ export function calculateCurve(node1, node2) {
   input: curveString, side (START or END), deleats
 
 */
-export function moveCurvePoint(curve, side, deltas) {
+export function moveCurvePointOld(curve, side, deltas) {
   const [p1, p2, p3] = parseCurveString(curve)
 
   if (side === 'START') {
@@ -102,6 +136,37 @@ export function moveCurvePoint(curve, side, deltas) {
   }
 
 }
+
+function angleBetweenPoints(a, b) {
+  return Math.atan2(b.y - a.y, b.x - a.x)
+}
+
+function rotatePoint(point, angle) {
+  const cos = Math.cos(angle)
+  const sin = Math.sin(angle)
+
+  return { x: point.x * cos - point.y * sin,
+           y: point.x * sin + point.y * cos }
+}
+
+export function moveCurvePoint(curveString, side, deltas) {
+  const curve = parseCurveString(curveString).map(xyFromArray)
+  const futureCurve = clone(curve)
+
+  if (side === 'START') {
+    futureCurve[0] = translatePoint(curve[0], deltas)
+  } else {
+    futureCurve[2] = translatePoint(curve[2], deltas)
+  }
+
+  const deltaAngle = angleBetweenPoints(futureCurve[0], futureCurve[2]) - angleBetweenPoints(curve[0], curve[2])
+
+  futureCurve[1] = rotatePoint(curve[1], deltaAngle)
+
+  return curveString(...futureCurve)
+
+}
+
 
 export function calculateGeometry(edgeDisplay) {
   let { cx, cy, x1, y1, x2, y2, s1, s2 } = edgeDisplay
