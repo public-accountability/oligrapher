@@ -35,15 +35,6 @@ describe('Graph', function() {
       expect(determineNodeNumber({edge, node: n2})).to.eql(2)
       expect(() => determineNodeNumber({edge, node: Node.new()})).to.throw(/Edge is not connected/)
     })
-
-    xspecify("nodeSide", function() {
-      let n1 = Node.new()
-      let n2 = Node.new()
-      let edge = Edge.newEdgeFromNodes(n1, n2)
-
-      expect(nodeSide({node: n1, edge})).to.eql('START')
-      expect(nodeSide({node: n2, edge})).to.eql('END')
-    })
   })
 
   describe("Getters", function() {
@@ -246,6 +237,7 @@ describe('Graph', function() {
         expect({x: updatedEdge.x2, y: updatedEdge.y2}).to.eql({x: 100, y: 100})
       })
     })
+
 
     specify('dragNodeEdge')
     xdescribe('dragNode', function() {})

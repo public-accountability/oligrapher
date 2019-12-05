@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Header from './Header'
 import Graph from './Graph'
+import Editor from './Editor'
 // import Story form './Story'
 
 /*
@@ -23,6 +24,7 @@ export class Root extends Component {
     return <div id="oligrapher-container">
              <Header />
              <Graph />
+             <Editor />
            </div>
   }
 }

@@ -24,6 +24,7 @@ export default class Oligrapher {
     initialState.hooks = userConfig?.hooks || {}
     initialState.graph = userConfig?.graph || {}
     initialState.attributes = userConfig?.attributes || {}
+    initialState.display = userConfig?.display || {}
 
     this.store = createOligrapherStore(stateInitalizer(initialState))
     renderNewApplication(this.store, this.store.getState().settings.rootElement)
