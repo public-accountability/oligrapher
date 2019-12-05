@@ -205,8 +205,7 @@ describe('Graph', function() {
     })
   })
 
-
-  describe.only('dragging', function() {
+  describe('dragging', function() {
     let node1, node2, node3, edge1, edge2, graph
 
     beforeEach(function() {

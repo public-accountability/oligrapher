@@ -9,9 +9,9 @@ import EdgeLine from './../components/graph/EdgeLine'
 
 export function Edge(props) {
   const edgeDomId = `edge-${props.id}`
+
   const geometry = Curve.calculateGeometry(props)
   const curve = Curve.curveFromGeometry(geometry)
-
   const edgeLineProps = { ...pick(props, ['id', 'scale', 'dash', 'status']), curve }
 
   return <g className="edge-group" id={edgeDomId}>

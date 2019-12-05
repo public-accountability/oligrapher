@@ -42,9 +42,7 @@ export class Graph extends React.Component {
                </Pannable>
              </Zoomable>
            </GraphContainer>
-
   }
-
 }
 
 

@@ -40,7 +40,7 @@ const DISPLAY =  {
 // markerStart: svgParams.markerStart,
 // markerEnd: svgParams.markerEnd
 
-export function EdgeLine(props) {
+export default function EdgeLine(props) {
   const width = 1 + (props.scale - 1) * 5
   const dy = -6 * Math.sqrt(props.scale)
   const strokeDasharray = props.dash ? DASH_PARAMS : ''
@@ -73,4 +73,4 @@ EdgeLine.propTypes = {
 }
 
 
-export default React.memo(EdgeLine)
+// export default React.memo(EdgeLine)

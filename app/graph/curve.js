@@ -19,11 +19,7 @@ is_reverse
 */
 
 import toNumber from 'lodash/toNumber'
-import mapValues from 'lodash/mapValues'
 import chunk from  'lodash/chunk'
-import clone from 'lodash/clone'
-
-import { xy, xyFromArray, translatePoint } from '../util/helpers'
 
 const curveStrength = 0.5
 const circleRadius = 25
@@ -243,5 +239,4 @@ export function curveFromGeometry(geometry) {
 export default {
   calculateGeometry: calculateGeometry,
   curveFromGeometry: curveFromGeometry
-
 }

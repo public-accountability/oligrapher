@@ -1,7 +1,7 @@
 import Curve from '../../app/graph/curve'
 import Node from '../../app/graph/node'
 
-describe('Curve', function() {
+xdescribe('Curve', function() {
   let n1, n2
 
   beforeEach(function() {
