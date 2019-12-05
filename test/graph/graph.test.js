@@ -189,8 +189,24 @@ describe('Graph', function() {
       expect(g.edges[edge.id].url).to.eql('http://example.com')
       expect(g.edges[edge.id].label).to.eql('example label')
     })
+  })
 
-    specify("moveEdgeNode")
+
+  describe.only('dragging', function() {
+    specify('moveNode', function() {
+      let node = Node.new({x: 10, y: 20 })
+      let graph = Graph.new()
+      Graph.addNode(graph, node)
+      expect(xy(graph.nodes[node.id])).to.eql({x: 10, y: 20 })
+      Graph.moveNode(graph, node.id, {x: -2,  y: -5 })
+      expect(xy(graph.nodes[node.id])).to.eql({x: 8, y: 15 })
+    })
+
+    specify('updateEdgeOffset')
+    specify('updateEdgeCurveEnd')
+    specify('dragNodeEdge')
+    specify('dragNode')
+    specify('dragEdge')
   })
 
   describe("ViewBox", function() {

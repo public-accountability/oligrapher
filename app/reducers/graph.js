@@ -29,10 +29,11 @@ export default produce( (draft, action) => {
     Graph.updateNode(draft, action.id, action.attributes)
     return
   case 'MOVE_NODE':
+    Graph.dragNode(draft, action.id, action.deltas)
     Graph.moveNode(draft, action.id, action.deltas)
     return
   case 'DRAG_NODE':
-    Graph.moveEdgesOfNode(draft, action.id, action.deltas)
+    Graph.dragNode(draft, action.id, action.deltas)
     return
   }
 }, null)

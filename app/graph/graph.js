@@ -1,8 +1,11 @@
 import at from 'lodash/at'
 import filter from 'lodash/filter'
 import merge from 'lodash/merge'
+import pick from 'lodash/pick'
+
 import values from 'lodash/values'
-import { xy, translatePoint } from '../util/helpers'
+
+import { xy, translatePoint, rotatePoint } from '../util/helpers'
 import { moveCurvePoint } from './curve'
 
 const GRAPH_PADDING = 100
@@ -30,7 +33,7 @@ export function getId(thing) {
     if (thing.id) {
       return getId(thing.id)
     } else {
-      throw new Error("getId() failed: Missing id from object")
+      throw new Error("getId() failed: the object does not have the property 'id'")
     }
   } else if (typeof thing === 'number') {
     return thing.toString()
@@ -38,6 +41,25 @@ export function getId(thing) {
     throw new Error("getId() only accepts Strings, Objects, and numbers")
   }
 }
+
+// Which node of the edge is the node -- can be either 1 or 2
+function determineNodeNumber({edge, node}) {
+  const nodeId = getId(node)
+
+  if (edge.node1_id.toString() === nodeId) {
+    return 1
+  } else if (edge.node2_id.toString() === nodeId) {
+    return 2
+  } else {
+    throw new Error("Edge is not connected to the node")
+  }
+}
+
+function edgeAngle (edge) {
+  Math.atan2(edge.y2 - edge.y1, edge.x2 - edge.x1)
+}
+
+const logProxy = (x, label = '') => console.log(label, JSON.parse(JSON.stringify(x)))
 
 // Determines if the node at the 'start' or 'end' of curve
 // export function nodeSide({node, edge}) {
@@ -57,7 +79,6 @@ export function getId(thing) {
 // Unless the function is derriving state, all these functions mutate `graph`
 
 // Stats, Getters, and Calculations
-
 const minNodeX = nodes => Math.min(...nodes.map(n => n.x))
 const minNodeY = nodes => Math.min(...nodes.map(n => n.y))
 const maxNodeX = nodes => Math.max(...nodes.map(n => n.x))
@@ -133,11 +154,12 @@ export function nodesOf(graph, edge) {
 
 
 // Basic Graph Actions: Adding/Removing Components
-// These all *mutate* graph and then it
+// These all *mutate* graph and then return it
 export function addNode(graph, node) {
   graph.nodes[getId(node)] = node
   return graph
 }
+
 
 export function addNodes(graph, nodes) {
   nodes.forEach(node => addNode(graph, node))
@@ -176,29 +198,73 @@ export function updateEdge(graph, edge, attributes) {
 }
 
 // Dragging Functions
-
-export function moveEdgesOfNode(graph, nodeId, deltas) {
-  const node = getNode(graph, nodeId)
-
-  edgesOf(graph, node).forEach(edge => {
-    const side = nodeSide({node, edge})
-    const newCurveString = moveCurvePoint(edge.display.curve, side, deltas)
-    graph.edges[edge.id].display.curve = newCurveString
-  })
-  return graph
-}
-
 // Moves a node to new position,
-// transforming the deltas according to `graph.actualZoom`
 export function moveNode(graph, node, deltas) {
-  const id = getId(node)
-  const currentPosition = xy(graph.nodes[id])
-  const newPosition = translatePoint(currentPosition, deltas)
-  merge(graph.nodes[id], newPosition)
+  const newPosition = translatePoint(getNode(graph, node), deltas)
+  merge(graph.nodes[getId(node)], newPosition)
   return graph
 }
 
-export function dragNode(graph, nodeId, deltas) {}
+// function updateNodeOfEdge(edge, node) {
+//   if (edge.node1_id == node.id) {
+//     return merge({}, edge, { x1: node.x, y1: node.y })
+//   } else {
+//     return merge({}, edge, { x2: node.x, y2: node.y })
+//   }
+// }
+
+// function moveEdgeOfNode(oldEdge, node, deltas) {
+//   const newEdge = updateNodeOfEdge(oldEdge, newNode)
+//   const deltaAngle = edgeAngle(newEdge) - edgeAngle(oldEdge)
+//   const rotatedPoint = rotatePoint({x: newEdge.cx, y: newEdge.cy }, deltaAngle)
+//   newEdge.cx = rotatedPoint.x
+//   newEdge.cy = rotatedPoint.y
+//   return newEdge
+// }
+
+
+//
+
+function updateEdgeOffset(oldEdge, newEdge) {
+  const deltaAngle = edgeAngle(newEdge) - edgeAngle(oldEdge)
+  const rotatedPoint = rotatePoint({x: newEdge.cx, y: newEdge.cy }, deltaAngle)
+  return {...newEdge, cx: rotatedPoint.x, cy: rotatedPoint.cy }
+}
+
+// This updates either x1, y1 or x2, y2 of the edge with the new coordinates.
+// Returns a new copy of the edge with the updated values
+// {edge}, Number, {x,y} --> {edge}
+function updateEdgeCurveEnd(edge, nodeNumber, coordinates) {
+  if (nodeNumber === 1) {
+    return {...edge, x1: coordinates.x, y1: coordinates.y}
+  } else if (nodeNumber === 2) {
+    return {...edge, x2: coordinates.x, y2: coordinates.y}
+  } else {
+    throw new Error("Node number must be 1 or 2")
+  }
+}
+
+// This updates an edge's curve when one of it's nodes has moved
+export function dragNodeEdge(graph, {edge, node, coordinates}) {
+  let updatedEdge = updateEdgeCurveEnd(edge,
+                                       determineNodeNumber({ edge, node }),
+                                       coordinates)
+
+  // updatedEdge = updateEdgeOffset(edge, updatedEdge)
+  graph.edges[updatedEdge.id] = updatedEdge
+  return graph
+}
+
+
+// dragNode() updates the connected edges (if any)
+// It does not change the coordinates of the node itself, the role of moveNode()
+export function dragNode(graph, nodeId, deltas) {
+  const node = getNode(graph, nodeId)
+  const coordinates = translatePoint(node, deltas) // x,y of location of new node
+  edgesOf(graph, node.id).forEach(edge => dragNodeEdge(graph, {edge, node, coordinates}))
+  return graph
+}
+
 export function dragEdge(graph, edge) {}
 
 
@@ -237,7 +303,7 @@ export default {
   "removeEdge":        removeEdge,
   "updateEdge":        updateEdge,
   "moveNode":          moveNode,
-  "moveEdgesOfNode":   moveEdgesOfNode,
+  // "moveEdgesOfNode":   moveEdgesOfNode,
   "dragNode":          dragNode,
   "dragEdge":          dragEdge,
   "updateViewBox":     updateViewBox,
