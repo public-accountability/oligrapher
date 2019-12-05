@@ -6,12 +6,7 @@ import { xy } from '../../util/helpers'
 const DEFAULT_POSITION = { x: 0, y: 0 }
 
 export default function DraggableNode(props) {
-  const onDrag = (e, d) => {
-    props.onDrag({
-      x: d.deltaX,
-      y: d.deltaY
-    })
-  }
+  const onDrag = (e, d) => props.onDrag(xy(d))
   const onStop = (e, d) => props.onStop(xy(d))
 
   // The setting the position to 0,0 has the effect of ensuring that
