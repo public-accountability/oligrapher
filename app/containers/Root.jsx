@@ -8,7 +8,7 @@ import Editor from './Editor'
 /*
   This is the root container
 
-  Oligrapher has 3 three components
+  Oligrapher's layout can be divided into three components
 
    _ _ _ _ _ _ _ _
   |   header      |
@@ -17,6 +17,7 @@ import Editor from './Editor'
   | graph | story |
   |       |       |
 
+  Graph is divided into the visuals (<Graph>) and editing interface (<Editor>)
 
 */
 export class Root extends Component {

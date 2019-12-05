@@ -10,7 +10,7 @@ import EditorMenu from './EditorMenu'
 export function Editor(props) {
   if (props.disabled) { return <></> }
 
-  return <div className="oligrapher-editor">
+  return <div className="oligrapher-graph-editor">
            <EditorMenu />
          </div>
 }

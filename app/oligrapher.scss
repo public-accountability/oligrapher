@@ -17,7 +17,7 @@ $header_save_button_font_color: white;
 $header_discard_button_bg_color: #6e89a1;
 $header_discard_button_font_color: white;
 
-$editor_menu_item_size: 25px;
+$editor_menu_item_size: 35px;
 /*
    This is our outermost div.
 
@@ -149,23 +149,42 @@ $editor_menu_item_size: 25px;
 }
 
 .oligrapher-graph-container {
-    .oligrapher-graph-svg {}
-    .oligrapher-graph-editor {}
+    position: relative;
+
+    // .oligrapher-graph-svg and .oligrapher-graph-editor are sibilings
+    // although they displayed on top of each other
+
+    .oligrapher-graph-svg {
+        z-index: 1;
+    }
+
+    .oligrapher-graph-editor {
+        z-index: 10;
+        // position, top, and left places the editor ontop of the SVG element
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
 }
 
 
 /* EDITOR */
 
-.oligrapher-editor {
-    .editor-menu {
+.editor-menu {
+    margin-top: 5px;
+    margin-left: 10px;
+    width: $editor_menu_item_size;
+    .editor-menu-item {
         width: $editor_menu_item_size;
-        .editor-menu-item {
-            width: $editor_menu_item_size;
-            height: $editor_menu_item_size;
+        height: $editor_menu_item_size;
+
+        &:hover {
+            cursor: pointer;
             background-color: lightgreen;
         }
     }
 }
+
 
 
 
