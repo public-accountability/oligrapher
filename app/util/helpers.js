@@ -35,3 +35,11 @@ export function translatePoint(point, deltas) {
     y: point.y + deltas.y
   }
 }
+
+export function rotatePoint(point, angle) {
+  const cos = Math.cos(angle)
+  const sin = Math.sin(angle)
+  const x = point.x * cos - point.y * sin
+  const y = point.x * sin + point.y * cos
+  return { x, y }
+}

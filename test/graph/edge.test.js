@@ -16,10 +16,16 @@ describe('Edge', function() {
   })
 
   specify('newEdgeFromNodes', function() {
-    let n1 = Node.new()
-    let n2 = Node.new()
+    let n1 = Node.new({x: 1, y: 1})
+    let n2 = Node.new({x: 2, y: 2})
     let edge = Edge.newEdgeFromNodes(n1, n2)
     expect(edge.node1_id).to.eql(n1.id)
     expect(edge.node2_id).to.eql(n2.id)
+    expect(edge.x1).to.eql(1)
+    expect(edge.y1).to.eql(1)
+    expect(edge.s1).to.eql(1)
+    expect(edge.x2).to.eql(2)
+    expect(edge.y2).to.eql(2)
+    expect(edge.s2).to.eql(1)
   })
 })

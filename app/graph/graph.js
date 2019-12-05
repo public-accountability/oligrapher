@@ -43,7 +43,7 @@ export function getId(thing) {
 }
 
 // Which node of the edge is the node -- can be either 1 or 2
-function determineNodeNumber({edge, node}) {
+export function determineNodeNumber({edge, node}) {
   const nodeId = getId(node)
 
   if (edge.node1_id.toString() === nodeId) {
@@ -234,7 +234,7 @@ function updateEdgeOffset(oldEdge, newEdge) {
 // This updates either x1, y1 or x2, y2 of the edge with the new coordinates.
 // Returns a new copy of the edge with the updated values
 // {edge}, Number, {x,y} --> {edge}
-function updateEdgeCurveEnd(edge, nodeNumber, coordinates) {
+export function updateEdgeCurveEnd(edge, nodeNumber, coordinates) {
   if (nodeNumber === 1) {
     return {...edge, x1: coordinates.x, y1: coordinates.y}
   } else if (nodeNumber === 2) {

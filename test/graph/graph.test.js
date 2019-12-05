@@ -1,6 +1,11 @@
 import curry from 'lodash/curry'
 import values from 'lodash/values'
-import Graph, { getId, nodeSide } from '../../app/graph/graph'
+import Graph, {
+  getId,
+  nodeSide,
+  determineNodeNumber,
+  updateEdgeCurveEnd
+} from '../../app/graph/graph'
 import Node from '../../app/graph/node'
 import Edge from '../../app/graph/edge'
 import { xy } from '../../app/util/helpers'
@@ -20,6 +25,15 @@ describe('Graph', function() {
       expect(g.nodes).to.eql({})
       expect(g.edges).to.eql({})
       expect(Graph.new()).not.to.eq(Graph.new())
+    })
+
+    specify('determineNodeNumber', function() {
+      let n1 = Node.new()
+      let n2 = Node.new()
+      let edge = Edge.newEdgeFromNodes(n1, n2)
+      expect(determineNodeNumber({edge, node: n1})).to.eql(1)
+      expect(determineNodeNumber({edge, node: n2})).to.eql(2)
+      expect(() => determineNodeNumber({edge, node: Node.new()})).to.throw(/Edge is not connected/)
     })
 
     xspecify("nodeSide", function() {
@@ -193,6 +207,20 @@ describe('Graph', function() {
 
 
   describe.only('dragging', function() {
+    let node1, node2, node3, edge1, edge2, graph
+
+    beforeEach(function() {
+      node1 = Node.new({x: 5, y: 10})
+      node2 = Node.new({x: 10, y: 20})
+      node3 = Node.new({x: 20, y: 40})
+      edge1 = Edge.newEdgeFromNodes(node1, node2)
+      edge2 = Edge.newEdgeFromNodes(node2, node3)
+      graph = Graph.new()
+      Graph.addNodes(graph, [node1, node2, node3])
+      Graph.addEdges(graph, [edge1, edge2])
+    })
+
+
     specify('moveNode', function() {
       let node = Node.new({x: 10, y: 20 })
       let graph = Graph.new()
@@ -203,9 +231,25 @@ describe('Graph', function() {
     })
 
     specify('updateEdgeOffset')
-    specify('updateEdgeCurveEnd')
+
+    describe('updateEdgeCurveEnd', function() {
+      let newNodeCoords = {x: 100, y: 100}
+
+      it('updates node 1 position', function() {
+        let updatedEdge = updateEdgeCurveEnd(edge1, 1, newNodeCoords)
+        expect({x: updatedEdge.x1, y: updatedEdge.y1}).to.eql({x: 100, y: 100})
+        expect({x: updatedEdge.x2, y: updatedEdge.y2}).to.eql({x: 10, y: 20})
+      })
+
+      it('updates node 2 position', function() {
+        let updatedEdge = updateEdgeCurveEnd(edge1, 2, newNodeCoords)
+        expect({x: updatedEdge.x1, y: updatedEdge.y1}).to.eql({x: 5, y: 10})
+        expect({x: updatedEdge.x2, y: updatedEdge.y2}).to.eql({x: 100, y: 100})
+      })
+    })
+
     specify('dragNodeEdge')
-    specify('dragNode')
+    xdescribe('dragNode', function() {})
     specify('dragEdge')
   })
 

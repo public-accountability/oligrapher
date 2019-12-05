@@ -36,7 +36,12 @@ export function newEdgeFromNodes(n1, n2) {
   let edge = newEdge()
   edge.node1_id = n1.id
   edge.node2_id = n2.id
-
+  edge.x1 = n1.x
+  edge.y1 = n1.y
+  edge.s1 = n1.scale
+  edge.x2 = n2.x
+  edge.y2 = n2.y
+  edge.s2 = n2.scale
   // if (n1.display.x && n1.display.y) {
   //   edge.display.curve = Curve.from.nodes(n1, n2)
   // }
