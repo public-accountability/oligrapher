@@ -171,14 +171,14 @@ $editor_menu_item_size: 35px;
 /* EDITOR */
 
 .editor-menu {
-    margin-top: 5px;
+    margin-top: 15px;
     margin-left: 10px;
     width: $editor_menu_item_size;
     .editor-menu-item {
         width: $editor_menu_item_size;
         height: $editor_menu_item_size;
 
-        margin-bottom: 5px;
+        margin-bottom: 8px;
 
         &:hover {
             cursor: pointer;
