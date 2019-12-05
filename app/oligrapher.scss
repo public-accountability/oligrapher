@@ -16,6 +16,8 @@ $header_save_button_bg_color: #2c63c8;
 $header_save_button_font_color: white;
 $header_discard_button_bg_color: #6e89a1;
 $header_discard_button_font_color: white;
+
+$editor_menu_item_size: 25px;
 /*
    This is our outermost div.
 
@@ -145,6 +147,26 @@ $header_discard_button_font_color: white;
     height: 100%;
     width: 100%;
 }
+
+.oligrapher-graph-container {
+    .oligrapher-graph-svg {}
+    .oligrapher-graph-editor {}
+}
+
+
+/* EDITOR */
+
+.oligrapher-editor {
+    .editor-menu {
+        width: $editor_menu_item_size;
+        .editor-menu-item {
+            width: $editor_menu_item_size;
+            height: $editor_menu_item_size;
+            background-color: lightgreen;
+        }
+    }
+}
+
 
 
 /*

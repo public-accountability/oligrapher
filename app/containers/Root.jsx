@@ -23,8 +23,10 @@ export class Root extends Component {
   render() {
     return <div id="oligrapher-container">
              <Header />
-             <Graph />
-             <Editor />
+             <div className="oligrapher-graph-container">
+               <Graph />
+               <Editor />
+             </div>
            </div>
   }
 }
