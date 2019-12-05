@@ -178,15 +178,18 @@ $editor_menu_item_size: 35px;
         width: $editor_menu_item_size;
         height: $editor_menu_item_size;
 
+        margin-bottom: 5px;
+
         &:hover {
             cursor: pointer;
             background-color: lightgreen;
         }
     }
+
+    .editor-menu-icon {
+
+    }
 }
-
-
-
 
 /*
 

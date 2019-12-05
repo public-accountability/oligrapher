@@ -9,7 +9,7 @@ export default function EditorMenuItem(props) {
 
 
 EditorMenuItem.propTypes = {
-  icon: PropTypes.string.isRequired,
+  icon: PropTypes.node.isRequired,
   action: PropTypes.func.isRequired
 }
 
