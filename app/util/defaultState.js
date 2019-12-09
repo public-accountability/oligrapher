@@ -26,8 +26,6 @@ export default {
     settings:{}
   },
 
-  // Display information for individual nodes and edges
-  // are on the `.display` attribute of those objects.
   // This section of the state is not sync'd with the server;
   // it mostly used internally to implement the editor UI.
   // Many actions trigger a reconfiguration of these menus
@@ -46,6 +44,9 @@ export default {
     modes: {
       editor: false,
       story: false
+    },
+    editor: {
+      tool: null
     }
   },
 

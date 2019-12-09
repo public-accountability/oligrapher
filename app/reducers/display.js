@@ -11,5 +11,8 @@ export default produce((state, action) => {
   case 'SET_MODE':
     state.modes[action.mode] = action.enabled
     return
+  case 'OPEN_TOOL':
+    state.editor.tool = action.item
+    return
   }
 }, {})

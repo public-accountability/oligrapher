@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 import EditorMenu from './EditorMenu'
+import Tool from '../components/Tool'
 
 /*
   Container for the editing interfaces
@@ -12,16 +13,21 @@ export function Editor(props) {
 
   return <div className="oligrapher-graph-editor">
            <EditorMenu />
+           { props.tool_is_visible && <Tool name={props.tool} /> }
          </div>
 }
 
 Editor.propTypes = {
-  "disabled": PropTypes.bool.isRequired
+  disabled: PropTypes.bool.isRequired,
+  tool_is_visible: PropTypes.bool.isRequired,
+  tool: PropTypes.string
 }
 
 const mapStateToProps = function(state) {
   return {
-    "disabled": !state.display.modes.editor
+    disabled:             !state.display.modes.editor,
+    tool_is_visible:      Boolean(state.display.editor.tool),
+    tool:                 state.display.editor.tool
   }
 }
 
