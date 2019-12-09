@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import NodeTool from './tools/Node'
+import MENU from '../editorMenu'
 
 function Box(props) {
   return <div className="oligrapher-toolbox">
@@ -23,7 +24,11 @@ const tools = {
   "node": <NodeTool />
 }
 
-
 export default function Tool(props) {
-  return <Box render={() => tools[props.name]} />
+  let title = MENU[props.name].title
+  return <Box render={() => tools[props.name]}  title={title} />
+}
+
+Tool.propTypes = {
+  name: PropTypes.oneOf(Object.keys(MENU)).isRequired
 }

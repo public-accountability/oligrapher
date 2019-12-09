@@ -12,8 +12,10 @@ export function Editor(props) {
   if (props.disabled) { return <></> }
 
   return <div className="oligrapher-graph-editor">
-           <EditorMenu />
-           { props.tool_is_visible && <Tool name={props.tool} /> }
+           <div className="editor-menu-wrapper">
+             <EditorMenu />
+             { props.tool_is_visible && <Tool name={props.tool} /> }
+           </div>
          </div>
 }
 

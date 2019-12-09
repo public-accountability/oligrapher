@@ -17,6 +17,9 @@ $header_save_button_font_color: white;
 $header_discard_button_bg_color: #6e89a1;
 $header_discard_button_font_color: white;
 
+$oligrapher_blue: #2c63c8;
+
+
 $editor_menu_item_size: 35px;
 /*
    This is our outermost div.
@@ -30,6 +33,7 @@ $editor_menu_item_size: 35px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    font-family: Helvetica, Arial, sans-serif;
 }
 
 #oligrapher-header {
@@ -152,7 +156,7 @@ $editor_menu_item_size: 35px;
     position: relative;
 
     // .oligrapher-graph-svg and .oligrapher-graph-editor are sibilings
-    // although they displayed on top of each other
+    // although they're displayed on top of each other
 
     .oligrapher-graph-svg {
         z-index: 1;
@@ -170,9 +174,15 @@ $editor_menu_item_size: 35px;
 
 /* EDITOR */
 
+/* child of oligrapher-graph-editor */
+.editor-menu-wrapper {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 1em;
+}
+
+/* child of editor-menu-wrapper */
 .editor-menu {
-    margin-top: 15px;
-    margin-left: 10px;
     width: $editor_menu_item_size;
 
     .editor-menu-item {
@@ -191,11 +201,29 @@ $editor_menu_item_size: 35px;
 }
 
 .oligrapher-toolbox {
+    margin-left: 1em;
+    border: 2px solid $oligrapher_blue;
+    padding: 5px;
 
+    header {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .nodetool {
+        input {
+            display: block;
+        }
+
+        a {
+            cursor: pointer;
+            color: $oligrapher_blue;
+            font-weight: bold;
+        }
+    }
 }
 
 /*
-
 NODES
 
 g.oligrapher-node.react-draggable

@@ -7,7 +7,7 @@ import values from 'lodash/values'
   action.type      |  fields
 -------------------|-------------
   SET_ACTUAL_ZOOM  | actualZoom
-  ADD_NODE         | node
+  ADD_NODE         | attributes
   ADD_NODES        | nodes
   UPDATE_NODE      | id, attributes
   MOVE_NODE        | id, deltas
@@ -17,10 +17,11 @@ import values from 'lodash/values'
 export default produce( (draft, action) => {
   switch(action.type) {
   case 'SET_ACTUAL_ZOOM':
+    console.log('ACTUAL ZOOM value is', action.actualZoom)
     draft.actualZoom = action.actualZoom
     return
   case 'ADD_NODE':
-    Graph.addNode(draft, action.node)
+    Graph.addNode(draft, action.attributes)
     return
   case 'ADD_NODES':
     Graph.addNodes(draft, action.nodes)
