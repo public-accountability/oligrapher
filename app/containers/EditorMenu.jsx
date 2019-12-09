@@ -2,28 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
+// Icons
 import { IconContext } from "react-icons"
-
-import {
-  FaRegCircle,
-  FaBezierCurve,
-  FaFlipboard,
-  FaTv,
-  FaRegEdit,
-  FaRegTrashAlt
-} from "react-icons/fa"
-
+import { FaRegCircle, FaBezierCurve, FaFlipboard, FaTv, FaRegEdit, FaRegTrashAlt } from "react-icons/fa"
 import { FiHelpCircle } from 'react-icons/fi'
-
-import {
-  GoTextSize,
-  GoGear
-} from 'react-icons/go'
-
-import {
-  TiArrowMove
-} from 'react-icons/ti'
-
+import { GoTextSize, GoGear } from 'react-icons/go'
+import { TiArrowMove } from 'react-icons/ti'
 
 import EditorMenuItem from '../components/editor/EditorMenuItem'
 
@@ -75,7 +59,6 @@ const MENU_ITEMS = [
     key: 'help'
   }
 ]
-
 
 export function EditorMenu(props) {
   return <div className="editor-menu">

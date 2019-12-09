@@ -8,11 +8,14 @@ import './oligrapher.scss'
 
   This is how to initialize a new map on a page:
 
-     var oli = new Oligrapher(your Configuration)`
+     const oli = new Oligrapher(<your Configuration>)
 
-     The configuration option takes four optional keys:
-     hooks, graph, attributes, settings, initialState.
-
+     The configuration option accepts five optional keys:
+        - settings
+        - hooks
+        - graph
+        - attributes
+        - display
 
   See app/util/defaultState for a list of variables
 */
