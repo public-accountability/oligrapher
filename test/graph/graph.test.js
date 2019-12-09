@@ -4,7 +4,8 @@ import Graph, {
   getId,
   nodeSide,
   determineNodeNumber,
-  updateEdgeCurveEnd
+  updateEdgeCurveEnd,
+  calculateCenter
 } from '../../app/graph/graph'
 import Node from '../../app/graph/node'
 import Edge from '../../app/graph/edge'
@@ -98,12 +99,21 @@ describe('Graph', function() {
   })
 
   describe("Nodes", function() {
-    specify("addNode()", function() {
+    specify("addNode() - with values", function() {
       let g = Graph.new()
-      let n = Node.new({ display: { x: 1, y: 1 } })
+      let n = Node.new({ x: 1, y: 1 })
       expect(g.nodes).to.eql({})
       Graph.addNode(g, n)
       expect(g.nodes).to.eql({ [n.id]: n })
+    })
+
+    specify("addNode() - calculate center", function() {
+      let g = Graph.new()
+      let n = Node.new()
+      expect(g.nodes).to.eql({})
+      Graph.addNode(g, n)
+      expect(g.nodes[n.id]).to.be.ok
+      expect(xy(g.nodes[n.id])).to.eql({x: 0, y: 0})
     })
 
     specify("addNodes()", function() {
@@ -247,6 +257,13 @@ describe('Graph', function() {
   describe("ViewBox", function() {
     specify("calculateViewBox")
     specify("updateViewBox")
+  })
+
+  describe('calculateCenter()', function() {
+    it("calculate for default graph", function() {
+      let graph = Graph.new()
+      expect(calculateCenter(graph)).to.eql({x: 0, y:0 })
+    })
   })
 
   describe("Zoom", function() {

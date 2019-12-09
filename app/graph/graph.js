@@ -1,9 +1,11 @@
 import at from 'lodash/at'
 import filter from 'lodash/filter'
+import isNumber from 'lodash/isNumber'
 import merge from 'lodash/merge'
 import values from 'lodash/values'
 
 import { translatePoint, rotatePoint } from '../util/helpers'
+import { newNode } from './node'
 import { calculateGeometry } from './curve'
 
 const GRAPH_PADDING = 100
@@ -120,6 +122,13 @@ export function calculateViewBox(graph) {
   }
 }
 
+export function calculateCenter(graph) {
+  const vb = calculateViewBox(graph)
+  const x = vb.minX + (vb.w / 2)
+  const y = vb.minY + (vb.h / 2)
+  return { x, y }
+}
+
 export const getNode = (graph, nodeId) => graph.nodes[getId(nodeId)]
 export const getEdge = (graph, edgeId) => graph.nodes[getId(edgeId)]
 
@@ -141,7 +150,14 @@ export function nodesOf(graph, edge) {
 
 // These all *mutate* graph and then return it
 
-export function addNode(graph, node) {
+export function addNode(graph, attributes) {
+  let node = newNode(attributes)
+
+  // Place the node at the graph center, unless coordinates are provided
+  if (!(isNumber(node.x) && isNumber(node.y))) {
+    merge(node, calculateCenter(graph))
+  }
+
   graph.nodes[getId(node)] = node
   return graph
 }
