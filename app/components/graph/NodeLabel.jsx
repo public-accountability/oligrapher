@@ -1,22 +1,41 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import ds from '../../NodeDisplaySettings'
+import textLines from '../../util/textLines'
 
-// TODO: Splits name into separate based on length of name
-export function textLines(name) {
-  return [name]
-}
+const SPACING = 20
 
-export default function NodeLabel({name, scale}) {
-  return <></>
+export default function NodeLabel(props) {
+  if (!props.name) { return <></> }
+
+  const y = (ds.circleRadius * props.scale) + props.y + SPACING
+  const x = props.x
+
+  const lines = textLines(props.name).map(function(line, i) {
+    const props = {
+      x: x,
+      y: y,
+      dy: i === 0 ? 0 : (i * ds.lineHeight),
+      textAnchor: "middle"
+    }
+
+    return <text key={i} {...props} >
+             {line}
+           </text>
+  })
+
+  return <g className="nodelabel">
+           {lines}
+         </g>
+
 }
 
 NodeLabel.propTypes = {
-  name:  PropTypes.string.isRequired,
-  scale: PropTypes.number.isRequired
-}
-
-NodeLabel.defaultProps = {
-  name: '',
-  scale: 1
+  name:    PropTypes.string,
+  scale:   PropTypes.number.isRequired,
+  status:  PropTypes.string.isRequired,
+  url:     PropTypes.string,
+  x:       PropTypes.number.isRequired,
+  y:       PropTypes.number.isRequired
 }

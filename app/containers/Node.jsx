@@ -5,13 +5,17 @@ import pick from 'lodash/pick'
 
 import DraggableNode from './../components/graph/DraggableNode'
 import NodeCircle from './../components/graph/NodeCircle'
+import NodeLabel from './../components/graph/NodeLabel'
 
 const DEFAULT_COLOR = "#ccc"
+const CIRCLE_PROPS = ['x', 'y', 'scale', 'color']
+const LABEL_PROPS = ['x', 'y', 'name', 'scale', 'status', 'url']
 
 export function Node(props) {
   return <DraggableNode onStop={props.onStop} onDrag={props.onDrag} actualZoom={props.actualZoom} >
            <g id={"node-" + props.id} className="oligrapher-node">
-             <NodeCircle {...pick(props, ['x', 'y', 'scale', 'color'])} />
+             <NodeCircle {...pick(props, CIRCLE_PROPS)} />
+             <NodeLabel {...pick(props, LABEL_PROPS)} />
            </g>
          </DraggableNode>
 }
