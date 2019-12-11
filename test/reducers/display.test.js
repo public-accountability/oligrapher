@@ -28,10 +28,10 @@ describe('Display Reducer', function() {
     })
   })
 
-  describe('EDIT_NODE', function() {
-    it("set editNode", function() {
+  describe('OPEN_EDIT_NODE_MENU', function() {
+    it('set editNode', function() {
       const state = { editor: { editNode: 'abc', tool: 'node' } }
-      const action = { type: 'EDIT_NODE', id: 'xyz'}
+      const action = { type: 'OPEN_EDIT_NODE_MENU', id: 'xyz'}
       expect(displayReducer(state, action))
         .to.eql({ editor: { editNode: 'xyz', tool: 'node' } })
     })
