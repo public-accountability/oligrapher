@@ -2,19 +2,50 @@ import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import pick from 'lodash/pick'
+import subtract from 'lodash/subtract'
+import add from 'lodash/add'
 
 import DraggableNode from './../components/graph/DraggableNode'
 import NodeCircle from './../components/graph/NodeCircle'
 import NodeLabel from './../components/graph/NodeLabel'
+import NodeHandle from './../components/graph/NodeHandle'
+
+import ds from '../NodeDisplaySettings'
 
 const DEFAULT_COLOR = "#ccc"
 const CIRCLE_PROPS = ['x', 'y', 'scale', 'color']
 const LABEL_PROPS = ['x', 'y', 'name', 'scale', 'status', 'url']
 
+
+function nodeHandleAction(side) {
+  return () => console.log(`you clicked the ${side} node handle`)
+}
+
+// left | right, {number, number, number} --> {x, y}
+// This calculate the center of the editor handle
+function nodeHandleCoords(side, {x, y, scale}) {
+  const operation = side === 'right' ? add : subtract
+
+  return {
+    x: operation(x, (ds.circleRadius * scale)),
+    y: y
+  }
+}
+
+function nodeHandles(props) {
+  if (!props.editorMode) { return <></> }
+
+  return [
+    <NodeHandle {...nodeHandleCoords('left', props)} action={nodeHandleAction('left')} key="left" />,
+    <NodeHandle {...nodeHandleCoords('right', props)} action={nodeHandleAction('right')} key="right" />
+  ]
+}
+
 export function Node(props) {
   return <DraggableNode onStop={props.onStop} onDrag={props.onDrag} actualZoom={props.actualZoom} >
            <g id={"node-" + props.id} className="oligrapher-node">
              <NodeCircle {...pick(props, CIRCLE_PROPS)} />
+             { nodeHandles(props) }
              <NodeLabel {...pick(props, LABEL_PROPS)} />
            </g>
          </DraggableNode>
@@ -42,9 +73,13 @@ Node.defaultProps = {
 const mapStateToProps = (state, ownProps) => {
   const id = ownProps.id.toString()
   const node = state.graph.nodes[id]
-  const actualZoom = state.graph.actualZoom
 
-  return { ...node, id, actualZoom }
+  return {
+    ...node,
+    id: id,
+    actualZoom: state.graph.actualZoom,
+    editorMode: state.display.modes.editor
+  }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
