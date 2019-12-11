@@ -229,13 +229,26 @@ NODES
 g.oligrapher-node.react-draggable
     g.node-circle-group
         circle.node-circle
+        circle.node-handle
 */
 
 .oligrapher-node {
-    .node-circle-group {
-        .node-circle {}
+    .node-circle-group {}
+    .node-handle {
+        &:hover {
+            stroke: lightyellow;
+            stroke-width: 2;
+        }
+    }
+    .node-circle {
+        &:hover {
+            stroke: lightgreen;
+            stroke-width: 2;
+        }
     }
 }
+
+
 
 
 .react-draggable-dragging {
