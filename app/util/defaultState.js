@@ -46,7 +46,8 @@ export default {
       story: false
     },
     editor: {
-      tool: null
+      tool: null,
+      editNode: null
     }
   },
 
