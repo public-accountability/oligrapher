@@ -14,7 +14,7 @@ export default function DraggableNode(props) {
   // The onStop and onDrag callbacks all work off of relative coordinates.
   const draggableProps = { onDrag, onStop, scale: props.actualZoom, position: DEFAULT_POSITION }
 
-  return <Draggable {...draggableProps} >
+  return <Draggable {...draggableProps}  handle=".node-circle">
            {props.children}
          </Draggable>
 }

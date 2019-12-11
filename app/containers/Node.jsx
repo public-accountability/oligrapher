@@ -42,13 +42,15 @@ function nodeHandles(props) {
 }
 
 export function Node(props) {
-  return <DraggableNode onStop={props.onStop} onDrag={props.onDrag} actualZoom={props.actualZoom} >
-           <g id={"node-" + props.id} className="oligrapher-node">
-             <NodeCircle {...pick(props, CIRCLE_PROPS)} />
-             { nodeHandles(props) }
-             <NodeLabel {...pick(props, LABEL_PROPS)} />
-           </g>
-         </DraggableNode>
+  return  <g id={"node-" + props.id} className="oligrapher-node">
+            <DraggableNode onStop={props.onStop} onDrag={props.onDrag} actualZoom={props.actualZoom} >
+              <g>
+                <NodeCircle {...pick(props, CIRCLE_PROPS)} />
+                <NodeLabel {...pick(props, LABEL_PROPS)} />
+                { nodeHandles(props) }
+              </g>
+            </DraggableNode>
+          </g>
 }
 
 Node.propTypes = {
