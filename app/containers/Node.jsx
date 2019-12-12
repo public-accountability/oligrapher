@@ -37,7 +37,7 @@ function nodeHandles(props) {
 
   return [
     <NodeHandle {...nodeHandleCoords('left', props)} action={nodeHandleAction('left')} key="left" />,
-    <NodeHandle {...nodeHandleCoords('right', props)} action={nodeHandleAction('right')} key="right" />
+    <NodeHandle {...nodeHandleCoords('right', props)} action={props.openEditNodeMenu} key="right" />
   ]
 }
 
@@ -64,6 +64,7 @@ Node.propTypes = {
   status: PropTypes.string.isRequired,
   onStop: PropTypes.func.isRequired,
   onDrag: PropTypes.func.isRequired,
+  openEditNodeMenu: PropTypes.func.isRequired,
   actualZoom: PropTypes.number
 }
 
@@ -89,7 +90,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
   return {
     onStop: (deltas) => dispatch({ type: 'MOVE_NODE', id: id, deltas: deltas }),
-    onDrag: (deltas) => dispatch({ type: 'DRAG_NODE', id: id, deltas: deltas })
+    onDrag: (deltas) => dispatch({ type: 'DRAG_NODE', id: id, deltas: deltas }),
+    openEditNodeMenu: () => dispatch({ type: 'OPEN_EDIT_NODE_MENU', id: id })
   }
 }
 

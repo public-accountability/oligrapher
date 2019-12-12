@@ -169,6 +169,14 @@ $editor_menu_item_size: 35px;
         top: 0;
         left: 0;
     }
+
+    #oligrapher-edit-node-menu {
+        z-index: 20;
+        // position, top, and left places the editor ontop of the SVG element
+        position: absolute;
+        top: 10%;
+        left: 50%;
+    }
 }
 
 
@@ -223,6 +231,10 @@ $editor_menu_item_size: 35px;
     }
 }
 
+.edit-node-menu {
+    background-color: chartreuse;
+}
+
 /*
 NODES
 
@@ -247,9 +259,6 @@ g.oligrapher-node.react-draggable
         }
     }
 }
-
-
-
 
 .react-draggable-dragging {
     cursor: grabbing;

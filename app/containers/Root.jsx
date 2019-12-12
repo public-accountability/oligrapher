@@ -27,6 +27,7 @@ export class Root extends Component {
              <div className="oligrapher-graph-container">
                <Graph />
                <Editor />
+               <div id="oligrapher-edit-node-menu"></div>
              </div>
            </div>
   }

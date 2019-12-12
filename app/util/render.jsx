@@ -33,3 +33,10 @@ export const renderNewApplication = (store, element) => {
 
   ReactDOM.render(application, element)
 }
+
+// This is a higher-order component that renders the component into a different
+// place in the dom instead of it's normal position in the hierarchy.
+// see reactjs.org/docs/portals.html for the docs on Portals.
+export function inPortal(Component, id) {
+  return props => ReactDOM.createPortal(<Component {...props} />, document.getElementById(id))
+}
