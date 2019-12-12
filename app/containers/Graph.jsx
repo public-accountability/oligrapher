@@ -36,7 +36,7 @@ export class Graph extends React.Component {
 
     return <GraphContainer {...containerProps} >
              <Zoomable zoom={zoom}>
-               <Pannable zoom={zoom }>
+               <Pannable zoom={zoom}>
                  <Nodes />
                  <Edges />
                </Pannable>
@@ -44,22 +44,6 @@ export class Graph extends React.Component {
            </GraphContainer>
   }
 }
-
-
-// export function Graph(props) {
-//   let zoom = 1
-
-//   return <GraphContainer viewBox={props.viewBox} height="100%">
-//              <Zoomable zoom={zoom}>
-//                <Pannable zoom={zoom }>
-//                  <Nodes />
-//                  <Edges />
-//                  { /* <Captions /> */ }
-//                </Pannable>
-//              </Zoomable>
-//          </GraphContainer>
-// }
-
 
 Graph.propTypes = {
   viewBox: PropTypes.object.isRequired,

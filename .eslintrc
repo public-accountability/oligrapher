@@ -9,7 +9,9 @@
   "globals": {
     "expect": "readonly",
     "shallow": "readonly",
-    "sinon": "readonly"
+    "sinon": "readonly",
+    "mount": "readonly",
+    "merge": "readonly"
   },
   "extends": [
     "eslint:recommended",

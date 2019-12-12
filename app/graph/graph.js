@@ -281,6 +281,8 @@ export default {
   "stats":             stats,
   "edgesOf":           edgesOf,
   "nodesOf":           nodesOf,
+  "getNode":           getNode,
+  "getEdge":           getEdge,
   "calculateViewBox":  calculateViewBox,
   "addNode":           addNode,
   "addNodes":          addNodes,
