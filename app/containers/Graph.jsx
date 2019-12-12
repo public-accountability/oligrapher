@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
+import { SvgRefContext } from '../contexts'
 import GraphContainer from '../components/graph/GraphContainer'
 import Edges from './Edges'
 import Nodes from './Nodes'
@@ -17,31 +18,27 @@ export class Graph extends React.Component {
 
   constructor(props) {
     super(props)
-    this.containerRef = React.createRef()
+    this.svgRef = React.createRef()
   }
 
   componentDidMount() {
-    const actualZoom = computeActualZoom(this.props.viewBox, this.containerRef.current)
+    const actualZoom = computeActualZoom(this.props.viewBox, this.svgRef.current)
     this.props.setActualZoom(actualZoom)
   }
 
   render() {
     let zoom = 1
 
-    let containerProps = {
-      viewBox: this.props.viewBox,
-      height: "100%",
-      ref: this.containerRef
-    }
-
-    return <GraphContainer {...containerProps} >
-             <Zoomable zoom={zoom}>
-               <Pannable zoom={zoom}>
-                 <Nodes />
-                 <Edges />
-               </Pannable>
-             </Zoomable>
-           </GraphContainer>
+    return <SvgRefContext.Provider value={this.svgRef}>
+             <GraphContainer viewBox={this.props.viewBox}>
+               <Zoomable zoom={zoom}>
+                 <Pannable zoom={zoom}>
+                   <Nodes />
+                   <Edges />
+                 </Pannable>
+               </Zoomable>
+             </GraphContainer>
+           </SvgRefContext.Provider>
   }
 }
 
