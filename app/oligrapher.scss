@@ -21,6 +21,8 @@ $oligrapher_blue: #2c63c8;
 $oligrapher_font_gray: #b3b3b3;
 
 $editor_menu_item_size: 35px;
+
+
 /*
    This is our outermost div.
 
@@ -34,6 +36,13 @@ $editor_menu_item_size: 35px;
     flex-direction: column;
     justify-content: space-between;
     font-family: Helvetica, Arial, sans-serif;
+
+    /*
+       changes to all elements of certian type
+   */
+    button, a:hover {
+        cursor: pointer;
+    }
 }
 
 #oligrapher-header {
@@ -102,7 +111,6 @@ $editor_menu_item_size: 35px;
 
         .oligrapher-header-buttons-wrapper {
             button {
-                cursor: pointer;
                 border-radius: 3px;
                 border: 0;
                 padding: 0.3em;
@@ -234,6 +242,14 @@ $editor_menu_item_size: 35px;
 /*
    This is the "edit and customize node" box
 */
+
+%edit_node_menu_title {
+    margin-bottom: 0.25em;
+    color: $oligrapher_font_gray;
+    font-size: 12px;
+    font-weight: bold;
+}
+
 .edit-node-menu {
     background-color: white;
     border: 2px solid $oligrapher_blue;
@@ -253,11 +269,8 @@ $editor_menu_item_size: 35px;
 
     .oligrapher-edit-node-menu-form {
         label {
+            @extend %edit_node_menu_title;
             display: block;
-            margin-bottom: 0.25em;
-            color: $oligrapher_font_gray;
-            font-size: 12px;
-            font-weight: bold;
         }
 
         input {
@@ -266,8 +279,55 @@ $editor_menu_item_size: 35px;
             border: 0.8px solid $oligrapher_font_gray;
 
         }
+    }
+
+    .style-form {
+        >div:nth-child(1) {
+            @extend %edit_node_menu_title;
+
+        }
+
+        >div:nth-child(2) {
+            margin-top: 0.25em;
+            display: flex;
+            flex-direction: row;
+
+            >div {
+                flex-grow: 1;
+
+                svg {
+                    cursor: pointer;
+                    display: block;
+                    margin: auto;
+                }
+
+                &:not(:last-child) {
+                    border-right: 1px gray solid;
+                }
+            }
+        }
+    }
+
+    a.add-node-bio-link {
+        display: block;
+        font-size: 14px;
+        color: $oligrapher_blue;
+        font-weight: bold;
+        margin-bottom: 0.5em;
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+
+    div.edit-node-menu-submit-buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
 
     }
+
 }
 
 /*
