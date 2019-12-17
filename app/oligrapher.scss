@@ -18,7 +18,7 @@ $header_discard_button_bg_color: #6e89a1;
 $header_discard_button_font_color: white;
 
 $oligrapher_blue: #2c63c8;
-
+$oligrapher_font_gray: #b3b3b3;
 
 $editor_menu_item_size: 35px;
 /*
@@ -231,8 +231,43 @@ $editor_menu_item_size: 35px;
     }
 }
 
+/*
+   This is the "edit and customize node" box
+*/
 .edit-node-menu {
-    background-color: chartreuse;
+    background-color: white;
+    border: 2px solid $oligrapher_blue;
+    padding: 10px;
+
+
+    header {
+        font-size: 18px;
+        font-weight: bold;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    main {
+        margin-top: 0.5em;
+    }
+
+    .oligrapher-edit-node-menu-form {
+        label {
+            display: block;
+            margin-bottom: 0.25em;
+            color: $oligrapher_font_gray;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        input {
+            padding: 0.25em;
+            margin-bottom: 0.8em;
+            border: 0.8px solid $oligrapher_font_gray;
+
+        }
+
+    }
 }
 
 /*
