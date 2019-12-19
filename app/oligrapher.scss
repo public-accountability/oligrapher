@@ -239,9 +239,7 @@ $editor_menu_item_size: 35px;
     }
 }
 
-/*
-   This is the "edit and customize node" box
-*/
+
 
 %edit_node_menu_title {
     margin-bottom: 0.25em;
@@ -250,6 +248,7 @@ $editor_menu_item_size: 35px;
     font-weight: bold;
 }
 
+/* This is the "edit and customize node" box */
 .edit-node-menu {
     background-color: white;
     border: 2px solid $oligrapher_blue;
@@ -284,7 +283,6 @@ $editor_menu_item_size: 35px;
     .style-form {
         >div:nth-child(1) {
             @extend %edit_node_menu_title;
-
         }
 
         >div:nth-child(2) {
@@ -325,9 +323,34 @@ $editor_menu_item_size: 35px;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-
     }
 
+    .sizepicker {
+        display: flex;
+        flex-direction: row;
+        margin-left: 2em;
+        margin-bottom: 1em;
+        font-size: 10px;
+        text-align: center;
+
+        .circle-wrapper {
+            height: 50px;
+            position: relative;
+            margin-bottom: 0.5em;
+        }
+
+        .circle {
+            background-color: #ccc;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 0;
+        }
+
+        > div {
+            margin-right: 1em;
+        }
+
+    }
 }
 
 /*

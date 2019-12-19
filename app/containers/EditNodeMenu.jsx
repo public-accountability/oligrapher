@@ -6,6 +6,8 @@ import { inPortal } from '../util/render'
 import omit from 'lodash/omit'
 import curry from 'lodash/curry'
 
+import SizePicker from '../components/SizePicker'
+
 import { MdPhotoSizeSelectSmall, MdFormatColorFill } from "react-icons/md"
 import { FaShapes } from "react-icons/fa"
 
@@ -18,7 +20,7 @@ function updateNodeFunc(setNode, attributeName) {
 }
 
 // A form with input fields for node name, image url, and clickthrough link
-function nodeAttributeForm(node, nodeUpdater) {
+function nodeAttributeForm({node, nodeUpdater}) {
   return <form className="oligrapher-edit-node-menu-form">
            <div>
              <label>Title</label>
@@ -46,32 +48,40 @@ function nodeAttributeForm(node, nodeUpdater) {
          </form>
 }
 
-function styleForm() {
-  return <div className="edit-node-style-buttons">
-           <h6>Style</h6>
-           <div className="edit-node-style-button">
-             <MdPhotoSizeSelectSmall/>
-           </div>
-           <div className="edit-node-style-button">
-             <MdFormatColorFill/>
-           </div>
-           <div className="edit-node-style-button">
-             <FaShapes/>
+function styleForm(setPage) {
+  return <div className="style-form">
+           <div>Style</div>
+           <div>
+             <div>
+               <span onClick={() => setPage('size')}>
+                 <MdPhotoSizeSelectSmall/>
+               </span>
+             </div>
+             <div>
+               <span onClick={() => setPage('color')}>
+                 <MdFormatColorFill/>
+               </span>
+             </div>
+             <div>
+               <span onClick={() => console.error('Shapes not yet implemented')}>
+                 <FaShapes/>
+               </span>
+             </div>
            </div>
          </div>
 }
 
-function nodeBioLink() {
-  return <a>Add Node Bio +</a>
+function nodeBioLink(setPage) {
+  return <a onclick={() => setPage('bio')} className="add-node-bio-link">Add Node Bio +</a>
 }
 
-function mainPage(node, nodeUpdater) {
+function mainPage({node, nodeUpdater, setPage}) {
   return <>
-           { nodeAttributeForm(node, nodeUpdater) }
+           { nodeAttributeForm({node, nodeUpdater}) }
            <hr/>
-           { styleForm() }
+           { styleForm(setPage) }
            <hr/>
-           { nodeBioLink() }
+           { nodeBioLink(setPage) }
          </>
 
 }
@@ -81,16 +91,17 @@ function colorPage() {
 }
 
 function sizePage() {
-  return "SIZE PAGE"
+  return <SizePicker />
 }
 
 function bioPage() {
   return "BIO PAGE"
 }
 
-function buttons({handleSubmit, handleDelete}) {
+function buttons({page, setPage, handleSubmit, handleDelete}) {
   return <div className="edit-node-menu-submit-buttons">
-           <button name="delete" onClick={handleDelete}>Delete</button>
+           { page === 'main' && <button name="delete" onClick={handleDelete}>Delete</button> }
+           { page !== 'main' && <button name="back" onClick={() => setPage('main')}>Back</button> }
            <button name="update" onClick={handleSubmit}>Update</button>
          </div>
 }
@@ -106,13 +117,13 @@ export function EditNodeMenu(props) {
   return <div className="edit-node-menu">
            <header>Edit & Customize Node</header>
            <main>
-             { page === 'main' && mainPage(node, nodeUpdater) }
+             { page === 'main' && mainPage({node, nodeUpdater, setPage}) }
              { page === 'color' && colorPage() }
              { page === 'size' && sizePage() }
              { page === 'bio' && bioPage() }
              </main>
            <footer>
-             { buttons({handleSubmit, handleDelete}) }
+             { buttons({page, setPage, handleSubmit, handleDelete}) }
            </footer>
          </div>
 }
