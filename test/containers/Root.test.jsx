@@ -2,6 +2,7 @@ import React from 'react'
 import { Root } from '../../app/containers/Root'
 import Header from '../../app/containers/Header'
 import Graph from '../../app/containers/Graph'
+import ZoomControl from '../../app/components/ZoomControl'
 
 describe('<Root>', function() {
   let root
@@ -20,5 +21,9 @@ describe('<Root>', function() {
 
   it('has graph container', function(){
     expect(root.find(Graph).length).to.equal(1)
+  })
+
+  it('has ZoomControl', function() {
+    expect(root.find(ZoomControl)).to.have.lengthOf(1)
   })
 })

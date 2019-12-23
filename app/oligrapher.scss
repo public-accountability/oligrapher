@@ -185,8 +185,23 @@ $editor_menu_item_size: 35px;
         top: 10%;
         left: 50%;
     }
+
+    .oligrapher-zoomcontrol {
+        z-index: 15;
+         /* position, top, and left places the editor ontop of the SVG element */
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
 }
 
+.oligrapher-zoomcontrol > div {
+    display: flex;
+    flex-direction: column;
+    margin-top: 5px;
+    margin-right: 5px;
+}
 
 /* EDITOR */
 
