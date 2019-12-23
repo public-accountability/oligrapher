@@ -63,10 +63,6 @@ export default {
   //   }
 
   // Global settings
-  // Unlike attributes and display settings, there are no actions available
-  // to change these.
-  // They are designed to be set once when the Oligrapher object
-  // is initialized.
   settings: {
     dataSource: 'littlesis',
     debug: false,

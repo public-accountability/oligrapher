@@ -1,12 +1,11 @@
 import Graph from '../graph/graph'
 import produce from 'immer'
-
-import values from 'lodash/values'
 /*
 
   action.type      |  fields
 -------------------|-------------
   SET_ACTUAL_ZOOM  | actualZoom
+  ZOOM             | direction
   ADD_NODE         | attributes
   ADD_NODES        | nodes
   UPDATE_NODE      | id, attributes
@@ -35,6 +34,9 @@ export default produce( (draft, action) => {
     return
   case 'DRAG_NODE':
     Graph.dragNode(draft, action.id, action.deltas)
+    return
+  case 'ZOOM':
+    // Graph.zoom(action.direction)
     return
   }
 }, null)

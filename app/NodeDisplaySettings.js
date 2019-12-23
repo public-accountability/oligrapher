@@ -32,7 +32,7 @@ export default {
     faded: 0
   },
   imageOpacity: {
-    normal: 1, 
+    normal: 1,
     highlighted: 1,
     faded: 0.2
   },

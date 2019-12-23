@@ -29,7 +29,7 @@ export class Graph extends React.Component {
   render() {
     let zoom = 1
 
-    return <SvgRefContext.Provider value={this.svgRef}>
+    return <SvgRefContext.Provider value={this.svgRef} >
              <GraphContainer viewBox={this.props.viewBox}>
                <Zoomable zoom={zoom}>
                  <Pannable zoom={zoom}>

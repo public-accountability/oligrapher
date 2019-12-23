@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import Header from './Header'
 import Graph from './Graph'
 import Editor from './Editor'
+import EditNodeMenu from './EditNodeMenu'
+import ZoomControl from '../components/ZoomControl'
 // import Story form './Story'
 
 /*
@@ -27,7 +29,8 @@ export class Root extends Component {
              <div className="oligrapher-graph-container">
                <Graph />
                <Editor />
-               <div id="oligrapher-edit-node-menu"></div>
+               <ZoomControl />
+               <EditNodeMenu />
              </div>
            </div>
   }

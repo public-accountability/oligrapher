@@ -5,6 +5,7 @@ import { getNode } from '../graph/graph'
 import { inPortal } from '../util/render'
 import omit from 'lodash/omit'
 import curry from 'lodash/curry'
+import clone from 'lodash/clone'
 
 import SizePicker from '../components/SizePicker'
 
@@ -90,8 +91,16 @@ function colorPage() {
   return "COLOR PAGE"
 }
 
-function sizePage() {
-  return <SizePicker />
+function sizePage(scale, setNode) {
+  const props = {
+    scale: scale,
+    setScale: s => {
+      console.log(`setting scale to ${s}`)
+      setNode(oldState => ({...oldState, scale: s }))
+    }
+  }
+
+  return <SizePicker {...props} />
 }
 
 function bioPage() {
@@ -107,6 +116,8 @@ function buttons({page, setPage, handleSubmit, handleDelete}) {
 }
 
 export function EditNodeMenu(props) {
+  if (!props.visible) { return <></> }
+
   // possible pages: main, color, size, bio
   const [page, setPage] = useState('main')
   const [node, setNode] = useState(omit(props, ['x', 'y', 'id']))
@@ -114,26 +125,44 @@ export function EditNodeMenu(props) {
   const handleSubmit = () => props.updateNode(props.id, node)
   const handleDelete = () => console.log(`deleting node ${props.id}`)
 
-  return <div className="edit-node-menu">
-           <header>Edit & Customize Node</header>
-           <main>
-             { page === 'main' && mainPage({node, nodeUpdater, setPage}) }
-             { page === 'color' && colorPage() }
-             { page === 'size' && sizePage() }
-             { page === 'bio' && bioPage() }
+  return <div className="oligrapher-edit-node-menu">
+           <div className="edit-node-menu-wrapper">
+             <header>Edit & Customize Node</header>
+             <main>
+               { page === 'main' && mainPage({node, nodeUpdater, setPage}) }
+               { page === 'color' && colorPage() }
+               { page === 'size' && sizePage(node.scale, nodeUpdater) }
+               { page === 'bio' && bioPage() }
              </main>
-           <footer>
-             { buttons({page, setPage, handleSubmit, handleDelete}) }
-           </footer>
+             <footer>
+               { buttons({page, setPage, handleSubmit, handleDelete}) }
+             </footer>
+           </div>
          </div>
 }
 
 EditNodeMenu.propTypes = {
-  name: PropTypes.string
+  visible: PropTypes.bool.isRequired,
+  id: PropTypes.string,
+  node: PropTypes.object
 }
 
 const mapStateToProps = state => {
-  return getNode(state.graph, state.display.editor.editNode)
+  let visible = Boolean(state.display.editor.tool === 'node' && state.display.editor.editNode)
+
+  if (visible) {
+    return {
+      visible: true,
+      id: state.display.editor.editNode,
+      node: state.graph.nodes[state.display.editor.editNode]
+    }
+  } else {
+    return {
+      visible: false,
+      id: null,
+      node: null
+    }
+  }
 }
 
 const mapDispatchToProps = (dispatch) => ({
@@ -144,5 +173,6 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps,
   null,
-  { areStatePropsEqual: Object.is }
-)(inPortal(EditNodeMenu, "oligrapher-edit-node-menu"))
+)(EditNodeMenu)
+
+// inPortal(EditNodeMenu, "oligrapher-edit-node-menu")

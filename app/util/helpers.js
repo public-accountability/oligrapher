@@ -43,3 +43,7 @@ export function rotatePoint(point, angle) {
   const y = point.x * sin + point.y * cos
   return { x, y }
 }
+
+export function classNames(...classes) {
+  return classes.filter(Boolean).join(' ')
+}

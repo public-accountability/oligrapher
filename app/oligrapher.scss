@@ -18,7 +18,10 @@ $header_discard_button_bg_color: #6e89a1;
 $header_discard_button_font_color: white;
 
 $oligrapher_blue: #2c63c8;
+$oligrapher_dark_gray: #6e89a1;
+$oligrapher_gray: #b3b3b3;
 $oligrapher_font_gray: #b3b3b3;
+
 
 $editor_menu_item_size: 35px;
 
@@ -163,24 +166,21 @@ $editor_menu_item_size: 35px;
 .oligrapher-graph-container {
     position: relative;
 
-    // .oligrapher-graph-svg and .oligrapher-graph-editor are sibilings
-    // although they're displayed on top of each other
-
     .oligrapher-graph-svg {
         z-index: 1;
     }
 
     .oligrapher-graph-editor {
         z-index: 10;
-        // position, top, and left places the editor ontop of the SVG element
+        /* position, top, and left places the editor ontop of the SVG element */
         position: absolute;
         top: 0;
         left: 0;
     }
 
-    #oligrapher-edit-node-menu {
+    .oligrapher-edit-node-menu {
         z-index: 20;
-        // position, top, and left places the editor ontop of the SVG element
+         /* position, top, and left places the editor ontop of the SVG element */
         position: absolute;
         top: 10%;
         left: 50%;
@@ -249,7 +249,7 @@ $editor_menu_item_size: 35px;
 }
 
 /* This is the "edit and customize node" box */
-.edit-node-menu {
+.edit-node-menu-wrapper {
     background-color: white;
     border: 2px solid $oligrapher_blue;
     padding: 10px;
@@ -344,6 +344,15 @@ $editor_menu_item_size: 35px;
             border-radius: 50%;
             position: absolute;
             bottom: 0;
+            cursor: pointer;
+
+            &:hover {
+                border: 1px solid chartreuse;
+            }
+        }
+
+        .current {
+            border: 1px solid $oligrapher_blue;
         }
 
         > div {

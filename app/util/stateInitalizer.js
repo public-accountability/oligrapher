@@ -1,11 +1,9 @@
-import { getElementById } from './helpers'
 import defaultState from './defaultState'
 import Graph from '../graph/graph'
 // import Curve from '../graph/curve'
 
 import merge from 'lodash/merge'
 import omit from 'lodash/omit'
-// import pick from 'lodash/pick'
 
 
 /*
@@ -42,7 +40,6 @@ export function flatten(obj) {
 export default function stateInitalizer(serializedState) {
   let state = merge({}, defaultState, serializedState)
 
-
   Object.keys(state.graph.edges).forEach(edgeId => {
     let edge = state.graph.edges[edgeId]
     state.graph.edges[edge.id] = flatten(edge)
@@ -53,7 +50,6 @@ export default function stateInitalizer(serializedState) {
     state.graph.nodes[node.id] = flatten(node)
   })
 
-  state.settings.rootElement = getElementById(state.settings.domId)
   state.graph = Graph.new(state.graph)
   return state
 }
