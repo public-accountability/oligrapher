@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { getNode } from '../graph/graph'
-import { inPortal } from '../util/render'
+import { nodePropTypes } from '../graph/node'
 import omit from 'lodash/omit'
 import curry from 'lodash/curry'
-import clone from 'lodash/clone'
 
 import SizePicker from '../components/SizePicker'
 
@@ -20,36 +18,7 @@ function updateNodeFunc(setNode, attributeName) {
   }
 }
 
-// A form with input fields for node name, image url, and clickthrough link
-function nodeAttributeForm({node, nodeUpdater}) {
-  return <form className="oligrapher-edit-node-menu-form">
-           <div>
-             <label>Title</label>
-             <input type="text"
-                    placeholder="node title"
-                    value={node.name || ''}
-                    onChange={nodeUpdater('name')} />
-           </div>
-
-           <div>
-             <label>Image Link</label>
-             <input type="text"
-                    placeholder="Image link"
-                    value={node.image || ''}
-                    onChange={nodeUpdater('image')} />
-           </div>
-
-           <div>
-             <label>Clickthrough Link</label>
-             <input type="text"
-                    placeholder="Link"
-                    value={node.url || ''}
-                    onChange={nodeUpdater('url')} />
-           </div>
-         </form>
-}
-
-function styleForm(setPage) {
+function StyleForm({setPage}) {
   return <div className="style-form">
            <div>Style</div>
            <div>
@@ -72,71 +41,104 @@ function styleForm(setPage) {
          </div>
 }
 
-function nodeBioLink(setPage) {
-  return <a onclick={() => setPage('bio')} className="add-node-bio-link">Add Node Bio +</a>
-}
+StyleForm.propTypes = { setPage: PropTypes.func.isRequired }
 
-function mainPage({node, nodeUpdater, setPage}) {
+export function MainPage({node, nodeUpdater, setPage}) {
   return <>
-           { nodeAttributeForm({node, nodeUpdater}) }
+           <form className="oligrapher-edit-node-menu-form">
+             <div>
+               <label>Title</label>
+                <input type="text"
+                      placeholder="node title"
+                      value={node.name || ''}
+                      onChange={nodeUpdater('name')} />
+             </div>
+
+             <div>
+               <label>Image Link</label>
+               <input type="text"
+                      placeholder="Image link"
+                      value={node.image || ''}
+                      onChange={nodeUpdater('image')} />
+             </div>
+
+             <div>
+               <label>Clickthrough Link</label>
+               <input type="text"
+                      placeholder="Link"
+                      value={node.url || ''}
+                      onChange={nodeUpdater('url')} />
+             </div>
+           </form>
            <hr/>
-           { styleForm(setPage) }
+           <StyleForm setPage={setPage} />
            <hr/>
-           { nodeBioLink(setPage) }
+           <a onClick={() => setPage('bio')}
+              className="add-node-bio-link">Add Node Bio +</a>
          </>
-
 }
 
-function colorPage() {
-  return "COLOR PAGE"
+MainPage.propTypes = {
+  node: PropTypes.shape({ name: PropTypes.string,
+                          image: PropTypes.string,
+                          url: PropTypes.string }).isRequired,
+  nodeUpdater: PropTypes.func.isRequired,
+  setPage: PropTypes.func.isRequired
 }
 
-function sizePage(scale, setNode) {
-  const props = {
-    scale: scale,
-    setScale: s => {
-      console.log(`setting scale to ${s}`)
-      setNode(oldState => ({...oldState, scale: s }))
-    }
-  }
+function colorPage() { return "COLOR PAGE" }
+function bioPage() { return "BIO PAGE" }
 
-  return <SizePicker {...props} />
-}
-
-function bioPage() {
-  return "BIO PAGE"
-}
-
-function buttons({page, setPage, handleSubmit, handleDelete}) {
-  return <div className="edit-node-menu-submit-buttons">
-           { page === 'main' && <button name="delete" onClick={handleDelete}>Delete</button> }
-           { page !== 'main' && <button name="back" onClick={() => setPage('main')}>Back</button> }
-           <button name="update" onClick={handleSubmit}>Update</button>
-         </div>
-}
-
-export function EditNodeMenu(props) {
-  if (!props.visible) { return <></> }
-
+/*
+  Changes to the node are stored as local state on this component until submitted
+*/
+export function EditNodeMenuBody(props) {
   // possible pages: main, color, size, bio
   const [page, setPage] = useState('main')
-  const [node, setNode] = useState(omit(props, ['x', 'y', 'id']))
+  const [node, setNode] = useState(omit(props.node, ['x', 'y', 'id']))
   const nodeUpdater = curry(updateNodeFunc)(setNode)
   const handleSubmit = () => props.updateNode(props.id, node)
   const handleDelete = () => console.log(`deleting node ${props.id}`)
 
+  const setScale = newScale => setNode(oldState => ({...oldState, scale: newScale }))
+
+  return <>
+           <main>
+             { page === 'main' && <MainPage node={node} nodeUpdater={nodeUpdater} setPage={setPage} /> }
+             { page === 'color' && colorPage() }
+             { page === 'size' && <SizePicker scale={node.scale} setScale={setScale} /> }
+             { page === 'bio' && bioPage() }
+           </main>
+           <footer>
+             <div className="edit-node-menu-submit-buttons">
+               { page === 'main' && <button name="delete" onClick={handleDelete}>Delete</button> }
+               { page !== 'main' && <button name="back" onClick={() => setPage('main')}>Back</button> }
+               <button name="update" onClick={handleSubmit}>Update</button>
+             </div>
+           </footer>
+         </>
+}
+
+EditNodeMenuBody.propTypes = {
+  id: PropTypes.string.isRequired,
+  node: PropTypes.shape(nodePropTypes).isRequired,
+  updateNode: PropTypes.func.isRequired
+}
+
+/*
+  The menu for Editing a node. Rendered in <root>
+
+  This component is a simple wrapper around EditNodeMenuBody.
+  The "key" property on <EditNodeMenuBody> is important: it ensures that
+  <EditNodeMenuBody /> is re-created when a different node is selected.
+*/
+export function EditNodeMenu(props) {
+  if (!props.visible) { return null }
+
   return <div className="oligrapher-edit-node-menu">
            <div className="edit-node-menu-wrapper">
              <header>Edit & Customize Node</header>
-             <main>
-               { page === 'main' && mainPage({node, nodeUpdater, setPage}) }
-               { page === 'color' && colorPage() }
-               { page === 'size' && sizePage(node.scale, nodeUpdater) }
-               { page === 'bio' && bioPage() }
-             </main>
-             <footer>
-               { buttons({page, setPage, handleSubmit, handleDelete}) }
-             </footer>
+             <EditNodeMenuBody {...props} key={props.id} />
            </div>
          </div>
 }
@@ -144,24 +146,22 @@ export function EditNodeMenu(props) {
 EditNodeMenu.propTypes = {
   visible: PropTypes.bool.isRequired,
   id: PropTypes.string,
-  node: PropTypes.object
+  node: PropTypes.shape(nodePropTypes),
+  updateNode: PropTypes.func.isRequired
 }
 
-const mapStateToProps = state => {
-  let visible = Boolean(state.display.editor.tool === 'node' && state.display.editor.editNode)
 
-  if (visible) {
-    return {
-      visible: true,
-      id: state.display.editor.editNode,
-      node: state.graph.nodes[state.display.editor.editNode]
-    }
-  } else {
-    return {
-      visible: false,
-      id: null,
-      node: null
-    }
+const mapStateToProps = state => {
+  const visible = Boolean(state.display.editor.tool === 'node' && state.display.editor.editNode)
+
+  if (!visible) {
+    return { visible: false, id: null, node: null }
+  }
+
+  return {
+    visible: true,
+    id: state.display.editor.editNode,
+    node: state.graph.nodes[state.display.editor.editNode]
   }
 }
 
@@ -169,10 +169,4 @@ const mapDispatchToProps = (dispatch) => ({
   updateNode: (id, attributes) => dispatch({type: "UPDATE_NODE", id, attributes })
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-  null,
-)(EditNodeMenu)
-
-// inPortal(EditNodeMenu, "oligrapher-edit-node-menu")
+export default connect(mapStateToProps, mapDispatchToProps)(EditNodeMenu)

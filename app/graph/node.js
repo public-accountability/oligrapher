@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import merge from 'lodash/merge'
 import { generate } from 'shortid'
 
@@ -11,6 +12,18 @@ const nodeDefaults = {
   type: "circle",
   image: null,
   url: null
+}
+
+export const nodePropTypes = {
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string,
+  x: PropTypes.number,
+  y: PropTypes.number,
+  scale: PropTypes.number,
+  status: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
+  image: PropTypes.string,
+  url: PropTypes.string
 }
 
 export function newNode(attributes = {}) {
