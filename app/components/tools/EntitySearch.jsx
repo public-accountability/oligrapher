@@ -4,8 +4,19 @@ import { findNodes } from '../../util/search'
 import isArray from 'lodash/isArray'
 
 
-function SearchResult() {}
-function SearchResults() {}
+function SearchResult({entity}) {
+  return <div className="entity-search-entity">
+           <a><b>{entity.display.name}</b></a>
+         </div>
+}
+
+
+function SearchResults({results}) {
+  return <div className="entity-search-results">
+           {results.map(entity => <SearchResult entity={entity} key={entity.id} />) }
+         </div>
+
+}
 
 export default function EntitySearch({ query }) {
   const [loading, setLoading] = useState(true)
@@ -19,21 +30,25 @@ export default function EntitySearch({ query }) {
         setLoading(false)
         setResults(json)
       })
-      .catch(() => console.error("Error finding nodes"))
+      .catch(err => {
+        setResults(false)
+        console.error("Error finding nodes", err)
+      })
 
   }, [query] )
 
   if (loading) {
     return <em>...loading...</em>
-  } else if (results === false) {
-    return <em>error finding nodes</em>
-  } else if (isArray(results) && results.length === 0) {
-    return <em>no results</em>
+  } else if (isArray(results)) {
+    return results.length === 0
+      ? <em>no results</em>
+      : <SearchResults results={results} />
   } else {
-    return <p>{ JSON.stringify(results, null, 4) }</p>
+    let errorMsg = "Error searching for nodes"
+    console.error(`${errorMsg}. Results = ${results}`)
+    return <em>{errorMsg}</em>
   }
 }
-
 
 EntitySearch.propTypes = {
   query: PropTypes.string.isRequired
