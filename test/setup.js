@@ -4,6 +4,10 @@ import sinon from 'sinon'
 import { JSDOM } from 'jsdom'
 import merge from 'lodash/merge'
 
+import { createOligrapherStore} from '../app/util/render'
+import defaultState from '../app/util/defaultState'
+
+
 Enzyme.configure({ adapter: new Adapter() })
 
 // Add globals. All tests can use: shallow, mount, sinon, merge
@@ -16,6 +20,7 @@ global.merge = merge
 // source: https://stackoverflow.com/questions/33881123/handle-webpack-css-imports-when-testing-with-mocha-and-babel/37184369#37184369
 require.extensions['.scss'] = () => null
 
+global.createMockStore = () => createOligrapherStore(merge({}, defaultState))
 
 // JSDOM is used by when enzyme's `mount` (full DOM rendering)
 // Source: https://airbnb.io/enzyme/docs/guides/jsdom.html

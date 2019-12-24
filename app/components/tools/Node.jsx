@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
+
+import EntitySearch from './EntitySearch'
+
+const doSearch = searchValue => Boolean(searchValue) && searchValue.length > 2
 
 export default function NodeTool(props) {
   const dispatch = useDispatch()
   const [searchValue, setSearchValue] = useState('')
-
-
   const onSearch = event => setSearchValue(event.target.value)
 
   const onClickCreateNew = (_) => {
@@ -15,6 +17,7 @@ export default function NodeTool(props) {
     if (name) {
       dispatch({ type: 'ADD_NODE', attributes: { name } })
     } else {
+      // TODO move this error handling to the reducer
       console.error("Node name is blank.")
     }
   }
@@ -26,6 +29,10 @@ export default function NodeTool(props) {
                   onChange={onSearch} />
 
            <a onClick={onClickCreateNew}>Create New +</a>
+
+           <div>
+             { doSearch(searchValue) && <EntitySearch query={searchValue} />}
+           </div>
          </div>
 
 

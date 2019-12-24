@@ -26,6 +26,7 @@ export class Graph extends React.Component {
     this.props.setActualZoom(actualZoom)
   }
 
+  // TODO: Combine SvgRefContext.Provider & GraphContainer
   render() {
     return <SvgRefContext.Provider value={this.svgRef} >
              <GraphContainer viewBox={this.props.viewBox}>
