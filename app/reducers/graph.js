@@ -1,5 +1,7 @@
 import Graph from '../graph/graph'
 import produce from 'immer'
+
+const ZOOM_INTERVAL = 0.2
 /*
 
   action.type      |  fields
@@ -36,7 +38,15 @@ export default produce( (draft, action) => {
     Graph.dragNode(draft, action.id, action.deltas)
     return
   case 'ZOOM':
-    // Graph.zoom(action.direction)
+    switch(action.direction) {
+    case 'IN':
+      draft.zoom = draft.zoom + ZOOM_INTERVAL
+      break
+    case 'OUT':
+      draft.zoom = draft.zoom - ZOOM_INTERVAL
+      break
+    }
+
     return
   }
 }, null)

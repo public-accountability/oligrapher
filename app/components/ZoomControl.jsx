@@ -9,8 +9,8 @@ export default function ZoomControl(props) {
 
   return <div className="oligrapher-zoomcontrol">
            <div>
-             <button>+</button>
-             <button>-</button>
+             <button onClick={zoomIn}>+</button>
+             <button onClick={zoomOut}>-</button>
            </div>
          </div>
 }
