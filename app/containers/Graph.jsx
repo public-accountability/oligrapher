@@ -30,7 +30,7 @@ export class Graph extends React.Component {
     return <SvgRefContext.Provider value={this.svgRef} >
              <GraphContainer viewBox={this.props.viewBox}>
                <Zoomable zoom={this.props.zoom}>
-                 <Pannable zoom={this.props.zoom}>
+                 <Pannable zoom={this.props.zoom} actualZoom={this.props.actualZoom}>
                    <Nodes />
                    <Edges />
                  </Pannable>
@@ -43,13 +43,15 @@ export class Graph extends React.Component {
 Graph.propTypes = {
   viewBox: PropTypes.object.isRequired,
   setActualZoom: PropTypes.func.isRequired,
-  zoom: PropTypes.number.isRequired
+  zoom: PropTypes.number.isRequired,
+  actualZoom: PropTypes.number
 }
 
 const mapStateToProps = function(state) {
   return {
     viewBox: state.graph.viewBox,
-    zoom: state.graph.zoom
+    zoom: state.graph.zoom,
+    actualZoom: state.graph.actualZoom
   }
 }
 
