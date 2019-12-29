@@ -1,3 +1,9 @@
+require("@babel/register")({
+  ignore: [
+    /node_modules\/(?!@public-accountability\/littlesis-api)/
+  ]
+})
+
 module.exports = function(api) {
   // These are run in reserve order. @babel/preset-react is run first.
   const presets = [
