@@ -2,7 +2,7 @@ import React from 'react'
 import { Provider } from 'react-redux'
 import NodeTool from '../../app/components/tools/Node'
 
-describe.only('<NodeTool>', function() {
+describe('<NodeTool>', function() {
   let wrapper, mockStore
 
   beforeEach(function() {
