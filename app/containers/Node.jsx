@@ -1,9 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import add from 'lodash/add'
+import curry from 'lodash/curry'
+import noop from 'lodash/noop'
 import pick from 'lodash/pick'
 import subtract from 'lodash/subtract'
-import add from 'lodash/add'
 
 import DraggableNode from './../components/graph/DraggableNode'
 import NodeCircle from './../components/graph/NodeCircle'
@@ -33,12 +35,14 @@ function nodeHandleCoords(side, {x, y, scale}) {
 }
 
 function nodeHandles(props) {
-  if (!props.editorMode) { return <></> }
+  if (props.editorMode && props.nodeToolOpen)  {
+    return [
+      <NodeHandle {...nodeHandleCoords('left', props)} action={nodeHandleAction('left')} key="left" />,
+      <NodeHandle {...nodeHandleCoords('right', props)} action={props.openEditNodeMenu} key="right" />
+    ]
+  }
 
-  return [
-    <NodeHandle {...nodeHandleCoords('left', props)} action={nodeHandleAction('left')} key="left" />,
-    <NodeHandle {...nodeHandleCoords('right', props)} action={props.openEditNodeMenu} key="right" />
-  ]
+  return null
 }
 
 export function Node(props) {
@@ -64,14 +68,17 @@ Node.propTypes = {
   status: PropTypes.string.isRequired,
   onStop: PropTypes.func.isRequired,
   onDrag: PropTypes.func.isRequired,
+  actualZoom: PropTypes.number,
   openEditNodeMenu: PropTypes.func.isRequired,
-  actualZoom: PropTypes.number
+  editorMode: PropTypes.bool.isRequired,
+  nodeToolOpen: PropTypes.bool.isRequired,
+  edgeToolOpen: PropTypes.bool.isRequired
 }
 
 Node.defaultProps = {
-  color: DEFAULT_COLOR
+  color: DEFAULT_COLOR,
+  openEditNodeMenu: noop
 }
-
 
 const mapStateToProps = (state, ownProps) => {
   const id = ownProps.id.toString()
@@ -81,18 +88,39 @@ const mapStateToProps = (state, ownProps) => {
     ...node,
     id: id,
     actualZoom: state.graph.actualZoom,
-    editorMode: state.display.modes.editor
+    editorMode: state.display.modes.editor,
+    editorTool: state.display.editor.tool,
+    nodeToolOpen: state.display.editor.tool === 'node',
+    edgeToolOpen: state.display.editor.tool === 'edge'
   }
 }
+
+function nodeMovementFunc(dispatch, id, actionType, editorTool, deltas) {
+  return ['node', 'edge'].includes(editorTool)
+    ? dispatch({ type: actionType,
+                 editorTool: editorTool,
+                 deltas: deltas,
+                 id: id })
+    : noop
+}
+
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   const id = ownProps.id.toString()
 
   return {
-    onStop: (deltas) => dispatch({ type: 'MOVE_NODE', id: id, deltas: deltas }),
-    onDrag: (deltas) => dispatch({ type: 'DRAG_NODE', id: id, deltas: deltas }),
+    nodeMovement: curry(nodeMovementFunc)(dispatch, id),
     openEditNodeMenu: () => dispatch({ type: 'OPEN_EDIT_NODE_MENU', id: id })
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Node)
+const mergeProps = (stateProps, dispatchProps) => {
+  let editorTool = stateProps.editorTool
+
+  return { ...stateProps,
+           ...dispatchProps,
+           onStop: dispatchProps.nodeMovement('MOVE_NODE', editorTool),
+           onDrag: dispatchProps.nodeMovement('DRAG_NODE', editorTool) }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(Node)

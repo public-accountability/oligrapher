@@ -31,11 +31,18 @@ export default produce( (draft, action) => {
     Graph.updateNode(draft, action.id, action.attributes)
     return
   case 'MOVE_NODE':
-    Graph.dragNode(draft, action.id, action.deltas)
-    Graph.moveNode(draft, action.id, action.deltas)
+    if (action.editorTool === 'node') {
+      Graph.dragNode(draft, action.id, action.deltas)
+      Graph.moveNode(draft, action.id, action.deltas)
+    }
+
+    // if (action.editortool === 'edge') {}
+
     return
   case 'DRAG_NODE':
-    Graph.dragNode(draft, action.id, action.deltas)
+      if (action.editorTool === 'node') {
+        Graph.dragNode(draft, action.id, action.deltas)
+      }
     return
   case 'ZOOM':
     switch(action.direction) {
