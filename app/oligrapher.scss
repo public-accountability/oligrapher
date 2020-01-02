@@ -386,8 +386,14 @@ g.oligrapher-node.react-draggable
         circle.node-handle
 */
 
+/* while dragging for edge mode*/
+g.edge-tool-open .react-draggable-dragging .node-circle {
+    fill: lightyellow;
+}
+
 .oligrapher-node {
     .node-circle-group {}
+
     .node-handle {
         &:hover {
             stroke: lightyellow;
