@@ -44,6 +44,12 @@ export function rotatePoint(point, angle) {
   return { x, y }
 }
 
+export function distance(point1, point2) {
+  let a = point1.x - point2.x
+  let b = point1.y - point2.y
+  return Math.hypot(a, b)
+}
+
 export function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }

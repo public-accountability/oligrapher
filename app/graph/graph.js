@@ -1,12 +1,16 @@
 import at from 'lodash/at'
+import curry from 'lodash/curry'
 import filter from 'lodash/filter'
 import isNumber from 'lodash/isNumber'
 import merge from 'lodash/merge'
+import omit from 'lodash/omit'
 import values from 'lodash/values'
 
-import { translatePoint, rotatePoint } from '../util/helpers'
+import { translatePoint, rotatePoint, distance } from '../util/helpers'
 import { newNode } from './node'
 import { calculateGeometry } from './curve'
+
+import nodeDisplaySetting from '../NodeDisplaySettings'
 
 const GRAPH_PADDING = 100
 const DEFAULT_VIEWBOX = { minX: -200, minY: -200, w: 400, h: 400 }
@@ -254,6 +258,27 @@ export function dragEdge(graph, edge) {
   throw new Error("Not Yet Implemented")
 }
 
+// {x,y}, {x,y} ---> Boolean
+function intersects(coordinates, node) {
+  const padding = 20
+  const radius = (nodeDisplaySetting.circleRadius * node.scale) + padding
+  return distance(node, coordinates) <= radius
+}
+
+// Returns the intersecting node (including a hard-coded buffer radius)
+// If there are no intersections, this returns undefined
+export function intersectingNode(graph, coordinates, selfId = null) {
+  return values(omit(graph.nodes, selfId)).find(curry(intersects)(coordinates))
+}
+
+export function intersectingNodeFromDrag(graph, nodeId, deltas) {
+  return intersectingNode(
+    graph,
+    translatePoint(getNode(graph, nodeId), deltas),
+    nodeId
+  )
+}
+
 ///////////////////////
 // View Box and Zoom //
 //////////////////////
@@ -277,24 +302,26 @@ export function newGraph(attributes = {}) {
 }
 
 export default {
-  "new":               newGraph,
-  "stats":             stats,
-  "edgesOf":           edgesOf,
-  "nodesOf":           nodesOf,
-  "getNode":           getNode,
-  "getEdge":           getEdge,
-  "calculateViewBox":  calculateViewBox,
-  "addNode":           addNode,
-  "addNodes":          addNodes,
-  "removeNode":        removeNode,
-  "updateNode":        updateNode,
-  "addEdge":           addEdge,
-  "addEdges":          addEdges,
-  "removeEdge":        removeEdge,
-  "updateEdge":        updateEdge,
-  "moveNode":          moveNode,
-  "dragNode":          dragNode,
-  "dragEdge":          dragEdge,
-  "updateViewBox":     updateViewBox,
-  "setZoom":           setZoom
+  "new":                        newGraph,
+  "stats":                      stats,
+  "edgesOf":                    edgesOf,
+  "nodesOf":                    nodesOf,
+  "getNode":                    getNode,
+  "getEdge":                    getEdge,
+  "calculateViewBox":           calculateViewBox,
+  "addNode":                    addNode,
+  "addNodes":                   addNodes,
+  "removeNode":                 removeNode,
+  "updateNode":                 updateNode,
+  "addEdge":                    addEdge,
+  "addEdges":                   addEdges,
+  "removeEdge":                 removeEdge,
+  "updateEdge":                 updateEdge,
+  "moveNode":                   moveNode,
+  "dragNode":                   dragNode,
+  "dragEdge":                   dragEdge,
+  "intersectingNode":           intersectingNode,
+  "intersectingNodeFromDrag":   intersectingNodeFromDrag,
+  "updateViewBox":              updateViewBox,
+  "setZoom":                    setZoom
 }

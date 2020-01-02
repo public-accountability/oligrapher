@@ -43,6 +43,13 @@ export default produce( (draft, action) => {
       if (action.editorTool === 'node') {
         Graph.dragNode(draft, action.id, action.deltas)
       }
+
+    if (action.editorTool === 'edge') {
+      let node = Graph.intersectingNodeFromDrag(draft, action.id, action.deltas)
+      if (node) {
+        console.log(`Intersection with ${node.name}`)
+      }
+    }
     return
   case 'ZOOM':
     switch(action.direction) {
