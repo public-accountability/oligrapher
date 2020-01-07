@@ -1,4 +1,4 @@
-import React from 'react'
+import { createContext } from 'react'
 
-export const SvgRefContext = React.createContext()
+export const SvgRefContext = createContext()
 SvgRefContext.displayName  = "Svg-Container-Ref-Context"

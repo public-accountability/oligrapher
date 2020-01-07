@@ -12,9 +12,13 @@ export default function DraggableNode(props) {
   // The setting the position to 0,0 has the effect of ensuring that
   // all drag deltas always start with 0,0.
   // The onStop and onDrag callbacks all work off of relative coordinates.
-  const draggableProps = { onDrag, onStop, scale: props.actualZoom, position: DEFAULT_POSITION }
+  const draggableProps = { onDrag,
+                           onStop,
+                           scale: props.actualZoom,
+                           position: DEFAULT_POSITION,
+                           handle: ".node-circle" }
 
-  return <Draggable {...draggableProps}  handle=".node-circle">
+  return <Draggable {...draggableProps}>
            {props.children}
          </Draggable>
 }
@@ -23,10 +27,9 @@ DraggableNode.propTypes = {
   children:   PropTypes.node.isRequired,
   onStop:     PropTypes.func.isRequired,
   onDrag:     PropTypes.func.isRequired,
-  actualZoom: PropTypes.number
+  actualZoom: PropTypes.number.isRequired
 }
 
-// Because actualZoom is derived from
 DraggableNode.defaultProps = {
   actualZoom: 1
 }

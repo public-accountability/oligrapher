@@ -17,7 +17,7 @@ import ds from '../NodeDisplaySettings'
 const DEFAULT_COLOR = "#ccc"
 const CIRCLE_PROPS = ['x', 'y', 'scale', 'color']
 const LABEL_PROPS = ['x', 'y', 'name', 'scale', 'status', 'url']
-
+const DRAGGABLE_PROPS = ['onStop', 'onDrag', 'actualZoom']
 
 function nodeHandleAction(side) {
   return () => console.log(`you clicked the ${side} node handle`)
@@ -47,7 +47,7 @@ function nodeHandles(props) {
 
 export function Node(props) {
   return  <g id={"node-" + props.id} className="oligrapher-node">
-            <DraggableNode onStop={props.onStop} onDrag={props.onDrag} actualZoom={props.actualZoom} >
+            <DraggableNode {...pick(props, DRAGGABLE_PROPS)}>
               <g>
                 <NodeCircle {...pick(props, CIRCLE_PROPS)} />
                 <NodeLabel {...pick(props, LABEL_PROPS)} />
@@ -58,6 +58,7 @@ export function Node(props) {
 }
 
 Node.propTypes = {
+  // Node attributes
   id: PropTypes.string.isRequired,
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
@@ -66,10 +67,13 @@ Node.propTypes = {
   url: PropTypes.string,
   color: PropTypes.string,
   status: PropTypes.string.isRequired,
+  // Actions
   onStop: PropTypes.func.isRequired,
   onDrag: PropTypes.func.isRequired,
-  actualZoom: PropTypes.number,
   openEditNodeMenu: PropTypes.func.isRequired,
+
+  // UI helpers
+  actualZoom: PropTypes.number,
   editorMode: PropTypes.bool.isRequired,
   nodeToolOpen: PropTypes.bool.isRequired,
   edgeToolOpen: PropTypes.bool.isRequired
@@ -87,6 +91,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     ...node,
     id: id,
+    zoom: state.graph.zoom,
     actualZoom: state.graph.actualZoom,
     editorMode: state.display.modes.editor,
     editorTool: state.display.editor.tool,

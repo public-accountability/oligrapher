@@ -15,28 +15,41 @@ import { computeActualZoom } from '../util/dimensions'
   The core component that displays the graph
 */
 export class Graph extends React.Component {
-
   constructor(props) {
     super(props)
+    // see components/graph/GraphContainer.jsx
+    // This is the ref of div.oligrapher-graph-svg, a div that wraps the graph root svg element
     this.svgRef = React.createRef()
+    this.computeAndSetActualZoom = this.computeAndSetActualZoom.bind(this)
+  }
+
+  computeAndSetActualZoom() {
+    this.props.setActualZoom(
+      computeActualZoom(this.props.viewBox, this.svgRef.current, this.props.zoom)
+    )
   }
 
   componentDidMount() {
-    const actualZoom = computeActualZoom(this.props.viewBox, this.svgRef.current)
-    this.props.setActualZoom(actualZoom)
+    this.computeAndSetActualZoom()
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.zoom !== prevProps.zoom) {
+      this.computeAndSetActualZoom()
+    }
   }
 
   // TODO: Combine SvgRefContext.Provider & GraphContainer
   render() {
     return <SvgRefContext.Provider value={this.svgRef} >
-             <GraphContainer viewBox={this.props.viewBox}>
-               <Zoomable zoom={this.props.zoom}>
-                 <Pannable zoom={this.props.zoom} actualZoom={this.props.actualZoom}>
-                   <Nodes />
-                   <Edges />
-                 </Pannable>
-               </Zoomable>
-             </GraphContainer>
+               <GraphContainer viewBox={this.props.viewBox}>
+                 <Zoomable zoom={this.props.zoom}>
+                   <Pannable zoom={this.props.zoom} actualZoom={this.props.actualZoom}>
+                     <Nodes />
+                     <Edges />
+                   </Pannable>
+                 </Zoomable>
+               </GraphContainer>
            </SvgRefContext.Provider>
   }
 }
