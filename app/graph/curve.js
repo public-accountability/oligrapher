@@ -140,7 +140,9 @@ export function parseCurveString(str) {
 //     futureCurve[0] = translatePoint(curve[0], deltas)
 //   } else {
 //     futureCurve[2] = translatePoint(curve[2], deltas)
-//   }
+//   } It's fine so far. They have lots of extra space in their office so I'm basically just working away like a I always do...
+
+
 
 //   const deltaAngle = angleBetweenPoints(futureCurve[0], futureCurve[2]) - angleBetweenPoints(curve[0], curve[2])
 
@@ -238,5 +240,9 @@ export function curveFromGeometry(geometry) {
 
 export default {
   calculateGeometry: calculateGeometry,
-  curveFromGeometry: curveFromGeometry
+  curveFromGeometry: curveFromGeometry,
+  from: {
+    geometry: curveFromGeometry,
+    edge: edge => curveFromGeometry(calculateGeometry(edge)),
+  }
 }

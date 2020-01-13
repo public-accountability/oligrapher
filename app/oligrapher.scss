@@ -411,3 +411,20 @@ g.edge-tool-open .react-draggable-dragging .node-circle {
 .react-draggable-dragging {
     cursor: grabbing;
 }
+
+/*
+  EDGES
+*/
+
+.edge-group {
+
+    .edge-handle {
+        stroke: #fff;
+        stroke-opacity: 0;
+        fill: none;
+
+        &:hover {
+            cursor: pointer
+        }
+    }
+}

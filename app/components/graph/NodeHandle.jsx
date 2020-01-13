@@ -1,7 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const RADIUS = 6
+const RADIUS = 8
+//const TARGET = RADIUS * 2
 
 export default function NodeHandle(props) {
   const onClick = (event) => {

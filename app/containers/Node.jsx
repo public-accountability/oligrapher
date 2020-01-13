@@ -100,6 +100,17 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+/*
+  There are two types of actions here: MOVE_NODE and DRAG_NODE,
+  which correspond to react-draggable's onStop and onDrag.
+
+
+  Dragging cause different actions depending on which editorTool is open
+
+  editorTool: "node"   moves nodes around
+  editorTool: "edge"   creates new edges on between connected nodes
+
+*/
 function nodeMovementFunc(dispatch, id, actionType, editorTool, deltas) {
   return ['node', 'edge'].includes(editorTool)
     ? dispatch({ type: actionType,

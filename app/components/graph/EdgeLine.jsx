@@ -41,7 +41,6 @@ const DISPLAY =  {
 // markerEnd: svgParams.markerEnd
 
 export default function EdgeLine(props) {
-  const width = 1 + (props.scale - 1) * 5
   const dy = -6 * Math.sqrt(props.scale)
   const strokeDasharray = props.dash ? DASH_PARAMS : ''
 
@@ -50,7 +49,7 @@ export default function EdgeLine(props) {
     className: 'edge-path',
     d: props.curve,
     dy: dy,
-    strokeWidth: width,
+    strokeWidth: props.width,
     strokeDasharray: strokeDasharray,
     stroke: DISPLAY.lineColor[props.status],
     lineColor: DISPLAY.lineColor[props.status],
@@ -69,7 +68,8 @@ EdgeLine.propTypes = {
   curve:    PropTypes.string.isRequired,
   scale:    PropTypes.number.isRequired,
   dash:     PropTypes.bool.isRequired,
-  status:   PropTypes.string.isRequired
+  status:   PropTypes.string.isRequired,
+  width:    PropTypes.number.isRequired
 }
 
 

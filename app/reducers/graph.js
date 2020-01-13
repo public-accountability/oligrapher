@@ -1,4 +1,5 @@
 import Graph from '../graph/graph'
+import Edge from '../graph/edge'
 import produce from 'immer'
 
 const ZOOM_INTERVAL = 0.2
@@ -13,6 +14,7 @@ const ZOOM_INTERVAL = 0.2
   UPDATE_NODE      | id, attributes
   MOVE_NODE        | id, deltas
   DRAG_NODE        | id, deltas
+  UPDATE_EDGE      | id, attributes
 */
 
 export default produce( (draft, action) => {
@@ -36,20 +38,29 @@ export default produce( (draft, action) => {
       Graph.moveNode(draft, action.id, action.deltas)
     }
 
-    // if (action.editortool === 'edge') {}
-
-    return
-  case 'DRAG_NODE':
-      if (action.editorTool === 'node') {
-        Graph.dragNode(draft, action.id, action.deltas)
-      }
-
+    // The is the drag to create edges feature:
     if (action.editorTool === 'edge') {
-      let node = Graph.intersectingNodeFromDrag(draft, action.id, action.deltas)
-      if (node) {
-        console.log(`Intersection with ${node.name}`)
+      let node1 = Graph.getNode(draft, action.id)
+      let node2 = Graph.intersectingNodeFromDrag(draft, action.id, action.deltas)
+
+      if (node2) {
+        Graph.addEdge(draft, Edge.newEdgeFromNodes(node1, node2))
       }
     }
+    return
+  case 'DRAG_NODE':
+
+    if (action.editorTool === 'node') {
+      Graph.dragNode(draft, action.id, action.deltas)
+    }
+
+    if (action.editorTool === 'edge') {
+      // Display message about which node will be connected ?
+    }
+
+    return
+  case 'UPDATE_EDGE':
+    Graph.updateEdge(draft, action.id, action.attributes)
     return
   case 'ZOOM':
     switch(action.direction) {
@@ -60,7 +71,6 @@ export default produce( (draft, action) => {
       draft.zoom = draft.zoom - ZOOM_INTERVAL
       break
     }
-
     return
   }
 }, null)
