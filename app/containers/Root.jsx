@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import Header from './Header'
 import Graph from './Graph'
 import Editor from './Editor'
-import EditNodeMenu from './EditNodeMenu'
+import FloatingMenus from './FloatingMenus'
 import ZoomControl from '../components/ZoomControl'
 // import Story form './Story'
 
@@ -30,7 +30,7 @@ export class Root extends Component {
                <Graph />
                <Editor />
                <ZoomControl />
-               <EditNodeMenu />
+               <FloatingMenus />
              </div>
            </div>
   }
