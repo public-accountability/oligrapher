@@ -9,11 +9,12 @@ import noop from 'lodash/noop'
 import { calculateDeltas } from '../util/deltas'
 import Curve from '../graph/curve'
 
-// import DraggableEdge from '../components/graph/DraggableEdge'
 import EdgeLine from '../components/graph/EdgeLine'
 import EdgeHandle from '../components/graph/EdgeHandle'
 
 const DRAGGABLE_HANDLE = '.edge-handle'
+
+const calculateEdgeWidth = scale => 1 + (scale - 1) * 5
 
 export function Edge(props) {
   const [curve, setCurve] = useState(Curve.from.edge(props))
@@ -25,7 +26,7 @@ export function Edge(props) {
 
   const [startDrag, setStartDrag] = useState()
 
-  const width = 1 + (props.scale - 1) * 5
+  const width = calculateEdgeWidth(props.scale)
   const startPosition = { x: props.cx, y: props.cy }
 
   const onStart = (evt, data) =>  setStartDrag(data)
@@ -40,6 +41,9 @@ export function Edge(props) {
   const onStop = (evt, data) => {
     const deltas = calculateDeltas(data, startPosition, startDrag, props.actualZoom)
     props.updateEdge({cx: deltas.x, cy: deltas.y })
+  }
+
+  const onClick = (evt, data) => {
   }
 
   const draggableProps = {
@@ -87,9 +91,12 @@ Edge.propTypes = {
   cy:         PropTypes.number.isRequired,
   s1:         PropTypes.number.isRequired,
   s2:         PropTypes.number.isRequired,
-  //
+
   actualZoom: PropTypes.number,
-  updateEdge: PropTypes.func.isRequired
+
+  // Actions
+  updateEdge: PropTypes.func.isRequired,
+  openEdgeMenu: PropTypes.func.isRequired
 }
 
 Edge.defaultProps = {
@@ -104,14 +111,28 @@ const mapStateToProps = (state, ownProps) => {
            actualZoom: state.graph.actualZoom }
 }
 
+// dispatch helpers
+
+const openEdgeMenu = (dispatch, id) => () => dispatch({
+  type: 'OPEN_EDIT_EDGE_MENU',
+  id: id
+})
+
+const updateEdge = (dispatch, id) => attributes => dispatch({
+  type: 'UPDATE_EDGE',
+  id: id,
+  attributes: attributes
+})
+
+
 const mapDispatchToProps = (dispatch, ownProps) => {
   const id = ownProps.id.toString()
 
   return {
-    updateEdge: attributes => dispatch({type: 'UPDATE_EDGE',
-                                        id: id,
-                                        attributes: attributes })
+    updateEdge: updateEdge(dispatch, id),
+    openEdgeMenu: openEdgeMenu(dispatch, id)
   }
+
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Edge)
