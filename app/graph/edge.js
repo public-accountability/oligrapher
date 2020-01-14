@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import merge from 'lodash/merge'
 import { generate } from 'shortid'
 import Curve from './curve'
@@ -57,6 +58,26 @@ export function edgeCoordinates(nodeNumber, coordinates) {
   } else {
     throw new Error("Node number must be 1 or 2")
   }
+}
+
+export const edgePropTypes = {
+  id: PropTypes.string.isRequired,
+  node1_id: PropTypes.string.isRequired,
+  node2_id: PropTypes.string.isRequired,
+  status: PropTypes.oneOf(['normal']),
+  label: PropTypes.string,
+  scale: PropTypes.number,
+  arrow: PropTypes.string,
+  dash:  PropTypes.string,
+  url: PropTypes.string,
+  x1: PropTypes.number,
+  y1: PropTypes.number,
+  x2: PropTypes.number,
+  y2: PropTypes.number,
+  cx: PropTypes.number,
+  cy: PropTypes.number,
+  s1: PropTypes.number,
+  s2: PropTypes.number
 }
 
 export default {
