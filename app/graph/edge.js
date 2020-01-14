@@ -49,8 +49,15 @@ export function newEdgeFromNodes(n1, n2) {
   return edge
 }
 
-
-
+export function edgeCoordinates(nodeNumber, coordinates) {
+  if (nodeNumber === 1) {
+    return { x1: coordinates.x, y1: coordinates.y }
+  } else if (nodeNumber === 2) {
+    return { x2: coordinates.x, y2: coordinates.y }
+  } else {
+    throw new Error("Node number must be 1 or 2")
+  }
+}
 
 export default {
   "new": newEdge,

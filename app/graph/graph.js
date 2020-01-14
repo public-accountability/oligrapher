@@ -8,6 +8,7 @@ import values from 'lodash/values'
 
 import { translatePoint, rotatePoint, distance } from '../util/helpers'
 import { newNode } from './node'
+import { edgeCoordinates } from './edge'
 import { calculateGeometry } from './curve'
 
 import nodeDisplaySetting from '../NodeDisplaySettings'
@@ -221,27 +222,10 @@ export function updateEdgeOffset(oldEdge, newEdge) {
   return {...newEdge, cx: rotatedPoint.x, cy: rotatedPoint.cy }
 }
 
-// This updates either x1, y1 or x2, y2 of the edge with the new coordinates.
-// Returns a new copy of the edge with the updated values
-// {edge}, Number, {x,y} --> {edge}
-export function updateEdgeCurveEnd(edge, nodeNumber, coordinates) {
-  if (nodeNumber === 1) {
-    return {...edge, x1: coordinates.x, y1: coordinates.y}
-  } else if (nodeNumber === 2) {
-    return {...edge, x2: coordinates.x, y2: coordinates.y}
-  } else {
-    throw new Error("Node number must be 1 or 2")
-  }
-}
-
 // This updates an edge's curve when one of it's nodes has moved
 export function dragNodeEdge(graph, {edge, node, coordinates}) {
-  let updatedEdge = updateEdgeCurveEnd(edge,
-                                       determineNodeNumber({ edge, node }),
-                                       coordinates)
-
-  // updatedEdge = updateEdgeOffset(edge, updatedEdge)
-  graph.edges[updatedEdge.id] = updatedEdge
+  merge(graph.edges[edge.id],
+        edgeCoordinates(determineNodeNumber({ edge, node }), coordinates))
   return graph
 }
 

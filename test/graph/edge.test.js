@@ -1,6 +1,6 @@
 // import Graph from '../../app/graph/graph'
 import Node from '../../app/graph/node'
-import Edge from '../../app/graph/edge'
+import Edge, { edgeCoordinates } from '../../app/graph/edge'
 
 describe('Edge', function() {
   describe("Edge.new", function() {
@@ -27,5 +27,17 @@ describe('Edge', function() {
     expect(edge.x2).to.eql(2)
     expect(edge.y2).to.eql(2)
     expect(edge.s2).to.eql(1)
+  })
+
+  describe('edgeCoordinates', function() {
+    const newNodeCoords = {x: 100, y: 200}
+
+    it('returns node 1 position', function() {
+      expect(edgeCoordinates(1, newNodeCoords)).to.eql({x1: 100, y1: 200})
+    })
+
+    it('updates node 2 position', function() {
+      expect(edgeCoordinates(2, newNodeCoords)).to.eql({x2: 100, y2: 200})
+    })
   })
 })

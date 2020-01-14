@@ -4,7 +4,6 @@ import Graph, {
   getId,
   nodeSide,
   determineNodeNumber,
-  updateEdgeCurveEnd,
   calculateCenter
 } from '../../app/graph/graph'
 import Node from '../../app/graph/node'
@@ -231,23 +230,6 @@ describe('Graph', function() {
     })
 
     specify('updateEdgeOffset')
-
-    describe('updateEdgeCurveEnd', function() {
-      let newNodeCoords = {x: 100, y: 100}
-
-      it('updates node 1 position', function() {
-        let updatedEdge = updateEdgeCurveEnd(edge1, 1, newNodeCoords)
-        expect({x: updatedEdge.x1, y: updatedEdge.y1}).to.eql({x: 100, y: 100})
-        expect({x: updatedEdge.x2, y: updatedEdge.y2}).to.eql({x: 10, y: 20})
-      })
-
-      it('updates node 2 position', function() {
-        let updatedEdge = updateEdgeCurveEnd(edge1, 2, newNodeCoords)
-        expect({x: updatedEdge.x1, y: updatedEdge.y1}).to.eql({x: 5, y: 10})
-        expect({x: updatedEdge.x2, y: updatedEdge.y2}).to.eql({x: 100, y: 100})
-      })
-    })
-
 
     specify('dragNodeEdge')
     xdescribe('dragNode', function() {})

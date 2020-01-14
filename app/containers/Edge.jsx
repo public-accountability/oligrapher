@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { DraggableCore } from 'react-draggable'
 import { connect } from 'react-redux'
@@ -15,31 +15,29 @@ import EdgeHandle from '../components/graph/EdgeHandle'
 
 const DRAGGABLE_HANDLE = '.edge-handle'
 
-const logger = msg => () => console.log(msg)
-
 export function Edge(props) {
   const [curve, setCurve] = useState(Curve.from.edge(props))
+
+  // This resets the curve based on new props when they are passed to an already rendered component
+  // This happens after the DRAG_NODE action occurs.
+  useEffect(() => setCurve(Curve.from.edge(props)),
+            [props.cx, props.cy, props.x1, props.x2, props.y1, props.y2, props.s1, props.s2])
+
   const [startDrag, setStartDrag] = useState()
+
   const width = 1 + (props.scale - 1) * 5
   const startPosition = { x: props.cx, y: props.cy }
 
-  const curveFromDragData = data => {
-    const deltas = calculateDeltas(data, startPosition, startDrag, props.actualZoom)
-    return Curve.from.edge({...props, cx: deltas.x, cy: deltas.y })
-  }
+  const onStart = (evt, data) =>  setStartDrag(data)
 
-  const onStart = (_, data) => {
-    setStartDrag(data)
-  }
-
-  const onDrag = (_, data) => {
+  const onDrag = (evt, data) => {
     const deltas = calculateDeltas(data, startPosition, startDrag, props.actualZoom)
     setCurve(
       Curve.from.edge({...props, cx: deltas.x, cy: deltas.y })
     )
   }
 
-  const onStop = (_, data) => {
+  const onStop = (evt, data) => {
     const deltas = calculateDeltas(data, startPosition, startDrag, props.actualZoom)
     props.updateEdge({cx: deltas.x, cy: deltas.y })
   }
@@ -98,8 +96,10 @@ Edge.defaultProps = {
   dash: false
 }
 
+
 const mapStateToProps = (state, ownProps) => {
   const id = ownProps.id.toString()
+
   return { ...state.graph.edges[id],
            actualZoom: state.graph.actualZoom }
 }
