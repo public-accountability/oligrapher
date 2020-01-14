@@ -133,8 +133,6 @@ EditNodeMenuBody.propTypes = {
   <EditNodeMenuBody /> is re-created when a different node is selected.
 */
 export function EditNodeMenu(props) {
-  if (!props.visible) { return null }
-
   return <div className="oligrapher-edit-node-menu">
            <div className="edit-node-menu-wrapper">
              <header>Edit & Customize Node</header>
@@ -144,7 +142,6 @@ export function EditNodeMenu(props) {
 }
 
 EditNodeMenu.propTypes = {
-  visible: PropTypes.bool.isRequired,
   id: PropTypes.string,
   node: PropTypes.shape(nodePropTypes),
   updateNode: PropTypes.func.isRequired
@@ -152,14 +149,7 @@ EditNodeMenu.propTypes = {
 
 
 const mapStateToProps = state => {
-  const visible = Boolean(state.display.editor.tool === 'node' && state.display.editor.editNode)
-
-  if (!visible) {
-    return { visible: false, id: null, node: null }
-  }
-
   return {
-    visible: true,
     id: state.display.editor.editNode,
     node: state.graph.nodes[state.display.editor.editNode]
   }
