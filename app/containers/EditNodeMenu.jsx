@@ -6,9 +6,7 @@ import omit from 'lodash/omit'
 import curry from 'lodash/curry'
 
 import SizePicker from '../components/SizePicker'
-
-import { MdPhotoSizeSelectSmall, MdFormatColorFill } from "react-icons/md"
-import { FaShapes } from "react-icons/fa"
+import CustomizeButton from '../components/editor/CustomizeButton'
 
 // whatever-func-useState()-returns, string ---> function(event)
 function updateNodeFunc(setNode, attributeName) {
@@ -18,30 +16,17 @@ function updateNodeFunc(setNode, attributeName) {
   }
 }
 
-function StyleForm({setPage}) {
+function styleForm(setPage) {
   return <div className="style-form">
            <div>Style</div>
            <div>
-             <div>
-               <span onClick={() => setPage('size')}>
-                 <MdPhotoSizeSelectSmall/>
-               </span>
-             </div>
-             <div>
-               <span onClick={() => setPage('color')}>
-                 <MdFormatColorFill/>
-               </span>
-             </div>
-             <div>
-               <span onClick={() => console.error('Shapes not yet implemented')}>
-                 <FaShapes/>
-               </span>
-             </div>
+             <CustomizeButton icon="size" onClick={() => setPage('size')} />
+             <CustomizeButton icon="color" onClick={() => setPage('color')} />
+             <CustomizeButton icon="shapes" onClick={() => console.error('Shapes not yet implemented')}  />
            </div>
          </div>
 }
 
-StyleForm.propTypes = { setPage: PropTypes.func.isRequired }
 
 export function MainPage({node, nodeUpdater, setPage}) {
   return <>
@@ -71,7 +56,7 @@ export function MainPage({node, nodeUpdater, setPage}) {
              </div>
            </form>
            <hr/>
-           <StyleForm setPage={setPage} />
+           {styleForm(setPage)}
            <hr/>
            <a onClick={() => setPage('bio')}
               className="add-node-bio-link">Add Node Bio +</a>
