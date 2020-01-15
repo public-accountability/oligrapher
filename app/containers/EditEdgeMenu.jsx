@@ -15,7 +15,7 @@ export function EditEdgeMenu(props)  {
            <div className="edit-edge-menu-wrapper">
              <header>Customize Edge</header>
              <main>
-               <form className="oligrapher-edit-edge-menu-form">
+               <form>
                  <div>
                    <label>Title</label>
                    <input type="text"

@@ -45,7 +45,7 @@ StyleForm.propTypes = { setPage: PropTypes.func.isRequired }
 
 export function MainPage({node, nodeUpdater, setPage}) {
   return <>
-           <form className="oligrapher-edit-node-menu-form">
+           <form>
              <div>
                <label>Title</label>
                 <input type="text"

@@ -163,6 +163,11 @@ $editor_menu_item_size: 35px;
     width: 100%;
 }
 
+%floating_menu {
+    z-index: 20;
+    position: absolute;
+}
+
 .oligrapher-graph-container {
     position: relative;
 
@@ -172,28 +177,31 @@ $editor_menu_item_size: 35px;
 
     .oligrapher-graph-editor {
         z-index: 10;
-        /* position, top, and left places the editor ontop of the SVG element */
         position: absolute;
+        /* position, top, and left places the editor ontop of the SVG element */
         top: 0;
         left: 0;
     }
 
     .oligrapher-edit-node-menu {
-        z-index: 20;
-         /* position, top, and left places the editor ontop of the SVG element */
-        position: absolute;
+        @extend %floating_menu;
+        top: 10%;
+        left: 50%;
+    }
+
+    .oligrapher-edit-edge-menu {
+        @extend %floating_menu;
         top: 10%;
         left: 50%;
     }
 
     .oligrapher-zoomcontrol {
         z-index: 15;
-         /* position, top, and left places the editor ontop of the SVG element */
+
         position: absolute;
         top: 0;
         right: 0;
     }
-
 }
 
 .oligrapher-zoomcontrol > div {
@@ -264,7 +272,7 @@ $editor_menu_item_size: 35px;
 }
 
 /* This is the "edit and customize node" box */
-.edit-node-menu-wrapper {
+.edit-edge-menu-wrapper, .edit-node-menu-wrapper {
     background-color: white;
     border: 2px solid $oligrapher_blue;
     padding: 10px;
@@ -281,7 +289,7 @@ $editor_menu_item_size: 35px;
         margin-top: 0.5em;
     }
 
-    .oligrapher-edit-node-menu-form {
+    form {
         label {
             @extend %edit_node_menu_title;
             display: block;
