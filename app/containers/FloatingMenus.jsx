@@ -19,11 +19,13 @@ FloatingMenus.propTypes = {
   })
 }
 
-const mapStateToProps = state => {
+export const mapStateToProps = state => {
+  let editor = state.display.editor
+
   return {
     visible: {
-      editNodeMenu: Boolean(state.display.editor.tool === 'node' && state.display.editor.editNode),
-      editEdgeMenu: false
+      editNodeMenu: Boolean(editor.tool === 'node' && editor.editNode),
+      editEdgeMenu: Boolean(editor.tool === 'edge' && editor.editEdge)
     }
   }
 }
