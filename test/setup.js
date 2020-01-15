@@ -22,7 +22,7 @@ require.extensions['.scss'] = () => null
 
 global.createMockStore = () => createOligrapherStore(merge({}, defaultState))
 
-// JSDOM is used by when enzyme's `mount` (full DOM rendering)
+// JSDOM is used by enzyme's `mount` (full DOM rendering)
 // Source: https://airbnb.io/enzyme/docs/guides/jsdom.html
 
 const jsdom = new JSDOM('<!doctype html><html><body></body></html>')

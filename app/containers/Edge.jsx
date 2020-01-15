@@ -4,15 +4,12 @@ import { DraggableCore } from 'react-draggable'
 import { connect } from 'react-redux'
 import merge from 'lodash/merge'
 import pick from 'lodash/pick'
-import noop from 'lodash/noop'
 
 import { calculateDeltas } from '../util/deltas'
 import Curve from '../graph/curve'
 
 import EdgeLine from '../components/graph/EdgeLine'
 import EdgeHandle from '../components/graph/EdgeHandle'
-
-const DRAGGABLE_HANDLE = '.edge-handle'
 
 const calculateEdgeWidth = scale => 1 + (scale - 1) * 5
 
@@ -25,11 +22,15 @@ export function Edge(props) {
             [props.cx, props.cy, props.x1, props.x2, props.y1, props.y2, props.s1, props.s2])
 
   const [startDrag, setStartDrag] = useState()
+  const [dragging, setDragging] = useState(false)
 
   const width = calculateEdgeWidth(props.scale)
   const startPosition = { x: props.cx, y: props.cy }
 
-  const onStart = (evt, data) =>  setStartDrag(data)
+  const onStart = (evt, data) => {
+    setDragging(true)
+    setStartDrag(data)
+  }
 
   const onDrag = (evt, data) => {
     const deltas = calculateDeltas(data, startPosition, startDrag, props.actualZoom)
@@ -39,15 +40,20 @@ export function Edge(props) {
   }
 
   const onStop = (evt, data) => {
-    const deltas = calculateDeltas(data, startPosition, startDrag, props.actualZoom)
-    props.updateEdge({cx: deltas.x, cy: deltas.y })
+    if (dragging) {
+      const deltas = calculateDeltas(data, startPosition, startDrag, props.actualZoom)
+      props.updateEdge({cx: deltas.x, cy: deltas.y })
+      setDragging(false)
+    }
   }
 
-  const onClick = (evt, data) => {
+  const onClick = evt => {
+    evt.preventDefault()
+    props.openEdgeMenu()
   }
 
   const draggableProps = {
-    handle: DRAGGABLE_HANDLE,
+    handle: '.edge-handle',
     onStart: onStart,
     onDrag: onDrag,
     onStop: onStop
@@ -58,10 +64,9 @@ export function Edge(props) {
     id: `edge-${props.id}`
   }
 
-  const edgeHandleProps = { curve, width, onClick: noop }
+  const edgeHandleProps = { curve, width, onClick }
 
-  const edgeLineProps = merge({ curve, width },
-                              pick(props, ['id', 'scale', 'dash', 'status']))
+  const edgeLineProps = merge({ curve, width }, pick(props, ['id', 'scale', 'dash', 'status']))
 
   return  <DraggableCore {...draggableProps} >
             <g {...edgeGroupProps} >
@@ -73,11 +78,11 @@ export function Edge(props) {
 
 Edge.propTypes = {
   id:         PropTypes.string.isRequired,
-  node1_id:   PropTypes.string.isRequired,
-  node2_id:   PropTypes.string.isRequired,
+  node1_id:   PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  node2_id:   PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   // display
   scale:      PropTypes.number.isRequired,
-  arrow:      PropTypes.string,
+  arrow:      PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
   label:      PropTypes.string,
   dash:       PropTypes.bool.isRequired,
   url:        PropTypes.string,
@@ -102,7 +107,6 @@ Edge.propTypes = {
 Edge.defaultProps = {
   dash: false
 }
-
 
 const mapStateToProps = (state, ownProps) => {
   const id = ownProps.id.toString()
