@@ -1,7 +1,9 @@
+import React from 'react'
 import Enzyme from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import sinon from 'sinon'
 import { JSDOM } from 'jsdom'
+import { Provider } from 'react-redux'
 import merge from 'lodash/merge'
 
 import { createOligrapherStore} from '../app/util/render'
@@ -15,12 +17,11 @@ global.shallow = Enzyme.shallow
 global.mount = Enzyme.mount
 global.sinon = sinon
 global.merge = merge
+global.Provider = Provider
 
 // Webpack bundles scss files using `require ()` and this instructs Mocha to skip those files.
 // source: https://stackoverflow.com/questions/33881123/handle-webpack-css-imports-when-testing-with-mocha-and-babel/37184369#37184369
 require.extensions['.scss'] = () => null
-
-global.createMockStore = () => createOligrapherStore(merge({}, defaultState))
 
 // JSDOM is used by enzyme's `mount` (full DOM rendering)
 // Source: https://airbnb.io/enzyme/docs/guides/jsdom.html
@@ -48,3 +49,11 @@ global.cancelAnimationFrame = function(id) {
 }
 
 copyProps(window, global)
+
+// helper functions
+
+global.createMockStore = (defaults = {}) => createOligrapherStore(merge({}, defaultState, defaults))
+
+global.mountWithStore = (store, children) => Enzyme.mount(
+  React.createElement(Provider,{store: store}, children)
+)
