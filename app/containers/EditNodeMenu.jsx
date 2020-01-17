@@ -7,6 +7,7 @@ import curry from 'lodash/curry'
 
 import SizePicker from '../components/SizePicker'
 import CustomizeButton from '../components/editor/CustomizeButton'
+import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
 
 // whatever-func-useState()-returns, string ---> function(event)
 function updateNodeFunc(setNode, attributeName) {
@@ -95,11 +96,10 @@ export function EditNodeMenuBody(props) {
              { page === 'bio' && bioPage() }
            </main>
            <footer>
-             <div className="edit-node-menu-submit-buttons">
-               { page === 'main' && <button name="delete" onClick={handleDelete}>Delete</button> }
-               { page !== 'main' && <button name="back" onClick={() => setPage('main')}>Back</button> }
-               <button name="update" onClick={handleSubmit}>Update</button>
-             </div>
+             <EditMenuSubmitButtons handleSubmit={handleSubmit}
+                                    handleDelete={handleDelete}
+                                    page={page}
+                                    setPage={setPage} />
            </footer>
          </>
 }

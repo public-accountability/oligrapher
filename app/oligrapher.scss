@@ -1,3 +1,5 @@
+@use "sass:color";
+
 /*
   Oligrapher uses IDs for components that have only one.
   Otherwise classes are used.
@@ -5,7 +7,6 @@
   SCSS nesting is used here, even when not necessary,
   to help us navigate the DOM tree.
 */
-
 $font_color: black;
 $link_color: #2c63c8;
 $header_menu_item_color: $font_color;
@@ -22,9 +23,8 @@ $oligrapher_dark_gray: #6e89a1;
 $oligrapher_gray: #b3b3b3;
 $oligrapher_font_gray: #b3b3b3;
 
-
+$delete_red: #c82c63;
 $editor_menu_item_size: 35px;
-
 
 /*
    This is our outermost div.
@@ -342,10 +342,41 @@ $editor_menu_item_size: 35px;
     }
 
 
-    div.edit-node-menu-submit-buttons {
+    div.edit-menu-submit-buttons {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+
+        button {
+            border: 0;
+            border-radius: 2px;
+
+        }
+
+        button[name="delete"] {
+            background-color: $delete_red;
+
+            &:hover {
+                background-color: color.scale($delete_red, $lightness: 30%);
+            }
+        }
+
+        button[name="back"] {
+            background-color: $oligrapher_dark_gray;
+
+            /* &:hover { */
+            /*     background-color: scale($oligrapher_dark_gray, -30%); */
+            /* } */
+        }
+
+        button[name="update"] {
+            background-color: $oligrapher_blue;
+
+            /* &:hover { */
+            /*     background-color: scale($oligrapher_blue, -30%); */
+            /* } */
+        }
+
     }
 
     .sizepicker {
