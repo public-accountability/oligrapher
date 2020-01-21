@@ -289,6 +289,10 @@ $editor_menu_item_size: 35px;
         margin-top: 0.5em;
     }
 
+    footer {
+        margin-top: 0.75em;
+    }
+
     form {
         label {
             @extend %edit_node_menu_title;

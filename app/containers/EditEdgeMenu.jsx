@@ -1,24 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import pick from 'lodash/pick'
+import merge from 'lodash/merge'
 
-import CustomizeButton from '../components/editor/CustomizeButton'
-import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
+import Graph from '../graph/graph'
 import { edgePropTypes } from '../graph/edge'
+import { nodePropTypes } from '../graph/node'
 
-/* Wrapper divs. */
-const wrapper = renderChildren => (
-  <div className="oligrapher-edit-edge-menu">
-    <div className="edit-edge-menu-wrapper">
-      <header>Customize Edge</header>
-      <main>
-        {renderChildren()}
-      </main>
-    </div>
-  </div>)
+// Components
+import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
+import LineStyle from '../components/editor/LineStyle'
 
-
-const form = (label, setLabel) => (
+const labelForm = (label, setLabel) => (
   <form>
     <div>
       <label>Title</label>
@@ -29,67 +23,61 @@ const form = (label, setLabel) => (
     </div>
   </form>)
 
-
-const style = setPage => (
-  <div className="style-form">
-    <div>Style</div>
+const urlForm = (url, setUrl) => (
+  <form>
     <div>
-      <CustomizeButton icon="size" onClick={() => setPage('size')} />
-      <CustomizeButton icon="color" onClick={() => setPage('color')} />
+      <label>Clickthrough link</label>
+      <input type="url"
+             placeholder="Clickthrough link"
+             value={url}
+             onChange={ evt => setUrl(evt.target.value) } />
     </div>
-  </div>
+  </form>
+
 )
 
-const sizePicker = () => (
-  <span>Size Picker for edge</span>
-)
 
-const colorPicker = () => (
-  <span>Color Picker for edge</span>
-)
-
+// Object, Func => Func(String) => Func(Any) => setAttributes() call
+const attributeUpdator = (attributes, setAttributes) => name => value => setAttributes(merge({}, attributes, { [name]: value }))
+const propsToAttributes = props => pick(props.edge, 'label', 'size', 'color', 'url')
 
 export function EditEdgeMenu(props)  {
-  const [page, setPage] = useState('main')
-  const [label, setLabel] = useState(props.edge.label || '')
-  const [size, setSize] = useState(props.size)
-  const [color, setColor] = useState(props.size)
+  const [attributes, setAttributes] = useState(propsToAttributes(props))
+  const updator = attributeUpdator(attributes, setAttributes)
+  const setLabel = updator('label')
+  const setUrl = updator('url')
 
-  const handleSubmit = () => props.updateEdge(props.edge.id, { label, size, color})
+  useEffect(() => {
+    setAttributes( prevEdge => ({ ...prevEdge, ...propsToAttributes(props) }))
+  }, [props.id, props.edge.label, props.edge.size, props.edge.color, props.edge.url] )
+
+  const handleSubmit = () => props.updateEdge(props.edge.id, attributes)
   const handleDelete = () => console.log(`deleting edge ${props.id}`)
 
-  useEffect(() => {
-    setLabel(props.edge.label || '')
-  }, [props.edge.label])
+  return <div className="oligrapher-edit-edge-menu">
+           <div className="edit-edge-menu-wrapper">
+             <header>Customize Edge</header>
 
-  useEffect(() => {
-    setSize(props.edge.size)
-  }, [props.edge.size])
+             <main>
+               { labelForm(attributes.label, setLabel) }
+               <hr />
+               <LineStyle nodes={props.nodes}/>
+               <hr />
+               { urlForm(attributes.url, setUrl) }
+             </main>
 
-  useEffect(() => {
-    setColor(props.edge.color)
-  }, [props.edge.color])
+             <footer>
+               <EditMenuSubmitButtons handleSubmit={handleSubmit} handleDelete={handleDelete} />
+             </footer>
+           </div>
+         </div>
 
-
-  return wrapper(() => (
-    <>
-      { page === 'main' && form(label, setLabel) }
-      { page === 'main' && style(setPage) }
-      { page === 'size' && sizePicker() }
-      { page === 'color' && colorPicker() }
-      <footer>
-        <EditMenuSubmitButtons handleSubmit={handleSubmit}
-                               handleDelete={handleDelete}
-                               page={page}
-                               setPage={setPage} />
-      </footer>
-    </>
-  ))
 }
 
 EditEdgeMenu.propTypes = {
   id: PropTypes.string.isRequired,
   edge: PropTypes.shape(edgePropTypes),
+  nodes: PropTypes.arrayOf(nodePropTypes),
   updateEdge: PropTypes.func.isRequired
 }
 
@@ -98,7 +86,8 @@ const mapStateToProps = state => {
 
   return {
     id: id,
-    edge: state.graph.edges[id]
+    edge: state.graph.edges[id],
+    nodes: Graph.nodesOf(state.graph, id)
   }
 }
 
