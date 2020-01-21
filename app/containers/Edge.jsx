@@ -10,10 +10,14 @@ import Curve from '../graph/curve'
 
 import EdgeLine from '../components/graph/EdgeLine'
 import EdgeHandle from '../components/graph/EdgeHandle'
+import EdgeLabel from '../components/graph/EdgeLabel'
+
 
 const calculateEdgeWidth = scale => 1 + (scale - 1) * 5
 
+
 export function Edge(props) {
+  const pickProps = (...propNames) => pick(props, propNames)
   const [curve, setCurve] = useState(Curve.from.edge(props))
 
   // This resets the curve based on new props when they are passed to an already rendered component
@@ -64,13 +68,14 @@ export function Edge(props) {
     id: `edge-${props.id}`
   }
 
+  const edgeLineProps = { curve, width, ...pickProps('id', 'scale', 'dash', 'status') }
+  const edgeLabelProps = { curve, width, ...pickProps('id', 'status', 'label') }
   const edgeHandleProps = { curve, width, onClick }
-
-  const edgeLineProps = merge({ curve, width }, pick(props, ['id', 'scale', 'dash', 'status']))
 
   return  <DraggableCore {...draggableProps} >
             <g {...edgeGroupProps} >
               <EdgeLine {...edgeLineProps} />
+              { props.showLabel && <EdgeLabel {...edgeLabelProps} /> }
               <EdgeHandle {...edgeHandleProps} />
             </g>
           </DraggableCore>
@@ -101,7 +106,10 @@ Edge.propTypes = {
 
   // Actions
   updateEdge: PropTypes.func.isRequired,
-  openEdgeMenu: PropTypes.func.isRequired
+  openEdgeMenu: PropTypes.func.isRequired,
+
+  // Helpers
+  showLabel: PropTypes.bool.isRequired
 }
 
 Edge.defaultProps = {
@@ -110,9 +118,13 @@ Edge.defaultProps = {
 
 const mapStateToProps = (state, ownProps) => {
   const id = ownProps.id.toString()
+  const edge = state.graph.edges[id]
 
-  return { ...state.graph.edges[id],
-           actualZoom: state.graph.actualZoom }
+  return {
+    ...edge,
+    actualZoom: state.graph.actualZoom,
+    showLabel: Boolean(edge.label)
+  }
 }
 
 // dispatch helpers
