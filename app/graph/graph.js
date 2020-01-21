@@ -43,6 +43,8 @@ export function getId(thing) {
     }
   } else if (typeof thing === 'number') {
     return thing.toString()
+  } else if (typeof thing === 'undefined') {
+    throw new Error("getId() called with an undefined argument")
   } else {
     throw new Error("getId() only accepts Strings, Objects, and numbers")
   }
@@ -135,7 +137,7 @@ export function calculateCenter(graph) {
 }
 
 export const getNode = (graph, nodeId) => graph.nodes[getId(nodeId)]
-export const getEdge = (graph, edgeId) => graph.nodes[getId(edgeId)]
+export const getEdge = (graph, edgeId) => graph.edges[getId(edgeId)]
 
 export function edgesOf(graph, node) {
   return filter(
@@ -145,8 +147,7 @@ export function edgesOf(graph, node) {
 }
 
 export function nodesOf(graph, edge) {
-  const nodeIds = at(graph.edges[getId(edge)], ['node1_id', 'node2_id'])
-  return nodeIds.map(nodeId => graph.nodes[nodeId])
+  return at(graph.edges[getId(edge)], ['node1_id', 'node2_id']).map(nodeId => graph.nodes[nodeId])
 }
 
 /////////////////////////////
