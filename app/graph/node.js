@@ -23,7 +23,7 @@ export const nodeShape = {
   y: PropTypes.number,
   scale: PropTypes.number,
   status: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
+  type: PropTypes.string,
   image: PropTypes.string,
   url: PropTypes.string
 }

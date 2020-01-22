@@ -13,5 +13,9 @@ EditMenuSubmitButtons.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   handleDelete: PropTypes.func.isRequired,
   page:         PropTypes.string.isRequired,
-  setPage:     PropTypes.func.isRequired
+  setPage:      PropTypes.func
+}
+
+EditMenuSubmitButtons.defaultTypes = {
+  setPage: () => {}
 }

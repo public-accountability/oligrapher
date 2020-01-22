@@ -37,21 +37,20 @@ const urlForm = (url, updateUrl) => (
 
 // Object, Func => Func(String) => Func(Any) => setAttributes() call
 const createAttributeUpdator = (attributes, setAttributes) => name => value => setAttributes(merge({}, attributes, { [name]: value }))
-const propsToAttributes = props => pick(props.edge, 'label', 'size', 'color', 'url', 'arrow')
+const edgeAttributes = edge => pick(edge, 'label', 'size', 'color', 'url', 'arrow')
 
 export function EditEdgeMenu(props)  {
-  console.log(props.nodes)
-  const [attributes, setAttributes] = useState(propsToAttributes(props))
+  const [attributes, setAttributes] = useState(edgeAttributes(props.edge))
   const attributeUpdator = createAttributeUpdator(attributes, setAttributes)
   const updateLabel = attributeUpdator('label')
   const updateUrl = attributeUpdator('url')
   const updateArrow = attributeUpdator('arrow')
 
   useEffect(() => {
-    setAttributes( prevEdge => ({ ...prevEdge, ...propsToAttributes(props) }))
-  }, [props.id, props.edge.label, props.edge.size, props.edge.color, props.edge.url] )
+    setAttributes( prevEdge => ({ ...prevEdge, ...edgeAttributes(props.edge) }))
+  }, [props.id, props.edge.label, props.edge.size, props.edge.color, props.edge.url, props.edge.arrow] )
 
-  const handleSubmit = () => props.updateEdge(props.edge.id, attributes)
+  const handleSubmit = () => props.updateEdge(props.id, attributes)
   const handleDelete = () => console.log(`deleting edge ${props.id}`)
 
   return <div className="oligrapher-edit-edge-menu">
@@ -67,7 +66,7 @@ export function EditEdgeMenu(props)  {
              </main>
 
              <footer>
-               <EditMenuSubmitButtons handleSubmit={handleSubmit} handleDelete={handleDelete} />
+               <EditMenuSubmitButtons handleSubmit={handleSubmit} handleDelete={handleDelete} page="main"/>
              </footer>
            </div>
          </div>
@@ -82,12 +81,12 @@ EditEdgeMenu.propTypes = {
 }
 
 const mapStateToProps = state => {
-  const id = state.display.editor.editEdge
+  const edgeId = state.display.editor.editEdge.toString()
 
   return {
-    id: id,
-    edge: state.graph.edges[id],
-    nodes: Graph.nodesOf(state.graph, id)
+    id: edgeId,
+    edge: state.graph.edges[edgeId],
+    nodes: Graph.nodesOf(state.graph, edgeId)
   }
 }
 
