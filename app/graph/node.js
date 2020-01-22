@@ -14,8 +14,8 @@ const nodeDefaults = {
   url: null
 }
 
-export const nodePropTypes = {
-  id: PropTypes.string.isRequired,
+export const nodeShape = {
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   name: PropTypes.string,
   x: PropTypes.number,
   y: PropTypes.number,
@@ -24,6 +24,11 @@ export const nodePropTypes = {
   type: PropTypes.string.isRequired,
   image: PropTypes.string,
   url: PropTypes.string
+}
+
+export const propTypes = {
+  node: PropTypes.shape(nodeShape),
+  arrayOfNodes: PropTypes.arrayOf(PropTypes.shape(nodeShape)),
 }
 
 export function newNode(attributes = {}) {
@@ -37,5 +42,6 @@ export function newNode(attributes = {}) {
 }
 
 export default {
-  "new": newNode
+  "new": newNode,
+  "types" : propTypes
 }

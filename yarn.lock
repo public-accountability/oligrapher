@@ -1678,11 +1678,11 @@ browserify-zlib@^0.2.0:
     pako "~1.0.5"
 
 browserslist@^4.8.2, browserslist@^4.8.3:
-  version "4.8.4"
-  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-4.8.4.tgz#b0cf2470ce928ce86b546217f70825577bb01c3a"
-  integrity sha512-3qv/Ar3nRnRTpwGD+LZc7F4YHDBb3NAEIn+DesNa8TcBhyxf8eDqYwTOa70kiWXwvFjQQz+abbykJcyOlfBfNg==
+  version "4.8.5"
+  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-4.8.5.tgz#691af4e327ac877b25e7a3f7ee869c4ef36cdea3"
+  integrity sha512-4LMHuicxkabIB+n9874jZX/az1IaZ5a+EUuvD7KFOu9x/Bd5YHyO0DIz2ls/Kl8g0ItS4X/ilEgf4T1Br0lgSg==
   dependencies:
-    caniuse-lite "^1.0.30001021"
+    caniuse-lite "^1.0.30001022"
     electron-to-chromium "^1.3.338"
     node-releases "^1.1.46"
 
@@ -1780,7 +1780,7 @@ camelcase@^5.0.0, camelcase@^5.3.1:
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-5.3.1.tgz#e3c9b31569e106811df242f715725a1f4c494320"
   integrity sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==
 
-caniuse-lite@^1.0.30001020, caniuse-lite@^1.0.30001021:
+caniuse-lite@^1.0.30001020, caniuse-lite@^1.0.30001022:
   version "1.0.30001022"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001022.tgz#9eeffe580c3a8f110b7b1742dcf06a395885e4c6"
   integrity sha512-FjwPPtt/I07KyLPkBQ0g7/XuZg6oUkYBVnPHNj3VHJbOjmmJ/GdSo/GUY6MwINEQvjhP6WZVbX8Tvms8xh0D5A==
@@ -2673,9 +2673,9 @@ ee-first@1.1.1:
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
 electron-to-chromium@^1.3.338:
-  version "1.3.338"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.338.tgz#4f33745aed599dfa0fd7b388bf754c164e915168"
-  integrity sha512-wlmfixuHEc9CkfOKgcqdtzBmRW4NStM9ptl5oPILY2UDyHuSXb3Yit+yLVyLObTgGuMMU36hhnfs2GDJId7ctA==
+  version "1.3.339"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.339.tgz#ff7b56c4bc58159f0d6623591116e4414e7a618b"
+  integrity sha512-C1i/vH6/kQx9YV8RddMkmW216GwW4pTrnYIlKmDFIqXA4fPwqDxIdGyHsuG+fgurHoljRz7/oaD+tztcryW/9g==
 
 elliptic@^6.0.0:
   version "6.5.2"
@@ -5085,9 +5085,9 @@ nan@^2.12.1:
   integrity sha512-INOFj37C7k3AfaNTtX8RhsTw7qRy7eLET14cROi9+5HAVbbHuIWUHEauBv5qT4Av2tWasiTY1Jw6puUNqRJXQg==
 
 nanoid@^2.1.0:
-  version "2.1.9"
-  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-2.1.9.tgz#edc71de7b16fc367bbb447c7a638ccebe07a17a1"
-  integrity sha512-J2X7aUpdmTlkAuSe9WaQ5DsTZZPW1r/zmEWKsGhbADO6Gm9FMd2ZzJ8NhsmP4OtA9oFhXfxNqPlreHEDOGB4sg==
+  version "2.1.10"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-2.1.10.tgz#66fb5ac664ee2d3017f451b9f0d26cfec3c034b5"
+  integrity sha512-ZPUHBAwrQ+BSwVV2Xh6hBOEStTzAf8LgohOY0kk22lDiDdI32582KjVPYCqgqj7834hTunGzwZOB4me9T6ZcnA==
 
 nanomatch@^1.2.9:
   version "1.2.13"
@@ -5222,9 +5222,9 @@ node-pre-gyp@*:
     tar "^4.4.2"
 
 node-releases@^1.1.46:
-  version "1.1.46"
-  resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-1.1.46.tgz#6b262afef1bdc9a950a96df2e77e0d2290f484bf"
-  integrity sha512-YOjdx+Uoh9FbRO7yVYbnbt1puRWPQMemR3SutLeyv2XfxKs1ihpe0OLAUwBPEP2ImNH/PZC7SEiC6j32dwRZ7g==
+  version "1.1.47"
+  resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-1.1.47.tgz#c59ef739a1fd7ecbd9f0b7cf5b7871e8a8b591e4"
+  integrity sha512-k4xjVPx5FpwBUj0Gw7uvFOTF4Ep8Hok1I6qjwL3pLfwe7Y0REQSAqOwwv9TWBCUtMHxcXfY4PgRLRozcChvTcA==
   dependencies:
     semver "^6.3.0"
 
@@ -6547,9 +6547,9 @@ resolve-url@^0.2.1:
   integrity sha1-LGN/53yJOv0qZj/iGqkIAGjiBSo=
 
 resolve@^1.10.0, resolve@^1.12.0, resolve@^1.14.2, resolve@^1.3.2:
-  version "1.14.2"
-  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.14.2.tgz#dbf31d0fa98b1f29aa5169783b9c290cb865fea2"
-  integrity sha512-EjlOBLBO1kxsUxsKjLt7TAECyKW6fOh1VRkykQkKGzcBbjjPIxBqGh0jf7GJ3k/f5mxMqW3htMD3WdTUVtW8HQ==
+  version "1.15.0"
+  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.15.0.tgz#1b7ca96073ebb52e741ffd799f6b39ea462c67f5"
+  integrity sha512-+hTmAldEGE80U2wJJDC1lebb5jWqvTYAfm3YZ1ckk1gBr0MnCqUKlwK1e+anaFljIl+F5tR5IoZcm4ZDA1zMQw==
   dependencies:
     path-parse "^1.0.6"
 
@@ -6857,10 +6857,10 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
   integrity sha1-tf3AjxKH6hF4Yo5BXiUTK3NkbG0=
 
-sinon@^8.1.0:
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/sinon/-/sinon-8.1.0.tgz#30f82371ac6e7d4dccb77fa1525f5ea748c636ff"
-  integrity sha512-6/05TR+8QhEgTbyMWaConm8iPL609Eno7SqToPq63wC/jS/6NMEI4NxqtzlLkk3r/KcZT9xPXQodH0oJ917Hbg==
+sinon@^8.1.1:
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/sinon/-/sinon-8.1.1.tgz#21fffd5ad0a2d072a8aa7f8a3cf7ed2ced497497"
+  integrity sha512-E+tWr3acRdoe1nXbHMu86SSqA1WGM7Yw3jZRLvlCMnXwTHP8lgFFVn5BnKnF26uc5SfZ3D7pA9sN7S3Y2jG4Ew==
   dependencies:
     "@sinonjs/commons" "^1.7.0"
     "@sinonjs/formatio" "^4.0.1"

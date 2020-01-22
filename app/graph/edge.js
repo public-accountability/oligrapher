@@ -60,14 +60,14 @@ export function edgeCoordinates(nodeNumber, coordinates) {
   }
 }
 
-export const edgePropTypes = {
+export const edgeShape = {
   id: PropTypes.string.isRequired,
-  node1_id: PropTypes.string.isRequired,
-  node2_id: PropTypes.string.isRequired,
+  node1_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  node2_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   status: PropTypes.oneOf(['normal']),
   label: PropTypes.string,
   scale: PropTypes.number,
-  arrow: PropTypes.string,
+  arrow: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   dash:  PropTypes.string,
   url: PropTypes.string,
   x1: PropTypes.number,
@@ -80,9 +80,15 @@ export const edgePropTypes = {
   s2: PropTypes.number
 }
 
+const types = {
+  edge: PropTypes.shape(edgeShape),
+  arrayOfEdges: PropTypes.arrayOf(PropTypes.shape(edgeShape))
+}
+
 export default {
   "new": newEdge,
-  "newEdgeFromNodes": newEdgeFromNodes
+  "newEdgeFromNodes": newEdgeFromNodes,
+  "types": types
 }
 
 

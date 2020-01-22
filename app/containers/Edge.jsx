@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { DraggableCore } from 'react-draggable'
 import { connect } from 'react-redux'
-import merge from 'lodash/merge'
 import pick from 'lodash/pick'
 
 import { calculateDeltas } from '../util/deltas'
@@ -12,9 +11,7 @@ import EdgeLine from '../components/graph/EdgeLine'
 import EdgeHandle from '../components/graph/EdgeHandle'
 import EdgeLabel from '../components/graph/EdgeLabel'
 
-
 const calculateEdgeWidth = scale => 1 + (scale - 1) * 5
-
 
 export function Edge(props) {
   const pickProps = (...propNames) => pick(props, propNames)
@@ -139,7 +136,6 @@ const updateEdge = (dispatch, id) => attributes => dispatch({
   id: id,
   attributes: attributes
 })
-
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   const id = ownProps.id.toString()

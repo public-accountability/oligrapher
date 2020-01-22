@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { nodePropTypes } from '../graph/node'
+import Node from '../graph/node'
 import omit from 'lodash/omit'
 import curry from 'lodash/curry'
 
@@ -106,7 +106,7 @@ export function EditNodeMenuBody(props) {
 
 EditNodeMenuBody.propTypes = {
   id: PropTypes.string.isRequired,
-  node: PropTypes.shape(nodePropTypes).isRequired,
+  node: Node.types.node.isRequired,
   updateNode: PropTypes.func.isRequired
 }
 
@@ -128,7 +128,7 @@ export function EditNodeMenu(props) {
 
 EditNodeMenu.propTypes = {
   id: PropTypes.string,
-  node: PropTypes.shape(nodePropTypes),
+  node: Node.types.node.isRequired,
   updateNode: PropTypes.func.isRequired
 }
 
