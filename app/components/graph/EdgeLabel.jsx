@@ -17,7 +17,7 @@ export default function EdgeLabel(props) {
   }
 
   const textPathProps = {
-    classname: "edge-label-textpath",
+    className: "edge-label-textpath",
     startOffset: "50%",
     href: `#${curveId}`,
     fontSize: 10 * Math.sqrt(props.scale)
@@ -38,7 +38,7 @@ export default function EdgeLabel(props) {
 }
 
 EdgeLabel.propTypes = {
-  id: PropTypes.string.isRequired,
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   width: PropTypes.number.isRequired,
   curve: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,

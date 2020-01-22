@@ -3,28 +3,29 @@ import PropTypes from 'prop-types'
 
 const DASH_PARAMS = "5, 2"
 
-const DISPLAY =  {
-  lineColor: {
-    normal: "#999",
-    highlighted: "#999",
-    faded: "#ddd"
-  },
-  textColor: {
-    normal: "#999",
-    highlighted: "#444",
-    faded: "#ddd"
-  },
-  bgColor: {
-    normal: "#fff",
-    highlighted: "#ff0",
-    faded: "#fff"
-  },
-  bgOpacity: {
-    normal: 0,
-    highlighted: 0.5,
-    faded: 0
-  }
+const LINE_COLOR = {
+  normal: "#999",
+  highlighted: "#999",
+  faded: "#ddd"
 }
+
+// const DISPLAY =  {
+//    textColor: {
+//     normal: "#999",
+//     highlighted: "#444",
+//     faded: "#ddd"
+//   },
+//   bgColor: {
+//     normal: "#fff",
+//     highlighted: "#ff0",
+//     faded: "#fff"
+//   },
+//   bgOpacity: {
+//     normal: 0,
+//     highlighted: 0.5,
+//     faded: 0
+//   }
+// }
 
 // <path
 //             id={sp.pathId}
@@ -51,11 +52,7 @@ export default function EdgeLine(props) {
     dy: dy,
     strokeWidth: props.width,
     strokeDasharray: strokeDasharray,
-    stroke: DISPLAY.lineColor[props.status],
-    lineColor: DISPLAY.lineColor[props.status],
-    textColor: DISPLAY.textColor[props.status],
-    bgColor: DISPLAY.bgColor[props.status],
-    bgOpacity: DISPLAY.bgOpacity[props.status],
+    stroke: LINE_COLOR[props.status],
     fill: "none"
   }
 
@@ -64,7 +61,7 @@ export default function EdgeLine(props) {
 
 
 EdgeLine.propTypes = {
-  id:       PropTypes.string.isRequired,
+  id:       PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   curve:    PropTypes.string.isRequired,
   scale:    PropTypes.number.isRequired,
   dash:     PropTypes.bool.isRequired,

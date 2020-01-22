@@ -27,7 +27,7 @@ DraggableNode.propTypes = {
   children:   PropTypes.node.isRequired,
   onStop:     PropTypes.func.isRequired,
   onDrag:     PropTypes.func.isRequired,
-  actualZoom: PropTypes.number.isRequired
+  actualZoom: PropTypes.number,
 }
 
 DraggableNode.defaultProps = {

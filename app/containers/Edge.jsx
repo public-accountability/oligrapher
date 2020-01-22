@@ -66,7 +66,7 @@ export function Edge(props) {
   }
 
   const edgeLineProps = { curve, width, ...pickProps('id', 'scale', 'dash', 'status') }
-  const edgeLabelProps = { curve, width, ...pickProps('id', 'status', 'label') }
+  const edgeLabelProps = { curve, width, ...pickProps('id', 'scale', 'status', 'label') }
   const edgeHandleProps = { curve, width, onClick }
 
   return  <DraggableCore {...draggableProps} >
@@ -79,7 +79,7 @@ export function Edge(props) {
 }
 
 Edge.propTypes = {
-  id:         PropTypes.string.isRequired,
+  id:         PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   node1_id:   PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   node2_id:   PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   // display

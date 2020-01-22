@@ -61,7 +61,7 @@ export function edgeCoordinates(nodeNumber, coordinates) {
 }
 
 export const edgeShape = {
-  id: PropTypes.string.isRequired,
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   node1_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   node2_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   status: PropTypes.oneOf(['normal']),
