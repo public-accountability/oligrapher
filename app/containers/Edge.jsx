@@ -94,8 +94,8 @@ Edge.propTypes = {
   y1:         PropTypes.number.isRequired,
   x2:         PropTypes.number.isRequired,
   y2:         PropTypes.number.isRequired,
-  cx:         PropTypes.number.isRequired,
-  cy:         PropTypes.number.isRequired,
+  cx:         PropTypes.number,
+  cy:         PropTypes.number,
   s1:         PropTypes.number.isRequired,
   s2:         PropTypes.number.isRequired,
 

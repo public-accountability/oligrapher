@@ -19,5 +19,9 @@ export default function Pannable(props) {
 Pannable.propTypes = {
   children:    PropTypes.node.isRequired,
   zoom:        PropTypes.number.isRequired,
-  actualZoom:  PropTypes.number.isRequired
+  actualZoom:  PropTypes.number
+}
+
+Pannable.defaultProps = {
+  actualZoom: 1
 }
