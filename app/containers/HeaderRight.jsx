@@ -9,7 +9,7 @@ import HeaderMenu from '../components/HeaderMenu'
 
 export function HeaderRight(props) {
   if (props.editorMode) {
-    return <HeaderButtons saveAction={noop} discardAction={noop} />
+    return <HeaderButtons saveAction={noop} discardAction={props.disableEditorMode} />
   } else {
 
     const headerMenuItems = [
@@ -24,6 +24,7 @@ export function HeaderRight(props) {
 
 HeaderRight.propTypes = {
   enableEditorMode: PropTypes.func.isRequired,
+  disableEditorMode: PropTypes.func.isRequired,
   editorMode: PropTypes.bool.isRequired
 }
 
@@ -31,7 +32,8 @@ const mapStateToProps = state => ({ editorMode: state.display.modes.editor })
 
 const mapDispatchToProps = dispatch => {
   return {
-    enableEditorMode: () => dispatch({ type: 'SET_MODE', mode: 'editor', enabled: true})
+    enableEditorMode: () => dispatch({ type: 'SET_MODE', mode: 'editor', enabled: true}),
+    disableEditorMode: () => dispatch({ type: 'SET_MODE', mode: 'editor', enabled: false})
   }
 }
 

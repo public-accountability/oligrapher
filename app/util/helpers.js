@@ -53,3 +53,10 @@ export function distance(point1, point2) {
 export function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
+
+export function callWithTargetValue(func) {
+  return function(event) {
+    const value = event.target.value
+    return func(value)
+  }
+}

@@ -1,12 +1,27 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-export default function Title({text}) {
+import { isFunctionIfEditable } from '../util/types'
+import { callWithTargetValue } from '../util/helpers'
+
+export default function Title({text, editable, onChange}) {
+
   return <div id="oligrapher-header-title-wrapper">
-           <h1>{text}</h1>
+           <h1>
+             {!editable && text}
+
+             {
+               editable && <input value={text}
+                                 onChange={callWithTargetValue(onChange)}
+                                 placeholder="Title"
+                           />
+             }
+           </h1>
          </div>
 }
 
 Title.propTypes = {
-  "text": PropTypes.string.isRequired
+  text:     PropTypes.string.isRequired,
+  editable: PropTypes.bool.isRequired,
+  onChange: isFunctionIfEditable
 }
