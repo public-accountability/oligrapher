@@ -43,18 +43,20 @@ export function Header(props) {
 }
 
 Header.propTypes = {
-  "title":      PropTypes.string,
-  "subtitle":   PropTypes.string,
-  "date":       PropTypes.string,
-  "user":       PropTypes.shape({ "name": PropTypes.string,
-                                  "url":  PropTypes.string })
+  editor:     PropTypes.bool,
+  title:      PropTypes.string,
+  subtitle:   PropTypes.string,
+  date:       PropTypes.string,
+  user:       PropTypes.shape({ name: PropTypes.string, url:  PropTypes.string })
 }
 
-const mapStateToProps = function(state) {
-  return { "title": state.attributes.title,
-           "subtitle": state.attributes.subtitle,
-           "user": state.attributes.user,
-           "date": state.attributes.date }
-}
+const mapStateToProps = state => ({
+  editor:   state.display.modes.editor,
+  title:    state.attributes.title,
+  subtitle: state.attributes.subtitle,
+  user:     state.attributes.user,
+  date:     state.attributes.date
+})
+
 
 export default connect(mapStateToProps)(Header)
