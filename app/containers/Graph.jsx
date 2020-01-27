@@ -6,6 +6,7 @@ import { SvgRefContext } from '../contexts'
 import GraphContainer from '../components/graph/GraphContainer'
 import Edges from './Edges'
 import Nodes from './Nodes'
+import Captions from './Captions'
 import Pannable from '../components/graph/Pannable'
 import Zoomable from '../components/graph/Zoomable'
 
@@ -47,6 +48,7 @@ export class Graph extends React.Component {
                    <Pannable zoom={this.props.zoom} actualZoom={this.props.actualZoom}>
                      <Nodes />
                      <Edges />
+                     <Captions />
                    </Pannable>
                  </Zoomable>
                </GraphContainer>

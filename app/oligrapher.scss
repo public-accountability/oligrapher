@@ -181,6 +181,8 @@ $editor_menu_item_size: 35px;
         /* position, top, and left places the editor ontop of the SVG element */
         top: 0;
         left: 0;
+        // Disables pointer events
+        pointer-events: none;
     }
 
     .oligrapher-edit-node-menu {
@@ -197,7 +199,6 @@ $editor_menu_item_size: 35px;
 
     .oligrapher-zoomcontrol {
         z-index: 15;
-
         position: absolute;
         top: 0;
         right: 0;
@@ -213,18 +214,20 @@ $editor_menu_item_size: 35px;
 
 /* EDITOR */
 
-/* child of oligrapher-graph-editor */
-.editor-menu-wrapper {
-    display: flex;
-    align-items: flex-start;
+%editing_menu {
     margin-top: 1em;
+    margin-left: 1em;
 }
 
-/* child of editor-menu-wrapper */
+
 .editor-menu {
+    @extend %editing_menu;
+    float: left;
     width: $editor_menu_item_size;
 
+
     .editor-menu-item {
+        pointer-events: auto;
         width: $editor_menu_item_size;
         height: $editor_menu_item_size;
 
@@ -240,9 +243,11 @@ $editor_menu_item_size: 35px;
 }
 
 .oligrapher-toolbox {
-    margin-left: 1em;
+    @extend %editing_menu;
+    pointer-events: auto;
     border: 2px solid $oligrapher_blue;
     padding: 5px;
+    float: right;
 
     header {
         font-size: 20px;
