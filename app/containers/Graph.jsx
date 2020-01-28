@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import { SvgRefContext } from '../contexts'
-import GraphContainer from '../components/graph/GraphContainer'
+// Core Graph Elements
 import Edges from './Edges'
 import Nodes from './Nodes'
 import Captions from './Captions'
+
+// Graph Display Components
+import GraphSvg from '../components/graph/GraphSvg'
 import Pannable from '../components/graph/Pannable'
 import Zoomable from '../components/graph/Zoomable'
 
@@ -15,45 +17,26 @@ import { computeActualZoom } from '../util/dimensions'
 /*
   The core component that displays the graph
 */
-export class Graph extends React.Component {
-  constructor(props) {
-    super(props)
-    // see components/graph/GraphContainer.jsx
-    // This is the ref of div.oligrapher-graph-svg, a div that wraps the graph root svg element
-    this.svgRef = React.createRef()
-    this.computeAndSetActualZoom = this.computeAndSetActualZoom.bind(this)
-  }
+export function Graph(props) {
+  // The two dom references are used to calculate the actual zoom and caption placement.
+  const svgRef = useRef(null)
+  const containerRef = useRef(null)
 
-  computeAndSetActualZoom() {
-    this.props.setActualZoom(
-      computeActualZoom(this.props.viewBox, this.svgRef.current, this.props.zoom)
-    )
-  }
+  useEffect(() => {
+    props.setActualZoom(computeActualZoom(props.viewBox, svgRef.current, props.zoom))
+  }, [props.zoom, props.viewBox])
 
-  componentDidMount() {
-    this.computeAndSetActualZoom()
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.zoom !== prevProps.zoom) {
-      this.computeAndSetActualZoom()
-    }
-  }
-
-  // TODO: Combine SvgRefContext.Provider & GraphContainer
-  render() {
-    return <SvgRefContext.Provider value={this.svgRef} >
-               <GraphContainer viewBox={this.props.viewBox}>
-                 <Zoomable zoom={this.props.zoom}>
-                   <Pannable zoom={this.props.zoom} actualZoom={this.props.actualZoom}>
-                     <Nodes />
-                     <Edges />
-                     <Captions />
-                   </Pannable>
-                 </Zoomable>
-               </GraphContainer>
-           </SvgRefContext.Provider>
-  }
+  return <div ref={containerRef} className="oligrapher-graph-svg">
+           <GraphSvg ref={svgRef} viewBox={props.viewBox}>
+             <Zoomable zoom={props.zoom}>
+               <Pannable zoom={props.zoom} actualZoom={props.actualZoom}>
+                 <Nodes />
+                 <Edges />
+                 <Captions />
+               </Pannable>
+             </Zoomable>
+           </GraphSvg>
+         </div>
 }
 
 Graph.propTypes = {
@@ -78,18 +61,3 @@ const mapDispatchToProps = function(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Graph)
-
-
-/*
-
-|div
-| _____
-| | Svg
-| |
-| |
-|
-|
-
-// <circle stroke="red" cx="200" cy="200" r="50px"></circle>
-
-*/

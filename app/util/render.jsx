@@ -4,9 +4,7 @@ import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import { createLogger } from 'redux-logger'
 import thunk from 'redux-thunk'
-
 import reducers from '../reducers'
-import Root from '../containers/Root'
 
 /*
   Returns an Redux store initialized configured oligrapher state
@@ -26,13 +24,10 @@ export const createOligrapherStore = preloadedState => {
                      applyMiddleware(...middleware))
 }
 
-export const renderNewApplication = (store, element) => {
-  const application = <Provider store={store}>
-                        <Root />
-                      </Provider>
-
-  ReactDOM.render(application, element)
-}
+export const withStore = store => WrappedComponent => props => (
+  <Provider store={store}>
+    <WrappedComponent {...props} />
+  </Provider>)
 
 // This is a higher-order component that renders the component into a different
 // place in the dom instead of it's normal position in the hierarchy.

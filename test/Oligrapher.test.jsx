@@ -1,16 +1,19 @@
 import * as helpers from '../app/util/helpers'
 import * as render from '../app/util/render'
 import Oligrapher from '../app/Oligrapher'
+import ReactDOM from 'react-dom'
+
+
 
 describe('Oligrapher', function() {
   describe('new Oligrapher.jsx()', function() {
     beforeEach(function() {
-      sinon.stub(render, 'renderNewApplication')
+      sinon.stub(ReactDOM, 'render')
       sinon.stub(helpers, 'getElementById').returns("FakeElement")
     })
 
     afterEach(function() {
-      render.renderNewApplication.restore()
+      ReactDOM.render.restore()
       helpers.getElementById.restore()
     })
 
@@ -24,6 +27,11 @@ describe('Oligrapher', function() {
       let state = oli.store.getState()
       expect(state.settings.debug).to.eql(true)
       expect(state.graph.nodes).to.eql({})
+    })
+
+    it("renders the application once with ReactDOM", function() {
+      new Oligrapher()
+      expect(ReactDOM.render.callCount).to.eql(1)
     })
   })
 })

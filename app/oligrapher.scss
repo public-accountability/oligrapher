@@ -25,7 +25,7 @@ $oligrapher_font_gray: #b3b3b3;
 
 $delete_red: #c82c63;
 $editor_menu_item_size: 35px;
-
+$toolbox_width: 250px;
 /*
    This is our outermost div.
 
@@ -168,6 +168,13 @@ $editor_menu_item_size: 35px;
     position: absolute;
 }
 
+%absolute_top_left {
+    position: absolute;
+    /* position, top, and left places the editor ontop of the SVG element */
+    top: 0;
+    left: 0;
+}
+
 .oligrapher-graph-container {
     position: relative;
 
@@ -176,13 +183,15 @@ $editor_menu_item_size: 35px;
     }
 
     .oligrapher-graph-editor {
+        @extend %absolute_top_left;
         z-index: 10;
-        position: absolute;
-        /* position, top, and left places the editor ontop of the SVG element */
-        top: 0;
-        left: 0;
-        // Disables pointer events
+        width: 100%;
         pointer-events: none;
+    }
+
+    .oligrapher-graph-editor.text-tool {
+        pointer-events: auto;
+        cursor: text;
     }
 
     .oligrapher-edit-node-menu {
@@ -219,12 +228,10 @@ $editor_menu_item_size: 35px;
     margin-left: 1em;
 }
 
-
 .editor-menu {
     @extend %editing_menu;
     float: left;
     width: $editor_menu_item_size;
-
 
     .editor-menu-item {
         pointer-events: auto;
@@ -244,10 +251,13 @@ $editor_menu_item_size: 35px;
 
 .oligrapher-toolbox {
     @extend %editing_menu;
+    position: absolute;
+    top: 0;
+    left: 60px;
     pointer-events: auto;
     border: 2px solid $oligrapher_blue;
     padding: 5px;
-    float: right;
+    width: $toolbox_width;
 
     header {
         font-size: 20px;
@@ -267,6 +277,9 @@ $editor_menu_item_size: 35px;
     }
 }
 
+.text-tool {
+
+}
 
 
 %edit_node_menu_title {

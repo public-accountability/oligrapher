@@ -2,9 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 /*
-  This renders an SVG element
+  A thin abstraction over a regular dom <svg> element
 */
-export default function Svg(props) {
+const Svg = React.forwardRef((props, ref) => {
   let svgAttributes = {
     height: props.height,
     width: props.width,
@@ -19,10 +19,10 @@ export default function Svg(props) {
     svgAttributes.xmlns = "http://www.w3.org/2000/svg"
   }
 
-  return <svg {...svgAttributes} >
+  return <svg {...svgAttributes} ref={ref}>
            {props.children}
          </svg>
-}
+})
 
 Svg.propTypes = {
   viewBox: PropTypes.shape({
@@ -44,3 +44,5 @@ Svg.defaultProps = {
   outermost: false,
   preserveAspectRatio: 'xMidYMid'
 }
+
+export default Svg

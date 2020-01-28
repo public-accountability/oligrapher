@@ -1,7 +1,16 @@
-import { createOligrapherStore, renderNewApplication } from './util/render'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { connect } from 'react-redux'
+import flow from 'lodash/flow'
+
+import Graph from './graph/graph'
+import Root from './containers/Root'
+
+import { createOligrapherRefs, withRefs } from './RefsContex'
+import { createOligrapherStore, withStore } from './util/render'
 import stateInitalizer from './util/stateInitalizer'
 import { getElementById } from './util/helpers'
-import Graph from './graph/graph'
+
 import './oligrapher.scss'
 
 /*
@@ -19,9 +28,11 @@ export default class Oligrapher {
 
   constructor(initialState = {}) {
     this.store = createOligrapherStore(stateInitalizer(initialState))
+    this.element = getElementById(this.store.getState().settings.domId)
     this.graph = () => this.store.getState().graph
 
-    renderNewApplication(this.store,
-                         getElementById(this.store.getState().settings.domId))
+    const Application = withStore(this.store)(Root)
+
+    ReactDOM.render(<Application />, this.element)
   }
 }
