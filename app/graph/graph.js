@@ -204,6 +204,11 @@ export function updateEdge(graph, edge, attributes) {
   return graph
 }
 
+export function addCaption(graph, caption) {
+  graph.captions[caption.id] = caption
+  return graph
+}
+
 /////////////////////////
 // Dragging Functions  //
 /////////////////////////
@@ -302,6 +307,7 @@ export default {
   "addEdges":                   addEdges,
   "removeEdge":                 removeEdge,
   "updateEdge":                 updateEdge,
+  "addCaption":                 addCaption,
   "moveNode":                   moveNode,
   "dragNode":                   dragNode,
   "dragEdge":                   dragEdge,

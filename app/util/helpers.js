@@ -14,6 +14,23 @@ export function getElementById(id) {
   }
 }
 
+export function isElement(element) {
+  return element instanceof Element || element instanceof HTMLDocument
+}
+
+// Element | String => Element | Throws
+export function toElement(idOrElement) {
+  if (isElement(idOrElement)) {
+    return idOrElement
+  }
+
+  if (typeof idOrElement === 'string') {
+    return getElementById(idOrElement)
+  }
+
+  throw new Error(`Excepted an Element or String. Received: ${typeof idOrElement}`)
+}
+
 export function xy(obj) {
   return pick(obj, ['x', 'y'])
 }

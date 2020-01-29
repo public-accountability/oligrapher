@@ -2,13 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Draggable from 'react-draggable'
 
-/*
-  Allows for the maps to be panned
-*/
+const defaultClassName = 'react-draggable pannable'
+
+/* Allows for the maps to be panned */
 export default function Pannable(props) {
   const scale = props.zoom * props.actualZoom
 
-  return <Draggable handle='.drag-handle' scale={scale}>
+  return <Draggable handle='.drag-handle' scale={scale} defaultClassName={defaultClassName}>
            <g>
              <rect className="drag-handle" x="-5000" y="-5000" width="10000" height="10000" fill="#fff" />
              {props.children}

@@ -17,6 +17,7 @@ const Svg = React.forwardRef((props, ref) => {
 
   if (props.outermost) {
     svgAttributes.xmlns = "http://www.w3.org/2000/svg"
+    svgAttributes.id = "oligrapher-svg"
   }
 
   return <svg {...svgAttributes} ref={ref}>

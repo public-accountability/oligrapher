@@ -1,6 +1,8 @@
+import produce from 'immer'
+
 import Graph from '../graph/graph'
 import Edge from '../graph/edge'
-import produce from 'immer'
+import Caption from '../graph/caption'
 
 const ZOOM_INTERVAL = 0.2
 /*
@@ -15,6 +17,7 @@ const ZOOM_INTERVAL = 0.2
   MOVE_NODE        | id, deltas
   DRAG_NODE        | id, deltas
   UPDATE_EDGE      | id, attributes
+  ADD_CAPTION      | event
 */
 
 export default produce( (draft, action) => {
@@ -61,6 +64,9 @@ export default produce( (draft, action) => {
     return
   case 'UPDATE_EDGE':
     Graph.updateEdge(draft, action.id, action.attributes)
+    return
+  case 'NEW_CAPTION':
+    Graph.addCaption(draft, Caption.fromEvent(action.event, draft.zoom))
     return
   case 'ZOOM':
     switch(action.direction) {

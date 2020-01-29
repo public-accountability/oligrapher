@@ -1,10 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import noop from 'lodash/noop'
+import pick from 'lodash/pick'
 
 import { classNames } from '../util/helpers'
-import noop from 'lodash/noop'
 
+import Caption from '../graph/caption'
 import EditorMenu from './EditorMenu'
 import NodeTool from '../components/tools/Node'
 
@@ -14,7 +16,7 @@ import NodeTool from '../components/tools/Node'
 export function Editor(props) {
   if (props.disabled) { return <></> }
 
-  return <div className={props.className} onClick={props.onClick}>
+  return <div className={props.className} onClick={props.textTool ? props.onClick : noop}>
            <EditorMenu />
            { props.nodeTool && <NodeTool /> }
          </div>
@@ -28,33 +30,38 @@ Editor.propTypes = {
   onClick: PropTypes.func
 }
 
-Editor.defaultProps = {
-  onClick: noop
-}
-
-const textToolClick = (evt) => {
-  console.log('clicked on text tool')
-  console.log(evt)
-}
-
 const mapStateToProps = function(state) {
   const disabled =  !state.display.modes.editor
   const textTool = state.display.editor.tool === 'text'
   const nodeTool = state.display.editor.tool === 'node'
   const classes = ['oligrapher-graph-editor']
-  let onClick
 
   if (textTool) {
     classes.push('text-tool')
-    onClick = textToolClick
   }
 
   return { textTool,
            nodeTool,
            disabled,
-           onClick,
            className: classNames(...classes)
   }
 }
 
-export default connect(mapStateToProps)(Editor)
+const newCaptionAction = event => {
+  event.persist()
+  return {
+    type: 'NEW_CAPTION',
+    event: event
+  }
+}
+
+const mapDispatchToProps = dispatch => ({
+  onClick: event => {
+    console.log('event to create caption')
+    let action = newCaptionAction(event)
+    console.log('caption action', action)
+    dispatch(action)
+  }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Editor)

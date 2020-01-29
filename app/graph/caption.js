@@ -2,6 +2,8 @@ import PropTypes from 'prop-types'
 import merge from 'lodash/merge'
 import { generate } from 'shortid'
 
+import { svgCoordinatesFromMouseEvent } from '../util/dimensions'
+
 const captionDefaults = {
   id: null,
   text: null,
@@ -28,6 +30,15 @@ export function newCaption(attributes = {}) {
   return caption
 }
 
+/// Event => Caption
+export function fromEvent(event, zoom) {
+  return newCaption({
+    text: "New Caption",
+    ...svgCoordinatesFromMouseEvent(event, zoom)
+  })
+}
+
 export default {
-  "new": newCaption
+  "new": newCaption,
+  "fromEvent": fromEvent
 }
