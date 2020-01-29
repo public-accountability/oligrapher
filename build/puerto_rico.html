@@ -4,9 +4,8 @@
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta content="utf-8" http-equiv="encoding">
     <title>Oligrapher Demo</title>
-    <!-- <script src="http://localhost:8090/webpack-dev-server.js"></script> -->
-    <!-- <script src="http://localhost:8090/build/vendors.js"></script> -->
-    <script src="oligrapher.js"></script>
+    <script src="http://localhost:8090/webpack-dev-server.js"></script>
+    <script src="http://localhost:8090/build/oligrapher.js"></script>
     <script src="puerto-rico-sample-data.js"></script>
     <style>
       body {
@@ -17,34 +16,27 @@
   <body>
     <div id="oligrapher"></div>
     <script>
-      var elem = document.getElementById('oligrapher');
-      elem.style.height = window.innerHeight - 100 + "px";
+     var elem = document.getElementById('oligrapher');
+     elem.style.height = window.innerHeight - 100 + "px";
 
-      var oli = new Oligrapher({ 
-        root: elem,
-        isEditor: true,
-        isLocked: false,
-        logActions: false,
-        viewOnlyHighlighted: true,
-        dataSource: 'littlesis',
-        data: puertoRico,
-	url: "https://example.com",
-        user: { name: "LittleSis", url: "http://example.com/user/UserName" },
-        date: "August 30, 2015",
-        startAnnotation: 0,
-        showSaveButton: true,
-        onSave: function(data) { console.log(data); },
-        onNav: function(index) { console.log("navigating to annotation " + String(index)); },
-        links: [
-          { text: "some", url: "http://some.net" },
-          { id: "exampleLink", text: "example", url: "http://example.com" },
-          { method: "POST", text: "clone", url: "http://example.com/clone" }
-        ],
-        settings: {
-          is_private: false,
-          is_featured: false
-        }
-      });
+     var oli = new Oligrapher({
+       graph: puertoRico,
+       settings: {
+         debug: true
+       },
+       attributes: {
+         title: "Puerto Rico's financial control board",
+         date: "January 12, 2018",
+         subtitle: "A longer description of this map. Use this space to give more context.",
+         user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },
+         settings: { private: false },
+         links: [
+           { text: "Edit", url: "https://littlesis.org/oligrapher/edit" },
+           { text: "Clone", url: "https://littlesis.org/oligrapher/clone" },
+           { text: "Disclaimer", url: "https://littlesis.org/oligrapher/disclaimer" }
+         ]
+       }
+     });
     </script>
   </body>
 </html>

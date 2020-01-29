@@ -2,14 +2,21 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-export function Captions(props) {
-  return null
+import Caption from './Caption'
+
+export function Captions({captionIds}) {
+  return <g className="captions">
+           { captionIds.map(id => <Caption key={id} id={id} />) }
+         </g>
 }
 
 
-Captions.propTypes = {}
+Captions.propTypes = {
+  captionIds: PropTypes.arrayOf(PropTypes.string).isRequired
+}
 
-const mapStateToProps = state => {}
-const mapDispatchToProps = dispatch => {}
+const mapStateToProps = state => ({
+  captionIds: Object.keys(state.graph.captions)
+})
 
-export default connect()(Captions)
+export default connect(mapStateToProps)(Captions)

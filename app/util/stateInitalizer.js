@@ -1,13 +1,13 @@
 import defaultState from './defaultState'
 import Graph from '../graph/graph'
+import Edge from '../graph/edge'
 // import Curve from '../graph/curve'
 
 import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
-
 /*
-  Edge and Node used to contain a `display` element.
+  Edges, Nodes, and Captions used to contain a `display` element.
   This has been simplified to be a flat object without any nested components.
 */
 export function flatten(obj) {
@@ -37,17 +37,23 @@ export function flatten(obj) {
   and/or converts legacy data.
 
 */
+
 export default function stateInitalizer(serializedState) {
   let state = merge({}, defaultState, serializedState)
 
   Object.keys(state.graph.edges).forEach(edgeId => {
-    let edge = state.graph.edges[edgeId]
-    state.graph.edges[edge.id] = flatten(edge)
+    let edge = Edge.new(flatten(state.graph.edges[edgeId]))
+    state.graph.edges[edge.id] = edge
   })
 
   Object.keys(state.graph.nodes).forEach(nodeId => {
     let node = state.graph.nodes[nodeId]
     state.graph.nodes[node.id] = flatten(node)
+  })
+
+  Object.keys(state.graph.captions).forEach(captionId => {
+    let caption = state.graph.captions[captionId]
+    state.graph.captions[caption.id] = flatten(caption)
   })
 
   state.graph = Graph.new(state.graph)

@@ -24,7 +24,7 @@ import ZoomControl from '../components/ZoomControl'
         <FloatingMenu> Editing menus
   editing interface (<Editor>)
 
-  It needs rendered inside a Redux Provider and RefsContext.Provider
+  It needs rendered inside a Redux Provider
 
 */
 export default function Root() {
