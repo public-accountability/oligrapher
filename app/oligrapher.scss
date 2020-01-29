@@ -473,9 +473,7 @@ g.edge-tool-open .react-draggable-dragging .node-circle {
     cursor: grabbing;
 }
 
-/*
-  EDGES
-*/
+/* EDGES */
 
 .edge-group {
 
@@ -488,5 +486,16 @@ g.edge-tool-open .react-draggable-dragging .node-circle {
         &:hover {
             cursor: pointer
         }
+    }
+}
+
+
+/* captions */
+
+g.caption {
+    span.caption-text {
+        padding: 0.5em;
+        background-color: lightcyan;
+        cursor: default;
     }
 }
