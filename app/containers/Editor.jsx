@@ -47,21 +47,21 @@ const mapStateToProps = function(state) {
   }
 }
 
-const newCaptionAction = event => {
-  event.persist()
-  return {
-    type: 'NEW_CAPTION',
-    event: event
-  }
-}
+// const newCaptionAction = event => {
+//   event.persist()
+//   return {
+//     type: 'NEW_CAPTION',
+//     event: event
+//   }
+// }
 
-const mapDispatchToProps = dispatch => ({
-  onClick: event => {
-    console.log('event to create caption')
-    let action = newCaptionAction(event)
-    console.log('caption action', action)
-    dispatch(action)
-  }
-})
+// const mapDispatchToProps = dispatch => ({
+//   onClick: event => {
+//     console.log('event to create caption')
+//     let action = newCaptionAction(event)
+//     console.log('caption action', action)
+//     dispatch(action)
+//   }
+// })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Editor)
+export default connect(mapStateToProps)(Editor)

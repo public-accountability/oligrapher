@@ -115,6 +115,10 @@ export default produce( (draft, action) => {
 
     draft.attributes[action.name] = action.value
     return
+  case 'BACKGROUND_CLICK':
+    console.log('background click')
+    return
+
   default:
     return
   }

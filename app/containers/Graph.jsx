@@ -2,13 +2,15 @@ import React, { useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-// Core Graph Elements
+// Graph Containers
 import Edges from './Edges'
 import Nodes from './Nodes'
 import Captions from './Captions'
+import Clickable from './Clickable'
 
 // Graph Display Components
-import GraphSvg from '../components/graph/GraphSvg'
+import Svg from '../components/graph/Svg'
+import Markers from '../components/graph/Markers'
 import Pannable from '../components/graph/Pannable'
 import Zoomable from '../components/graph/Zoomable'
 
@@ -27,15 +29,18 @@ export function Graph(props) {
   }, [props.zoom, props.viewBox])
 
   return <div ref={containerRef} className="oligrapher-graph-svg">
-           <GraphSvg ref={svgRef} viewBox={props.viewBox}>
+           <Svg outermost={true} viewBox={props.viewBox} height="500px "width="100%" ref={svgRef}>
+             <Markers />
              <Zoomable zoom={props.zoom}>
                <Pannable zoom={props.zoom} actualZoom={props.actualZoom}>
-                 <Nodes />
-                 <Edges />
-                 <Captions />
+                 <Clickable>
+                   <Nodes />
+                   <Edges />
+                   <Captions />
+                 </Clickable>
                </Pannable>
              </Zoomable>
-           </GraphSvg>
+           </Svg>
          </div>
 }
 
@@ -56,7 +61,8 @@ const mapStateToProps = function(state) {
 
 const mapDispatchToProps = function(dispatch) {
   return {
-    setActualZoom: (actualZoom) => dispatch({ type: 'SET_ACTUAL_ZOOM', actualZoom })
+    setActualZoom: actualZoom => dispatch({ type: 'SET_ACTUAL_ZOOM', actualZoom }),
+
   }
 }
 

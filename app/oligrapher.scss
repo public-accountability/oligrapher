@@ -189,8 +189,9 @@ $toolbox_width: 250px;
         pointer-events: none;
     }
 
-    .oligrapher-graph-editor.text-tool {
-        pointer-events: auto;
+    .oligrapher-graph-editor.text-tool {}
+
+    .clickable-tool-text {
         cursor: text;
     }
 
