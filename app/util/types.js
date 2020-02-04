@@ -5,8 +5,11 @@ export const stringOrNumber = PropTypes.oneOfType([PropTypes.string, PropTypes.n
 
 export const stringOrBool = PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
 
-export const isFunctionIfEditable = (props, propName, componentName) => {
-  if (props.editable && !isFunction(props[propName])) {
+const isFunctionIfX = x => (props, propName, componentName) => {
+  if (props[x] && !isFunction(props[propName])) {
     return new Error(`No ${propName} function provided to <${componentName}>`)
   }
 }
+
+export const isFunctionIfEditable = isFunctionIfX('editable')
+export const isFunctionIfEnabled = isFunctionIfX('enabled')

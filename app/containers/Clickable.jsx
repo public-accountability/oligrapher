@@ -33,7 +33,10 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  onClick: () => dispatch({ type: 'BACKGROUND_CLICK' })
+  onClick: event => {
+    event.persist()
+    dispatch({ event, type: 'BACKGROUND_CLICK' })
+  }
 })
 
 

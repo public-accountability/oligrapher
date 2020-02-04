@@ -31,6 +31,7 @@ const  checkOpenTool = (current, required) => {
   OPEN_EDIT_NODE_MENU | id
   OPEN_EDIT_EDGE_MENU | id
   UPDATE_ATTRIBUTE    | name, value
+  BACKGROUND_CLICK    | event
 */
 
 
@@ -116,7 +117,15 @@ export default produce( (draft, action) => {
     draft.attributes[action.name] = action.value
     return
   case 'BACKGROUND_CLICK':
-    console.log('background click')
+
+    // add new caption
+    if (checkOpenTool(draft.display.editor.tool, 'text')) {
+      Graph.addCaption(
+        draft.graph,
+        Caption.fromEvent(action.event, draft.graph.zoom)
+      )
+    }
+
     return
 
   default:
