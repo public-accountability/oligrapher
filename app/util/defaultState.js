@@ -48,7 +48,8 @@ export default {
     editor: {
       tool: null,
       editNode: null,
-      editEdge: null
+      editEdge: null,
+      editCaption: null
     }
   },
 

@@ -2,11 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import noop from 'lodash/noop'
-import pick from 'lodash/pick'
 
 import { classNames } from '../util/helpers'
 
-import Caption from '../graph/caption'
 import EditorMenu from './EditorMenu'
 import NodeTool from '../components/tools/Node'
 

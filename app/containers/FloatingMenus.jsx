@@ -4,18 +4,21 @@ import { connect } from 'react-redux'
 
 import EditNodeMenu from './EditNodeMenu'
 import EditEdgeMenu from './EditEdgeMenu'
+import EditCaptionMenu from './EditCaptionMenu'
 
 export function FloatingMenus({visible}) {
   return <>
            { visible.editNodeMenu && <EditNodeMenu /> }
            { visible.editEdgeMenu && <EditEdgeMenu /> }
+           { visible.editCaptionMenu && <EditCaptionMenu /> }
          </>
 }
 
 FloatingMenus.propTypes = {
   visible: PropTypes.shape({
     editNodeMenu: PropTypes.bool.isRequired,
-    editEdgeMenu: PropTypes.bool.isRequired
+    editEdgeMenu: PropTypes.bool.isRequired,
+    editCaptionMenu: PropTypes.bool.isRequired
   })
 }
 
@@ -24,8 +27,9 @@ export const mapStateToProps = state => {
 
   return {
     visible: {
-      editNodeMenu: Boolean(editor.tool === 'node' && editor.editNode),
-      editEdgeMenu: Boolean(editor.tool === 'edge' && editor.editEdge)
+      editNodeMenu:    Boolean(editor.tool === 'node' && editor.editNode),
+      editEdgeMenu:    Boolean(editor.tool === 'edge' && editor.editEdge),
+      editCaptionMenu: Boolean(editor.tool === 'text' && editor.editCaption)
     }
   }
 }

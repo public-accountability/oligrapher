@@ -13,6 +13,13 @@ const  checkOpenTool = (current, required) => {
   return false
 }
 
+// function clearOpenEditMenus(state) {
+//   state.display.editor.editNode =  null
+//   state.display.editor.editEdge = null
+//   state.display.editor.editCaption = null
+// }
+
+
 /*
 
   action.type         |  fields
@@ -118,12 +125,12 @@ export default produce( (draft, action) => {
     return
   case 'BACKGROUND_CLICK':
 
-    // add new caption
+    // Add new caption
     if (checkOpenTool(draft.display.editor.tool, 'text')) {
-      Graph.addCaption(
-        draft.graph,
-        Caption.fromEvent(action.event, draft.graph.zoom)
-      )
+      const caption = Caption.fromEvent(action.event, draft.graph.zoom)
+
+      Graph.addCaption(draft.graph, caption)
+      draft.display.editor.editCaption = caption.id
     }
 
     return

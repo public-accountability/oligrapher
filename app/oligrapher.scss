@@ -207,6 +207,12 @@ $toolbox_width: 250px;
         left: 50%;
     }
 
+    .oligrapher-edit-caption-menu {
+        @extend %floating_menu;
+        top: 10%;
+        left: 50%;
+    }
+
     .oligrapher-zoomcontrol {
         z-index: 15;
         position: absolute;
@@ -291,7 +297,7 @@ $toolbox_width: 250px;
 }
 
 /* This is the "edit and customize node" box */
-.edit-edge-menu-wrapper, .edit-node-menu-wrapper {
+.edit-edge-menu-wrapper, .edit-node-menu-wrapper, .edit-caption-menu-wrapper {
     background-color: white;
     border: 2px solid $oligrapher_blue;
     padding: 10px;
