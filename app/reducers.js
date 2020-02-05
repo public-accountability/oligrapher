@@ -24,7 +24,6 @@ const  checkOpenTool = (current, required) => {
 
 
 /*
-
   action.type            |  fields
 -------------------------|-------------
   SET_ACTUAL_ZOOM        | actualZoom
@@ -38,6 +37,7 @@ const  checkOpenTool = (current, required) => {
   NEW_CAPTION            | event
   UPDATE_CAPTION         | id, attributes
   MOVE_CAPTION           | id, deltas
+  DELETE_CAPTION         | [id]
   SET_MODE               | mode, enabled
   OPEN_TOOL              | item
   OPEN_EDIT_NODE_MENU    | id
@@ -46,7 +46,6 @@ const  checkOpenTool = (current, required) => {
   UPDATE_ATTRIBUTE       | name, value
   BACKGROUND_CLICK       | event
 */
-
 
 export default produce( (draft, action) => {
   switch(action.type) {
@@ -98,6 +97,14 @@ export default produce( (draft, action) => {
     throw new Error("UPDATE_CAPTION not yet implemented")
   case 'MOVE_CAPTION':
     merge(draft.graph.captions[action.id], translatePoint(draft.graph.captions[action.id], action.deltas))
+    return
+  case 'DELETE_CAPTION':
+    if (action.id) {
+      delete draft.graph.captions[action.id]
+    } else if (draft.display.editor.editCaption) {
+      delete draft.graph.captions[draft.display.editor.editCaption]
+      draft.display.editor.editCaption = null
+    }
     return
   case 'ZOOM':
     if (action.direction === 'IN') {
