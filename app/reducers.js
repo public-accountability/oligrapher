@@ -1,5 +1,5 @@
 import produce from 'immer'
-import isEqual from 'lodash'
+import isEqual from 'lodash/isEqual'
 
 import Graph from './graph/graph'
 import Edge from './graph/edge'

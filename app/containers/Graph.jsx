@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import Edges from './Edges'
 import Nodes from './Nodes'
 import Captions from './Captions'
+
 import Clickable from './Clickable'
 
 // Graph Display Components
