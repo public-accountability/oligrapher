@@ -25,25 +25,26 @@ const  checkOpenTool = (current, required) => {
 
 /*
 
-  action.type         |  fields
-----------------------|-------------
-  SET_ACTUAL_ZOOM     | actualZoom
-  ZOOM                | direction
-  ADD_NODE            | attributes
-  ADD_NODES           | nodes
-  UPDATE_NODE         | id, attributes
-  MOVE_NODE           | id, deltas
-  DRAG_NODE           | id, deltas
-  UPDATE_EDGE         | id, attributes
-  NEW_CAPTION         | event
-  UPDATE_CAPTION      | id, attributes
-  MOVE_CAPTION        | id, deltas
-  SET_MODE            | mode, enabled
-  OPEN_TOOL           | item
-  OPEN_EDIT_NODE_MENU | id
-  OPEN_EDIT_EDGE_MENU | id
-  UPDATE_ATTRIBUTE    | name, value
-  BACKGROUND_CLICK    | event
+  action.type            |  fields
+-------------------------|-------------
+  SET_ACTUAL_ZOOM        | actualZoom
+  ZOOM                   | direction
+  ADD_NODE               | attributes
+  ADD_NODES              | nodes
+  UPDATE_NODE            | id, attributes
+  MOVE_NODE              | id, deltas
+  DRAG_NODE              | id, deltas
+  UPDATE_EDGE            | id, attributes
+  NEW_CAPTION            | event
+  UPDATE_CAPTION         | id, attributes
+  MOVE_CAPTION           | id, deltas
+  SET_MODE               | mode, enabled
+  OPEN_TOOL              | item
+  OPEN_EDIT_NODE_MENU    | id
+  OPEN_EDIT_EDGE_MENU    | id
+  OPEN_EDIT_CAPTION_MENU | id
+  UPDATE_ATTRIBUTE       | name, value
+  BACKGROUND_CLICK       | event
 */
 
 
@@ -122,7 +123,12 @@ export default produce( (draft, action) => {
     return
   case 'OPEN_EDIT_EDGE_MENU':
     if (checkOpenTool(draft.display.editor.tool, 'edge')) {
-      draft.display.editEdge = action.id
+      draft.display.editor.editEdge = action.id
+    }
+    return
+  case 'OPEN_EDIT_CAPTION_MENU':
+    if (checkOpenTool(draft.display.editor.tool, 'text')) {
+      draft.display.editor.editCaption = action.id
     }
     return
   case 'UPDATE_ATTRIBUTE':

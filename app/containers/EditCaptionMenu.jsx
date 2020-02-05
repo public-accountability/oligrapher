@@ -14,13 +14,11 @@ export function EditCaptionMenu(props) {
              </footer>
            </div>
          </div>
-
 }
 
 EditCaptionMenu.propTypes = {
   id: PropTypes.string.isRequired
 }
-
 
 const mapStateToProps = state => {
   const captionId = state.display.editor.editCaption
