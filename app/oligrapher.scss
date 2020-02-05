@@ -26,6 +26,9 @@ $oligrapher_font_gray: #b3b3b3;
 $delete_red: #c82c63;
 $editor_menu_item_size: 35px;
 $toolbox_width: 250px;
+
+$caption_backgound: lightgreen;
+
 /*
    This is our outermost div.
 
@@ -510,7 +513,7 @@ g.caption {
 g.caption-textbox {
 
     rect.background-rect {
-        fill: lightgreen;
+        fill: $caption_backgound;
     }
 
 }

@@ -7,7 +7,7 @@ import noop from 'lodash/noop'
 import pick from 'lodash/pick'
 import subtract from 'lodash/subtract'
 
-import DraggableNode from './../components/graph/DraggableNode'
+import DraggableComponent from './../components/graph/DraggableComponent'
 import NodeCircle from './../components/graph/NodeCircle'
 import NodeLabel from './../components/graph/NodeLabel'
 import NodeHandle from './../components/graph/NodeHandle'
@@ -47,13 +47,13 @@ function nodeHandles(props) {
 
 export function Node(props) {
   return  <g id={"node-" + props.id} className="oligrapher-node">
-            <DraggableNode {...pick(props, DRAGGABLE_PROPS)}>
+            <DraggableComponent {...pick(props, DRAGGABLE_PROPS)} handle=".node-circle">
               <g>
                 <NodeCircle {...pick(props, CIRCLE_PROPS)} />
                 <NodeLabel {...pick(props, LABEL_PROPS)} />
                 { nodeHandles(props) }
               </g>
-            </DraggableNode>
+            </DraggableComponent>
           </g>
 }
 

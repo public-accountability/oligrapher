@@ -1,5 +1,8 @@
 import produce from 'immer'
+import merge from 'lodash/merge'
 import isEqual from 'lodash/isEqual'
+
+import { translatePoint } from './util/helpers'
 
 import Graph from './graph/graph'
 import Edge from './graph/edge'
@@ -32,7 +35,9 @@ const  checkOpenTool = (current, required) => {
   MOVE_NODE           | id, deltas
   DRAG_NODE           | id, deltas
   UPDATE_EDGE         | id, attributes
-  ADD_CAPTION         | event
+  NEW_CAPTION         | event
+  UPDATE_CAPTION      | id, attributes
+  MOVE_CAPTION        | id, deltas
   SET_MODE            | mode, enabled
   OPEN_TOOL           | item
   OPEN_EDIT_NODE_MENU | id
@@ -87,6 +92,11 @@ export default produce( (draft, action) => {
     return
   case 'NEW_CAPTION':
     Graph.addCaption(draft.graph, Caption.fromEvent(action.event, draft.zoom))
+    return
+  case 'UPDATE_CAPTION':
+    throw new Error("UPDATE_CAPTION not yet implemented")
+  case 'MOVE_CAPTION':
+    merge(draft.graph.captions[action.id], translatePoint(draft.graph.captions[action.id], action.deltas))
     return
   case 'ZOOM':
     if (action.direction === 'IN') {

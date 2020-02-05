@@ -31,6 +31,7 @@ export default {
   // Many actions trigger a reconfiguration of these menus
   display: {
     zoom: 1,
+    actualZoom: 1,
     highlight: {
       nodes: [],
       edges: [],

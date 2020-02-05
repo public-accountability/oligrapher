@@ -5,7 +5,7 @@ import { xy } from '../../util/helpers'
 
 const DEFAULT_POSITION = { x: 0, y: 0 }
 
-export default function DraggableNode(props) {
+export default function DraggableComponent(props) {
   const onDrag = (e, d) => props.onDrag(xy(d))
   const onStop = (e, d) => props.onStop(xy(d))
 
@@ -16,20 +16,21 @@ export default function DraggableNode(props) {
                            onStop,
                            scale: props.actualZoom,
                            position: DEFAULT_POSITION,
-                           handle: ".node-circle" }
+                           handle: props.handle }
 
   return <Draggable {...draggableProps}>
            {props.children}
          </Draggable>
 }
 
-DraggableNode.propTypes = {
+DraggableComponent.propTypes = {
   children:   PropTypes.node.isRequired,
   onStop:     PropTypes.func.isRequired,
   onDrag:     PropTypes.func.isRequired,
-  actualZoom: PropTypes.number,
+  handle:     PropTypes.string.isRequired,
+  actualZoom: PropTypes.number
 }
 
-DraggableNode.defaultProps = {
+DraggableComponent.defaultProps = {
   actualZoom: 1
 }

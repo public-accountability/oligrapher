@@ -1,24 +1,30 @@
 import React, { useEffect, useState, useRef } from 'react'
+
 import PropTypes from 'prop-types'
+import curry from 'lodash/curry'
+import flow from 'lodash/flow'
 import pick from 'lodash/pick'
 
+import { addPaddingToRectangle } from '../../util/dimensions'
+
+const refToBox = ref => pick(ref.current.getBBox(), 'x', 'y', 'width', 'height')
+const padRectangle = curry(addPaddingToRectangle)(10)
 
 export default function CaptionTextbox(props) {
   const textRef = useRef(null)
-  const [backgroundProps, setBackgroundProps] = useState(null)
+  const [rectProps, setRectProps] = useState(null)
 
   useEffect(() => {
-    setBackgroundProps(pick(textRef.current.getBBox(), 'x', 'y', 'width', 'height'))
-  }, [props.text])
+    flow([refToBox, padRectangle, setRectProps])(textRef)
+  }, [props.text, props.x, props.y])
 
-  return <g className="caption-textbox">
-           { backgroundProps && <rect {...backgroundProps} className="background-rect" /> }
+  return  <g className="caption-textbox">
+            { rectProps && <rect {...rectProps} className="background-rect" /> }
 
-           <text x={props.x} y={props.y} ref={textRef}>
-             {props.text}
-           </text>
-
-         </g>
+            <text x={props.x} y={props.y} ref={textRef}>
+              {props.text}
+            </text>
+          </g>
 
 }
 
@@ -31,8 +37,7 @@ CaptionTextbox.propTypes = {
 }
 
 CaptionTextbox.defaultProps = {
-  width: 100,
-  startFocused: false
+  width: 100
 }
 
 
