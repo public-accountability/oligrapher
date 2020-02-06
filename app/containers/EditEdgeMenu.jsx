@@ -9,6 +9,7 @@ import Edge from '../graph/edge'
 import Node from '../graph/node'
 
 // Components
+import EditMenuHeader from '../components/editor/EditMenuHeader'
 import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
 import LineStyle from '../components/editor/LineStyle'
 
@@ -55,7 +56,7 @@ export function EditEdgeMenu(props)  {
 
   return <div className="oligrapher-edit-edge-menu">
            <div className="edit-edge-menu-wrapper">
-             <header>Customize Edge</header>
+             <EditMenuHeader title="Customize Edge" />
 
              <main>
                { labelForm(attributes.label, updateLabel) }

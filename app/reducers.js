@@ -73,7 +73,7 @@ export default produce( (draft, action) => {
       let node2 = Graph.intersectingNodeFromDrag(draft.graph, action.id, action.deltas)
 
       if (node2) {
-        Graph.addEdge(draft.grpah, Edge.newEdgeFromNodes(node1, node2))
+        Graph.addEdge(draft.graph, Edge.newEdgeFromNodes(node1, node2))
       }
     }
     return
