@@ -259,6 +259,8 @@ $caption_backgound: lightgreen;
     .editor-menu-icon {}
 }
 
+
+
 .oligrapher-toolbox {
     @extend %editing_menu;
     position: absolute;
@@ -297,6 +299,25 @@ $caption_backgound: lightgreen;
     color: $oligrapher_font_gray;
     font-size: 12px;
     font-weight: bold;
+}
+
+header.edit-menu-header {
+    >div {
+        display: inline-block;
+    }
+
+    >div:nth-child(2) {
+        float: right;
+
+        button {
+            border: none;
+            margin-left: 0.5em;
+            background-color: #FFF;
+            &:hover {
+                box-shadow: -2px 3px 6px $oligrapher_gray
+            }
+        }
+    }
 }
 
 /* This is the "edit and customize node" box */

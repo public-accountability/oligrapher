@@ -7,6 +7,7 @@ import curry from 'lodash/curry'
 
 import SizePicker from '../components/SizePicker'
 import CustomizeButton from '../components/editor/CustomizeButton'
+import EditMenuHeader from '../components/editor/EditMenuHeader'
 import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
 
 // whatever-func-useState()-returns, string ---> function(event)
@@ -95,12 +96,14 @@ export function EditNodeMenuBody(props) {
              { page === 'size' && <SizePicker scale={node.scale} setScale={setScale} /> }
              { page === 'bio' && bioPage() }
            </main>
+
            <footer>
              <EditMenuSubmitButtons handleSubmit={handleSubmit}
                                     handleDelete={handleDelete}
                                     page={page}
                                     setPage={setPage} />
            </footer>
+
          </>
 }
 
@@ -120,8 +123,10 @@ EditNodeMenuBody.propTypes = {
 export function EditNodeMenu(props) {
   return <div className="oligrapher-edit-node-menu">
            <div className="edit-node-menu-wrapper">
-             <header>Edit & Customize Node</header>
+             <EditMenuHeader title="Edit & Customize Node" />
+
              <EditNodeMenuBody {...props} key={props.id} />
+
            </div>
          </div>
 }

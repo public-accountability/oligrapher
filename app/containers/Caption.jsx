@@ -20,7 +20,9 @@ export function Caption(props) {
              <CaptionTextbox x={props.x}
                              y={props.y}
                              text={props.text}
-                             handleTextChange={handleTextChange} actualZoom={props.actualZoom} />
+                             handleTextChange={handleTextChange}
+                             actualZoom={props.actualZoom}
+             />
            </g>
          </DraggableComponent>
 }
@@ -33,7 +35,11 @@ Caption.propTypes = {
   openEditMenu: PropTypes.func.isRequired
 }
 
-const mapStateToProps = (state, ownProps) => ({ ...state.graph.captions[ownProps.id], actualZoom: state.graph.actualZoom })
+const mapStateToProps = (state, ownProps) => {
+  return { ...state.graph.captions[ownProps.id],
+           actualZoom: state.graph.actualZoom,
+         }
+}
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   openEditMenu: () => dispatch({type: 'OPEN_EDIT_CAPTION_MENU', id: ownProps.id }),

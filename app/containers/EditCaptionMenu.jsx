@@ -19,7 +19,7 @@ const FONT_WEIGHT_OPTIONS = [
   { value: '200', label: 'Light'}
 ]
 
-const FONT_SIZE_OPTIONS = range(8, 31, 2).map(toString).map( i => ({ value: i, label: i }))
+const FONT_SIZE_OPTIONS = range(8, 31, 2).map(toString).map(i => ({ value: i, label: i }))
 
 function FontFamilyPicker(props) {
   const onChange = v => console.log('on change', v)
@@ -33,7 +33,6 @@ function FontWeightPicker(props) {
 function FontSizePicker() {
   return <Select options={FONT_SIZE_OPTIONS} />
 }
-
 
 export function EditCaptionMenu(props) {
   const handleSubmit = () => console.log('updating caption attributes...')

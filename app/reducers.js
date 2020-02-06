@@ -138,6 +138,11 @@ export default produce( (draft, action) => {
       draft.display.editor.editCaption = action.id
     }
     return
+  case 'CLOSE_EDIT_MENU':
+    draft.display.editor.editNode =  null
+    draft.display.editor.editEdge = null
+    draft.display.editor.editCaption = null
+    return
   case 'UPDATE_ATTRIBUTE':
 
     if (!['title', 'subtitle'].includes(action.name)) {
