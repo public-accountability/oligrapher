@@ -6,6 +6,8 @@ import Edge from '../graph/edge'
 import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
+const keys = Object.keys
+
 /*
   Edges, Nodes, and Captions used to contain a `display` element.
   This has been simplified to be a flat object without any nested components.
@@ -39,21 +41,18 @@ export function flatten(obj) {
 */
 
 export default function stateInitalizer(serializedState) {
-  let state = merge({}, defaultState, serializedState)
+  const state = merge({}, defaultState, serializedState)
 
-  Object.keys(state.graph.edges).forEach(edgeId => {
-    let edge = Edge.new(flatten(state.graph.edges[edgeId]))
-    state.graph.edges[edge.id] = edge
+  keys(state.graph.edges).forEach(edgeId => {
+    state.graph.edges[edgeId] = Edge.new(flatten(state.graph.edges[edgeId]))
   })
 
-  Object.keys(state.graph.nodes).forEach(nodeId => {
-    let node = state.graph.nodes[nodeId]
-    state.graph.nodes[node.id] = flatten(node)
+  keys(state.graph.nodes).forEach(nodeId => {
+    state.graph.nodes[nodeId] = flatten(state.graph.nodes[nodeId])
   })
 
-  Object.keys(state.graph.captions).forEach(captionId => {
-    let caption = state.graph.captions[captionId]
-    state.graph.captions[caption.id] = flatten(caption)
+  keys(state.graph.captions).forEach(captionId => {
+    state.graph.captions[captionId] = flatten(state.graph.captions[captionId])
   })
 
   state.graph = Graph.new(state.graph)

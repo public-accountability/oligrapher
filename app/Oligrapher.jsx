@@ -1,12 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { connect } from 'react-redux'
-import flow from 'lodash/flow'
 
 import Graph from './graph/graph'
 import Root from './containers/Root'
 
-import { createOligrapherRefs, withRefs } from './RefsContex'
 import { createOligrapherStore, withStore } from './util/render'
 import stateInitalizer from './util/stateInitalizer'
 import { getElementById } from './util/helpers'

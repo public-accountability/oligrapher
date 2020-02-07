@@ -1,6 +1,8 @@
 import React, { useState  } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { callWithTargetValue } from '../../util/helpers'
+
 import EntitySearch from './EntitySearch'
 import Toolbox from './Toolbox'
 
@@ -9,7 +11,7 @@ const doSearch = searchValue => Boolean(searchValue) && searchValue.length > 2
 export default function NodeTool() {
   const dispatch = useDispatch()
   const [searchValue, setSearchValue] = useState('')
-  const onSearch = event => setSearchValue(event.target.value)
+  const onSearch = callWithTargetValue(setSearchValue)
 
   const onClickCreateNew = () => {
     const name = searchValue.trim()

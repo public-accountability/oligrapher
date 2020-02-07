@@ -28,7 +28,7 @@ $editor_menu_item_size: 35px;
 $toolbox_width: 250px;
 
 $caption_backgound: lightgreen;
-
+$caption_backgound_focused: lightcoral;
 /*
    This is our outermost div.
 
@@ -529,12 +529,15 @@ g.caption {
         background-color: lightcyan;
         cursor: default;
     }
-}
-
-g.caption-textbox {
 
     rect.background-rect {
         fill: $caption_backgound;
     }
-
 }
+g.caption.focused {
+    rect.background-rect {
+        fill: $caption_backgound_focused;
+    }
+}
+
+g.caption-textbox {}

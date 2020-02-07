@@ -1,4 +1,5 @@
 import { xy, toElement } from './helpers'
+import curry from 'lodash/curry'
 
 const SVG_ID = 'oligrapher-svg'
 
@@ -36,11 +37,9 @@ export function svgCoordinatesFromMouseEvent(event) {
 }
 
 // Number, {x,y, width, height} => {x,y, width, height}
-export function addPaddingToRectangle(amount, rectangle) {
-  return {
-    x: rectangle.x - amount,
-    y: rectangle.y - amount,
-    width: rectangle.width + (amount * 2),
-    height: rectangle.height + (amount * 2)
-  }
-}
+export const addPaddingToRectangle = curry( (amount, rectangle) => ({
+  x: rectangle.x - amount,
+  y: rectangle.y - amount,
+  width: rectangle.width + (amount * 2),
+  height: rectangle.height + (amount * 2)
+}))

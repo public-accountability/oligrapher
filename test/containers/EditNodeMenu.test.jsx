@@ -7,6 +7,8 @@ import {
   EditNodeMenuBody
 } from '../../app/containers/EditNodeMenu'
 
+import EditMenuHeader from '../../app/components/editor/EditMenuHeader'
+
 describe('<EditNodeMenu>', function() {
   it("renders EditNodeMenuBody and wrapping divs", function() {
     const node = Node.new({name: 'Corporation', url: 'https://example.com' })
@@ -17,7 +19,7 @@ describe('<EditNodeMenu>', function() {
     const element = shallow(<EditNodeMenu {...props} />)
 
     expect(element.find('.oligrapher-edit-node-menu')).to.have.lengthOf(1)
-    expect(element.find('header')).to.have.lengthOf(1)
+    expect(element.find(EditMenuHeader)).to.have.lengthOf(1)
     expect(element.find(EditNodeMenuBody)).to.have.lengthOf(1)
   })
 })

@@ -1,22 +1,25 @@
 import React, { useEffect, useState, useRef } from 'react'
 
 import PropTypes from 'prop-types'
-import curry from 'lodash/curry'
+
 import flow from 'lodash/flow'
 import pick from 'lodash/pick'
 
 import { addPaddingToRectangle } from '../../util/dimensions'
 
-const refToBox = ref => pick(ref.current.getBBox(), 'x', 'y', 'width', 'height')
-const padRectangle = curry(addPaddingToRectangle)(10)
-
 export default function CaptionTextbox(props) {
   const textRef = useRef(null)
   const [rectProps, setRectProps] = useState(null)
 
-  useEffect(() => {
-    flow([refToBox, padRectangle, setRectProps])(textRef)
-  }, [props.text, props.x, props.y])
+  // <text> => (updates state)
+  const updateRectangle = flow([
+    textElement => pick(textElement.getBBox(), 'x', 'y', 'width', 'height'),
+    addPaddingToRectangle(10),
+    setRectProps
+  ])
+
+  useEffect(() => void updateRectangle(textRef.current),
+            [props.text, props.x, props.y])
 
   return  <g className="caption-textbox">
             { rectProps && <rect {...rectProps} className="background-rect" /> }
@@ -25,7 +28,6 @@ export default function CaptionTextbox(props) {
               {props.text}
             </text>
           </g>
-
 }
 
 CaptionTextbox.propTypes = {

@@ -2,14 +2,10 @@ import React, { useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-// Graph Containers
 import Edges from './Edges'
 import Nodes from './Nodes'
 import Captions from './Captions'
-
 import Clickable from './Clickable'
-
-// Graph Display Components
 import Svg from '../components/graph/Svg'
 import Markers from '../components/graph/Markers'
 import Pannable from '../components/graph/Pannable'
