@@ -178,9 +178,18 @@ export function removeNode(graph, node) {
   return graph
 }
 
-// Updates the attributes object of a node.
+// Updates the attributes object of a node
 export function updateNode(graph, node, attributes) {
   merge(graph.nodes[getId(node)], attributes)
+
+  // If scale is changed, update any associated edges
+  if (attributes.scale) {
+    edgesOf(graph, getId(node)).forEach(edge => {
+      let attribute = 's' + determineNodeNumber({edge, node})
+      graph.edges[edge.id][attribute] = attributes.scale
+    })
+  }
+
   return graph
 }
 
@@ -243,6 +252,7 @@ export function dragNode(graph, nodeId, deltas) {
   edgesOf(graph, node.id).forEach(edge => dragNodeEdge(graph, {edge, node, coordinates}))
   return graph
 }
+
 
 export function dragEdge(graph, edge) {
   throw new Error("Not Yet Implemented")
