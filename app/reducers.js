@@ -94,7 +94,10 @@ export default produce( (draft, action) => {
     Graph.addCaption(draft.graph, Caption.fromEvent(action.event, draft.zoom))
     return
   case 'UPDATE_CAPTION':
-    throw new Error("UPDATE_CAPTION not yet implemented")
+    merge(draft.graph.captions[action.id], action.attributes)
+    return
+
+    // throw new Error("UPDATE_CAPTION not yet implemented")
   case 'MOVE_CAPTION':
     merge(draft.graph.captions[action.id], translatePoint(draft.graph.captions[action.id], action.deltas))
     return

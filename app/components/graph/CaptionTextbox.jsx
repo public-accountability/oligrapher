@@ -34,7 +34,6 @@ CaptionTextbox.propTypes = {
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
   text: PropTypes.string.isRequired,
-  handleTextChange: PropTypes.func.isRequired,
   width: PropTypes.number
 }
 

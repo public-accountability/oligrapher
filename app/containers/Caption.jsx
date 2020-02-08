@@ -1,31 +1,60 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
+import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import { classNames } from '../util/helpers'
+import { classNames, getElementById } from '../util/helpers'
 import isEqual from 'lodash/isEqual'
 import noop from 'lodash/noop'
 
 import DraggableComponent from '../components/graph/DraggableComponent'
 import CaptionTextbox from '../components/graph/CaptionTextbox'
 
+const InvisibleTextbox = React.forwardRef((props, ref) => {
+  return <input ref={ref} value={props.value} onChange={props.onChange} type="text" />
+})
+
+InvisibleTextbox.propTypes = {
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired
+}
+
 export function Caption(props) {
+  const inputRef = useRef(null)
   const handleTextChange = event => props.updateCaption({ text: event.target.value })
 
   const className = classNames('caption', props.isFocused ? 'focused' : null)
+
+  useEffect( () => {
+    if (props.isFocused) {
+      inputRef.current.focus()
+    }
+  },[ props.isFocused ])
 
   return <DraggableComponent actualZoom={props.actualZoom}
                              onStop={props.moveCaption}
                              onDrag={noop}
                              onClick={props.openEditMenu}
                              handle=".caption">
+
            <g className={className} id={`caption-${props.id}`} >
+
+             {/*
+                 This is something of a hack because SVG elements cannot be
+                 easily made editiable like html divs or inputs.
+                 It uses a lesser-known react feature called portals to render an invisible <input>
+                 into an empty divin <FloatingMenu>.
+
+               */}
+
+             { props.isFocused && ReactDOM.createPortal(<InvisibleTextbox value={props.text}
+                                                                           onChange={handleTextChange}
+                                                                           ref={inputRef} />,
+                                                         getElementById('caption-text-input') )}
+
              <CaptionTextbox x={props.x}
                              y={props.y}
-                             text={props.text}
-                             handleTextChange={handleTextChange}
-                             actualZoom={props.actualZoom}
-             />
+                             text={props.text} />
            </g>
          </DraggableComponent>
 }

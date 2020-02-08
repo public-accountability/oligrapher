@@ -6,8 +6,10 @@ import EditNodeMenu from './EditNodeMenu'
 import EditEdgeMenu from './EditEdgeMenu'
 import EditCaptionMenu from './EditCaptionMenu'
 
+
 export function FloatingMenus({visible}) {
   return <>
+           <div style={{width: 0, overflow: "hidden"}} id="caption-text-input"></div>
            { visible.editNodeMenu && <EditNodeMenu /> }
            { visible.editEdgeMenu && <EditEdgeMenu /> }
            { visible.editCaptionMenu && <EditCaptionMenu /> }

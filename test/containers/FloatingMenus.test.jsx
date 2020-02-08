@@ -10,7 +10,7 @@ describe('<FloatingMenus>', function() {
 
   it("renders nothing", function() {
     let state = { display: { editor: { tool: null }}}
-    expect(floatMenus(state).html()).to.eql('')
+    expect(floatMenus(state).html()).to.eql('<div style="width:0;overflow:hidden" id="caption-text-input"></div>')
   })
 
   it("shows edit node menu", function() {
