@@ -13,7 +13,8 @@ const nodeDefaults = {
   status: "normal",
   type: "circle",
   image: null,
-  url: null
+  url: null,
+  color: '#ccc'
 }
 
 export const nodeShape = {
@@ -25,7 +26,8 @@ export const nodeShape = {
   status: PropTypes.string.isRequired,
   type: PropTypes.string,
   image: PropTypes.string,
-  url: PropTypes.string
+  url: PropTypes.string,
+  color: PropTypes.string
 }
 
 export const propTypes = {

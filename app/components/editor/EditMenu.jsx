@@ -14,13 +14,13 @@ const titles = {
 
 export default function EditMenu(props) {
   // see github.com/mzabriskie/react-draggable/issues/410 for reason behind enableUserSelectHack
-  return <Draggable enableUserSelectHack={false} >
-             <div className="oligrapher-edit-menu">
-               <div className={ classNames("edit-menu-wrapper", `edit-${props.tool}-menu`) }>
-                 <EditMenuHeader title={titles[props.tool]} />
-                 {props.children}
-               </div>
+  return <Draggable enableUserSelectHack={false} handle=".edit-menu-header">
+           <div className="oligrapher-edit-menu">
+             <div className={ classNames("edit-menu-wrapper", `edit-${props.tool}-menu`) }>
+               <EditMenuHeader title={titles[props.tool]} />
+               {props.children}
              </div>
+           </div>
          </Draggable>
 }
 

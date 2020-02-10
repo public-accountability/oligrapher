@@ -1,6 +1,7 @@
 import defaultState from './defaultState'
 import Graph from '../graph/graph'
 import Edge from '../graph/edge'
+import Node from '../graph/node'
 // import Curve from '../graph/curve'
 
 import merge from 'lodash/merge'
@@ -37,9 +38,7 @@ export function flatten(obj) {
 /*
   Transforms oligrapher's serialized state (plain json) into correct format
   and/or converts legacy data.
-
 */
-
 export default function stateInitalizer(serializedState) {
   const state = merge({}, defaultState, serializedState)
 
@@ -48,7 +47,7 @@ export default function stateInitalizer(serializedState) {
   })
 
   keys(state.graph.nodes).forEach(nodeId => {
-    state.graph.nodes[nodeId] = flatten(state.graph.nodes[nodeId])
+    state.graph.nodes[nodeId] = Node.new(flatten(state.graph.nodes[nodeId]))
   })
 
   keys(state.graph.captions).forEach(captionId => {

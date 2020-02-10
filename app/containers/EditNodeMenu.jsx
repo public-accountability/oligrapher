@@ -4,17 +4,25 @@ import { connect } from 'react-redux'
 import Node from '../graph/node'
 import omit from 'lodash/omit'
 import curry from 'lodash/curry'
+import isString from 'lodash/isString'
+import isNumber from 'lodash/isNumber'
+import isNil from 'lodash/isNil'
 
 import SizePicker from '../components/SizePicker'
+import EditNodeColorPage from '../components/editor/EditNodeColorPage'
 import CustomizeButton from '../components/editor/CustomizeButton'
 import EditMenu from '../components/editor/EditMenu'
 import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
 
 // whatever-func-useState()-returns, string ---> function(event)
 function updateNodeFunc(setNode, attributeName) {
-  return function(event) {
-    const value = event.target.value
-    setNode(oldState => ({...oldState, [attributeName]: value}))
+  return function(eventOrValue) {
+    if (isString(eventOrValue) || isNumber(eventOrValue) || isNil(eventOrValue.target)) {
+      setNode(oldState => ({...oldState, [attributeName]: eventOrValue}))
+    } else {
+      let value = eventOrValue.target.value
+      setNode(oldState => ({...oldState, [attributeName]: value}))
+    }
   }
 }
 
@@ -73,7 +81,6 @@ MainPage.propTypes = {
   setPage: PropTypes.func.isRequired
 }
 
-function colorPage() { return "COLOR PAGE" }
 function bioPage() { return "BIO PAGE" }
 
 /*
@@ -92,7 +99,7 @@ export function EditNodeMenuBody(props) {
   return <>
            <main>
              { page === 'main' && <MainPage node={node} nodeUpdater={nodeUpdater} setPage={setPage} /> }
-             { page === 'color' && colorPage() }
+             { page === 'color' && <EditNodeColorPage color={node.color} onChange={nodeUpdater('color')}/> }
              { page === 'size' && <SizePicker scale={node.scale} setScale={setScale} /> }
              { page === 'bio' && bioPage() }
            </main>
