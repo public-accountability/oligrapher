@@ -6,42 +6,47 @@ import noop from 'lodash/noop'
 import { classNames } from '../util/helpers'
 
 import EditorMenu from './EditorMenu'
+import Settings from './Settings'
 import NodeTool from '../components/tools/Node'
+
 
 /*
   Container for the editing interfaces
 */
 export function Editor(props) {
-  if (props.disabled) { return <></> }
+  if (props.disabled) { return null }
 
-  return <div className={props.className} onClick={props.textTool ? props.onClick : noop}>
+  const textTool = props.openTool === 'text'
+  const nodeTool = props.openTool === 'node'
+  const settings = props.openTool === 'settings'
+
+  return <div className={props.className} onClick={textTool ? props.onClick : noop}>
            <EditorMenu />
-           { props.nodeTool && <NodeTool /> }
+           { nodeTool && <NodeTool /> }
+           { settings && <Settings /> }
          </div>
 }
 
 Editor.propTypes = {
   disabled: PropTypes.bool.isRequired,
-  nodeTool: PropTypes.bool.isRequired,
-  textTool: PropTypes.bool.isRequired,
+  openTool: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(null)]).isRequired,
   className: PropTypes.string.isRequired,
   onClick: PropTypes.func
 }
 
 const mapStateToProps = function(state) {
   const disabled =  !state.display.modes.editor
-  const textTool = state.display.editor.tool === 'text'
-  const nodeTool = state.display.editor.tool === 'node'
+  const openTool = state.display.editor.tool
   const classes = ['oligrapher-graph-editor']
 
-  if (textTool) {
+  if (openTool === 'text') {
     classes.push('text-tool')
   }
 
-  return { textTool,
-           nodeTool,
-           disabled,
-           className: classNames(...classes)
+  return {
+    openTool,
+    disabled,
+    className: classNames(...classes)
   }
 }
 

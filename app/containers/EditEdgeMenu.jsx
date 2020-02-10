@@ -9,7 +9,7 @@ import Edge from '../graph/edge'
 import Node from '../graph/node'
 
 // Components
-import EditMenuHeader from '../components/editor/EditMenuHeader'
+import EditMenu from '../components/editor/EditMenu'
 import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
 import LineStyle from '../components/editor/LineStyle'
 
@@ -54,24 +54,19 @@ export function EditEdgeMenu(props)  {
   const handleSubmit = () => props.updateEdge(props.id, attributes)
   const handleDelete = () => console.log(`deleting edge ${props.id}`)
 
-  return <div className="oligrapher-edit-edge-menu">
-           <div className="edit-edge-menu-wrapper">
-             <EditMenuHeader title="Customize Edge" />
+  return <EditMenu tool="edge">
+           <main>
+             { labelForm(attributes.label, updateLabel) }
+             <hr />
+             <LineStyle nodes={props.nodes} updateArrow={updateArrow} />
+             <hr />
+             { urlForm(attributes.url, updateUrl) }
+           </main>
 
-             <main>
-               { labelForm(attributes.label, updateLabel) }
-               <hr />
-               <LineStyle nodes={props.nodes} updateArrow={updateArrow} />
-               <hr />
-               { urlForm(attributes.url, updateUrl) }
-             </main>
-
-             <footer>
-               <EditMenuSubmitButtons handleSubmit={handleSubmit} handleDelete={handleDelete} page="main"/>
-             </footer>
-           </div>
-         </div>
-
+           <footer>
+             <EditMenuSubmitButtons handleSubmit={handleSubmit} handleDelete={handleDelete} page="main"/>
+           </footer>
+         </EditMenu>
 }
 
 EditEdgeMenu.propTypes = {

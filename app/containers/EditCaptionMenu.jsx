@@ -5,7 +5,7 @@ import Select from 'react-select'
 import toString from 'lodash/toString'
 import range from 'lodash/range'
 
-import EditMenuHeader from '../components/editor/EditMenuHeader'
+import EditMenu from '../components/editor/EditMenu'
 import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
 
 const FONT_FAMILY_OPTIONS = [
@@ -39,25 +39,20 @@ export function EditCaptionMenu(props) {
   const handleSubmit = () => console.log('updating caption attributes...')
   const handleDelete = () => props.deleteCaption()
 
+  return <EditMenu tool="caption">
+           <main>
+             <label>Font</label>
+             <FontFamilyPicker />
+             <FontWeightPicker />
+             <FontSizePicker />
+           </main>
 
-  return <div className="oligrapher-edit-caption-menu">
-           <div className="edit-caption-menu-wrapper">
-             <EditMenuHeader title="Customize Text" />
-
-             <main>
-               <label>Font</label>
-               <FontFamilyPicker />
-               <FontWeightPicker />
-               <FontSizePicker />
-             </main>
-
-             <footer>
-               <EditMenuSubmitButtons handleSubmit={handleSubmit}
-                                      handleDelete={handleDelete}
-                                      page="main"/>
-             </footer>
-           </div>
-         </div>
+           <footer>
+             <EditMenuSubmitButtons handleSubmit={handleSubmit}
+                                    handleDelete={handleDelete}
+                                    page="main"/>
+           </footer>
+         </EditMenu>
 }
 
 EditCaptionMenu.propTypes = {

@@ -198,24 +198,6 @@ $caption_backgound_focused: lightcoral;
         cursor: text;
     }
 
-    .oligrapher-edit-node-menu {
-        @extend %floating_menu;
-        top: 10%;
-        left: 50%;
-    }
-
-    .oligrapher-edit-edge-menu {
-        @extend %floating_menu;
-        top: 10%;
-        left: 50%;
-    }
-
-    .oligrapher-edit-caption-menu {
-        @extend %floating_menu;
-        top: 10%;
-        left: 50%;
-    }
-
     .oligrapher-zoomcontrol {
         z-index: 15;
         position: absolute;
@@ -289,9 +271,7 @@ $caption_backgound_focused: lightcoral;
     }
 }
 
-.text-tool {
-
-}
+.text-tool { }
 
 
 %edit_node_menu_title {
@@ -320,8 +300,15 @@ header.edit-menu-header {
     }
 }
 
+.oligrapher-edit-menu {
+    @extend %floating_menu;
+    top: 10%;
+    left: 50%;
+}
+
 /* This is the "edit and customize node" box */
-.edit-edge-menu-wrapper, .edit-node-menu-wrapper, .edit-caption-menu-wrapper {
+/* .edit-edge-menu-wrapper, .edit-node-menu-wrapper, .edit-caption-menu-wrapper { */
+.edit-menu-wrapper {
     background-color: white;
     border: 2px solid $oligrapher_blue;
     padding: 10px;
@@ -342,6 +329,9 @@ header.edit-menu-header {
         margin-top: 0.75em;
     }
 
+
+
+/* .edit-node-menu { */
     form {
         label {
             @extend %edit_node_menu_title;
@@ -468,7 +458,6 @@ header.edit-menu-header {
 
     }
 }
-
 /*
 NODES
 

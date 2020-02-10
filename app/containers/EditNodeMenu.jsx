@@ -7,7 +7,7 @@ import curry from 'lodash/curry'
 
 import SizePicker from '../components/SizePicker'
 import CustomizeButton from '../components/editor/CustomizeButton'
-import EditMenuHeader from '../components/editor/EditMenuHeader'
+import EditMenu from '../components/editor/EditMenu'
 import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
 
 // whatever-func-useState()-returns, string ---> function(event)
@@ -121,14 +121,9 @@ EditNodeMenuBody.propTypes = {
   <EditNodeMenuBody /> is re-created when a different node is selected.
 */
 export function EditNodeMenu(props) {
-  return <div className="oligrapher-edit-node-menu">
-           <div className="edit-node-menu-wrapper">
-             <EditMenuHeader title="Edit & Customize Node" />
-
-             <EditNodeMenuBody {...props} key={props.id} />
-
-           </div>
-         </div>
+  return <EditMenu tool="node">
+           <EditNodeMenuBody {...props} key={props.id} />
+         </EditMenu>
 }
 
 EditNodeMenu.propTypes = {
