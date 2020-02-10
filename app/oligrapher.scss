@@ -115,25 +115,48 @@ $caption_backgound_focused: lightcoral;
         margin-left: auto; /* This pushes the flex item to the right */
         align-self: flex-end;
 
-        .oligrapher-header-buttons-wrapper {
-            button {
-                border-radius: 3px;
-                border: 0;
-                padding: 0.3em;
+        .oligrapher-header-buttons  {
+            >div {
+                display: inline-block;
+                margin-right: 0.5em;
+                cursor: pointer;
             }
 
             button[name="save"] {
+                border-radius: 3px;
+                border: 0;
+                padding: 0.3em;
                 margin-right: 0.2em;
                 background: $header_save_button_bg_color;
                 color: $header_save_button_font_color;
             }
 
-            button[name="discard"] {
-                margin-left: 0.2em;
-                background: $header_discard_button_bg_color;
-                color: $header_discard_button_font_color;
+            div.header-action-menu {
+                background-color: #FFF;
+                position: absolute;
+                top: 15px;
+                left: -100px;
+                z-index: 50;
 
+
+                ul {
+                    border: 2px solid $oligrapher_blue;
+                    padding: 0.5em;
+                    margin: 0;
+                }
+
+                li {
+                    font-size: 0.8em;
+                    padding-top: 0.3em;
+                    padding-bottom: 0.3em;
+                    list-style: none;
+
+                    &:hover {
+                        background-color: $oligrapher_gray;
+                    }
+                }
             }
+
         }
 
 

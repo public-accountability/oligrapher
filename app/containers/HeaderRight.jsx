@@ -2,14 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import noop from 'lodash/noop'
-
-import HeaderButtons from '../components/HeaderButtons'
+import HeaderButtons from './HeaderButtons'
 import HeaderMenu from '../components/HeaderMenu'
 
 export function HeaderRight(props) {
   if (props.editorMode) {
-    return <HeaderButtons saveAction={noop} discardAction={props.disableEditorMode} />
+    return <HeaderButtons />
   } else {
 
     const headerMenuItems = [
