@@ -67,10 +67,12 @@ export function distance(point1, point2) {
   return Math.hypot(a, b)
 }
 
+// Any number of Strings or Booleans => String
 export function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
+// Function => Function
 export function callWithTargetValue(func) {
   return function(event) {
     const value = event.target.value

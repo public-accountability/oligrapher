@@ -1,20 +1,23 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import Node from '../graph/node'
-import omit from 'lodash/omit'
-import curry from 'lodash/curry'
-import isString from 'lodash/isString'
-import isNumber from 'lodash/isNumber'
-import isNil from 'lodash/isNil'
 
+import curry from 'lodash/curry'
+import isNil from 'lodash/isNil'
+import isNumber from 'lodash/isNumber'
+import isString from 'lodash/isString'
+import noop from 'lodash/noop'
+import omit from 'lodash/omit'
+
+import Node from '../graph/node'
 import SizePicker from '../components/SizePicker'
 import EditNodeColorPage from '../components/editor/EditNodeColorPage'
+import EditNodeBioPage from '../components/editor/EditNodeBioPage'
 import CustomizeButton from '../components/editor/CustomizeButton'
 import EditMenu from '../components/editor/EditMenu'
 import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
 
-// whatever-func-useState()-returns, string ---> function(event)
+// whatever-func-useState()-returns, string ---> function(eventOrValue)
 function updateNodeFunc(setNode, attributeName) {
   return function(eventOrValue) {
     if (isString(eventOrValue) || isNumber(eventOrValue) || isNil(eventOrValue.target)) {
@@ -25,18 +28,6 @@ function updateNodeFunc(setNode, attributeName) {
     }
   }
 }
-
-function styleForm(setPage) {
-  return <div className="style-form">
-           <div>Style</div>
-           <div>
-             <CustomizeButton icon="size" onClick={() => setPage('size')} />
-             <CustomizeButton icon="color" onClick={() => setPage('color')} />
-             <CustomizeButton icon="shapes" onClick={() => console.error('Shapes not yet implemented')}  />
-           </div>
-         </div>
-}
-
 
 export function MainPage({node, nodeUpdater, setPage}) {
   return <>
@@ -66,7 +57,16 @@ export function MainPage({node, nodeUpdater, setPage}) {
              </div>
            </form>
            <hr/>
-           {styleForm(setPage)}
+
+           <div className="style-form">
+             <div>Style</div>
+             <div>
+               <CustomizeButton icon="size" onClick={() => setPage('size')} />
+               <CustomizeButton icon="color" onClick={() => setPage('color')} />
+               <CustomizeButton icon="shapes" onClick={() => console.error('Shapes not yet implemented')}  />
+             </div>
+           </div>
+
            <hr/>
            <a onClick={() => setPage('bio')}
               className="add-node-bio-link">Add Node Bio +</a>
@@ -101,7 +101,7 @@ export function EditNodeMenuBody(props) {
              { page === 'main' && <MainPage node={node} nodeUpdater={nodeUpdater} setPage={setPage} /> }
              { page === 'color' && <EditNodeColorPage color={node.color} onChange={nodeUpdater('color')}/> }
              { page === 'size' && <SizePicker scale={node.scale} setScale={setScale} /> }
-             { page === 'bio' && bioPage() }
+             { page === 'bio' && <EditNodeBioPage text="Placeholder node bio text" onChange={noop} /> }
            </main>
 
            <footer>
