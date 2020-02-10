@@ -20,10 +20,15 @@ export default {
     },
     // These are rendered in the Header Menu
     links: [],
-    // attributes.settings are optional checkboxes that
     // will be displayed in editor mode. It is used by LittleSis.org
     // to create additional buttons that set various map privacy settings.
-    settings:{}
+    settings:{
+      private: false,
+      clonable: true,
+      viewModeDefault: "view",  // view or expore
+      storyModeOnly: false,
+      viewModeOnly: false
+    }
   },
 
   // This section of the state is not sync'd with the server;
@@ -66,11 +71,12 @@ export default {
   //   }
 
   // Global settings
+  // These settings are NOT changable via the settings interface
+  // those are located at attributes.settings
   settings: {
     dataSource: 'littlesis',
     debug: false,
     domId: 'oligrapher',
-    rootElement: null,
     embedded: false,
     editable: true,
     saveable: true,

@@ -6,7 +6,6 @@ import noop from 'lodash/noop'
 import { classNames } from '../util/helpers'
 
 import EditorMenu from './EditorMenu'
-import Settings from './Settings'
 import NodeTool from '../components/tools/Node'
 
 
@@ -18,12 +17,10 @@ export function Editor(props) {
 
   const textTool = props.openTool === 'text'
   const nodeTool = props.openTool === 'node'
-  const settings = props.openTool === 'settings'
 
   return <div className={props.className} onClick={textTool ? props.onClick : noop}>
            <EditorMenu />
            { nodeTool && <NodeTool /> }
-           { settings && <Settings /> }
          </div>
 }
 

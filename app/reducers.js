@@ -142,9 +142,14 @@ export default produce( (draft, action) => {
     }
     return
   case 'CLOSE_EDIT_MENU':
+    if (draft.display.editor.tool === 'settings') {
+      draft.display.editor.tool = null
+    }
+
     draft.display.editor.editNode =  null
     draft.display.editor.editEdge = null
     draft.display.editor.editCaption = null
+
     return
   case 'UPDATE_ATTRIBUTE':
 
