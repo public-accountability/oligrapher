@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import Draggable from 'react-draggable'
 
 import { classNames } from '../../util/helpers'
 import EditMenuHeader from './EditMenuHeader'
@@ -12,12 +13,15 @@ const titles = {
 }
 
 export default function EditMenu(props) {
-  return <div className="oligrapher-edit-menu">
-           <div className={ classNames("edit-menu-wrapper", `edit-${props.tool}-menu`) }>
-             <EditMenuHeader title={titles[props.tool]} />
-             {props.children}
-           </div>
-         </div>
+  // see github.com/mzabriskie/react-draggable/issues/410 for reason behind enableUserSelectHack
+  return <Draggable enableUserSelectHack={false} >
+             <div className="oligrapher-edit-menu">
+               <div className={ classNames("edit-menu-wrapper", `edit-${props.tool}-menu`) }>
+                 <EditMenuHeader title={titles[props.tool]} />
+                 {props.children}
+               </div>
+             </div>
+         </Draggable>
 }
 
 EditMenu.propTypes = {
