@@ -62,7 +62,6 @@ export function Edge(props) {
     props.openEdgeMenu()
   }
 
-
   // Children Props //
   const draggableProps = { onStart, onDrag, onStop, handle: '.edge-handle' }
   const edgeGroupProps = { className: "edge-group", id: `edge-${props.id}` }
@@ -72,10 +71,9 @@ export function Edge(props) {
                             onMouseEnter: () => setHovering(true),
                             onMouseLeave: () => setHovering(false) }
 
-
   // Display helpers
   const showEditHighlight = props.editorOpen
-  const showHoverHighlight = isHovering && !props.editorOpen && !isDragging
+  const showHoverHighlight = isHovering && !showEditHighlight && !isDragging
   const showLabel = props.showLabel
 
   return  <DraggableCore {...draggableProps} >
@@ -97,7 +95,7 @@ Edge.propTypes = {
   scale:      PropTypes.number.isRequired,
   arrow:      stringOrBool.isRequired,
   label:      PropTypes.string,
-  dash:       PropTypes.bool.isRequired,
+  dash:       PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   url:        PropTypes.string,
   status:     PropTypes.string.isRequired,
   // geometry

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import Arrow from '../../graph/arrow'
 import { stringOrNumber } from '../../util/types'
 
-const DASH_PARAMS = "5, 2"
+//const DASH_PARAMS = "5, 2"
 
 const LINE_COLOR = {
   normal: "#999",
@@ -13,7 +13,7 @@ const LINE_COLOR = {
 }
 
 export default function EdgeLine(props) {
-  const strokeDasharray = props.dash ? DASH_PARAMS : ''
+  // const strokeDasharray = props.dash ?  : ''
   // const dy = -6 * Math.sqrt(props.scale)
 
   const attributes = {
@@ -21,7 +21,7 @@ export default function EdgeLine(props) {
     className: 'edge-path',
     d: props.curve,
     strokeWidth: props.width,
-    strokeDasharray: strokeDasharray,
+    strokeDasharray: props.dash || '',
     stroke: LINE_COLOR[props.status],
     fill: "none",
     markerStart: Arrow.marker.start(props.arrow, props.isReverse),
@@ -36,7 +36,7 @@ EdgeLine.propTypes = {
   id:        stringOrNumber.isRequired,
   curve:     PropTypes.string.isRequired,
   scale:     PropTypes.number.isRequired,
-  dash:      PropTypes.bool.isRequired,
+  dash:      PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
   status:    PropTypes.string.isRequired,
   width:     PropTypes.number.isRequired,
   arrow:     PropTypes.string,

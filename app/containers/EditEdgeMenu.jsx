@@ -12,6 +12,7 @@ import Node from '../graph/node'
 import EditMenu from '../components/editor/EditMenu'
 import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
 import LineStyle from '../components/editor/LineStyle'
+import DashStyle from '../components/editor/DashStyle'
 
 const labelForm = (label, updateLabel) => (
   <form>
@@ -46,6 +47,7 @@ export function EditEdgeMenu(props)  {
   const updateLabel = attributeUpdator('label')
   const updateUrl = attributeUpdator('url')
   const updateArrow = attributeUpdator('arrow')
+  const updateDash = attributeUpdator('dash')
 
   useEffect(() => {
     setAttributes( prevEdge => ({ ...prevEdge, ...edgeAttributes(props.edge) }))
@@ -59,6 +61,7 @@ export function EditEdgeMenu(props)  {
              { labelForm(attributes.label, updateLabel) }
              <hr />
              <LineStyle nodes={props.nodes} updateArrow={updateArrow} />
+             <DashStyle onChange={updateDash} dash={props.edge.dash}/>
              <hr />
              { urlForm(attributes.url, updateUrl) }
            </main>
