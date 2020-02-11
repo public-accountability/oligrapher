@@ -20,7 +20,58 @@
   <body>
     <div id="oligrapher"></div>
     <script>
+
+     var graph = {
+       "nodes": {
+         "EI-H6Mvz": {
+           "id": "EI-H6Mvz",
+           "name": "abc",
+           "x": -72.5,
+           "y": -10.5,
+           "scale": 1,
+           "status": "normal",
+           "type": "circle",
+           "image": null,
+           "url": null,
+           "color": "#ccc"
+         },
+         "vyBEjbAP": {
+           "id": "vyBEjbAP",
+           "name": "xyz",
+           "x": 117.66666666666667,
+           "y": -25.33333333333334,
+           "scale": 1,
+           "status": "normal",
+           "type": "circle",
+           "image": null,
+           "url": null,
+           "color": "#ccc"
+         }
+       },
+       "edges": {
+         "3S4z4aYy": {
+           "id": "3S4z4aYy",
+           "node1_id": "EI-H6Mvz",
+           "node2_id": "vyBEjbAP",
+           "status": "normal",
+           "label": null,
+           "scale": 1,
+           "arrow": null,
+           "dash": null,
+           "url": null,
+           "x1": -72.5,
+           "y1": -10.5,
+           "x2": 117.66666666666667,
+           "y2": -25.33333333333334,
+           "cx": null,
+           "cy": null,
+           "s1": 1,
+           "s2": 1
+         }
+       }
+     }
      var oli = new Oligrapher({
+       graph: graph,
        settings: { debug: true },
        display: { modes: { editor: true } },
        attributes: {
