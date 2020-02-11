@@ -9,23 +9,30 @@ import { stringOrNumber, stringOrBool } from '../util/types'
 import Curve from '../graph/curve'
 
 import EdgeLine from '../components/graph/EdgeLine'
+import EdgeHighlight from '../components/graph/EdgeHighlight'
 import EdgeHandle from '../components/graph/EdgeHandle'
 import EdgeLabel from '../components/graph/EdgeLabel'
+
+const HIGHLIGHT_COLOR = {
+  edit:  '#eaff00',
+  hover: '#d9d9d9'
+}
 
 const calculateEdgeWidth = scale => 1 + (scale - 1) * 5
 
 export function Edge(props) {
-  const pickProps = (...propNames) => pick(props, propNames)
+  const [isHovering, setHovering] = useState(false)
+  const [isDragging, setDragging] = useState(false)
+  const [startDrag, setStartDrag] = useState()
   const [geometry, setGeometry] = useState(Curve.calculateGeometry(props))
   const curve = Curve.from.geometry(geometry)
 
+  const pickProps = (...propNames) => pick(props, propNames)
+
   // This resets the curve based on new props when they are passed to an already rendered component
   // This happens after the DRAG_NODE action occurs.
-  useEffect(() => setGeometry(Curve.calculateGeometry(props)),
+  useEffect(() => void setGeometry(Curve.calculateGeometry(props)),
             [props.cx, props.cy, props.x1, props.x2, props.y1, props.y2, props.s1, props.s2])
-
-  const [startDrag, setStartDrag] = useState()
-  const [dragging, setDragging] = useState(false)
 
   const width = calculateEdgeWidth(props.scale)
   const startPosition = { x: props.cx, y: props.cy }
@@ -43,7 +50,7 @@ export function Edge(props) {
   }
 
   const onStop = (evt, data) => {
-    if (dragging) {
+    if (isDragging) {
       const deltas = calculateDeltas(data, startPosition, startDrag, props.actualZoom)
       props.updateEdge({cx: deltas.x, cy: deltas.y })
       setDragging(false)
@@ -55,27 +62,29 @@ export function Edge(props) {
     props.openEdgeMenu()
   }
 
-  const draggableProps = {
-    handle: '.edge-handle',
-    onStart: onStart,
-    onDrag: onDrag,
-    onStop: onStop
-  }
 
-  const edgeGroupProps = {
-    className: "edge-group",
-    id: `edge-${props.id}`
-  }
-
+  // Children Props //
+  const draggableProps = { onStart, onDrag, onStop, handle: '.edge-handle' }
+  const edgeGroupProps = { className: "edge-group", id: `edge-${props.id}` }
   const edgeLineProps = { curve, width, isReverse: geometry.is_reverse, ...pickProps('id', 'scale', 'dash', 'status', 'arrow') }
   const edgeLabelProps = { curve, width, ...pickProps('id', 'scale', 'status', 'label') }
-  const edgeHandleProps = { curve, width, onClick }
+  const edgeHandleProps = { curve, width, onClick,
+                            onMouseEnter: () => setHovering(true),
+                            onMouseLeave: () => setHovering(false) }
+
+
+  // Display helpers
+  const showEditHighlight = props.editorOpen
+  const showHoverHighlight = isHovering && !props.editorOpen && !isDragging
+  const showLabel = props.showLabel
 
   return  <DraggableCore {...draggableProps} >
             <g {...edgeGroupProps} >
+              { showEditHighlight && <EdgeHighlight color={HIGHLIGHT_COLOR.edit} curve={curve} scale={props.scale} /> }
+              { showHoverHighlight && <EdgeHighlight color={HIGHLIGHT_COLOR.hover} curve={curve} scale={props.scale} /> }
               <EdgeLine {...edgeLineProps} />
-              { props.showLabel && <EdgeLabel {...edgeLabelProps} /> }
-              <EdgeHandle {...edgeHandleProps} />
+              { showLabel && <EdgeLabel {...edgeLabelProps} /> }
+              <EdgeHandle {...edgeHandleProps}  />
             </g>
           </DraggableCore>
 }
@@ -108,7 +117,8 @@ Edge.propTypes = {
   openEdgeMenu: PropTypes.func.isRequired,
 
   // Helpers
-  showLabel: PropTypes.bool.isRequired
+  showLabel:  PropTypes.bool.isRequired,
+  editorOpen: PropTypes.bool.isRequired
 }
 
 Edge.defaultProps = {
@@ -122,7 +132,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     ...edge,
     actualZoom: state.graph.actualZoom,
-    showLabel: Boolean(edge.label)
+    showLabel: Boolean(edge.label),
+    editorOpen: id == state.display.editor.editEdge
   }
 }
 
