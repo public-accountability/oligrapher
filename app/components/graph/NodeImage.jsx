@@ -22,6 +22,7 @@ export function NodeImage(props) {
              </circle>
            </clipPath>
            <image href={props.image}
+                  className="node-image draggable-node-handle"
                   x={props.x - (imageWidth/2)}
                   y={props.y - (imageWidth/2)}
                   height={imageWidth}

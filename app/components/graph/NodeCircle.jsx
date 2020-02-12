@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 
 export function NodeCircle(props) {
-  return <circle className="node-circle"
+  return <circle className="node-circle draggable-node-handle"
                  cx={props.x}
                  cy={props.y}
                  r={props.radius}

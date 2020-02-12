@@ -53,7 +53,7 @@ export function Node(props) {
   const showCircle = !showImage
 
   return  <g id={"node-" + props.id} className="oligrapher-node">
-            <DraggableComponent {...pick(props, DRAGGABLE_PROPS)} handle=".node-circle">
+            <DraggableComponent {...pick(props, DRAGGABLE_PROPS)} handle=".draggable-node-handle">
               <g>
                 { showCircle && <NodeCircle {...pick(props, CIRCLE_PROPS)} /> }
                 { showImage && <NodeImage {...pick(props, IMAGE_PROPS)} /> }
