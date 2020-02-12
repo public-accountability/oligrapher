@@ -12,11 +12,13 @@ import NodeCircle from './../components/graph/NodeCircle'
 import NodeLabel from './../components/graph/NodeLabel'
 import NodeHandle from './../components/graph/NodeHandle'
 
-import ds from '../NodeDisplaySettings'
+//import ds from '../NodeDisplaySettings'
 
+const DEFAULT_RADIUS = 25
 const DEFAULT_COLOR = "#ccc"
-const CIRCLE_PROPS = ['x', 'y', 'scale', 'color']
-const LABEL_PROPS = ['x', 'y', 'name', 'scale', 'status', 'url']
+const CIRCLE_PROPS = ['x', 'y', 'radius', 'color']
+const IMAGE_PROPS = ['x', 'y', 'radius', 'image']
+const LABEL_PROPS = ['x', 'y', 'name', 'radius', 'status', 'url']
 const DRAGGABLE_PROPS = ['onStop', 'onDrag', 'actualZoom']
 
 function nodeHandleAction(side) {
@@ -25,11 +27,11 @@ function nodeHandleAction(side) {
 
 // left | right, {number, number, number} --> {x, y}
 // This calculate the center of the editor handle
-function nodeHandleCoords(side, {x, y, scale}) {
+function nodeHandleCoords(side, {x, y, radius}) {
   const operation = side === 'right' ? add : subtract
 
   return {
-    x: operation(x, (ds.circleRadius * scale)),
+    x: operation(x, radius),
     y: y
   }
 }
@@ -46,10 +48,14 @@ function nodeHandles(props) {
 }
 
 export function Node(props) {
+  const showImage = Boolean(props.image)
+  const showCircle = !showImage
+
   return  <g id={"node-" + props.id} className="oligrapher-node">
             <DraggableComponent {...pick(props, DRAGGABLE_PROPS)} handle=".node-circle">
               <g>
-                <NodeCircle {...pick(props, CIRCLE_PROPS)} />
+                { showCircle && <NodeCircle {...pick(props, CIRCLE_PROPS)} /> }
+                { showImage && <NodeImage {...pick(props, IMAGE_PROPS)} /> }
                 <NodeLabel {...pick(props, LABEL_PROPS)} />
                 { nodeHandles(props) }
               </g>
@@ -62,11 +68,15 @@ Node.propTypes = {
   id: PropTypes.string.isRequired,
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
-  scale: PropTypes.number.isRequired,
+  // radius is calculated in mapStateToProps
+  // scale: PropTypes.number.isRequired,
+  radius: PropTypes.number.isRequired,
   name: PropTypes.string,
   url: PropTypes.string,
+  image: PropTypes.string,
   color: PropTypes.string,
   status: PropTypes.string.isRequired,
+
   // Actions
   onStop: PropTypes.func.isRequired,
   onDrag: PropTypes.func.isRequired,
@@ -90,6 +100,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     ...node,
+    radius: DEFAULT_RADIUS * node.scale,
     id: id,
     zoom: state.graph.zoom,
     actualZoom: state.graph.actualZoom,

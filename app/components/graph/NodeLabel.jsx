@@ -9,7 +9,7 @@ const SPACING = 20
 export default function NodeLabel(props) {
   if (!props.name) { return <></> }
 
-  const y = (ds.circleRadius * props.scale) + props.y + SPACING
+  const y = props.radius + props.y + SPACING
   const x = props.x
 
   const lines = textLines(props.name).map(function(line, i) {
@@ -33,7 +33,7 @@ export default function NodeLabel(props) {
 
 NodeLabel.propTypes = {
   name:    PropTypes.string,
-  scale:   PropTypes.number.isRequired,
+  radius:   PropTypes.number.isRequired,
   status:  PropTypes.string.isRequired,
   url:     PropTypes.string,
   x:       PropTypes.number.isRequired,
