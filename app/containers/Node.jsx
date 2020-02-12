@@ -9,6 +9,7 @@ import subtract from 'lodash/subtract'
 
 import DraggableComponent from './../components/graph/DraggableComponent'
 import NodeCircle from './../components/graph/NodeCircle'
+import NodeImage from './../components/graph/NodeImage'
 import NodeLabel from './../components/graph/NodeLabel'
 import NodeHandle from './../components/graph/NodeHandle'
 
@@ -17,7 +18,7 @@ import NodeHandle from './../components/graph/NodeHandle'
 const DEFAULT_RADIUS = 25
 const DEFAULT_COLOR = "#ccc"
 const CIRCLE_PROPS = ['x', 'y', 'radius', 'color']
-const IMAGE_PROPS = ['x', 'y', 'radius', 'image']
+const IMAGE_PROPS = ['id', 'x', 'y', 'radius', 'image']
 const LABEL_PROPS = ['x', 'y', 'name', 'radius', 'status', 'url']
 const DRAGGABLE_PROPS = ['onStop', 'onDrag', 'actualZoom']
 

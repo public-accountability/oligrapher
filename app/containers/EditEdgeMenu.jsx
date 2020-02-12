@@ -72,8 +72,8 @@ export function EditEdgeMenu(props)  {
                  <div>
                    <DashStyle onChange={updateDash} dash={props.edge.dash} />
                  </div>
-               </div>
-             </div>
+                 </div>
+              </div>
 
              <hr />
              { urlForm(attributes.url, updateUrl) }

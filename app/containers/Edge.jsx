@@ -13,10 +13,8 @@ import EdgeHighlight from '../components/graph/EdgeHighlight'
 import EdgeHandle from '../components/graph/EdgeHandle'
 import EdgeLabel from '../components/graph/EdgeLabel'
 
-const HIGHLIGHT_COLOR = {
-  edit:  '#eaff00',
-  hover: '#d9d9d9'
-}
+const HIGHLIGHT_COLOR = { edit:  '#eaff00',
+                          hover: '#d9d9d9' }
 
 const calculateEdgeWidth = scale => 1 + (scale - 1) * 5
 
@@ -62,7 +60,7 @@ export function Edge(props) {
     props.openEdgeMenu()
   }
 
-  // Children Props //
+  // Children Props
   const draggableProps = { onStart, onDrag, onStop, handle: '.edge-handle' }
   const edgeGroupProps = { className: "edge-group", id: `edge-${props.id}` }
   const edgeLineProps = { curve, width, isReverse: geometry.is_reverse, ...pickProps('id', 'scale', 'dash', 'status', 'arrow') }
@@ -73,7 +71,7 @@ export function Edge(props) {
 
   // Display helpers
   const showEditHighlight = props.editorOpen
-  const showHoverHighlight = isHovering && !showEditHighlight && !isDragging
+  const showHoverHighlight = props.edgeToolEnabled && isHovering && !showEditHighlight && !isDragging
   const showLabel = props.showLabel
 
   return  <DraggableCore {...draggableProps} >
@@ -115,8 +113,9 @@ Edge.propTypes = {
   openEdgeMenu: PropTypes.func.isRequired,
 
   // Helpers
-  showLabel:  PropTypes.bool.isRequired,
-  editorOpen: PropTypes.bool.isRequired
+  showLabel: PropTypes.bool.isRequired,
+  editorOpen: PropTypes.bool.isRequired,
+  edgeToolEnabled: PropTypes.bool.isRequired
 }
 
 Edge.defaultProps = {
@@ -131,7 +130,8 @@ const mapStateToProps = (state, ownProps) => {
     ...edge,
     actualZoom: state.graph.actualZoom,
     showLabel: Boolean(edge.label),
-    editorOpen: id == state.display.editor.editEdge
+    editorOpen: id == state.display.editor.editEdge,
+    edgeToolEnabled: state.display.editor.tool === 'edge'
   }
 }
 
