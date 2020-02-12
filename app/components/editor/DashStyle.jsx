@@ -12,9 +12,9 @@ const parseDash = strDash => strDash ? strDash.split(" ").map(toNumber) : [0, 0]
 // Array => null | String
 const serializeDash = dashArray => isEqual(dashArray, [0, 0]) ? null : dashArray.join(' ')
 
-
 export default function DashStyle(props) {
-  const [dash, setDash] = useState(parseDash(props.dash))  // [length, gap]
+  // dash = [length, gap]
+  const [dash, setDash] = useState(parseDash(props.dash))
 
   const update = newDash => {
     setDash(newDash)
@@ -30,23 +30,18 @@ export default function DashStyle(props) {
   })
 
   return <div className="edit-edge-dash-style">
-           <div>
-             <input className="input-dash-length"
+           <input className="input-dash-length"
                     type="number"
                     value={dash[0]}
                     min={0}
                     onChange={updateDash('length')}
              />
-           </div>
-
-             <div>
-               <input className="gap-dash-length"
-                      type="number"
-                      value={dash[1]}
-                      min={0}
-                      onChange={updateDash('gap')}
-               />
-           </div>
+           <input className="gap-dash-length"
+                    type="number"
+                    value={dash[1]}
+                    min={0}
+                    onChange={updateDash('gap')}
+           />
          </div>
 }
 

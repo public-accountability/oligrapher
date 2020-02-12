@@ -60,8 +60,21 @@ export function EditEdgeMenu(props)  {
            <main>
              { labelForm(attributes.label, updateLabel) }
              <hr />
-             <LineStyle nodes={props.nodes} updateArrow={updateArrow} />
-             <DashStyle onChange={updateDash} dash={props.edge.dash}/>
+             <div>
+               <label>Line Style</label>
+             </div>
+
+             <div className="line-style-wrapper">
+               <div>
+                 <div>
+                   <LineStyle nodes={props.nodes} updateArrow={updateArrow} />
+                 </div>
+                 <div>
+                   <DashStyle onChange={updateDash} dash={props.edge.dash} />
+                 </div>
+               </div>
+             </div>
+
              <hr />
              { urlForm(attributes.url, updateUrl) }
            </main>
@@ -89,7 +102,7 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   updateEdge: (id, attributes) => dispatch({type: "UPDATE_EDGE", id, attributes })
 })
 

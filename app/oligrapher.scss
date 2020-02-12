@@ -347,13 +347,25 @@ header.edit-menu-header {
 
     main {
         margin-top: 0.5em;
+
+        label {
+            @extend %edit_node_menu_title;
+        }
+
+        div.line-style-wrapper {
+            width: 100%;
+
+            >div >div {
+                display: inline-block;
+                padding: 0.2em;
+            }
+        }
+
     }
 
     footer {
         margin-top: 0.75em;
     }
-
-
 
 /* .edit-node-menu { */
     form {
@@ -480,6 +492,13 @@ header.edit-menu-header {
             margin-right: 1em;
         }
 
+    }
+} /* end: .edit-menu-wrapper */
+
+.edit-edge-dash-style {
+    input {
+        display: inline-block;
+        width: 2.5em;
     }
 }
 /*
