@@ -21,6 +21,8 @@ export function NodeImage(props) {
                      cy={props.y}>
              </circle>
            </clipPath>
+
+           {/* The x/y math centers the image inside the circle clippath*/}
            <image href={props.image}
                   className="node-image draggable-node-handle"
                   x={props.x - (imageWidth/2)}
@@ -30,6 +32,7 @@ export function NodeImage(props) {
                   opacity={IMAGE_OPAICTY}
                   clipPath={`url(#${clipPathId})`} >
            </image>
+
          </>
 }
 

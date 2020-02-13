@@ -76,10 +76,10 @@ export function Edge(props) {
 
   return  <DraggableCore {...draggableProps} >
             <g {...edgeGroupProps} >
-              { showEditHighlight && <EdgeHighlight color={HIGHLIGHT_COLOR.edit} curve={curve} scale={props.scale} /> }
+              { showEditHighlight  && <EdgeHighlight color={HIGHLIGHT_COLOR.edit} curve={curve} scale={props.scale} /> }
               { showHoverHighlight && <EdgeHighlight color={HIGHLIGHT_COLOR.hover} curve={curve} scale={props.scale} /> }
-              <EdgeLine {...edgeLineProps} />
-              { showLabel && <EdgeLabel {...edgeLabelProps} /> }
+              { true               && <EdgeLine {...edgeLineProps} />   }
+              { showLabel          && <EdgeLabel {...edgeLabelProps} /> }
               <EdgeHandle {...edgeHandleProps}  />
             </g>
           </DraggableCore>
