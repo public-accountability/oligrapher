@@ -13,6 +13,7 @@ import EditMenu from '../components/editor/EditMenu'
 import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
 import LineStyle from '../components/editor/LineStyle'
 import DashStyle from '../components/editor/DashStyle'
+import ScaleStyle from '../components/editor/ScaleStyle'
 
 const labelForm = (label, updateLabel) => (
   <form>
@@ -39,7 +40,7 @@ const urlForm = (url, updateUrl) => (
 
 // Object, Func => Func(String) => Func(Any) => setAttributes() call
 const createAttributeUpdator = (attributes, setAttributes) => name => value => setAttributes(merge({}, attributes, { [name]: value }))
-const edgeAttributes = edge => pick(edge, 'label', 'size', 'color', 'url', 'arrow')
+const edgeAttributes = edge => pick(edge, 'label', 'size', 'color', 'url', 'arrow', 'scale')
 
 export function EditEdgeMenu(props)  {
   const [attributes, setAttributes] = useState(edgeAttributes(props.edge))
@@ -48,6 +49,7 @@ export function EditEdgeMenu(props)  {
   const updateUrl = attributeUpdator('url')
   const updateArrow = attributeUpdator('arrow')
   const updateDash = attributeUpdator('dash')
+  const updateScale = attributeUpdator('scale')
 
   useEffect(() => {
     setAttributes( prevEdge => ({ ...prevEdge, ...edgeAttributes(props.edge) }))
@@ -67,14 +69,23 @@ export function EditEdgeMenu(props)  {
              <div className="line-style-wrapper">
                <div>
                  <div>
+                   <label>End points</label>
                    <LineStyle nodes={props.nodes} updateArrow={updateArrow} />
                  </div>
                  <div>
+                   <label>Dash</label>
                    <DashStyle onChange={updateDash} dash={props.edge.dash} />
                  </div>
-                 </div>
-              </div>
+               </div>
 
+               <div>
+                 <div>
+                   <label>Width</label>
+                   <ScaleStyle updateScale={updateScale} scale={props.edge.scale} />
+                 </div>
+               </div>
+
+             </div>
              <hr />
              { urlForm(attributes.url, updateUrl) }
            </main>
