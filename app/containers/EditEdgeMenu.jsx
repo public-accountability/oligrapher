@@ -17,7 +17,7 @@ import LineStyle from '../components/editor/LineStyle'
 import DashStyle from '../components/editor/DashStyle'
 import ScaleStyle from '../components/editor/ScaleStyle'
 
-function MainPage({ nodes, attributes, attributeUpdator, setPage }) {
+export function MainPage({ nodes, attributes, attributeUpdator, setPage }) {
   const updateLabel = attributeUpdator('label')
   const updateUrl = attributeUpdator('url')
   const updateArrow = attributeUpdator('arrow')
@@ -30,7 +30,7 @@ function MainPage({ nodes, attributes, attributeUpdator, setPage }) {
                <label>Title</label>
                <input type="text"
                       placeholder="label"
-                      value={attributes.label}
+                      value={attributes.label || ''}
                       onChange={ evt => updateLabel(evt.target.value) } />
              </div>
            </form>
@@ -70,7 +70,7 @@ function MainPage({ nodes, attributes, attributeUpdator, setPage }) {
                <label>Clickthrough link</label>
                <input type="url"
                       placeholder="Clickthrough link"
-                      value={attributes.url}
+                      value={attributes.url || ''}
                       onChange={callWithTargetValue(updateUrl)} />
              </div>
            </form>
@@ -98,7 +98,7 @@ export function EditEdgeMenu(props)  {
   }, [props.id, props.edge.label, props.edge.size, props.edge.color, props.edge.url, props.edge.arrow] )
 
   const handleSubmit = () => props.updateEdge(props.id, attributes)
-  const handleDelete = () => console.log(`deleting edge ${props.id}`)
+  const handleDelete = () => props.removeEdge(props.id)
 
   return <EditMenu tool="edge">
            <main>
@@ -121,7 +121,8 @@ EditEdgeMenu.propTypes = {
   id: PropTypes.string.isRequired,
   edge: Edge.types.edge.isRequired,
   nodes: Node.types.arrayOfNodes.isRequired,
-  updateEdge: PropTypes.func.isRequired
+  updateEdge: PropTypes.func.isRequired,
+  removeEdge: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => {
@@ -135,7 +136,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  updateEdge: (id, attributes) => dispatch({type: "UPDATE_EDGE", id, attributes })
+  updateEdge: (id, attributes) => dispatch({type: "UPDATE_EDGE", id, attributes }),
+  removeEdge: (id) => dispatch({ type: "REMOVE_EDGE", id })
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditEdgeMenu)

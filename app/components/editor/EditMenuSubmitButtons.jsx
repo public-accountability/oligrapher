@@ -16,6 +16,6 @@ EditMenuSubmitButtons.propTypes = {
   setPage:      PropTypes.func
 }
 
-EditMenuSubmitButtons.defaultTypes = {
+EditMenuSubmitButtons.defaultProps = {
   setPage: () => {}
 }

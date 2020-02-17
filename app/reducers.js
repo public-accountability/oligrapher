@@ -34,6 +34,7 @@ const  checkOpenTool = (current, required) => {
   MOVE_NODE              | id, deltas
   DRAG_NODE              | id, deltas
   UPDATE_EDGE            | id, attributes
+  DELETE_EDGE            | id
   NEW_CAPTION            | event
   UPDATE_CAPTION         | id, attributes
   MOVE_CAPTION           | id, deltas
@@ -89,6 +90,11 @@ export default produce( (draft, action) => {
     return
   case 'UPDATE_EDGE':
     Graph.updateEdge(draft.graph, action.id, action.attributes)
+    return
+  // Reserving "DELETE" for future ability to delete data from littlesis backend
+  case 'REMOVE_EDGE':
+    Graph.removeEdge(draft.graph, action.id)
+    draft.display.editor.editEdge = null
     return
   case 'NEW_CAPTION':
     Graph.addCaption(draft.graph, Caption.fromEvent(action.event, draft.zoom))

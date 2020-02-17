@@ -195,6 +195,13 @@ describe('Graph', function() {
       expect(g.edges).to.eql({})
     })
 
+    specify("removeEdge by id", function() {
+      Graph.addEdge(g, edge)
+      expect(g.edges).to.eql({ [edge.id]: edge })
+      Graph.removeEdge(g, edge.id)
+      expect(g.edges).to.eql({})
+    })
+
     specify("updateEdge", function() {
       Graph.addEdge(g, edge)
       expect(g.edges[edge.id].url).to.eql(null)
