@@ -1,11 +1,15 @@
 import React from 'react'
-import noop from 'lodash/noop'
-import HeaderButtons from '../../app/components/HeaderButtons'
+import HeaderButtons, { ActionMenu } from '../../app/containers/HeaderButtons'
 
 describe("<HeaderButtons", function() {
-  it("renders two buttons and a wrapper div", function() {
-    let component = shallow(<HeaderButtons saveAction={noop} discardAction={noop} />)
-    expect(component.find('button')).to.have.lengthOf(2)
-    expect(component.find('div.oligrapher-header-buttons-wrapper')).to.have.lengthOf(1)
+  it("renders wrapper div", function() {
+    expect(shallow(<HeaderButtons />).find('div.oligrapher-header-buttons')).to.have.lengthOf(1)
+  })
+
+  it("open actions menu after clicking", function() {
+    let headerButtons = shallow(<HeaderButtons />)
+    expect(headerButtons.find(ActionMenu)).to.have.lengthOf(0)
+    headerButtons.find('span.toggle-action-menu').simulate('click')
+    expect(headerButtons.find(ActionMenu)).to.have.lengthOf(1)
   })
 })

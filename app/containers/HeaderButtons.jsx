@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { IoIosPersonAdd, IoMdLink, IoIosMore } from 'react-icons/io'
 
-function ActionMenu() {
+export function ActionMenu() {
   return <div style={{position: "relative"}}>
            <div className="header-action-menu">
              <ul>
@@ -39,12 +39,11 @@ export default function HeaderButtons(props) {
            </div>
 
            <div>
-             <span onClick={toggleActionMenu}><IoIosMore /></span>
+             <span className="toggle-action-menu" onClick={toggleActionMenu}><IoIosMore /></span>
            </div>
 
            <div>
              { actionMenuState === 'OPEN' && <ActionMenu /> }
            </div>
-
          </div>
 }

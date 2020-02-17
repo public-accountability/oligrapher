@@ -4,28 +4,33 @@ import Node from '../../app/graph/node'
 
 import {
   EditNodeMenu,
-  EditNodeMenuBody
+  EditNodeMenuBody,
+  MainPage
 } from '../../app/containers/EditNodeMenu'
 
-import EditMenuHeader from '../../app/components/editor/EditMenuHeader'
+import EditNodeColorPage from '../../app/components/editor/EditNodeColorPage'
+import EditNodeBioPage from '../../app/components/editor/EditNodeBioPage'
+import CustomizeButton from '../../app/components/editor/CustomizeButton'
+import EditMenu from '../../app/components/editor/EditMenu'
+import EditMenuSubmitButtons from '../../app/components/editor/EditMenuSubmitButtons'
 
 describe('<EditNodeMenu>', function() {
-  it("renders EditNodeMenuBody and wrapping divs", function() {
-    const node = Node.new({name: 'Corporation', url: 'https://example.com' })
-    const props = { node: node,
-                    id: node.id,
-                    updateNode: sinon.spy() }
+  let node, props, editNodeMenu, editNodeMenuBody
 
-    const element = shallow(<EditNodeMenu {...props} />)
+  beforeEach(function(){
+    node = Node.new({name: 'Corporation', url: 'https://example.com' })
+    props = { node: node, id: node.id, updateNode: sinon.spy() }
+    editNodeMenu = shallow(<EditNodeMenu {...props} />)
+    editNodeMenuBody = shallow(<EditNodeMenuBody {...props} />)
+  })
 
-    expect(element.find('.oligrapher-edit-node-menu')).to.have.lengthOf(1)
-    expect(element.find(EditMenuHeader)).to.have.lengthOf(1)
-    expect(element.find(EditNodeMenuBody)).to.have.lengthOf(1)
+  it("renders menu body and wrapping divs", function() {
+    expect(editNodeMenu.find(EditMenu)).to.have.lengthOf(1)
+    expect(editNodeMenu.find(EditNodeMenuBody)).to.have.lengthOf(1)
+  })
+
+  it("starts with \"main\" page", function() {
+    expect(editNodeMenuBody.find(MainPage)).to.have.lengthOf(1)
+    expect(editNodeMenuBody.find(EditNodeColorPage)).to.have.lengthOf(0)
   })
 })
-
-// it("clicking on color switches page", function() {
-//   expect(element.find('.oligrapher-edit-node-menu-form')).to.have.lengthOf(1) // main page
-//   element.find('div.style-form > div > div > span').at(1).simulate('click')
-//   expect(element.find('.oligrapher-edit-node-menu-form')).to.have.lengthOf(0)
-// })

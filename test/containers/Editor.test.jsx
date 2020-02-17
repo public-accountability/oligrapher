@@ -4,7 +4,7 @@ import EditorMenu from '../../app/containers/EditorMenu'
 
 describe('<Editor>', function() {
   it("renders nothing if the editor is disabled", function() {
-    expect(shallow(<Editor disabled={true} />).html()).eql('')
+    expect(shallow(<Editor disabled={true} />).html()).eql(null)
   })
 
   it("renders editor menu", function() {

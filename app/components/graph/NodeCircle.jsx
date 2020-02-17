@@ -1,8 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-
-
 export function NodeCircle(props) {
   return <circle className="node-circle draggable-node-handle"
                  cx={props.x}

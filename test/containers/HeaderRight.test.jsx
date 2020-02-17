@@ -1,7 +1,7 @@
 import React from 'react'
 import { HeaderRight } from '../../app/containers/HeaderRight'
 import HeaderMenu from '../../app/components/HeaderMenu'
-import HeaderButtons from '../../app/components/HeaderButtons'
+import HeaderButtons from '../../app/containers/HeaderButtons'
 
 describe('<HeaderRight>', function() {
   it("shows HeaderMenu when not in editor mode", function() {
