@@ -14,7 +14,7 @@ const LINE_COLOR = {
 
 export default function EdgeLine(props) {
   // const strokeDasharray = props.dash ?  : ''
-  // const dy = -6 * Math.sqrt(props.scale)
+   // const dy = -6 * Math.sqrt(props.scale)
 
   const attributes = {
     id: `path-${props.id}`,

@@ -74,15 +74,15 @@ export function Edge(props) {
   const showHoverHighlight = props.edgeToolEnabled && isHovering && !showEditHighlight && !isDragging
   const showLabel = props.showLabel
 
-  return  <DraggableCore {...draggableProps} >
-            <g {...edgeGroupProps} >
-              { showEditHighlight  && <EdgeHighlight color={HIGHLIGHT_COLOR.edit} curve={curve} scale={props.scale} /> }
-              { showHoverHighlight && <EdgeHighlight color={HIGHLIGHT_COLOR.hover} curve={curve} scale={props.scale} /> }
-              { true               && <EdgeLine {...edgeLineProps} />   }
-              { showLabel          && <EdgeLabel {...edgeLabelProps} /> }
-              <EdgeHandle {...edgeHandleProps}  />
-            </g>
-          </DraggableCore>
+  return <DraggableCore {...draggableProps}>
+           <g {...edgeGroupProps}>
+             { showEditHighlight  && <EdgeHighlight color={HIGHLIGHT_COLOR.edit} curve={curve} scale={props.scale} /> }
+             { showHoverHighlight && <EdgeHighlight color={HIGHLIGHT_COLOR.hover} curve={curve} scale={props.scale} /> }
+             { true               && <EdgeLine {...edgeLineProps} /> }
+             { showLabel          && <EdgeLabel {...edgeLabelProps} /> }
+             <EdgeHandle {...edgeHandleProps} />
+           </g>
+         </DraggableCore>
 }
 
 Edge.propTypes = {
