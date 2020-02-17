@@ -6,16 +6,14 @@ import isArray from 'lodash/isArray'
 
 function SearchResult({entity}) {
   return <div className="entity-search-entity">
-           <a><b>{entity.display.name}</b></a>
+           <a><b>{entity.name}</b></a>
          </div>
 }
-
 
 function SearchResults({results}) {
   return <div className="entity-search-results">
            {results.map(entity => <SearchResult entity={entity} key={entity.id} />) }
          </div>
-
 }
 
 export default function EntitySearch({ query }) {
