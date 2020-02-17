@@ -8,6 +8,8 @@ import Graph from '../graph/graph'
 import Edge from '../graph/edge'
 import Node from '../graph/node'
 
+import { callWithTargetValue } from '../util/helpers'
+
 // Components
 import EditMenu from '../components/editor/EditMenu'
 import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
@@ -15,41 +17,81 @@ import LineStyle from '../components/editor/LineStyle'
 import DashStyle from '../components/editor/DashStyle'
 import ScaleStyle from '../components/editor/ScaleStyle'
 
-const labelForm = (label, updateLabel) => (
-  <form>
-    <div>
-      <label>Title</label>
-      <input type="text"
-             placeholder="label"
-             value={label}
-             onChange={ evt => updateLabel(evt.target.value) } />
-    </div>
-  </form>)
+function MainPage({ nodes, attributes, attributeUpdator, setPage }) {
+  const updateLabel = attributeUpdator('label')
+  const updateUrl = attributeUpdator('url')
+  const updateArrow = attributeUpdator('arrow')
+  const updateDash = attributeUpdator('dash')
+  const updateScale = attributeUpdator('scale')
 
-const urlForm = (url, updateUrl) => (
-  <form>
-    <div>
-      <label>Clickthrough link</label>
-      <input type="url"
-             placeholder="Clickthrough link"
-             value={url}
-             onChange={ evt => updateUrl(evt.target.value) } />
-    </div>
-  </form>
-)
+  return <>
+           <form>
+             <div>
+               <label>Title</label>
+               <input type="text"
+                      placeholder="label"
+                      value={attributes.label}
+                      onChange={ evt => updateLabel(evt.target.value) } />
+             </div>
+           </form>
+
+           <hr />
+
+           <div>
+             <label>Line Style</label>
+           </div>
+
+           <div className="line-style-wrapper">
+             <div>
+               <div>
+                 <label>End points</label>
+                 <LineStyle nodes={nodes} updateArrow={updateArrow} />
+               </div>
+
+               <div>
+                 <label>Dash</label>
+                 <DashStyle onChange={updateDash} dash={attributes.dash} />
+               </div>
+             </div>
+
+             <div>
+               <div>
+                 <label>Width</label>
+                 <ScaleStyle updateScale={updateScale} scale={attributes.scale} />
+               </div>
+             </div>
+
+           </div>
+
+           <hr />
+
+           <form>
+             <div>
+               <label>Clickthrough link</label>
+               <input type="url"
+                      placeholder="Clickthrough link"
+                      value={attributes.url}
+                      onChange={callWithTargetValue(updateUrl)} />
+             </div>
+           </form>
+         </>
+}
+
+MainPage.propTypes = {
+  nodes: PropTypes.array.isRequired,
+  attributes: PropTypes.object.isRequired,
+  attributeUpdator: PropTypes.func.isRequired,
+  setPage: PropTypes.func.isRequired
+}
 
 // Object, Func => Func(String) => Func(Any) => setAttributes() call
 const createAttributeUpdator = (attributes, setAttributes) => name => value => setAttributes(merge({}, attributes, { [name]: value }))
 const edgeAttributes = edge => pick(edge, 'label', 'size', 'color', 'url', 'arrow', 'scale')
 
 export function EditEdgeMenu(props)  {
+  const [page, setPage] = useState('main')
   const [attributes, setAttributes] = useState(edgeAttributes(props.edge))
   const attributeUpdator = createAttributeUpdator(attributes, setAttributes)
-  const updateLabel = attributeUpdator('label')
-  const updateUrl = attributeUpdator('url')
-  const updateArrow = attributeUpdator('arrow')
-  const updateDash = attributeUpdator('dash')
-  const updateScale = attributeUpdator('scale')
 
   useEffect(() => {
     setAttributes( prevEdge => ({ ...prevEdge, ...edgeAttributes(props.edge) }))
@@ -60,38 +102,17 @@ export function EditEdgeMenu(props)  {
 
   return <EditMenu tool="edge">
            <main>
-             { labelForm(attributes.label, updateLabel) }
-             <hr />
-             <div>
-               <label>Line Style</label>
-             </div>
-
-             <div className="line-style-wrapper">
-               <div>
-                 <div>
-                   <label>End points</label>
-                   <LineStyle nodes={props.nodes} updateArrow={updateArrow} />
-                 </div>
-                 <div>
-                   <label>Dash</label>
-                   <DashStyle onChange={updateDash} dash={props.edge.dash} />
-                 </div>
-               </div>
-
-               <div>
-                 <div>
-                   <label>Width</label>
-                   <ScaleStyle updateScale={updateScale} scale={props.edge.scale} />
-                 </div>
-               </div>
-
-             </div>
-             <hr />
-             { urlForm(attributes.url, updateUrl) }
+             { page === 'main' && <MainPage attributes={attributes}
+                                            attributeUpdator={attributeUpdator}
+                                            setPage={setPage}
+                                            nodes={props.nodes} />}
            </main>
 
            <footer>
-             <EditMenuSubmitButtons handleSubmit={handleSubmit} handleDelete={handleDelete} page="main"/>
+             <EditMenuSubmitButtons handleSubmit={handleSubmit}
+                                    handleDelete={handleDelete}
+                                    page={page}
+                                    setPage={setPage} />
            </footer>
          </EditMenu>
 }
