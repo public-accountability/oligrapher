@@ -4,20 +4,20 @@
   "description": "Network graph visualizer built for LittleSis",
   "main": "app/Oligrapher.jsx",
   "scripts": {
-    "dev-server": "webpack-dev-server --color --progress --config webpack.devServer.js",
-    "serve": "http-server ./build -p 8091",
+    "build-dev": "webpack --env.development",
+    "build-prod": "webpack -p --env.production",
+    "dev-server": "webpack-dev-server --color --progress --env.dev_server --env.api_url=http://localhost:8081" ,
     "build": "yarn run build-dev && yarn run build-prod",
-    "build-prod": "webpack -p --config webpack.prod.js",
-    "build-dev": "webpack --config webpack.dev.js",
+    "serve": "http-server ./build -p 8091",
     "test": "mocha",
     "test:watch": "mocha --watch",
     "test:debug": "mocha --inspect-brk",
-    "profile": "webpack --profile --display-modules --config webpack.prod.js",
+    "profile": "webpack --profile --display-modules --env.production",
     "lint": "yarn run lint:js && yarn run lint:scss",
     "lint:js": "eslint app",
     "lint:scss": "stylelint app",
     "repl": "babel-node",
-    "upgrade": "yarn upgrade-interactive --latest"
+    "upgrade": "yarn upgrade-interactive --latest && yarn upgrade"
   },
   "repository": {
     "type": "git",

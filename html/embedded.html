@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/><meta charset="UTF-8">
+    <title>Oligrapher Demo</title>
+    <script src="http://localhost:8090/webpack-dev-server.js"></script>
+    <script src="http://localhost:8090/build/vendors.js"></script>
+    <script src="http://localhost:8090/build/oligrapher.js"></script>
+    <script src="LsDataSource.js"></script>
+    <script src="oligrapher-demo-data.js"></script>
+  </head>
+
+  <body>
+    <div id="oligrapher"></div>
+    <script>
+     // var windowHeight = window.innerHeight;
+     // set wrapper div to be same height as window
+     
+     var elem = document.getElementById('oligrapher');
+     elem.style.height = window.innerHeight.toString() + 'px';
+
+      var oli = new Oligrapher({ 
+        root: elem,
+        isEditor: false,
+        isLocked: true,
+	isEmbedded: true,
+	url: "https://example.com",
+	embedded: {
+	  headerPct: 8, //  percentage  of windowHeight
+          annotationPct:  30, //  percentage  of windowHeight
+          logoUrl: "https://dfl6orqdcqt4f.cloudfront.net/assets/lilsis-logo-trans-200-74169fd94db9637c31388ad2060b48720f94450b40c45c23a3889cf480f02c52.png"
+	},
+        data: oligrapherDemoData,
+        user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },
+        date: "August 30, 2015",
+        startAnnotation: 0,
+      });
+
+     // var annotations = document.getElementById('oligrapherEmbeddedGraphAnnotations');
+     // find height of annotations or set to zero if there are no annotations
+     // var annotationsHeight = annotations ? annotations.offsetHeight : 0;
+     // get height of header
+     //var headerHeight = document.getElementById('oligrapherHeader').offsetHeight;
+     /* var graphHeight = windowHeight - annotationsHeight - headerHeight + 25;*/
+     // Subtract the annoatations and header height from the window height
+     //var graphHeight = windowHeight - annotationsHeight - headerHeight;
+     //document.querySelector('#oligrapherContainer svg').setAttribute('height', graphHeight);
+     
+    </script>
+  </body>
+</html>
