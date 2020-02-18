@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { findNodes } from '../../util/search'
+import { makeCancelable } from '../../util/helpers'
 import isArray from 'lodash/isArray'
-
 
 function SearchResult({entity}) {
   return <div className="entity-search-entity">
@@ -23,15 +23,22 @@ export default function EntitySearch({ query }) {
   useEffect(() => {
     setLoading(true)
 
-    findNodes(query)
+    const httpRequest =  makeCancelable(findNodes(query))
+
+    httpRequest
+      .promise
       .then(json => {
         setLoading(false)
         setResults(json)
       })
       .catch(err => {
-        setResults(false)
-        console.error("Error finding nodes", err)
+        if (!err.isCanceled) {
+          setResults(false)
+          console.error("Error finding nodes", err)
+        }
       })
+
+    return () => httpRequest.cancel()
 
   }, [query] )
 
