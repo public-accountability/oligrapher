@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>Oligrapher Demo</title>
+    <script src="webpack-dev-server.js"></script>
+    <script src="assets/oligrapher-dev.js"></script>
+    <script src="puerto-rico-sample-data.js"></script>
+    <style>
+      body {
+          margin: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="oligrapher"></div>
+    <script>
+     var elem = document.getElementById('oligrapher');
+     elem.style.height = window.innerHeight - 100 + "px";
+
+     var oli = new Oligrapher({
+       graph: puertoRico,
+       settings: {
+         debug: true
+       },
+       attributes: {
+         title: "Puerto Rico's financial control board",
+         date: "January 12, 2018",
+         subtitle: "A longer description of this map. Use this space to give more context.",
+         user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },
+         settings: { private: false },
+         links: [
+           { text: "Edit", url: "https://littlesis.org/oligrapher/edit" },
+           { text: "Clone", url: "https://littlesis.org/oligrapher/clone" },
+           { text: "Disclaimer", url: "https://littlesis.org/oligrapher/disclaimer" }
+         ]
+       }
+     });
+    </script>
+  </body>
+</html>

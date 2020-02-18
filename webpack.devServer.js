@@ -1,11 +1,11 @@
-const path = require('path');
-const merge = require('webpack-merge');
-const common = require('./webpack.common.js');
-const webpack = require('webpack');
+// const path = require('path')
+const merge = require('webpack-merge')
+const common = require('./webpack.common.js')
+const webpack = require('webpack')
 
-const localAPIUrl = 'http://localhost:8081';
+const localAPIUrl = 'http://localhost:8081'
 
-var devServerConfig = {
+const devServerConfig = {
   mode: 'development',
   devServer: {
     contentBase: './build',
@@ -17,14 +17,14 @@ var devServerConfig = {
   plugins: [
     new webpack.HotModuleReplacementPlugin()
   ]
-};
+}
 
-const config = merge(common, devServerConfig);
+const config = merge(common, devServerConfig)
 
 config.plugins.unshift(
   new webpack.DefinePlugin({
     'API_URL': JSON.stringify(localAPIUrl)
   })
-);
+)
 
-module.exports = config;
+module.exports = config
