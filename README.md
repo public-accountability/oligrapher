@@ -2,7 +2,7 @@
 
 Oligrapher is a JavaScript app for visualizing network graphs. It allows a user to design a nice-looking network graph using a combination of imported or manually entered data, and to create a collection of annotations for a graph.
 
-Oligrapher was originally developed by [LittleSis](https://littlesis.org) before it was separated into a standalone library. LittleSis has a large collection of [maps created with Oligrapher](https://littlesis.org/oligrapher). 
+Oligrapher was originally developed by [LittleSis](https://littlesis.org) before it was separated into a standalone library. LittleSis has a large collection of [maps created with Oligrapher](https://littlesis.org/oligrapher).
 
 Oligrapher 2 is built with [React](http://reactjs.com) and [Redux](http://rackt.org/redux) and is bundled into a single JavaScript file that is easy to run on any web page.
 
@@ -36,13 +36,13 @@ To run Oligrapher app in a web page, include [oligrapher.js](build/oligrapher.js
 <script src="oligrapherjs"></script>
 <script>
 var elem = document.getElementById('oligrapher');
-var oli = new Oligrapher({ 
+var oli = new Oligrapher({
   root: elem,
   isEditor: true
 });
 </script>
 ```
-Examine [build/index.html](build/index.html) in the repository for a complete example.
+Examine [html/dev.html](html/dev.html) in the repository for a complete example.
 
 Development
 -----------
@@ -56,16 +56,21 @@ yarn
 yarn run dev-server
 ```
 
-Then point your browser to [localhost:8090/webpack-dev-server/dev.html](http://localhost:8090/webpack-dev-server/dev.html) to view a demo graph with annotations in edit mode. In development mode the React application is served by webpack with hot loading.
+Then point your browser to [localhost:8090/dev.html](http://localhost:8090/dev.html) to view a demo graph. In development mode the React application is served by webpack with hot loading.
+
+Hot-loading Dev server : `yarn run dev-server`
 
 Development build: `yarn run build-dev`
 
 Production build: `yarn run build-prod`
 
+Run tests: `yarn test`
+
+
 Data Schema
 -----------
 
-Initial data can be provided to the app with the `data` configuration option. If no data is provided at initialization the app will begin empty. Data consists of a `graph` and, optionally, an array of `annotations` as well as `title`, `user`, and `date`. 
+Initial data can be provided to the app with the `data` configuration option. If no data is provided at initialization the app will begin empty. Data consists of a `graph` and, optionally, an array of `annotations` as well as `title`, `user`, and `date`.
 
 `graph` data should conform to the following general schema:
 
@@ -127,19 +132,19 @@ The `annotations` array should conforms to the following schema:
 
 ```javascript
 [
-  { 
-    header: "The Revolving Door", 
-    text: "Goldman Sachs has many former executives with top positions in the federal government.", 
-    nodeIds: [...], 
-    edgeIds: [...], 
-    captionIds: [...] 
+  {
+    header: "The Revolving Door",
+    text: "Goldman Sachs has many former executives with top positions in the federal government.",
+    nodeIds: [...],
+    edgeIds: [...],
+    captionIds: [...]
   },
-  { 
-    header: "Treasury Department", 
-    text: "Former Treasury Secretary Robert Rubin was co-chair of Goldman before joining the Clinton Administration in 1993." , 
-    nodeIds: [...], 
-    edgeIds: [...], 
-    captionIds: [] 
+  {
+    header: "Treasury Department",
+    text: "Former Treasury Secretary Robert Rubin was co-chair of Goldman before joining the Clinton Administration in 1993." ,
+    nodeIds: [...],
+    edgeIds: [...],
+    captionIds: []
   },
   ...
 ]
@@ -161,7 +166,7 @@ Returns an Oligrapher instance within a specified ```root``` DOM element and acc
 ```javascript
 var elem = document.getElementById('oligrapher');
 var data = getDataFromSomeWhere();
-var config = { 
+var config = {
   root: elem,   // DOM element to mount Oligrapher within
   data: data,   // initial graph data to load and display (null by default)
   isEditor: true,   // if true, clicking nodes or edges selects them; if false, clicking highlights (false by defaut)
@@ -213,7 +218,7 @@ Zooms in by 20%. This can be triggered with the keyboard shortcut `ctrl+equals`.
 Zooms out by 20%. This can be triggered with the keyboard shortcut `ctrl+minus`.
 
 ### `resetZoom()`
-Resets the zoom to the default level (1.00). 
+Resets the zoom to the default level (1.00).
 
 ### `addNode(node)`
 Adds given node to graph. Node must conform to data schema described above. Returns `id` of new node.
@@ -272,7 +277,7 @@ If you want to create your own data source object, it must implement the followi
 
 ### `findNodes(text, callback)`
 
-This function accepts a search string and passes a resulting array of nodes (conforming to the Data Schema above) to the given callback function. Each node in the array must have an `id` that can be provided to `getNodeWithEdges()` below. 
+This function accepts a search string and passes a resulting array of nodes (conforming to the Data Schema above) to the given callback function. Each node in the array must have an `id` that can be provided to `getNodeWithEdges()` below.
 
 ### `getNodeWithEdges(nodeId, nodeIds, callback)`
 
@@ -284,7 +289,7 @@ This function returns an array of new `nodes` connected to an existing node in t
 
 ### `getConnectedNodesOptions`
 
-This attribute of the data source object should provide a hash of keys and possible values to be passed as the `options` object to `getConnectedNodes`. The Oligrapher editor UI will display a drop-down menu for each key. 
+This attribute of the data source object should provide a hash of keys and possible values to be passed as the `options` object to `getConnectedNodes`. The Oligrapher editor UI will display a drop-down menu for each key.
 
 Editing Guide
 -------------
@@ -295,17 +300,17 @@ The pencil button swaps between graph editing mode and annotation editing mode. 
 
 ### Graph Editing Mode
 
-Type a name in the "add node" box and press enter to add the node to the graph. If Oligrapher is connected to an external data source, nodes from the data source matching the name you type will appear below; click on them to add them to the graph.      
+Type a name in the "add node" box and press enter to add the node to the graph. If Oligrapher is connected to an external data source, nodes from the data source matching the name you type will appear below; click on them to add them to the graph.
 
-ALT+C opens a form for adding a new caption in the top right of the graph.  
-CLICK a node, edge, or caption to select or deselect it.  
+ALT+C opens a form for adding a new caption in the top right of the graph.
+CLICK a node, edge, or caption to select or deselect it.
 SHIFT+CLICK to select mutiple nodes, edges, or captions.
 
 Select a single node, edge, or caption to view an editing form in the top-right corner of the map. Changes you make in the form will upate the item immediately.
 
-The CIRCLE button arranges nodes in a circle.  
-The PRUNE button removes unconnected nodes.  
-The CLEAR button deletes all content from the graph.  
+The CIRCLE button arranges nodes in a circle.
+The PRUNE button removes unconnected nodes.
+The CLEAR button deletes all content from the graph.
 The HELP button displays this user guide.
 
 ### Annotation Editing Mode
@@ -316,12 +321,12 @@ Click the NEW ANNOTATION button create a new annotation and display a form for e
 
 ### Shortcut Keys
 
-LEFT & RIGHT ARROWS navigate to the previous and next annotations.  
-ALT+H toggles this user guide.  
-ALT+H swaps the editing mode between graph editing and annotations.  
-ALT+D deletes selected nodes and edges.  
-ALT+E adds an edge. Selected nodes will be auto-populated in the form.  
-ALT+C adds a caption.  
+LEFT & RIGHT ARROWS navigate to the previous and next annotations.
+ALT+H toggles this user guide.
+ALT+H swaps the editing mode between graph editing and annotations.
+ALT+D deletes selected nodes and edges.
+ALT+E adds an edge. Selected nodes will be auto-populated in the form.
+ALT+C adds a caption.
 
 If ALT keys interfere with your browser or operating system shortcuts, all of the above shortcuts will work with CTRL instead of ALT.
 
@@ -342,10 +347,10 @@ There are additional embedded-specific configurations that can be included in an
 
 Returns an Oligrapher instance within a specified ```root``` DOM element and accepts other configuration options.
 ```javascript
-var config = { 
+var config = {
   root: document.getElementById('#oligrapher'),   // DOM element to mount Oligrapher within
   data: getDataFromSomeWhere(),   // graph data to load and display
-  isEditor: false 
+  isEditor: false
   isLocked: true,
   showSaveButton: false,
   isEmbedded: true // set this to true to enable embedded mode
@@ -357,10 +362,9 @@ var config = {
 	  annotationPct: 25, // percentage of width taken up by the annoations
 	  logoUrl: 'https://link_to_logo' // optional logo to display in right hand corner
 	  linkUrl: 'https://link_to_view_on_littlesis' // optional link & text to display at bottom
-	  border: true // show top and bottom border. default: true 
+	  border: true // show top and bottom border. default: true
 	}
 }
 
 var oli = new Oligrapher(config);
 ```
-
