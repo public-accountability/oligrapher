@@ -5,10 +5,10 @@
   "main": "app/Oligrapher.jsx",
   "scripts": {
     "build-dev": "webpack --env.development",
-    "build-prod": "webpack -p --env.production",
+    "build-prod": "webpack --env.production",
     "dev-server": "webpack-dev-server --color --progress --env.dev_server --env.api_url=http://localhost:8081",
     "build": "yarn run build-dev && yarn run build-prod",
-    "serve": "http-server ./build -p 8091",
+    "serve": "http-server ./dist -p 8091",
     "test": "mocha",
     "test:watch": "mocha --watch",
     "test:debug": "mocha --inspect-brk",

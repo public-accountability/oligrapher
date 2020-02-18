@@ -1,7 +1,7 @@
 /*
   Oligrapher's webpack build can be configured via the command line via changes these variables:
 
-  env.out_path            |  asset output directory. defaults to ./dist
+  env.output_path            |  asset output directory. defaults to ./dist
   env.filename            |  defaults to "oligrapher.js" or "oligrapher-dev.js"
   env.production          |  enables production mode
   env.development         |  enables development mode
