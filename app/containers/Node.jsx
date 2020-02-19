@@ -1,17 +1,17 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import add from 'lodash/add'
+
 import curry from 'lodash/curry'
 import noop from 'lodash/noop'
 import pick from 'lodash/pick'
-import subtract from 'lodash/subtract'
+
+import NodeHandles from './NodeHandles'
 
 import DraggableComponent from './../components/graph/DraggableComponent'
 import NodeCircle from './../components/graph/NodeCircle'
 import NodeImage from './../components/graph/NodeImage'
 import NodeLabel from './../components/graph/NodeLabel'
-import NodeHandle from './../components/graph/NodeHandle'
 
 //import ds from '../NodeDisplaySettings'
 
@@ -21,36 +21,12 @@ const CIRCLE_PROPS = ['x', 'y', 'radius', 'color']
 const IMAGE_PROPS = ['id', 'x', 'y', 'radius', 'image']
 const LABEL_PROPS = ['x', 'y', 'name', 'radius', 'status', 'url']
 const DRAGGABLE_PROPS = ['onStop', 'onDrag', 'actualZoom']
-
-function nodeHandleAction(side) {
-  return () => console.log(`you clicked the ${side} node handle`)
-}
-
-// left | right, {number, number, number} --> {x, y}
-// This calculate the center of the editor handle
-function nodeHandleCoords(side, {x, y, radius}) {
-  const operation = side === 'right' ? add : subtract
-
-  return {
-    x: operation(x, radius),
-    y: y
-  }
-}
-
-function nodeHandles(props) {
-  if (props.editorMode && props.nodeToolOpen)  {
-    return [
-      <NodeHandle {...nodeHandleCoords('left', props)} action={nodeHandleAction('left')} key="left" />,
-      <NodeHandle {...nodeHandleCoords('right', props)} action={props.openEditNodeMenu} key="right" />
-    ]
-  }
-
-  return null
-}
+const HANDLES_PROPS = ['id', 'x', 'y', 'radius']
 
 export function Node(props) {
   const showImage = Boolean(props.image)
   const showCircle = !showImage
+  const showNodeHandles = props.editorMode && props.nodeToolOpen
 
   return  <g id={"node-" + props.id} className="oligrapher-node">
             <DraggableComponent {...pick(props, DRAGGABLE_PROPS)} handle=".draggable-node-handle">
@@ -58,7 +34,7 @@ export function Node(props) {
                 { showCircle && <NodeCircle {...pick(props, CIRCLE_PROPS)} /> }
                 { showImage && <NodeImage {...pick(props, IMAGE_PROPS)} /> }
                 <NodeLabel {...pick(props, LABEL_PROPS)} />
-                { nodeHandles(props) }
+                { showNodeHandles && <NodeHandles {...pick(props, HANDLES_PROPS) }/>}
               </g>
             </DraggableComponent>
           </g>
@@ -137,8 +113,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const id = ownProps.id.toString()
 
   return {
-    nodeMovement: curry(nodeMovementFunc)(dispatch, id),
-    openEditNodeMenu: () => dispatch({ type: 'OPEN_EDIT_NODE_MENU', id: id })
+    nodeMovement: curry(nodeMovementFunc)(dispatch, id)
   }
 }
 

@@ -51,8 +51,9 @@ export default {
       editor: false,
       story: false
     },
+    floatingMenu: null, // node, connections, edge, caption, connections settings
     editor: {
-      tool: null,
+      tool: null, // node, edge, caption, connections, settings.
       editNode: null,
       editEdge: null,
       editCaption: null
