@@ -25,6 +25,12 @@ describe('Display Reducer', function() {
       const action = { type: 'OPEN_TOOL', item: 'edge'}
       expect(reducers(state, action)) .to.eql({ display: { editor: { editNode: null, tool: 'edge' } }})
     })
+
+    it("sets floating menu for settings", function(){
+      const state = { display: { floatingMenu: null, editor: { tool: 'caption' } } }
+      const action = { type: 'OPEN_TOOL', item: 'settings'}
+      expect(reducers(state, action)) .to.eql({ display: { floatingMenu: 'settings', editor: { tool: 'settings' } }})
+    })
   })
 
   describe('OPEN_EDIT_NODE_MENU', function() {
@@ -32,7 +38,9 @@ describe('Display Reducer', function() {
       const state = {display : { editor: { editNode: 'abc', tool: 'node' } } }
       const action = { type: 'OPEN_EDIT_NODE_MENU', id: 'xyz'}
       expect(reducers(state, action))
-        .to.eql({display: { editor: { editNode: 'xyz', tool: 'node' } }})
+        .to.eql(
+          { display: { floatingMenu: 'node', editor: { editNode: 'xyz', tool: 'node' } } }
+        )
     })
   })
 })

@@ -54,6 +54,10 @@ copyProps(window, global)
 
 global.createMockStore = (defaults = {}) => createOligrapherStore(merge({}, defaultState, defaults))
 
+global.shallowMountWithStore = (store, children) => Enzyme.shallow(
+  React.createElement(Provider,{store: store}, children)
+)
+
 global.mountWithStore = (store, children) => Enzyme.mount(
   React.createElement(Provider,{store: store}, children)
 )

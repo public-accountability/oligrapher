@@ -125,31 +125,35 @@ export default produce( (draft, action) => {
     draft.display.modes[action.mode] = action.enabled
     return
   case 'OPEN_TOOL':
-    draft.display.editor.tool = action.item
-
-    if (action.item != 'node') {
+    if (draft.display.editor.tool === 'node') {
       draft.display.editor.editNode = null  // Reset the selected node
     }
+
+    draft.display.editor.tool = action.item
+
+    if (draft.display.editor.tool === 'settings') {
+      draft.display.floatingMenu = 'settings'
+    }
+
     return
   case 'OPEN_EDIT_NODE_MENU':
-    if (checkOpenTool(draft.display.editor.tool, 'node')) {
-      draft.display.editor.editNode = action.id
-    }
+    draft.display.floatingMenu = 'node'
+    draft.display.editor.editNode = action.id
+    return
+  case 'OPEN_ADD_CONNECTIONS_MENU':
+    draft.display.floatingMenu = 'connections'
+    draft.display.editor.editNode = action.id
     return
   case 'OPEN_EDIT_EDGE_MENU':
-    if (checkOpenTool(draft.display.editor.tool, 'edge')) {
-      draft.display.editor.editEdge = action.id
-    }
+    draft.display.floatingMenu = 'edge'
+    draft.display.editor.editEdge = action.id
     return
   case 'OPEN_EDIT_CAPTION_MENU':
-    if (checkOpenTool(draft.display.editor.tool, 'text')) {
-      draft.display.editor.editCaption = action.id
-    }
+    draft.display.floatingMenu = 'caption'
+    draft.display.editor.editCaption = action.id
     return
   case 'CLOSE_EDIT_MENU':
-    if (draft.display.editor.tool === 'settings') {
-      draft.display.editor.tool = null
-    }
+    draft.display.floatingMenu = null
 
     draft.display.editor.editNode =  null
     draft.display.editor.editEdge = null

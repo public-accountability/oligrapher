@@ -1,19 +1,20 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import EditNodeMenu from './EditNodeMenu'
 import EditEdgeMenu from './EditEdgeMenu'
 import EditCaptionMenu from './EditCaptionMenu'
 import Settings from './Settings'
 
-export function FloatingMenus({visible}) {
+export default function FloatingMenus() {
+  const openMenu = useSelector(state => state.display.floatingMenu)
   return <>
            <div style={{width: 0, overflow: "hidden"}} id="caption-text-input"></div>
-           { visible.editNodeMenu && <EditNodeMenu /> }
-           { visible.editEdgeMenu && <EditEdgeMenu /> }
-           { visible.editCaptionMenu && <EditCaptionMenu /> }
-           { visible.settingsMenu && <Settings /> }
+           { openMenu === 'node' && <EditNodeMenu /> }
+           { openMenu === 'edge' && <EditEdgeMenu /> }
+           { openMenu === 'caption' && <EditCaptionMenu /> }
+           { openMenu === 'settings' && <Settings /> }
          </>
 }
 
@@ -25,18 +26,3 @@ FloatingMenus.propTypes = {
     settingsMenu: PropTypes.bool.isRequired
   })
 }
-
-export const mapStateToProps = state => {
-  let editor = state.display.editor
-
-  return {
-    visible: {
-      editNodeMenu:    Boolean(editor.tool === 'node' && editor.editNode),
-      editEdgeMenu:    Boolean(editor.tool === 'edge' && editor.editEdge),
-      editCaptionMenu: Boolean(editor.tool === 'text' && editor.editCaption),
-      settingsMenu:    editor.tool === 'settings'
-    }
-  }
-}
-
-export default connect(mapStateToProps)(FloatingMenus)
