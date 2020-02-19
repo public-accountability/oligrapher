@@ -8,6 +8,8 @@ import range from 'lodash/range'
 import EditMenu from '../components/editor/EditMenu'
 import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
 
+import FloatingMenu from '../util/floatingMenu'
+
 const FONT_FAMILY_OPTIONS = [
   { value: 'Arial', label: 'Arial' },
   { value: 'Monospace', label: 'Monospace'},
@@ -61,10 +63,8 @@ EditCaptionMenu.propTypes = {
 }
 
 const mapStateToProps = state => {
-  const captionId = state.display.editor.editCaption
-
   return {
-    id: captionId
+    id: FloatingMenu.getId(state, 'caption')
   }
 }
 

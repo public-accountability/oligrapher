@@ -51,12 +51,12 @@ export default {
       editor: false,
       story: false
     },
-    floatingMenu: null, // node, connections, edge, caption, connections settings
+    floatingMenu: {
+      type: null, // node, connections, edge, caption, connections, settings
+      id: null
+    },
     editor: {
-      tool: null, // node, edge, caption, connections, settings.
-      editNode: null,
-      editEdge: null,
-      editCaption: null
+      tool: null // node, edge, caption, settings
     }
   },
 

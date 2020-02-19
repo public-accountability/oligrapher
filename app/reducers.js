@@ -8,20 +8,15 @@ import Graph from './graph/graph'
 import Edge from './graph/edge'
 import Caption from './graph/caption'
 
+import FloatingMenu from './util/floatingMenu'
+
 const ZOOM_INTERVAL = 0.2
 
-const  checkOpenTool = (current, required) => {
+const checkOpenTool = (current, required) => {
   if (isEqual(current, required)) { return true }
   console.error('Correct tool is not open.')
   return false
 }
-
-// function clearOpenEditMenus(state) {
-//   state.display.editor.editNode =  null
-//   state.display.editor.editEdge = null
-//   state.display.editor.editCaption = null
-// }
-
 
 /*
   action.type            |  fields
@@ -94,7 +89,7 @@ export default produce( (draft, action) => {
   // Reserving "DELETE" for future ability to delete data from littlesis backend
   case 'REMOVE_EDGE':
     Graph.removeEdge(draft.graph, action.id)
-    draft.display.editor.editEdge = null
+    FloatingMenu.clear(draft)
     return
   case 'NEW_CAPTION':
     Graph.addCaption(draft.graph, Caption.fromEvent(action.event, draft.zoom))
@@ -102,17 +97,18 @@ export default produce( (draft, action) => {
   case 'UPDATE_CAPTION':
     merge(draft.graph.captions[action.id], action.attributes)
     return
-    // throw new Error("UPDATE_CAPTION not yet implemented")
   case 'MOVE_CAPTION':
     merge(draft.graph.captions[action.id], translatePoint(draft.graph.captions[action.id], action.deltas))
     return
   case 'DELETE_CAPTION':
-    if (action.id) {
+    // caption can be deleted directly or through floating menu
+    let id = action.id || FloatingMenu.getId(draft, 'caption')
+
+    if (id) {
       delete draft.graph.captions[action.id]
-    } else if (draft.display.editor.editCaption) {
-      delete draft.graph.captions[draft.display.editor.editCaption]
-      draft.display.editor.editCaption = null
+      FloatingMenu.clear(draft)
     }
+
     return
   case 'ZOOM':
     if (action.direction === 'IN') {
@@ -125,43 +121,35 @@ export default produce( (draft, action) => {
     draft.display.modes[action.mode] = action.enabled
     return
   case 'OPEN_TOOL':
-    if (draft.display.editor.tool === 'node') {
-      draft.display.editor.editNode = null  // Reset the selected node
-    }
+    // if (draft.display.editor.tool === 'node') {
+    //   FloatingMenu.clear() // Reset the selected node
+    // }
 
     draft.display.editor.tool = action.item
 
     if (draft.display.editor.tool === 'settings') {
-      draft.display.floatingMenu = 'settings'
+      FloatingMenu.set(draft, 'settings')
+    } else {
+      FloatingMenu.clear(draft)
     }
 
     return
   case 'OPEN_EDIT_NODE_MENU':
-    draft.display.floatingMenu = 'node'
-    draft.display.editor.editNode = action.id
+    FloatingMenu.set(draft, 'node', action.id)
     return
   case 'OPEN_ADD_CONNECTIONS_MENU':
-    draft.display.floatingMenu = 'connections'
-    draft.display.editor.editNode = action.id
+    FloatingMenu.set(draft, 'connections', action.id)
     return
   case 'OPEN_EDIT_EDGE_MENU':
-    draft.display.floatingMenu = 'edge'
-    draft.display.editor.editEdge = action.id
+    FloatingMenu.set(draft, 'edge', action.id)
     return
   case 'OPEN_EDIT_CAPTION_MENU':
-    draft.display.floatingMenu = 'caption'
-    draft.display.editor.editCaption = action.id
+    FloatingMenu.set(draft, 'caption', action.id)
     return
   case 'CLOSE_EDIT_MENU':
-    draft.display.floatingMenu = null
-
-    draft.display.editor.editNode =  null
-    draft.display.editor.editEdge = null
-    draft.display.editor.editCaption = null
-
+    FloatingMenu.set(draft)
     return
   case 'UPDATE_ATTRIBUTE':
-
     if (!['title', 'subtitle'].includes(action.name)) {
       throw new Error(`Unknown attribute: ${action.name}`)
     }
@@ -175,7 +163,7 @@ export default produce( (draft, action) => {
       const caption = Caption.fromEvent(action.event, draft.graph.zoom)
 
       Graph.addCaption(draft.graph, caption)
-      draft.display.editor.editCaption = caption.id
+      FloatingMenu.set(draft, 'caption')
     }
 
     return

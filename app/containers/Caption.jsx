@@ -10,6 +10,8 @@ import noop from 'lodash/noop'
 import DraggableComponent from '../components/graph/DraggableComponent'
 import CaptionTextbox from '../components/graph/CaptionTextbox'
 
+import FloatingMenu from '../util/floatingMenu'
+
 const InvisibleTextbox = React.forwardRef((props, ref) => {
   return <input ref={ref} value={props.value} onChange={props.onChange} type="text" />
 })
@@ -78,7 +80,7 @@ Caption.propTypes = {
 const mapStateToProps = (state, ownProps) => {
   return {
     ...state.graph.captions[ownProps.id],
-    isFocused: isEqual(state.display.editor.tool, 'text') && isEqual(state.display.editor.editCaption, ownProps.id),
+    isFocused: isEqual(state.display.editor.tool, 'text') && isEqual(FloatingMenu.getId(state, 'caption'), ownProps.id),
     actualZoom: state.graph.actualZoom,
   }
 }

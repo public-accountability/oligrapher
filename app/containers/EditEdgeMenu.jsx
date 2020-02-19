@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import pick from 'lodash/pick'
 import merge from 'lodash/merge'
 
 import Graph from '../graph/graph'
-import Edge from '../graph/edge'
-import Node from '../graph/node'
 
 import { callWithTargetValue } from '../util/helpers'
 
@@ -88,24 +86,36 @@ MainPage.propTypes = {
 const createAttributeUpdator = (attributes, setAttributes) => name => value => setAttributes(merge({}, attributes, { [name]: value }))
 const edgeAttributes = edge => pick(edge, 'label', 'size', 'color', 'url', 'arrow', 'scale')
 
-export function EditEdgeMenu(props)  {
+export default function EditEdgeMenu() {
   const [page, setPage] = useState('main')
-  const [attributes, setAttributes] = useState(edgeAttributes(props.edge))
+
+  const edgeId = useSelector(state => state.display.floatingMenu.id)
+  const edge = useSelector(state => state.graph.edges[edgeId])
+  const nodes = useSelector(state => Graph.nodesOf(state.graph, edgeId))
+
+  const [attributes, setAttributes] = useState(edgeAttributes(edge))
   const attributeUpdator = createAttributeUpdator(attributes, setAttributes)
 
   useEffect(() => {
-    setAttributes( prevEdge => ({ ...prevEdge, ...edgeAttributes(props.edge) }))
-  }, [props.id, props.edge.label, props.edge.size, props.edge.color, props.edge.url, props.edge.arrow] )
+    setAttributes( prevEdge => ({ ...prevEdge, ...edgeAttributes(edge) }))
+  }, [edgeId, edge.label, edge.size, edge.color, edge.url, edge.arrow] )
 
-  const handleSubmit = () => props.updateEdge(props.id, attributes)
-  const handleDelete = () => props.removeEdge(props.id)
+  const dispatch = useDispatch()
+  const handleSubmit = useCallback(
+    () => dispatch({ type: "UPDATE_EDGE", id: edgeId, attributes }),
+    [dispatch, edgeId, attributes]
+  )
+  const handleDelete = useCallback(
+    () => dispatch({ type: "REMOVE_EDGE", id: edgeId }), 
+    [dispatch, edgeId]
+  )
 
   return <EditMenu tool="edge">
            <main>
              { page === 'main' && <MainPage attributes={attributes}
                                             attributeUpdator={attributeUpdator}
                                             setPage={setPage}
-                                            nodes={props.nodes} />}
+                                            nodes={nodes} />}
            </main>
 
            <footer>
@@ -116,28 +126,3 @@ export function EditEdgeMenu(props)  {
            </footer>
          </EditMenu>
 }
-
-EditEdgeMenu.propTypes = {
-  id: PropTypes.string.isRequired,
-  edge: Edge.types.edge.isRequired,
-  nodes: Node.types.arrayOfNodes.isRequired,
-  updateEdge: PropTypes.func.isRequired,
-  removeEdge: PropTypes.func.isRequired
-}
-
-const mapStateToProps = state => {
-  const edgeId = state.display.editor.editEdge.toString()
-
-  return {
-    id: edgeId,
-    edge: state.graph.edges[edgeId],
-    nodes: Graph.nodesOf(state.graph, edgeId)
-  }
-}
-
-const mapDispatchToProps = dispatch => ({
-  updateEdge: (id, attributes) => dispatch({type: "UPDATE_EDGE", id, attributes }),
-  removeEdge: (id) => dispatch({ type: "REMOVE_EDGE", id })
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(EditEdgeMenu)

@@ -7,14 +7,19 @@ import defaultState from '../../app/util/defaultState'
 import Node from '../../app/graph/node'
 import Edge from '../../app/graph/edge'
 
-import { MainPage, EditEdgeMenu } from '../../app/containers/EditEdgeMenu'
+import EditEdgeMenu, { MainPage } from '../../app/containers/EditEdgeMenu'
 import EditMenu from '../../app/components/editor/EditMenu'
 import EditMenuSubmitButtons from '../../app/components/editor/EditMenuSubmitButtons'
 
-describe('<EditEdgeMenu>', function() {
-  let node1, node2, edge, props, editEdgeMenu, remover
+import FloatingMenu from '../../app/util/floatingMenu'
 
-  beforeEach(function(){
+import { mount } from 'enzyme'
+import Graph from '../../app/graph/graph'
+
+describe('<EditEdgeMenu>', function() {
+  let node1, node2, edge, props, store, editEdgeMenu, remover
+
+  beforeEach(() => {
     node1 = Node.new({ name: 'Person', url: 'https://example.com' })
     node2 = Node.new({ name: 'Corporation', url: 'https://exmaple.com' })
     edge = Edge.newEdgeFromNodes(node1, node2)
@@ -22,34 +27,30 @@ describe('<EditEdgeMenu>', function() {
     props = { 
       edge, 
       id: edge.id, 
-      nodes: [node1, node2], 
-      updateEdge: sinon.fake(), 
-      removeEdge: remover 
+      nodes: [node1, node2]
     }
+    let state = defaultState
+    FloatingMenu.set(state, 'edge', edge.id)
+    Graph.addNodes(state.graph, [node1, node2])
+    Graph.addEdge(state.graph, edge)
+    let store = createOligrapherStore(merge({}, state))
+    editEdgeMenu = mount(<Provider store={store}><EditEdgeMenu {...props} /></Provider>)
   })
 
   it("renders edit menu component", function() {
-    editEdgeMenu = shallow(<EditEdgeMenu {...props} />)
     expect(editEdgeMenu.find(EditMenu)).to.have.lengthOf(1)    
   })
 
   it("renders main edge menu", function() {
-    editEdgeMenu = shallow(<EditEdgeMenu {...props} />)
     expect(editEdgeMenu.find(MainPage)).to.have.lengthOf(1)
   })
 
   it("renders submit buttons", function() {
-    editEdgeMenu = shallow(<EditEdgeMenu {...props} />)
     expect(editEdgeMenu.find(EditMenuSubmitButtons)).to.have.lengthOf(1)
   })
 
-  it("renders a working delete button", function() {
-    let store = createOligrapherStore(merge({}, defaultState))
-    editEdgeMenu = mount(<Provider store={store}><EditEdgeMenu {...props} /></Provider>)
+  it("renders a delete button", function() {
     let button = editEdgeMenu.find("button[name='delete']")
     expect(button).to.have.lengthOf(1)
-    button.simulate("click")
-    expect(remover.calledOnce).to.be.true
-    expect(remover.firstCall.calledWithExactly(edge.id)).to.be.true
   })
 })

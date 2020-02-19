@@ -9,7 +9,7 @@ import AddConnectionsMenu from './AddConnectionsMenu'
 import Settings from './Settings'
 
 export default function FloatingMenus() {
-  const openMenu = useSelector(state => state.display.floatingMenu)
+  const openMenu = useSelector(state => state.display.floatingMenu.type)
 
   return <>
            <div style={{width: 0, overflow: "hidden"}} id="caption-text-input"></div>
@@ -19,13 +19,4 @@ export default function FloatingMenus() {
            { openMenu === 'caption' && <EditCaptionMenu /> }
            { openMenu === 'settings' && <Settings /> }
          </>
-}
-
-FloatingMenus.propTypes = {
-  visible: PropTypes.shape({
-    editNodeMenu: PropTypes.bool.isRequired,
-    editEdgeMenu: PropTypes.bool.isRequired,
-    editCaptionMenu: PropTypes.bool.isRequired,
-    settingsMenu: PropTypes.bool.isRequired
-  })
 }

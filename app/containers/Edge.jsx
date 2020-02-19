@@ -13,6 +13,8 @@ import EdgeHighlight from '../components/graph/EdgeHighlight'
 import EdgeHandle from '../components/graph/EdgeHandle'
 import EdgeLabel from '../components/graph/EdgeLabel'
 
+import FloatingMenu from '../util/floatingMenu'
+
 const HIGHLIGHT_COLOR = { edit:  '#eaff00',
                           hover: '#d9d9d9' }
 
@@ -130,7 +132,7 @@ const mapStateToProps = (state, ownProps) => {
     ...edge,
     actualZoom: state.graph.actualZoom,
     showLabel: Boolean(edge.label),
-    editorOpen: id == state.display.editor.editEdge,
+    editorOpen: id == FloatingMenu.getId(state, 'edge'),
     edgeToolEnabled: state.display.editor.tool === 'edge'
   }
 }
