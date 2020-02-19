@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { findNodes } from '../../util/search'
@@ -9,7 +9,10 @@ import EntitySearchResults from './EntitySearchResults'
 
 export default function EntitySearch({ query }) {
   const dispatch = useDispatch()
-  const addNode = attributes => dispatch({type: 'ADD_NODE', attributes })
+  const addNode = useCallback(
+    attributes => dispatch({type: 'ADD_NODE', attributes }),
+    [dispatch]
+  )
   const [loading, setLoading] = useState(true)
   const [results, setResults] = useState()
 
