@@ -10,7 +10,7 @@ import EntitySearchResults from './EntitySearchResults'
 export default function EntitySearch({ query }) {
   const dispatch = useDispatch()
   const addNode = useCallback(
-    attributes => dispatch({type: 'ADD_NODE', attributes }),
+    attributes => dispatch({ type: 'ADD_NODE', attributes }),
     [dispatch]
   )
   const [loading, setLoading] = useState(true)

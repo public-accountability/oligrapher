@@ -23,5 +23,6 @@ export default function NodeHandle(props) {
 NodeHandle.propTypes = {
   x:      PropTypes.number.isRequired,
   y:      PropTypes.number.isRequired,
-  action: PropTypes.func.isRequired
+  action: PropTypes.func.isRequired,
+  side:   PropTypes.oneOf(['left', 'right']).isRequired
 }
