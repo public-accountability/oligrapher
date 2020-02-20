@@ -9,6 +9,8 @@ import Node from '../../app/graph/node'
 import Edge from '../../app/graph/edge'
 import { xy } from '../../app/util/helpers'
 
+import { houseOfRepresentatives, lobbyingRelationship } from '../testData'
+
 describe('Graph', function() {
   describe("Helpers", function() {
     specify('getId', function() {
@@ -233,6 +235,44 @@ describe('Graph', function() {
     it("calculate for default graph", function() {
       let graph = Graph.new()
       expect(calculateCenter(graph)).to.eql({x: 0, y:0 })
+    })
+  })
+
+  describe('addConnection', function() {
+    let graph, node
+
+    beforeEach(function() {
+      graph = Graph.new()
+      node = Node.new()
+      Graph.addNode(graph, node)
+    })
+
+    it("creates a new node", function() {
+      expect(values(graph.nodes)).to.have.lengthOf(1)
+
+      Graph.addConnection(graph, { node,
+                                   entity: houseOfRepresentatives,
+                                   relationship: lobbyingRelationship })
+
+      expect(values(graph.nodes)).to.have.lengthOf(2)
+    })
+
+    it("creates a new edge", function() {
+      expect(values(graph.edges)).to.have.lengthOf(0)
+
+      Graph.addConnection(graph, { node,
+                                   entity: houseOfRepresentatives,
+                                   relationship: lobbyingRelationship })
+
+      expect(values(graph.edges)).to.have.lengthOf(1)
+    })
+
+    it("sets the edge id to be the same as the relationship id", function() {
+      Graph.addConnection(graph, { node,
+                                   entity: houseOfRepresentatives,
+                                   relationship: lobbyingRelationship })
+
+      expect(graph.edges[lobbyingRelationship.id]).to.be.ok
     })
   })
 })

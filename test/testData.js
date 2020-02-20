@@ -73,3 +73,73 @@ export const simpleGraph = {
   },
   "captions": {}
 }
+
+export const houseOfRepresentatives = {
+  "type": "entities",
+  "id": 12884,
+  "attributes": {
+    "id": 12884,
+    "name": "US House of Representatives",
+    "blurb": null,
+    "summary": null,
+    "website": null,
+    "parent_id": 84060,
+    "primary_ext": "Org",
+    "updated_at": "2019-07-01T15:33:13Z",
+    "start_date": null,
+    "end_date": null,
+    "relationship_id": 30434,
+    "relationship_category_id": 7,
+    "aliases": [
+      "HOUSE OF REPRESENTATIVES",
+      "US House of Representatives"
+    ],
+    "types": [
+      "Organization",
+      "Government Body"
+    ],
+    "extensions": {
+      "Org": {
+        "name": "US House of Representatives",
+        "name_nick": null,
+        "employees": null,
+        "revenue": null,
+        "fedspending_id": null,
+        "lda_registrant_id": null
+      },
+      "GovernmentBody": {
+        "is_federal": null,
+        "state_id": null,
+        "city": null,
+        "county": null
+      }
+    }
+  },
+  "links": {
+    "self": "http://localhost:8080/entities/12884-US_House_of_Representatives"
+  }
+}
+
+export const lobbyingRelationship = {
+  "type": "relationships",
+  "id": 30434,
+  "attributes": {
+    "id": 30434,
+    "entity1_id": 2,
+    "entity2_id": 12884,
+    "category_id": 7,
+    "description1": "Direct Lobbying",
+    "description2": "Direct Lobbying",
+    "amount": null,
+    "goods": null,
+    "filings": 22,
+    "updated_at": "2008-11-10T22:46:48Z",
+    "start_date": "1999-00-00",
+    "end_date": "2008-00-00",
+    "is_current": null,
+    "description": "ExxonMobil  lobbies/lobbied  US House of Representatives"
+  },
+  "links": {
+    "self": "http://localhost:8080/relationships/30434"
+  }
+}
