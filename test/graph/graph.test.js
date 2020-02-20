@@ -2,7 +2,6 @@ import curry from 'lodash/curry'
 import values from 'lodash/values'
 import Graph, {
   getId,
-  nodeSide,
   determineNodeNumber,
   calculateCenter
 } from '../../app/graph/graph'
@@ -177,12 +176,6 @@ describe('Graph', function() {
 
     specify("addEdges", function() {
       expect(g.edges).to.eql({})
-      Graph.addEdge(g, edge)
-      expect(g.edges).to.eql({ [edge.id]: edge })
-    })
-
-    specify("addEdges", function() {
-      expect(g.edges).to.eql({})
       let edges = [Edge.new(), Edge.new()]
       Graph.addEdges(g, edges)
       expect(values(g.edges)).to.have.lengthOf(2)
@@ -226,7 +219,6 @@ describe('Graph', function() {
       Graph.addEdges(graph, [edge1, edge2])
     })
 
-
     specify('moveNode', function() {
       let node = Node.new({x: 10, y: 20 })
       let graph = Graph.new()
@@ -235,17 +227,6 @@ describe('Graph', function() {
       Graph.moveNode(graph, node.id, {x: -2,  y: -5 })
       expect(xy(graph.nodes[node.id])).to.eql({x: 8, y: 15 })
     })
-
-    specify('updateEdgeOffset')
-
-    specify('dragNodeEdge')
-    xdescribe('dragNode', function() {})
-    specify('dragEdge')
-  })
-
-  describe("ViewBox", function() {
-    specify("calculateViewBox")
-    specify("updateViewBox")
   })
 
   describe('calculateCenter()', function() {
@@ -253,14 +234,5 @@ describe('Graph', function() {
       let graph = Graph.new()
       expect(calculateCenter(graph)).to.eql({x: 0, y:0 })
     })
-  })
-
-  describe("Zoom", function() {
-    specify("setZoom")
-  })
-
-  describe("Dragging", function() {
-    specify("dragNode")
-    specify("dragEdge")
   })
 })
