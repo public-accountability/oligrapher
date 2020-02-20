@@ -9,7 +9,8 @@ const titles = {
   node: "Edit & Customize Node",
   edge: "Customize Edge",
   caption: "Customize Text",
-  settings: "Settings"
+  settings: "Settings",
+  connections: "Add Connections"
 }
 
 export default function EditMenu(props) {
@@ -25,6 +26,6 @@ export default function EditMenu(props) {
 }
 
 EditMenu.propTypes = {
-  tool: PropTypes.oneOf(['node', 'edge', 'caption', 'settings']).isRequired,
+  tool: PropTypes.oneOf(Object.keys(titles)).isRequired,
   children: PropTypes.node.isRequired
 }

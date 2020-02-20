@@ -1,6 +1,7 @@
 import produce from 'immer'
 import merge from 'lodash/merge'
 import isEqual from 'lodash/isEqual'
+import toNumber from 'lodash/toNumber'
 
 import { translatePoint } from './util/helpers'
 
@@ -138,7 +139,11 @@ export default produce( (draft, action) => {
     FloatingMenu.set(draft, 'node', action.id)
     return
   case 'OPEN_ADD_CONNECTIONS_MENU':
-    FloatingMenu.set(draft, 'connections', action.id)
+    if (Number.isFinite(toNumber(action.id))) {
+      FloatingMenu.set(draft, 'connections', action.id)
+    } else {
+      console.error(`Cannot find connections unless the entity is a LittlesSis Entity. id == ${action.id}`)
+    }
     return
   case 'OPEN_EDIT_EDGE_MENU':
     FloatingMenu.set(draft, 'edge', action.id)
