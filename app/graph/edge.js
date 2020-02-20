@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types'
 import merge from 'lodash/merge'
+import isNumber from 'lodash/isNumber'
+
 import { generate } from 'shortid'
 
 import { stringOrBool, stringOrNumber } from '../util/types'
@@ -31,11 +33,15 @@ export function newEdge(attributes = {}) {
     edge.id = generate()
   }
 
+  if (isNumber(edge.id)) {
+    edge.id = edge.id.toString()
+  }
+
   return edge
 }
 
-export function newEdgeFromNodes(n1, n2) {
-  let edge = newEdge()
+export function newEdgeFromNodes(n1, n2, attributes = {}) {
+  let edge = newEdge(attributes)
   edge.node1_id = n1.id
   edge.node2_id = n2.id
   edge.x1 = n1.x

@@ -8,7 +8,7 @@ import values from 'lodash/values'
 
 import { translatePoint, rotatePoint, distance } from '../util/helpers'
 import { newNode } from './node'
-import { edgeCoordinates } from './edge'
+import { edgeCoordinates, newEdgeFromNodes } from './edge'
 import { calculateGeometry } from './curve'
 
 import nodeDisplaySetting from '../NodeDisplaySettings'
@@ -253,7 +253,6 @@ export function dragNode(graph, nodeId, deltas) {
   return graph
 }
 
-
 export function dragEdge(graph, edge) {
   throw new Error("Not Yet Implemented")
 }
@@ -292,7 +291,6 @@ export function setZoom(graph, zoomLevel) {
   throw new Error("Not Yet Implemented")
 }
 
-
 // Creates a new graph object
 // Available as Graph.new() and typically used to create a new empty graph
 export function newGraph(attributes = {}) {
@@ -300,6 +298,34 @@ export function newGraph(attributes = {}) {
   updateViewBox(g)
   return g
 }
+
+// Add Connections
+
+// Node =  already existing node or id
+// Entity = littlesis api entity
+// Relationship = littlesis api relationship
+function addConnection(graph, {node, entity, relationship}) {
+  if (getEdge(graph, relationship.id)) {
+    console.log(`An edge with id ${relationship.id} already exists`)
+    return
+  }
+
+  if (!getNode(graph, entity.id)) {
+    const nodeAttributes = { id: entity.id, name: entity.attributes.name, url: entity.links.self }
+    addNode(graph, nodeAttributes)
+  }
+
+  const edge = newEdgeFromNodes(getNode(graph, node),
+                                getNode(graph, entity.id),
+                                { id: relationship.id })
+
+  addEdge(graph, edge)
+
+  return graph
+}
+
+
+
 
 export default {
   "new":                        newGraph,
@@ -324,5 +350,6 @@ export default {
   "intersectingNode":           intersectingNode,
   "intersectingNodeFromDrag":   intersectingNodeFromDrag,
   "updateViewBox":              updateViewBox,
-  "setZoom":                    setZoom
+  "setZoom":                    setZoom,
+  "addConnection":              addConnection
 }

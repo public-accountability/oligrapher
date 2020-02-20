@@ -42,6 +42,7 @@ const checkOpenTool = (current, required) => {
   OPEN_EDIT_CAPTION_MENU | id
   UPDATE_ATTRIBUTE       | name, value
   BACKGROUND_CLICK       | event
+  ADD_CONNECTION         | entity, relationship
 */
 
 export default produce( (draft, action) => {
@@ -172,7 +173,18 @@ export default produce( (draft, action) => {
     }
 
     return
+  case 'ADD_CONNECTION':
+    // action.entity -- littlesis api entity object
+    // action.relationship -- littlesis api relationship object
+    // action.node -- current node
 
+    Graph.addConnection(draft.graph, {
+      entity: action.entity,
+      relationship: action.relationship,
+      node: action.node
+    })
+
+    return
   default:
     return
   }

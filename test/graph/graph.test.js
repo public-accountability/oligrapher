@@ -2,13 +2,14 @@ import curry from 'lodash/curry'
 import values from 'lodash/values'
 import Graph, {
   getId,
-  nodeSide,
   determineNodeNumber,
   calculateCenter
 } from '../../app/graph/graph'
 import Node from '../../app/graph/node'
 import Edge from '../../app/graph/edge'
 import { xy } from '../../app/util/helpers'
+
+import { houseOfRepresentatives, lobbyingRelationship } from '../testData'
 
 describe('Graph', function() {
   describe("Helpers", function() {
@@ -177,12 +178,6 @@ describe('Graph', function() {
 
     specify("addEdges", function() {
       expect(g.edges).to.eql({})
-      Graph.addEdge(g, edge)
-      expect(g.edges).to.eql({ [edge.id]: edge })
-    })
-
-    specify("addEdges", function() {
-      expect(g.edges).to.eql({})
       let edges = [Edge.new(), Edge.new()]
       Graph.addEdges(g, edges)
       expect(values(g.edges)).to.have.lengthOf(2)
@@ -226,7 +221,6 @@ describe('Graph', function() {
       Graph.addEdges(graph, [edge1, edge2])
     })
 
-
     specify('moveNode', function() {
       let node = Node.new({x: 10, y: 20 })
       let graph = Graph.new()
@@ -235,17 +229,6 @@ describe('Graph', function() {
       Graph.moveNode(graph, node.id, {x: -2,  y: -5 })
       expect(xy(graph.nodes[node.id])).to.eql({x: 8, y: 15 })
     })
-
-    specify('updateEdgeOffset')
-
-    specify('dragNodeEdge')
-    xdescribe('dragNode', function() {})
-    specify('dragEdge')
-  })
-
-  describe("ViewBox", function() {
-    specify("calculateViewBox")
-    specify("updateViewBox")
   })
 
   describe('calculateCenter()', function() {
@@ -255,12 +238,41 @@ describe('Graph', function() {
     })
   })
 
-  describe("Zoom", function() {
-    specify("setZoom")
-  })
+  describe('addConnection', function() {
+    let graph, node
 
-  describe("Dragging", function() {
-    specify("dragNode")
-    specify("dragEdge")
+    beforeEach(function() {
+      graph = Graph.new()
+      node = Node.new()
+      Graph.addNode(graph, node)
+    })
+
+    it("creates a new node", function() {
+      expect(values(graph.nodes)).to.have.lengthOf(1)
+
+      Graph.addConnection(graph, { node,
+                                   entity: houseOfRepresentatives,
+                                   relationship: lobbyingRelationship })
+
+      expect(values(graph.nodes)).to.have.lengthOf(2)
+    })
+
+    it("creates a new edge", function() {
+      expect(values(graph.edges)).to.have.lengthOf(0)
+
+      Graph.addConnection(graph, { node,
+                                   entity: houseOfRepresentatives,
+                                   relationship: lobbyingRelationship })
+
+      expect(values(graph.edges)).to.have.lengthOf(1)
+    })
+
+    it("sets the edge id to be the same as the relationship id", function() {
+      Graph.addConnection(graph, { node,
+                                   entity: houseOfRepresentatives,
+                                   relationship: lobbyingRelationship })
+
+      expect(graph.edges[lobbyingRelationship.id]).to.be.ok
+    })
   })
 })
