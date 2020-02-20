@@ -174,6 +174,7 @@ export function addNodes(graph, nodes) {
 }
 
 export function removeNode(graph, node) {
+  edgesOf(graph, node).forEach(edge => removeEdge(graph, edge))
   delete graph.nodes[getId(node)]
   return graph
 }

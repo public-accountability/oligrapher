@@ -59,6 +59,10 @@ export default produce( (draft, action) => {
   case 'UPDATE_NODE':
     Graph.updateNode(draft.graph, action.id, action.attributes)
     return
+  case 'REMOVE_NODE':
+    Graph.removeNode(draft.graph, action.id)
+    FloatingMenu.clear(draft)
+    return
   case 'MOVE_NODE':
     if (action.editorTool === 'node') {
       Graph.dragNode(draft.graph, action.id, action.deltas)

@@ -2,6 +2,7 @@ import reducers from '../app/reducers'
 import Graph from '../app/graph/graph'
 import Node from '../app/graph/node'
 import Edge from '../app/graph/edge'
+import FloatingMenu from '../app/util/floatingMenu'
 
 import values from 'lodash/values'
 
@@ -65,10 +66,39 @@ describe('Display Reducer', function() {
     })
   })
 
+  describe('REMOVE_NODE', function() {
+    let state, action, nextState, e1, e2, n1, n2, n3
+
+    beforeEach(function() {
+      let graph = Graph.new()
+      n1 = Node.new()
+      n2 = Node.new()
+      n3 = Node.new()
+      e1 = Edge.new({ node1_id: n1.id, node2_id: n2.id })
+      e2 = Edge.new({ node1_id: n1.id, node2_id: n3.id })
+      Graph.addNodes(graph, [n1, n2, n3])
+      Graph.addEdge(graph, e1)
+      Graph.addEdge(graph, e2)
+      state = { graph, display: { floatingMenu: { type: 'node', id: n1.id } } }
+      action = { type: 'REMOVE_NODE', id: n1.id }
+      nextState = reducers(state, action)  
+    })
+
+    it('removes node from graph', function() {
+      expect(Object.keys(nextState.graph.nodes)).to.eql([n2.id, n3.id])
+    })
+
+    it('closes floating menu', function() {
+      expect(nextState.display.floatingMenu.type).to.eql(null)
+      expect(nextState.display.floatingMenu.id).to.eql(null)
+    })
+  })
+
+
   describe('REMOVE_EDGE', function() {
     let state, action, nextState, e1, e2
 
-    beforeEach(() => {
+    beforeEach(function() {
       let graph = Graph.new()
       let n1 = Node.new()
       let n2 = Node.new()
@@ -84,11 +114,11 @@ describe('Display Reducer', function() {
       nextState = reducers(state, action)  
     })
 
-    it('removes edge from graph', () => {
+    it('removes edge from graph', function() {
       expect(values(nextState.graph.edges)).to.eql([e1])
     })
 
-    it('closes floating menu', () => {
+    it('closes floating menu', function() {
       expect(nextState.display.floatingMenu.type).to.eql(null)
       expect(nextState.display.floatingMenu.id).to.eql(null)
     })

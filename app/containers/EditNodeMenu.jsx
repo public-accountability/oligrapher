@@ -92,7 +92,7 @@ export function EditNodeMenuBody(props) {
   const [node, setNode] = useState(omit(props.node, ['x', 'y', 'id']))
   const nodeUpdater = curry(updateNodeFunc)(setNode)
   const handleSubmit = () => props.updateNode(props.id, node)
-  const handleDelete = () => console.log(`deleting node ${props.id}`)
+  const handleDelete = () => props.removeNode(props.id)
 
   const setScale = newScale => setNode(oldState => ({...oldState, scale: newScale }))
 
@@ -117,7 +117,8 @@ export function EditNodeMenuBody(props) {
 EditNodeMenuBody.propTypes = {
   id: PropTypes.string.isRequired,
   node: Node.types.node.isRequired,
-  updateNode: PropTypes.func.isRequired
+  updateNode: PropTypes.func.isRequired,
+  removeNode: PropTypes.func.isRequired
 }
 
 /*
@@ -136,7 +137,8 @@ export function EditNodeMenu(props) {
 EditNodeMenu.propTypes = {
   id: PropTypes.string,
   node: Node.types.node.isRequired,
-  updateNode: PropTypes.func.isRequired
+  updateNode: PropTypes.func.isRequired,
+  removeNode: PropTypes.func.isRequired
 }
 
 
@@ -149,7 +151,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  updateNode: (id, attributes) => dispatch({type: "UPDATE_NODE", id, attributes })
+  updateNode: (id, attributes) => dispatch({type: "UPDATE_NODE", id, attributes }),
+  removeNode: (id) => dispatch({ type: "REMOVE_NODE", id })
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditNodeMenu)

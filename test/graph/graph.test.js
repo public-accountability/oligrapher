@@ -148,6 +148,18 @@ describe('Graph', function() {
       expect(g.nodes[n.id].scale).to.eql(2)
     })
 
+    specify("removeNode", function() {
+      let g = Graph.new()
+      let n1 = Node.new()
+      let n2 = Node.new()
+      Graph.addNodes(g, [n1, n2])
+      let e = Edge.new( { node1_id: n1.id, node2_id: n2.id })
+      Graph.addEdge(g, e)
+      Graph.removeNode(g, n2)
+      expect(Object.keys(g.nodes)).to.eql([n1.id])
+      expect(Object.values(g.edges)).to.have.lengthOf(0)
+    })
+
     specify("moveNode", function() {
       let n = Node.new({x: 1, y: 2})
       let g = Graph.new()
