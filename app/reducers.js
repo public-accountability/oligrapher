@@ -42,6 +42,7 @@ const checkOpenTool = (current, required) => {
   OPEN_EDIT_CAPTION_MENU | id
   UPDATE_ATTRIBUTE       | name, value
   BACKGROUND_CLICK       | event
+  ADD_CONNECTION         | entity, relationship
 */
 
 export default produce( (draft, action) => {
@@ -172,7 +173,9 @@ export default produce( (draft, action) => {
     }
 
     return
-
+  case 'ADD_CONNECTION':
+    console.log('ADDING connection to map', action.entity, action.relationship)
+    return
   default:
     return
   }

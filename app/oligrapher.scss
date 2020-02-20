@@ -29,6 +29,7 @@ $toolbox_width: 250px;
 
 $caption_backgound: lightgreen;
 $caption_backgound_focused: lightcoral;
+
 /*
    This is our outermost div.
 
@@ -502,21 +503,40 @@ header.edit-menu-header {
     }
 }
 
-
 /* add connections tool */
-div.add-connections-entity {
-    font-size: 10px;
+.add-connections-results {
+    max-height: 300px;
+    overflow: auto;
 
-    div.entity-name {
+    .result-loading-svg {
+        margin-left: 3px;
+        stroke: $oligrapher_blue;
+    }
+
+    div.add-connections-entity {
+        font-size: 12px;
+        border: 1px solid #fff;
+
+        div {
+            display: inline-block;
+            padding: 2px;
+        }
+
+        div.entity-name {}
+
+        div.entity-blurb {
+            pointer-events: none;
+        }
+
+
+        &:hover {
+            cursor: pointer;
+            border: 1px solid black;
+        }
 
     }
 
-    div.entity-blurb {}
-
-
 }
-
-
 /*
 NODES
 
