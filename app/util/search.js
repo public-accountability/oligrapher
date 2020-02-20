@@ -24,6 +24,7 @@ export function findConnections(entityId, options = {}) {
   return api.get(urls.findConnections(entityId), params)
 }
 
+// Number ---> Promise
 export function getRelationship(relationshipId) {
   if (isNumber(relationshipId)) {
     return api.get(urls.getRelationship(relationshipId))

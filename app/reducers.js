@@ -174,7 +174,16 @@ export default produce( (draft, action) => {
 
     return
   case 'ADD_CONNECTION':
-    console.log('ADDING connection to map', action.entity, action.relationship)
+    // action.entity -- littlesis api entity object
+    // action.relationship -- littlesis api relationship object
+    // action.node -- current node
+
+    Graph.addConnection(draft.graph, {
+      entity: action.entity,
+      relationship: action.relationship,
+      node: action.node
+    })
+
     return
   default:
     return
