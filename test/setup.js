@@ -1,14 +1,9 @@
-import React from 'react'
 import Enzyme from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import sinon from 'sinon'
 import { JSDOM } from 'jsdom'
 import { Provider } from 'react-redux'
 import merge from 'lodash/merge'
-
-import { createOligrapherStore} from '../app/util/render'
-import defaultState from '../app/util/defaultState'
-
 
 Enzyme.configure({ adapter: new Adapter() })
 
@@ -49,15 +44,3 @@ global.cancelAnimationFrame = function(id) {
 }
 
 copyProps(window, global)
-
-// helper functions
-
-global.createMockStore = (defaults = {}) => createOligrapherStore(merge({}, defaultState, defaults))
-
-global.shallowMountWithStore = (store, children) => Enzyme.shallow(
-  React.createElement(Provider,{store: store}, children)
-)
-
-global.mountWithStore = (store, children) => Enzyme.mount(
-  React.createElement(Provider,{store: store}, children)
-)

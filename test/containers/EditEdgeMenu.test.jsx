@@ -1,7 +1,8 @@
 import React from 'react'
+import sinon from 'sinon'
+import merge from 'lodash/merge'
 
-import { Provider } from 'react-redux'
-import { createOligrapherStore } from '../../app/util/render'
+import { createMockStore, mountWithStore } from '../testHelpers'
 import defaultState from '../../app/util/defaultState'
 
 import Node from '../../app/graph/node'
@@ -13,28 +14,22 @@ import EditMenuSubmitButtons from '../../app/components/editor/EditMenuSubmitBut
 
 import FloatingMenu from '../../app/util/floatingMenu'
 
-import { mount } from 'enzyme'
 import Graph from '../../app/graph/graph'
 
 describe('<EditEdgeMenu>', function() {
-  let node1, node2, edge, props, store, editEdgeMenu, remover
+  let node1, node2, edge, editEdgeMenu, store, state, remover
 
-  beforeEach(() => {
+  beforeEach(function() {
+    state = merge({}, defaultState)
     node1 = Node.new({ name: 'Person', url: 'https://example.com' })
     node2 = Node.new({ name: 'Corporation', url: 'https://exmaple.com' })
     edge = Edge.newEdgeFromNodes(node1, node2)
-    remover = sinon.fake()
-    props = { 
-      edge, 
-      id: edge.id, 
-      nodes: [node1, node2]
-    }
-    let state = defaultState
     FloatingMenu.set(state, 'edge', edge.id)
     Graph.addNodes(state.graph, [node1, node2])
     Graph.addEdge(state.graph, edge)
-    let store = createOligrapherStore(merge({}, state))
-    editEdgeMenu = mount(<Provider store={store}><EditEdgeMenu {...props} /></Provider>)
+    remover = sinon.fake()
+    store = createMockStore(state, { dispatch: remover })
+    editEdgeMenu = mountWithStore(store, <EditEdgeMenu />)
   })
 
   it("renders edit menu component", function() {
@@ -52,5 +47,8 @@ describe('<EditEdgeMenu>', function() {
   it("renders a delete button", function() {
     let button = editEdgeMenu.find("button[name='delete']")
     expect(button).to.have.lengthOf(1)
+    button.simulate("click")
+    expect(remover.calledOnce).to.be.true
+    expect(remover.getCall(0).calledWithExactly({ type: "REMOVE_EDGE", id: edge.id })).to.be.true
   })
 })

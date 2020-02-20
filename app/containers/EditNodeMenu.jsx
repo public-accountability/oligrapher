@@ -141,7 +141,7 @@ EditNodeMenu.propTypes = {
 
 
 const mapStateToProps = state => {
-  let id = state.display.editor.floatingMenu.id
+  let id = state.display.floatingMenu.id
   return {
     id: id,
     node: state.graph.nodes[id]

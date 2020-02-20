@@ -1,5 +1,5 @@
 import React from 'react'
-import { Provider } from 'react-redux'
+import { createMockStore, mountWithStore } from '../testHelpers'
 import NodeTool from '../../app/components/tools/Node'
 
 describe('<NodeTool>', function() {
@@ -7,9 +7,7 @@ describe('<NodeTool>', function() {
 
   beforeEach(function() {
     mockStore = createMockStore()
-    wrapper = mount(<Provider store={mockStore}>
-                      <NodeTool />
-                    </Provider>)
+    wrapper = mountWithStore(mockStore, <NodeTool />)
   })
 
   it('renders components', function() {
@@ -17,6 +15,4 @@ describe('<NodeTool>', function() {
       expect(wrapper.find(selector)).to.have.lengthOf(1)
     })
   })
-
-  it('search database for results')
 })
