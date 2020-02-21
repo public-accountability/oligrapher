@@ -1,4 +1,4 @@
-export default {
+const defaultState = {
   // Core graph components
   // See app/models for the schema of each component
   graph: {
@@ -27,6 +27,7 @@ export default {
       clone: true,
       defaultStoryMode: false,
       defaultExploreMode: true,
+      listSources: false,
       storyModeOnly: false,
       exploreModeOnly: false
     }
@@ -38,16 +39,6 @@ export default {
   display: {
     zoom: 1,
     actualZoom: 1,
-    highlight: {
-      nodes: [],
-      edges: [],
-      captions: []
-    },
-    selected: {
-      nodes: [],
-      edges: [],
-      captions: []
-    },
     modes: {
       editor: false,
       story: false
@@ -61,20 +52,9 @@ export default {
     }
   },
 
-  // {
-  //     header: null,
-  //     map: null,
-  //     annotations: null,
-  //     editor: null,
-  //     modeToggle: null,
-  //     nodeMenu: null,
-  //     popup: null,
-  //     settings: null
-  //   }
-
   // Global settings
-  // These settings are NOT changable via the settings interface
-  // those are located at attributes.settings
+  // These settings are NOT changable via the settings interface;
+  // those are located at above under attributes.settings
   settings: {
     dataSource: 'littlesis',
     debug: false,
@@ -90,7 +70,9 @@ export default {
   // Hooks available to trigger code external to Oligrapher.
   // `onSave` is used by LittleSis.org to sync the graph with the LittleSis server
   hooks: {
-    onSave: function(state)  { null },
-    onNav:  function(state, index) { null }
+    onSave: null, // function(state) { null },
+    onNav:  null // function(state, index) { null }
   }
 }
+
+export default Object.freeze(defaultState)
