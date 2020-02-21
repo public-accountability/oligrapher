@@ -19,6 +19,22 @@ const checkOpenTool = (current, required) => {
   return false
 }
 
+const updateSettings = (settings, key, value) => {
+  settings[key] = value
+
+  if (key === 'defaultStoryMode') {
+    settings['defaultExploreMode'] = !value
+  }
+
+  if (key === 'storyModeOnly' && value) {
+    settings['exploreModeOnly'] = false
+  }
+
+  if (key === 'exploreModeOnly' && value) {
+    settings['storyModeOnly'] = false
+  }
+}
+
 /*
   action.type            |  fields
 -------------------------|-------------
@@ -43,6 +59,7 @@ const checkOpenTool = (current, required) => {
   UPDATE_ATTRIBUTE       | name, value
   BACKGROUND_CLICK       | event
   ADD_CONNECTION         | entity, relationship
+  UPDATE_SETTING         | key, value
 */
 
 export default produce( (draft, action) => {
@@ -188,6 +205,10 @@ export default produce( (draft, action) => {
       node: action.node
     })
 
+    return
+
+  case 'UPDATE_SETTING':
+    updateSettings(draft.attributes.settings, action.key, action.value)
     return
   default:
     return

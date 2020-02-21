@@ -23,11 +23,12 @@ export default {
     // will be displayed in editor mode. It is used by LittleSis.org
     // to create additional buttons that set various map privacy settings.
     settings:{
-      private: false,
-      clonable: true,
-      viewModeDefault: "view",  // view or expore
+      "private": false,
+      clone: true,
+      defaultStoryMode: false,
+      defaultExploreMode: true,
       storyModeOnly: false,
-      viewModeOnly: false
+      exploreModeOnly: false
     }
   },
 
