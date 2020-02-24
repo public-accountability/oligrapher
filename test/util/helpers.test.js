@@ -19,4 +19,14 @@ describe("Helpers", function() {
     let result = { x: 0, y: 20 }
     expect(helpers.translatePoint(point, deltas)).to.eql(result)
   })
+
+  specify('createStateUpdater', function() {
+    const mockOldState = { a: '1', b: '2'}
+    let state = mockOldState
+    const mockUseStateSetter = (f) => state = f(mockOldState)
+    const updateB = helpers.createStateUpdater(mockUseStateSetter, 'b')
+    expect(state).to.eql({ a: '1', b: '2'})
+    updateB('3')
+    expect(state).to.eql({ a: '1', b: '3'})
+  })
 })

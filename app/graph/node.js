@@ -4,8 +4,6 @@ import { generate } from 'shortid'
 import { stringOrNumber } from '../util/types'
 import { frozenArray } from '../util/helpers'
 
-export const nodeStatuses = frozenArray("normal", "selected")
-
 const nodeDefaults = {
   id: null,
   name: null,

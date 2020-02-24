@@ -30,6 +30,8 @@ $toolbox_width: 250px;
 $caption_backgound: lightgreen;
 $caption_backgound_focused: lightcoral;
 
+$node_halo_color: #b6e63e;
+
 /*
    This is our outermost div.
 
@@ -577,12 +579,19 @@ g.edge-tool-open .react-draggable-dragging .node-circle {
 .oligrapher-node {
     .node-circle-group {}
 
+    .node-halo-group {
+        circle.node-halo-circle {
+            fill: $node_halo_color;
+        }
+    }
+
     .node-handle {
         &:hover {
             stroke: lightyellow;
             stroke-width: 2;
         }
     }
+
     .node-circle {
         &:hover {
             stroke: lightgreen;

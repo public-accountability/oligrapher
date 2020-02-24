@@ -8,8 +8,8 @@ export const clear = (state) => {
 }
 
 export const getId = (state, type) => {
-  return (type == state.display.floatingMenu.type) ? 
-    state.display.floatingMenu.id : 
+  return (type == state.display.floatingMenu.type) ?
+    state.display.floatingMenu.id :
     null
 }
 
@@ -20,5 +20,6 @@ export const getType = (state) => {
 export default {
   clear,
   set,
-  getId
+  getId,
+  getType
 }

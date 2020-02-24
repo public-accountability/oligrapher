@@ -1,6 +1,7 @@
 import produce from 'immer'
 import merge from 'lodash/merge'
 import isEqual from 'lodash/isEqual'
+import toString from 'lodash/toString'
 import toNumber from 'lodash/toNumber'
 
 import { translatePoint } from './util/helpers'
@@ -47,6 +48,7 @@ const updateSettings = (settings, key, value) => {
   ADD_NODE               | attributes
   ADD_NODES              | nodes
   UPDATE_NODE            | id, attributes
+  UPDATE_NODES           | attributes
   MOVE_NODE              | id, deltas
   DRAG_NODE              | id, deltas
   UPDATE_EDGE            | id, attributes
@@ -62,6 +64,7 @@ const updateSettings = (settings, key, value) => {
   OPEN_EDIT_CAPTION_MENU | id
   UPDATE_ATTRIBUTE       | name, value
   BACKGROUND_CLICK       | event
+  NODE_CLICK             | id, event
   ADD_CONNECTION         | entity, relationship
   UPDATE_SETTING         | key, value
 */
@@ -79,6 +82,12 @@ export default produce( (draft, action) => {
     return
   case 'UPDATE_NODE':
     Graph.updateNode(draft.graph, action.id, action.attributes)
+    return
+  case 'UPDATE_NODES':
+    // Updates all the nodes in display.selectedNodes
+    for (let nodeId of draft.display.selectedNodes) {
+      Graph.updateNode(draft.graph, nodeId, action.attributes)
+    }
     return
   case 'REMOVE_NODE':
     Graph.removeNode(draft.graph, action.id)
@@ -198,6 +207,16 @@ export default produce( (draft, action) => {
       FloatingMenu.set(draft, 'caption')
     }
 
+    return
+  case 'NODE_CLICK':
+    if (FloatingMenu.getType(draft) === 'style') {
+      let id = toString(action.id)
+      if (draft.display.selectedNodes.has(id)) {
+        draft.display.selectedNodes.delete(id)
+      } else {
+        draft.display.selectedNodes.add(id)
+      }
+    }
     return
   case 'ADD_CONNECTION':
     // action.entity -- littlesis api entity object

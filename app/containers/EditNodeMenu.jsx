@@ -3,11 +3,9 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 import curry from 'lodash/curry'
-import isNil from 'lodash/isNil'
-import isNumber from 'lodash/isNumber'
-import isString from 'lodash/isString'
 import noop from 'lodash/noop'
 import omit from 'lodash/omit'
+import { createStateUpdater } from '../util/helpers'
 
 import Node from '../graph/node'
 import SizePicker from '../components/SizePicker'
@@ -16,18 +14,6 @@ import EditNodeBioPage from '../components/editor/EditNodeBioPage'
 import NodeStyleForm from '../components/editor/NodeStyleForm'
 import EditMenu from '../components/editor/EditMenu'
 import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
-
-// whatever-func-useState()-returns, string ---> function(eventOrValue)
-function updateNodeFunc(setNode, attributeName) {
-  return function(eventOrValue) {
-    if (isString(eventOrValue) || isNumber(eventOrValue) || isNil(eventOrValue.target)) {
-      setNode(oldState => ({...oldState, [attributeName]: eventOrValue}))
-    } else {
-      let value = eventOrValue.target.value
-      setNode(oldState => ({...oldState, [attributeName]: value}))
-    }
-  }
-}
 
 export function MainPage({node, nodeUpdater, setPage}) {
   return <>
@@ -72,8 +58,6 @@ MainPage.propTypes = {
   setPage: PropTypes.func.isRequired
 }
 
-function bioPage() { return "BIO PAGE" }
-
 /*
   Changes to the node are stored as local state on this component until submitted
 */
@@ -81,7 +65,7 @@ export function EditNodeMenuBody(props) {
   // possible pages: main, color, size, bio
   const [page, setPage] = useState('main')
   const [node, setNode] = useState(omit(props.node, ['x', 'y', 'id']))
-  const nodeUpdater = curry(updateNodeFunc)(setNode)
+  const nodeUpdater = curry(createStateUpdater)(setNode)
   const handleSubmit = () => props.updateNode(props.id, node)
   const handleDelete = () => props.removeNode(props.id)
 

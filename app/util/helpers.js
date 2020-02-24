@@ -1,4 +1,8 @@
 import pick from 'lodash/pick'
+import isFunction from 'lodash/isFunction'
+import isString from 'lodash/isString'
+import isNumber from 'lodash/isNumber'
+import isNil from 'lodash/isNil'
 
 /**
  * works the same as document.getElementById,
@@ -80,6 +84,15 @@ export function callWithTargetValue(func) {
   }
 }
 
+// Function => Function
+export function callWithPersistedEvent(func) {
+  return function(event) {
+    if (isFunction(event.persist)) {
+      event.persist()
+    }
+    return func(event)
+  }
+}
 
 // Promise => { promise<Promise>, cancel<func>}
 // source: https://reactjs.org/blog/2015/12/16/ismounted-antipattern.html
@@ -103,4 +116,25 @@ export function makeCancelable(promise) {
 
 export function frozenArray(...items) {
   return Object.freeze(items)
+}
+
+/*
+  useState() is often used to store an object instead of a single value,
+  but  in order to modify the object, the caller must copy the entire state.
+  This helper creates a function that allows a single key/value to be easily changed,
+  without having to remember to merge the old state.
+
+     const [attributes, setAttributes] = useState({x: 1, foo: 'bar'})
+     const updateFoo = createStateUpdater(setAttributes, 'foo')
+     updateFoo('baz') // state is changed to {x: 1, foo: 'baz'}
+*/
+export function createStateUpdater(setStateFunction, attributeName) {
+  return function(eventOrValue) {
+    if (isString(eventOrValue) || isNumber(eventOrValue) || isNil(eventOrValue.target)) {
+      setStateFunction(oldState => ({...oldState, [attributeName]: eventOrValue}))
+    } else {
+      let value = eventOrValue.target.value
+      setStateFunction(oldState => ({...oldState, [attributeName]: value}))
+    }
+  }
 }
