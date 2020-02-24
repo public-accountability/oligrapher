@@ -10,7 +10,8 @@ const titles = {
   edge: "Customize Edge",
   caption: "Customize Text",
   settings: "Settings",
-  connections: "Add Connections"
+  connections: "Add Connections",
+  style: "Style Nodes"
 }
 
 export default function EditMenu(props) {
