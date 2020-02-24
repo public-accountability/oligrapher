@@ -27,7 +27,6 @@ const defaultState = {
       clone: true,
       defaultStoryMode: false,
       defaultExploreMode: true,
-      listSources: false,
       storyModeOnly: false,
       exploreModeOnly: false
     }

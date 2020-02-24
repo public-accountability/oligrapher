@@ -22,8 +22,12 @@ const checkOpenTool = (current, required) => {
 const updateSettings = (settings, key, value) => {
   settings[key] = value
 
-  if (key === 'defaultStoryMode') {
-    settings['defaultExploreMode'] = !value
+  if (key === 'defaultStoryMode' && value) {
+    settings['defaultExploreMode'] = false
+  }
+
+  if (key === 'defaultExploreMode' && value) {
+    settings['defaultStoryMode'] = false
   }
 
   if (key === 'storyModeOnly' && value) {
