@@ -6,9 +6,12 @@ import curry from 'lodash/curry'
 import noop from 'lodash/noop'
 import pick from 'lodash/pick'
 
+import { frozenArray } from '../util/helpers'
+
 import NodeHandles from './NodeHandles'
 
 import DraggableComponent from './../components/graph/DraggableComponent'
+import NodeHalo from './../components/graph/NodeHalo'
 import NodeCircle from './../components/graph/NodeCircle'
 import NodeImage from './../components/graph/NodeImage'
 import NodeLabel from './../components/graph/NodeLabel'
@@ -17,20 +20,24 @@ import NodeLabel from './../components/graph/NodeLabel'
 
 const DEFAULT_RADIUS = 25
 const DEFAULT_COLOR = "#ccc"
-const CIRCLE_PROPS = ['x', 'y', 'radius', 'color']
-const IMAGE_PROPS = ['id', 'x', 'y', 'radius', 'image']
-const LABEL_PROPS = ['x', 'y', 'name', 'radius', 'status', 'url']
-const DRAGGABLE_PROPS = ['onStop', 'onDrag', 'actualZoom']
-const HANDLES_PROPS = ['id', 'x', 'y', 'radius']
+
+const HALO_PROPS = frozenArray('x', 'y', 'radius', 'status')
+const CIRCLE_PROPS = frozenArray('x', 'y', 'radius', 'color')
+const IMAGE_PROPS = frozenArray('id', 'x', 'y', 'radius', 'image')
+const LABEL_PROPS = frozenArray('x', 'y', 'name', 'radius', 'status', 'url')
+const DRAGGABLE_PROPS = frozenArray('onStop', 'onDrag', 'actualZoom')
+const HANDLES_PROPS = frozenArray('id', 'x', 'y', 'radius')
 
 export function Node(props) {
   const showImage = Boolean(props.image)
   const showCircle = !showImage
+  const showHalo = props.status === 'selected'
   const showNodeHandles = props.editorMode && props.nodeToolOpen
 
   return  <g id={"node-" + props.id} className="oligrapher-node">
             <DraggableComponent {...pick(props, DRAGGABLE_PROPS)} handle=".draggable-node-handle">
               <g>
+                { showHalo && <NodeHalo {...pick(props, HALO_PROPS)} /> }
                 { showCircle && <NodeCircle {...pick(props, CIRCLE_PROPS)} /> }
                 { showImage && <NodeImage {...pick(props, IMAGE_PROPS)} /> }
                 <NodeLabel {...pick(props, LABEL_PROPS)} />
@@ -53,7 +60,6 @@ Node.propTypes = {
   image: PropTypes.string,
   color: PropTypes.string,
   status: PropTypes.string.isRequired,
-
   // Actions
   onStop: PropTypes.func.isRequired,
   onDrag: PropTypes.func.isRequired,

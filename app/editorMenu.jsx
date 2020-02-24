@@ -28,7 +28,7 @@ export const MENU = {
   },
   "style": {
     icon: <FaRegEdit />,
-    title: 'style'
+    title: 'Style Nodes'
   },
   "organize": {
     icon: <TiArrowMove />,

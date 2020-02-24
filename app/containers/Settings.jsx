@@ -15,7 +15,6 @@ const OPTION_DESCRIPTION = {
   "exploreModeOnly": "Explore Mode Only"
 }
 
-
 function SettingsOption({ option }) {
   const dispatch = useDispatch()
   const value = useSelector(state => state.attributes.settings[option])

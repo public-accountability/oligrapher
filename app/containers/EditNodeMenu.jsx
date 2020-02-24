@@ -13,7 +13,7 @@ import Node from '../graph/node'
 import SizePicker from '../components/SizePicker'
 import EditNodeColorPage from '../components/editor/EditNodeColorPage'
 import EditNodeBioPage from '../components/editor/EditNodeBioPage'
-import CustomizeButton from '../components/editor/CustomizeButton'
+import NodeStyleForm from '../components/editor/NodeStyleForm'
 import EditMenu from '../components/editor/EditMenu'
 import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
 
@@ -57,16 +57,7 @@ export function MainPage({node, nodeUpdater, setPage}) {
              </div>
            </form>
            <hr/>
-
-           <div className="style-form">
-             <div>Style</div>
-             <div>
-               <CustomizeButton icon="size" onClick={() => setPage('size')} />
-               <CustomizeButton icon="color" onClick={() => setPage('color')} />
-               <CustomizeButton icon="shapes" onClick={() => console.error('Shapes not yet implemented')}  />
-             </div>
-           </div>
-
+           <NodeStyleForm setPage={setPage} />
            <hr/>
            <a onClick={() => setPage('bio')}
               className="add-node-bio-link">Add Node Bio +</a>

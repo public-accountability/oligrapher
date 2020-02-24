@@ -19,7 +19,8 @@
     "plugin:mocha/recommended"
   ],
   "plugins": [
-    "mocha"
+    "mocha",
+    "react-hooks"
   ],
   "parserOptions": {
     "sourceType": "module",
@@ -35,6 +36,8 @@
   "rules": {
     "semi": ["error", "never"],
     "space-before-function-paren": ["error", "never"],
-    "react/prop-types": [ 2, { ignore: ['dispatch'] }]
+    "react/prop-types": [ 2, { ignore: ['dispatch'] }],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   }
 }

@@ -100,3 +100,7 @@ export function makeCancelable(promise) {
     }
   }
 }
+
+export function frozenArray(...items) {
+  return Object.freeze(items)
+}

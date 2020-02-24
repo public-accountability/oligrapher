@@ -154,8 +154,9 @@ export default produce( (draft, action) => {
 
     draft.display.editor.tool = action.item
 
-    if (draft.display.editor.tool === 'settings') {
-      FloatingMenu.set(draft, 'settings')
+    // Tools with floating menus that are always open
+    if (['settings', 'style'].includes(draft.display.editor.tool)) {
+      FloatingMenu.set(draft, draft.display.editor.tool)
     } else {
       FloatingMenu.clear(draft)
     }

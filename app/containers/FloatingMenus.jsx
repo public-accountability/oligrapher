@@ -1,11 +1,11 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 
 import EditNodeMenu from './EditNodeMenu'
 import EditEdgeMenu from './EditEdgeMenu'
 import EditCaptionMenu from './EditCaptionMenu'
 import AddConnectionsMenu from './AddConnectionsMenu'
+import StyleNodesMenu from './StyleNodesMenu'
 import Settings from './Settings'
 
 export default function FloatingMenus() {
@@ -17,6 +17,7 @@ export default function FloatingMenus() {
            { openMenu === 'connections' && <AddConnectionsMenu /> }
            { openMenu === 'edge' && <EditEdgeMenu /> }
            { openMenu === 'caption' && <EditCaptionMenu /> }
+           { openMenu === 'style' && <StyleNodesMenu />}
            { openMenu === 'settings' && <Settings /> }
          </>
 }
