@@ -1,6 +1,6 @@
 {
   "name": "@public-accountability/oligrapher",
-  "version": "0.5.3",
+  "version": "3.0.0-beta",
   "description": "Network graph visualizer built for LittleSis",
   "main": "app/Oligrapher.jsx",
   "scripts": {
@@ -90,32 +90,6 @@
       "test/setup.js"
     ],
     "spec": "./test/**/*.test.js?(x)"
-  },
-  "jest": {
-    "setupFiles": [
-      "<rootDir>/test/setup.js"
-    ],
-    "transform": {
-      "^.+\\.jsx?$": "babel-jest"
-    },
-    "transformIgnorePatterns": [
-      "/node_modules/(?!(@public-accountability.*?\\.js$))"
-    ],
-    "modulePaths": [
-      "<rootDir>/app/"
-    ],
-    "moduleFileExtensions": [
-      "js",
-      "jsx",
-      "json"
-    ],
-    "moduleNameMapper": {
-      "^.+\\.(css)$": "<rootDir>/app/styles/test/styleMock.js"
-    },
-    "roots": [
-      "test"
-    ],
-    "testRegex": "(.*)\\.test\\.jsx?$"
   },
   "browserslist": [
     "last 2 chrome versions",
