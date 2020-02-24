@@ -1,6 +1,7 @@
 import produce from 'immer'
 import merge from 'lodash/merge'
 import isEqual from 'lodash/isEqual'
+import toString from 'lodash/toString'
 import toNumber from 'lodash/toNumber'
 
 import { translatePoint } from './util/helpers'
@@ -201,7 +202,14 @@ export default produce( (draft, action) => {
 
     return
   case 'NODE_CLICK':
-    console.log(`you clicked on node #${action.id}`)
+    if (FloatingMenu.getType(draft) === 'style') {
+      let id = toString(action.id)
+      if (draft.display.selectedNodes.has(id)) {
+        draft.display.selectedNodes.delete(id)
+      } else {
+        draft.display.selectedNodes.add(id)
+      }
+    }
     return
   case 'ADD_CONNECTION':
     // action.entity -- littlesis api entity object

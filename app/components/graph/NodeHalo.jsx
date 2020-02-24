@@ -1,25 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { nodeStatuses } from '../../graph/node'
 
 const HALO_WIDTH = 4
 
-function getHaloColor(status) {
-  return '#b6e63e'
-  // switch(status) {
-  // case 'selected':
-  //   return '#b6e63e'
-  // default:
-  //   return '#fff'
-  // }
-}
-
 export function NodeHalo(props) {
-  return <g className="node-halo">
-           <circle cx={props.x}
+  return <g className="node-halo-group">
+           <circle className="node-halo-circle"
+                   cx={props.x}
                    cy={props.y}
-                   r={props.radius + HALO_WIDTH}
-                   fill={getHaloColor(props.status)} />
+                   r={props.radius + HALO_WIDTH} />
            <circle cx={props.x}
                    cy={props.y}
                    r={props.radius}
@@ -30,8 +19,7 @@ export function NodeHalo(props) {
 NodeHalo.propTypes = {
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
-  radius: PropTypes.number.isRequired,
-  status: PropTypes.oneOf(nodeStatuses).isRequired
+  radius: PropTypes.number.isRequired
 }
 
 export default React.memo(NodeHalo)
