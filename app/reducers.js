@@ -48,6 +48,7 @@ const updateSettings = (settings, key, value) => {
   ADD_NODE               | attributes
   ADD_NODES              | nodes
   UPDATE_NODE            | id, attributes
+  UPDATE_NODES           | attributes
   MOVE_NODE              | id, deltas
   DRAG_NODE              | id, deltas
   UPDATE_EDGE            | id, attributes
@@ -81,6 +82,12 @@ export default produce( (draft, action) => {
     return
   case 'UPDATE_NODE':
     Graph.updateNode(draft.graph, action.id, action.attributes)
+    return
+  case 'UPDATE_NODES':
+    // Updates all the nodes in display.selectedNodes
+    for (let nodeId of draft.display.selectedNodes) {
+      Graph.updateNode(draft.graph, nodeId, action.attributes)
+    }
     return
   case 'REMOVE_NODE':
     Graph.removeNode(draft.graph, action.id)
