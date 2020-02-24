@@ -62,6 +62,7 @@ const updateSettings = (settings, key, value) => {
   OPEN_EDIT_CAPTION_MENU | id
   UPDATE_ATTRIBUTE       | name, value
   BACKGROUND_CLICK       | event
+  NODE_CLICK             | id, event
   ADD_CONNECTION         | entity, relationship
   UPDATE_SETTING         | key, value
 */
@@ -198,6 +199,9 @@ export default produce( (draft, action) => {
       FloatingMenu.set(draft, 'caption')
     }
 
+    return
+  case 'NODE_CLICK':
+    console.log(`you clicked on node #${action.id}`)
     return
   case 'ADD_CONNECTION':
     // action.entity -- littlesis api entity object

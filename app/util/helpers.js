@@ -1,4 +1,5 @@
 import pick from 'lodash/pick'
+import isFunction from 'lodash/isFunction'
 
 /**
  * works the same as document.getElementById,
@@ -80,6 +81,15 @@ export function callWithTargetValue(func) {
   }
 }
 
+// Function => Function
+export function callWithPersistedEvent(func) {
+  return function(event) {
+    if (isFunction(event.persist)) {
+      event.persist()
+    }
+    return func(event)
+  }
+}
 
 // Promise => { promise<Promise>, cancel<func>}
 // source: https://reactjs.org/blog/2015/12/16/ismounted-antipattern.html
