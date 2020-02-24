@@ -1,13 +1,52 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+
+import defaultState from '../util/defaultState'
 
 import EditMenu from '../components/editor/EditMenu'
 
-export default function Settings(props) {
-  return <EditMenu tool="settings">
-           <p>settings</p>
-         </EditMenu>
+const OPTION_DESCRIPTION = {
+  "private": "Set map to private",
+  "clone": "Allow map cloning",
+  "defaultStoryMode": "Default: Story Mode",
+  "defaultExploreMode": "Default: Explore Mode",
+  "storyModeOnly": "Story Mode Only",
+  "exploreModeOnly": "Explore Mode Only"
 }
 
-Settings.propTypes = {}
+
+function SettingsOption({ option }) {
+  const dispatch = useDispatch()
+  const value = useSelector(state => state.attributes.settings[option])
+
+  const onChange = useCallback(
+    () => dispatch({type: 'UPDATE_SETTING', key: option, value: !value}),
+    [dispatch, value]
+  )
+
+  return <div className="settings-option">
+           <div>{OPTION_DESCRIPTION[option]}: </div>
+           <div>
+             <input type="checkbox" checked={value} onChange={onChange} />
+           </div>
+         </div>
+}
+
+SettingsOption.propTypes = {
+  option: PropTypes.oneOf(Object.keys(defaultState.attributes.settings)).isRequired
+}
+
+export default function Settings() {
+  return <EditMenu tool="settings">
+           <label>Privacy</label>
+           <SettingsOption option="private" />
+           <SettingsOption option="clone" />
+           <hr />
+           <label>View</label>
+           <SettingsOption option="defaultStoryMode" />
+           <SettingsOption option="defaultExploreMode" />
+           <SettingsOption option="storyModeOnly" />
+           <SettingsOption option="exploreModeOnly" />
+         </EditMenu>
+}

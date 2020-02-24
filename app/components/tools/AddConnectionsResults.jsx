@@ -4,6 +4,11 @@ import { entityLink } from '../../util/entity'
 import { getRelationship } from '../../util/search'
 import ResultLoadingIcon from './ResultLoadingIcon'
 
+/*
+  The entity object from the littlesis api includes the field "relationship_id".
+  An api call is made to /api/relationships/:id which retrieves more information
+  about the relationship which is used by Graph.addConnection
+*/
 function AddConnectionResult({ entity, addConnectionToMap }) {
   const [isLoading, setLoading] = useState(false)
 
@@ -44,6 +49,7 @@ AddConnectionResult.propTypes = {
   addConnectionToMap: PropTypes.func.isRequired
 }
 
+// see AddConnections.jsx
 export default function AddConnectionsResults(props) {
   return <main className="add-connections-results">
            {

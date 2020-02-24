@@ -25,9 +25,18 @@ const DEFAULT_GRAPH = {
   zoom: 1
 }
 
-////////////////////////
+
+/*
+    - Helper Functions
+    - Stats & Getters
+    - ViewBox Calculations
+    - Graph Functions
+    - Dragging
+    - Add Connections
+*/
+
+
 /// Helper Functions  //
-////////////////////////
 
 // Allows functions to accept a node object or an id.
 // For example: 400, "400", and { id: 400 } all return "400"
@@ -63,16 +72,13 @@ export function determineNodeNumber({edge, node}) {
   }
 }
 
+
+
 function edgeAngle(edge) {
   Math.atan2(edge.y2 - edge.y1, edge.x2 - edge.x1)
 }
 
-// All of these functions take `graph` as the first argument
-// Note that many of these functions will mutate `graph`
-
-//////////////////////////////////////
-// Stats, Getters, and Calculations //
-/////////////////////////////////////
+// Stats, Getters, and Calculations
 
 const minNodeX = nodes => Math.min(...nodes.map(n => n.x))
 const minNodeY = nodes => Math.min(...nodes.map(n => n.y))
@@ -93,6 +99,23 @@ export function stats(graph) {
     maxNodeY:  maxNodeY(nodes)
   }
 }
+
+export const getNode = (graph, nodeId) => graph.nodes[getId(nodeId)]
+export const getEdge = (graph, edgeId) => graph.edges[getId(edgeId)]
+
+export function edgesOf(graph, node) {
+  return filter(
+    values(graph.edges),
+    edge => edge.node1_id == getId(node) || edge.node2_id == getId(node)
+  )
+}
+
+export function nodesOf(graph, edge) {
+  return at(graph.edges[getId(edge)], ['node1_id', 'node2_id']).map(nodeId => graph.nodes[nodeId])
+}
+
+
+// ViewBox Calculations
 
 // output: { minX, minY, w, h }
 // These values are used to create the viewBox attribute for the outermost SVG
@@ -136,25 +159,27 @@ export function calculateCenter(graph) {
   return { x, y }
 }
 
-export const getNode = (graph, nodeId) => graph.nodes[getId(nodeId)]
-export const getEdge = (graph, edgeId) => graph.edges[getId(edgeId)]
-
-export function edgesOf(graph, node) {
-  return filter(
-    values(graph.edges),
-    edge => edge.node1_id == getId(node) || edge.node2_id == getId(node)
-  )
+export function updateViewBox(graph) {
+  graph.viewBox = calculateViewBox(graph)
+  return graph
 }
 
-export function nodesOf(graph, edge) {
-  return at(graph.edges[getId(edge)], ['node1_id', 'node2_id']).map(nodeId => graph.nodes[nodeId])
+export function setZoom(graph, zoomLevel) {
+  throw new Error("Not Yet Implemented")
 }
 
-/////////////////////////////
-// Update parts of graph  //
-///////////////////////////
+// Graph Functions
+// All of these functions take `graph` as the first argument
+//
+// Note that many of these functions will mutate `graph`.
 
-// These all *mutate* graph and then return it
+// Creates a new, empty graph object
+// exported in the module default as Graph.new
+export function newGraph(attributes = {}) {
+  let g = merge({}, DEFAULT_GRAPH, attributes)
+  updateViewBox(g)
+  return g
+}
 
 export function addNode(graph, attributes) {
   let node = newNode(attributes)
@@ -179,7 +204,6 @@ export function removeNode(graph, node) {
   return graph
 }
 
-// Updates the attributes object of a node
 export function updateNode(graph, node, attributes) {
   merge(graph.nodes[getId(node)], attributes)
 
@@ -219,9 +243,7 @@ export function addCaption(graph, caption) {
   return graph
 }
 
-/////////////////////////
-// Dragging Functions  //
-/////////////////////////
+// Dragging
 
 // Moves a node to new position,
 export function moveNode(graph, node, deltas) {
@@ -246,7 +268,7 @@ export function dragNodeEdge(graph, {edge, node, coordinates}) {
 }
 
 // dragNode() updates the connected edges (if any)
-// It does not change the coordinates of the node itself, which is the done by moveNode()
+// It does not change the coordinates of the node that is dragging.
 export function dragNode(graph, nodeId, deltas) {
   const node = getNode(graph, nodeId)
   const coordinates = translatePoint(node, deltas) // x,y of location of new node
@@ -279,27 +301,6 @@ export function intersectingNodeFromDrag(graph, nodeId, deltas) {
   )
 }
 
-///////////////////////
-// View Box and Zoom //
-//////////////////////
-
-export function updateViewBox(graph) {
-  graph.viewBox = calculateViewBox(graph)
-  return graph
-}
-
-export function setZoom(graph, zoomLevel) {
-  throw new Error("Not Yet Implemented")
-}
-
-// Creates a new graph object
-// Available as Graph.new() and typically used to create a new empty graph
-export function newGraph(attributes = {}) {
-  let g = merge({}, DEFAULT_GRAPH, attributes)
-  updateViewBox(g)
-  return g
-}
-
 // Add Connections
 
 // Node =  already existing node or id
@@ -324,9 +325,6 @@ function addConnection(graph, {node, entity, relationship}) {
 
   return graph
 }
-
-
-
 
 export default {
   "new":                        newGraph,
