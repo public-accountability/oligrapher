@@ -11,7 +11,7 @@
     "serve": "http-server ./dist -p 8091",
     "test": "mocha",
     "test:watch": "mocha --watch",
-    "test:debug": "mocha --inspect-brk",
+    "test:debug": "mocha inspect",
     "profile": "webpack --profile --display-modules --env.production",
     "lint": "yarn run lint:js && yarn run lint:scss",
     "lint:js": "eslint app",
