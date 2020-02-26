@@ -7,7 +7,7 @@ import { classNames } from '../util/helpers'
 
 import EditorMenu from './EditorMenu'
 import NodeTool from '../components/tools/Node'
-
+import OrganizeTool from '../components/tools/Organize'
 
 /*
   Container for the editing interfaces
@@ -17,10 +17,12 @@ export function Editor(props) {
 
   const textTool = props.openTool === 'text'
   const nodeTool = props.openTool === 'node'
+  const organizeTool = props.openTool === 'organize'
 
   return <div className={props.className} onClick={textTool ? props.onClick : noop}>
            <EditorMenu />
            { nodeTool && <NodeTool /> }
+           { organizeTool && <OrganizeTool /> }
          </div>
 }
 

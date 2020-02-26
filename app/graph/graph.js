@@ -326,6 +326,14 @@ function addConnection(graph, {node, entity, relationship}) {
   return graph
 }
 
+function arrangeGraph(graph, arrangement) {
+  if (!['circle', 'lines'].includes(arrangement)) {
+    throw new Error(`invalid graph arrangement: ${arrangement}`)
+  }
+
+  return graph
+}
+
 export default {
   "new":                        newGraph,
   "stats":                      stats,
@@ -350,5 +358,6 @@ export default {
   "intersectingNodeFromDrag":   intersectingNodeFromDrag,
   "updateViewBox":              updateViewBox,
   "setZoom":                    setZoom,
-  "addConnection":              addConnection
+  "addConnection":              addConnection,
+  "arrange":                    arrangeGraph
 }
