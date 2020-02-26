@@ -1,7 +1,8 @@
 import React from 'react'
-import HeaderButtons, { ActionMenu } from '../../app/containers/HeaderButtons'
+import HeaderButtons from '../../app/containers/HeaderButtons'
+import ActionMenu from '../../app/containers/ActionMenu'
 
-describe("<HeaderButtons", function() {
+describe("<HeaderButtons>", function() {
   it("renders wrapper div", function() {
     expect(shallow(<HeaderButtons />).find('div.oligrapher-header-buttons')).to.have.lengthOf(1)
   })

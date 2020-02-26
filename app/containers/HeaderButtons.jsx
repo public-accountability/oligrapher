@@ -1,25 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { IoIosPersonAdd, IoMdLink, IoIosMore } from 'react-icons/io'
-
-export function ActionMenu() {
-  return <div style={{position: "relative"}}>
-           <div className="header-action-menu">
-             <ul>
-               <li>Publish Map</li>
-               <li>Present</li>
-               <hr />
-               <li>Clone</li>
-               <li>Delete</li>
-               <li>Create New</li>
-               <hr />
-               <li>Share</li>
-               <li>Print</li>
-               <li>Export</li>
-             </ul>
-           </div>
-         </div>
-}
+import ActionMenu from './ActionMenu'
 
 export default function HeaderButtons(props) {
   const [ actionMenuState, setActionMenuState ] = useState('CLOSED')
