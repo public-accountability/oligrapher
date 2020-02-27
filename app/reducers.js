@@ -67,6 +67,7 @@ const updateSettings = (settings, key, value) => {
   NODE_CLICK             | id, event
   ADD_CONNECTION         | entity, relationship
   UPDATE_SETTING         | key, value
+  SAVE_MAP               |
 */
 
 export default produce( (draft, action) => {
@@ -233,6 +234,15 @@ export default produce( (draft, action) => {
 
   case 'UPDATE_SETTING':
     updateSettings(draft.attributes.settings, action.key, action.value)
+    return
+
+  // Save map actions
+
+  case 'SAVE_MAP_IN_PROGRESS':
+    return
+  case 'SAVE_MAP_SUCCESS':
+    return
+  case 'SAVE_MAP_FAILED':
     return
   default:
     return

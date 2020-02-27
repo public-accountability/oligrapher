@@ -11,7 +11,8 @@
     "shallow": "readonly",
     "sinon": "readonly",
     "mount": "readonly",
-    "merge": "readonly"
+    "merge": "readonly",
+    "API_URL": "readonly"
   },
   "extends": [
     "eslint:recommended",

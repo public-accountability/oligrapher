@@ -10,6 +10,8 @@ import { getElementById } from './util/helpers'
 
 import './oligrapher.scss'
 
+import LittleSisApi from './datasources/littlesis3'
+
 /*
   Main entry point of Oligrapher.
 
@@ -22,6 +24,7 @@ import './oligrapher.scss'
 */
 export default class Oligrapher {
   static Graph = Graph
+  static Api = LittleSisApi
 
   constructor(initialState = {}) {
     this.store = createOligrapherStore(stateInitalizer(initialState))

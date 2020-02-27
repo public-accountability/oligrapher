@@ -5247,6 +5247,11 @@ node-environment-flags@1.0.6, node-environment-flags@^1.0.5:
     object.getownpropertydescriptors "^2.0.3"
     semver "^5.7.0"
 
+node-fetch@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
+  integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
+
 node-forge@0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.9.0.tgz#d624050edbb44874adca12bb9a52ec63cb782579"
@@ -8216,6 +8221,11 @@ wrappy@1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
   integrity sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
+
+wretch@^1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/wretch/-/wretch-1.7.1.tgz#3e1482d7beaa845fe2c8459f319cbfecac5d47f3"
+  integrity sha512-2ki4IUOnXVUtjDaJD/ts6ImpDMd0WWl5tolO8RG/aYD77S2cwekG7TKtQBRAXdDZYKUDwbnu6WfMCFA+HqPKWw==
 
 write-file-atomic@^3.0.1:
   version "3.0.3"
