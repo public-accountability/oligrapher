@@ -237,7 +237,6 @@ export default produce( (draft, action) => {
     return
 
   // Save map actions
-
   case 'SAVE_MAP_IN_PROGRESS':
     draft.display.saveMap = 'IN_PROGRESS'
     return
@@ -245,6 +244,10 @@ export default produce( (draft, action) => {
     draft.display.saveMap = 'SUCCESS'
     return
   case 'SAVE_MAP_FAILED':
+    draft.display.saveMap = 'FAILED'
+    return
+  case 'SAVE_MAP_RESET':
+    draft.display.saveMap = null
     return
   default:
     return
