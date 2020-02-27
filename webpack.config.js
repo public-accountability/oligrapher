@@ -127,7 +127,8 @@ module.exports = function(env) {
 
     plugins: [
       new webpack.DefinePlugin({
-        'API_URL': JSON.stringify(env.api_url ? env.api_url : 'https://littlesis.org')
+        'API_URL': JSON.stringify(env.api_url ? env.api_url : 'https://littlesis.org'),
+        'PRODUCTION': JSON.stringify(env.production)
       }),
       env.dev_server ? new webpack.HotModuleReplacementPlugin() : false
     ].filter(Boolean),

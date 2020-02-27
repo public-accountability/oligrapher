@@ -1,15 +1,24 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
+import { useSelector, useDispatch } from 'react-redux'
 import { IoIosPersonAdd, IoMdLink, IoIosMore } from 'react-icons/io'
 import ActionMenu from './ActionMenu'
 
-export default function HeaderButtons(props) {
+import saveMapAction from '../util/save'
+
+export default function HeaderButtons() {
+  const dispatch = useDispatch()
   const [ actionMenuState, setActionMenuState ] = useState('CLOSED')
   const toggleActionMenu = () => actionMenuState === 'CLOSED' ? setActionMenuState('OPEN') : setActionMenuState('CLOSED')
 
+  const saveMap = useSelector(state => state.display.saveMap)
+
   return <div className="oligrapher-header-buttons">
            <div>
-             <button name="save" onClick={() => alert("saving")}>Save</button>
+             { !saveMap && <button name="save" onClick={() => dispatch(saveMapAction())}>Save</button> }
+             { saveMap === "IN_PROGRESS" && <button>...saving...</button> }
+             { saveMap === "SUCCESS" && <button><em>saved!</em></button> }
+             { saveMap === "FAILED" && <button><em>failed to save map</em></button> }
            </div>
 
            <div>

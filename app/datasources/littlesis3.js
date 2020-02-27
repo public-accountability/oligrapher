@@ -1,4 +1,4 @@
-import wretch from "wretch"
+import wretch from 'wretch'
 
 // API_URL is defined by webpack.DefinePlugin
 // see webpack.config.js
@@ -13,7 +13,25 @@ const urls = {
 
 const isInteger = x => RegExp('^[0-9]+$').test(x.toString())
 
-function validateId(id) {
+const getCsrfToken = () => {
+  const token = document.head.querySelector('meta[name="csrf-token"]')?.content
+
+  if (token) {
+    return token
+  } else if (PRODUCTION) {
+    throw new Error("No csrf token found")
+  } else {
+    return "LittleSis-Test-CSRF-Token"
+  }
+}
+
+const headers = () => ({
+  'Content-Type': "application/json",
+  'Accept': "application/json",
+  'X-CSRF-Token': getCsrfToken()
+})
+
+const validateId = id => {
   if (!id) {
     throw new Error('Missing id')
   }
@@ -22,6 +40,8 @@ function validateId(id) {
     throw new Error(`id is not valid integer`)
   }
 }
+
+// API
 
 export function findNodes(query) {
   if (!query) {
@@ -51,11 +71,32 @@ export function getRelationship(id) {
     .json()
 }
 
-export function createOligrapher(data) {}
+export function createOligrapher(data) {
+  return wretch(urls.createOligrapher())
+    .options({ credentials: "same-origin" })
+    .headers(headers())
+    .post(data)
+    .json()
+}
 
-export function updateOligrapher(data) {}
+export function updateOligrapher(data) {
+  validateId(data.id)
 
-export function deleteOligrapher(id) {}
+  return wretch(urls.updateOligrapher(data.id))
+    .options({ credentials: "same-origin" })
+    .headers(headers())
+    .patch(data)
+    .json()
+}
+
+export function deleteOligrapher(id) {
+  validateId(id)
+
+  return wretch(urls.deleteOligrapher(id))
+    .options({ credentials: "same-origin" })
+    .headers(headers())
+    .delete()
+}
 
 export default {
   findNodes,
@@ -63,5 +104,10 @@ export default {
   getRelationship,
   createOligrapher,
   updateOligrapher,
-  deleteOligrapher
+  deleteOligrapher,
+  oligrapher: {
+    create: createOligrapher,
+    update: updateOligrapher,
+    "delete": deleteOligrapher
+  }
 }
