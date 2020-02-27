@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import uniqBy from 'lodash/uniqBy'
 import filter from 'lodash/filter'
-import { findConnections } from '../../util/search'
+import { findConnections } from '../../datasources/littlesis3'
 import { makeCancelable } from '../../util/helpers'
 
 import AddConnectionsResults from './AddConnectionsResults'

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { entityLink } from '../../util/entity'
-import { getRelationship } from '../../util/search'
+import { getRelationship } from '../../datasources/littlesis3'
 import ResultLoadingIcon from './ResultLoadingIcon'
 
 /*

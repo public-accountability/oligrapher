@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { findNodes } from '../../util/search'
+import { findNodes } from '../../datasources/littlesis3'
 import { makeCancelable } from '../../util/helpers'
 import isArray from 'lodash/isArray'
 
