@@ -14,6 +14,7 @@ const defaultState = {
     title: null,
     subtitle: null,
     date: null,
+    oligrapher_version: 3,
     user: {
       name: null,
       url: null
