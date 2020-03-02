@@ -7,8 +7,11 @@ import LittleSis from '../../datasources/littlesis3'
 
 import EditMenu from '../editor/EditMenu'
 
-
 const addEditorAction = (setLoading, oligrapherId) => username => dispatch => {
+  if (!oligrapherId) {
+    throw new Error('Cannot add editors to maps without an id')
+  }
+
   setLoading(true)
 
   LittleSis
@@ -39,12 +42,8 @@ export default function Editors() {
   const [loading, setLoading] = useState(false)
   const editors = useSelector(state => state.attributes.editors)
   const oligrapherId = useSelector(state => state.attributes.id)
+  const submitUsername =  addEditorAction(setLoading, oligrapherId)
 
-  const submitUsername = addEditorAction(setLoading, oligrapherId)
-  const addEditor = username => {
-    console.log("ADDING", username)
-    dispatch(submitUsername(username))
-  }
 
   return <EditMenu tool="editors">
            <div className="add-editors-body">
@@ -72,7 +71,7 @@ export default function Editors() {
                </div>
                <div>
                  <button name="submit"
-                         onClick={addEditor}
+                         onClick={() => dispatch(submitUsername(username)) }
                          disabled={loading}>
                    ✓
                  </button>
