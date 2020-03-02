@@ -1,8 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
+import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 
-export default function ActionMenu() {
+export default function ActionMenu({toggleActionMenu}) {
   const dispatch = useDispatch()
+
+  const openEditorsMenu = useCallback(
+    function() {
+      dispatch({ type: 'OPEN_TOOL', item: 'editors' })
+      toggleActionMenu()
+    },
+    [dispatch, toggleActionMenu]
+  )
+
 
   return <div style={{position: "relative"}}>
            <div className="header-action-menu">
@@ -10,7 +20,9 @@ export default function ActionMenu() {
                <li onClick={() => dispatch({type: 'SET_MODE', mode: 'editor', enabled: false})}>
                  Present
                </li>
-               <li>Publish Map</li>
+               <li onClick={openEditorsMenu}>
+                 Editors
+               </li>
                <hr />
                <li>Clone</li>
                <li>Delete</li>
@@ -22,4 +34,9 @@ export default function ActionMenu() {
              </ul>
            </div>
          </div>
+}
+
+
+ActionMenu.propTypes = {
+  toggleActionMenu: PropTypes.func.isRequired
 }

@@ -67,7 +67,10 @@ const updateSettings = (settings, key, value) => {
   NODE_CLICK             | id, event
   ADD_CONNECTION         | entity, relationship
   UPDATE_SETTING         | key, value
-  SAVE_MAP               |
+  SAVE_MAP_IN_PROGRESS   |
+  SAVE_MAP_SUCCESS       |
+  SAVE_MAP_FAILED        |
+  SAVE_MAP_RESET         |
 */
 
 export default produce( (draft, action) => {
@@ -165,7 +168,7 @@ export default produce( (draft, action) => {
     draft.display.editor.tool = action.item
 
     // Tools with floating menus that are always open
-    if (['settings', 'style'].includes(draft.display.editor.tool)) {
+    if (['settings', 'style', 'editors'].includes(draft.display.editor.tool)) {
       FloatingMenu.set(draft, draft.display.editor.tool)
     } else {
       FloatingMenu.clear(draft)

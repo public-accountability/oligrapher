@@ -10,6 +10,7 @@ const titles = {
   edge: "Customize Edge",
   caption: "Customize Text",
   settings: "Settings",
+  editors: "Editors",
   connections: "Add Connections",
   style: "Style Nodes"
 }

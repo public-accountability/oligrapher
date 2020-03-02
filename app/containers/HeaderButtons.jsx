@@ -34,7 +34,7 @@ export default function HeaderButtons() {
            </div>
 
            <div>
-             { actionMenuState === 'OPEN' && <ActionMenu /> }
+             { actionMenuState === 'OPEN' && <ActionMenu toggleActionMenu={toggleActionMenu} /> }
            </div>
          </div>
 }

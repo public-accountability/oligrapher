@@ -8,7 +8,8 @@ const urls = {
   getRelationship: id => `${API_URL}/api/relationships/${id}`,
   createOligrapher: () => `${API_URL}/oligrapher`,
   updateOligrapher: id => `${API_URL}/oligrapher/${id}`,
-  deleteOligrapher: id => `${API_URL}/oligrapher/${id}`
+  deleteOligrapher: id => `${API_URL}/oligrapher/${id}`,
+  editors: id => `${API_URL}/oligrapher/${id}/editors`
 }
 
 const isInteger = x => RegExp('^[0-9]+$').test(x.toString())
@@ -98,6 +99,27 @@ export function deleteOligrapher(id) {
     .delete()
 }
 
+export function getEditors(id) {
+  validateId(id)
+
+  return wretch(urls.editors(id))
+    .headers(headers())
+    .get()
+    .json()
+}
+
+const editorAction = action => (id, username) => {
+  validateId(id)
+
+  return wretch(urls.editors(id))
+    .headers(headers())
+    .post({ editor: { action: action, username: username } })
+    .json()
+}
+
+export const addEditor = editorAction('add')
+export const removeEditor = editorAction('remove')
+
 export default {
   findNodes,
   findConnections,
@@ -105,6 +127,14 @@ export default {
   createOligrapher,
   updateOligrapher,
   deleteOligrapher,
+  getEditors,
+  addEditor,
+  removeEditor,
+  editors: {
+    get: getEditors,
+    add: addEditor,
+    remove: removeEditor
+  },
   oligrapher: {
     create: createOligrapher,
     update: updateOligrapher,
