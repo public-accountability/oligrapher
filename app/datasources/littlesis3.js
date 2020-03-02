@@ -1,4 +1,5 @@
 import wretch from 'wretch'
+import curry from 'lodash/curry'
 
 // API_URL is defined by webpack.DefinePlugin
 // see webpack.config.js
@@ -108,14 +109,14 @@ export function getEditors(id) {
     .json()
 }
 
-const editorAction = action => (id, username) => {
+const editorAction = action => curry((id, username) => {
   validateId(id)
 
   return wretch(urls.editors(id))
     .headers(headers())
     .post({ editor: { action: action, username: username } })
     .json()
-}
+})
 
 export const addEditor = editorAction('add')
 export const removeEditor = editorAction('remove')
@@ -130,11 +131,11 @@ export default {
   getEditors,
   addEditor,
   removeEditor,
-  editors: {
-    get: getEditors,
-    add: addEditor,
-    remove: removeEditor
-  },
+  editors: id => ({
+    get: getEditors(id),
+    add: addEditor(id),
+    remove: removeEditor(id)
+  }),
   oligrapher: {
     create: createOligrapher,
     update: updateOligrapher,

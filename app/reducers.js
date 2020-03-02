@@ -71,6 +71,7 @@ const updateSettings = (settings, key, value) => {
   SAVE_MAP_SUCCESS       |
   SAVE_MAP_FAILED        |
   SAVE_MAP_RESET         |
+  SET_EDITORS            | editors
 */
 
 export default produce( (draft, action) => {
@@ -251,6 +252,9 @@ export default produce( (draft, action) => {
     return
   case 'SAVE_MAP_RESET':
     draft.display.saveMap = null
+    return
+  case 'SET_EDITORS':
+    draft.attributes.editors = action.editors
     return
   default:
     return

@@ -9,12 +9,14 @@
 */
 $font_color: black;
 $link_color: #2c63c8;
+$button_bg_color: #2c63c8;
+$button_font_color: white;
 $header_menu_item_color: $font_color;
 $header_menu_item_color_hover: $link_color;
 $header_spacing_between_header: 0.5em;
 $header_bottom_border_color: #6e89a1;
-$header_save_button_bg_color: #2c63c8;
-$header_save_button_font_color: white;
+$header_save_button_bg_color: $button_bg_color;
+$header_save_button_font_color: $button_font_color;
 $header_discard_button_bg_color: #6e89a1;
 $header_discard_button_font_color: white;
 
@@ -562,6 +564,38 @@ header.edit-menu-header {
     }
 
 }
+
+.add-editors-body {
+    margin-top: 1em;
+
+    div.add-editors-fields {
+        margin: 1em;
+        input, textarea {
+            width: 100%;
+            padding: 5px;
+        }
+        textarea {
+            margin-top: 1em;
+        }
+    }
+
+    div.add-editors-bottom-row {
+        display: flex;
+        justify-content: space-between;
+
+        label {
+            font-size: 10px;
+        }
+
+        button {
+            background: $button_bg_color;
+            color: $button_font_color;
+        }
+    }
+
+}
+
+
 /*
 NODES
 

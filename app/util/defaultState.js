@@ -30,7 +30,8 @@ const defaultState = {
       defaultExploreMode: true,
       storyModeOnly: false,
       exploreModeOnly: false
-    }
+    },
+    editors: []
   },
 
   // This section of the state is not sync'd with the server;
