@@ -595,6 +595,17 @@ header.edit-menu-header {
 
 }
 
+div.lock {
+    z-index: 20;
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    width: 25em;
+    background-color: white;
+    border: 2px solid $oligrapher_blue;
+    padding: 10px;
+}
+
 
 /*
 NODES

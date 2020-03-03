@@ -31,7 +31,8 @@ const defaultState = {
       storyModeOnly: false,
       exploreModeOnly: false
     },
-    editors: []
+    editors: [],
+    lock: { locked: false }
   },
 
   // This section of the state is not sync'd with the server;

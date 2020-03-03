@@ -10,7 +10,8 @@ const urls = {
   createOligrapher: () => `${API_URL}/oligrapher`,
   updateOligrapher: id => `${API_URL}/oligrapher/${id}`,
   deleteOligrapher: id => `${API_URL}/oligrapher/${id}`,
-  editors: id => `${API_URL}/oligrapher/${id}/editors`
+  editors: id => `${API_URL}/oligrapher/${id}/editors`,
+  lock: id => `${API_URL}/oligrapher/${id}/lock`
 }
 
 const isInteger = x => RegExp('^[0-9]+$').test(x.toString())
@@ -121,6 +122,16 @@ const editorAction = action => curry((id, username) => {
 export const addEditor = editorAction('add')
 export const removeEditor = editorAction('remove')
 
+function lock(id) {
+  validateId(id)
+  return wretch(urls.lock(id)).headers(headers()).get().json()
+}
+
+function lockTakeover(id) {
+  validateId(id)
+  return wretch(urls.lock(id)).headers(headers()).post().json()
+}
+
 export default {
   findNodes,
   findConnections,
@@ -131,6 +142,8 @@ export default {
   getEditors,
   addEditor,
   removeEditor,
+  lock,
+  lockTakeover,
   editors: id => ({
     get: getEditors(id),
     add: addEditor(id),
