@@ -49,7 +49,7 @@ function getDevServerConfig(env) {
   if (env.dev_server) {
     return {
       contentBase: path.resolve(__dirname, 'html'),
-      publicPath: '/assets/',
+      publicPath: '/',
       port: 8090,
       serveIndex: true,
       historyApiFallback: true,
@@ -134,7 +134,10 @@ module.exports = function(env) {
     ].filter(Boolean),
 
     resolve: {
-      extensions: ['.js', '.jsx']
+      extensions: ['.js', '.jsx'],
+      alias: {
+        'react-dom': '@hot-loader/react-dom'
+      }
     }
   }
 }
