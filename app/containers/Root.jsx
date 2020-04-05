@@ -1,4 +1,5 @@
 import React from 'react'
+import { hot } from 'react-hot-loader/root'
 import Header from './Header'
 import Graph from './Graph'
 import Editor from './Editor'
@@ -27,7 +28,7 @@ import ZoomControl from '../components/ZoomControl'
   It needs rendered inside a Redux Provider
 
 */
-export default function Root() {
+export const Root = () => {
   return <div id="oligrapher-container">
            <Header />
            <div className="oligrapher-graph-container">
@@ -38,3 +39,5 @@ export default function Root() {
            </div>
          </div>
 }
+
+export default hot(Root)
