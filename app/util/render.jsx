@@ -19,9 +19,11 @@ export const createOligrapherStore = preloadedState => {
     middleware.push(createLogger())
   }
 
-  return createStore(reducers,
-                     preloadedState,
-                     applyMiddleware(...middleware))
+  return createStore(
+    reducers,
+    preloadedState,
+    applyMiddleware(...middleware)
+  )
 }
 
 export const withStore = store => WrappedComponent => props => (

@@ -29,6 +29,7 @@ export default function EntitySearch({ query }) {
       })
       .catch(err => {
         if (!err.isCanceled) {
+          setLoading(false)
           setResults(false)
           console.error("Error finding nodes", err)
         }

@@ -11,7 +11,7 @@ export function HeaderRight(props) {
   } else {
 
     const headerMenuItems = [
-      { text: "edit", action: props.enableEditorMode},
+      { text: "Edit", action: props.enableEditorMode},
       { text: "Clone", url: "https://littlesis.org/oligrapher/clone" },
       { text: "Disclaimer", url: "https://littlesis.org/oligrapher/disclaimer" }
     ]
