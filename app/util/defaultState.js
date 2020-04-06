@@ -48,7 +48,8 @@ const defaultState = {
     selectedNodes: new Set(),
     floatingMenu: {
       type: null, // node, connections, edge, caption, connections, settings
-      id: null
+      id: null,
+      position: null
     },
     editor: {
       tool: null // node, edge, caption, settings

@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Draggable from 'react-draggable'
+import { useSelector } from 'react-redux'
 
 import { classNames } from '../../util/helpers'
 import EditMenuHeader from './EditMenuHeader'
@@ -16,8 +17,10 @@ const titles = {
 }
 
 export default function EditMenu(props) {
+  const position = useSelector(state => state.display.floatingMenu.position)
+
   // see github.com/mzabriskie/react-draggable/issues/410 for reason behind enableUserSelectHack
-  return <Draggable enableUserSelectHack={false} handle=".edit-menu-header">
+  return <Draggable enableUserSelectHack={false} handle=".edit-menu-header" defaultPosition={position || undefined}>
            <div className="oligrapher-edit-menu">
              <div className={ classNames("edit-menu-wrapper", `edit-${props.tool}-menu`) }>
                <EditMenuHeader title={titles[props.tool]} />

@@ -75,13 +75,15 @@ const updateSettings = (settings, key, value) => {
   SET_LOCK               | lock
 */
 
-export default produce( (draft, action) => {
+export default produce((draft, action) => {
   switch(action.type) {
   case 'SET_ACTUAL_ZOOM':
     draft.graph.actualZoom = action.actualZoom
     return
   case 'ADD_NODE':
-    Graph.addNode(draft.graph, action.attributes)
+    Graph.addNode(draft.graph, action.attributes, (node) => {
+      FloatingMenu.set(draft, 'node', node.id, { x: node.x, y: node.y })      
+    })
     return
   case 'ADD_NODES':
     Graph.addNodes(draft.graph, action.nodes)

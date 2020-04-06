@@ -29,5 +29,6 @@ export const mountWithStore = (store, children) => mount(
 export const stubDispatch = () => {
   let mock = sinon.spy()
   sinon.stub(reactRedux, "useDispatch").returns(mock)
-  return [mock, () => reactRedux.useDispatch.restore()]
+  mock.restore = () => reactRedux.useDispatch.restore()
+  return mock
 }

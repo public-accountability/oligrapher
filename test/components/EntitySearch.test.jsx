@@ -6,32 +6,31 @@ import { stubDispatch } from "../../test/testHelpers"
 import waitUntil from 'async-wait-until'
 import sinon from 'sinon'
 
+// Unfortunately, it's currently necessary to mock react-redux's useDispatch 
+// in order for enzyme to work. We also can't use enzyme's shallow mounting,
+// which currently doesn't run the useEffect hook that we're mostly testing here.
+
 describe('<EntitySearch>', function() {
-  let wrapper, mockDispatch, restoreDispatch
+  let wrapper, mockDispatch, response
 
-  beforeEach(function () {
-    [mockDispatch, restoreDispatch] = stubDispatch()
+  beforeEach(function() {
+    mockDispatch = stubDispatch()
+    sinon.stub(littlesis3, "findNodes").callsFake(() => response)
   })
 
-  afterEach(function () {
-    restoreDispatch()
-  })
-
-  it('shows loading', function() {
-    let mockFindNodes = () => {
-      return new Promise((resolve, reject) => setTimeout(() => resolve([]), 10))
-    }
-    sinon.stub(littlesis3, "findNodes").callsFake(mockFindNodes)
-    wrapper = mount(<EntitySearch query="bob" />)
-    expect(wrapper.html().toLowerCase()).to.contain("loading")
+  afterEach(function() {
+    mockDispatch.restore()
     littlesis3.findNodes.restore()
   })
 
+  it('shows loading', function() {
+    response = new Promise((resolve, reject) => setTimeout(() => resolve([]), 10))
+    wrapper = mount(<EntitySearch query="bob" />)
+    expect(wrapper.html().toLowerCase()).to.contain("loading")
+  })
+
   it('shows error', async function() {
-    let mockFindNodes = () => {
-      return new Promise((resolve, reject) => setTimeout(() => reject("error"), 10))
-    }
-    sinon.stub(littlesis3, "findNodes").callsFake(mockFindNodes)
+    response = new Promise((resolve, reject) => setTimeout(() => reject("error"), 10))
     wrapper = mount(<EntitySearch query="bob" />)
     
     await waitUntil(() => {
@@ -40,15 +39,11 @@ describe('<EntitySearch>', function() {
     })
 
     expect(wrapper.html().toLowerCase()).to.contain("error")
-    littlesis3.findNodes.restore()
   })
 
   it('shows no results', async function() {
     let data = []
-    let mockFindNodes = () => {
-      return new Promise((resolve, reject) => setTimeout(() => resolve(data), 10))
-    }
-    sinon.stub(littlesis3, "findNodes").callsFake(mockFindNodes)
+    response = new Promise((resolve, reject) => setTimeout(() => resolve(data), 10))
     wrapper = mount(<EntitySearch query="bob" />)
     
     await waitUntil(() => {
@@ -57,15 +52,11 @@ describe('<EntitySearch>', function() {
     })
 
     expect(wrapper.html().toLowerCase()).to.contain("no results")
-    littlesis3.findNodes.restore()    
   })
 
   it('shows search results', async function() {
     let data = [{ id: 1, name: "Bob", description: "a person", image: null, url: null }]
-    let mockFindNodes = () => {
-      return new Promise((resolve, reject) => setTimeout(() => resolve(data), 10))
-    }
-    sinon.stub(littlesis3, "findNodes").callsFake(mockFindNodes)
+    response = new Promise((resolve, reject) => setTimeout(() => resolve(data), 10))
     wrapper = mount(<EntitySearch query="bob" />)
     
     await waitUntil(() => {
@@ -76,6 +67,5 @@ describe('<EntitySearch>', function() {
     let results = wrapper.find(EntitySearchResults)
     expect(results).to.have.lengthOf(1)
     expect(results.prop('results')).to.equal(data)
-    littlesis3.findNodes.restore()
   })
 })

@@ -4,16 +4,19 @@ import Toolbox from "../../app/components/tools/Toolbox"
 import EntitySearch from "../../app/components/tools/EntitySearch"
 import { stubDispatch } from "../../test/testHelpers"
 
+// Currently we have to mock react-redux's useDispatch hook 
+// in order to use enzyme.
+
 describe('<NodeTool>', function() {
-  let wrapper, mockDispatch, restoreDispatch
+  let wrapper, mockDispatch
 
   beforeEach(function() {
-    [mockDispatch, restoreDispatch] = stubDispatch()
+    mockDispatch = stubDispatch()
     wrapper = shallow(<NodeTool />)
   })
 
   afterEach(function() {
-    restoreDispatch()
+    mockDispatch.restore()
   })
 
   it('renders Toolbox with title', function() {

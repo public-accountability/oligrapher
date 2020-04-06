@@ -2,7 +2,7 @@ import reducers from '../app/reducers'
 import Graph from '../app/graph/graph'
 import Node from '../app/graph/node'
 import Edge from '../app/graph/edge'
-import FloatingMenu from '../app/util/floatingMenu'
+import defaultState from '../app/util/defaultState'
 
 import values from 'lodash/values'
 
@@ -24,7 +24,7 @@ describe('Display Reducer', function() {
       const state = { 
         display: { 
           editor: { tool: 'node' },
-          floatingMenu: { type: 'node', id: 'abc' }
+          floatingMenu: { type: 'node', id: 'abc', position: null }
         }
       }
       const action = { type: 'OPEN_TOOL', item: 'edge'}
@@ -35,11 +35,11 @@ describe('Display Reducer', function() {
       const state = { 
         display: { 
           editor: { tool: 'node' },
-          floatingMenu: { type: 'node', id: 'abc' }
+          floatingMenu: { type: 'node', id: 'abc', position: null }
         }
       }
       const action = { type: 'OPEN_TOOL', item: 'edge'}
-      expect(reducers(state, action).display.floatingMenu) .to.eql({ type: null, id: null })
+      expect(reducers(state, action).display.floatingMenu) .to.eql({ type: null, id: null, position: null })
     })
 
     it("sets floating menu for settings", function(){
@@ -50,7 +50,7 @@ describe('Display Reducer', function() {
       const action = { type: 'OPEN_TOOL', item: 'settings'}
       expect(reducers(state, action)) .to.eql({ 
         display: { 
-          floatingMenu: { type: 'settings', id: null }, 
+          floatingMenu: { type: 'settings', id: null, position: null }, 
           editor: { tool: 'settings' } 
         }
       })
@@ -59,10 +59,40 @@ describe('Display Reducer', function() {
 
   describe('OPEN_EDIT_NODE_MENU', function() {
     it('set editNode', function() {
-      const state = { display : { editor: { tool: 'node' }, floatingMenu: { type: 'edge', id: 'abc' } } }
-      const action = { type: 'OPEN_EDIT_NODE_MENU', id: 'xyz'}
+      const state = { display : { editor: { tool: 'node' }, floatingMenu: { type: 'edge', id: 'abc', position: null } } }
+      const action = { type: 'OPEN_EDIT_NODE_MENU', id: 'xyz' }
       expect(reducers(state, action).display.floatingMenu)
-        .to.eql({ type: 'node', id: 'xyz' })
+        .to.eql({ type: 'node', id: 'xyz', position: null })
+    })
+  })
+
+  describe('CLOSE_EDIT_MENU', function() {
+    it('clears floatingMenu', function() {
+      const state = { display : { editor: { tool: 'node' }, floatingMenu: { type: 'node', id: 'abc', position: { x: 1, y: 2 } } } }
+      const action = { type: 'CLOSE_EDIT_MENU' }
+      expect(reducers(state, action).display.floatingMenu)
+        .to.eql({ type: null, id: null, position: null })
+    })   
+  })
+
+  describe('ADD_NODE', function() {
+    let node, state, action, nextState
+
+    beforeEach(function() {
+      node = Node.new()
+      state = defaultState
+      action = { type: 'ADD_NODE', attributes : node }
+      nextState = reducers(state, action)
+    })
+
+    it('adds node to graph', function() {
+      expect(Object.keys(nextState.graph.nodes)).to.eql([node.id])
+    })
+
+    it('opens and positions floating menu', function() {
+      expect(nextState.display.floatingMenu.type).to.eql('node')
+      expect(nextState.display.floatingMenu.id).to.eql(node.id)
+      expect(nextState.display.floatingMenu.position).to.not.be.null
     })
   })
 

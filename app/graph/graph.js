@@ -181,7 +181,7 @@ export function newGraph(attributes = {}) {
   return g
 }
 
-export function addNode(graph, attributes) {
+export function addNode(graph, attributes, callback = null) {
   let node = newNode(attributes)
 
   // Place the node at the graph center, unless coordinates are provided
@@ -190,6 +190,13 @@ export function addNode(graph, attributes) {
   }
 
   graph.nodes[getId(node)] = node
+  
+  // So that the outer scope can access the node that was just added 
+  // in case it didn't already have an id
+  if (callback) {
+    callback(node)
+  }
+  
   return graph
 }
 
