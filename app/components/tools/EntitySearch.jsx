@@ -24,20 +24,20 @@ export default function EntitySearch({ query }) {
     httpRequest
       .promise
       .then(json => {
-        setLoading(false)
         setResults(json)
+        setLoading(false)
       })
       .catch(err => {
         if (!err.isCanceled) {
-          setLoading(false)
           setResults(false)
+          setLoading(false)
           console.error("Error finding nodes", err)
         }
       })
 
     return () => httpRequest.cancel()
 
-  }, [query] )
+  }, [query])
 
   if (loading) {
     return <em>...loading...</em>
@@ -46,7 +46,7 @@ export default function EntitySearch({ query }) {
       ? <em>no results</em>
       : <EntitySearchResults results={results} addNode={addNode} />
   } else {
-    return <em>error</em>
+    return <em>Your search resulted in an error.</em>
   }
 }
 
