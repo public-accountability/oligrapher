@@ -2,12 +2,10 @@ import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import curry from 'lodash/curry'
 import noop from 'lodash/noop'
 import pick from 'lodash/pick'
-import { frozenArray, callWithPersistedEvent } from '../util/helpers'
+import { frozenArray } from '../util/helpers'
 
-import NodeHandles from './NodeHandles'
 import DraggableComponent from './../components/graph/DraggableComponent'
 import NodeHalo from './../components/graph/NodeHalo'
 import NodeCircle from './../components/graph/NodeCircle'
@@ -21,23 +19,24 @@ const HALO_PROPS = frozenArray('x', 'y', 'radius')
 const CIRCLE_PROPS = frozenArray('x', 'y', 'radius', 'color')
 const IMAGE_PROPS = frozenArray('id', 'x', 'y', 'radius', 'image')
 const LABEL_PROPS = frozenArray('x', 'y', 'name', 'radius', 'status', 'url')
-const DRAGGABLE_PROPS = frozenArray('onStop', 'onDrag', 'onClick', 'actualZoom')
-const HANDLES_PROPS = frozenArray('id', 'x', 'y', 'radius')
 
 export function Node(props) {
   const showImage = Boolean(props.image)
-  const showCircle = !showImage
-  const showHalo = props.selected
-  const showNodeHandles = props.editorMode && props.nodeToolOpen
+  const showHalo = props.selected || props.isNewEdgeNode
 
   return  <g id={"node-" + props.id} className="oligrapher-node">
-            <DraggableComponent {...pick(props, DRAGGABLE_PROPS)} handle=".draggable-node-handle">
+            <DraggableComponent
+              disabled={!props.editorMode}
+              handle=".draggable-node-handle"
+              actualZoom={props.actualZoom}
+              onStop={props.editorMode ? props.moveNode : noop}
+              onClick={props.editorMode ? props.toggleEditNodeMenu : noop}
+              onDrag={props.editorMode ? props.dragNode : noop}>
               <g>
                 { showHalo && <NodeHalo {...pick(props, HALO_PROPS)} /> }
-                { showCircle && <NodeCircle {...pick(props, CIRCLE_PROPS)} /> }
+                <NodeCircle {...pick(props, CIRCLE_PROPS)} />
                 { showImage && <NodeImage {...pick(props, IMAGE_PROPS)} /> }
                 <NodeLabel {...pick(props, LABEL_PROPS)} />
-                { showNodeHandles && <NodeHandles {...pick(props, HANDLES_PROPS) }/>}
               </g>
             </DraggableComponent>
           </g>
@@ -57,24 +56,21 @@ Node.propTypes = {
   // Virtual attributes
   radius: PropTypes.number.isRequired,
   selected: PropTypes.bool.isRequired,
+  isNewEdgeNode: PropTypes.bool.isRequired,
 
   // Actions
-  onStop: PropTypes.func.isRequired,
-  onDrag: PropTypes.func.isRequired,
-  onClick: PropTypes.func,
-  openEditNodeMenu: PropTypes.func.isRequired,
+  toggleEditNodeMenu: PropTypes.func.isRequired,
+  moveNode: PropTypes.func.isRequired,
+  dragNode: PropTypes.func.isRequired,
 
   // UI helpers
   actualZoom: PropTypes.number,
-  editorMode: PropTypes.bool.isRequired,
-  nodeToolOpen: PropTypes.bool.isRequired,
-  edgeToolOpen: PropTypes.bool.isRequired
+  editorMode: PropTypes.bool.isRequired
 }
 
 Node.defaultProps = {
   color: DEFAULT_COLOR,
-  openEditNodeMenu: noop,
-  onClick: noop
+  toggleEditNodeMenu: noop
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -88,50 +84,19 @@ const mapStateToProps = (state, ownProps) => {
     zoom: state.graph.zoom,
     actualZoom: state.graph.actualZoom,
     editorMode: state.display.modes.editor,
-    editorTool: state.display.editor.tool,
-    nodeToolOpen: state.display.editor.tool === 'node',
-    edgeToolOpen: state.display.editor.tool === 'edge',
-    selected: state.display.selectedNodes.has(id)
+    selected: state.display.selectedNodes.has(id),
+    isNewEdgeNode: state.edgeCreation.nodes.includes(id)
   }
 }
-
-/*
-  There are two types of actions here: MOVE_NODE and DRAG_NODE,
-  which correspond to react-draggable's onStop and onDrag.
-
-  Dragging cause different actions depending on which editorTool is open
-
-  editorTool: "node"   moves nodes around
-  editorTool: "edge"   creates new edges on between connected nodes
-
-*/
-function nodeMovementFunc(dispatch, id, actionType, editorTool, deltas) {
-  return ['node', 'edge'].includes(editorTool)
-    ? dispatch({ type: actionType,
-                 editorTool: editorTool,
-                 deltas: deltas,
-                 id: id })
-    : noop
-}
-
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   const id = ownProps.id.toString()
 
   return {
-    nodeMovement: curry(nodeMovementFunc)(dispatch, id),
-    onClick: callWithPersistedEvent( event => dispatch({ id, event, type: 'NODE_CLICK' }))
+    toggleEditNodeMenu: () => dispatch({ type: 'TOGGLE_EDIT_NODE_MENU', id }),
+    moveNode: (deltas) => dispatch({ type: 'MOVE_NODE', id, deltas }),
+    dragNode: (deltas) => dispatch({ type: 'DRAG_NODE', id, deltas })
   }
 }
 
-const mergeProps = (stateProps, dispatchProps) => {
-  let editorTool = stateProps.editorTool
-
-  return { ...stateProps,
-           ...dispatchProps,
-           onStop: dispatchProps.nodeMovement('MOVE_NODE', editorTool),
-           onDrag: dispatchProps.nodeMovement('DRAG_NODE', editorTool)
-         }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(Node)
+export default connect(mapStateToProps, mapDispatchToProps)(Node)

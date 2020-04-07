@@ -707,3 +707,17 @@ g.caption.focused {
 }
 
 g.caption-textbox {}
+
+
+/* create edge message */
+
+.oligrapher-edge-creation-message {
+  position: absolute;
+  right: 80px;
+  top: 20px;
+  padding: 10px;
+  width: 300px;
+  font-size: 14px;
+  border: 1px solid $oligrapher_gray;
+  background-color: $node_halo_color;
+}

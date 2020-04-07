@@ -6,7 +6,7 @@ import defaultState from '../app/util/defaultState'
 
 import values from 'lodash/values'
 
-describe('Display Reducer', function() {
+describe('Reducer', function() {
   describe('SET_MODE', function() {
     it('changes editor to true', function() {
       const state = { foo: 'bar',
@@ -124,6 +124,74 @@ describe('Display Reducer', function() {
     })
   })
 
+  describe('DRAG_NODE', function() {
+    let state, graph, action, nextState, n1, n2, n3, e1
+
+    beforeEach(function() {
+      graph = Graph.new()
+      n1 = Node.new({ x: 0, y: 0 })
+      n2 = Node.new({ x: 100, y: 0 })
+      n3 = Node.new({ x: 0, y: 100 })
+      e1 = Edge.newEdgeFromNodes(n1, n2)
+      Graph.addNodes(graph, [n1, n2, n3])
+      Graph.addEdge(graph, e1)
+      state = Object.assign({}, defaultState)
+      state.graph = graph
+    })
+
+    it('moves edge but not node', function() {
+      action = { type: 'DRAG_NODE', id: n1.id, deltas: { x: 50, y: 50 } }
+      nextState = reducers(state, action)
+      expect(nextState.graph.nodes[n1.id].x).to.equal(n1.x)
+      expect(nextState.graph.nodes[n1.id].y).to.equal(n1.y)
+      expect(nextState.graph.edges[e1.id].x1).to.equal(e1.x1 + 50)
+      expect(nextState.graph.edges[e1.id].y1).to.equal(e1.y1 + 50)
+      expect(nextState.edgeCreation.nodes).to.eql([])
+    })
+
+    it('detects edge creation', function() {
+      action = { type: 'DRAG_NODE', id: n1.id, deltas: { x: 0, y: 100 } }
+      nextState = reducers(state, action)
+      expect(nextState.edgeCreation.nodes).to.eql([n1.id, n3.id])
+    })
+  })
+
+  describe('MOVE_NODE', function() {
+    let state, graph, action, nextState, n1, n2, n3, e1, e2
+
+    beforeEach(function() {
+      graph = Graph.new()
+      n1 = Node.new({ x: 0, y: 0 })
+      n2 = Node.new({ x: 100, y: 0 })
+      n3 = Node.new({ x: 0, y: 100 })
+      e1 = Edge.newEdgeFromNodes(n1, n2)
+      Graph.addNodes(graph, [n1, n2, n3])
+      Graph.addEdge(graph, e1)
+      state = Object.assign({}, defaultState)
+      state.graph = graph
+    })
+
+    it('moves node and its edges when no intersection', function() {
+      action = { type: 'MOVE_NODE', id: n1.id, deltas: { x: 50, y: 50 } }
+      nextState = reducers(state, action)
+      expect(nextState.graph.nodes[n1.id].x).to.equal(n1.x + 50)
+      expect(nextState.graph.nodes[n1.id].y).to.equal(n1.y + 50)
+      expect(nextState.graph.edges[e1.id].x1).to.equal(e1.x1 + 50)
+      expect(nextState.graph.edges[e1.id].y1).to.equal(e1.y1 + 50)
+      expect(nextState.edgeCreation.nodes).to.eql([])
+    })
+
+    it('creates edge but doesnt move node when intersection dected', function() {
+      action = { type: 'MOVE_NODE', id: n1.id, deltas: { x: 0, y: 100 } }
+      nextState = reducers(state, action)
+      expect(Object.keys(nextState.graph.edges)).to.have.lengthOf(2)
+      expect(nextState.graph.nodes[n1.id].x).to.equal(n1.x)
+      expect(nextState.graph.nodes[n1.id].y).to.equal(n1.y)
+      expect(nextState.graph.edges[e1.id].x1).to.equal(e1.x1)
+      expect(nextState.graph.edges[e1.id].y1).to.equal(e1.y1)
+      expect(nextState.edgeCreation.nodes).to.eql([])
+    })
+  })
 
   describe('REMOVE_EDGE', function() {
     let state, action, nextState, e1, e2

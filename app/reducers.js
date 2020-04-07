@@ -11,6 +11,7 @@ import Edge from './graph/edge'
 import Caption from './graph/caption'
 
 import FloatingMenu from './util/floatingMenu'
+import EdgeCreation from './util/edgeCreation'
 
 const ZOOM_INTERVAL = 0.2
 
@@ -75,6 +76,8 @@ const updateSettings = (settings, key, value) => {
   SET_LOCK               | lock
 */
 
+let intersectedNode
+
 export default produce((draft, action) => {
   switch(action.type) {
   case 'SET_ACTUAL_ZOOM':
@@ -102,28 +105,27 @@ export default produce((draft, action) => {
     FloatingMenu.clear(draft)
     return
   case 'MOVE_NODE':
-    if (action.editorTool === 'node') {
-      Graph.dragNode(draft.graph, action.id, action.deltas)
+    intersectedNode = Graph.intersectingNodeFromDrag(draft.graph, action.id, action.deltas)
+
+    if (intersectedNode) {
+      let intersectingNode = Graph.getNode(draft.graph, action.id)
+      Graph.addEdge(draft.graph, Edge.newEdgeFromNodes(intersectingNode, intersectedNode))
+      Graph.dragNode(draft.graph, action.id, { x: 0, y: 0 })
+    } else {
       Graph.moveNode(draft.graph, action.id, action.deltas)
+      Graph.dragNode(draft.graph, action.id, { x: 0, y: 0 }) // updates node's edges
     }
-
-    // The is the drag to create edges feature:
-    if (action.editorTool === 'edge') {
-      let node1 = Graph.getNode(draft.graph, action.id)
-      let node2 = Graph.intersectingNodeFromDrag(draft.graph, action.id, action.deltas)
-
-      if (node2) {
-        Graph.addEdge(draft.graph, Edge.newEdgeFromNodes(node1, node2))
-      }
-    }
+    
+    EdgeCreation.clearNodes(draft)
     return
   case 'DRAG_NODE':
-    if (action.editorTool === 'node') {
-      Graph.dragNode(draft.graph, action.id, action.deltas)
-    }
+    Graph.dragNode(draft.graph, action.id, action.deltas)
+    intersectedNode = Graph.intersectingNodeFromDrag(draft.graph, action.id, action.deltas)
 
-    if (action.editorTool === 'edge') {
-      // Display message about which node will be connected ?
+    if (intersectedNode) {
+      EdgeCreation.setNodes(draft, [action.id, intersectedNode.id])
+    } else {
+      EdgeCreation.clearNodes(draft)
     }
 
     return
@@ -181,6 +183,13 @@ export default produce((draft, action) => {
     return
   case 'OPEN_EDIT_NODE_MENU':
     FloatingMenu.set(draft, 'node', action.id)
+    return
+  case 'TOGGLE_EDIT_NODE_MENU':
+    if (FloatingMenu.getId(draft, 'node') == action.id) {
+      FloatingMenu.clear(draft)
+    } else {
+      FloatingMenu.set(draft, 'node', action.id)
+    }
     return
   case 'OPEN_ADD_CONNECTIONS_MENU':
     if (Number.isFinite(toNumber(action.id))) {

@@ -30,11 +30,14 @@ export default function DraggableComponent(props) {
   // The setting the position to 0,0 has the effect of ensuring that
   // all drag deltas always start with 0,0.
   // The onStop and onDrag callbacks all work off of relative coordinates.
-  const draggableProps = { onDrag,
-                           onStop,
-                           scale: props.actualZoom,
-                           position: DEFAULT_POSITION,
-                           handle: props.handle }
+  const draggableProps = { 
+    onDrag,
+    onStop,
+    scale: props.actualZoom,
+    position: DEFAULT_POSITION,
+    handle: props.handle,
+    disabled: props.disabled
+  }
 
   return <Draggable {...draggableProps}>
            {props.children}
@@ -47,7 +50,8 @@ DraggableComponent.propTypes = {
   onDrag:     PropTypes.func.isRequired,
   onClick:    PropTypes.func,
   handle:     PropTypes.string.isRequired,
-  actualZoom: PropTypes.number
+  actualZoom: PropTypes.number,
+  disabled: PropTypes.bool
 }
 
 DraggableComponent.defaultProps = {

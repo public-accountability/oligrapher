@@ -5,6 +5,7 @@ import Graph from './Graph'
 import Editor from './Editor'
 import FloatingMenus from './FloatingMenus'
 import ZoomControl from '../components/ZoomControl'
+import EdgeCreationMessage from "./EdgeCreationMessage"
 
 /*
   This is the root container
@@ -28,7 +29,7 @@ import ZoomControl from '../components/ZoomControl'
   It needs rendered inside a Redux Provider
 
 */
-export const Root = () => {
+export function Root() {
   return <div id="oligrapher-container">
            <Header />
            <div className="oligrapher-graph-container">
@@ -36,6 +37,7 @@ export const Root = () => {
              <Editor />
              <ZoomControl />
              <FloatingMenus />
+             <EdgeCreationMessage />
            </div>
          </div>
 }
