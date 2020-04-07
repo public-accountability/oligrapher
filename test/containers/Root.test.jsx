@@ -1,5 +1,5 @@
 import React from 'react'
-import Root from '../../app/containers/Root'
+import { Root } from '../../app/containers/Root'
 import Header from '../../app/containers/Header'
 import Graph from '../../app/containers/Graph'
 import ZoomControl from '../../app/components/ZoomControl'
@@ -12,7 +12,7 @@ describe('<Root>', function() {
   })
 
   it('has container div', function()  {
-    expect(root.find('#oligrapher-container').length).to.equal(1)
+    expect(root.find('#oligrapher-container')).to.have.lengthOf(1)
   })
 
   it('has header container', function() {

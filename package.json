@@ -30,6 +30,7 @@
   },
   "homepage": "https://littlesis.org/oligrapher",
   "dependencies": {
+    "@hot-loader/react-dom": "^16.13.0",
     "@public-accountability/littlesis-api": "^0.0.7",
     "immer": "^5.3.6",
     "lodash": "^4.17.15",
@@ -70,6 +71,7 @@
     "jsdom": "^16.2.0",
     "mocha": "^7.1.0",
     "node-fetch": "^2.6.0",
+    "react-hot-loader": "^4.12.20",
     "react-test-renderer": "^16.13.0",
     "sass": "^1.26.2",
     "sass-loader": "^8.0.2",
