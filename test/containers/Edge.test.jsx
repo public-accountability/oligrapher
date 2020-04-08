@@ -58,7 +58,12 @@ describe('<Edge>', function() {
   })
 
   it("labels can be hide or shown", function() {
-    expect( createTestEdge({showLabel: false}).component.find(EdgeLabel)).to.be.empty
+    expect(createTestEdge({showLabel: false}).component.find(EdgeLabel)).to.be.empty
     expect(createTestEdge({showLabel: true}).component.find(EdgeLabel)).to.have.lengthOf(1)
+  })
+
+  it("enables dragging only when in editor mode", function() {
+    expect(createTestEdge({editorMode: false}).component.find(DraggableCore).prop('disabled')).to.be.true
+    expect(createTestEdge({editorMode: true}).component.find(DraggableCore).prop('disabled')).to.be.false
   })
 })

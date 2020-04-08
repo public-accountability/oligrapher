@@ -63,7 +63,7 @@ export function Edge(props) {
   }
 
   // Children Props
-  const draggableProps = { onStart, onDrag, onStop, handle: '.edge-handle' }
+  const draggableProps = { onStart, onDrag, onStop, handle: '.edge-handle', disabled: !props.editorMode }
   const edgeGroupProps = { className: "edge-group", id: `edge-${props.id}` }
   const edgeLineProps = { curve, width, isReverse: geometry.is_reverse, ...pickProps('id', 'scale', 'dash', 'status', 'arrow') }
   const edgeLabelProps = { curve, width, ...pickProps('id', 'scale', 'status', 'label') }
@@ -117,7 +117,8 @@ Edge.propTypes = {
   // Helpers
   showLabel: PropTypes.bool.isRequired,
   editorOpen: PropTypes.bool.isRequired,
-  edgeToolEnabled: PropTypes.bool.isRequired
+  edgeToolEnabled: PropTypes.bool.isRequired,
+  editorMode: PropTypes.bool.isRequired
 }
 
 Edge.defaultProps = {
@@ -133,7 +134,8 @@ const mapStateToProps = (state, ownProps) => {
     actualZoom: state.graph.actualZoom,
     showLabel: Boolean(edge.label),
     editorOpen: id == FloatingMenu.getId(state, 'edge'),
-    edgeToolEnabled: state.display.editor.tool === 'edge'
+    edgeToolEnabled: state.display.editor.tool === 'edge',
+    editorMode: state.display.modes.editor
   }
 }
 
