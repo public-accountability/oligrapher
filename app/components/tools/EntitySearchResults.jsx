@@ -4,9 +4,13 @@ import PropTypes from 'prop-types'
 function SearchResult({entity, addNode}) {
   const onClick = () => addNode(entity)
 
-  return <div className="entity-search-entity">
-           <a onClick={onClick}><b>{entity.name}</b></a>
-         </div>
+  return (
+    <div className="entity-search-entity">
+      <a onClick={onClick}><b>{entity.name}</b></a>
+      { entity.description && <br /> }
+      { entity.description && <span className="entity-search-description">{entity.description}</span> }
+    </div>
+  )
 }
 
 SearchResult.propTypes = {

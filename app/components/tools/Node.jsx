@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { callWithTargetValue } from '../../util/helpers'
@@ -6,36 +6,39 @@ import { callWithTargetValue } from '../../util/helpers'
 import EntitySearch from './EntitySearch'
 import Toolbox from './Toolbox'
 
-const doSearch = searchValue => Boolean(searchValue) && searchValue.length > 2
-
 export default function NodeTool() {
   const dispatch = useDispatch()
+  const inputRef = useRef()
   const [searchValue, setSearchValue] = useState('')
-  const onSearch = callWithTargetValue(setSearchValue)
+  const trimmed = searchValue.trim()
+  const doSearch = trimmed.length > 2
+  const handleInputChange = callWithTargetValue(setSearchValue)
 
   const onClickCreateNew = () => {
-    const name = searchValue.trim()
-
-    if (name) {
-      dispatch({ type: 'ADD_NODE', attributes: { name } })
-    } else {
-      // TODO move this error handling to the reducer?
-      console.error("Node name is blank.")
-    }
+    dispatch({ type: 'ADD_NODE', attributes: { name: trimmed } })
   }
 
-  return <Toolbox title="Add Node">
-           <div className="nodetool">
-             <input type="text"
-                    placeholder="Search database"
-                    value={searchValue}
-                    onChange={onSearch} />
+  useEffect(() => {
+    inputRef.current.focus()
+  })
 
-             <a onClick={onClickCreateNew}>Create New +</a>
+  return (
+    <Toolbox title="Add Node">
+      <div className="nodetool">
+        <input type="text"
+               placeholder="Search database"
+               ref={inputRef}
+               value={searchValue}
+               onChange={handleInputChange} />
 
-             <div>
-               { doSearch(searchValue) && <EntitySearch query={searchValue} />}
-             </div>
-           </div>
-         </Toolbox>
+        { doSearch && 
+          <div>
+            Select below or <a onClick={onClickCreateNew}>create new node</a>
+            <hr />
+            <EntitySearch query={trimmed} />
+          </div>
+        }
+      </div>
+    </Toolbox>
+  )
 }

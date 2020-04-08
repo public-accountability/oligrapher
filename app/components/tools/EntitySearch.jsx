@@ -14,29 +14,27 @@ export default function EntitySearch({ query }) {
     [dispatch]
   )
   const [loading, setLoading] = useState(true)
-  const [results, setResults] = useState()
+  const [results, setResults] = useState(null)
 
   useEffect(() => {
     setLoading(true)
-
-    const httpRequest =  makeCancelable(findNodes(query))
+    const httpRequest = makeCancelable(findNodes(query))
 
     httpRequest
       .promise
       .then(json => {
-        setLoading(false)
         setResults(json)
+        setLoading(false)    
       })
       .catch(err => {
         if (!err.isCanceled) {
           setResults(false)
-          console.error("Error finding nodes", err)
+          setLoading(false)
         }
       })
 
-    return () => httpRequest.cancel()
-
-  }, [query] )
+    return httpRequest.cancel
+  }, [query])
 
   if (loading) {
     return <em>...loading...</em>
@@ -45,7 +43,7 @@ export default function EntitySearch({ query }) {
       ? <em>no results</em>
       : <EntitySearchResults results={results} addNode={addNode} />
   } else {
-    return <em>error</em>
+    return <em>Your search resulted in an error.</em>
   }
 }
 

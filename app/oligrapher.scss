@@ -278,23 +278,44 @@ $node_halo_color: #b6e63e;
     left: 60px;
     pointer-events: auto;
     border: 2px solid $oligrapher_blue;
-    padding: 5px;
+    padding: 10px;
     width: $toolbox_width;
 
     header {
         font-size: 20px;
         font-weight: bold;
+        margin-bottom: 5px;
     }
 
     .nodetool {
+        font-size: 15px;
+
         input {
             display: block;
+            margin-bottom: 10px;
         }
 
         a {
             cursor: pointer;
             color: $oligrapher_blue;
             font-weight: bold;
+        }
+
+        hr { 
+            border: 0; 
+            height: 1px;
+            background: $oligrapher_font_gray;
+        }
+    }
+
+    .entity-search-entity {
+        margin-top: 10px;
+
+        a { font-size: 1.1em; }
+
+        .entity-search-description {
+            font-size: 0.8em;
+            color: $oligrapher_dark_gray;
         }
     }
 }
