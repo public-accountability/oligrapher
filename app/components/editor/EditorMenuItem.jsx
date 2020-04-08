@@ -17,8 +17,3 @@ export default function EditorMenuItem(props) {
 EditorMenuItem.propTypes = {
   item: PropTypes.oneOf(Object.keys(MENU)).isRequired
 }
-
-
-// EditorMenuItem.propTypes = {
-//   // action: () => {}
-// }

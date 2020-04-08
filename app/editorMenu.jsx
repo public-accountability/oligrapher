@@ -50,12 +50,12 @@ export const MENU = {
 
 export const MENU_ITEMS = [
   'node',
-  'edge',
   'text',
   'legend',
-  'story',
-  'style',
-  'organize',
+  // TODO:
+  // 'story',
+  // 'style',
+  // 'organize',
   'delete',
   'settings',
   'help'

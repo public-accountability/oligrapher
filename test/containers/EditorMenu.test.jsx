@@ -20,10 +20,9 @@ import EditorMenuItem from '../../app/components/editor/EditorMenuItem'
 
 */
 
-
 describe('<EditorMenu>', function() {
-  it('renders 10 menu items', function() {
+  it('renders 6 menu items', function() {
     let editorMenu = shallow(<EditorMenu />)
-    expect(editorMenu.find(EditorMenuItem)).to.have.lengthOf(10)
+    expect(editorMenu.find(EditorMenuItem)).to.have.lengthOf(6)
   })
 })

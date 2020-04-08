@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { IconContext } from "react-icons/lib"
 
@@ -12,7 +11,7 @@ const iconContextValue = {
   color: 'gray'
 }
 
-export function EditorMenu(props) {
+export function EditorMenu() {
   return <div className="editor-menu">
            <IconContext.Provider value={iconContextValue} >
              { MENU_ITEMS.map(item => <EditorMenuItem key={item} item={item} />) }
@@ -20,12 +19,4 @@ export function EditorMenu(props) {
          </div>
 }
 
-
-EditorMenu.propTypes = {}
-
-const mapStateToProps = function(state) {
-  return {}
-}
-
-
-export default connect(mapStateToProps)(EditorMenu)
+export default connect()(EditorMenu)
