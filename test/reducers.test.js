@@ -3,6 +3,7 @@ import Graph from '../app/graph/graph'
 import Node from '../app/graph/node'
 import Edge from '../app/graph/edge'
 import defaultState from '../app/util/defaultState'
+import { transformNodePosition } from '../app/util/floatingMenu'
 
 import values from 'lodash/values'
 
@@ -57,12 +58,19 @@ describe('Reducer', function() {
     })
   })
 
-  describe('OPEN_EDIT_NODE_MENU', function() {
-    it('set editNode', function() {
-      const state = { display : { editor: { tool: 'node' }, floatingMenu: { type: 'edge', id: 'abc', position: null } } }
-      const action = { type: 'OPEN_EDIT_NODE_MENU', id: 'xyz' }
+  describe('TOGGLE_EDIT_NODE_MENU', function() {
+    it('opens floating menu', function() {
+      const state = { display : { floatingMenu: { type: null, id: null, position: null } } }
+      const action = { type: 'TOGGLE_EDIT_NODE_MENU', id: 'xyz', x: 100, y: 100, actualZoom: 1 }
       expect(reducers(state, action).display.floatingMenu)
-        .to.eql({ type: 'node', id: 'xyz', position: null })
+        .to.eql({ type: 'node', id: 'xyz', position: transformNodePosition({ x: 100, y: 100 }, 1) })
+    })
+
+    it('closes floating menu', function() {
+      const state = { display : { floatingMenu: { type: 'node', id: 'xyz', position: { x: 100, y: 100 } } } }
+      const action = { type: 'TOGGLE_EDIT_NODE_MENU', id: 'xyz', x: 100, y: 100, actualZoom: 1 }
+      expect(reducers(state, action).display.floatingMenu)
+        .to.eql({ type: null, id: null, position: null })
     })
   })
 

@@ -188,7 +188,10 @@ export default produce((draft, action) => {
     if (FloatingMenu.getId(draft, 'node') == action.id) {
       FloatingMenu.clear(draft)
     } else {
-      FloatingMenu.set(draft, 'node', action.id)
+      FloatingMenu.set(
+        draft, 'node', action.id,
+        FloatingMenu.transformNodePosition({ x: action.x, y: action.y }, action.actualZoom)
+      )
     }
     return
   case 'OPEN_ADD_CONNECTIONS_MENU':

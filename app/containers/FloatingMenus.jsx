@@ -21,7 +21,7 @@ export default function FloatingMenus() {
   return <>
            <div style={{width: 0, overflow: "hidden"}} id="caption-text-input"></div>
            { isLocked && <Lock username="example" />}
-           { openMenu === 'node' && <EditNodeMenu /> }
+           { openMenu === 'node' && <EditNodeMenu key={floatingMenu.id} /> }
            { openMenu === 'connections' && <AddConnectionsMenu /> }
            { openMenu === 'edge' && <EditEdgeMenu /> }
            { openMenu === 'caption' && <EditCaptionMenu /> }

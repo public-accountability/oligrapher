@@ -1,24 +1,9 @@
-const transformPosition = (position = null, type = null) => {
-  if (!position || !type) {
-    return null
-  }
-
-  if (type == 'node') {
-    // a temporary and ad-hoc transormation used to roughly place the Edit Node 
-    // menu to the right of the node being edited
-    return {
-      x: position.x + 150,
-      y: position.y
-    }
-  } else {
-    return position
-  }
-}
+export const NODE_X_OFFSET = 150
 
 export const set = (state, type = null, id = null, position = null) => {
   state.display.floatingMenu.type = type
   state.display.floatingMenu.id = id
-  state.display.floatingMenu.position = transformPosition(position, type)
+  state.display.floatingMenu.position = position
 }
 
 export const clear = (state) => {
@@ -35,9 +20,18 @@ export const getType = (state) => {
   return state.display.floatingMenu.type
 }
 
+// used to calculate floating menu position based on node's position
+export const transformNodePosition = (position, zoom) => {
+  return {
+    x: Math.trunc((position.x + NODE_X_OFFSET) * zoom),
+    y: Math.trunc(position.y * zoom)
+  }
+}
+
 export default {
   clear,
   set,
   getId,
-  getType
+  getType,
+  transformNodePosition
 }

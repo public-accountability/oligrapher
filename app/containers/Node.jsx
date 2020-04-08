@@ -93,10 +93,20 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const id = ownProps.id.toString()
 
   return {
-    toggleEditNodeMenu: () => dispatch({ type: 'TOGGLE_EDIT_NODE_MENU', id }),
     moveNode: (deltas) => dispatch({ type: 'MOVE_NODE', id, deltas }),
-    dragNode: (deltas) => dispatch({ type: 'DRAG_NODE', id, deltas })
+    dragNode: (deltas) => dispatch({ type: 'DRAG_NODE', id, deltas }),
+    dispatch
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Node)
+const mergeProps = (stateProps, dispatchProps) => {
+  let { id, x, y, actualZoom } = stateProps
+
+  return {
+    ...stateProps,
+    ...dispatchProps,
+    toggleEditNodeMenu: () => dispatchProps.dispatch({ type: 'TOGGLE_EDIT_NODE_MENU', id, x, y, actualZoom })
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(Node)

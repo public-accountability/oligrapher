@@ -333,6 +333,7 @@ $node_halo_color: #b6e63e;
 header.edit-menu-header {
     >div {
         display: inline-block;
+        cursor: grab;
     }
 
     >div:nth-child(2) {
