@@ -199,7 +199,10 @@ export default produce((draft, action) => {
     return
   case 'OPEN_ADD_CONNECTIONS_MENU':
     if (isLittleSisId(action.id)) {
-      FloatingMenu.set(draft, 'connections', action.id)
+      FloatingMenu.set(
+        draft, 'connections', action.id,
+        FloatingMenu.transformNodePosition({ x: action.x, y: action.y }, action.actualZoom)
+      )
     } else {
       console.error(`Cannot find connections unless the entity is a LittlesSis Entity. id == ${action.id}`)
     }
@@ -242,14 +245,10 @@ export default produce((draft, action) => {
     }
     return
   case 'ADD_CONNECTION':
-    // action.entity -- littlesis api entity object
-    // action.relationship -- littlesis api relationship object
-    // action.node -- current node
-
     Graph.addConnection(draft.graph, {
-      entity: action.entity,
-      relationship: action.relationship,
-      node: action.node
+      newNode: action.newNode,
+      newEdge: action.newEdge,
+      existingNodeId: action.existingNodeId
     })
 
     return

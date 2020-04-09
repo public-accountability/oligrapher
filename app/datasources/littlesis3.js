@@ -5,7 +5,7 @@ import curry from 'lodash/curry'
 // see webpack.config.js
 const urls = {
   findNodes: () => `${API_URL}/oligrapher/find_nodes`,
-  findConnections: id => `${API_URL}/api/entities/${id}/connections`,
+  findConnections: () => `${API_URL}/oligrapher/find_connections`,
   getRelationship: id => `${API_URL}/api/relationships/${id}`,
   createOligrapher: () => `${API_URL}/oligrapher`,
   updateOligrapher: id => `${API_URL}/oligrapher/${id}`,
@@ -60,8 +60,8 @@ export function findNodes(query) {
 export function findConnections(entityId, options = {}) {
   validateId(entityId)
 
-  return wretch(urls.findConnections(entityId))
-    .query({ page: 1, ...options })
+  return wretch(urls.findConnections())
+    .query({ entity_id: entityId, num: 10, ...options })
     .get()
     .json()
 }

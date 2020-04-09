@@ -1,12 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-function SearchResult({entity, addNode}) {
-  const onClick = () => addNode(entity)
-
+function SearchResult({ entity, onClick }) {
   return (
-    <div className="entity-search-entity">
-      <a onClick={onClick}><b>{entity.name}</b></a>
+    <div className="entity-search-result">
+      <a onClick={() => onClick(entity)}><b>{entity.name}</b></a>
       { entity.description && <br /> }
       { entity.description && <span className="entity-search-description">{entity.description}</span> }
     </div>
@@ -15,18 +13,25 @@ function SearchResult({entity, addNode}) {
 
 SearchResult.propTypes = {
   entity: PropTypes.object.isRequired,
-  addNode: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired
 }
 
-export default function EntitySearchResults({results, addNode}) {
-  return <div className="entity-search-results">
-           { results.map(entity => <SearchResult addNode={addNode}
-                                                entity={entity}
-                                                key={entity.id} />) }
-         </div>
+export default function EntitySearchResults({ results, onClick }) {
+  console.log(results)
+  return (
+    <div className="entity-search-results">
+      { results.map(entity => 
+          <SearchResult 
+            onClick={onClick}
+            entity={entity}
+            key={entity.id} />
+        ) 
+      }
+    </div>
+  )
 }
 
 EntitySearchResults.propTypes = {
   results: PropTypes.array.isRequired,
-  addNode: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired
 }

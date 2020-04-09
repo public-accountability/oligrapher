@@ -10,7 +10,7 @@ import EntitySearchResults from './EntitySearchResults'
 export default function EntitySearch({ query }) {
   const dispatch = useDispatch()
   const addNode = useCallback(
-    attributes => dispatch({ type: 'ADD_NODE', attributes }),
+    entity => dispatch({ type: 'ADD_NODE', attributes: entity }),
     [dispatch]
   )
   const [loading, setLoading] = useState(true)
@@ -41,7 +41,7 @@ export default function EntitySearch({ query }) {
   } else if (isArray(results)) {
     return results.length === 0
       ? <em>no results</em>
-      : <EntitySearchResults results={results} addNode={addNode} />
+      : <EntitySearchResults results={results} onClick={addNode} />
   } else {
     return <em>Your search resulted in an error.</em>
   }

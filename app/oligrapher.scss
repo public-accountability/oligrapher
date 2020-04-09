@@ -288,8 +288,6 @@ $node_halo_color: #b6e63e;
     }
 
     .nodetool {
-        font-size: 15px;
-
         input {
             display: block;
             margin-bottom: 10px;
@@ -307,17 +305,27 @@ $node_halo_color: #b6e63e;
             background: $oligrapher_font_gray;
         }
     }
+}
 
-    .entity-search-entity {
-        margin-top: 10px;
+.entity-search-results {
+  width: $toolbox_width;
+}
 
-        a { font-size: 1.1em; }
+.entity-search-result {
+  font-size: 15px;
+  margin-top: 10px;
 
-        .entity-search-description {
-            font-size: 0.8em;
-            color: $oligrapher_dark_gray;
-        }
-    }
+  a {
+    cursor: pointer;
+    color: $oligrapher_blue;
+    font-weight: bold;
+    font-size: 1.1em;
+  }
+
+  .entity-search-description {
+      font-size: 0.8em;
+      color: $oligrapher_dark_gray;
+  }
 }
 
 .text-tool { }

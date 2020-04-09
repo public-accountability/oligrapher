@@ -5,6 +5,7 @@ import isNumber from 'lodash/isNumber'
 import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 import values from 'lodash/values'
+import pick from 'lodash/pick'
 
 import { translatePoint, rotatePoint, distance } from '../util/helpers'
 import { newNode } from './node'
@@ -212,6 +213,7 @@ export function removeNode(graph, node) {
 }
 
 export function updateNode(graph, node, attributes) {
+  console.log(graph.nodes[getId(node)], attributes)
   merge(graph.nodes[getId(node)], attributes)
 
   // If scale is changed, update any associated edges
@@ -310,23 +312,24 @@ export function intersectingNodeFromDrag(graph, nodeId, deltas) {
 
 // Add Connections
 
-// Node =  already existing node or id
-// Entity = littlesis api entity
-// Relationship = littlesis api relationship
-function addConnection(graph, {node, entity, relationship}) {
-  if (getEdge(graph, relationship.id)) {
-    console.log(`An edge with id ${relationship.id} already exists`)
+function addConnection(graph, { existingNodeId, newNode, newEdge }) {
+  if (getEdge(graph, newEdge.id)) {
+    console.log(`An edge with id ${newEdge.id} already exists`)
     return
   }
 
-  if (!getNode(graph, entity.id)) {
-    const nodeAttributes = { id: entity.id, name: entity.attributes.name, url: entity.links.self }
-    addNode(graph, nodeAttributes)
+  if (!getNode(graph, newNode.id)) {
+    addNode(graph, pick(newNode, ['id', 'name', 'url', 'image']))
   }
 
-  const edge = newEdgeFromNodes(getNode(graph, node),
-                                getNode(graph, entity.id),
-                                { id: relationship.id })
+  const node1Id = newEdge.node1_id == existingNodeId ? existingNodeId : newNode.id
+  const node2Id = newEdge.node1_id == existingNodeId ? newNode.id : existingNodeId
+
+  const edge = newEdgeFromNodes(
+    getNode(graph, node1Id),
+    getNode(graph, node2Id),
+    pick(newEdge, ['id', 'label', 'url', 'arrow', 'dash'])
+  )
 
   addEdge(graph, edge)
 

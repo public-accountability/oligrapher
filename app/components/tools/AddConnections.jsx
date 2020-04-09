@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 import uniqBy from 'lodash/uniqBy'
+import isArray from 'lodash/isArray'
 
-import { findConnections } from '../../datasources/littlesis3'
+import { findConnections, getRelationship } from '../../datasources/littlesis3'
 import { makeCancelable } from '../../util/helpers'
-import AddConnectionsResults from './AddConnectionsResults'
+import EntitySearchResults from './EntitySearchResults'
 import Graph from '../../graph/graph'
 
 /*
@@ -16,36 +17,49 @@ import Graph from '../../graph/graph'
   The results component is <AddConnectionsResults>
 */
 export default function AddConnections({ id }) {
+  const graph = useSelector(state => state.graph)
+  const connectedNodeIds = useMemo(() => Graph.connectedNodeIds(graph, id), [graph, id])
   const dispatch = useDispatch()
-  const connectedNodeIds = useSelector(state => Graph.connectedNodeIds(state.graph, id))
-  console.log(connectedNodeIds)
   const [results, setResults] = useState(null)
+  const [loading, setLoading] = useState(true)
 
-  // This function is passed all the way down into <AddConnectionResult>
-  // The setResults(filter(results)) removes the clicked on entity from the display list
-  const addConnection = (entity, relationship) => {
-    dispatch({ type: 'ADD_CONNECTION', node: id, entity, relationship })
-  }
+  const addConnection = useCallback(node => {
+    dispatch({ type: 'ADD_CONNECTION', existingNodeId: id, newNode: node, newEdge: node.edge })
+  }, [dispatch, id])
 
   useEffect(() => {
+    setLoading(true)
     const httpRequest = makeCancelable(findConnections(id))
 
     httpRequest
       .promise
-      .then(json => {
-        let entities = uniqBy(json['data'], 'id').filter(entity => !connectedNodeIds.includes(entity.id))
-        setResults(entities) // ..Until we figure out the best way handle the case where there are multiple relationship between the same entity
+      .then(entities => {
+        let results = uniqBy(entities, 'id').filter(entity => !connectedNodeIds.includes(entity.id))
+        
+        setResults(results) // ..Until we figure out the best way handle the case where there are multiple relationship between the same entity
+        setLoading(false)
       })
-      .catch(err => err.isCanceled ? null : console.error("Error finding connections", err))
+      .catch(err => {
+        if (!err.isCanceled) {
+          console.error("Error finding connections", err)
+          setResults(false)
+          setLoading(false)
+        }
+      })
 
-    return () => httpRequest.cancel()
-
+    return httpRequest.cancel
   }, [id, connectedNodeIds])
 
-  if (results && results.length > 0) {
-    return <AddConnectionsResults results={results} addConnection={addConnection} />
+  if (loading) {
+    return <em>...loading...</em>
+  } else if (isArray(results)) {
+    if (results.length > 0) {
+      return <EntitySearchResults results={results} onClick={addConnection} />
+    } else {
+      return <em>No results.</em>
+    }
   } else {
-    return null
+    return <em>Your search resulted in an error.</em>
   }
 }
 

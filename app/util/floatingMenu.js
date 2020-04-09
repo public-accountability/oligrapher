@@ -1,4 +1,4 @@
-export const NODE_X_OFFSET = 150
+export const NODE_X_OFFSET = 200
 
 export const set = (state, type = null, id = null, position = null) => {
   state.display.floatingMenu.type = type
