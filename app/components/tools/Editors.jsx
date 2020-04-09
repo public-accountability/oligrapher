@@ -5,8 +5,6 @@ import { callWithTargetValue } from '../../util/helpers'
 
 import LittleSis from '../../datasources/littlesis3'
 
-import EditMenu from '../editor/EditMenu'
-
 const addEditorAction = (setLoading, oligrapherId) => username => dispatch => {
   if (!oligrapherId) {
     throw new Error('Cannot add editors to maps without an id')
@@ -45,39 +43,37 @@ export default function Editors() {
   const submitUsername =  addEditorAction(setLoading, oligrapherId)
 
 
-  return <EditMenu tool="editors">
-           <div className="add-editors-body">
-             <div className="add-editors-fields">
-               <input type="type"
-                      value={username}
-                      onChange={callWithTargetValue(setUsername)}
-                      placeholder="Enter username" />
+  return (
+    <div className="add-editors-body">
+      <div className="add-editors-fields">
+        <input type="type"
+              value={username}
+              onChange={callWithTargetValue(setUsername)}
+              placeholder="Enter username" />
 
-               {/*This field is in our designs but it doesn't do anything right now. */}
-               <textarea row="3"
-                         cols="25"
-                         value={message}
-                         onChange={callWithTargetValue(setMessage)}
-                         placeholder="Message" />
+        {/*This field is in our designs but it doesn't do anything right now. */}
+        <textarea row="3"
+                  cols="25"
+                  value={message}
+                  onChange={callWithTargetValue(setMessage)}
+                  placeholder="Message" />
+      </div>
 
-             </div>
+      <hr />
 
-             <hr />
-
-             <div className="add-editors-bottom-row">
-               <div>
-                 <label> editors </label>
-                 <EditorList editors={editors} />
-               </div>
-               <div>
-                 <button name="submit"
-                         onClick={() => dispatch(submitUsername(username)) }
-                         disabled={loading}>
-                   ✓
-                 </button>
-               </div>
-             </div>
-
-           </div>
-         </EditMenu>
+      <div className="add-editors-bottom-row">
+        <div>
+          <label> editors </label>
+          <EditorList editors={editors} />
+        </div>
+        <div>
+          <button name="submit"
+                  onClick={() => dispatch(submitUsername(username)) }
+                  disabled={loading}>
+            ✓
+          </button>
+        </div>
+      </div>
+    </div>
+  )
 }

@@ -9,7 +9,7 @@ import ResultLoadingIcon from './ResultLoadingIcon'
   An api call is made to /api/relationships/:id which retrieves more information
   about the relationship which is used by Graph.addConnection
 */
-function AddConnectionResult({ entity, addConnectionToMap }) {
+function AddConnectionResult({ entity, addConnection }) {
   const [isLoading, setLoading] = useState(false)
 
   const onClick = () => {
@@ -18,7 +18,7 @@ function AddConnectionResult({ entity, addConnectionToMap }) {
     getRelationship(entity.attributes.relationship_id)
       .then(json => {
         setLoading(false)
-        addConnectionToMap(entity, json.data)
+        addConnection(entity, json.data)
       })
       .catch(err => {
         console.error(`Failed to load relationship #${entity.attributes.relationship_id}`)
@@ -46,7 +46,7 @@ function AddConnectionResult({ entity, addConnectionToMap }) {
 
 AddConnectionResult.propTypes = {
   entity: PropTypes.object.isRequired,  // "Entity" is the json from our api
-  addConnectionToMap: PropTypes.func.isRequired
+  addConnection: PropTypes.func.isRequired
 }
 
 // see AddConnections.jsx
@@ -55,12 +55,12 @@ export default function AddConnectionsResults(props) {
            {
              props.results.map( entity => <AddConnectionResult entity={entity}
                                                                key={entity.id}
-                                                               addConnectionToMap={props.addConnectionToMap} />)
+                                                               addConnection={props.addConnection} />)
            }
          </main>
 }
 
 AddConnectionsResults.propTypes = {
   results: PropTypes.array.isRequired,
-  addConnectionToMap: PropTypes.func.isRequired // takes two arguments: Entity and Relationship
+  addConnection: PropTypes.func.isRequired // takes two arguments: Entity and Relationship
 }

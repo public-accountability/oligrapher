@@ -2,6 +2,7 @@ import pick from 'lodash/pick'
 import isFunction from 'lodash/isFunction'
 import isString from 'lodash/isString'
 import isNumber from 'lodash/isNumber'
+import toNumber from 'lodash/toNumber'
 import isNil from 'lodash/isNil'
 
 /**
@@ -137,4 +138,8 @@ export function createStateUpdater(setStateFunction, attributeName) {
       setStateFunction(oldState => ({...oldState, [attributeName]: value}))
     }
   }
+}
+
+export function isLittleSisId(id) {
+  return Number.isFinite(toNumber(id))
 }

@@ -1,32 +1,48 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import Draggable from 'react-draggable'
 
-import EditNodeMenu from './EditNodeMenu'
-import EditEdgeMenu from './EditEdgeMenu'
-import EditCaptionMenu from './EditCaptionMenu'
-import AddConnectionsMenu from './AddConnectionsMenu'
-import StyleNodesMenu from './StyleNodesMenu'
+import EditHeader from '../components/editor/EditMenuHeader'
+import EditNode from './EditNode'
+import EditEdge from './EditEdge'
+import EditCaption from './EditCaption'
+import AddConnections from '../components/tools/AddConnections'
 import Settings from './Settings'
 import Editors from '../components/tools/Editors'
-import Lock from '../components/Lock'
+import { classNames } from '../util/helpers'
 
 
 export default function FloatingMenus() {
-  const floatingMenu = useSelector(state => state.display.floatingMenu)
-  const lock = useSelector(state => state.attributes.lock)
+  let { id, type, position } = useSelector(state => state.display.floatingMenu)
   const isEditor = useSelector(state => state.display.modes.editor)
-  const isLocked = isEditor && lock?.locked && !lock.user_has_lock
-  const openMenu = isLocked ? null : floatingMenu.type
 
-  return <>
-           <div style={{width: 0, overflow: "hidden"}} id="caption-text-input"></div>
-           { isLocked && <Lock username="example" />}
-           { openMenu === 'node' && <EditNodeMenu key={floatingMenu.id} /> }
-           { openMenu === 'connections' && <AddConnectionsMenu /> }
-           { openMenu === 'edge' && <EditEdgeMenu /> }
-           { openMenu === 'caption' && <EditCaptionMenu /> }
-           { openMenu === 'style' && <StyleNodesMenu /> }
-           { openMenu === 'settings' && <Settings /> }
-           { openMenu === 'editors' && <Editors /> }
-         </>
+  if (!type || !isEditor) {
+    return null
+  }
+
+  const titles = {
+    node: "Customize Node",
+    connections: "Add Connections",
+    edge: "Customize Edge",
+    caption: "Customize Text",
+    style: "Style Nodes",
+    settings: "Settings",
+    editors: "Add Editors"
+  }
+
+  return (
+    <Draggable enableUserSelectHack={false} handle=".edit-menu-header" positionOffset={position || undefined}>
+      <div className="oligrapher-edit-menu">
+        <div className={ classNames("edit-menu-wrapper", `edit-${type}-menu`) }>
+          <EditHeader title={titles[type]} />
+           { type === 'node' && <EditNode id={id} /> }
+           { type === 'connections' && <AddConnections id={id} /> }
+           { type === 'edge' && <EditEdge id={id} /> }
+           { type === 'caption' && <EditCaption captionId={id} /> }
+           { type === 'settings' && <Settings /> }
+           { type === 'editors' && <Editors /> }
+        </div>
+      </div>
+    </Draggable>  
+  )
 }

@@ -9,13 +9,12 @@ import Graph from '../graph/graph'
 import { callWithTargetValue } from '../util/helpers'
 
 // Components
-import EditMenu from '../components/editor/EditMenu'
 import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
 import LineStyle from '../components/editor/LineStyle'
 import DashStyle from '../components/editor/DashStyle'
 import ScaleStyle from '../components/editor/ScaleStyle'
 
-export function MainPage({ nodes, attributes, attributeUpdator, setPage }) {
+export function MainPage({ nodes, attributes, attributeUpdator }) {
   const updateLabel = attributeUpdator('label')
   const updateUrl = attributeUpdator('url')
   const updateArrow = attributeUpdator('arrow')
@@ -78,51 +77,54 @@ export function MainPage({ nodes, attributes, attributeUpdator, setPage }) {
 MainPage.propTypes = {
   nodes: PropTypes.array.isRequired,
   attributes: PropTypes.object.isRequired,
-  attributeUpdator: PropTypes.func.isRequired,
-  setPage: PropTypes.func.isRequired
+  attributeUpdator: PropTypes.func.isRequired
 }
 
 // Object, Func => Func(String) => Func(Any) => setAttributes() call
 const createAttributeUpdator = (attributes, setAttributes) => name => value => setAttributes(merge({}, attributes, { [name]: value }))
 const edgeAttributes = edge => pick(edge, 'label', 'size', 'color', 'url', 'arrow', 'scale')
 
-export default function EditEdgeMenu() {
+export default function EditEdge({ id }) {
   const [page, setPage] = useState('main')
 
-  const edgeId = useSelector(state => state.display.floatingMenu.id)
-  const edge = useSelector(state => state.graph.edges[edgeId])
-  const nodes = useSelector(state => Graph.nodesOf(state.graph, edgeId))
+  const edge = useSelector(state => state.graph.edges[id])
+  const nodes = useSelector(state => Graph.nodesOf(state.graph, id))
 
   const [attributes, setAttributes] = useState(edgeAttributes(edge))
   const attributeUpdator = createAttributeUpdator(attributes, setAttributes)
 
   useEffect(() => {
     setAttributes( prevEdge => ({ ...prevEdge, ...edgeAttributes(edge) }))
-  }, [edgeId, edge.label, edge.size, edge.color, edge.url, edge.arrow] )
+  }, [id, edge] )
 
   const dispatch = useDispatch()
   const handleSubmit = useCallback(
-    () => dispatch({ type: "UPDATE_EDGE", id: edgeId, attributes }),
-    [dispatch, edgeId, attributes]
+    () => dispatch({ type: "UPDATE_EDGE", id, attributes }),
+    [dispatch, id, attributes]
   )
   const handleDelete = useCallback(
-    () => dispatch({ type: "REMOVE_EDGE", id: edgeId }), 
-    [dispatch, edgeId]
+    () => dispatch({ type: "REMOVE_EDGE", id }), 
+    [dispatch, id]
   )
 
-  return <EditMenu tool="edge">
-           <main>
-             { page === 'main' && <MainPage attributes={attributes}
-                                            attributeUpdator={attributeUpdator}
-                                            setPage={setPage}
-                                            nodes={nodes} />}
-           </main>
+  return (
+    <div>
+      <main>
+        { page === 'main' && <MainPage attributes={attributes}
+                                      attributeUpdator={attributeUpdator}
+                                      setPage={setPage}
+                                      nodes={nodes} />}
+      </main>
+      <footer>
+        <EditMenuSubmitButtons handleSubmit={handleSubmit}
+                              handleDelete={handleDelete}
+                              page={page}
+                              setPage={setPage} />
+      </footer>
+    </div>
+  )
+}
 
-           <footer>
-             <EditMenuSubmitButtons handleSubmit={handleSubmit}
-                                    handleDelete={handleDelete}
-                                    page={page}
-                                    setPage={setPage} />
-           </footer>
-         </EditMenu>
+EditEdge.propTypes = {
+  id: PropTypes.number.isRequired
 }

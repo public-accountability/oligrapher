@@ -86,21 +86,32 @@ describe('Reducer', function() {
   describe('ADD_NODE', function() {
     let node, state, action, nextState
 
-    beforeEach(function() {
+    it('adds node to graph', function() {
       node = Node.new()
       state = defaultState
       action = { type: 'ADD_NODE', attributes : node }
       nextState = reducers(state, action)
-    })
-
-    it('adds node to graph', function() {
       expect(Object.keys(nextState.graph.nodes)).to.eql([node.id])
     })
 
-    it('opens and positions floating menu', function() {
-      expect(nextState.display.floatingMenu.type).to.eql('node')
-      expect(nextState.display.floatingMenu.id).to.eql(node.id)
+    it('opens and positions node editor if node isnt from LittleSis', function() {
+      node = { name: "bob" }
+      state = defaultState
+      action = { type: 'ADD_NODE', attributes : node }
+      nextState = reducers(state, action)
+      expect(nextState.display.floatingMenu.type).to.equal('node')
+      expect(nextState.display.floatingMenu.id).to.not.be.null
       expect(nextState.display.floatingMenu.position).to.not.be.null
+    })
+
+    it('doesnt open node editor node is from LittleSis', function() {
+      node = Node.new()
+      state = defaultState
+      action = { type: 'ADD_NODE', attributes : node }
+      nextState = reducers(state, action)
+      expect(nextState.display.floatingMenu.type).to.be.null
+      expect(nextState.display.floatingMenu.id).to.be.null
+      expect(nextState.display.floatingMenu.position).to.be.null
     })
   })
 

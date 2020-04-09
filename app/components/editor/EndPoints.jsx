@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import toNumber from 'lodash/toNumber'
-//import { useStore } from 'react-redux'
 
 import Arrow from '../../graph/arrow'
 import Node from '../../graph/node'

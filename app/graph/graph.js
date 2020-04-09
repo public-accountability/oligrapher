@@ -333,6 +333,11 @@ function addConnection(graph, {node, entity, relationship}) {
   return graph
 }
 
+function connectedNodeIds(graph, node) {
+  let nodeIds = edgesOf(graph, node).map(edge => [edge.node1_id, edge.node2_id]).flat()
+  return [...new Set(nodeIds)].filter(id => id != node.id)
+}
+
 function arrangeGraph(graph, arrangement) {
   if (!['circle', 'lines'].includes(arrangement)) {
     throw new Error(`invalid graph arrangement: ${arrangement}`)
@@ -366,5 +371,6 @@ export default {
   "updateViewBox":              updateViewBox,
   "setZoom":                    setZoom,
   "addConnection":              addConnection,
+  "connectedNodeIds":           connectedNodeIds,
   "arrange":                    arrangeGraph
 }

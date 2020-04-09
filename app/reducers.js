@@ -2,7 +2,6 @@ import produce from 'immer'
 import merge from 'lodash/merge'
 import isEqual from 'lodash/isEqual'
 import toString from 'lodash/toString'
-import toNumber from 'lodash/toNumber'
 
 import { translatePoint } from './util/helpers'
 
@@ -12,6 +11,7 @@ import Caption from './graph/caption'
 
 import FloatingMenu from './util/floatingMenu'
 import EdgeCreation from './util/edgeCreation'
+import { isLittleSisId } from './util/helpers'
 
 const ZOOM_INTERVAL = 0.2
 
@@ -85,7 +85,10 @@ export default produce((draft, action) => {
     return
   case 'ADD_NODE':
     Graph.addNode(draft.graph, action.attributes, (node) => {
-      FloatingMenu.set(draft, 'node', node.id, { x: node.x, y: node.y })      
+      // only show edit box if node is new
+      if (!action.attributes.id) {
+        FloatingMenu.set(draft, 'node', node.id, { x: node.x, y: node.y })        
+      }
     })
     return
   case 'ADD_NODES':
@@ -195,7 +198,7 @@ export default produce((draft, action) => {
     }
     return
   case 'OPEN_ADD_CONNECTIONS_MENU':
-    if (Number.isFinite(toNumber(action.id))) {
+    if (isLittleSisId(action.id)) {
       FloatingMenu.set(draft, 'connections', action.id)
     } else {
       console.error(`Cannot find connections unless the entity is a LittlesSis Entity. id == ${action.id}`)

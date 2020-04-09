@@ -287,4 +287,21 @@ describe('Graph', function() {
       expect(graph.edges[lobbyingRelationship.id]).to.be.ok
     })
   })
+
+  describe('connectedNodeIds', function() {
+    let graph, n1, n2, n3, n4, e1, e2
+
+    it('returns connected node ids', function() {
+      graph = Graph.new()
+      n1 = Node.new()
+      n2 = Node.new()
+      n3 = Node.new()
+      n4 = Node.new()
+      e1 = Edge.newEdgeFromNodes(n1, n2)
+      e2 = Edge.newEdgeFromNodes(n1, n3)
+      Graph.addNodes(graph, [n1, n2, n3, n4])
+      Graph.addEdges(graph, [e1, e2])
+      expect(Graph.connectedNodeIds(graph, n1)).to.have.members([n2.id, n3.id])
+    })
+  })
 })

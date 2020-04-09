@@ -435,7 +435,7 @@ header.edit-menu-header {
         }
     }
 
-    a.add-node-bio-link {
+    a.add-node-bio-link, a.add-connections-link {
         display: block;
         font-size: 14px;
         color: $oligrapher_blue;
@@ -446,7 +446,6 @@ header.edit-menu-header {
             text-decoration: underline;
         }
     }
-
 
     div.edit-menu-submit-buttons {
         display: flex;

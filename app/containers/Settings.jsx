@@ -4,8 +4,6 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import defaultState from '../util/defaultState'
 
-import EditMenu from '../components/editor/EditMenu'
-
 const OPTION_DESCRIPTION = {
   "private": "Set map to private",
   "clone": "Allow map cloning",
@@ -21,7 +19,7 @@ function SettingsOption({ option }) {
 
   const onChange = useCallback(
     () => dispatch({type: 'UPDATE_SETTING', key: option, value: !value}),
-    [dispatch, value]
+    [dispatch, option, value]
   )
 
   return <div className="settings-option">
@@ -37,15 +35,17 @@ SettingsOption.propTypes = {
 }
 
 export default function Settings() {
-  return <EditMenu tool="settings">
-           <label>Privacy</label>
-           <SettingsOption option="private" />
-           <SettingsOption option="clone" />
-           <hr />
-           <label>View</label>
-           <SettingsOption option="defaultStoryMode" />
-           <SettingsOption option="defaultExploreMode" />
-           <SettingsOption option="storyModeOnly" />
-           <SettingsOption option="exploreModeOnly" />
-         </EditMenu>
+  return (
+    <div>
+      <label>Privacy</label>
+      <SettingsOption option="private" />
+      <SettingsOption option="clone" />
+      <hr />
+      <label>View</label>
+      <SettingsOption option="defaultStoryMode" />
+      <SettingsOption option="defaultExploreMode" />
+      <SettingsOption option="storyModeOnly" />
+      <SettingsOption option="exploreModeOnly" />
+    </div>
+  )
 }

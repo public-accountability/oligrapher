@@ -5,10 +5,8 @@ import Select from 'react-select'
 import toString from 'lodash/toString'
 import range from 'lodash/range'
 
-import EditMenu from '../components/editor/EditMenu'
 import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
 
-import FloatingMenu from '../util/floatingMenu'
 
 const FONT_FAMILY_OPTIONS = [
   { value: 'Arial', label: 'Arial' },
@@ -33,43 +31,38 @@ function FontWeightPicker(props) {
   return <Select options={FONT_WEIGHT_OPTIONS} />
 }
 
-function FontSizePicker() {
+function FontSizePicker(props) {
   return <Select options={FONT_SIZE_OPTIONS} />
 }
 
-export function EditCaptionMenu(props) {
+export function EditCaption(props) {
   const handleSubmit = () => console.log('updating caption attributes...')
-  const handleDelete = () => props.deleteCaption()
 
-  return <EditMenu tool="caption">
-           <main>
-             <label>Font</label>
-             <FontFamilyPicker />
-             <FontWeightPicker />
-             <FontSizePicker />
-           </main>
+  return (
+    <div>
+      <main>
+        <label>Font</label>
+        <FontFamilyPicker />
+        <FontWeightPicker />
+        <FontSizePicker />
+      </main>
 
-           <footer>
-             <EditMenuSubmitButtons handleSubmit={handleSubmit}
-                                    handleDelete={handleDelete}
-                                    page="main"/>
-           </footer>
-         </EditMenu>
+      <footer>
+        <EditMenuSubmitButtons handleSubmit={handleSubmit}
+                              handleDelete={props.deleteCaption}
+                              page="main"/>
+      </footer>
+    </div>
+  )
 }
 
-EditCaptionMenu.propTypes = {
+EditCaption.propTypes = {
   id: PropTypes.string.isRequired,
   deleteCaption: PropTypes.func.isRequired
 }
 
-const mapStateToProps = state => {
-  return {
-    id: FloatingMenu.getId(state, 'caption')
-  }
-}
-
-const mapDispatchToProps = dispatch => ({
-  deleteCaption: () => dispatch({ type: "DELETE_CAPTION" })
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  deleteCaption: () => dispatch({ type: "DELETE_CAPTION", id: ownProps.id })
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditCaptionMenu)
+export default connect((state) => state, mapDispatchToProps)(EditCaption)
