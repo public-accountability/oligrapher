@@ -54,7 +54,7 @@ describe('<FloatingMenus>', function() {
     let edge = Edge.newEdgeFromNodes(node1, node2)
     Graph.addNodes(state.graph, [node1, node2])
     Graph.addEdge(state.graph, edge)
-    FloatingMenu.set(state, 'edge', edge.id)
+    FloatingMenu.set(state, 'edge', edge.id, { x: 0, y: 0 })
     store = createMockStore(state)
     wrapper = mountWithStore(store, <FloatingMenus />)
     expect(wrapper.find(EditEdge)).to.have.lengthOf(1)

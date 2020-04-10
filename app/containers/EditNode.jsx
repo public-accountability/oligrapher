@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSelector, useDispatch } from 'react-redux'
 
-import Node from '../graph/node'
 import SizePicker from '../components/SizePicker'
 import EditNodeColorPage from '../components/editor/EditNodeColorPage'
 import EditNodeBioPage from '../components/editor/EditNodeBioPage'
@@ -12,15 +11,14 @@ import { callWithTargetValue, isLittleSisId } from '../util/helpers'
 
 export function MainPage({node, setPage, updateNode, openAddConnections}) {
   const showAddConnections = isLittleSisId(node.id)
-  console.log(node)
 
   return (
     <>
       <form>
         <div>
-          <label>Title</label>
+          <label>Name</label>
           <input type="text"
-                placeholder="node title"
+                placeholder="Node name"
                 value={node.name || ''}
                 onChange={callWithTargetValue(name => updateNode({ name }))} />
         </div>
@@ -48,7 +46,6 @@ export function MainPage({node, setPage, updateNode, openAddConnections}) {
         className="add-node-bio-link">Add Node Bio +</a>
       { showAddConnections && <a className="add-connections-link" onClick={openAddConnections}>Add Connections +</a> }
     </>
-
   )
 }
 
@@ -64,15 +61,13 @@ MainPage.propTypes = {
   openAddConnections: PropTypes.func.isRequired
 }
 
-export default function EditNode({ id }) {
+export default function EditNode({ id, openAddConnections }) {
   // possible pages: main, color, size, bio
   const [page, setPage] = useState('main')
   const dispatch = useDispatch()
   const node = useSelector(state => state.graph.nodes[id])
   const removeNode = () => dispatch({ type: "REMOVE_NODE", id })
   const updateNode = (attributes) => dispatch({ type: "UPDATE_NODE", id, attributes })
-  const { x, y, actualZoom } = node
-  const openAddConnections = () => dispatch({ type: "OPEN_ADD_CONNECTIONS_MENU", id, x, y, actualZoom })
 
   return (
     <>
@@ -85,6 +80,7 @@ export default function EditNode({ id }) {
 
       <footer>
         <EditMenuSubmitButtons
+          hideSubmitButton={true}
           handleDelete={removeNode}
           page={page}
           setPage={setPage} />
@@ -95,8 +91,5 @@ export default function EditNode({ id }) {
 
 EditNode.propTypes = {
   id: PropTypes.string.isRequired,
-  node: Node.types.node.isRequired,
-  updateNode: PropTypes.func.isRequired,
-  removeNode: PropTypes.func.isRequired,
   openAddConnections: PropTypes.func.isRequired
 }

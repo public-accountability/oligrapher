@@ -199,16 +199,15 @@ export default produce((draft, action) => {
     return
   case 'OPEN_ADD_CONNECTIONS_MENU':
     if (isLittleSisId(action.id)) {
-      FloatingMenu.set(
-        draft, 'connections', action.id,
-        FloatingMenu.transformNodePosition({ x: action.x, y: action.y }, action.actualZoom)
-      )
+      // no need to transform position as this is only opened from EditNode,
+      // which is already positioned
+      FloatingMenu.set(draft, 'connections', action.id, { x: action.x, y: action.y })
     } else {
       console.error(`Cannot find connections unless the entity is a LittlesSis Entity. id == ${action.id}`)
     }
     return
   case 'OPEN_EDIT_EDGE_MENU':
-    FloatingMenu.set(draft, 'edge', action.id)
+    FloatingMenu.set(draft, 'edge', action.id, { x: 0, y: 0 }) // placeholder position
     return
   case 'OPEN_EDIT_CAPTION_MENU':
     FloatingMenu.set(draft, 'caption', action.id)

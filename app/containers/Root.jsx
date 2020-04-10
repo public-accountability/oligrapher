@@ -30,16 +30,18 @@ import EdgeCreationMessage from "./EdgeCreationMessage"
 
 */
 export function Root() {
-  return <div id="oligrapher-container">
-           <Header />
-           <div className="oligrapher-graph-container">
-             <Graph />
-             <Editor />
-             <ZoomControl />
-             <FloatingMenus />
-             <EdgeCreationMessage />
-           </div>
-         </div>
+  return (
+    <div id="oligrapher-container">
+      <Header />
+      <div className="oligrapher-graph-container">
+        <Graph />
+        <Editor />
+        <ZoomControl />
+        <FloatingMenus />
+        <EdgeCreationMessage />
+      </div>
+    </div>
+  )
 }
 
 export default hot(Root)

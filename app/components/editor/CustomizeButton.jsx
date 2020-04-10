@@ -15,7 +15,7 @@ export default function CustomizeButton({icon, onClick}) {
   const Icon = ICONS[icon]
 
   return <div>
-           <span onClick={onClick}>
+           <span className={`entity-${icon}-icon`} onClick={onClick}>
              <Icon />
            </span>
          </div>

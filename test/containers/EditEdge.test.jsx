@@ -9,7 +9,6 @@ import Node from '../../app/graph/node'
 import Edge from '../../app/graph/edge'
 
 import EditEdge, { MainPage } from '../../app/containers/EditEdge'
-import EditMenu from '../../app/components/editor/EditMenu'
 import EditMenuSubmitButtons from '../../app/components/editor/EditMenuSubmitButtons'
 
 import FloatingMenu from '../../app/util/floatingMenu'
@@ -29,11 +28,7 @@ describe('<EditEdge>', function() {
     Graph.addEdge(state.graph, edge)
     remover = sinon.fake()
     store = createMockStore(state, { dispatch: remover })
-    editEdgeMenu = mountWithStore(store, <EditEdge />)
-  })
-
-  it("renders edit menu component", function() {
-    expect(editEdgeMenu.find(EditMenu)).to.have.lengthOf(1)    
+    editEdgeMenu = mountWithStore(store, <EditEdge id={edge.id} />)
   })
 
   it("renders main edge menu", function() {

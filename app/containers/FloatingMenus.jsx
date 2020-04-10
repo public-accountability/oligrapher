@@ -1,5 +1,5 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import Draggable from 'react-draggable'
 
 import EditHeader from '../components/editor/EditMenuHeader'
@@ -13,12 +13,15 @@ import { classNames } from '../util/helpers'
 
 
 export default function FloatingMenus() {
-  let { id, type, position } = useSelector(state => state.display.floatingMenu)
+  const dispatch = useDispatch()
   const isEditor = useSelector(state => state.display.modes.editor)
+  const { id, type, position } = useSelector(state => state.display.floatingMenu)
 
-  if (!type || !isEditor) {
+  if (!id || !type || !isEditor ) {
     return null
   }
+
+  const openAddConnections = () => dispatch({ type: "OPEN_ADD_CONNECTIONS_MENU", id, position })
 
   const titles = {
     node: "Customize Node",
@@ -35,7 +38,7 @@ export default function FloatingMenus() {
       <div className="oligrapher-edit-menu">
         <div className={ classNames("edit-menu-wrapper", `edit-${type}-menu`) }>
           <EditHeader title={titles[type]} />
-           { type === 'node' && <EditNode id={id} /> }
+           { type === 'node' && <EditNode id={id} openAddConnections={openAddConnections} /> }
            { type === 'connections' && <AddConnections id={id} /> }
            { type === 'edge' && <EditEdge id={id} /> }
            { type === 'caption' && <EditCaption captionId={id} /> }
