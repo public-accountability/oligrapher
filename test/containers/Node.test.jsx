@@ -16,7 +16,7 @@ describe('<Node>', function() {
       id: 'abc',
       x: 1,
       y: 2,
-      scale: 1,
+      radius: 25,
       name: 'Example',
       url: null,
       color: '#CCC',

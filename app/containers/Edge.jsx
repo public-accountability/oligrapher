@@ -32,7 +32,8 @@ export function Edge(props) {
   // This resets the curve based on new props when they are passed to an already rendered component
   // This happens after the DRAG_NODE action occurs.
   useEffect(() => void setGeometry(Curve.calculateGeometry(props)),
-            [props.cx, props.cy, props.x1, props.x2, props.y1, props.y2, props.s1, props.s2])
+    [props.cx, props.cy, props.x1, props.x2, props.y1, props.y2, props.s1, props.s2]
+  )
 
   const width = calculateEdgeWidth(props.scale)
   const startPosition = { x: props.cx, y: props.cy }
@@ -73,18 +74,20 @@ export function Edge(props) {
 
   // Display helpers
   const showEditHighlight = props.editorOpen
-  const showHoverHighlight = props.edgeToolEnabled && isHovering && !showEditHighlight && !isDragging
-  const showLabel = props.showLabel
+  const showHoverHighlight = isHovering && !showEditHighlight && !isDragging
+  const showLabel = Boolean(props.label)
 
-  return <DraggableCore {...draggableProps}>
-           <g {...edgeGroupProps}>
-             { showEditHighlight  && <EdgeHighlight color={HIGHLIGHT_COLOR.edit} curve={curve} scale={props.scale} /> }
-             { showHoverHighlight && <EdgeHighlight color={HIGHLIGHT_COLOR.hover} curve={curve} scale={props.scale} /> }
-             { true               && <EdgeLine {...edgeLineProps} /> }
-             { showLabel          && <EdgeLabel {...edgeLabelProps} /> }
-             <EdgeHandle {...edgeHandleProps} />
-           </g>
-         </DraggableCore>
+  return (  
+    <DraggableCore {...draggableProps}>
+      <g {...edgeGroupProps}>
+        { showEditHighlight  && <EdgeHighlight color={HIGHLIGHT_COLOR.edit} curve={curve} scale={props.scale} /> }
+        { showHoverHighlight && <EdgeHighlight color={HIGHLIGHT_COLOR.hover} curve={curve} scale={props.scale} /> }
+        { true               && <EdgeLine {...edgeLineProps} /> }
+        { showLabel          && <EdgeLabel {...edgeLabelProps} /> }
+        <EdgeHandle {...edgeHandleProps} />
+      </g>
+    </DraggableCore>
+  )
 }
 
 Edge.propTypes = {
@@ -115,14 +118,14 @@ Edge.propTypes = {
   openEdgeMenu: PropTypes.func.isRequired,
 
   // Helpers
-  showLabel: PropTypes.bool.isRequired,
-  editorOpen: PropTypes.bool.isRequired,
-  edgeToolEnabled: PropTypes.bool.isRequired,
-  editorMode: PropTypes.bool.isRequired
+  editorOpen: PropTypes.bool,
+  editorMode: PropTypes.bool
 }
 
 Edge.defaultProps = {
-  dash: false
+  dash: false,
+  editorOpen: false,
+  editorMode: false
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -132,7 +135,6 @@ const mapStateToProps = (state, ownProps) => {
   return {
     ...edge,
     actualZoom: state.graph.actualZoom,
-    showLabel: Boolean(edge.label),
     editorOpen: id == FloatingMenu.getId(state, 'edge'),
     edgeToolEnabled: state.display.editor.tool === 'edge',
     editorMode: state.display.modes.editor

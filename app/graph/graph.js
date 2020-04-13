@@ -213,7 +213,6 @@ export function removeNode(graph, node) {
 }
 
 export function updateNode(graph, node, attributes) {
-  console.log(graph.nodes[getId(node)], attributes)
   merge(graph.nodes[getId(node)], attributes)
 
   // If scale is changed, update any associated edges

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 /*
   A thin abstraction over a regular dom <svg> element
 */
+// eslint-disable-next-line react/display-name
 const Svg = React.forwardRef((props, ref) => {
   let svgAttributes = {
     height: props.height,
@@ -20,9 +21,11 @@ const Svg = React.forwardRef((props, ref) => {
     svgAttributes.id = "oligrapher-svg"
   }
 
-  return <svg {...svgAttributes} ref={ref}>
-           {props.children}
-         </svg>
+  return (
+    <svg {...svgAttributes} ref={ref}>
+      {props.children}
+    </svg>
+  )
 })
 
 Svg.propTypes = {

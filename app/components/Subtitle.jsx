@@ -6,15 +6,20 @@ import { callWithTargetValue } from '../util/helpers'
 export default function Subtitle({text, editable, onChange}) {
   if (!text && !editable) { return null }
 
-  return <div id="oligrapher-header-subtitle-wrapper">
-           <h2>
-             { !editable && text }
-             { editable && <input value={text}
-                                  onChange={callWithTargetValue(onChange)}
-                                  placeholder="Subtitle"/> }
+  return (
+    <div id="oligrapher-header-subtitle-wrapper">
+      <h2>
+        { editable
+          ? <input 
+              value={text}
+              onChange={callWithTargetValue(onChange)}
+              placeholder="Subtitle"/>
+          : text
+        }
 
-           </h2>
-         </div>
+      </h2>
+    </div>
+  )
 }
 
 Subtitle.propTypes = {

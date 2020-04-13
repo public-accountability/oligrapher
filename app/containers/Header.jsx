@@ -37,52 +37,48 @@ export function Header(props) {
     }
   }
 
-  return <div id="oligrapher-header">
-             <div id="oligrapher-header-top">
-               <Title {...PROPS.title} />
-             </div>
+  return (
+   <div id="oligrapher-header">
+      <div id="oligrapher-header-top">
+        <Title {...PROPS.title} />
+      </div>
 
-             <div id="oligrapher-header-bottom">
-               <div id="oligrapher-header-left-wrapper">
-                 <Subtitle {...PROPS.subtitle} />
-                 <Attribution {...PROPS.attribution} />
-               </div>
+      <div id="oligrapher-header-bottom">
+        <div id="oligrapher-header-left-wrapper">
+          <Subtitle {...PROPS.subtitle} />
+          <Attribution {...PROPS.attribution} />
+        </div>
 
-               <div id="oligrapher-header-right-wrapper">
-                 <HeaderRight />
-               </div>
+        <div id="oligrapher-header-right-wrapper">
+          <HeaderRight />
+        </div>
 
-             </div>
-           </div>
+      </div>
+    </div>
+  )
 }
 
 Header.propTypes = {
-  editor:         PropTypes.bool,
-  title:          PropTypes.string,
-  subtitle:       PropTypes.string,
-  date:           PropTypes.string,
-  user:           PropTypes.shape({ name: PropTypes.string, url:  PropTypes.string }),
-  updateTitle:    PropTypes.func,
+  editor: PropTypes.bool,
+  title: PropTypes.string,
+  subtitle: PropTypes.string,
+  date: PropTypes.string,
+  user: PropTypes.shape({ name: PropTypes.string, url:  PropTypes.string }),
+  updateTitle: PropTypes.func,
   updateSubtitle: PropTypes.func
 }
 
 const mapStateToProps = state => ({
-  editor:   Boolean(state.display.modes.editor),
-  title:    state.attributes.title,
+  editor: Boolean(state.display.modes.editor),
+  title: state.attributes.title,
   subtitle: state.attributes.subtitle,
-  user:     state.attributes.user,
-  date:     state.attributes.date
+  user: state.attributes.user,
+  date: state.attributes.date
 })
 
 const mapDispatchToProps = dispatch => ({
-  updateTitle: value => dispatch({ type: 'UPDATE_ATTRIBUTE',
-                                   name: 'title',
-                                   value: value }),
-
-  updateSubtitle: value => dispatch({ type: 'UPDATE_ATTRIBUTE',
-                                      name: 'subtitle',
-                                      value: value })
-
+  updateTitle: value => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'title', value: value }),
+  updateSubtitle: value => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'subtitle', value: value })
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header)

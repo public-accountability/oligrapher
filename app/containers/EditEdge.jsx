@@ -126,5 +126,5 @@ export default function EditEdge({ id }) {
 }
 
 EditEdge.propTypes = {
-  id: PropTypes.number.isRequired
+  id: PropTypes.string.isRequired
 }

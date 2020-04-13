@@ -17,7 +17,6 @@ SearchResult.propTypes = {
 }
 
 export default function EntitySearchResults({ results, onClick }) {
-  console.log(results)
   return (
     <div className="entity-search-results">
       { results.map(entity => 

@@ -55,8 +55,8 @@ Node.propTypes = {
   // scale: PropTypes.number.isRequired,
   // Virtual attributes
   radius: PropTypes.number.isRequired,
-  selected: PropTypes.bool.isRequired,
-  isNewEdgeNode: PropTypes.bool.isRequired,
+  selected: PropTypes.bool,
+  isNewEdgeNode: PropTypes.bool,
 
   // Actions
   toggleEditNodeMenu: PropTypes.func.isRequired,
@@ -70,6 +70,8 @@ Node.propTypes = {
 
 Node.defaultProps = {
   color: DEFAULT_COLOR,
+  selected: false,
+  isNewEdgeNode: false,
   toggleEditNodeMenu: noop
 }
 

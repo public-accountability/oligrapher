@@ -2,17 +2,22 @@ import React from 'react'
 import { Header } from '../../app/containers/Header'
 import Attribution from '../../app/components/Attribution'
 import Title from '../../app/components/Title'
-import HeaderMenu from '../../app/components/HeaderMenu'
 import HeaderRight from '../../app/containers/HeaderRight'
+import noop from 'lodash/noop'
 
 describe('<Header>', function() {
   let header
 
   beforeEach(function(){
-    header = shallow(<Header
-                       title="Example Title"
-                       subtitle="Example Subtitle"
-                       user={{"name": "Example UserName", "url": "https://example.com"}}/>)
+    header = shallow(
+      <Header
+        title="Example Title"
+        subtitle="Example Subtitle"
+        user={{ "name": "Example UserName", "url": "https://example.com" }}
+        editor={true}
+        updateTitle={noop}
+        updateSubtitle={noop} />
+    )
   })
 
   it('has container div', function()  {

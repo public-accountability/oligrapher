@@ -36,7 +36,7 @@ function createTestEdge(additionalProps = {}) {
   }
 
   let props = { ...defaultEdgeProps, ...spies, ...additionalProps }
-  let component = mount( <Edge {...props} /> )
+  let component = mount(<svg><Edge {...props} /></svg> )
 
   return { spies, props, component }
 }

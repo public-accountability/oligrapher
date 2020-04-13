@@ -20,19 +20,25 @@ export function Editor(props) {
   const nodeTool = props.openTool === 'node'
   const organizeTool = props.openTool === 'organize'
 
-  return <div className={props.className} onClick={textTool ? props.onClick : noop}>
-           <LockPoll />
-           <EditorMenu />
-           { nodeTool && <NodeTool /> }
-           { organizeTool && <OrganizeTool /> }
-         </div>
+  return (
+    <div className={props.className} onClick={textTool ? props.onClick : noop}>
+      <LockPoll />
+      <EditorMenu />
+      { nodeTool && <NodeTool /> }
+      { organizeTool && <OrganizeTool /> }
+    </div>
+  )
 }
 
 Editor.propTypes = {
   disabled: PropTypes.bool.isRequired,
-  openTool: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(null)]).isRequired,
-  className: PropTypes.string.isRequired,
+  className: PropTypes.string,
+  openTool: PropTypes.string,
   onClick: PropTypes.func
+}
+
+Editor.defaultProps = {
+  openTool: null
 }
 
 const mapStateToProps = function(state) {

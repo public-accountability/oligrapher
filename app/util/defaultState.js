@@ -52,7 +52,7 @@ const defaultState = {
       position: null
     },
     editor: {
-      tool: null // node, edge, caption, settings
+      tool: null // text, settings
     },
     saveMap: null // states: null, 'IN_PROGRESS', 'SUCCESS', 'FAILED'
   },

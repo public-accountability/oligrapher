@@ -13,7 +13,7 @@ describe('<Graph>', function(){
     setActualZoom = sinon.spy()
 
     graph = mount(<Provider store={store}>
-                    <Graph viewBox={viewBox} setActualZoom={setActualZoom}/>
+                    <Graph viewBox={viewBox} zoom={1} setActualZoom={setActualZoom}/>
                   </Provider>)
 
   })

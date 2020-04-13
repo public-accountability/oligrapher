@@ -11,7 +11,7 @@ export function HeaderRight(props) {
   } else {
 
     const headerMenuItems = [
-      { text: "Edit", action: props.enableEditorMode},
+      { text: "Edit", action: props.enableEditorMode },
       { text: "Clone", url: "https://littlesis.org/oligrapher/clone" },
       { text: "Disclaimer", url: "https://littlesis.org/oligrapher/disclaimer" }
     ]
@@ -22,7 +22,6 @@ export function HeaderRight(props) {
 
 HeaderRight.propTypes = {
   enableEditorMode: PropTypes.func.isRequired,
-  disableEditorMode: PropTypes.func.isRequired,
   editorMode: PropTypes.bool.isRequired
 }
 
@@ -30,8 +29,7 @@ const mapStateToProps = state => ({ editorMode: state.display.modes.editor })
 
 const mapDispatchToProps = dispatch => {
   return {
-    enableEditorMode: () => dispatch({ type: 'SET_MODE', mode: 'editor', enabled: true}),
-    disableEditorMode: () => dispatch({ type: 'SET_MODE', mode: 'editor', enabled: false})
+    enableEditorMode: () => dispatch({ type: 'SET_MODE', mode: 'editor', enabled: true }) 
   }
 }
 
