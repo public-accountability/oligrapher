@@ -21,6 +21,28 @@ const checkOpenTool = (current, required) => {
   return false
 }
 
+const toggleSelectedNode = (draft, id) => {
+  if (draft.display.selectedNodes.has(id)) {
+    draft.display.selectedNodes.delete(id)
+  } else {
+    draft.display.selectedNodes.add(id)
+  }
+}
+
+const toggleNodeEditor = (draft, id, x, y, actualZoom) => {
+  let isOpen = ['node', 'connections'].includes(FloatingMenu.getType(draft))
+  let isThisNode = FloatingMenu.getId(draft) === id
+
+  if (isOpen && isThisNode) {
+    FloatingMenu.clear(draft)
+  } else {
+    FloatingMenu.set(
+      draft, 'node', id,
+      FloatingMenu.transformNodePosition({ x, y }, actualZoom)
+    )
+  }
+}
+
 const updateSettings = (settings, key, value) => {
   settings[key] = value
 
@@ -76,7 +98,7 @@ const updateSettings = (settings, key, value) => {
   SET_LOCK               | lock
 */
 
-let intersectedNode
+let id, intersectedNode
 
 export default produce((draft, action) => {
   switch(action.type) {
@@ -122,6 +144,7 @@ export default produce((draft, action) => {
     EdgeCreation.clearNodes(draft)
     return
   case 'DRAG_NODE':
+    FloatingMenu.clear(draft)
     Graph.dragNode(draft.graph, action.id, action.deltas)
     intersectedNode = Graph.intersectingNodeFromDrag(draft.graph, action.id, action.deltas)
 
@@ -151,7 +174,7 @@ export default produce((draft, action) => {
     return
   case 'DELETE_CAPTION':
     // caption can be deleted directly or through floating menu
-    let id = action.id || FloatingMenu.getId(draft, 'caption')
+    id = action.id || FloatingMenu.getId(draft, 'caption')
 
     if (id) {
       delete draft.graph.captions[action.id]
@@ -187,16 +210,6 @@ export default produce((draft, action) => {
   case 'OPEN_EDIT_NODE_MENU':
     FloatingMenu.set(draft, 'node', action.id)
     return
-  case 'TOGGLE_EDIT_NODE_MENU':
-    if (FloatingMenu.getId(draft, 'node') == action.id) {
-      FloatingMenu.clear(draft)
-    } else {
-      FloatingMenu.set(
-        draft, 'node', action.id,
-        FloatingMenu.transformNodePosition({ x: action.x, y: action.y }, action.actualZoom)
-      )
-    }
-    return
   case 'OPEN_ADD_CONNECTIONS_MENU':
     if (isLittleSisId(action.id)) {
       // no need to transform position as this is only opened from EditNode,
@@ -223,25 +236,17 @@ export default produce((draft, action) => {
     draft.attributes[action.name] = action.value
     return
   case 'BACKGROUND_CLICK':
-
     // Add new caption
     if (checkOpenTool(draft.display.editor.tool, 'text')) {
       const caption = Caption.fromEvent(action.event, draft.graph.zoom)
-
       Graph.addCaption(draft.graph, caption)
       FloatingMenu.set(draft, 'caption')
     }
 
     return
-  case 'NODE_CLICK':
-    if (FloatingMenu.getType(draft) === 'style') {
-      let id = toString(action.id)
-      if (draft.display.selectedNodes.has(id)) {
-        draft.display.selectedNodes.delete(id)
-      } else {
-        draft.display.selectedNodes.add(id)
-      }
-    }
+  case 'CLICK_NODE':
+    id = toString(action.id)
+    toggleNodeEditor(draft, id, action.x, action.y, action.actualZoom)
     return
   case 'ADD_CONNECTION':
     Graph.addConnection(draft.graph, {
@@ -249,9 +254,7 @@ export default produce((draft, action) => {
       newEdge: action.newEdge,
       existingNodeId: action.existingNodeId
     })
-
     return
-
   case 'UPDATE_SETTING':
     updateSettings(draft.attributes.settings, action.key, action.value)
     return

@@ -26,17 +26,16 @@ export const mountWithStore = (store, children) => mount(
   React.createElement(Provider, {store: store}, children)
 )
 
-export const mockReactReduxHook = (hookName) => {
+export const stubDispatch = () => {
   let mock = sinon.spy()
-  sinon.stub(reactRedux, hookName).returns(mock)
-  mock.restore = () => reactRedux[hookName].restore()
+  sinon.stub(reactRedux, 'useDispatch').returns(mock)
+  mock.restore = () => reactRedux['useDispatch'].restore()
   return mock
 }
 
-export const stubDispatch = () => {
-  return mockReactReduxHook('useDispatch')
-}
-
-export const stubUseSelector = () => {
-  return mockReactReduxHook('useSelector')
+export const stubUseSelector = (state) => {
+  let mock = (selector) => selector(state)
+  sinon.stub(reactRedux, 'useSelector').returns(mock)
+  mock.restore = () => reactRedux['useSelector'].restore()
+  return mock
 }

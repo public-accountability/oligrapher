@@ -22,24 +22,26 @@ const LABEL_PROPS = frozenArray('x', 'y', 'name', 'radius', 'status', 'url')
 
 export function Node(props) {
   const showImage = Boolean(props.image)
-  const showHalo = props.selected || props.isNewEdgeNode
+  const showHalo = props.selected || props.isNewEdgeNode || props.isBeingEdited
 
-  return  <g id={"node-" + props.id} className="oligrapher-node">
-            <DraggableComponent
-              disabled={!props.editorMode}
-              handle=".draggable-node-handle"
-              actualZoom={props.actualZoom}
-              onStop={props.editorMode ? props.moveNode : noop}
-              onClick={props.editorMode ? props.toggleEditNodeMenu : noop}
-              onDrag={props.editorMode ? props.dragNode : noop}>
-              <g>
-                { showHalo && <NodeHalo {...pick(props, HALO_PROPS)} /> }
-                <NodeCircle {...pick(props, CIRCLE_PROPS)} />
-                { showImage && <NodeImage {...pick(props, IMAGE_PROPS)} /> }
-                <NodeLabel {...pick(props, LABEL_PROPS)} />
-              </g>
-            </DraggableComponent>
-          </g>
+  return (
+    <g id={"node-" + props.id} className="oligrapher-node">
+      <DraggableComponent
+        disabled={!props.editorMode}
+        handle=".draggable-node-handle"
+        actualZoom={props.actualZoom}
+        onStop={props.editorMode ? props.moveNode : noop}
+        onClick={props.editorMode ? props.clickNode : noop}
+        onDrag={props.editorMode ? props.dragNode : noop}>
+        <g>
+          { showHalo && <NodeHalo {...pick(props, HALO_PROPS)} /> }
+          <NodeCircle {...pick(props, CIRCLE_PROPS)} />
+          { showImage && <NodeImage {...pick(props, IMAGE_PROPS)} /> }
+          <NodeLabel {...pick(props, LABEL_PROPS)} />
+        </g>
+      </DraggableComponent>
+    </g>
+  )
 }
 
 Node.propTypes = {
@@ -57,9 +59,10 @@ Node.propTypes = {
   radius: PropTypes.number.isRequired,
   selected: PropTypes.bool,
   isNewEdgeNode: PropTypes.bool,
+  isBeingEdited: PropTypes.bool,
 
   // Actions
-  toggleEditNodeMenu: PropTypes.func.isRequired,
+  clickNode: PropTypes.func.isRequired,
   moveNode: PropTypes.func.isRequired,
   dragNode: PropTypes.func.isRequired,
 
@@ -72,12 +75,15 @@ Node.defaultProps = {
   color: DEFAULT_COLOR,
   selected: false,
   isNewEdgeNode: false,
+  isBeingEdited: false,
   toggleEditNodeMenu: noop
 }
 
 const mapStateToProps = (state, ownProps) => {
   const id = ownProps.id.toString()
   const node = state.graph.nodes[id]
+  const { floatingMenu } = state.display
+  const isBeingEdited = ['node', 'connections'].includes(floatingMenu.type) && floatingMenu.id === id
 
   return {
     ...node,
@@ -87,7 +93,8 @@ const mapStateToProps = (state, ownProps) => {
     actualZoom: state.graph.actualZoom,
     editorMode: state.display.modes.editor,
     selected: state.display.selectedNodes.has(id),
-    isNewEdgeNode: state.edgeCreation.nodes.includes(id)
+    isNewEdgeNode: state.edgeCreation.nodes.includes(id),
+    isBeingEdited: isBeingEdited
   }
 }
 
@@ -107,7 +114,7 @@ const mergeProps = (stateProps, dispatchProps) => {
   return {
     ...stateProps,
     ...dispatchProps,
-    toggleEditNodeMenu: () => dispatchProps.dispatch({ type: 'TOGGLE_EDIT_NODE_MENU', id, x, y, actualZoom })
+    clickNode: () => dispatchProps.dispatch({ type: 'CLICK_NODE', id, x, y, actualZoom })
   }
 }
 

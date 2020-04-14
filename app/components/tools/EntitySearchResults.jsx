@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-function SearchResult({ entity, onClick }) {
+export function SearchResult({ entity, onClick }) {
   return (
     <div className="entity-search-result">
       <a onClick={() => onClick(entity)}><b>{entity.name}</b></a>

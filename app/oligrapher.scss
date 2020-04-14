@@ -529,6 +529,11 @@ header.edit-menu-header {
     }
 } /* end: .edit-menu-wrapper */
 
+.edit-connections-menu {
+  max-height: 500px;
+  overflow-y: scroll;
+}
+
 .edit-settings-menu {
     width: 225px;
 

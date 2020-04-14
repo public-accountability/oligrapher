@@ -6,7 +6,6 @@ import EditorMenuItem from '../../app/components/editor/EditorMenuItem'
   Layout:
 
   ()      Add Node
-  *--*    Customize Edge
   Aa      Text Box
   ()      Legend
   [ ]     Story editor
@@ -21,8 +20,8 @@ import EditorMenuItem from '../../app/components/editor/EditorMenuItem'
 */
 
 describe('<EditorMenu>', function() {
-  it('renders 6 menu items', function() {
+  it('renders 5 menu items', function() {
     let editorMenu = shallow(<EditorMenu />)
-    expect(editorMenu.find(EditorMenuItem)).to.have.lengthOf(6)
+    expect(editorMenu.find(EditorMenuItem)).to.have.lengthOf(5)
   })
 })

@@ -23,7 +23,7 @@ export default function FloatingMenus() {
 
   const openAddConnections = () => dispatch({ type: "OPEN_ADD_CONNECTIONS_MENU", id, position })
 
-  const titles = {
+  const title = {
     node: "Customize Node",
     connections: "Add Connections",
     edge: "Customize Edge",
@@ -31,13 +31,13 @@ export default function FloatingMenus() {
     style: "Style Nodes",
     settings: "Settings",
     editors: "Add Editors"
-  }
+  }[type]
 
   return (
     <Draggable enableUserSelectHack={false} handle=".edit-menu-header" positionOffset={position || undefined}>
       <div className="oligrapher-edit-menu">
         <div className={ classNames("edit-menu-wrapper", `edit-${type}-menu`) }>
-          <EditHeader title={titles[type]} />
+          <EditHeader title={title} />
            { type === 'node' && <EditNode id={id} openAddConnections={openAddConnections} /> }
            { type === 'connections' && <AddConnections id={id} /> }
            { type === 'edge' && <EditEdge id={id} /> }

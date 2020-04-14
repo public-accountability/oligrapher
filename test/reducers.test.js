@@ -58,17 +58,24 @@ describe('Reducer', function() {
     })
   })
 
-  describe('TOGGLE_EDIT_NODE_MENU', function() {
-    it('opens floating menu', function() {
+  describe('CLICK_NODE', function() {
+    it('opens node editor', function() {
       const state = { display : { floatingMenu: { type: null, id: null, position: null } } }
-      const action = { type: 'TOGGLE_EDIT_NODE_MENU', id: 'xyz', x: 100, y: 100, actualZoom: 1 }
+      const action = { type: 'CLICK_NODE', id: 'xyz', x: 100, y: 100, actualZoom: 1 }
       expect(reducers(state, action).display.floatingMenu)
         .to.eql({ type: 'node', id: 'xyz', position: transformNodePosition({ x: 100, y: 100 }, 1) })
     })
 
-    it('closes floating menu', function() {
+    it('closes node editor', function() {
       const state = { display : { floatingMenu: { type: 'node', id: 'xyz', position: { x: 100, y: 100 } } } }
-      const action = { type: 'TOGGLE_EDIT_NODE_MENU', id: 'xyz', x: 100, y: 100, actualZoom: 1 }
+      const action = { type: 'CLICK_NODE', id: 'xyz', x: 100, y: 100, actualZoom: 1 }
+      expect(reducers(state, action).display.floatingMenu)
+        .to.eql({ type: null, id: null, position: null })
+    })
+
+    it('closes add connections', function() {
+      const state = { display : { floatingMenu: { type: 'connections', id: 'xyz', position: { x: 100, y: 100 } } } }
+      const action = { type: 'CLICK_NODE', id: 'xyz', x: 100, y: 100, actualZoom: 1 }
       expect(reducers(state, action).display.floatingMenu)
         .to.eql({ type: null, id: null, position: null })
     })

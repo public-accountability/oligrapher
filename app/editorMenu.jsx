@@ -51,7 +51,7 @@ export const MENU = {
 export const MENU_ITEMS = [
   'node',
   'text',
-  'legend',
+  // 'legend',
   // TODO:
   // 'story',
   // 'style',

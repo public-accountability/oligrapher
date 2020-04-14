@@ -61,7 +61,7 @@ export function findConnections(entityId, options = {}) {
   validateId(entityId)
 
   return wretch(urls.findConnections())
-    .query({ entity_id: entityId, num: 10, ...options })
+    .query({ entity_id: entityId, num: 30, ...options })
     .get()
     .json()
 }

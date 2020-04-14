@@ -313,7 +313,6 @@ export function intersectingNodeFromDrag(graph, nodeId, deltas) {
 
 function addConnection(graph, { existingNodeId, newNode, newEdge }) {
   if (getEdge(graph, newEdge.id)) {
-    console.log(`An edge with id ${newEdge.id} already exists`)
     return
   }
 

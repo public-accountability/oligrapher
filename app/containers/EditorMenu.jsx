@@ -12,11 +12,13 @@ const iconContextValue = {
 }
 
 export function EditorMenu() {
-  return <div className="editor-menu">
-           <IconContext.Provider value={iconContextValue} >
-             { MENU_ITEMS.map(item => <EditorMenuItem key={item} item={item} />) }
-           </IconContext.Provider>
-         </div>
+  return (
+    <div className="editor-menu">
+      <IconContext.Provider value={iconContextValue} >
+        { MENU_ITEMS.map(item => <EditorMenuItem key={item} item={item} />) }
+      </IconContext.Provider>
+    </div>
+  )
 }
 
 export default connect()(EditorMenu)

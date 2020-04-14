@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import uniqBy from 'lodash/uniqBy'
 import isArray from 'lodash/isArray'
 
-import { findConnections, getRelationship } from '../../datasources/littlesis3'
+import { findConnections } from '../../datasources/littlesis3'
 import { makeCancelable } from '../../util/helpers'
 import EntitySearchResults from './EntitySearchResults'
 import Graph from '../../graph/graph'
@@ -17,25 +17,30 @@ import Graph from '../../graph/graph'
   The results component is <AddConnectionsResults>
 */
 export default function AddConnections({ id }) {
+  const dispatch = useDispatch()
   const graph = useSelector(state => state.graph)
   const connectedNodeIds = useMemo(() => Graph.connectedNodeIds(graph, id), [graph, id])
-  const dispatch = useDispatch()
+  const [addedNodeIds, setAddedNodeIds] = useState([])
   const [results, setResults] = useState(null)
   const [loading, setLoading] = useState(true)
+  const excludeIds = addedNodeIds.concat(connectedNodeIds)
+  const visibleResults = isArray(results) 
+    ? results.filter(entity => !excludeIds.includes(entity['id']))
+    : null
 
   const addConnection = useCallback(node => {
     dispatch({ type: 'ADD_CONNECTION', existingNodeId: id, newNode: node, newEdge: node.edge })
-  }, [dispatch, id])
+    setAddedNodeIds(addedNodeIds.concat([node.id]))
+  }, [id, dispatch, addedNodeIds])
 
   useEffect(() => {
     setLoading(true)
-    const httpRequest = makeCancelable(findConnections(id))
+    const httpRequest = makeCancelable(findConnections(parseInt(id)))
 
     httpRequest
       .promise
       .then(entities => {
-        let results = uniqBy(entities, 'id').filter(entity => !connectedNodeIds.includes(entity.id))
-        
+        let results = uniqBy(entities, 'id')
         setResults(results) // ..Until we figure out the best way handle the case where there are multiple relationship between the same entity
         setLoading(false)
       })
@@ -48,13 +53,14 @@ export default function AddConnections({ id }) {
       })
 
     return httpRequest.cancel
-  }, [id, connectedNodeIds])
+  }, [id])
 
-  if (loading) {
+  // only show loading indicator if there aren't already results
+  if (loading && !isArray(results)) {
     return <em>...loading...</em>
-  } else if (isArray(results)) {
-    if (results.length > 0) {
-      return <EntitySearchResults results={results} onClick={addConnection} />
+  } else if (isArray(visibleResults)) {
+    if (visibleResults.length > 0) {
+      return <EntitySearchResults results={visibleResults} onClick={addConnection} />
     } else {
       return <em>No results.</em>
     }
@@ -64,5 +70,5 @@ export default function AddConnections({ id }) {
 }
 
 AddConnections.propTypes = {
-  id: PropTypes.number.isRequired
+  id: PropTypes.string.isRequired
 }

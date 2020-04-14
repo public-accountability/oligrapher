@@ -40,7 +40,7 @@ export default function EntitySearch({ query }) {
     return <em>...loading...</em>
   } else if (isArray(results)) {
     return results.length === 0
-      ? <em>no results</em>
+      ? <em>No results.</em>
       : <EntitySearchResults results={results} onClick={addNode} />
   } else {
     return <em>Your search resulted in an error.</em>
