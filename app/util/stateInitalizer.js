@@ -55,5 +55,7 @@ export default function stateInitalizer(serializedState) {
   })
 
   state.graph = Graph.new(state.graph)
+  state.display.viewBox = Graph.calculateViewBox(state.graph)
+
   return state
 }

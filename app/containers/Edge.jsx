@@ -134,7 +134,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     ...edge,
-    actualZoom: state.graph.actualZoom,
+    actualZoom: state.display.actualZoom,
     editorOpen: id == FloatingMenu.getId(state, 'edge'),
     edgeToolEnabled: state.display.editor.tool === 'edge',
     editorMode: state.display.modes.editor

@@ -22,8 +22,12 @@ export const shallowMountWithStore = (store, children) => shallow(
   React.createElement(Provider, {store: store}, children)
 )
 
-export const mountWithStore = (store, children) => mount(
-  React.createElement(Provider, {store: store}, children)
+export const mountWithStore = (store, component) => mount(
+  component,
+  {
+    wrappingComponent: Provider,
+    wrappingComponentProps: { store }
+  }
 )
 
 export const stubDispatch = () => {

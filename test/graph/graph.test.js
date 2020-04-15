@@ -3,7 +3,8 @@ import values from 'lodash/values'
 import Graph, {
   getId,
   determineNodeNumber,
-  calculateCenter
+  calculateCenter,
+  GRAPH_PADDING
 } from '../../app/graph/graph'
 import Node from '../../app/graph/node'
 import Edge from '../../app/graph/edge'
@@ -326,6 +327,24 @@ describe('Graph', function() {
       Graph.addNodes(graph, [n1, n2, n3, n4])
       Graph.addEdges(graph, [e1, e2])
       expect(Graph.connectedNodeIds(graph, n1)).to.have.members([n2.id, n3.id])
+    })
+  })
+
+  describe('calculateViewBox', function() {
+    let graph, n1, n2, n3
+
+    it('returns padded viewbox', function() {
+      graph = Graph.new()
+      n1 = Node.new({ x: -100, y: 0 })
+      n2 = Node.new({ x: 50, y: -100 })
+      n3 = Node.new({ x: 100, y: -50 })
+      Graph.addNodes(graph, [n1, n2, n3])
+      expect(Graph.calculateViewBox(graph)).to.eql({ 
+        minX: -100 - GRAPH_PADDING, 
+        minY: -100 - GRAPH_PADDING,
+        w: 200 + 2 * GRAPH_PADDING,
+        h: 100 + 2 * GRAPH_PADDING
+      })
     })
   })
 })

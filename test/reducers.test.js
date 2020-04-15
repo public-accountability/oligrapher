@@ -60,10 +60,13 @@ describe('Reducer', function() {
 
   describe('CLICK_NODE', function() {
     it('opens node editor', function() {
-      const state = { display : { floatingMenu: { type: null, id: null, position: null } } }
-      const action = { type: 'CLICK_NODE', id: 'xyz', x: 100, y: 100, actualZoom: 1 }
+      const state = { 
+        graph: { nodes: { 'xyz': { x: 100, y: 100 } } }, 
+        display : { actualZoom: 2, zoom: 1, offset: { x: 50, y: 50 }, floatingMenu: { type: null, id: null, position: null } } 
+      }
+      const action = { type: 'CLICK_NODE', id: 'xyz' }
       expect(reducers(state, action).display.floatingMenu)
-        .to.eql({ type: 'node', id: 'xyz', position: transformNodePosition({ x: 100, y: 100 }, 1) })
+        .to.eql({ type: 'node', id: 'xyz', position: transformNodePosition(state, { x: 100, y: 100 }) })
     })
 
     it('closes node editor', function() {

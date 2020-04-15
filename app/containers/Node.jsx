@@ -89,8 +89,8 @@ const mapStateToProps = (state, ownProps) => {
     ...node,
     radius: DEFAULT_RADIUS * node.scale,
     id: id,
-    zoom: state.graph.zoom,
-    actualZoom: state.graph.actualZoom,
+    zoom: state.display.zoom,
+    actualZoom: state.display.actualZoom,
     editorMode: state.display.modes.editor,
     selected: state.display.selectedNodes.has(id),
     isNewEdgeNode: state.edgeCreation.nodes.includes(id),
@@ -109,12 +109,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 }
 
 const mergeProps = (stateProps, dispatchProps) => {
-  let { id, x, y, actualZoom } = stateProps
+  let { id } = stateProps
 
   return {
     ...stateProps,
     ...dispatchProps,
-    clickNode: () => dispatchProps.dispatch({ type: 'CLICK_NODE', id, x, y, actualZoom })
+    clickNode: () => dispatchProps.dispatch({ type: 'CLICK_NODE', id })
   }
 }
 

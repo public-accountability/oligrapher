@@ -664,17 +664,10 @@ g.edge-tool-open .react-draggable-dragging .node-circle {
         }
     }
 
-    .node-handle {
-        &:hover {
-            stroke: lightyellow;
-            stroke-width: 2;
-        }
-    }
-
     .node-circle {
         &:hover {
             stroke: lightgreen;
-            stroke-width: 2;
+            stroke-width: 5;
         }
     }
 }

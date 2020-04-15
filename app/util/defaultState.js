@@ -41,6 +41,8 @@ const defaultState = {
   display: {
     zoom: 1,
     actualZoom: 1,
+    viewBox: null,
+    offset: { x: 0, y: 0 },
     modes: {
       editor: false,
       story: false

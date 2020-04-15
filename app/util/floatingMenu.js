@@ -1,4 +1,4 @@
-export const NODE_X_OFFSET = 200
+export const NODE_X_OFFSET = 100
 
 export const set = (state, type = null, id = null, position = null) => {
   state.display.floatingMenu.type = type
@@ -21,10 +21,13 @@ export const getType = (state) => {
 }
 
 // used to calculate floating menu position based on node's position
-export const transformNodePosition = (position, zoom) => {
+export const transformNodePosition = (state, position) => {
+  let zoom = state.display.actualZoom / state.display.zoom
+  let offset = state.display.offset
+
   return {
-    x: Math.trunc((position.x + NODE_X_OFFSET) * zoom),
-    y: Math.trunc(position.y * zoom)
+    x: Math.trunc((position.x + offset.x) * zoom + NODE_X_OFFSET),
+    y: Math.trunc((position.y + offset.y) * zoom)
   }
 }
 

@@ -4,22 +4,25 @@ import { connect } from 'react-redux'
 import { classNames } from '../util/helpers'
 
 export function Clickable(props) {
-  return <>
-           { props.enabled && <rect className={props.className}
-                                    x="-5000"
-                                    y="-5000"
-                                    width="10000"
-                                    height="10000"
-                                    fill="#fff"
-                                    onClick={props.onClick} /> }
-           { props.children }
-         </>
+  return (
+    <>
+      { props.enabled && 
+        <rect className={props.className}
+          x="-5000"
+          y="-5000"
+          width="10000"
+          height="10000"
+          fill="#fff"
+          onClick={props.onClick} /> }
+      { props.children }
+    </>
+  )
 }
 
 Clickable.propTypes = {
-  children:  PropTypes.node.isRequired,
-  enabled:   PropTypes.bool.isRequired,
-  onClick:   PropTypes.func,
+  children: PropTypes.node.isRequired,
+  enabled: PropTypes.bool.isRequired,
+  onClick: PropTypes.func,
   className: PropTypes.string
 }
 

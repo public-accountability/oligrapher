@@ -81,7 +81,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     ...state.graph.captions[ownProps.id],
     isFocused: isEqual(state.display.editor.tool, 'text') && isEqual(FloatingMenu.getId(state, 'caption'), ownProps.id),
-    actualZoom: state.graph.actualZoom,
+    actualZoom: state.display.actualZoom,
   }
 }
 

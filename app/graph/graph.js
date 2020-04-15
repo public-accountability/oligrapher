@@ -14,7 +14,7 @@ import { calculateGeometry } from './curve'
 
 import nodeDisplaySetting from '../NodeDisplaySettings'
 
-const GRAPH_PADDING = 100
+export const GRAPH_PADDING = 100
 const DEFAULT_VIEWBOX = { minX: -200, minY: -200, w: 400, h: 400 }
 
 const DEFAULT_GRAPH = {
@@ -119,54 +119,30 @@ export function nodesOf(graph, edge) {
 // ViewBox Calculations
 
 // output: { minX, minY, w, h }
-// These values are used to create the viewBox attribute for the outermost SVG
-// Unless we are zoomed in or out, the extent is a box where all the nodes are visible
+// These values are used to create the viewBox attribute for the outermost SVG,
+// which is effectively the smallest rectangle that can be fit around all nodes.
 export function calculateViewBox(graph) {
-  const zoom = graph.zoom
+  // const zoom = graph.zoom
   const graphStats = stats(graph)
 
   if (graphStats.nodeCount === 0) {
     return DEFAULT_VIEWBOX
-  }
+  }``
 
   const minX = graphStats.minNodeX - GRAPH_PADDING
   const minY = graphStats.minNodeY - GRAPH_PADDING
   const w = (graphStats.maxNodeX - graphStats.minNodeX) + (GRAPH_PADDING * 2)
   const h = (graphStats.maxNodeY - graphStats.minNodeY) + (GRAPH_PADDING * 2)
 
-  // We can return here if the zoom is 1
-  if (zoom === 1) {
-    return { minX, minY, w, h }
-  }
-
-  // Update viewBox according to zoom settings
-  const zoomW = w / zoom
-  const zoomH = h / zoom
-  const zoomMinX = minX + (w / 2) - (zoomW / 2)
-  const zoomMinY = minY + (h / 2) - (zoomH / 2)
-
-  return {
-    minX: zoomMinX,
-    minY: zoomMinY,
-    w: zoomW,
-    h: zoomH
-  }
+  return { minX, minY, w, h }
 }
 
+// Returns the geometric center point of a graph's viewbox
 export function calculateCenter(graph) {
   const vb = calculateViewBox(graph)
   const x = vb.minX + (vb.w / 2)
   const y = vb.minY + (vb.h / 2)
   return { x, y }
-}
-
-export function updateViewBox(graph) {
-  graph.viewBox = calculateViewBox(graph)
-  return graph
-}
-
-export function setZoom(graph, zoomLevel) {
-  throw new Error("Not Yet Implemented")
 }
 
 // Graph Functions
@@ -178,7 +154,6 @@ export function setZoom(graph, zoomLevel) {
 // exported in the module default as Graph.new
 export function newGraph(attributes = {}) {
   let g = merge({}, DEFAULT_GRAPH, attributes)
-  updateViewBox(g)
   return g
 }
 
@@ -369,8 +344,6 @@ export default {
   "dragEdge":                   dragEdge,
   "intersectingNode":           intersectingNode,
   "intersectingNodeFromDrag":   intersectingNodeFromDrag,
-  "updateViewBox":              updateViewBox,
-  "setZoom":                    setZoom,
   "addConnection":              addConnection,
   "connectedNodeIds":           connectedNodeIds,
   "arrange":                    arrangeGraph

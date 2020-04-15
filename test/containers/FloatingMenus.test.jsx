@@ -35,7 +35,7 @@ describe('<FloatingMenus>', function() {
     state.display.modes.editor = false
     store = createMockStore(state)
     wrapper = mountWithStore(store, <FloatingMenus />)
-    expect(wrapper.html()).to.equal("")
+    expect(wrapper.html()).to.be.null
   })
 
   it("shows nothing when there's no open floating menu", function() {

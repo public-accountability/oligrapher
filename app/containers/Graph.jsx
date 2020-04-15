@@ -11,7 +11,7 @@ import Markers from '../components/graph/Markers'
 import Pannable from '../components/graph/Pannable'
 import Zoomable from '../components/graph/Zoomable'
 
-import { computeActualZoom } from '../util/dimensions'
+import { applyZoomToViewBox, computeSvgZoom } from '../util/dimensions'
 
 /*
   The core component that displays the graph
@@ -21,24 +21,30 @@ export function Graph(props) {
   const svgRef = useRef(null)
   const containerRef = useRef(null)
 
+  // calculate actual zoom = user-set zoom (props.zoom) x automatic svg zoom
+  // only triggered by initial render and user zoom changes
   useEffect(() => {
-    props.setActualZoom(computeActualZoom(props.viewBox, svgRef.current, props.zoom))
-  }, [props.zoom, props.viewBox])
+    const zoomedViewBox = applyZoomToViewBox(props.viewBox, props.zoom)
+    const svgZoom = computeSvgZoom(zoomedViewBox, svgRef.current)
+    props.setActualZoom(props.zoom * svgZoom)
+  }, [props.viewBox, props.zoom])
 
-  return <div ref={containerRef} className="oligrapher-graph-svg">
-           <Svg outermost={true} viewBox={props.viewBox} height="500px "width="100%" ref={svgRef}>
-             <Markers />
-             <Zoomable zoom={props.zoom}>
-               <Pannable zoom={props.zoom} actualZoom={props.actualZoom}>
-                 <Clickable>
-                   <Nodes />
-                   <Edges />
-                   <Captions />
-                 </Clickable>
-               </Pannable>
-             </Zoomable>
-           </Svg>
-         </div>
+  return (
+    <div ref={containerRef} className="oligrapher-graph-svg">
+      <Svg outermost={true} viewBox={props.viewBox} height="500px "width="100%" ref={svgRef}>
+        <Markers />
+        <Zoomable zoom={props.zoom}>
+          <Pannable scale={props.zoom * props.actualZoom}>
+            <Clickable>
+              <Nodes />
+              <Edges />
+              <Captions />
+            </Clickable>
+          </Pannable>
+        </Zoomable>
+      </Svg>
+    </div>
+  )
 }
 
 Graph.propTypes = {
@@ -50,16 +56,15 @@ Graph.propTypes = {
 
 const mapStateToProps = function(state) {
   return {
-    viewBox: state.graph.viewBox,
-    zoom: state.graph.zoom,
-    actualZoom: state.graph.actualZoom
+    viewBox: state.display.viewBox,
+    zoom: state.display.zoom,
+    actualZoom: state.display.actualZoom
   }
 }
 
 const mapDispatchToProps = function(dispatch) {
   return {
-    setActualZoom: actualZoom => dispatch({ type: 'SET_ACTUAL_ZOOM', actualZoom }),
-
+    setActualZoom: actualZoom => dispatch({ type: 'SET_ACTUAL_ZOOM', actualZoom })
   }
 }
 

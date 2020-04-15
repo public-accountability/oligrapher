@@ -29,16 +29,17 @@ const toggleSelectedNode = (draft, id) => {
   }
 }
 
-const toggleNodeEditor = (draft, id, x, y, actualZoom) => {
+const toggleNodeEditor = (draft, id) => {
   let isOpen = ['node', 'connections'].includes(FloatingMenu.getType(draft))
   let isThisNode = FloatingMenu.getId(draft) === id
 
   if (isOpen && isThisNode) {
     FloatingMenu.clear(draft)
   } else {
+    let { x, y } = draft.graph.nodes[id]
     FloatingMenu.set(
       draft, 'node', id,
-      FloatingMenu.transformNodePosition({ x, y }, actualZoom)
+      FloatingMenu.transformNodePosition(draft, { x, y })
     )
   }
 }
@@ -103,7 +104,10 @@ let id, intersectedNode
 export default produce((draft, action) => {
   switch(action.type) {
   case 'SET_ACTUAL_ZOOM':
-    draft.graph.actualZoom = action.actualZoom
+    draft.display.actualZoom = action.actualZoom
+    return
+  case 'SET_OFFSET':
+    draft.display.offset = action.offset
     return
   case 'ADD_NODE':
     Graph.addNode(draft.graph, action.attributes, (node) => {
@@ -129,6 +133,10 @@ export default produce((draft, action) => {
     Graph.removeNode(draft.graph, action.id)
     FloatingMenu.clear(draft)
     return
+  case 'CLICK_NODE':
+    id = toString(action.id)
+    toggleNodeEditor(draft, id)
+    return  
   case 'MOVE_NODE':
     intersectedNode = Graph.intersectingNodeFromDrag(draft.graph, action.id, action.deltas)
 
@@ -164,7 +172,7 @@ export default produce((draft, action) => {
     FloatingMenu.clear(draft)
     return
   case 'NEW_CAPTION':
-    Graph.addCaption(draft.graph, Caption.fromEvent(action.event, draft.zoom))
+    Graph.addCaption(draft.graph, Caption.fromEvent(action.event, draft.display.zoom))
     return
   case 'UPDATE_CAPTION':
     merge(draft.graph.captions[action.id], action.attributes)
@@ -184,9 +192,9 @@ export default produce((draft, action) => {
     return
   case 'ZOOM':
     if (action.direction === 'IN') {
-      draft.graph.zoom = draft.graph.zoom + ZOOM_INTERVAL
+      draft.display.zoom = draft.display.zoom + ZOOM_INTERVAL
     } else if (action.direction === 'OUT') {
-      draft.graph.zoom = draft.graph.zoom - ZOOM_INTERVAL
+      draft.display.zoom = draft.display.zoom - ZOOM_INTERVAL
     }
     return
   case 'SET_MODE':
@@ -238,15 +246,11 @@ export default produce((draft, action) => {
   case 'BACKGROUND_CLICK':
     // Add new caption
     if (checkOpenTool(draft.display.editor.tool, 'text')) {
-      const caption = Caption.fromEvent(action.event, draft.graph.zoom)
+      const caption = Caption.fromEvent(action.event, draft.display.zoom)
       Graph.addCaption(draft.graph, caption)
       FloatingMenu.set(draft, 'caption')
     }
 
-    return
-  case 'CLICK_NODE':
-    id = toString(action.id)
-    toggleNodeEditor(draft, id, action.x, action.y, action.actualZoom)
     return
   case 'ADD_CONNECTION':
     Graph.addConnection(draft.graph, {
