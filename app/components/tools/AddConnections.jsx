@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import uniqBy from 'lodash/uniqBy'
 import isArray from 'lodash/isArray'
 
-import { findConnections } from '../../datasources/littlesis3'
+import { findConnections, getEdges } from '../../datasources/littlesis3'
 import { makeCancelable } from '../../util/helpers'
 import EntitySearchResults from './EntitySearchResults'
 import Graph from '../../graph/graph'
@@ -20,6 +20,8 @@ export default function AddConnections({ id }) {
   const dispatch = useDispatch()
   const graph = useSelector(state => state.graph)
   const connectedNodeIds = useMemo(() => Graph.connectedNodeIds(graph, id), [graph, id])
+  const allNodeIds = Object.keys(graph.nodes)
+  const addEdges = useSelector(state => state.settings.automaticallyAddEdges)
   const [addedNodeIds, setAddedNodeIds] = useState([])
   const [results, setResults] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -31,7 +33,21 @@ export default function AddConnections({ id }) {
   const addConnection = useCallback(node => {
     dispatch({ type: 'ADD_CONNECTION', existingNodeId: id, newNode: node, newEdge: node.edge })
     setAddedNodeIds(addedNodeIds.concat([node.id]))
-  }, [id, dispatch, addedNodeIds])
+
+    if (!addEdges || !allNodeIds) {
+      return
+    }
+
+    getEdges(node.id, allNodeIds)
+    .then(json => {
+      if (json.length > 0) {
+        dispatch({ type: 'ADD_EDGES', edges: json })
+      }
+    })
+    .catch(err => {
+      console.error("Couldn't add edges for new node:", err)
+    })
+  }, [id, dispatch, addedNodeIds, allNodeIds, addEdges])
 
   useEffect(() => {
     setLoading(true)

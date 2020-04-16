@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types'
 import merge from 'lodash/merge'
 import { generate } from 'shortid'
-import { stringOrNumber } from '../util/types'
-import { frozenArray } from '../util/helpers'
 
 const nodeDefaults = {
   id: null,
@@ -18,7 +16,7 @@ const nodeDefaults = {
 }
 
 export const nodeShape = {
-  id: stringOrNumber.isRequired,
+  id: PropTypes.string.isRequired,
   name: PropTypes.string,
   x: PropTypes.number,
   y: PropTypes.number,

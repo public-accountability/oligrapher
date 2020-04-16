@@ -77,7 +77,8 @@ const defaultState = {
     saveable: true,
     storyable: true,
     draggableNodes: true,
-    draggableEdges: true
+    draggableEdges: true,
+    automaticallyAddEdges: true
   }
 
   // Hooks available to trigger code external to Oligrapher.

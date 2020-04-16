@@ -6,6 +6,7 @@ import curry from 'lodash/curry'
 const urls = {
   findNodes: () => `${API_URL}/oligrapher/find_nodes`,
   findConnections: () => `${API_URL}/oligrapher/find_connections`,
+  getEdges: () => `${API_URL}/oligrapher/get_edges`,
   getRelationship: id => `${API_URL}/api/relationships/${id}`,
   createOligrapher: () => `${API_URL}/oligrapher`,
   updateOligrapher: id => `${API_URL}/oligrapher/${id}`,
@@ -58,10 +59,15 @@ export function findNodes(query) {
 }
 
 export function findConnections(entityId, options = {}) {
-  validateId(entityId)
-
   return wretch(urls.findConnections())
     .query({ entity_id: entityId, num: 30, ...options })
+    .get()
+    .json()
+}
+
+export function getEdges(entity1Id, entity2Ids) {
+  return wretch(urls.getEdges())
+    .query({ entity1_id: entity1Id, entity2_ids: entity2Ids.join(',') })
     .get()
     .json()
 }

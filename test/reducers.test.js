@@ -222,6 +222,30 @@ describe('Reducer', function() {
     })
   })
 
+  describe('ADD_EDGES', function() {
+    let state, action, nextState, graph, n1, n2, n3, n4, e1, e2, e3
+
+    beforeEach(function() {
+      graph = Graph.new()
+      n1 = Node.new()
+      n2 = Node.new()
+      n3 = Node.new()
+      n4 = Node.new() // some node that's not around anymore
+      e1 = Edge.newEdgeFromNodes(n1, n3)
+      e2 = Edge.newEdgeFromNodes(n2, n3)
+      e3 = Edge.newEdgeFromNodes(n3, n4) // shouldn't be added
+      Graph.addNodes(graph, [n1, n2, n3])
+
+      state = { graph }
+      action = { type: 'ADD_EDGES', edges: [e1, e2] }
+      nextState = reducers(state, action)
+    })
+
+    it('adds only edges with existing nodes', function() {
+      expect(Object.keys(nextState.graph.edges)).to.eql([e1.id, e2.id])
+    })
+  })
+
   describe('REMOVE_EDGE', function() {
     let state, action, nextState, e1, e2
 

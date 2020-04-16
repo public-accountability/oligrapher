@@ -4,7 +4,7 @@ import isNumber from 'lodash/isNumber'
 
 import { generate } from 'shortid'
 
-import { stringOrBool, stringOrNumber } from '../util/types'
+import { stringOrBool } from '../util/types'
 
 const edgeDefaults = {
   id: null,
@@ -68,9 +68,9 @@ export function edgeCoordinates(nodeNumber, coordinates) {
 }
 
 export const edgeShape = {
-  id: stringOrNumber.isRequired,
-  node1_id: stringOrNumber.isRequired,
-  node2_id: stringOrNumber.isRequired,
+  id: PropTypes.string.isRequired,
+  node1_id: PropTypes.string.isRequired,
+  node2_id: PropTypes.string.isRequired,
   status: PropTypes.oneOf(['normal']),
   label: PropTypes.string,
   scale: PropTypes.number,

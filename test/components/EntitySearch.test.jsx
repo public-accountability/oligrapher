@@ -3,7 +3,7 @@ import { act } from "react-dom/test-utils"
 import EntitySearch from '../../app/components/tools/EntitySearch'
 import EntitySearchResults from '../../app/components/tools/EntitySearchResults'
 import * as littlesis3 from '../../app/datasources/littlesis3'
-import { stubDispatch } from "../../test/testHelpers"
+import { stubDispatch, createMockStore, mountWithStore } from "../../test/testHelpers"
 import sinon from 'sinon'
 
 // Unfortunately, it's currently necessary to mock react-redux's useDispatch 
@@ -11,21 +11,28 @@ import sinon from 'sinon'
 // which currently doesn't run the useEffect hook that we're mostly testing here.
 
 describe('<EntitySearch>', function() {
-  let wrapper, mockDispatch, response
+  let wrapper, mockDispatch, response, state, store, edgesResponse
 
   beforeEach(function() {
     mockDispatch = stubDispatch()
     sinon.stub(littlesis3, "findNodes").callsFake(() => response)
+    sinon.stub(littlesis3, "getEdges").callsFake(() => edgesResponse)
+    state = {
+      graph: { nodes: { "100": { id: "100" } } },
+      settings: { automaticallyAddEdges: true }
+    }
+    store = createMockStore(state)
   })
 
   afterEach(function() {
     mockDispatch.restore()
     littlesis3.findNodes.restore()
+    littlesis3.getEdges.restore()
   })
 
   it('shows loading', function() {
     response = Promise.resolve([])
-    wrapper = mount(<EntitySearch query="bob" />)
+    wrapper = mountWithStore(store, <EntitySearch query="bob" />)
     expect(wrapper.html().toLowerCase()).to.contain("loading")
   })
 
@@ -33,7 +40,7 @@ describe('<EntitySearch>', function() {
     response = Promise.reject("error")
 
     await act(async () => {
-      wrapper = mount(<EntitySearch query="bob" />)
+      wrapper = mountWithStore(store, <EntitySearch query="bob" />)
     })
     
     expect(wrapper.html().toLowerCase()).to.contain("error")
@@ -43,7 +50,7 @@ describe('<EntitySearch>', function() {
     response = Promise.resolve([])
 
     await act(async () => {
-      wrapper = mount(<EntitySearch query="bob" />)
+      wrapper = mountWithStore(store, <EntitySearch query="bob" />)
     })
 
     expect(wrapper.html().toLowerCase()).to.contain("no results")
@@ -54,7 +61,7 @@ describe('<EntitySearch>', function() {
     response = Promise.resolve(data)
 
     await act(async () => {
-      wrapper = mount(<EntitySearch query="bob" />)
+      wrapper = mountWithStore(store, <EntitySearch query="bob" />)
     })
     
     // for some reason update() is necessary this one test, perhaps because
@@ -64,5 +71,28 @@ describe('<EntitySearch>', function() {
     let results = wrapper.find(EntitySearchResults)
     expect(results).to.have.lengthOf(1)
     expect(results.prop('results')).to.equal(data)
+  })
+
+  it('adds node and edges', async function() {
+    let data = [{ id: "1", name: "Bob", description: "a person", image: null, url: null }]
+    response = Promise.resolve(data)
+    let edges = [{ id: "1" }]
+    edgesResponse = Promise.resolve(edges)
+
+    await act(async () => {
+      wrapper = mountWithStore(store, <EntitySearch query="bob" />) 
+    })
+
+    wrapper.update()
+
+    let link = wrapper.find('.entity-search-result a')
+
+    await act(async () => {
+      link.simulate('click')    
+    })
+
+    expect(mockDispatch.callCount).to.equal(2)
+    expect(mockDispatch.getCall(0).args[0]).to.eql({ type: 'ADD_NODE', attributes: data[0] })
+    expect(mockDispatch.getCall(1).args[0]).to.eql({ type: 'ADD_EDGES', edges })
   })
 })

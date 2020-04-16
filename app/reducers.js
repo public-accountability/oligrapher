@@ -163,6 +163,9 @@ export default produce((draft, action) => {
     }
 
     return
+  case 'ADD_EDGES':
+    action.edges.forEach(edge => Graph.addEdgeIfNodes(draft.graph, edge))
+    return
   case 'UPDATE_EDGE':
     Graph.updateEdge(draft.graph, action.id, action.attributes)
     return

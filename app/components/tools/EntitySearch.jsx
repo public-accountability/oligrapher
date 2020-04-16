@@ -1,20 +1,37 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
-import { findNodes } from '../../datasources/littlesis3'
+import { useDispatch, useSelector } from 'react-redux'
+import { findNodes, getEdges } from '../../datasources/littlesis3'
 import { makeCancelable } from '../../util/helpers'
 import isArray from 'lodash/isArray'
 
 import EntitySearchResults from './EntitySearchResults'
+import { jpegVersion } from 'canvas'
 
 export default function EntitySearch({ query }) {
   const dispatch = useDispatch()
-  const addNode = useCallback(
-    entity => dispatch({ type: 'ADD_NODE', attributes: entity }),
-    [dispatch]
-  )
+  const nodeIds = useSelector(state => Object.keys(state.graph.nodes))
+  const addEdges = useSelector(state => state.settings.automaticallyAddEdges)
   const [loading, setLoading] = useState(true)
   const [results, setResults] = useState(null)
+
+  const addNode = useCallback((entity) => {
+    dispatch({ type: 'ADD_NODE', attributes: entity })
+
+    if (!addEdges || !nodeIds) {
+      return
+    }
+
+    getEdges(entity.id, nodeIds)
+      .then(json => {
+        if (json.length > 0) {
+          dispatch({ type: 'ADD_EDGES', edges: json })
+        }
+      })
+      .catch(err => {
+        console.error("Couldn't add edges for new node:", err)
+      })
+  }, [dispatch, nodeIds, addEdges])
 
   useEffect(() => {
     setLoading(true)

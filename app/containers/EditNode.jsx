@@ -42,8 +42,6 @@ export function MainPage({node, setPage, updateNode, openAddConnections}) {
       <hr/>
       <NodeStyleForm setPage={setPage} />
       <hr/>
-      <a onClick={() => setPage('bio')}
-        className="add-node-bio-link">Add Node Bio +</a>
       { showAddConnections && <a className="add-connections-link" onClick={openAddConnections}>Add Connections +</a> }
     </>
   )

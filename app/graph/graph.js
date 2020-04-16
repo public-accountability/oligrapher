@@ -9,7 +9,7 @@ import pick from 'lodash/pick'
 
 import { translatePoint, rotatePoint, distance } from '../util/helpers'
 import { newNode } from './node'
-import { edgeCoordinates, newEdgeFromNodes } from './edge'
+import { edgeCoordinates, newEdgeFromNodes, newEdge } from './edge'
 import { calculateGeometry } from './curve'
 
 import nodeDisplaySetting from '../NodeDisplaySettings'
@@ -211,6 +211,21 @@ export function addEdges(graph, edges) {
   return graph
 }
 
+export function addEdgeIfNodes(graph, edge) {
+  if (getEdge(graph, edge.id)) {
+    return graph
+  }
+
+  let node1 = getNode(graph, edge.node1_id)
+  let node2 = getNode(graph, edge.node2_id)
+
+  if (!node1 || !node2) {
+    return graph
+  }
+
+  return addEdge(graph, newEdgeFromNodes(node1, node2, edge))
+}
+
 export function removeEdge(graph, edge) {
   delete graph.edges[getId(edge)]
   return graph
@@ -336,6 +351,7 @@ export default {
   "updateNode":                 updateNode,
   "addEdge":                    addEdge,
   "addEdges":                   addEdges,
+  "addEdgeIfNodes":             addEdgeIfNodes,
   "removeEdge":                 removeEdge,
   "updateEdge":                 updateEdge,
   "addCaption":                 addCaption,
