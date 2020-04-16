@@ -10,7 +10,8 @@ const OPTION_DESCRIPTION = {
   "defaultStoryMode": "Default: Story Mode",
   "defaultExploreMode": "Default: Explore Mode",
   "storyModeOnly": "Story Mode Only",
-  "exploreModeOnly": "Explore Mode Only"
+  "exploreModeOnly": "Explore Mode Only",
+  "automaticallyAddEdges": "Automatically Add Edges"
 }
 
 function SettingsOption({ option }) {
@@ -22,12 +23,14 @@ function SettingsOption({ option }) {
     [dispatch, option, value]
   )
 
-  return <div className="settings-option">
-           <div>{OPTION_DESCRIPTION[option]}: </div>
-           <div>
-             <input type="checkbox" checked={value} onChange={onChange} />
-           </div>
-         </div>
+  return (
+    <div className="settings-option">
+      <div>{OPTION_DESCRIPTION[option]}: </div>
+      <div>
+        <input type="checkbox" checked={value} onChange={onChange} />
+      </div>
+    </div>
+  )
 }
 
 SettingsOption.propTypes = {
@@ -46,6 +49,9 @@ export default function Settings() {
       <SettingsOption option="defaultExploreMode" />
       <SettingsOption option="storyModeOnly" />
       <SettingsOption option="exploreModeOnly" />
+      <hr />
+      <label>Editing</label>
+      <SettingsOption option="automaticallyAddEdge" />
     </div>
   )
 }

@@ -106,13 +106,22 @@ describe('Graph', function() {
       expect(g.nodes).to.eql({ [n.id]: n })
     })
 
-    specify("addNode() - calculate center", function() {
+    specify("addNode() - placed at center", function() {
       let g = Graph.new()
       let n = Node.new()
       expect(g.nodes).to.eql({})
       Graph.addNode(g, n)
       expect(g.nodes[n.id]).to.be.ok
-      expect(xy(g.nodes[n.id])).to.eql({x: 0, y: 0})
+      expect(xy(g.nodes[n.id])).to.eql({ x: 0, y: 0 })
+    })
+
+    specify("addNode() - placed away from center", function() {
+      let g = Graph.new()
+      let n1 = Node.new()
+      let n2 = Node.new()
+      Graph.addNode(g, n1)
+      Graph.addNode(g, n2)
+      expect(xy(g.nodes[n2.id])).not.to.eql({ x: 0, y: 0 })
     })
 
     specify("addNodes()", function() {
@@ -236,20 +245,20 @@ describe('Graph', function() {
       let node = Node.new({x: 10, y: 20 })
       let graph = Graph.new()
       Graph.addNode(graph, node)
-      expect(xy(graph.nodes[node.id])).to.eql({x: 10, y: 20 })
-      Graph.moveNode(graph, node.id, {x: -2,  y: -5 })
-      expect(xy(graph.nodes[node.id])).to.eql({x: 8, y: 15 })
+      expect(xy(graph.nodes[node.id])).to.eql({ x: 10, y: 20 })
+      Graph.moveNode(graph, node.id, { x: -2,  y: -5 })
+      expect(xy(graph.nodes[node.id])).to.eql({ x: 8, y: 15 })
     })
   })
 
   describe('calculateCenter()', function() {
-    it("calculate for default graph", function() {
+    it("calculates for default graph", function() {
       let graph = Graph.new()
-      expect(calculateCenter(graph)).to.eql({x: 0, y:0 })
+      expect(calculateCenter(graph)).to.eql({ x: 0, y: 0 })
     })
   })
 
-  describe('addConnection', function() {
+  describe('addConnection()', function() {
     let graph, node, newNode, newEdge
 
     beforeEach(function() {

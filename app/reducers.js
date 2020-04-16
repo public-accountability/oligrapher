@@ -113,7 +113,7 @@ export default produce((draft, action) => {
     Graph.addNode(draft.graph, action.attributes, (node) => {
       // only show edit box if node is new
       if (!action.attributes.id) {
-        FloatingMenu.set(draft, 'node', node.id, { x: node.x, y: node.y })        
+        toggleNodeEditor(draft, node.id)
       }
     })
     return
@@ -203,12 +203,9 @@ export default produce((draft, action) => {
   case 'SET_MODE':
     draft.display.modes[action.mode] = action.enabled
     return
-  case 'OPEN_TOOL':
-    // if (draft.display.editor.tool === 'node') {
-    //   FloatingMenu.clear() // Reset the selected node
-    // }
-
-    draft.display.editor.tool = action.item
+  case 'TOGGLE_TOOL':
+    const toolIsOpen = draft.display.editor.tool === action.tool
+    draft.display.editor.tool = toolIsOpen ? null : action.tool
 
     // Tools with floating menus that are always open
     if (['settings', 'style', 'editors'].includes(draft.display.editor.tool)) {

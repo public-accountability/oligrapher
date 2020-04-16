@@ -7,11 +7,13 @@ import MENU from '../../editorMenu'
 export default function EditorMenuItem(props) {
   const item = MENU[props.item]
   const dispatch = useDispatch()
-  const onClick = () => dispatch({ type: 'OPEN_TOOL', item: props.item })
+  const onClick = () => dispatch({ type: 'TOGGLE_TOOL', tool: props.item })
 
-  return <div className="editor-menu-item" onClick={onClick}>
-           <span>{item.icon}</span>
-         </div>
+  return (
+    <div className="editor-menu-item" onClick={onClick}>
+      <span>{item.icon}</span>
+    </div>
+  )
 }
 
 EditorMenuItem.propTypes = {

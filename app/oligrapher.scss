@@ -326,6 +326,13 @@ $node_halo_color: #b6e63e;
       font-size: 0.8em;
       color: $oligrapher_dark_gray;
   }
+
+  a.entity-external-link {
+    margin-left: 5px;
+    font-size: 0.8em;
+    font-weight: normal;
+    color: $oligrapher_dark_gray;
+  }
 }
 
 .text-tool { }

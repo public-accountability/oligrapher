@@ -9,7 +9,7 @@ import pick from 'lodash/pick'
 
 import { translatePoint, rotatePoint, distance } from '../util/helpers'
 import { newNode } from './node'
-import { edgeCoordinates, newEdgeFromNodes, newEdge } from './edge'
+import { edgeCoordinates, newEdgeFromNodes } from './edge'
 import { calculateGeometry } from './curve'
 
 import nodeDisplaySetting from '../NodeDisplaySettings'
@@ -145,6 +145,33 @@ export function calculateCenter(graph) {
   return { x, y }
 }
 
+// Tries to find position near a position on a graph not intersecting a node,
+// starting at the center and incrementally expanding the search radius.
+export function findFreePositionNear(graph, startPosition) {
+  const padding = 50
+  const maxTries = 30
+  let position, node, success = false, tries = 0, radius = 0
+
+  do {
+    position = positionNear(startPosition, radius)
+    node = intersectingNode(graph, position, null, padding)
+    success = (node === undefined)
+    tries += 1
+    radius += 20
+  } while (!success && tries < maxTries)
+
+  return success ? position : startPosition
+}
+
+// Picks random position within a radius of another position
+export function positionNear({ x, y }, radius) {
+  const angle = Math.random() * Math.PI
+  const xOffset = Math.random() * radius * Math.cos(angle)
+  const yOffset = Math.random() * radius * Math.sin(angle)
+
+  return { x: Math.floor(x + xOffset), y: Math.floor(y + yOffset) }
+}
+
 // Graph Functions
 // All of these functions take `graph` as the first argument
 //
@@ -160,9 +187,10 @@ export function newGraph(attributes = {}) {
 export function addNode(graph, attributes, callback = null) {
   let node = newNode(attributes)
 
-  // Place the node at the graph center, unless coordinates are provided
+  // Place the node at random spaced position near the graph center, 
+  // unless coordinates are provided
   if (!(isNumber(node.x) && isNumber(node.y))) {
-    merge(node, calculateCenter(graph))
+    merge(node, findFreePositionNear(graph, calculateCenter(graph)))
   }
 
   graph.nodes[getId(node)] = node
@@ -279,16 +307,15 @@ export function dragEdge(graph, edge) {
 }
 
 // {x,y}, {x,y} ---> Boolean
-function intersects(coordinates, node) {
-  const padding = 20
+function intersects(coordinates, node, padding = 20) {
   const radius = (nodeDisplaySetting.circleRadius * node.scale) + padding
   return distance(node, coordinates) <= radius
 }
 
 // Returns the intersecting node (including a hard-coded buffer radius)
 // If there are no intersections, this returns undefined
-export function intersectingNode(graph, coordinates, selfId = null) {
-  return values(omit(graph.nodes, selfId)).find(curry(intersects)(coordinates))
+export function intersectingNode(graph, coordinates, selfId = null, padding = 20) {
+  return values(omit(graph.nodes, selfId)).find(node => intersects(coordinates, node, padding))
 }
 
 export function intersectingNodeFromDrag(graph, nodeId, deltas) {
