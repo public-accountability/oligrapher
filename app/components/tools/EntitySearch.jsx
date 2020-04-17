@@ -6,7 +6,6 @@ import { makeCancelable } from '../../util/helpers'
 import isArray from 'lodash/isArray'
 
 import EntitySearchResults from './EntitySearchResults'
-import { jpegVersion } from 'canvas'
 
 export default function EntitySearch({ query }) {
   const dispatch = useDispatch()

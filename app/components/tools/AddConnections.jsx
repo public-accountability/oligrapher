@@ -5,7 +5,8 @@ import uniqBy from 'lodash/uniqBy'
 import isArray from 'lodash/isArray'
 
 import { findConnections, getEdges } from '../../datasources/littlesis3'
-import { makeCancelable } from '../../util/helpers'
+import { makeCancelable, callWithTargetValue } from '../../util/helpers'
+import AddConnectionsCategory from './AddConnectionsCategory'
 import EntitySearchResults from './EntitySearchResults'
 import Graph from '../../graph/graph'
 
@@ -22,6 +23,7 @@ export default function AddConnections({ id }) {
   const connectedNodeIds = useMemo(() => Graph.connectedNodeIds(graph, id), [graph, id])
   const allNodeIds = Object.keys(graph.nodes)
   const addEdges = useSelector(state => state.settings.automaticallyAddEdges)
+  const [categoryId, setCategoryId] = useState(0)
   const [addedNodeIds, setAddedNodeIds] = useState([])
   const [results, setResults] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -49,15 +51,21 @@ export default function AddConnections({ id }) {
     })
   }, [id, dispatch, addedNodeIds, allNodeIds, addEdges])
 
+
+  const changeCategory = useCallback(callWithTargetValue(value => {
+    setCategoryId(parseInt(value))
+    setResults(null)
+  }))
+
   useEffect(() => {
     setLoading(true)
-    const httpRequest = makeCancelable(findConnections(parseInt(id)))
+    const httpRequest = makeCancelable(findConnections(id, categoryId))
 
     httpRequest
       .promise
       .then(entities => {
-        let results = uniqBy(entities, 'id')
-        setResults(results) // ..Until we figure out the best way handle the case where there are multiple relationship between the same entity
+        let results = uniqBy(entities, 'id') // ..Until we figure out the best way handle the case where there are multiple relationship between the same entity
+        setResults(results)
         setLoading(false)
       })
       .catch(err => {
@@ -69,20 +77,30 @@ export default function AddConnections({ id }) {
       })
 
     return httpRequest.cancel
-  }, [id])
+  }, [id, categoryId])
+
+  let status
 
   // only show loading indicator if there aren't already results
   if (loading && !isArray(results)) {
-    return <em>...loading...</em>
+    status = <em>...loading...</em>
   } else if (isArray(visibleResults)) {
     if (visibleResults.length > 0) {
-      return <EntitySearchResults results={visibleResults} onClick={addConnection} />
+      status = <EntitySearchResults results={visibleResults} onClick={addConnection} />
     } else {
-      return <em>No results.</em>
+      status = <em>No results.</em>
     }
   } else {
-    return <em>Your search resulted in an error.</em>
+    status = <em>Your search resulted in an error.</em>
   }
+
+  return (
+    <>
+      <AddConnectionsCategory onChange={changeCategory} />
+      <br />
+      { status }
+    </>
+  )
 }
 
 AddConnections.propTypes = {

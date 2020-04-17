@@ -4,6 +4,7 @@ import sinon from 'sinon'
 
 import AddConnections from '../../app/components/tools/AddConnections'
 import EntitySearchResults, { SearchResult } from '../../app/components/tools/EntitySearchResults'
+import { CATEGORIES } from '../../app/components/tools/AddConnectionsCategory'
 import Graph from '../../app/graph/graph'
 import Node from '../../app/graph/node'
 import Edge from '../../app/graph/edge'
@@ -117,5 +118,19 @@ describe('<AddConnections>', function() {
     expect(mockDispatch.getCall(1).args[0]).to.eql({ type: 'ADD_EDGES', edges: edgeResults })
     expect(wrapper.find(SearchResult)).to.have.length(1)
     expect(wrapper.find('.entity-search-result a').text()).to.equal("Babs")
+  })
+
+  it('shows category options', function() {
+    wrapper = mountWithStore(store, <AddConnections id={node1.id} />)
+    expect(wrapper.find('.add-connections-category option')).to.have.lengthOf(CATEGORIES.length)
+  })
+
+  it('reloads after new category selection', function() {
+    wrapper = mountWithStore(store, <AddConnections id={node1.id} />)
+    let select = wrapper.find('.add-connections-category')
+    expect(mockFindConnections.callCount).to.equal(1)
+    select.simulate("change", { target: { value: 1 } })
+    expect(mockFindConnections.callCount).to.equal(2)
+    expect(mockFindConnections.getCall(1).args).to.eql([node1.id, 1])
   })
 })

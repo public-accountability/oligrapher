@@ -307,10 +307,6 @@ $node_halo_color: #b6e63e;
     }
 }
 
-.entity-search-results {
-  width: $toolbox_width;
-}
-
 .entity-search-result {
   font-size: 15px;
   margin-top: 10px;
@@ -536,11 +532,6 @@ header.edit-menu-header {
     }
 } /* end: .edit-menu-wrapper */
 
-.edit-connections-menu {
-  max-height: 500px;
-  overflow-y: scroll;
-}
-
 .edit-settings-menu {
     width: 225px;
 
@@ -572,6 +563,16 @@ header.edit-menu-header {
 }
 
 /* add connections tool */
+.edit-connections-menu {
+  width: $toolbox_width;
+  max-height: 500px;
+  overflow-y: scroll;
+}
+
+.add-connections-category {
+  margin-top: 10px;
+}
+
 .add-connections-results {
     max-height: 300px;
     overflow: auto;

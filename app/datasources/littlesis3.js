@@ -58,9 +58,15 @@ export function findNodes(query) {
     .json()
 }
 
-export function findConnections(entityId, options = {}) {
+export function findConnections(entityId, categoryId = null) {
+  let params = { entity_id: entityId, num: 30 }
+
+  if (categoryId) {
+    params.category_id = categoryId
+  }
+
   return wretch(urls.findConnections())
-    .query({ entity_id: entityId, num: 30, ...options })
+    .query(params)
     .get()
     .json()
 }
