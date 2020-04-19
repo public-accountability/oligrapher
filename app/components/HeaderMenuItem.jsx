@@ -20,9 +20,11 @@ export default function HeaderMenuItem(props) {
     linkAttrs.href = props.url
   }
 
-  return <li>
-           <a {...linkAttrs}>{props.text}</a>
-         </li>
+  return (
+    <li>
+      <a {...linkAttrs}>{props.text}</a>
+    </li>
+  )
 }
 
 

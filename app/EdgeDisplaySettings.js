@@ -24,4 +24,4 @@ export default {
   selectOpacity: 0.5,
   bgWidthDiff: 5,
   selectWidthDiff: 12
-};
+}

@@ -7,9 +7,11 @@ import { classNames } from '../util/helpers'
 import Node from './Node'
 
 export function Nodes(props) {
-  return <g className={props.className}>
-           { props.nodeIds.map( id => <Node key={id} id={id} /> )  }
-         </g>
+  return (
+    <g className={props.className}>
+      { props.nodeIds.map( id => <Node key={id} id={id} /> )  }
+    </g>
+  )
 }
 
 Nodes.propTypes = {

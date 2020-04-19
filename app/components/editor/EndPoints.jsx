@@ -22,19 +22,21 @@ export default function EndPoints(props) {
 
  //const selectedNode = props.nodes[toNumber(selected) - 1]
 
-  return <div className="select-endpoints">
-           <div>
-             <select value={selected} onChange={selectNode} >
-               <option value="1">{props.nodes[0].name}</option>
-               <option value="2">{props.nodes[1].name}</option>
-             </select>
+  return (
+    <div className="select-endpoints">
+      <div>
+        <select value={selected} onChange={selectNode} >
+          <option value="1">{props.nodes[0].name}</option>
+          <option value="2">{props.nodes[1].name}</option>
+        </select>
 
-             <select value={arrowState} onChange={pickArrow}>
-               <option value="true">---&gt;</option>
-               <option value="false">----</option>
-             </select>
-           </div>
-         </div>
+        <select value={arrowState} onChange={pickArrow}>
+          <option value="true">---&gt;</option>
+          <option value="false">----</option>
+        </select>
+      </div>
+    </div>
+  )
 }
 
 EndPoints.propTypes = {

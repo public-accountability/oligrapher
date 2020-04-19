@@ -1,5 +1,4 @@
 import at from 'lodash/at'
-import curry from 'lodash/curry'
 import filter from 'lodash/filter'
 import isNumber from 'lodash/isNumber'
 import merge from 'lodash/merge'

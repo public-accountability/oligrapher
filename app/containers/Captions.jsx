@@ -5,9 +5,11 @@ import { connect } from 'react-redux'
 import Caption from './Caption'
 
 export function Captions({captionIds}) {
-  return <g className="captions">
-           { captionIds.map(id => <Caption key={id} id={id} />) }
-         </g>
+  return (
+    <g className="captions">
+      { captionIds.map(id => <Caption key={id} id={id} />) }
+    </g>
+  )
 }
 
 

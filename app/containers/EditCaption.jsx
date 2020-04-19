@@ -22,16 +22,16 @@ const FONT_WEIGHT_OPTIONS = [
 
 const FONT_SIZE_OPTIONS = range(8, 31, 2).map(toString).map(i => ({ value: i, label: i }))
 
-function FontFamilyPicker(props) {
+function FontFamilyPicker() {
   const onChange = v => console.log('on change', v)
   return <Select options={FONT_FAMILY_OPTIONS} onChange={onChange}/>
 }
 
-function FontWeightPicker(props) {
+function FontWeightPicker() {
   return <Select options={FONT_WEIGHT_OPTIONS} />
 }
 
-function FontSizePicker(props) {
+function FontSizePicker() {
   return <Select options={FONT_SIZE_OPTIONS} />
 }
 

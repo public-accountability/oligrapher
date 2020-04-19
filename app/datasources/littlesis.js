@@ -1,9 +1,9 @@
-import { client } from "@public-accountability/littlesis-api";
-import merge from 'lodash/merge';
+import { client } from "@public-accountability/littlesis-api"
+import merge from 'lodash/merge'
 
 const api = client(
   typeof API_URL === 'undefined' ? 'https://littlesis.org' : API_URL
-);
+)
 
 export const getConnectedNodesOptions = {
   category_id: {
@@ -28,23 +28,23 @@ export function findNodes(text, callback) {
     num: 12,
     desc: true,
     with_ids: true    
-  };
+  }
 
-  return api.get('/maps/find_nodes', params).then(callback);
+  return api.get('/maps/find_nodes', params).then(callback)
 }
 
 export function getNodeWithEdges(nodeId, nodeIds, callback) {
-  let params = { node_id: nodeId, node_ids: nodeIds };
-  return api.get('/maps/node_with_edges', params).then(callback);
-};
+  let params = { node_id: nodeId, node_ids: nodeIds }
+  return api.get('/maps/node_with_edges', params).then(callback)
+}
 
 export function getConnectedNodes(nodeId, nodeIds, options, callback) {
   let params = merge(options, {
     node_id: nodeId,
     node_ids: nodeIds
-  });
+  })
 
-  return api.get('/maps/edges_with_nodes', params).then(callback);
+  return api.get('/maps/edges_with_nodes', params).then(callback)
 }
 
 export function getInterlocks(node1Id, node2Id, nodeIds, options, callback) {
@@ -52,9 +52,9 @@ export function getInterlocks(node1Id, node2Id, nodeIds, options, callback) {
     "node1_id": node1Id,
     "node2_id": node2Id,
     "node_ids": nodeIds    
-  });
+  })
 
-  return api.get('/maps/interlocsk', params).then(callback);
+  return api.get('/maps/interlocsk', params).then(callback)
 }
   
 export default {

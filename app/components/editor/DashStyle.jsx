@@ -29,20 +29,22 @@ export default function DashStyle(props) {
     }
   })
 
-  return <div className="edit-edge-dash-style">
-           <input className="input-dash-length"
-                    type="number"
-                    value={dash[0]}
-                    min={0}
-                    onChange={updateDash('length')}
-             />
-           <input className="gap-dash-length"
-                    type="number"
-                    value={dash[1]}
-                    min={0}
-                    onChange={updateDash('gap')}
-           />
-         </div>
+  return (
+    <div className="edit-edge-dash-style">
+      <input className="input-dash-length"
+              type="number"
+              value={dash[0]}
+              min={0}
+              onChange={updateDash('length')}
+        />
+      <input className="gap-dash-length"
+              type="number"
+              value={dash[1]}
+              min={0}
+              onChange={updateDash('gap')}
+      />
+    </div>
+  )
 }
 
 DashStyle.propTypes = {

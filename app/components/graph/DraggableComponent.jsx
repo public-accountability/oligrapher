@@ -39,9 +39,11 @@ export default function DraggableComponent(props) {
     disabled: props.disabled
   }
 
-  return <Draggable {...draggableProps}>
-           {props.children}
-         </Draggable>
+  return (
+    <Draggable {...draggableProps}>
+      {props.children}
+    </Draggable>
+  )
 }
 
 DraggableComponent.propTypes = {

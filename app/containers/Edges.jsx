@@ -6,9 +6,11 @@ import isEqual from 'lodash/isEqual'
 import Edge from './Edge'
 
 export function Edges(props) {
-  return <g className="edges">
-           { props.edgeIds.map(id => <Edge key={id} id={id} />) }
-         </g>
+  return (
+    <g className="edges">
+      { props.edgeIds.map(id => <Edge key={id} id={id} />) }
+    </g>
+  )
 }
 
 Edges.propTypes = {

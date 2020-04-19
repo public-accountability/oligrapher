@@ -15,7 +15,7 @@ import Graph from '../../graph/graph'
   It uses LittleSis /api/entities/:id/connections
   routes to get a list of connected entities.
 
-  The results component is <AddConnectionsResults>
+  The results component is <EntityResults>
 */
 export default function AddConnections({ id }) {
   const dispatch = useDispatch()

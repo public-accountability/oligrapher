@@ -9,7 +9,6 @@
   "globals": {
     "expect": "readonly",
     "shallow": "readonly",
-    "sinon": "readonly",
     "mount": "readonly",
     "merge": "readonly",
     "API_URL": "readonly"
@@ -37,7 +36,8 @@
   "rules": {
     "semi": ["error", "never"],
     "space-before-function-paren": ["error", "never"],
-    "react/prop-types": [ 2, { ignore: ['dispatch'] }],
+    "react/prop-types": [ 2, { "ignore": ['dispatch'] } ],
+    "react/jsx-wrap-multilines": [ 1, { "return": 'parens-new-line' } ],
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn"
   }

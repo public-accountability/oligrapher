@@ -20,15 +20,18 @@ export default function NodeLabel(props) {
       textAnchor: "middle"
     }
 
-    return <text key={i} {...props} >
-             {line}
-           </text>
+    return (
+      <text key={i} {...props} >
+        {line}
+      </text>
+    )
   })
 
-  return <g className="nodelabel">
-           {lines}
-         </g>
-
+  return (
+    <g className="nodelabel">
+      {lines}
+    </g>
+  )
 }
 
 NodeLabel.propTypes = {

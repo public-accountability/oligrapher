@@ -4,11 +4,13 @@ import Svg from './Svg'
 import Markers from './Markers'
 
 
-const GraphSvg = React.forwardRef((props, ref)  => {
-  return <Svg outermost={true} viewBox={props.viewBox} height="500px "width="100%" ref={ref}>
-           <Markers />
-           {props.children}
-         </Svg>
+const GraphSvg = React.forwardRef(function Func(props, ref) {
+  return (
+    <Svg outermost={true} viewBox={props.viewBox} height="500px "width="100%" ref={ref}>
+      <Markers />
+      {props.children}
+    </Svg>
+  )
 })
 
 GraphSvg.propTypes = {

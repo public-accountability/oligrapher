@@ -25,12 +25,12 @@ SearchResult.propTypes = {
 export default function EntitySearchResults({ results, onClick }) {
   return (
     <div className="entity-search-results">
-      { results.map(entity => 
+      { results.map(entity => (
           <SearchResult 
             onClick={onClick}
             entity={entity}
             key={entity.id} />
-        ) 
+        )) 
       }
     </div>
   )

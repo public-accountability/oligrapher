@@ -21,57 +21,59 @@ export function MainPage({ nodes, attributes, attributeUpdator }) {
   const updateDash = attributeUpdator('dash')
   const updateScale = attributeUpdator('scale')
 
-  return <>
-           <form>
-             <div>
-               <label>Title</label>
-               <input type="text"
-                      placeholder="label"
-                      value={attributes.label || ''}
-                      onChange={ evt => updateLabel(evt.target.value) } />
-             </div>
-           </form>
+  return (
+    <>
+      <form>
+        <div>
+          <label>Title</label>
+          <input type="text"
+                placeholder="label"
+                value={attributes.label || ''}
+                onChange={ evt => updateLabel(evt.target.value) } />
+        </div>
+      </form>
 
-           <hr />
+      <hr />
 
-           <div>
-             <label>Line Style</label>
-           </div>
+      <div>
+        <label>Line Style</label>
+      </div>
 
-           <div className="line-style-wrapper">
-             <div>
-               <div>
-                 <label>End points</label>
-                 <LineStyle nodes={nodes} updateArrow={updateArrow} />
-               </div>
+      <div className="line-style-wrapper">
+        <div>
+          <div>
+            <label>End points</label>
+            <LineStyle nodes={nodes} updateArrow={updateArrow} />
+          </div>
 
-               <div>
-                 <label>Dash</label>
-                 <DashStyle onChange={updateDash} dash={attributes.dash} />
-               </div>
-             </div>
+          <div>
+            <label>Dash</label>
+            <DashStyle onChange={updateDash} dash={attributes.dash} />
+          </div>
+        </div>
 
-             <div>
-               <div>
-                 <label>Width</label>
-                 <ScaleStyle updateScale={updateScale} scale={attributes.scale} />
-               </div>
-             </div>
+        <div>
+          <div>
+            <label>Width</label>
+            <ScaleStyle updateScale={updateScale} scale={attributes.scale} />
+          </div>
+        </div>
 
-           </div>
+      </div>
 
-           <hr />
+      <hr />
 
-           <form>
-             <div>
-               <label>Clickthrough link</label>
-               <input type="url"
-                      placeholder="Clickthrough link"
-                      value={attributes.url || ''}
-                      onChange={callWithTargetValue(updateUrl)} />
-             </div>
-           </form>
-         </>
+      <form>
+        <div>
+          <label>Clickthrough link</label>
+          <input type="url"
+                placeholder="Clickthrough link"
+                value={attributes.url || ''}
+                onChange={callWithTargetValue(updateUrl)} />
+        </div>
+      </form>
+    </>
+  )
 }
 
 MainPage.propTypes = {

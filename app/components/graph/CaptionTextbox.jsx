@@ -18,16 +18,20 @@ export default function CaptionTextbox(props) {
     setRectProps
   ])
 
-  useEffect(() => void updateRectangle(textRef.current),
-            [props.text, props.x, props.y])
+  useEffect(
+    () => void updateRectangle(textRef.current),
+    [props.text, props.x, props.y]
+  )
 
-  return  <g className="caption-textbox">
-            { rectProps && <rect {...rectProps} className="background-rect" /> }
+  return (
+    <g className="caption-textbox">
+      { rectProps && <rect {...rectProps} className="background-rect" /> }
 
-            <text x={props.x} y={props.y} ref={textRef}>
-              {props.text}
-            </text>
-          </g>
+      <text x={props.x} y={props.y} ref={textRef}>
+        {props.text}
+      </text>
+    </g>
+  )
 }
 
 CaptionTextbox.propTypes = {

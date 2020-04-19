@@ -43,4 +43,4 @@ export default {
   },
   bgRadiusDiff: 4,
   selectionRadiusDiff: 10
-};
+}

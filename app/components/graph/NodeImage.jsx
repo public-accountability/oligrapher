@@ -14,26 +14,27 @@ export function NodeImage(props) {
   const clipPathId = `image-clip-${props.id}`
   const imageWidth = IMAGE_SCALE * props.radius
 
-  return <>
-           <clipPath id={clipPathId}>
-             <circle r={props.radius}
-                     cx={props.x}
-                     cy={props.y}>
-             </circle>
-           </clipPath>
+  return (
+    <>
+      <clipPath id={clipPathId}>
+        <circle r={props.radius}
+                cx={props.x}
+                cy={props.y}>
+        </circle>
+      </clipPath>
 
-           {/* The x/y math centers the image inside the circle clippath*/}
-           <image href={props.image}
-                  className="node-image draggable-node-handle"
-                  x={props.x - (imageWidth/2)}
-                  y={props.y - (imageWidth/2)}
-                  height={imageWidth}
-                  width={imageWidth}
-                  opacity={IMAGE_OPAICTY}
-                  clipPath={`url(#${clipPathId})`} >
-           </image>
-
-         </>
+      {/* The x/y math centers the image inside the circle clippath*/}
+      <image href={props.image}
+            className="node-image draggable-node-handle"
+            x={props.x - (imageWidth/2)}
+            y={props.y - (imageWidth/2)}
+            height={imageWidth}
+            width={imageWidth}
+            opacity={IMAGE_OPAICTY}
+            clipPath={`url(#${clipPathId})`} >
+      </image>
+    </>
+  )
 }
 
 NodeImage.propTypes = {

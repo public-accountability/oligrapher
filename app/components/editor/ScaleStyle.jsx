@@ -13,14 +13,17 @@ export default function ScaleStyle(props) {
     props.updateScale(scale)
   })
 
-  return <div className="edit-edge-scale-style">
-           <input className="input-scale"
-                  type="number"
-                  min={1}
-                  max={10}
-                  value={scale}
-                  onChange={onChange} />
-         </div>
+  return (
+    <div className="edit-edge-scale-style">
+      <input 
+        className="input-scale"
+        type="number"
+        min={1}
+        max={10}
+        value={scale}
+        onChange={onChange} />
+    </div>
+  )
 }
 
 ScaleStyle.propTypes = {

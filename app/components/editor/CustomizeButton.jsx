@@ -14,11 +14,13 @@ const ICONS = {
 export default function CustomizeButton({icon, onClick}) {
   const Icon = ICONS[icon]
 
-  return <div>
-           <span className={`entity-${icon}-icon`} onClick={onClick}>
-             <Icon />
-           </span>
-         </div>
+  return (
+    <div>
+      <span className={`entity-${icon}-icon`} onClick={onClick}>
+        <Icon />
+      </span>
+    </div>
+  )
 }
 
 CustomizeButton.propTypes = {

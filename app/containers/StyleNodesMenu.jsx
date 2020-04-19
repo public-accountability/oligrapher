@@ -27,26 +27,28 @@ export default function StyleNodesMenu() {
   const handleSubmit = () => dispatch({ type: 'UPDATE_NODES', attributes: prepareAttributes(attributes) })
   const attributesUpdater = curry(createStateUpdater)(setAttributes)
 
-  return <EditMenu tool="style">
-           <main>
-             {
-               page === 'main' && <>
-                                    <input type="url" value={attributes.image} placeholder="image url" onChange={attributesUpdater('image')}/>
-                                    <hr />
-                                    <NodeStyleForm setPage={setPage} />
-                                    <hr />
-                                  </> }
+  return (
+    <EditMenu tool="style">
+      <main>
+        {
+          page === 'main' && <>
+                              <input type="url" value={attributes.image} placeholder="image url" onChange={attributesUpdater('image')}/>
+                              <hr />
+                              <NodeStyleForm setPage={setPage} />
+                              <hr />
+                            </> }
 
 
-             { page === 'color' && <EditNodeColorPage color={attributes.color || '#ccc'} onChange={attributesUpdater('color')} /> }
-             { page === 'size' && <SizePicker scale={attributes.scale || 1} setScale={attributesUpdater('scale')} /> }
-           </main>
+        { page === 'color' && <EditNodeColorPage color={attributes.color || '#ccc'} onChange={attributesUpdater('color')} /> }
+        { page === 'size' && <SizePicker scale={attributes.scale || 1} setScale={attributesUpdater('scale')} /> }
+      </main>
 
-           <footer>
-             <EditMenuSubmitButtons handleSubmit={handleSubmit}
-                                    hideDeleteButton={true}
-                                    page={page}
-                                    setPage={setPage} />
-           </footer>
-         </EditMenu>
+      <footer>
+        <EditMenuSubmitButtons handleSubmit={handleSubmit}
+                              hideDeleteButton={true}
+                              page={page}
+                              setPage={setPage} />
+      </footer>
+    </EditMenu>
+  )
 }

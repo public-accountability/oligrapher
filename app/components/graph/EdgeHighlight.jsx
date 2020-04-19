@@ -6,11 +6,13 @@ import PropTypes from 'prop-types'
 export default function EdgeHighlight(props) {
   const width = 10 + (props.scale - 1) * 5
 
-  return <path d={props.curve}
-               stroke={props.color}
-               strokeWidth={width}
-               fill="none">
-         </path>
+  return (
+    <path d={props.curve}
+          stroke={props.color}
+          strokeWidth={width}
+          fill="none">
+    </path>
+  )
 }
 
 

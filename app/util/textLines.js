@@ -16,9 +16,7 @@ export default function textLines(text) {
   let currentWordIndex = 1
   let currentLineIndex = 0
 
-  while (true) {
-    if (currentWordIndex >= words.length) { break }
-
+  while (currentWordIndex >= words.length) {
     let goToNewLine = ((lines[currentLineIndex] + words[currentWordIndex]).length + 1) > perLineMax
 
     if (goToNewLine) {

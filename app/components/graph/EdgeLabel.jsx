@@ -23,18 +23,20 @@ export default function EdgeLabel(props) {
     fontSize: 10 * Math.sqrt(props.scale)
   }
 
-  return <g className="edge-label">
-           <defs>
-             <path d={props.curve} id={curveId}>
-             </path>
-           </defs>
+  return (
+    <g className="edge-label">
+      <defs>
+        <path d={props.curve} id={curveId}>
+        </path>
+      </defs>
 
-           <text {...textProps}>
-             <textPath {...textPathProps} >
-               {props.label}
-             </textPath>
-           </text>
-         </g>
+      <text {...textProps}>
+        <textPath {...textPathProps} >
+          {props.label}
+        </textPath>
+      </text>
+    </g>
+  )
 }
 
 EdgeLabel.propTypes = {

@@ -33,32 +33,37 @@ export function Caption(props) {
     }
   },[ props.isFocused ])
 
-  return <DraggableComponent actualZoom={props.actualZoom}
-                             onStop={props.moveCaption}
-                             onDrag={noop}
-                             onClick={props.openEditMenu}
-                             handle=".caption">
+  return (
+    <DraggableComponent 
+      actualZoom={props.actualZoom}
+      onStop={props.moveCaption}
+      onDrag={noop}
+      onClick={props.openEditMenu}
+      handle=".caption">
 
-           <g className={className} id={`caption-${props.id}`} >
+      <g className={className} id={`caption-${props.id}`} >
 
-             {/*
-                 This is something of a hack because SVG elements cannot be
-                 easily made editiable like html divs or inputs.
-                 It uses a lesser-known react feature called portals to render an invisible <input>
-                 into an empty divin <FloatingMenu>.
+        {/*
+            This is something of a hack because SVG elements cannot be
+            easily made editiable like html divs or inputs.
+            It uses a lesser-known react feature called portals to render an invisible <input>
+            into an empty divin <FloatingMenu>.
+        */}
 
-               */}
+        { props.isFocused && ReactDOM.createPortal(
+            <InvisibleTextbox value={props.text}
+              onChange={handleTextChange}
+              ref={inputRef} />,
+            getElementById('caption-text-input')
+        ) }
 
-             { props.isFocused && ReactDOM.createPortal(<InvisibleTextbox value={props.text}
-                                                                           onChange={handleTextChange}
-                                                                           ref={inputRef} />,
-                                                         getElementById('caption-text-input') )}
-
-             <CaptionTextbox x={props.x}
-                             y={props.y}
-                             text={props.text} />
-           </g>
-         </DraggableComponent>
+        <CaptionTextbox 
+          x={props.x}
+          y={props.y}
+          text={props.text} />
+      </g>
+    </DraggableComponent>
+  )
 }
 
 Caption.propTypes = {

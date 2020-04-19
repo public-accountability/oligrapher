@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 export const CATEGORIES = [
   'All Categories',
@@ -22,4 +23,8 @@ export default function AddConnectionsCategory({ onChange }) {
         { CATEGORIES.map((name, id) => <option value={id} key={id}>{name}</option>) }
       </select>
   )
+}
+
+AddConnectionsCategory.propTypes = {
+  onChange: PropTypes.func.isRequired
 }
