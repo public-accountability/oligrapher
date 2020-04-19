@@ -15,7 +15,7 @@ export default function NodeTool() {
   const handleInputChange = callWithTargetValue(setSearchValue)
 
   const onClickCreateNew = () => {
-    dispatch({ type: 'ADD_NODE', attributes: { name: trimmed } })
+    dispatch({ type: 'ADD_NODE', node: { name: trimmed } })
   }
 
   useEffect(() => {

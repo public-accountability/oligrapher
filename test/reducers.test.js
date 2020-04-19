@@ -110,7 +110,7 @@ describe('Reducer', function() {
     it('adds node to graph', function() {
       node = Node.new()
       state = defaultState
-      action = { type: 'ADD_NODE', attributes : node }
+      action = { type: 'ADD_NODE', node }
       nextState = reducers(state, action)
       expect(Object.keys(nextState.graph.nodes)).to.eql([node.id])
     })
@@ -118,7 +118,7 @@ describe('Reducer', function() {
     it('opens and positions node editor if node isnt from LittleSis', function() {
       node = { name: "bob" }
       state = defaultState
-      action = { type: 'ADD_NODE', attributes : node }
+      action = { type: 'ADD_NODE', node }
       nextState = reducers(state, action)
       expect(nextState.display.floatingMenu.type).to.equal('node')
       expect(nextState.display.floatingMenu.id).to.not.be.null
@@ -128,7 +128,7 @@ describe('Reducer', function() {
     it('doesnt open node editor node is from LittleSis', function() {
       node = Node.new()
       state = defaultState
-      action = { type: 'ADD_NODE', attributes : node }
+      action = { type: 'ADD_NODE', node }
       nextState = reducers(state, action)
       expect(nextState.display.floatingMenu.type).to.be.null
       expect(nextState.display.floatingMenu.id).to.be.null

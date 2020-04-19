@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom'
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import { createLogger } from 'redux-logger'
-import thunk from 'redux-thunk'
+import createSagaMiddleware from 'redux-saga'
 import reducers from '../reducers'
+import rootSaga from '../sagas'
 
 /*
   Returns an Redux store initialized configured oligrapher state
@@ -13,17 +14,22 @@ import reducers from '../reducers'
   If preloadedState.settings.debug is true, redux's logger is enabled.
 */
 export const createOligrapherStore = preloadedState => {
-  let middleware = [thunk]
+  const sagaMiddleware = createSagaMiddleware()
+  let middleware = [sagaMiddleware]
 
   if (preloadedState.settings.debug) {
     middleware.push(createLogger())
   }
 
-  return createStore(
+  const store = createStore(
     reducers,
     preloadedState,
     applyMiddleware(...middleware)
   )
+
+  sagaMiddleware.run(rootSaga)
+
+  return store
 }
 
 export const withStore = store => WrappedComponent => props => (

@@ -12,13 +12,12 @@ import * as littlesis3 from '../../app/datasources/littlesis3'
 import { createMockStore, mountWithStore, stubDispatch } from '../testHelpers'
 
 describe('<AddConnections>', function() {
-  let wrapper, mockDispatch, mockFindConnections, store, response, state, graph, node1, node2, node3, edge, edgeResults
+  let wrapper, mockDispatch, mockFindConnections, store, response, state, graph, node1, node2, node3, edge
 
   beforeEach(function() {
     mockDispatch = stubDispatch()
     mockFindConnections = sinon.spy(() => response)
     sinon.stub(littlesis3, "findConnections").callsFake(mockFindConnections)
-    sinon.stub(littlesis3, "getEdges").callsFake(() => Promise.resolve(edgeResults))
     graph = Graph.new()
     node1 = Node.new()
     node2 = Node.new()
@@ -33,7 +32,6 @@ describe('<AddConnections>', function() {
   afterEach(function() {
     mockDispatch.restore()
     littlesis3.findConnections.restore()
-    littlesis3.getEdges.restore()
   })
 
   it('shows loading', function() {
@@ -88,13 +86,12 @@ describe('<AddConnections>', function() {
     expect(wrapper.html().toLowerCase()).to.contain("no results")
   })
 
-  it('adds connection and edges and filters added node from results', async function() {
+  it('adds node and edge and filters added node from results', async function() {
     let data = [
-      { id: 1, name: "Bob", description: "a person", image: null, url: null },
-      { id: 2, name: "Babs", description: "another person", image: null, url: null }
+      { id: "1", name: "Bob", description: "a person", image: null, url: null, edge: { id: "101", node1_id: node1.id, node2_id: "1" } },
+      { id: "2", name: "Babs", description: "another person", image: null, url: null, edge: { id: "102", node1_id: node1.id, node2_id: "2" } }
     ]
     response = Promise.resolve(data)
-    edgeResults = [{ id: "100" }]
 
     await act(async () => {
       wrapper = mountWithStore(store, <AddConnections id={node1.id} />)
@@ -113,9 +110,9 @@ describe('<AddConnections>', function() {
 
     expect(mockDispatch.callCount).to.equal(2)
     let action = mockDispatch.getCall(0).args[0]
-    expect(action.type).to.equal('ADD_CONNECTION')
-    expect(action.existingNodeId).to.equal(node1.id)
-    expect(mockDispatch.getCall(1).args[0]).to.eql({ type: 'ADD_EDGES', edges: edgeResults })
+    expect(action.type).to.equal('ADD_NODE')
+    expect(action.node.id).to.equal("1")
+    expect(mockDispatch.getCall(1).args[0]).to.eql({ type: 'ADD_EDGE', edge: data[0].edge })
     expect(wrapper.find(SearchResult)).to.have.length(1)
     expect(wrapper.find('.entity-search-result a').text()).to.equal("Babs")
   })

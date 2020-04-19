@@ -110,9 +110,9 @@ export default produce((draft, action) => {
     draft.display.offset = action.offset
     return
   case 'ADD_NODE':
-    Graph.addNode(draft.graph, action.attributes, (node) => {
+    Graph.addNode(draft.graph, action.node, (node) => {
       // only show edit box if node is new
-      if (!action.attributes.id) {
+      if (!action.node.id) {
         toggleNodeEditor(draft, node.id)
       }
     })
@@ -162,6 +162,9 @@ export default produce((draft, action) => {
       EdgeCreation.clearNodes(draft)
     }
 
+    return
+  case 'ADD_EDGE':
+    Graph.addEdgeIfNodes(draft.graph, action.edge)
     return
   case 'ADD_EDGES':
     action.edges.forEach(edge => Graph.addEdgeIfNodes(draft.graph, edge))

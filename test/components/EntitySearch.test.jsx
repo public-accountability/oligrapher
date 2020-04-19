@@ -11,12 +11,11 @@ import sinon from 'sinon'
 // which currently doesn't run the useEffect hook that we're mostly testing here.
 
 describe('<EntitySearch>', function() {
-  let wrapper, mockDispatch, response, state, store, edgesResponse
+  let wrapper, mockDispatch, response, state, store
 
   beforeEach(function() {
     mockDispatch = stubDispatch()
     sinon.stub(littlesis3, "findNodes").callsFake(() => response)
-    sinon.stub(littlesis3, "getEdges").callsFake(() => edgesResponse)
     state = {
       graph: { nodes: { "100": { id: "100" } } },
       settings: { automaticallyAddEdges: true }
@@ -27,7 +26,6 @@ describe('<EntitySearch>', function() {
   afterEach(function() {
     mockDispatch.restore()
     littlesis3.findNodes.restore()
-    littlesis3.getEdges.restore()
   })
 
   it('shows loading', function() {
@@ -73,11 +71,9 @@ describe('<EntitySearch>', function() {
     expect(results.prop('results')).to.equal(data)
   })
 
-  it('adds node and edges', async function() {
+  it('adds node', async function() {
     let data = [{ id: "1", name: "Bob", description: "a person", image: null, url: null }]
     response = Promise.resolve(data)
-    let edges = [{ id: "1" }]
-    edgesResponse = Promise.resolve(edges)
 
     await act(async () => {
       wrapper = mountWithStore(store, <EntitySearch query="bob" />) 
@@ -91,8 +87,7 @@ describe('<EntitySearch>', function() {
       link.simulate('click')    
     })
 
-    expect(mockDispatch.callCount).to.equal(2)
-    expect(mockDispatch.getCall(0).args[0]).to.eql({ type: 'ADD_NODE', attributes: data[0] })
-    expect(mockDispatch.getCall(1).args[0]).to.eql({ type: 'ADD_EDGES', edges })
+    expect(mockDispatch.callCount).to.equal(1)
+    expect(mockDispatch.getCall(0).args[0]).to.eql({ type: 'ADD_NODE', node: data[0] })
   })
 })
