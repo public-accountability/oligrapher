@@ -28,12 +28,13 @@ export function Edge(props) {
   const curve = Curve.from.geometry(geometry)
 
   const pickProps = (...propNames) => pick(props, propNames)
+  const curveProps = pickProps(['cx', 'cy', 'x1', 'x2', 'y1', 'y2', 's1', 's2'])
 
   // This resets the curve based on new props when they are passed to an already rendered component
   // This happens after the DRAG_NODE action occurs.
-  useEffect(() => void setGeometry(Curve.calculateGeometry(props)),
-    [props.cx, props.cy, props.x1, props.x2, props.y1, props.y2, props.s1, props.s2]
-  )
+  useEffect(() => {
+    setGeometry(Curve.calculateGeometry(curveProps))
+  }, [curveProps])
 
   const width = calculateEdgeWidth(props.scale)
   const startPosition = { x: props.cx, y: props.cy }

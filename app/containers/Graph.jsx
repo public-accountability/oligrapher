@@ -16,7 +16,7 @@ import { applyZoomToViewBox, computeSvgZoom } from '../util/dimensions'
 /*
   The core component that displays the graph
 */
-export function Graph(props) {
+export function Graph({ viewBox, zoom, actualZoom, setActualZoom }) {
   // The two dom references are used to calculate the actual zoom and caption placement.
   const svgRef = useRef(null)
   const containerRef = useRef(null)
@@ -24,17 +24,17 @@ export function Graph(props) {
   // calculate actual zoom = user-set zoom (props.zoom) x automatic svg zoom
   // only triggered by initial render and user zoom changes
   useEffect(() => {
-    const zoomedViewBox = applyZoomToViewBox(props.viewBox, props.zoom)
+    const zoomedViewBox = applyZoomToViewBox(viewBox, zoom)
     const svgZoom = computeSvgZoom(zoomedViewBox, svgRef.current)
-    props.setActualZoom(props.zoom * svgZoom)
-  }, [props.viewBox, props.zoom])
+    setActualZoom(zoom * svgZoom)
+  }, [viewBox, zoom]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div ref={containerRef} className="oligrapher-graph-svg">
-      <Svg outermost={true} viewBox={props.viewBox} height="500px "width="100%" ref={svgRef}>
+      <Svg outermost={true} viewBox={viewBox} height="500px "width="100%" ref={svgRef}>
         <Markers />
-        <Zoomable zoom={props.zoom}>
-          <Pannable scale={props.zoom * props.actualZoom}>
+        <Zoomable zoom={zoom}>
+          <Pannable scale={zoom * actualZoom}>
             <Clickable>
               <Nodes />
               <Edges />
