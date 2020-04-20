@@ -26,13 +26,12 @@ export function* addNode(action) {
   }
 }
 
-// actual zoom = user-set zoom (zoom) x automatic svg zoom
-//
-// only triggered by initial render, user zoom changes, and svg resize
+// Calculate actual zoom = user-set zoom (zoom) x automatic svg zoom.
+// Triggered by initial render, user zoom changes, and svg resize.
 export function* setActualZoom() {
   const { viewBox, zoom, svgSize } = yield select(state => state.display)
-  const zoomedViewBox = applyZoomToViewBox(viewBox, zoom)
-  const svgZoom = computeSvgZoom(zoomedViewBox, svgSize)
+  const zoomedViewBox = yield call(applyZoomToViewBox, viewBox, zoom)
+  const svgZoom = yield call(computeSvgZoom, zoomedViewBox, svgSize)
   yield put({ type: 'SET_ACTUAL_ZOOM', actualZoom: zoom * svgZoom })
 }
 

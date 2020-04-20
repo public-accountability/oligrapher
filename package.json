@@ -76,6 +76,7 @@
     "node-fetch": "^2.6.0",
     "react-hot-loader": "^4.12.20",
     "react-test-renderer": "^16.13.0",
+    "redux-saga-test-plan": "^4.0.0-rc.3",
     "sass": "^1.26.2",
     "sass-loader": "^8.0.2",
     "sinon": "^9.0.0",

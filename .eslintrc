@@ -38,8 +38,8 @@
     "semi": ["error", "never"],
     "space-before-function-paren": ["error", "never"],
     "key-spacing": "warn",
-    "react/prop-types": [ 2, { "ignore": ['dispatch'] } ],
-    "react/jsx-wrap-multilines": [ 1, { "return": 'parens-new-line' } ],
+    "react/prop-types": [ 2, { "ignore": ["dispatch"] } ],
+    "react/jsx-wrap-multilines": [ 1, { "return": "parens-new-line" } ],
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn"
   }
