@@ -11,23 +11,26 @@ import Markers from '../components/graph/Markers'
 import Pannable from '../components/graph/Pannable'
 import Zoomable from '../components/graph/Zoomable'
 
-import { applyZoomToViewBox, computeSvgZoom } from '../util/dimensions'
-
 /*
   The core component that displays the graph
 */
-export function Graph({ viewBox, zoom, actualZoom, setActualZoom }) {
+export function Graph({ viewBox, zoom, actualZoom, setSvgSize }) {
   // The two dom references are used to calculate the actual zoom and caption placement.
   const svgRef = useRef(null)
   const containerRef = useRef(null)
 
-  // calculate actual zoom = user-set zoom (props.zoom) x automatic svg zoom
-  // only triggered by initial render and user zoom changes
+  // we want to keep track of svg size to compute actual zoom
   useEffect(() => {
-    const zoomedViewBox = applyZoomToViewBox(viewBox, zoom)
-    const svgZoom = computeSvgZoom(zoomedViewBox, svgRef.current)
-    setActualZoom(zoom * svgZoom)
-  }, [viewBox, zoom]) // eslint-disable-line react-hooks/exhaustive-deps
+    const handleWindowResize = function() {
+      const { width, height } = svgRef.current.getBoundingClientRect()
+      setSvgSize({ width, height })
+    }
+
+    handleWindowResize() // run on first render
+    window.addEventListener('resize', handleWindowResize)
+
+    return () => window.removeEventListener('resize', handleWindowResize)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div ref={containerRef} className="oligrapher-graph-svg">
@@ -49,7 +52,7 @@ export function Graph({ viewBox, zoom, actualZoom, setActualZoom }) {
 
 Graph.propTypes = {
   viewBox: PropTypes.object.isRequired,
-  setActualZoom: PropTypes.func.isRequired,
+  setSvgSize: PropTypes.func.isRequired,
   zoom: PropTypes.number.isRequired,
   actualZoom: PropTypes.number
 }
@@ -64,7 +67,7 @@ const mapStateToProps = function(state) {
 
 const mapDispatchToProps = function(dispatch) {
   return {
-    setActualZoom: actualZoom => dispatch({ type: 'SET_ACTUAL_ZOOM', actualZoom })
+    setSvgSize: (size) => dispatch({ type: 'SET_SVG_SIZE', size })
   }
 }
 

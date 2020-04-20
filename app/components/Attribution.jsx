@@ -5,9 +5,11 @@ const renderUser = function(user) {
   const name = user.url ? <a href={user.url}>{user.name}</a> : user.name
 
   return (
+    name ? 
     <div id="oligrapher-header-attribution-user">
       <span>by {name}</span>
-    </div>
+    </div> :
+    null
   )
 }
 

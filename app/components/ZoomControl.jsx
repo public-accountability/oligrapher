@@ -3,8 +3,8 @@ import { useDispatch } from 'react-redux'
 
 export default function ZoomControl() {
   const dispatch = useDispatch()
-  const zoomIn = () => dispatch({ type: 'ZOOM', direction: 'IN' })
-  const zoomOut = () => dispatch({ type: 'ZOOM', direction: 'OUT' })
+  const zoomIn = () => dispatch({ type: 'ZOOM_IN' })
+  const zoomOut = () => dispatch({ type: 'ZOOM_OUT' })
 
   return (
     <div className="oligrapher-zoomcontrol">

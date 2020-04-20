@@ -31,8 +31,8 @@ export function applyZoomToViewBox(viewBox, zoom) {
 // in order to fit the viewbox within the element's dimensions.
 // This function calculates this automatic zoom so as to inform
 // other zoom-dependent calculations.
-export function computeSvgZoom(viewBox, domNode) {
-  const { width, height } = domNode.getBoundingClientRect()
+export function computeSvgZoom(viewBox, svgSize) {
+  const { width, height } = svgSize
   const xFactor = width / viewBox.w
   const yFactor = height / viewBox.h
   return Math.min(xFactor, yFactor)

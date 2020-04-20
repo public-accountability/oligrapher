@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { DraggableCore } from 'react-draggable'
 import { connect } from 'react-redux'
@@ -28,7 +28,7 @@ export function Edge(props) {
   const curve = Curve.from.geometry(geometry)
 
   const pickProps = (...propNames) => pick(props, propNames)
-  const curveProps = pickProps(['cx', 'cy', 'x1', 'x2', 'y1', 'y2', 's1', 's2'])
+  const curveProps = useMemo(() => pick(props, ['cx', 'cy', 'x1', 'x2', 'y1', 'y2', 's1', 's2']), [props])
 
   // This resets the curve based on new props when they are passed to an already rendered component
   // This happens after the DRAG_NODE action occurs.

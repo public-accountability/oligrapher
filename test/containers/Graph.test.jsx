@@ -1,18 +1,18 @@
 import React from 'react'
-import { Provider } from 'react-redux'
+import sinon from 'sinon'
 import { createMockStore, mountWithStore } from '../testHelpers'
 import { Graph } from '../../app/containers/Graph'
 
 describe('<Graph>', function() {
-  let viewBox, setActualZoom, store, wrapper, props
+  let viewBox, setSvgSize, store, wrapper, props
 
   beforeEach(function() {
     store = createMockStore()
     viewBox = {minX: -200, minY: -200, w: 400, h: 400}
-    setActualZoom = sinon.spy()
+    setSvgSize = sinon.spy()
     props = {
       viewBox,
-      setActualZoom, 
+      setSvgSize, 
       zoom: 1
     }
     wrapper = mountWithStore(store, <Graph {...props} />)
@@ -26,10 +26,7 @@ describe('<Graph>', function() {
     expect(wrapper.find('svg')).to.have.lengthOf(1)
   })
 
-  it('sets actual zoom once', function() {
-    expect(setActualZoom.callCount).to.equal(1)
-    props.zoom = 2
-    wrapper.setProps(props)
-    expect(setActualZoom.callCount).to.equal(2)
+  it('sets svg size once', function() {
+    expect(setSvgSize.callCount).to.equal(1)
   })
 })

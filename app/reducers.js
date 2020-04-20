@@ -111,6 +111,9 @@ export default produce((draft, action) => {
   case 'SET_OFFSET':
     draft.display.offset = action.offset
     return
+  case 'SET_SVG_SIZE':
+    draft.display.svgSize = action.size
+    return
   case 'ADD_NODE':
     Graph.addNode(draft.graph, action.node, (node) => {
       // only show edit box if node is new
@@ -198,12 +201,11 @@ export default produce((draft, action) => {
     }
 
     return
-  case 'ZOOM':
-    if (action.direction === 'IN') {
-      draft.display.zoom = draft.display.zoom + ZOOM_INTERVAL
-    } else if (action.direction === 'OUT') {
-      draft.display.zoom = draft.display.zoom - ZOOM_INTERVAL
-    }
+  case 'ZOOM_IN':
+    draft.display.zoom = draft.display.zoom + ZOOM_INTERVAL
+    return
+  case 'ZOOM_OUT':
+    draft.display.zoom = draft.display.zoom - ZOOM_INTERVAL
     return
   case 'SET_MODE':
     draft.display.modes[action.mode] = action.enabled

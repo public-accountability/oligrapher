@@ -73,7 +73,7 @@ describe('Reducer', function() {
     it('opens node editor', function() {
       const state = { 
         graph: { nodes: { 'xyz': { x: 100, y: 100 } } }, 
-        display : { actualZoom: 2, zoom: 1, offset: { x: 50, y: 50 }, floatingMenu: { type: null, id: null, position: null } } 
+        display: { actualZoom: 2, zoom: 1, offset: { x: 50, y: 50 }, floatingMenu: { type: null, id: null, position: null } } 
       }
       const action = { type: 'CLICK_NODE', id: 'xyz' }
       expect(reducers(state, action).display.floatingMenu)
@@ -81,14 +81,14 @@ describe('Reducer', function() {
     })
 
     it('closes node editor', function() {
-      const state = { display : { floatingMenu: { type: 'node', id: 'xyz', position: { x: 100, y: 100 } } } }
+      const state = { display: { floatingMenu: { type: 'node', id: 'xyz', position: { x: 100, y: 100 } } } }
       const action = { type: 'CLICK_NODE', id: 'xyz', x: 100, y: 100, actualZoom: 1 }
       expect(reducers(state, action).display.floatingMenu)
         .to.eql({ type: null, id: null, position: null })
     })
 
     it('closes add connections', function() {
-      const state = { display : { floatingMenu: { type: 'connections', id: 'xyz', position: { x: 100, y: 100 } } } }
+      const state = { display: { floatingMenu: { type: 'connections', id: 'xyz', position: { x: 100, y: 100 } } } }
       const action = { type: 'CLICK_NODE', id: 'xyz', x: 100, y: 100, actualZoom: 1 }
       expect(reducers(state, action).display.floatingMenu)
         .to.eql({ type: null, id: null, position: null })
@@ -97,7 +97,7 @@ describe('Reducer', function() {
 
   describe('CLOSE_EDIT_MENU', function() {
     it('clears floatingMenu', function() {
-      const state = { display : { editor: { tool: 'node' }, floatingMenu: { type: 'node', id: 'abc', position: { x: 1, y: 2 } } } }
+      const state = { display: { editor: { tool: 'node' }, floatingMenu: { type: 'node', id: 'abc', position: { x: 1, y: 2 } } } }
       const action = { type: 'CLOSE_EDIT_MENU' }
       expect(reducers(state, action).display.floatingMenu)
         .to.eql({ type: null, id: null, position: null })
@@ -197,7 +197,7 @@ describe('Reducer', function() {
   })
 
   describe('MOVE_NODE', function() {
-    let state, graph, action, nextState, n1, n2, n3, e1, e2
+    let state, graph, action, nextState, n1, n2, n3, e1
 
     beforeEach(function() {
       graph = Graph.new()
@@ -248,7 +248,7 @@ describe('Reducer', function() {
       Graph.addNodes(graph, [n1, n2, n3])
 
       state = { graph }
-      action = { type: 'ADD_EDGES', edges: [e1, e2] }
+      action = { type: 'ADD_EDGES', edges: [e1, e2, e3] }
       nextState = reducers(state, action)
     })
 
