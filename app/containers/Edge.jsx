@@ -68,9 +68,11 @@ export function Edge(props) {
   const edgeGroupProps = { className: "edge-group", id: `edge-${props.id}` }
   const edgeLineProps = { curve, width, isReverse: geometry.is_reverse, ...pickProps('id', 'scale', 'dash', 'status', 'arrow') }
   const edgeLabelProps = { curve, width, ...pickProps('id', 'scale', 'status', 'label') }
-  const edgeHandleProps = { curve, width, onClick,
-                            onMouseEnter: () => setHovering(true),
-                            onMouseLeave: () => setHovering(false) }
+  const edgeHandleProps = { 
+    curve, width, onClick,
+    onMouseEnter: () => setHovering(true),
+    onMouseLeave: () => setHovering(false) 
+  }
 
   // Display helpers
   const showEditHighlight = props.editorOpen
@@ -91,26 +93,25 @@ export function Edge(props) {
 }
 
 Edge.propTypes = {
-  id:         stringOrNumber.isRequired,
-  node1_id:   stringOrNumber.isRequired,
-  node2_id:   stringOrNumber.isRequired,
+  id: stringOrNumber.isRequired,
+  node1_id: stringOrNumber.isRequired,
+  node2_id: stringOrNumber.isRequired,
   // display
-  scale:      PropTypes.number.isRequired,
-  arrow:      stringOrBool.isRequired,
-  label:      PropTypes.string,
-  dash:       PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  url:        PropTypes.string,
-  status:     PropTypes.string.isRequired,
+  scale: PropTypes.number.isRequired,
+  arrow: stringOrBool.isRequired,
+  label: PropTypes.string,
+  dash: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  url: PropTypes.string,
+  status: PropTypes.string.isRequired,
   // geometry
-  x1:         PropTypes.number.isRequired,
-  y1:         PropTypes.number.isRequired,
-  x2:         PropTypes.number.isRequired,
-  y2:         PropTypes.number.isRequired,
-  cx:         PropTypes.number,
-  cy:         PropTypes.number,
-  s1:         PropTypes.number.isRequired,
-  s2:         PropTypes.number.isRequired,
-
+  x1: PropTypes.number.isRequired,
+  y1: PropTypes.number.isRequired,
+  x2: PropTypes.number.isRequired,
+  y2: PropTypes.number.isRequired,
+  cx: PropTypes.number,
+  cy: PropTypes.number,
+  s1: PropTypes.number.isRequired,
+  s2: PropTypes.number.isRequired,
   actualZoom: PropTypes.number,
 
   // Actions

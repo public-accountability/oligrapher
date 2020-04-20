@@ -12,7 +12,7 @@ import CaptionTextbox from '../components/graph/CaptionTextbox'
 
 import FloatingMenu from '../util/floatingMenu'
 
-const InvisibleTextbox = React.forwardRef((props, ref) => {
+const InvisibleTextbox = React.forwardRef(function Func(props, ref) {
   return <input ref={ref} value={props.value} onChange={props.onChange} type="text" />
 })
 

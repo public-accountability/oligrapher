@@ -12,8 +12,8 @@ import Graph from '../../graph/graph'
 
 /*
   This is the "Add Connections" popup.
-  It uses LittleSis /api/entities/:id/connections
-  routes to get a list of connected entities.
+  It uses LittleSis /oligrapher/find_connections
+  endpoint to get a list of connected entities.
 
   The results component is <EntityResults>
 */

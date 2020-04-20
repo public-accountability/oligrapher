@@ -21,13 +21,15 @@ const checkOpenTool = (current, required) => {
   return false
 }
 
-const toggleSelectedNode = (draft, id) => {
-  if (draft.display.selectedNodes.has(id)) {
-    draft.display.selectedNodes.delete(id)
-  } else {
-    draft.display.selectedNodes.add(id)
-  }
-}
+// Will eventually use this when implementing selection
+//
+// const toggleSelectedNode = (draft, id) => {
+//   if (draft.display.selectedNodes.has(id)) {
+//     draft.display.selectedNodes.delete(id)
+//   } else {
+//     draft.display.selectedNodes.add(id)
+//   }
+// }
 
 const toggleNodeEditor = (draft, id) => {
   let isOpen = ['node', 'connections'].includes(FloatingMenu.getType(draft))
@@ -207,8 +209,7 @@ export default produce((draft, action) => {
     draft.display.modes[action.mode] = action.enabled
     return
   case 'TOGGLE_TOOL':
-    const toolIsOpen = draft.display.editor.tool === action.tool
-    draft.display.editor.tool = toolIsOpen ? null : action.tool
+    draft.display.editor.tool = (draft.display.editor.tool === action.tool) ? null : action.tool
 
     // Tools with floating menus that are always open
     if (['settings', 'style', 'editors'].includes(draft.display.editor.tool)) {

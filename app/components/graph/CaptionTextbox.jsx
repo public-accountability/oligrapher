@@ -1,34 +1,25 @@
 import React, { useEffect, useState, useRef } from 'react'
-
 import PropTypes from 'prop-types'
-
-import flow from 'lodash/flow'
 import pick from 'lodash/pick'
-
 import { addPaddingToRectangle } from '../../util/dimensions'
 
-export default function CaptionTextbox(props) {
+export default function CaptionTextbox({ text, x, y }) {
   const textRef = useRef(null)
   const [rectProps, setRectProps] = useState(null)
 
-  // <text> => (updates state)
-  const updateRectangle = flow([
-    textElement => pick(textElement.getBBox(), 'x', 'y', 'width', 'height'),
-    addPaddingToRectangle(10),
-    setRectProps
-  ])
-
-  useEffect(
-    () => void updateRectangle(textRef.current),
-    [props.text, props.x, props.y]
-  )
+  useEffect(() => {
+    const rect = addPaddingToRectangle(10)(
+      pick(textRef.current.getBBox(), 'x', 'y', 'tect')
+    )
+    setRectProps(rect)
+  }, [text, x, y])
 
   return (
     <g className="caption-textbox">
       { rectProps && <rect {...rectProps} className="background-rect" /> }
 
-      <text x={props.x} y={props.y} ref={textRef}>
-        {props.text}
+      <text x={x} y={y} ref={textRef}>
+        {text}
       </text>
     </g>
   )
@@ -38,13 +29,7 @@ CaptionTextbox.propTypes = {
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
   text: PropTypes.string.isRequired,
-  width: PropTypes.number
 }
-
-CaptionTextbox.defaultProps = {
-  width: 100
-}
-
 
 // export default CaptionTextbox
 

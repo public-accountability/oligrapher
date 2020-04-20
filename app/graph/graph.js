@@ -301,10 +301,6 @@ export function dragNode(graph, nodeId, deltas) {
   return graph
 }
 
-export function dragEdge(graph, edge) {
-  throw new Error("Not Yet Implemented")
-}
-
 // {x,y}, {x,y} ---> Boolean
 function intersects(coordinates, node, padding = 20) {
   const radius = (nodeDisplaySetting.circleRadius * node.scale) + padding
@@ -383,7 +379,6 @@ export default {
   "addCaption":                 addCaption,
   "moveNode":                   moveNode,
   "dragNode":                   dragNode,
-  "dragEdge":                   dragEdge,
   "intersectingNode":           intersectingNode,
   "intersectingNodeFromDrag":   intersectingNodeFromDrag,
   "addConnection":              addConnection,
