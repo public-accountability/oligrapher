@@ -63,7 +63,7 @@ Header.propTypes = {
   title: PropTypes.string,
   subtitle: PropTypes.string,
   date: PropTypes.string,
-  user: PropTypes.shape({ name: PropTypes.string, url:  PropTypes.string }),
+  user: PropTypes.shape({ name: PropTypes.string, url: PropTypes.string }),
   updateTitle: PropTypes.func,
   updateSubtitle: PropTypes.func
 }

@@ -36,7 +36,7 @@ export default function Attribution(props) {
 
 Attribution.propTypes = {
   "user": PropTypes.shape({ "name": PropTypes.string,
-                            "url":  PropTypes.string }),
+                            "url": PropTypes.string }),
   "date": PropTypes.string
 }
 

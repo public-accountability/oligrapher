@@ -48,6 +48,6 @@ export default function DashStyle(props) {
 }
 
 DashStyle.propTypes = {
-  dash:      PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  onChange:  PropTypes.func.isRequired
+  dash: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  onChange: PropTypes.func.isRequired
 }

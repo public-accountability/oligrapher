@@ -14,6 +14,7 @@
     "test:debug": "mocha inspect",
     "profile": "webpack --profile --display-modules --env.production",
     "lint": "yarn run lint:js && yarn run lint:scss",
+    "lint:js-fix": "eslint app --ext .js --ext .jsx --fix",
     "lint:js": "eslint app --ext .js --ext .jsx",
     "lint:scss": "stylelint app",
     "repl": "babel-node",

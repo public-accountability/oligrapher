@@ -23,7 +23,7 @@ export default function Subtitle({text, editable, onChange}) {
 }
 
 Subtitle.propTypes = {
-  text:     PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
   editable: PropTypes.bool.isRequired,
   onChange: isFunctionIfEditable
 }

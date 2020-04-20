@@ -17,14 +17,14 @@ export default function EdgeHandle(props) {
 }
 
 EdgeHandle.propTypes = {
-  curve:         PropTypes.string.isRequired,
-  width:         PropTypes.number.isRequired,
-  onClick:       PropTypes.func.isRequired,
-  onMouseEnter:  PropTypes.func,
-  onMouseLeave:  PropTypes.func
+  curve: PropTypes.string.isRequired,
+  width: PropTypes.number.isRequired,
+  onClick: PropTypes.func.isRequired,
+  onMouseEnter: PropTypes.func,
+  onMouseLeave: PropTypes.func
 }
 
 EdgeHandle.defaultProps = {
-  onMouseEnter:  noop,
-  onMouseLeave:  noop
+  onMouseEnter: noop,
+  onMouseLeave: noop
 }

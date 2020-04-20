@@ -23,7 +23,7 @@ const defaultState = {
     links: [],
     // will be displayed in editor mode. It is used by LittleSis.org
     // to create additional buttons that set various map privacy settings.
-    settings:{
+    settings: {
       "private": false,
       clone: true,
       defaultStoryMode: false,

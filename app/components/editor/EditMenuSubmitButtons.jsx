@@ -14,12 +14,12 @@ export default function EditMenuSubmitButtons({ handleSubmit, handleDelete, hide
 }
 
 EditMenuSubmitButtons.propTypes = {
-  handleSubmit:       PropTypes.func,
-  handleDelete:       PropTypes.func,
-  hideSubmitButton:   PropTypes.bool,
-  hideDeleteButton:   PropTypes.bool,
-  page:               PropTypes.string.isRequired,
-  setPage:            PropTypes.func
+  handleSubmit: PropTypes.func,
+  handleDelete: PropTypes.func,
+  hideSubmitButton: PropTypes.bool,
+  hideDeleteButton: PropTypes.bool,
+  page: PropTypes.string.isRequired,
+  setPage: PropTypes.func
 }
 
 EditMenuSubmitButtons.defaultProps = {

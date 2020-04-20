@@ -15,7 +15,7 @@ const GraphSvg = React.forwardRef(function Func(props, ref) {
 
 GraphSvg.propTypes = {
   children: PropTypes.node.isRequired,
-  viewBox:  PropTypes.object.isRequired,
+  viewBox: PropTypes.object.isRequired,
 }
 
 export default GraphSvg

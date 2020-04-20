@@ -45,5 +45,5 @@ export function newNode(attributes = {}) {
 
 export default {
   "new": newNode,
-  "types" : propTypes
+  "types": propTypes
 }

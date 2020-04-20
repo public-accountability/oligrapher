@@ -75,7 +75,7 @@ export const edgeShape = {
   label: PropTypes.string,
   scale: PropTypes.number,
   arrow: stringOrBool.isRequired,
-  dash:  stringOrBool,
+  dash: stringOrBool,
   url: PropTypes.string,
   x1: PropTypes.number,
   y1: PropTypes.number,

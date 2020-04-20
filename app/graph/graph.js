@@ -93,10 +93,10 @@ export function stats(graph) {
   return {
     nodeCount: nodes.length,
     edgeCount: values(graph.edges).length,
-    minNodeX:  minNodeX(nodes),
-    minNodeY:  minNodeY(nodes),
-    maxNodeX:  maxNodeX(nodes),
-    maxNodeY:  maxNodeY(nodes)
+    minNodeX: minNodeX(nodes),
+    minNodeY: minNodeY(nodes),
+    maxNodeX: maxNodeX(nodes),
+    maxNodeY: maxNodeY(nodes)
   }
 }
 
@@ -360,28 +360,28 @@ function arrangeGraph(graph, arrangement) {
 }
 
 export default {
-  "new":                        newGraph,
-  "stats":                      stats,
-  "edgesOf":                    edgesOf,
-  "nodesOf":                    nodesOf,
-  "getNode":                    getNode,
-  "getEdge":                    getEdge,
-  "calculateViewBox":           calculateViewBox,
-  "addNode":                    addNode,
-  "addNodes":                   addNodes,
-  "removeNode":                 removeNode,
-  "updateNode":                 updateNode,
-  "addEdge":                    addEdge,
-  "addEdges":                   addEdges,
-  "addEdgeIfNodes":             addEdgeIfNodes,
-  "removeEdge":                 removeEdge,
-  "updateEdge":                 updateEdge,
-  "addCaption":                 addCaption,
-  "moveNode":                   moveNode,
-  "dragNode":                   dragNode,
-  "intersectingNode":           intersectingNode,
-  "intersectingNodeFromDrag":   intersectingNodeFromDrag,
-  "addConnection":              addConnection,
-  "connectedNodeIds":           connectedNodeIds,
-  "arrange":                    arrangeGraph
+  "new": newGraph,
+  "stats": stats,
+  "edgesOf": edgesOf,
+  "nodesOf": nodesOf,
+  "getNode": getNode,
+  "getEdge": getEdge,
+  "calculateViewBox": calculateViewBox,
+  "addNode": addNode,
+  "addNodes": addNodes,
+  "removeNode": removeNode,
+  "updateNode": updateNode,
+  "addEdge": addEdge,
+  "addEdges": addEdges,
+  "addEdgeIfNodes": addEdgeIfNodes,
+  "removeEdge": removeEdge,
+  "updateEdge": updateEdge,
+  "addCaption": addCaption,
+  "moveNode": moveNode,
+  "dragNode": dragNode,
+  "intersectingNode": intersectingNode,
+  "intersectingNodeFromDrag": intersectingNodeFromDrag,
+  "addConnection": addConnection,
+  "connectedNodeIds": connectedNodeIds,
+  "arrange": arrangeGraph
 }

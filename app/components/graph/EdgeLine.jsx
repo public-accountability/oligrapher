@@ -33,13 +33,13 @@ export default function EdgeLine(props) {
 
 
 EdgeLine.propTypes = {
-  id:        stringOrNumber.isRequired,
-  curve:     PropTypes.string.isRequired,
-  scale:     PropTypes.number.isRequired,
-  dash:      PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
-  status:    PropTypes.string.isRequired,
-  width:     PropTypes.number.isRequired,
-  arrow:     PropTypes.string,
+  id: stringOrNumber.isRequired,
+  curve: PropTypes.string.isRequired,
+  scale: PropTypes.number.isRequired,
+  dash: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
+  status: PropTypes.string.isRequired,
+  width: PropTypes.number.isRequired,
+  arrow: PropTypes.string,
   isReverse: PropTypes.bool.isRequired
 }
 

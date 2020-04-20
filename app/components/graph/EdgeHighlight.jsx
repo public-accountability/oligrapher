@@ -17,9 +17,9 @@ export default function EdgeHighlight(props) {
 
 
 EdgeHighlight.propTypes = {
-  curve:     PropTypes.string.isRequired,
-  color:     PropTypes.string.isRequired,
-  scale:     PropTypes.number.isRequired
+  curve: PropTypes.string.isRequired,
+  color: PropTypes.string.isRequired,
+  scale: PropTypes.number.isRequired
 }
 
 // export default React.memo(EdgeLine)

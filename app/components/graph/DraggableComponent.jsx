@@ -47,11 +47,11 @@ export default function DraggableComponent(props) {
 }
 
 DraggableComponent.propTypes = {
-  children:   PropTypes.node.isRequired,
-  onStop:     PropTypes.func.isRequired,
-  onDrag:     PropTypes.func.isRequired,
-  onClick:    PropTypes.func,
-  handle:     PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+  onStop: PropTypes.func.isRequired,
+  onDrag: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
+  handle: PropTypes.string.isRequired,
   actualZoom: PropTypes.number,
   disabled: PropTypes.bool
 }

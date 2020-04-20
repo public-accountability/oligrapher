@@ -38,8 +38,8 @@ Svg.propTypes = {
   height: PropTypes.string.isRequired,
   width: PropTypes.string.isRequired,
   preserveAspectRatio: PropTypes.string.isRequired,
-  outermost:      PropTypes.bool.isRequired,
-  children:       PropTypes.node.isRequired
+  outermost: PropTypes.bool.isRequired,
+  children: PropTypes.node.isRequired
 }
 
 

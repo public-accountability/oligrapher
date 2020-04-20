@@ -35,10 +35,10 @@ export default function NodeLabel(props) {
 }
 
 NodeLabel.propTypes = {
-  name:    PropTypes.string,
-  radius:   PropTypes.number.isRequired,
-  status:  PropTypes.string.isRequired,
-  url:     PropTypes.string,
-  x:       PropTypes.number.isRequired,
-  y:       PropTypes.number.isRequired
+  name: PropTypes.string,
+  radius: PropTypes.number.isRequired,
+  status: PropTypes.string.isRequired,
+  url: PropTypes.string,
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired
 }

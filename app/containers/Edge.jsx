@@ -15,7 +15,7 @@ import EdgeLabel from '../components/graph/EdgeLabel'
 
 import FloatingMenu from '../util/floatingMenu'
 
-const HIGHLIGHT_COLOR = { edit:  '#eaff00',
+const HIGHLIGHT_COLOR = { edit: '#eaff00',
                           hover: '#d9d9d9' }
 
 const calculateEdgeWidth = scale => 1 + (scale - 1) * 5

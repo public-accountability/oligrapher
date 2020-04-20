@@ -22,7 +22,7 @@ export default function Title({text, editable, onChange}) {
 }
 
 Title.propTypes = {
-  text:     PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
   editable: PropTypes.bool.isRequired,
   onChange: isFunctionIfEditable
 }
