@@ -65,8 +65,6 @@ describe('<Node>', function() {
   it('disabled clicking and dragging when not in editor mode', function() {
     props.editorMode = false
     node = shallow(<Node {...props} />)
-    node.find(DraggableComponent).simulate('click')
     expect(node.find(DraggableComponent).prop('disabled')).to.be.true
-    expect(click.callCount).to.equal(0)
   })
 })

@@ -30,9 +30,9 @@ export function Node(props) {
         disabled={!props.editorMode}
         handle=".draggable-node-handle"
         actualZoom={props.actualZoom}
-        onStop={props.editorMode ? props.moveNode : noop}
-        onClick={props.editorMode ? props.clickNode : noop}
-        onDrag={props.editorMode ? props.dragNode : noop}>
+        onStop={props.moveNode}
+        onClick={props.clickNode}
+        onDrag={props.dragNode}>
         <g>
           { showHalo && <NodeHalo {...pick(props, HALO_PROPS)} /> }
           <NodeCircle {...pick(props, CIRCLE_PROPS)} />

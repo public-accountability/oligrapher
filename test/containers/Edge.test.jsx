@@ -1,5 +1,6 @@
 import React from 'react'
 import { DraggableCore } from 'react-draggable'
+import sinon from 'sinon'
 import noop from 'lodash/noop'
 
 import { Edge } from '../../app/containers/Edge'
@@ -32,7 +33,7 @@ const defaultEdgeProps = {
 function createTestEdge(additionalProps = {}) {
   let spies = {
     updateEdge: sinon.spy(),
-    openEdgeMenu: sinon.spy()
+    clickEdge: sinon.spy()
   }
 
   let props = { ...defaultEdgeProps, ...spies, ...additionalProps }
@@ -50,11 +51,11 @@ describe('<Edge>', function() {
     expect(component.find(EdgeHandle)).to.have.lengthOf(1)
   })
 
-  it("calls props.openEdgeMenu after clicking", function() {
+  it("calls props.clickEdge after clicking", function() {
     const { component, spies } = createTestEdge()
 
     component.find(EdgeHandle).simulate('click', { preventDefault: noop })
-    expect(spies.openEdgeMenu.callCount).to.eql(1)
+    expect(spies.clickEdge.callCount).to.eql(1)
   })
 
   it("labels can be hide or shown", function() {

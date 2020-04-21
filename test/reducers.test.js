@@ -2,8 +2,9 @@ import reducers from '../app/reducers'
 import Graph from '../app/graph/graph'
 import Node from '../app/graph/node'
 import Edge from '../app/graph/edge'
+import Curve from '../app/graph/curve'
 import defaultState from '../app/util/defaultState'
-import { transformNodePosition } from '../app/util/floatingMenu'
+import { transformPosition } from '../app/util/floatingMenu'
 
 import values from 'lodash/values'
 
@@ -77,19 +78,19 @@ describe('Reducer', function() {
       }
       const action = { type: 'CLICK_NODE', id: 'xyz' }
       expect(reducers(state, action).display.floatingMenu)
-        .to.eql({ type: 'node', id: 'xyz', position: transformNodePosition(state, { x: 100, y: 100 }) })
+        .to.eql({ type: 'node', id: 'xyz', position: transformPosition(state, { x: 100, y: 100 }, 'node') })
     })
 
     it('closes node editor', function() {
       const state = { display: { floatingMenu: { type: 'node', id: 'xyz', position: { x: 100, y: 100 } } } }
-      const action = { type: 'CLICK_NODE', id: 'xyz', x: 100, y: 100, actualZoom: 1 }
+      const action = { type: 'CLICK_NODE', id: 'xyz' }
       expect(reducers(state, action).display.floatingMenu)
         .to.eql({ type: null, id: null, position: null })
     })
 
     it('closes add connections', function() {
       const state = { display: { floatingMenu: { type: 'connections', id: 'xyz', position: { x: 100, y: 100 } } } }
-      const action = { type: 'CLICK_NODE', id: 'xyz', x: 100, y: 100, actualZoom: 1 }
+      const action = { type: 'CLICK_NODE', id: 'xyz' }
       expect(reducers(state, action).display.floatingMenu)
         .to.eql({ type: null, id: null, position: null })
     })
@@ -283,6 +284,27 @@ describe('Reducer', function() {
     it('closes floating menu', function() {
       expect(nextState.display.floatingMenu.type).to.eql(null)
       expect(nextState.display.floatingMenu.id).to.eql(null)
+    })
+  })
+
+  describe('CLICK_EDGE', function() {
+    it('opens edge editor', function() {
+      const edge = { id: 'xyz', x1: 100, y1: 100, x2: 200, y2: 200, s1: 1, s2: 1 }
+      const state = { 
+        graph: { edges: { 'xyz': edge } }, 
+        display: { actualZoom: 2, zoom: 1, offset: { x: 50, y: 50 }, floatingMenu: { type: null, id: null, position: null } } 
+      }
+      const { xb, y } = Curve.calculateGeometry(edge)
+      const action = { type: 'CLICK_EDGE', id: 'xyz' }
+      expect(reducers(state, action).display.floatingMenu)
+        .to.eql({ type: 'edge', id: 'xyz', position: transformPosition(state, { x: xb, y: y }, 'edge') })
+    })
+
+    it('closes edge editor', function() {
+      const state = { display: { floatingMenu: { type: 'edge', id: 'xyz', position: { x: 100, y: 100 } } } }
+      const action = { type: 'CLICK_EDGE', id: 'xyz' }
+      expect(reducers(state, action).display.floatingMenu)
+        .to.eql({ type: null, id: null, position: null })
     })
   })
 })

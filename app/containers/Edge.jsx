@@ -15,8 +15,7 @@ import EdgeLabel from '../components/graph/EdgeLabel'
 
 import FloatingMenu from '../util/floatingMenu'
 
-const HIGHLIGHT_COLOR = { edit: '#eaff00',
-                          hover: '#d9d9d9' }
+const HIGHLIGHT_COLOR = '#b6e63e'
 
 const calculateEdgeWidth = scale => 1 + (scale - 1) * 5
 
@@ -40,11 +39,11 @@ export function Edge(props) {
   const startPosition = { x: props.cx, y: props.cy }
 
   const onStart = (evt, data) => {
-    setDragging(true)
     setStartDrag(data)
   }
 
   const onDrag = (evt, data) => {
+    setDragging(true)
     const deltas = calculateDeltas(data, startPosition, startDrag, props.actualZoom)
     setGeometry(
       Curve.calculateGeometry({...props, cx: deltas.x, cy: deltas.y })
@@ -54,19 +53,17 @@ export function Edge(props) {
   const onStop = (evt, data) => {
     if (isDragging) {
       const deltas = calculateDeltas(data, startPosition, startDrag, props.actualZoom)
-      props.updateEdge({cx: deltas.x, cy: deltas.y })
+      props.updateEdge({ cx: deltas.x, cy: deltas.y })
       setDragging(false)
     }
   }
 
   const onClick = evt => {
     evt.preventDefault()
-    props.openEdgeMenu()
+    props.clickEdge()
   }
 
   // Children Props
-  const draggableProps = { onStart, onDrag, onStop, handle: '.edge-handle', disabled: !props.editorMode }
-  const edgeGroupProps = { className: "edge-group", id: `edge-${props.id}` }
   const edgeLineProps = { curve, width, isReverse: geometry.is_reverse, ...pickProps('id', 'scale', 'dash', 'status', 'arrow') }
   const edgeLabelProps = { curve, width, ...pickProps('id', 'scale', 'status', 'label') }
   const edgeHandleProps = { 
@@ -76,17 +73,20 @@ export function Edge(props) {
   }
 
   // Display helpers
-  const showEditHighlight = props.editorOpen
-  const showHoverHighlight = isHovering && !showEditHighlight && !isDragging
+  const showHighlight = !isDragging && (props.isBeingEdited || isHovering)
   const showLabel = Boolean(props.label)
 
   return (  
-    <DraggableCore {...draggableProps}>
-      <g {...edgeGroupProps}>
-        { showEditHighlight  && <EdgeHighlight color={HIGHLIGHT_COLOR.edit} curve={curve} scale={props.scale} /> }
-        { showHoverHighlight && <EdgeHighlight color={HIGHLIGHT_COLOR.hover} curve={curve} scale={props.scale} /> }
-        { true               && <EdgeLine {...edgeLineProps} /> }
-        { showLabel          && <EdgeLabel {...edgeLabelProps} /> }
+    <DraggableCore
+      hanlde=".edge-handle"
+      disabled={!props.editorMode}
+      onStart={onStart}
+      onDrag={onDrag}
+      onStop={onStop}>
+      <g className="edge-group" id={`edge-${props.id}`}>
+        { showHighlight && <EdgeHighlight color={HIGHLIGHT_COLOR} curve={curve} scale={props.scale} /> }
+        <EdgeLine {...edgeLineProps} />
+        { showLabel && <EdgeLabel {...edgeLabelProps} /> }
         <EdgeHandle {...edgeHandleProps} />
       </g>
     </DraggableCore>
@@ -117,10 +117,10 @@ Edge.propTypes = {
 
   // Actions
   updateEdge: PropTypes.func.isRequired,
-  openEdgeMenu: PropTypes.func.isRequired,
+  clickEdge: PropTypes.func.isRequired,
 
   // Helpers
-  editorOpen: PropTypes.bool,
+  isBeingEdited: PropTypes.bool,
   editorMode: PropTypes.bool
 }
 
@@ -137,18 +137,13 @@ const mapStateToProps = (state, ownProps) => {
   return {
     ...edge,
     actualZoom: state.display.actualZoom,
-    editorOpen: id == FloatingMenu.getId(state, 'edge'),
+    isBeingEdited: id == FloatingMenu.getId(state, 'edge'),
     edgeToolEnabled: state.display.editor.tool === 'edge',
     editorMode: state.display.modes.editor
   }
 }
 
 // dispatch helpers
-
-const openEdgeMenu = (dispatch, id) => () => dispatch({
-  type: 'OPEN_EDIT_EDGE_MENU',
-  id: id
-})
 
 const updateEdge = (dispatch, id) => attributes => dispatch({
   type: 'UPDATE_EDGE',
@@ -161,9 +156,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
   return {
     updateEdge: updateEdge(dispatch, id),
-    openEdgeMenu: openEdgeMenu(dispatch, id)
+    clickEdge: () => dispatch({ type: 'CLICK_EDGE', id })
   }
-
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Edge)

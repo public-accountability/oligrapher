@@ -1,13 +1,13 @@
 import produce from 'immer'
 import merge from 'lodash/merge'
 import isEqual from 'lodash/isEqual'
-import toString from 'lodash/toString'
 
 import { translatePoint } from './util/helpers'
 
 import Graph from './graph/graph'
 import Edge from './graph/edge'
 import Caption from './graph/caption'
+import Curve from './graph/curve'
 
 import FloatingMenu from './util/floatingMenu'
 import EdgeCreation from './util/edgeCreation'
@@ -41,7 +41,22 @@ const toggleNodeEditor = (draft, id) => {
     let { x, y } = draft.graph.nodes[id]
     FloatingMenu.set(
       draft, 'node', id,
-      FloatingMenu.transformNodePosition(draft, { x, y })
+      FloatingMenu.transformPosition(draft, { x, y }, 'node')
+    )
+  }
+}
+
+const toggleEdgeEditor = (draft, id) => {
+  let isOpen = FloatingMenu.getType(draft) === 'edge'
+  let isThisEdge = FloatingMenu.getId(draft) === id
+
+  if (isOpen && isThisEdge) {
+    FloatingMenu.clear(draft)
+  } else {
+    let { xb, y } = Curve.calculateGeometry(draft.graph.edges[id])
+    FloatingMenu.set(
+      draft, 'edge', id,
+      FloatingMenu.transformPosition(draft, { x: xb, y: y }, 'edge')
     )
   }
 }
@@ -139,8 +154,7 @@ export default produce((draft, action) => {
     FloatingMenu.clear(draft)
     return
   case 'CLICK_NODE':
-    id = toString(action.id)
-    toggleNodeEditor(draft, id)
+    toggleNodeEditor(draft, action.id)
     return  
   case 'MOVE_NODE':
     intersectedNode = Graph.intersectingNodeFromDrag(draft.graph, action.id, action.deltas)
@@ -181,6 +195,9 @@ export default produce((draft, action) => {
   case 'REMOVE_EDGE':
     Graph.removeEdge(draft.graph, action.id)
     FloatingMenu.clear(draft)
+    return
+  case 'CLICK_EDGE':
+    toggleEdgeEditor(draft, action.id)
     return
   case 'NEW_CAPTION':
     Graph.addCaption(draft.graph, Caption.fromEvent(action.event, draft.display.zoom))
@@ -228,7 +245,7 @@ export default produce((draft, action) => {
     if (isLittleSisId(action.id)) {
       // no need to transform position as this is only opened from EditNode,
       // which is already positioned
-      FloatingMenu.set(draft, 'connections', action.id, { x: action.x, y: action.y })
+      FloatingMenu.set(draft, 'connections', action.id, action.position)
     } else {
       console.error(`Cannot find connections unless the entity is a LittlesSis Entity. id == ${action.id}`)
     }
@@ -293,13 +310,3 @@ export default produce((draft, action) => {
     return
   }
 }, null)
-
-
-// export default combineReducers({
-//   graph,
-//   display,
-//   selection,
-//   settings,
-//   hooks,
-//   attributes
-// })

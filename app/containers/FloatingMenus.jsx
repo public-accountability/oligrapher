@@ -33,8 +33,12 @@ export default function FloatingMenus() {
     editors: "Add Editors"
   }[type]
 
+  // key prop ensures that Draggable's position is 
+  // reset when the id or type of menu changes
+  const key = type + "-" + id
+
   return (
-    <Draggable enableUserSelectHack={false} handle=".edit-menu-header" positionOffset={position || undefined}>
+    <Draggable key={key} enableUserSelectHack={false} handle=".edit-menu-header" positionOffset={position || undefined}>
       <div className="oligrapher-edit-menu">
         <div className={ classNames("edit-menu-wrapper", `edit-${type}-menu`) }>
           <EditHeader title={title} />
