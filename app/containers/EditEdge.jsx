@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { useSelector, useDispatch } from 'react-redux'
-import pick from 'lodash/pick'
 
 import Graph from '../graph/graph'
 import { callWithTargetValue } from '../util/helpers'
@@ -12,7 +11,7 @@ import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
 
 export function MainPage({ nodes, edge, updateEdge }) {
   return (
-    <>
+    <div className="oligrapher-edge-editor">
       <form>
         <div>
           <label>Label</label>
@@ -59,7 +58,7 @@ export function MainPage({ nodes, edge, updateEdge }) {
             onChange={(url) => updateEdge({ url })} />
         </div>
       </form>
-    </>
+    </div>
   )
 }
 
@@ -68,9 +67,6 @@ MainPage.propTypes = {
   edge: PropTypes.object.isRequired,
   updateEdge: PropTypes.func.isRequired
 }
-
-// Object, Func => Func(String) => Func(Any) => setAttributes() call
-const edgeAttributes = edge => pick(edge, 'label', 'size', 'color', 'url', 'arrow', 'scale')
 
 export default function EditEdge({ id }) {
   const dispatch = useDispatch()

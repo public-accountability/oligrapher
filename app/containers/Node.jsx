@@ -30,9 +30,8 @@ export function Node(props) {
       handle=".draggable-node-handle"
       actualZoom={props.actualZoom}
       onStop={props.moveNode}
-      onClick={props.clickNode}
       onDrag={props.dragNode}>
-      <g id={"node-" + props.id} className="oligrapher-node">
+      <g id={"node-" + props.id} className="oligrapher-node" onClick={(props.clickNode)}>
         <NodeHalo {...pick(props, HALO_PROPS)} showHalo={showHalo} />
         <NodeCircle {...pick(props, CIRCLE_PROPS)} />
         { showImage && <NodeImage {...pick(props, IMAGE_PROPS)} /> }

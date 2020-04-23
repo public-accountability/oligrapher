@@ -14,7 +14,7 @@ const renderUser = function(user) {
   }
 
   return (
-    <div id="oligrapher-header-attribution-user">
+    <div id="oligrapher-attribution-user">
       <span>by {name}</span>
     </div>
   )
@@ -27,7 +27,7 @@ const renderDate = function(date) {
   }
 
   return (
-    <div id="oligrapher-header-attribution-date">
+    <div id="oligrapher-attribution-date">
       {date}
     </div>
   )
@@ -36,7 +36,7 @@ const renderDate = function(date) {
 
 export default function Attribution(props) {
   return (
-    <div id="oligrapher-header-attribution-wrapper">
+    <div id="oligrapher-attribution">
       {renderUser(props.user)}
       {renderDate(props.date)}
     </div>

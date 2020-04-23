@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { callWithTargetValue } from '../../util/helpers'
@@ -8,7 +8,6 @@ import Toolbox from './Toolbox'
 
 export default function NodeTool() {
   const dispatch = useDispatch()
-  const inputRef = useRef()
   const [searchValue, setSearchValue] = useState('')
   const trimmed = searchValue.trim()
   const doSearch = trimmed.length > 2
@@ -18,18 +17,15 @@ export default function NodeTool() {
     dispatch({ type: 'ADD_NODE', node: { name: trimmed } })
   }
 
-  useEffect(() => {
-    inputRef.current.focus()
-  })
-
   return (
     <Toolbox title="Add Node">
       <div className="nodetool">
-        <input type="text"
-               placeholder="Search database"
-               ref={inputRef}
-               value={searchValue}
-               onChange={handleInputChange} />
+        <input 
+          autoFocus
+          type="text"
+          placeholder="Search database"
+          value={searchValue}
+          onChange={handleInputChange} />
 
         { doSearch && 
           <div>

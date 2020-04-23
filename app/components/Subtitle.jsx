@@ -11,7 +11,7 @@ export default function Subtitle({text, editable, onChange}) {
       <h2>
         { editable
           ? <input 
-              value={text}
+              value={text || ''}
               onChange={callWithTargetValue(onChange)}
               placeholder="Subtitle"/>
           : text
@@ -23,7 +23,7 @@ export default function Subtitle({text, editable, onChange}) {
 }
 
 Subtitle.propTypes = {
-  text: PropTypes.string.isRequired,
+  text: PropTypes.string,
   editable: PropTypes.bool.isRequired,
   onChange: isFunctionIfEditable
 }

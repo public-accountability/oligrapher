@@ -68,7 +68,7 @@ export function Edge(props) {
   const edgeLineProps = { curve, width, isReverse: geometry.is_reverse, ...pickProps('id', 'scale', 'dash', 'status', 'arrow') }
   const edgeLabelProps = { curve, width, ...pickProps('id', 'scale', 'status', 'label') }
   const edgeHandleProps = { 
-    curve, width, onClick,
+    curve, width,
     onMouseEnter: () => setHovering(true),
     onMouseLeave: () => setHovering(false) 
   }
@@ -85,7 +85,7 @@ export function Edge(props) {
       onStart={onStart}
       onDrag={onDrag}
       onStop={onStop}>
-      <g className="edge-group" id={`edge-${props.id}`}>
+      <g className="oligrapher-edge" id={`edge-${props.id}`} onClick={onClick}>
         { showHighlight && <EdgeHighlight color={HIGHLIGHT_COLOR} curve={curve} scale={props.scale} /> }
         <EdgeLine {...edgeLineProps} />
         { showLabel && <EdgeLabel {...edgeLabelProps} /> }

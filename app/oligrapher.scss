@@ -104,9 +104,7 @@ $edge_highlight_color: $highlight_blue;
             max-width: 60%;
         }
 
-        #oligrapher-header-title-wrapper {}
-
-        #oligrapher-header-attribution-wrapper {
+        #oligrapher-attribution {
 
             a {
                 color: $link_color;
@@ -115,9 +113,6 @@ $edge_highlight_color: $highlight_blue;
                     text-decoration: underline;
                 }
             }
-
-            #oligrapher-header-attribution-user {}
-            #oligrapher-header-attribution-date {}
         }
     }
 
@@ -583,7 +578,7 @@ header.edit-menu-header {
         }
       }
 
-    .nodelabel {
+    .node-label {
         font-size: 0.6em;
      }
 
@@ -714,7 +709,7 @@ g.edge-tool-open .react-draggable-dragging .node-circle {
 
 /* EDGES */
 
-.edge-group {
+.oligrapher-edge {
 
     .edge-handle {
         stroke: #fff;

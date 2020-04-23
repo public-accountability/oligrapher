@@ -20,7 +20,7 @@ export default function NodeLabel(props) {
   ))
 
   return (
-    <g className="nodelabel">
+    <g className="node-label">
       {lines}
     </g>
   )

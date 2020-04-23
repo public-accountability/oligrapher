@@ -73,7 +73,7 @@ export default function EditNode({ id, openAddConnections }) {
   const updateNode = (attributes) => dispatch({ type: "UPDATE_NODE", id, attributes })
 
   return (
-    <>
+    <div className="oligrapher-node-editor">
       <main>
         { page === 'main' && <MainPage node={node} setPage={setPage} updateNode={updateNode} openAddConnections={openAddConnections} /> }
         { page === 'color' && <EditNodeColorPage color={node.color} updateNode={updateNode}/> }
@@ -88,7 +88,7 @@ export default function EditNode({ id, openAddConnections }) {
           page={page}
           setPage={setPage} />
       </footer>
-    </>
+    </div>
   )
 }
 
