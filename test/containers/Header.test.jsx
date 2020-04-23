@@ -14,9 +14,10 @@ describe('<Header>', function() {
         title="Example Title"
         subtitle="Example Subtitle"
         user={{ "name": "Example UserName", "url": "https://example.com" }}
-        editor={true}
+        editMode={true}
         updateTitle={noop}
-        updateSubtitle={noop} />
+        updateSubtitle={noop}
+        setHeaderHeight={noop} />
     )
   })
 

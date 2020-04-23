@@ -1,5 +1,12 @@
-export const NODE_X_OFFSET = 100
-export const EDGE_X_OFFSET = 100
+export const X_OFFSET = {
+  node: 120,
+  edge: 100
+}
+
+export const Y_OFFSET = {
+  node: -200,
+  edge: -250
+}
 
 export const set = (state, type = null, id = null, position = null) => {
   state.display.floatingMenu.type = type
@@ -23,22 +30,15 @@ export const getType = (state) => {
 
 // used to calculate floating menu position based on node or edge position
 export const transformPosition = (state, position, type) => {
-  let xOffset
+  const xOffset = X_OFFSET[type] || 0
+  const yOffset = Y_OFFSET[type] || 0
 
-  if (type === 'node') {
-    xOffset = NODE_X_OFFSET
-  } else if (type === 'edge') {
-    xOffset = EDGE_X_OFFSET
-  } else {
-    xOffset = 0
-  }
-
-  let zoom = state.display.actualZoom / state.display.zoom
-  let offset = state.display.offset
+  const zoom = state.display.actualZoom / state.display.zoom
+  const offset = state.display.offset
 
   return {
     x: Math.trunc((position.x + offset.x) * zoom + xOffset),
-    y: Math.trunc((position.y + offset.y) * zoom)
+    y: Math.trunc((position.y + offset.y) * zoom + yOffset)
   }
 }
 

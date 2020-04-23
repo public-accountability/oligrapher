@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
@@ -20,15 +20,22 @@ import Subtitle from '../components/Subtitle'
 */
 
 export function Header(props) {
+  const divRef = useRef()
+
+  useEffect(() => {
+    const height = divRef.current.getBoundingClientRect().height
+    props.setHeaderHeight(Math.ceil(height))
+  }, [props])
+
   const PROPS = {
     title: {
       text: props.title,
-      editable: props.editor,
+      editable: props.editMode,
       onChange: props.updateTitle
     },
     subtitle: {
       text: props.subtitle,
-      editable: props.editor,
+      editable: props.editMode,
       onChange: props.updateSubtitle
     },
     attribution: {
@@ -38,7 +45,7 @@ export function Header(props) {
   }
 
   return (
-   <div id="oligrapher-header">
+   <div id="oligrapher-header" ref={divRef}>
       <div id="oligrapher-header-top">
         <Title {...PROPS.title} />
       </div>
@@ -59,17 +66,18 @@ export function Header(props) {
 }
 
 Header.propTypes = {
-  editor: PropTypes.bool,
+  editMode: PropTypes.bool,
   title: PropTypes.string,
   subtitle: PropTypes.string,
   date: PropTypes.string,
   user: PropTypes.shape({ name: PropTypes.string, url: PropTypes.string }),
-  updateTitle: PropTypes.func,
-  updateSubtitle: PropTypes.func
+  updateTitle: PropTypes.func.isRequired,
+  updateSubtitle: PropTypes.func.isRequired,
+  setHeaderHeight: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
-  editor: Boolean(state.display.modes.editor),
+  editMode: Boolean(state.display.modes.editor),
   title: state.attributes.title,
   subtitle: state.attributes.subtitle,
   user: state.attributes.user,
@@ -78,7 +86,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   updateTitle: value => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'title', value: value }),
-  updateSubtitle: value => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'subtitle', value: value })
+  updateSubtitle: value => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'subtitle', value: value }),
+  setHeaderHeight: height => dispatch({ type: 'SET_HEADER_HEIGHT', height })
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header)

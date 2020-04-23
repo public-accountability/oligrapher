@@ -17,32 +17,37 @@ export function MainPage({node, setPage, updateNode, openAddConnections}) {
       <form>
         <div>
           <label>Name</label>
-          <input type="text"
-                placeholder="Node name"
-                value={node.name || ''}
-                onChange={callWithTargetValue(name => updateNode({ name }))} />
+          <input
+            type="text"
+            placeholder="Node name"
+            value={node.name || ''}
+            onChange={callWithTargetValue(name => updateNode({ name }))} />
         </div>
 
         <div>
           <label>Image Link</label>
-          <input type="text"
-                placeholder="Image link"
-                value={node.image || ''}
-                onChange={callWithTargetValue(image => updateNode({ image }))} />
+          <input
+            type="text"
+            placeholder="Image link"
+            value={node.image || ''}
+            onChange={callWithTargetValue(image => updateNode({ image }))} />
         </div>
 
         <div>
           <label>Clickthrough Link</label>
-          <input type="text"
-                placeholder="Link"
-                value={node.url || ''}
-                onChange={callWithTargetValue(url => updateNode({ url }))} />
+          <input
+            type="text"
+            placeholder="Link"
+            value={node.url || ''}
+            onChange={callWithTargetValue(url => updateNode({ url }))} />
         </div>
       </form>
       <hr/>
       <NodeStyleForm setPage={setPage} />
       <hr/>
-      { showAddConnections && <a className="add-connections-link" onClick={openAddConnections}>Add Connections +</a> }
+      { showAddConnections &&
+        <a className="add-connections-link" onClick={openAddConnections}>Add Connections +</a>
+      }
     </>
   )
 }

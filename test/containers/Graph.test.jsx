@@ -13,7 +13,8 @@ describe('<Graph>', function() {
     props = {
       viewBox,
       setSvgSize, 
-      zoom: 1
+      zoom: 1,
+      headerHeight: 0
     }
     wrapper = mountWithStore(store, <Graph {...props} />)
   })

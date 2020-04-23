@@ -1,35 +1,26 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { useSelector, useDispatch } from 'react-redux'
 import pick from 'lodash/pick'
-import merge from 'lodash/merge'
 
 import Graph from '../graph/graph'
-
 import { callWithTargetValue } from '../util/helpers'
 
 // Components
+import EditEdgeStyle from '../components/editor/EditEdgeStyle'
 import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
-import LineStyle from '../components/editor/LineStyle'
-import DashStyle from '../components/editor/DashStyle'
-import ScaleStyle from '../components/editor/ScaleStyle'
 
-export function MainPage({ nodes, attributes, attributeUpdator }) {
-  const updateLabel = attributeUpdator('label')
-  const updateUrl = attributeUpdator('url')
-  const updateArrow = attributeUpdator('arrow')
-  const updateDash = attributeUpdator('dash')
-  const updateScale = attributeUpdator('scale')
-
+export function MainPage({ nodes, edge, updateEdge }) {
   return (
     <>
       <form>
         <div>
-          <label>Title</label>
-          <input type="text"
-                placeholder="label"
-                value={attributes.label || ''}
-                onChange={ evt => updateLabel(evt.target.value) } />
+          <label>Label</label>
+          <input
+            type="text"
+            placeholder="label"
+            value={edge.label || ''}
+            onChange={callWithTargetValue(label => updateEdge({ label }))} />
         </div>
       </form>
 
@@ -39,26 +30,21 @@ export function MainPage({ nodes, attributes, attributeUpdator }) {
         <label>Line Style</label>
       </div>
 
-      <div className="line-style-wrapper">
-        <div>
-          <div>
-            <label>End points</label>
-            <LineStyle nodes={nodes} updateArrow={updateArrow} />
-          </div>
+      <EditEdgeStyle edge={edge} nodes={nodes} updateEdge={updateEdge} />
 
-          <div>
-            <label>Dash</label>
-            <DashStyle onChange={updateDash} dash={attributes.dash} />
-          </div>
-        </div>
-
-        <div>
-          <div>
-            <label>Width</label>
-            <ScaleStyle updateScale={updateScale} scale={attributes.scale} />
-          </div>
-        </div>
-
+      <div className="edit-edge-scale">
+        <form>
+          <label>Scale</label>
+          <input
+            type="range"
+            placeholder="pixels"
+            value={edge.scale}
+            min="1"
+            max="3"
+            step="0.5"
+            onChange={callWithTargetValue(scale => updateEdge({ scale }))} />
+          &nbsp; <input type="text" value={edge.scale} size="2" disabled></input>
+        </form>
       </div>
 
       <hr />
@@ -66,10 +52,11 @@ export function MainPage({ nodes, attributes, attributeUpdator }) {
       <form>
         <div>
           <label>Clickthrough link</label>
-          <input type="url"
-                placeholder="Clickthrough link"
-                value={attributes.url || ''}
-                onChange={callWithTargetValue(updateUrl)} />
+          <input
+            type="url"
+            placeholder="Clickthrough link"
+            value={edge.url || ''}
+            onChange={(url) => updateEdge({ url })} />
         </div>
       </form>
     </>
@@ -78,50 +65,46 @@ export function MainPage({ nodes, attributes, attributeUpdator }) {
 
 MainPage.propTypes = {
   nodes: PropTypes.array.isRequired,
-  attributes: PropTypes.object.isRequired,
-  attributeUpdator: PropTypes.func.isRequired
+  edge: PropTypes.object.isRequired,
+  updateEdge: PropTypes.func.isRequired
 }
 
 // Object, Func => Func(String) => Func(Any) => setAttributes() call
-const createAttributeUpdator = (attributes, setAttributes) => name => value => setAttributes(merge({}, attributes, { [name]: value }))
 const edgeAttributes = edge => pick(edge, 'label', 'size', 'color', 'url', 'arrow', 'scale')
 
 export default function EditEdge({ id }) {
+  const dispatch = useDispatch()
   const [page, setPage] = useState('main')
-
   const edge = useSelector(state => state.graph.edges[id])
   const nodes = useSelector(state => Graph.nodesOf(state.graph, id))
 
-  const [attributes, setAttributes] = useState(edgeAttributes(edge))
-  const attributeUpdator = createAttributeUpdator(attributes, setAttributes)
-
-  useEffect(() => {
-    setAttributes( prevEdge => ({ ...prevEdge, ...edgeAttributes(edge) }))
-  }, [id, edge] )
-
-  const dispatch = useDispatch()
-  const handleSubmit = useCallback(
-    () => dispatch({ type: "UPDATE_EDGE", id, attributes }),
-    [dispatch, id, attributes]
-  )
-  const handleDelete = useCallback(
+  const removeEdge = useCallback(
     () => dispatch({ type: "REMOVE_EDGE", id }), 
+    [dispatch, id]
+  )
+
+  const updateEdge = useCallback(
+    (attributes) => dispatch({ type: 'UPDATE_EDGE', id, attributes }),
     [dispatch, id]
   )
 
   return (
     <div>
       <main>
-        { page === 'main' && <MainPage attributes={attributes}
-                                      attributeUpdator={attributeUpdator}
-                                      setPage={setPage}
-                                      nodes={nodes} />}
+        { page === 'main' &&
+          <MainPage
+            edge={edge}
+            updateEdge={updateEdge}
+            setPage={setPage}
+            nodes={nodes} />
+        }
       </main>
       <footer>
-        <EditMenuSubmitButtons handleSubmit={handleSubmit}
-                              handleDelete={handleDelete}
-                              page={page}
-                              setPage={setPage} />
+        <EditMenuSubmitButtons 
+          hideSubmitButton={true}
+          handleDelete={removeEdge}
+          page={page}
+          setPage={setPage} />
       </footer>
     </div>
   )

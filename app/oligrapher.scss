@@ -13,7 +13,7 @@ $button_bg_color: #2c63c8;
 $button_font_color: white;
 $header_menu_item_color: $font_color;
 $header_menu_item_color_hover: $link_color;
-$header_spacing_between_header: 0.5em;
+$header_spacing_between_header: 10px;
 $header_bottom_border_color: #6e89a1;
 $header_save_button_bg_color: $button_bg_color;
 $header_save_button_font_color: $button_font_color;
@@ -32,7 +32,9 @@ $toolbox_width: 250px;
 $caption_backgound: lightgreen;
 $caption_backgound_focused: lightcoral;
 
-$node_halo_color: #b6e63e;
+$highlight_blue: #50a3ff;
+$node_highlight_color: $highlight_blue;
+$edge_highlight_color: $highlight_blue;
 
 /*
    This is our outermost div.
@@ -65,8 +67,9 @@ $node_halo_color: #b6e63e;
     border-bottom: 1.75px solid $header_bottom_border_color;
 
     /* title and subtitle*/
-    h1 {
+    h1, h1 input {
         font-size: 42px;
+        margin-top: 10px;
         margin-bottom: $header_spacing_between_header / 2;
     }
 
@@ -74,6 +77,10 @@ $node_halo_color: #b6e63e;
         font-weight: normal;
         font-size: 19px;
         margin-top: $header_spacing_between_header / 2;
+
+        input {
+          width: 500px;
+        }
     }
 }
 
@@ -277,9 +284,10 @@ $node_halo_color: #b6e63e;
     top: 0;
     left: 60px;
     pointer-events: auto;
-    border: 2px solid $oligrapher_blue;
+    border: 2px solid $highlight_blue;
     padding: 10px;
     width: $toolbox_width;
+    background-color: white;
 
     header {
         font-size: 20px;
@@ -336,7 +344,7 @@ $node_halo_color: #b6e63e;
 
 %edit_menu_title {
     margin-bottom: 0.25em;
-    color: $oligrapher_font_gray;
+    color: $oligrapher_dark_gray;
     font-size: 12px;
     font-weight: bold;
 }
@@ -364,7 +372,7 @@ header.edit-menu-header {
 .oligrapher-edit-menu {
     z-index: 20;
     position: absolute;
-    top: 10%;
+    top: 50%;
     left: 50%;
 }
 
@@ -372,7 +380,7 @@ header.edit-menu-header {
 /* .edit-edge-menu-wrapper, .edit-node-menu-wrapper, .edit-caption-menu-wrapper { */
 .edit-menu-wrapper {
     background-color: white;
-    border: 2px solid $oligrapher_blue;
+    border: 2px solid $highlight_blue;
     padding: 10px;
 
 
@@ -389,16 +397,6 @@ header.edit-menu-header {
         label {
             @extend %edit_menu_title;
         }
-
-        div.line-style-wrapper {
-            width: 100%;
-
-            >div >div {
-                display: inline-block;
-                padding: 0.2em;
-            }
-        }
-
     }
 
     footer {
@@ -486,7 +484,7 @@ header.edit-menu-header {
         }
 
         button[name="update"] {
-            background-color: $oligrapher_blue;
+            background-color: $highlight_blue;
 
             /* &:hover { */
             /*     background-color: scale($oligrapher_blue, -30%); */
@@ -522,7 +520,7 @@ header.edit-menu-header {
         }
 
         .current {
-            border: 1px solid $oligrapher_blue;
+            border: 1px solid $highlight_blue;
         }
 
         > div {
@@ -555,22 +553,63 @@ header.edit-menu-header {
 
 }
 
-.edit-edge-dash-style {
+.edit-edge-menu {
+    width: 300px;
+
     input {
-        display: inline-block;
-        width: 2.5em;
+      width: 280px;
+    }
+
+    .edit-edge-style {
+        width: 100%;
+        padding-top: 10px;
+
+        div {
+            display: inline-block;
+        }
+
+        .edge-style-button {
+          position: relative;
+          top: -55px;
+          font-size: 0.8em;
+          background-color: #fff;
+          color: #000;
+          border: 1px solid #ccc;
+          text-align: center;
+          padding: 0px;
+          width: 35px;
+          font-size: 1.3em;
+          margin-top: 3px;
+        }
+      }
+
+    .nodelabel {
+        font-size: 0.6em;
+     }
+
+    .edit-edge-scale {
+        input {
+          margin: 0;
+          width: 30px;
+        }
+
+        input[type='range'] {
+            position: relative;
+            top: 8px;
+            width: 100px;
+        }
     }
 }
 
 /* add connections tool */
 .edit-connections-menu {
-  width: $toolbox_width;
-  max-height: 500px;
-  overflow-y: scroll;
+    width: $toolbox_width;
+    max-height: 500px;
+    overflow-y: scroll;
 }
 
 .add-connections-category {
-  margin-top: 10px;
+    margin-top: 10px;
 }
 
 .add-connections-results {
@@ -663,20 +702,9 @@ g.edge-tool-open .react-draggable-dragging .node-circle {
     fill: lightyellow;
 }
 
-.oligrapher-node {
-    .node-circle-group {}
-
-    .node-halo-group {
-        circle.node-halo-circle {
-            fill: $node_halo_color;
-        }
-    }
-
-    .node-circle {
-        &:hover {
-            stroke: lightgreen;
-            stroke-width: 5;
-        }
+.oligrapher-node:hover {
+    .node-halo-circle {
+        fill: $highlight_blue;
     }
 }
 
@@ -733,5 +761,5 @@ g.caption-textbox {}
   width: 300px;
   font-size: 14px;
   border: 1px solid $oligrapher_gray;
-  background-color: $node_halo_color;
+  background-color: lightgreen;
 }

@@ -2,28 +2,35 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 const renderUser = function(user) {
-  const name = user.url ? <a href={user.url}>{user.name}</a> : user.name
+  const link = (
+    <a href={user.url} target="_blank" rel="noopener noreferrer">
+      {user.name}
+    </a>
+  )
+  const name = user.url ? link : user.name
+
+  if (!name) {
+    return null
+  }
 
   return (
-    name ? 
     <div id="oligrapher-header-attribution-user">
       <span>by {name}</span>
-    </div> :
-    null
+    </div>
   )
 }
 
 
 const renderDate = function(date) {
-  if (date) {
-    return (
-      <div id="oligrapher-header-attribution-date">
-        {date}
-      </div>
-    )
+  if (!date) {
+    return null
   }
 
-  return <></>
+  return (
+    <div id="oligrapher-header-attribution-date">
+      {date}
+    </div>
+  )
 }
 
 
@@ -37,12 +44,14 @@ export default function Attribution(props) {
 }
 
 Attribution.propTypes = {
-  "user": PropTypes.shape({ "name": PropTypes.string,
-                            "url": PropTypes.string }),
-  "date": PropTypes.string
+  user: PropTypes.shape({
+    name: PropTypes.string,
+    url: PropTypes.string
+  }),
+  date: PropTypes.string
 }
 
 Attribution.defaultProps = {
-  "user": { "name": '', "url": ''},
-  "date": null
+  user: { "name": '', "url": ''},
+  date: null
 }

@@ -40,10 +40,7 @@ describe('<Node>', function() {
     expect(node.find('g').first().hasClass('oligrapher-node')).to.be.ok
   })
 
-  it('renders <NodeHalo> only if being edited', function() {
-    expect(node.find(NodeHalo)).to.have.lengthOf(0)
-    props.isBeingEdited = true
-    node.setProps(props)
+  it('renders <NodeHalo>', function() {
     expect(node.find(NodeHalo)).to.have.lengthOf(1)
   })
 
@@ -60,11 +57,5 @@ describe('<Node>', function() {
     expect(click.callCount).to.equal(1)
     expect(drag.callCount).to.equal(0)
     expect(move.callCount).to.equal(0)
-  })
-
-  it('disabled clicking and dragging when not in editor mode', function() {
-    props.editorMode = false
-    node = shallow(<Node {...props} />)
-    expect(node.find(DraggableComponent).prop('disabled')).to.be.true
   })
 })

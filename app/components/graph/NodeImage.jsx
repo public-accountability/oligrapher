@@ -23,16 +23,18 @@ export function NodeImage(props) {
         </circle>
       </clipPath>
 
-      {/* The x/y math centers the image inside the circle clippath*/}
-      <image href={props.image}
-            className="node-image draggable-node-handle"
-            x={props.x - (imageWidth/2)}
-            y={props.y - (imageWidth/2)}
-            height={imageWidth}
-            width={imageWidth}
-            opacity={IMAGE_OPAICTY}
-            clipPath={`url(#${clipPathId})`} >
-      </image>
+      {/* The x/y math centers the image inside the circle clippath */}
+      <image
+        href={props.image}
+        className="node-image draggable-node-handle"
+        x={props.x - (imageWidth/2)}
+        y={props.y - (imageWidth/2)}
+        height={imageWidth}
+        width={imageWidth}
+        opacity={IMAGE_OPAICTY}
+        clipPath={`url(#${clipPathId})`}
+        onDragStart={(e) => e.preventDefault()} // to prevent HTML5 drag-n-drop (draggable="false" used to work)
+      />
     </>
   )
 }

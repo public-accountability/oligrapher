@@ -14,33 +14,36 @@ import Zoomable from '../components/graph/Zoomable'
 /*
   The core component that displays the graph
 */
-export function Graph({ viewBox, zoom, actualZoom, setSvgSize }) {
-  // The two dom references are used to calculate the actual zoom and caption placement.
+export function Graph({ viewBox, zoom, actualZoom, setSvgSize, headerHeight }) {
+  // used to calculate the actual zoom and caption placement.
   const svgRef = useRef(null)
-  const containerRef = useRef(null)
 
-  // we want to keep track of svg size to compute actual zoom
+  // set svg height to maxmimum without having to scroll
+  // and keep track of svg size to compute actual zoom
   useEffect(() => {
     const handleWindowResize = function() {
-      const { width, height } = svgRef.current.getBoundingClientRect()
-      setSvgSize({ width, height })
+      const windowHeight = window.innerHeight
+      const svgHeight = Math.floor(windowHeight - headerHeight - 10)
+      svgRef.current.style.height = (svgHeight) + "px"
+      const { width } = svgRef.current.getBoundingClientRect()
+      setSvgSize({ width: Math.floor(width), height: svgHeight })
     }
 
     handleWindowResize() // run on first render
     window.addEventListener('resize', handleWindowResize)
 
     return () => window.removeEventListener('resize', handleWindowResize)
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [headerHeight, setSvgSize]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div ref={containerRef} className="oligrapher-graph-svg">
-      <Svg outermost={true} viewBox={viewBox} height="500px "width="100%" ref={svgRef}>
+    <div className="oligrapher-graph-svg">
+      <Svg outermost={true} viewBox={viewBox} height="500px" width="100%" ref={svgRef}>
         <Markers />
         <Zoomable zoom={zoom}>
-          <Pannable scale={zoom * actualZoom}>
+          <Pannable scale={actualZoom / zoom}>
             <Clickable>
-              <Nodes />
               <Edges />
+              <Nodes />
               <Captions />
             </Clickable>
           </Pannable>
@@ -54,6 +57,7 @@ Graph.propTypes = {
   viewBox: PropTypes.object.isRequired,
   setSvgSize: PropTypes.func.isRequired,
   zoom: PropTypes.number.isRequired,
+  headerHeight: PropTypes.number.isRequired,
   actualZoom: PropTypes.number
 }
 
@@ -61,7 +65,8 @@ const mapStateToProps = function(state) {
   return {
     viewBox: state.display.viewBox,
     zoom: state.display.zoom,
-    actualZoom: state.display.actualZoom
+    actualZoom: state.display.actualZoom,
+    headerHeight: state.display.headerHeight
   }
 }
 

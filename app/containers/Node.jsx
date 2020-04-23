@@ -25,22 +25,20 @@ export function Node(props) {
   const showHalo = props.selected || props.isNewEdgeNode || props.isBeingEdited
 
   return (
-    <g id={"node-" + props.id} className="oligrapher-node">
-      <DraggableComponent
-        disabled={!props.editorMode}
-        handle=".draggable-node-handle"
-        actualZoom={props.actualZoom}
-        onStop={props.moveNode}
-        onClick={props.clickNode}
-        onDrag={props.dragNode}>
-        <g>
-          { showHalo && <NodeHalo {...pick(props, HALO_PROPS)} /> }
-          <NodeCircle {...pick(props, CIRCLE_PROPS)} />
-          { showImage && <NodeImage {...pick(props, IMAGE_PROPS)} /> }
-          <NodeLabel {...pick(props, LABEL_PROPS)} />
-        </g>
-      </DraggableComponent>
-    </g>
+    <DraggableComponent
+      disabled={!props.editorMode}
+      handle=".draggable-node-handle"
+      actualZoom={props.actualZoom}
+      onStop={props.moveNode}
+      onClick={props.clickNode}
+      onDrag={props.dragNode}>
+      <g id={"node-" + props.id} className="oligrapher-node">
+        <NodeHalo {...pick(props, HALO_PROPS)} showHalo={showHalo} />
+        <NodeCircle {...pick(props, CIRCLE_PROPS)} />
+        { showImage && <NodeImage {...pick(props, IMAGE_PROPS)} /> }
+        <NodeLabel {...pick(props, LABEL_PROPS)} />
+      </g>
+    </DraggableComponent>
   )
 }
 

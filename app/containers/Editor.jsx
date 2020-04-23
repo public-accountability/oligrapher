@@ -22,7 +22,7 @@ export function Editor(props) {
 
   return (
     <div className={props.className} onClick={textTool ? props.onClick : noop}>
-      <LockPoll />
+      { props.mapId && <LockPoll mapId={props.mapId} /> }
       <EditorMenu />
       { nodeTool && <NodeTool /> }
       { organizeTool && <OrganizeTool /> }
@@ -34,7 +34,8 @@ Editor.propTypes = {
   disabled: PropTypes.bool.isRequired,
   className: PropTypes.string,
   openTool: PropTypes.string,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  mapId: PropTypes.any
 }
 
 Editor.defaultProps = {
@@ -42,6 +43,7 @@ Editor.defaultProps = {
 }
 
 const mapStateToProps = function(state) {
+  const mapId = state.attributes.id
   const disabled =  !state.display.modes.editor
   const openTool = state.display.editor.tool
   const classes = ['oligrapher-graph-editor']
@@ -51,6 +53,7 @@ const mapStateToProps = function(state) {
   }
 
   return {
+    mapId,
     openTool,
     disabled,
     className: classNames(...classes)

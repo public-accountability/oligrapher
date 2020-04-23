@@ -44,6 +44,7 @@ const defaultState = {
     viewBox: null,
     svgSize: null,
     offset: { x: 0, y: 0 },
+    headerHeight: 0,
     modes: {
       editor: false,
       story: false

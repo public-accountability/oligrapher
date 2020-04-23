@@ -11,21 +11,13 @@ export default function NodeLabel(props) {
 
   const y = props.radius + props.y + SPACING
   const x = props.x
+  const lineHeight = props.lineHeight || ds.lineHeight
 
-  const lines = textLines(props.name).map(function(line, i) {
-    const props = {
-      x: x,
-      y: y,
-      dy: i === 0 ? 0 : (i * ds.lineHeight),
-      textAnchor: "middle"
-    }
-
-    return (
-      <text key={i} {...props} >
-        {line}
-      </text>
-    )
-  })
+  const lines = textLines(props.name).map((line, i) => (
+    <text key={i} x={x} y={y} dy={i * lineHeight} textAnchor="middle" >
+      {line}
+    </text>
+  ))
 
   return (
     <g className="nodelabel">
@@ -37,8 +29,7 @@ export default function NodeLabel(props) {
 NodeLabel.propTypes = {
   name: PropTypes.string,
   radius: PropTypes.number.isRequired,
-  status: PropTypes.string.isRequired,
-  url: PropTypes.string,
   x: PropTypes.number.isRequired,
-  y: PropTypes.number.isRequired
+  y: PropTypes.number.isRequired,
+  lineHeight: PropTypes.number
 }

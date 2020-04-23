@@ -14,30 +14,36 @@
 // str, boolean -> str
 
 // see components/graph/Markers
-const MARKER_END = "url(#marker1)"
-const MARKER_START = "url(#marker2)"
+const MARKER_END = {
+  normal: "url(#marker1)",
+  highlighted: "url(#highlightedmarker1"
+}
+const MARKER_START = {
+  normal: "url(#marker2)",
+  highlighted: "url(#highlightedmarker2)"
+}
 
 // String, Bool => String
-export function markerStartArrow(arrow, is_reverse) {
+export function markerStartArrow(arrow, is_reverse, status = 'normal') {
   if (arrow === "1->2" && is_reverse) {
-    return MARKER_START
+    return MARKER_START[status]
   } else if (arrow === "2->1" && !is_reverse) {
-    return MARKER_START
+    return MARKER_START[status]
   } else if (arrow === 'both') {
-    return MARKER_START
+    return MARKER_START[status]
   } else {
     return ""
   }
 }
 
 // String, Bool => String
-export function markerEndArrow(arrow, is_reverse) {
+export function markerEndArrow(arrow, is_reverse, status = 'normal') {
   if (arrow === "1->2" && !is_reverse) {
-    return MARKER_END
+    return MARKER_END[status]
   } else if (arrow === "2->1" && is_reverse) {
-    return MARKER_END
+    return MARKER_END[status]
   } else if (arrow === 'both') {
-    return MARKER_END
+    return MARKER_END[status]
   } else {
     return ""
   }
@@ -57,36 +63,20 @@ export function parse(arrow) {
   }
 }
 
-// String, Boolean, ("1" | "2") => String
-export function change({arrow, addArrow, selected}) {
-  const removeArrow = !addArrow
-  const arrowState = parse(arrow)
-  const oneSelected = selected === '1'
-  const twoSelected = selected === '2'
+// String, Boolean, (1 | 2) => String
+export function change(arrow, addArrow, selected) {
+  let { node1, node2 } = parse(arrow)
 
-  if (addArrow && (!arrow || arrowState.node1) && oneSelected) {
-    return '2->1'
+  if (selected === '1') {
+    node1 = addArrow
+  } else if (selected === '2') {
+    node2 = addArrow
   }
 
-  if (addArrow && (!arrow || arrowState.node2) && twoSelected) {
-    return '1->2'
-  }
-
-  if (addArrow && ((oneSelected && arrowState.node2) || (twoSelected && arrowState.node1)) ) {
-    return 'both'
-  }
-
-  if (removeArrow && arrow === 'both' && oneSelected) {
-    return '1->2'
-  }
-
-  if (removeArrow && arrow === 'both' && twoSelected) {
-    return '2->1'
-  }
-
-  if (removeArrow && arrow !== 'both') {
-    return false
-  }
+  return [
+    [null, '1->2'],
+    ['2->1', 'both']
+  ][Number(node1)][Number(node2)]
 }
 
 const marker = {

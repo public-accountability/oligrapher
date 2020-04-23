@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import LittleSisApi from '../datasources/littlesis3.js'
 
 const POLL_INTERVAL = 10 * 1000
 const FAILURE_LIMIT = 10
 
-export default function LockPoll() {
+export default function LockPoll({ mapId }) {
   const dispatch = useDispatch()
-  const mapId = useSelector(state => state.attributes.id)
   const [status, setStatus] = useState('READY')
   const [failCount, setFailCount] = useState(0)
 

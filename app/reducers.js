@@ -129,6 +129,9 @@ export default produce((draft, action) => {
   case 'SET_SVG_SIZE':
     draft.display.svgSize = action.size
     return
+  case 'SET_HEADER_HEIGHT':
+    draft.display.headerHeight = action.height
+    return
   case 'ADD_NODE':
     Graph.addNode(draft.graph, action.node, (node) => {
       // only show edit box if node is new
@@ -161,8 +164,10 @@ export default produce((draft, action) => {
 
     if (intersectedNode) {
       let intersectingNode = Graph.getNode(draft.graph, action.id)
-      Graph.addEdge(draft.graph, Edge.newEdgeFromNodes(intersectingNode, intersectedNode))
+      let newEdge = Edge.newEdgeFromNodes(intersectingNode, intersectedNode)
+      Graph.addEdge(draft.graph, newEdge)
       Graph.dragNode(draft.graph, action.id, { x: 0, y: 0 })
+      toggleEdgeEditor(draft, newEdge.id)
     } else {
       Graph.moveNode(draft.graph, action.id, action.deltas)
       Graph.dragNode(draft.graph, action.id, { x: 0, y: 0 }) // updates node's edges

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { DraggableCore } from 'react-draggable'
 import { connect } from 'react-redux'
@@ -15,7 +15,7 @@ import EdgeLabel from '../components/graph/EdgeLabel'
 
 import FloatingMenu from '../util/floatingMenu'
 
-const HIGHLIGHT_COLOR = '#b6e63e'
+const HIGHLIGHT_COLOR = '#50a3ff'
 
 const calculateEdgeWidth = scale => 1 + (scale - 1) * 5
 
@@ -26,14 +26,15 @@ export function Edge(props) {
   const [geometry, setGeometry] = useState(Curve.calculateGeometry(props))
   const curve = Curve.from.geometry(geometry)
 
-  const pickProps = (...propNames) => pick(props, propNames)
-  const curveProps = useMemo(() => pick(props, ['cx', 'cy', 'x1', 'x2', 'y1', 'y2', 's1', 's2']), [props])
+  const { cx, cy, x1, x2, y1, y2, s1, s2 } = props
 
   // This resets the curve based on new props when they are passed to an already rendered component
   // This happens after the DRAG_NODE action occurs.
   useEffect(() => {
-    setGeometry(Curve.calculateGeometry(curveProps))
-  }, [curveProps])
+    setGeometry(Curve.calculateGeometry({ cx, cy, x1, x2, y1, y2, s1, s2 }))
+  }, [cx, cy, x1, x2, y1, y2, s1, s2]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const pickProps = (...propNames) => pick(props, propNames)
 
   const width = calculateEdgeWidth(props.scale)
   const startPosition = { x: props.cx, y: props.cy }
@@ -73,8 +74,9 @@ export function Edge(props) {
   }
 
   // Display helpers
-  const showHighlight = !isDragging && (props.isBeingEdited || isHovering)
+  const showHighlight = false && !isDragging && (props.isBeingEdited || isHovering)
   const showLabel = Boolean(props.label)
+  edgeLineProps.status = showHighlight ? "highlighted" : edgeLineProps.status
 
   return (  
     <DraggableCore
