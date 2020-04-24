@@ -1,7 +1,6 @@
 import React from 'react'
 import { DraggableCore } from 'react-draggable'
 import sinon from 'sinon'
-import noop from 'lodash/noop'
 
 import { Edge } from '../../app/containers/Edge'
 import EdgeLine from '../../app/components/graph/EdgeLine'
@@ -46,19 +45,12 @@ describe('<Edge>', function() {
   it("renders correct components", function() {
     const { component } = createTestEdge()
     expect(component.find(DraggableCore)).to.have.lengthOf(1)
-    expect(component.find('g.edge-group')).to.have.lengthOf(1)
+    expect(component.find('g.oligrapher-edge')).to.have.lengthOf(1)
     expect(component.find(EdgeLine)).to.have.lengthOf(1)
     expect(component.find(EdgeHandle)).to.have.lengthOf(1)
   })
 
-  it("calls props.clickEdge after clicking", function() {
-    const { component, spies } = createTestEdge()
-
-    component.find(EdgeHandle).simulate('click', { preventDefault: noop })
-    expect(spies.clickEdge.callCount).to.eql(1)
-  })
-
-  it("labels can be hide or shown", function() {
+  it("labels can be hidden or shown", function() {
     expect(createTestEdge({showLabel: false}).component.find(EdgeLabel)).to.be.empty
     expect(createTestEdge({showLabel: true}).component.find(EdgeLabel)).to.have.lengthOf(1)
   })

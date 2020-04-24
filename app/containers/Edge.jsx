@@ -56,12 +56,9 @@ export function Edge(props) {
       const deltas = calculateDeltas(data, startPosition, startDrag, props.actualZoom)
       props.updateEdge({ cx: deltas.x, cy: deltas.y })
       setDragging(false)
+    } else {
+      props.clickEdge()
     }
-  }
-
-  const onClick = evt => {
-    evt.preventDefault()
-    props.clickEdge()
   }
 
   // Children Props
@@ -70,7 +67,7 @@ export function Edge(props) {
   const edgeHandleProps = { 
     curve, width,
     onMouseEnter: () => setHovering(true),
-    onMouseLeave: () => setHovering(false) 
+    onMouseLeave: () => setHovering(false)
   }
 
   // Display helpers
@@ -85,7 +82,7 @@ export function Edge(props) {
       onStart={onStart}
       onDrag={onDrag}
       onStop={onStop}>
-      <g className="oligrapher-edge" id={`edge-${props.id}`} onClick={onClick}>
+      <g className="oligrapher-edge" id={`edge-${props.id}`}>
         { showHighlight && <EdgeHighlight color={HIGHLIGHT_COLOR} curve={curve} scale={props.scale} /> }
         <EdgeLine {...edgeLineProps} />
         { showLabel && <EdgeLabel {...edgeLabelProps} /> }

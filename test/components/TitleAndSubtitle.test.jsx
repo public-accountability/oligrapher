@@ -9,13 +9,8 @@ describe("<Title>", function() {
     component = shallow(<Title text="abc" editable={false} />)
   })
 
-  it("renders wrapper div", function(){
-    expect(component.find('div#oligrapher-header-title-wrapper').length)
-      .to.equal(1)
-  })
-
   it("renders title into h1", function(){
-    expect(component.find('h1').html()).to.equal("<h1>abc</h1>")
+    expect(component.find('h1').text()).to.equal('abc')
   })
 
 })
@@ -23,6 +18,6 @@ describe("<Title>", function() {
 describe('<Subtitle>', function() {
   it("renders subtitle into h2", function(){
     let component = shallow(<Subtitle text="xyz" editable={false} />)
-    expect(component.find('h2').html()).to.equal("<h2>xyz</h2>")
+    expect(component.find('h2').text()).to.equal('xyz')
   })
 })

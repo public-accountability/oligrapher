@@ -23,7 +23,7 @@ export default function DraggableComponent(props) {
       props.onStop(xy(data))
       setDragging(false)
     } else {
-      props.onClick(event, data)
+      props.onClick(evt, data)
     }
   }
 

@@ -21,7 +21,9 @@ describe('Oligrapher', function() {
         modes: { editor: true }
       }
     })
+
     store = createOligrapherStore(state)
+    
     container = render(
       <Provider store={store}>
         <Root />
@@ -50,17 +52,27 @@ describe('Oligrapher', function() {
     expect(edges).to.have.lengthOf(Object.keys(state.graph.edges).length)
   })
 
-  it('opens node tool', function() {
+  it('opens and closes node tool', function() {
     let nodeTool = container.querySelectorAll('.nodetool')
     expect(nodeTool).to.have.lengthOf(0)
     fireEvent.click(container.querySelector('.editor-menu-item'))
     nodeTool = container.querySelectorAll('.nodetool')
     expect(nodeTool).to.have.lengthOf(1)
+    fireEvent.click(container.querySelector('.editor-menu-item'))
+    nodeTool = container.querySelectorAll('.nodetool')
+    expect(nodeTool).to.have.lengthOf(0)
   })
 
   it('opens node editor', async function() {
-    const node = container.querySelector('.oligrapher-node')
-    fireEvent.click(node)
+    const handle = container.querySelector('.draggable-node-handle')
+
+    // react-draggable listens to mousedown and mouseup instead of click
+    fireEvent.mouseDown(handle)
+    fireEvent.mouseUp(handle, { bubbles: false }) 
+    // unclear why bubbles: false is necessary above, 
+    // but without it draggable's onmouseup gets called twice,
+    // (unlike in real browser interaction), and the node editor 
+    // gets toggled twice and thus disappears
 
     const editor = container.querySelectorAll('.oligrapher-node-editor')
     expect(editor).to.have.lengthOf(1)
@@ -70,8 +82,11 @@ describe('Oligrapher', function() {
   })
   
   it('opens edge editor', function() {
-    const edge = container.querySelector('.oligrapher-edge')
-    fireEvent.click(edge)
+    const handle = container.querySelector('.edge-handle')
+
+    // see comment for node editor click
+    fireEvent.mouseDown(handle)
+    fireEvent.mouseUp(handle, { bubbles: false }) 
 
     const editor = container.querySelectorAll('.oligrapher-edge-editor')
     expect(editor).to.have.lengthOf(1)
