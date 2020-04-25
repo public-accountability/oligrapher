@@ -1,44 +1,27 @@
-import React, { useRef, useEffect } from 'react'
-import ReactDOM from 'react-dom'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-
-import { classNames, getElementById } from '../util/helpers'
-import isEqual from 'lodash/isEqual'
 import noop from 'lodash/noop'
 
+import { classNames } from '../util/helpers'
 import DraggableComponent from '../components/graph/DraggableComponent'
 import CaptionTextbox from '../components/graph/CaptionTextbox'
-
+import EditCaptionTextarea from './EditCaptionTextarea'
 import FloatingMenu from '../util/floatingMenu'
 
-const InvisibleTextbox = React.forwardRef(function Func(props, ref) {
-  return <input ref={ref} value={props.value} onChange={props.onChange} type="text" />
-})
-
-InvisibleTextbox.propTypes = {
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired
-}
-
 export function Caption(props) {
-  const inputRef = useRef(null)
-  const handleTextChange = event => props.updateCaption({ text: event.target.value })
-
-  const className = classNames('caption', props.isFocused ? 'focused' : null)
-
-  useEffect( () => {
-    if (props.isFocused) {
-      inputRef.current.focus()
-    }
-  },[ props.isFocused ])
+  const className = classNames('caption', props.isBeingEdited ? 'focused' : null)
+  const foreignObjectWidth = props.isBeingEdited ? 1000 : props.caption.width + 25
+  const foreignObjectHeight = props.isBeingEdited ? 1000 : props.caption.height + 25
 
   return (
     <DraggableComponent 
-      actualZoom={props.actualZoom}
+      disabled={props.isBeingEdited}
+      enableUserSelectHack={props.isBeingEdited}
+      scale={props.draggableScale}
       onStop={props.moveCaption}
       onDrag={noop}
-      onClick={props.openEditMenu}
+      onClick={props.clickCaption}
       handle=".caption">
 
       <g className={className} id={`caption-${props.id}`} >
@@ -50,17 +33,19 @@ export function Caption(props) {
             into an empty divin <FloatingMenu>.
         */}
 
-        { props.isFocused && ReactDOM.createPortal(
-            <InvisibleTextbox value={props.text}
+        {/* { props.isBeingEdited && ReactDOM.createPortal(
+            <textarea value={props.text}
               onChange={handleTextChange}
               ref={inputRef} />,
             getElementById('caption-text-input')
-        ) }
+        ) } */}
 
-        <CaptionTextbox 
-          x={props.x}
-          y={props.y}
-          text={props.text} />
+        <foreignObject x={Math.round(props.caption.x)} y={Math.round(props.caption.y)} width={foreignObjectWidth} height={foreignObjectHeight}>
+          { props.isBeingEdited
+            ? <EditCaptionTextarea caption={props.caption} updateCaption={props.updateCaption} />
+            : <CaptionTextbox caption={props.caption} />
+          }
+        </foreignObject>
       </g>
     </DraggableComponent>
   )
@@ -69,29 +54,26 @@ export function Caption(props) {
 Caption.propTypes = {
   // Caption Attributes
   id: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired,
-  x: PropTypes.number.isRequired,
-  y: PropTypes.number.isRequired,
-  scale: PropTypes.number.isRequired,
+  caption: PropTypes.object.isRequired,
   // Action Functions
   updateCaption: PropTypes.func.isRequired,
   moveCaption: PropTypes.func.isRequired,
-  openEditMenu: PropTypes.func.isRequired,
+  clickCaption: PropTypes.func.isRequired,
   // Other fields from store
-  actualZoom: PropTypes.number.isRequired,
-  isFocused: PropTypes.bool.isRequired
+  draggableScale: PropTypes.number.isRequired,
+  isBeingEdited: PropTypes.bool.isRequired
 }
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    ...state.graph.captions[ownProps.id],
-    isFocused: isEqual(state.display.editor.tool, 'text') && isEqual(FloatingMenu.getId(state, 'caption'), ownProps.id),
-    actualZoom: state.display.actualZoom,
+    caption: state.graph.captions[ownProps.id],
+    isBeingEdited: ownProps.id == FloatingMenu.getId(state, 'caption'),
+    draggableScale: state.display.actualZoom / state.display.zoom
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  openEditMenu: () => dispatch({type: 'OPEN_EDIT_CAPTION_MENU', id: ownProps.id }),
+  clickCaption: () => dispatch({type: 'CLICK_CAPTION', id: ownProps.id }),
   updateCaption: attributes => dispatch({
     type: 'UPDATE_CAPTION',
     attributes: attributes,

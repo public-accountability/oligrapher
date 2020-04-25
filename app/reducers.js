@@ -7,9 +7,8 @@ import { translatePoint } from './util/helpers'
 import Graph from './graph/graph'
 import Edge from './graph/edge'
 import Caption from './graph/caption'
-import Curve from './graph/curve'
 
-import FloatingMenu from './util/floatingMenu'
+import FloatingMenu, { toggleEditor } from './util/floatingMenu'
 import EdgeCreation from './util/edgeCreation'
 import { isLittleSisId } from './util/helpers'
 
@@ -30,36 +29,6 @@ const checkOpenTool = (current, required) => {
 //     draft.display.selectedNodes.add(id)
 //   }
 // }
-
-const toggleNodeEditor = (draft, id) => {
-  let isOpen = ['node', 'connections'].includes(FloatingMenu.getType(draft))
-  let isThisNode = FloatingMenu.getId(draft) === id
-
-  if (isOpen && isThisNode) {
-    FloatingMenu.clear(draft)
-  } else {
-    let { x, y } = draft.graph.nodes[id]
-    FloatingMenu.set(
-      draft, 'node', id,
-      FloatingMenu.transformPosition(draft, { x, y }, 'node')
-    )
-  }
-}
-
-const toggleEdgeEditor = (draft, id) => {
-  let isOpen = FloatingMenu.getType(draft) === 'edge'
-  let isThisEdge = FloatingMenu.getId(draft) === id
-
-  if (isOpen && isThisEdge) {
-    FloatingMenu.clear(draft)
-  } else {
-    let { xb, y } = Curve.calculateGeometry(draft.graph.edges[id])
-    FloatingMenu.set(
-      draft, 'edge', id,
-      FloatingMenu.transformPosition(draft, { x: xb, y: y }, 'edge')
-    )
-  }
-}
 
 const updateSettings = (settings, key, value) => {
   settings[key] = value
@@ -116,7 +85,7 @@ const updateSettings = (settings, key, value) => {
   SET_LOCK               | lock
 */
 
-let id, intersectedNode
+let id, intersectedNode, caption
 
 export default produce((draft, action) => {
   switch(action.type) {
@@ -136,7 +105,7 @@ export default produce((draft, action) => {
     Graph.addNode(draft.graph, action.node, (node) => {
       // only show edit box if node is new
       if (!action.node.id) {
-        toggleNodeEditor(draft, node.id)
+        toggleEditor(draft, node.id, 'node')
       }
     })
     return
@@ -157,7 +126,7 @@ export default produce((draft, action) => {
     FloatingMenu.clear(draft)
     return
   case 'CLICK_NODE':
-    toggleNodeEditor(draft, action.id)
+    toggleEditor(draft, action.id, 'node')
     return  
   case 'MOVE_NODE':
     intersectedNode = Graph.intersectingNodeFromDrag(draft.graph, action.id, action.deltas)
@@ -167,7 +136,7 @@ export default produce((draft, action) => {
       let newEdge = Edge.newEdgeFromNodes(intersectingNode, intersectedNode)
       Graph.addEdge(draft.graph, newEdge)
       Graph.dragNode(draft.graph, action.id, { x: 0, y: 0 })
-      toggleEdgeEditor(draft, newEdge.id)
+      toggleEditor(draft, newEdge.id, 'edge')
     } else {
       Graph.moveNode(draft.graph, action.id, action.deltas)
       Graph.dragNode(draft.graph, action.id, { x: 0, y: 0 }) // updates node's edges
@@ -202,10 +171,12 @@ export default produce((draft, action) => {
     FloatingMenu.clear(draft)
     return
   case 'CLICK_EDGE':
-    toggleEdgeEditor(draft, action.id)
+    toggleEditor(draft, action.id, 'edge')
     return
-  case 'NEW_CAPTION':
-    Graph.addCaption(draft.graph, Caption.fromEvent(action.event, draft.display.zoom))
+  case 'ADD_CAPTION':
+    caption = Caption.fromEvent(action.event, draft.display.zoom)
+    Graph.addCaption(draft.graph, caption)
+    toggleEditor(draft, caption.id, 'caption')
     return
   case 'UPDATE_CAPTION':
     merge(draft.graph.captions[action.id], action.attributes)
@@ -222,6 +193,9 @@ export default produce((draft, action) => {
       FloatingMenu.clear(draft)
     }
 
+    return
+  case 'CLICK_CAPTION':
+    toggleEditor(draft, action.id, 'caption')
     return
   case 'ZOOM_IN':
     draft.display.zoom = draft.display.zoom + ZOOM_INTERVAL
@@ -243,9 +217,6 @@ export default produce((draft, action) => {
     }
 
     return
-  case 'OPEN_EDIT_NODE_MENU':
-    FloatingMenu.set(draft, 'node', action.id)
-    return
   case 'OPEN_ADD_CONNECTIONS_MENU':
     if (isLittleSisId(action.id)) {
       // no need to transform position as this is only opened from EditNode,
@@ -254,12 +225,6 @@ export default produce((draft, action) => {
     } else {
       console.error(`Cannot find connections unless the entity is a LittlesSis Entity. id == ${action.id}`)
     }
-    return
-  case 'OPEN_EDIT_EDGE_MENU':
-    FloatingMenu.set(draft, 'edge', action.id, { x: 0, y: 0 }) // placeholder position
-    return
-  case 'OPEN_EDIT_CAPTION_MENU':
-    FloatingMenu.set(draft, 'caption', action.id)
     return
   case 'CLOSE_EDIT_MENU':
     FloatingMenu.set(draft)
@@ -270,15 +235,6 @@ export default produce((draft, action) => {
     }
 
     draft.attributes[action.name] = action.value
-    return
-  case 'BACKGROUND_CLICK':
-    // Add new caption
-    if (checkOpenTool(draft.display.editor.tool, 'text')) {
-      const caption = Caption.fromEvent(action.event, draft.display.zoom)
-      Graph.addCaption(draft.graph, caption)
-      FloatingMenu.set(draft, 'caption')
-    }
-
     return
   case 'ADD_CONNECTION':
     Graph.addConnection(draft.graph, {

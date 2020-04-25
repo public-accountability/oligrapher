@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Select from 'react-select'
@@ -6,7 +7,7 @@ import toString from 'lodash/toString'
 import range from 'lodash/range'
 
 import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
-
+import EditCaptionTextarea from './EditCaptionTextarea'
 
 const FONT_FAMILY_OPTIONS = [
   { value: 'Arial', label: 'Arial' },
@@ -22,47 +23,51 @@ const FONT_WEIGHT_OPTIONS = [
 
 const FONT_SIZE_OPTIONS = range(8, 31, 2).map(toString).map(i => ({ value: i, label: i }))
 
-function FontFamilyPicker() {
-  const onChange = v => console.log('on change', v)
-  return <Select options={FONT_FAMILY_OPTIONS} onChange={onChange}/>
-}
-
-function FontWeightPicker() {
-  return <Select options={FONT_WEIGHT_OPTIONS} />
-}
-
-function FontSizePicker() {
-  return <Select options={FONT_SIZE_OPTIONS} />
-}
-
-export function EditCaption(props) {
-  const handleSubmit = () => console.log('updating caption attributes...')
-
+export function EditCaption({ caption, updateCaption, deleteCaption }) {
   return (
-    <div>
-      <main>
-        <label>Font</label>
-        <FontFamilyPicker />
-        <FontWeightPicker />
-        <FontSizePicker />
-      </main>
+    <>
+      <div>
+        <main>
+          <label>Font</label>
+          <Select options={FONT_FAMILY_OPTIONS} />
+          <Select options={FONT_WEIGHT_OPTIONS} />
+          <Select options={FONT_SIZE_OPTIONS} />
+        </main>
 
-      <footer>
-        <EditMenuSubmitButtons handleSubmit={handleSubmit}
-                              handleDelete={props.deleteCaption}
-                              page="main"/>
-      </footer>
-    </div>
+        <footer>
+          <EditMenuSubmitButtons 
+            hideSubmitButton={true}
+            handleDelete={deleteCaption}
+            page="main" />
+        </footer>
+      </div>
+
+      {/* { ReactDOM.createPortal(
+          <EditCaptionTextarea caption={caption} updateCaption={updateCaption} />,
+          document.getElementById('oligrapher-graph-container')
+      )} */}
+    </>
   )
 }
 
 EditCaption.propTypes = {
   id: PropTypes.string.isRequired,
-  deleteCaption: PropTypes.func.isRequired
+  caption: PropTypes.object.isRequired,
+  deleteCaption: PropTypes.func.isRequired,
+  updateCaption: PropTypes.func.isrequired
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  deleteCaption: () => dispatch({ type: "DELETE_CAPTION", id: ownProps.id })
-})
+const mapStateToProps = (state, ownProps) => {
+  return {
+    caption: state.graph.captions[ownProps.id]
+  }
+}
 
-export default connect((state) => state, mapDispatchToProps)(EditCaption)
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    deleteCaption: () => dispatch({ type: 'DELETE_CAPTION', id: ownProps.id }),
+    updateCaption: (attributes) => dispatch({ type: 'UPDATE_CAPTION', id: ownProps.id, attributes })
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditCaption)

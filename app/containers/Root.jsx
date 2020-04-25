@@ -33,7 +33,7 @@ export function Root() {
   return (
     <div id="oligrapher-container">
       <Header />
-      <div className="oligrapher-graph-container">
+      <div id="oligrapher-graph-container">
         <Graph />
         <Editor />
         <ZoomControl />

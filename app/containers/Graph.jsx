@@ -41,11 +41,9 @@ export function Graph({ viewBox, zoom, actualZoom, setSvgSize, headerHeight }) {
         <Markers />
         <Zoomable zoom={zoom}>
           <Pannable scale={actualZoom / zoom}>
-            <Clickable>
-              <Edges />
-              <Nodes />
-              <Captions />
-            </Clickable>
+            <Edges />
+            <Nodes />
+            <Captions />
           </Pannable>
         </Zoomable>
       </Svg>

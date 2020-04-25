@@ -1,20 +1,36 @@
 import React, { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
-import Draggable from 'react-draggable'
 
-const defaultClassName = 'react-draggable pannable'
+import DraggableComponent from './DraggableComponent'
 
 /* Allows for the maps to be panned */
+/* Also allows for adding new caption by clicking background */
 export default function Pannable({ scale, children }) {
   const dispatch = useDispatch()
-  const setOffset = useCallback((event, data) => {
-    dispatch({ type: 'SET_OFFSET', offset: { x: data.x, y: data.y } })
+  const isEditor = useSelector(state => state.display.modes.editor)
+  const isTextTool = useSelector(state => state.display.editor.tool === 'text')
+  const offset = useSelector(state => state.display.offset)
+
+  const onClick = useCallback((event) => {
+    console.log(event)
+    if (isEditor && isTextTool) {
+      dispatch({ type: 'ADD_CAPTION', event })
+    }
+  }, [dispatch, isEditor, isTextTool])
+
+  const onStop = useCallback(offset => {
+    dispatch({ type: 'SET_OFFSET', offset })
   }, [dispatch])
 
   return (
-    <Draggable handle='.pannable-handle' scale={scale} defaultClassName={defaultClassName} onStop={setOffset}>
-      <g>
+    <DraggableComponent 
+      handle='.pannable-handle' 
+      scale={scale} 
+      position={offset} 
+      onStop={onStop} 
+      onClick={onClick}>
+      <g className="pannable">
         <rect 
           className="pannable-handle"
           x="-5000"
@@ -24,7 +40,7 @@ export default function Pannable({ scale, children }) {
           fill="#fff" />
         {children}
       </g>
-    </Draggable>
+    </DraggableComponent>
   )
 }
 

@@ -42,12 +42,12 @@ export default function FloatingMenus() {
       <div className="oligrapher-edit-menu">
         <div className={ classNames("edit-menu-wrapper", `edit-${type}-menu`) }>
           <EditHeader title={title} />
-           { type === 'node' && <EditNode id={id} openAddConnections={openAddConnections} /> }
-           { type === 'connections' && <AddConnections id={id} /> }
-           { type === 'edge' && <EditEdge id={id} /> }
-           { type === 'caption' && <EditCaption captionId={id} /> }
-           { type === 'settings' && <Settings /> }
-           { type === 'editors' && <Editors /> }
+          { type === 'node' && <EditNode id={id} openAddConnections={openAddConnections} /> }
+          { type === 'connections' && <AddConnections id={id} /> }
+          { type === 'edge' && <EditEdge id={id} /> }
+          { type === 'caption' && <EditCaption id={id} /> }
+          { type === 'settings' && <Settings /> }
+          { type === 'editors' && <Editors /> }
         </div>
       </div>
     </Draggable>  

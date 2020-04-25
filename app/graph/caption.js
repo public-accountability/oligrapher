@@ -9,7 +9,12 @@ const captionDefaults = {
   text: null,
   x: null,
   y: null,
-  scale: 1
+  scale: 1,
+  width: 100,
+  height: 100,
+  font: 'Helvetica, Arial, sans-serif',
+  size: 20,
+  style: 'normal'
 }
 
 export const captionShape = {
@@ -17,7 +22,8 @@ export const captionShape = {
   text: PropTypes.string.isRequired,
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
-  scale: PropTypes.number.isRequired
+  scale: PropTypes.number.isRequired,
+  width: PropTypes.number.isRequired
 }
 
 export function newCaption(attributes = {}) {

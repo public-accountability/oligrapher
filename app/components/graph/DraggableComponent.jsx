@@ -4,8 +4,6 @@ import Draggable from 'react-draggable'
 import noop from 'lodash/noop'
 import { xy } from '../../util/helpers'
 
-const DEFAULT_POSITION = { x: 0, y: 0 }
-
 /*
   Wrapper around react-draggable
   Required props: onDrag, onStop, handle
@@ -33,10 +31,11 @@ export default function DraggableComponent(props) {
   const draggableProps = { 
     onDrag,
     onStop,
-    scale: props.actualZoom,
-    position: DEFAULT_POSITION,
+    scale: props.scale,
+    position: props.position,
     handle: props.handle,
-    disabled: props.disabled
+    disabled: props.disabled,
+    enableUserSelectHack: props.enableUserSelectHack
   }
 
   return (
@@ -49,14 +48,18 @@ export default function DraggableComponent(props) {
 DraggableComponent.propTypes = {
   children: PropTypes.node.isRequired,
   onStop: PropTypes.func.isRequired,
-  onDrag: PropTypes.func.isRequired,
+  onDrag: PropTypes.func,
   onClick: PropTypes.func,
   handle: PropTypes.string.isRequired,
-  actualZoom: PropTypes.number,
-  disabled: PropTypes.bool
+  scale: PropTypes.number,
+  position: PropTypes.object,
+  disabled: PropTypes.bool,
+  enableUserSelectHack: PropTypes.bool
 }
 
 DraggableComponent.defaultProps = {
-  actualZoom: 1,
+  scale: 1,
+  position: { x: 0, y: 0 },
+  onDrag: noop,
   onClick: noop
 }

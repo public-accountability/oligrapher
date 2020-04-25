@@ -48,7 +48,7 @@ $edge_highlight_color: $highlight_blue;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    font-family: Helvetica, Arial, sans-serif;
+    font-family: Helvetica, Arial;
 
     /*
        changes to all elements of certian type
@@ -59,10 +59,8 @@ $edge_highlight_color: $highlight_blue;
 }
 
 #oligrapher-header {
-    /* height: 230px; */
     display: flex;
     flex-direction: column;
-    font-family: sans-serif;
     padding-bottom: 1.2em;
     border-bottom: 1.75px solid $header_bottom_border_color;
 
@@ -208,7 +206,7 @@ $edge_highlight_color: $highlight_blue;
     left: 0;
 }
 
-.oligrapher-graph-container {
+#oligrapher-graph-container {
     position: relative;
 
     .oligrapher-graph-svg {
@@ -221,8 +219,6 @@ $edge_highlight_color: $highlight_blue;
         width: 100%;
         pointer-events: none;
     }
-
-    .oligrapher-graph-editor.text-tool {}
 
     .clickable-tool-text {
         cursor: text;
@@ -311,31 +307,28 @@ $edge_highlight_color: $highlight_blue;
 }
 
 .entity-search-result {
-  font-size: 15px;
-  margin-top: 10px;
+    font-size: 15px;
+    margin-top: 10px;
 
-  a {
-    cursor: pointer;
-    color: $oligrapher_blue;
-    font-weight: bold;
-    font-size: 1.1em;
-  }
+    a {
+        cursor: pointer;
+        color: $oligrapher_blue;
+        font-weight: bold;
+        font-size: 1.1em;
+    }
 
-  .entity-search-description {
-      font-size: 0.8em;
-      color: $oligrapher_dark_gray;
-  }
+    .entity-search-description {
+        font-size: 0.8em;
+        color: $oligrapher_dark_gray;
+    }
 
-  a.entity-external-link {
-    margin-left: 5px;
-    font-size: 0.8em;
-    font-weight: normal;
-    color: $oligrapher_dark_gray;
-  }
+    a.entity-external-link {
+        margin-left: 5px;
+        font-size: 0.8em;
+        font-weight: normal;
+        color: $oligrapher_dark_gray;
+    }
 }
-
-.text-tool { }
-
 
 %edit_menu_title {
     margin-bottom: 0.25em;
@@ -377,7 +370,6 @@ header.edit-menu-header {
     background-color: white;
     border: 2px solid $highlight_blue;
     padding: 10px;
-
 
     header {
         font-size: 18px;
@@ -743,8 +735,22 @@ g.caption.focused {
     }
 }
 
-g.caption-textbox {}
+.edit-caption-textarea {
+    overflow-y: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+.edit-caption-textarea::-webkit-scrollbar { /* WebKit */
+    width: 0;
+    height: 0;
+}
 
+.caption-text, .edit-caption-textarea {
+    margin: 0;
+    border: 0;
+    box-sizing: border-box;
+    padding: 10px;
+}
 
 /* create edge message */
 

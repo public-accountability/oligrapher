@@ -7,6 +7,7 @@ import { classNames } from '../util/helpers'
 
 import EditorMenu from './EditorMenu'
 import NodeTool from '../components/tools/Node'
+import TextTool from '../components/tools/Text'
 import OrganizeTool from '../components/tools/Organize'
 import LockPoll from './LockPoll'
 
@@ -25,6 +26,7 @@ export function Editor(props) {
       { props.mapId && <LockPoll mapId={props.mapId} /> }
       <EditorMenu />
       { nodeTool && <NodeTool /> }
+      { textTool && <TextTool /> }
       { organizeTool && <OrganizeTool /> }
     </div>
   )

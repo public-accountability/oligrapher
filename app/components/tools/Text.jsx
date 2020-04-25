@@ -1,11 +1,11 @@
 import React from 'react'
 
+import Toolbox from './Toolbox'
+
 export default function Text() {
   return (
-    <div className="text-tool-wrapper">
-      <div className="text-tool">
-        <p>text tool</p>
-      </div>
-    </div>
+    <Toolbox title="Add Text">
+      <div>Click anywhere to create a new caption.</div>
+    </Toolbox>
   )
 }
