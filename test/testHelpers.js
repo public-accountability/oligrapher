@@ -43,3 +43,5 @@ export const stubUseSelector = (state) => {
   mock.restore = () => reactRedux['useSelector'].restore()
   return mock
 }
+
+export const removeSpaces = string => string.replace(/\s/g, '')

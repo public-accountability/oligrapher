@@ -18,7 +18,7 @@ export default function EditCaption({ id }) {
   }, [dispatch, id])
 
   return (
-    <div className="edit-caption">
+    <div className="oligrapher-caption-editor">
       <main>
         <label>Font</label>
         <br />

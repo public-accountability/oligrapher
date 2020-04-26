@@ -902,6 +902,19 @@ export const bigGraph = {
       "node2_id": "KOBTd3z1B"
     }
   },
-  "captions": {},
+  "captions": {
+    "x1": {
+      id: "x1",
+      text: "A sophisticated observation about what's going on in this map",
+      x: 400,
+      y: 100,
+      scale: 1,
+      width: 250,
+      height: 150,
+      weight: '400',
+      font: 'Arial',
+      size: '20'
+    }
+  },
   "id": "3638"
 }

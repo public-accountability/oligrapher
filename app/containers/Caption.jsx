@@ -25,8 +25,8 @@ export default function Caption({ id }) {
       enableUserSelectHack={isBeingEdited}
       onStop={moveCaption}
       onClick={clickCaption}
-      handle=".caption">
-      <g className="caption" id={`caption-${id}`} >
+      handle=".oligrapher-caption">
+      <g className="oligrapher-caption" id={`caption-${id}`} >
         <foreignObject 
           x={Math.round(caption.x)} 
           y={Math.round(caption.y)} 

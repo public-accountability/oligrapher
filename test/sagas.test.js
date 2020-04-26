@@ -77,8 +77,11 @@ describe('sagas', function() {
       // provide saga with new viewbox and check that it computes svg zoom
       saga.next(viewBox).call(computeSvgZoom, viewBox, svgSize)
 
-      // provide saga with svg zoom and check that it sets actual zoom
-      saga.next(2).put({ type: 'SET_ACTUAL_ZOOM', actualZoom: 2 })
+      // provide saga with svg zoom and check that it sets svg zoom
+      saga.next(2).put({ type: 'SET_SVG_ZOOM', svgZoom: 2 })
+
+      // check that it sets actual zoom
+      saga.next().put({ type: 'SET_ACTUAL_ZOOM', actualZoom: 2 })
 
       // all done
       saga.next().isDone()
