@@ -220,7 +220,7 @@ $edge_highlight_color: $highlight_blue;
         pointer-events: none;
     }
 
-    .clickable-tool-text {
+    .text-tool {
         cursor: text;
     }
 
@@ -735,7 +735,12 @@ g.caption.focused {
     }
 }
 
+.caption-text {
+    border: 2px solid #ccc;
+}
+
 .edit-caption-textarea {
+    border: 2px solid $highlight_blue;
     overflow-y: scroll;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none;  /* Internet Explorer 10+ */
@@ -746,10 +751,18 @@ g.caption.focused {
 }
 
 .caption-text, .edit-caption-textarea {
+    border-top-width: 3px;
     margin: 0;
-    border: 0;
     box-sizing: border-box;
     padding: 10px;
+}
+
+.edit-caption select {
+  margin-top: 5px;
+  margin-right: 5px;
+  background-color: white;
+  font-size: 0.8em;
+  border: 1px solid $oligrapher_gray;
 }
 
 /* create edge message */

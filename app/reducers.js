@@ -14,12 +14,6 @@ import { isLittleSisId } from './util/helpers'
 
 const ZOOM_INTERVAL = 0.2
 
-const checkOpenTool = (current, required) => {
-  if (isEqual(current, required)) { return true }
-  console.error('Correct tool is not open.')
-  return false
-}
-
 // Will eventually use this when implementing selection
 //
 // const toggleSelectedNode = (draft, id) => {
@@ -29,6 +23,20 @@ const checkOpenTool = (current, required) => {
 //     draft.display.selectedNodes.add(id)
 //   }
 // }
+
+const convertCaptionSize = (draft, attributes) => {
+  if (!attributes.width || !attributes.height) {
+    return attributes
+  }
+
+  const { svgZoom } = draft.display
+  const { width, height } = attributes
+
+  const captionWidth = width / svgZoom
+  const captionHeight = height / svgZoom
+
+  return {...attributes, width: captionWidth, height: captionHeight }
+}
 
 const updateSettings = (settings, key, value) => {
   settings[key] = value
@@ -91,6 +99,9 @@ export default produce((draft, action) => {
   switch(action.type) {
   case 'SET_ACTUAL_ZOOM':
     draft.display.actualZoom = action.actualZoom
+    return
+  case 'SET_SVG_ZOOM':
+    draft.display.svgZoom = action.svgZoom
     return
   case 'SET_OFFSET':
     draft.display.offset = action.offset
@@ -179,7 +190,7 @@ export default produce((draft, action) => {
     toggleEditor(draft, caption.id, 'caption')
     return
   case 'UPDATE_CAPTION':
-    merge(draft.graph.captions[action.id], action.attributes)
+    merge(draft.graph.captions[action.id], convertCaptionSize(draft, action.attributes))
     return
   case 'MOVE_CAPTION':
     merge(draft.graph.captions[action.id], translatePoint(draft.graph.captions[action.id], action.deltas))

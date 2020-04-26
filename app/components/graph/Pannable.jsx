@@ -6,18 +6,18 @@ import DraggableComponent from './DraggableComponent'
 
 /* Allows for the maps to be panned */
 /* Also allows for adding new caption by clicking background */
-export default function Pannable({ scale, children }) {
+export default function Pannable({ children }) {
   const dispatch = useDispatch()
-  const isEditor = useSelector(state => state.display.modes.editor)
   const isTextTool = useSelector(state => state.display.editor.tool === 'text')
   const offset = useSelector(state => state.display.offset)
 
+  const className = "pannable" + (isTextTool ? " text-tool" : "")
+
   const onClick = useCallback((event) => {
-    console.log(event)
-    if (isEditor && isTextTool) {
+    if (isTextTool) {
       dispatch({ type: 'ADD_CAPTION', event })
     }
-  }, [dispatch, isEditor, isTextTool])
+  }, [dispatch, isTextTool])
 
   const onStop = useCallback(offset => {
     dispatch({ type: 'SET_OFFSET', offset })
@@ -26,11 +26,10 @@ export default function Pannable({ scale, children }) {
   return (
     <DraggableComponent 
       handle='.pannable-handle' 
-      scale={scale} 
-      position={offset} 
+      position={offset}
       onStop={onStop} 
       onClick={onClick}>
-      <g className="pannable">
+      <g className={className}>
         <rect 
           className="pannable-handle"
           x="-5000"

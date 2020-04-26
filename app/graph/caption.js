@@ -10,11 +10,11 @@ const captionDefaults = {
   x: null,
   y: null,
   scale: 1,
-  width: 100,
+  width: 200,
   height: 100,
-  font: 'Helvetica, Arial, sans-serif',
-  size: 20,
-  style: 'normal'
+  font: 'Arial',
+  size: '20',
+  weight: '400'
 }
 
 export const captionShape = {

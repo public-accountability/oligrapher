@@ -32,6 +32,7 @@ export function* setActualZoom() {
   const { viewBox, zoom, svgSize } = yield select(state => state.display)
   const zoomedViewBox = yield call(applyZoomToViewBox, viewBox, zoom)
   const svgZoom = yield call(computeSvgZoom, zoomedViewBox, svgSize)
+  yield put({ type: 'SET_SVG_ZOOM', svgZoom })
   yield put({ type: 'SET_ACTUAL_ZOOM', actualZoom: zoom * svgZoom })
 }
 
@@ -46,6 +47,6 @@ export function* watchZoom() {
 export default function* rootSaga() {
   yield all([
     watchAddNode(),
-    watchZoom(),
+    watchZoom()
   ])
 } 

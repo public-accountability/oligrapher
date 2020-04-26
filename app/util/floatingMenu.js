@@ -34,12 +34,11 @@ export const getType = (state) => {
 
 // converts position of svg element to equivalent html position
 export const svgToHtmlPosition = (state, position) => {
-  const zoom = state.display.actualZoom / state.display.zoom
-  const offset = state.display.offset
+  const { svgZoom, offset } = state.display
 
   return {
-    x: Math.trunc((position.x + offset.x) * zoom),
-    y: Math.trunc((position.y + offset.y) * zoom)
+    x: Math.trunc((position.x + offset.x) * svgZoom),
+    y: Math.trunc((position.y + offset.y) * svgZoom)
   }
 }
 

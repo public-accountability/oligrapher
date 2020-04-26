@@ -14,7 +14,7 @@ import Zoomable from '../components/graph/Zoomable'
 /*
   The core component that displays the graph
 */
-export function Graph({ viewBox, zoom, actualZoom, setSvgSize, headerHeight }) {
+export function Graph({ viewBox, zoom, setSvgSize, headerHeight }) {
   // used to calculate the actual zoom and caption placement.
   const svgRef = useRef(null)
 
@@ -40,7 +40,7 @@ export function Graph({ viewBox, zoom, actualZoom, setSvgSize, headerHeight }) {
       <Svg outermost={true} viewBox={viewBox} height="500px" width="100%" ref={svgRef}>
         <Markers />
         <Zoomable zoom={zoom}>
-          <Pannable scale={actualZoom / zoom}>
+          <Pannable>
             <Edges />
             <Nodes />
             <Captions />
@@ -56,14 +56,12 @@ Graph.propTypes = {
   setSvgSize: PropTypes.func.isRequired,
   zoom: PropTypes.number.isRequired,
   headerHeight: PropTypes.number.isRequired,
-  actualZoom: PropTypes.number
 }
 
 const mapStateToProps = function(state) {
   return {
     viewBox: state.display.viewBox,
     zoom: state.display.zoom,
-    actualZoom: state.display.actualZoom,
     headerHeight: state.display.headerHeight
   }
 }

@@ -6,7 +6,7 @@ export const styleForCaption = (caption) => {
     backgroundColor: '#ccc',
     fontFamily: caption.font,
     fontSize: caption.size + 'px',
-    fontStyle: caption.style,
+    fontWeight: caption.weight,
     height: caption.height + 'px',
     width: caption.width + 'px'
   }
@@ -17,7 +17,6 @@ export default function CaptionTextbox({ caption }) {
 
   return (
     <div 
-      xmlns="http://www.w3.org/1999/xhtml"
       className="caption-text"
       style={style}>
       { caption.text }

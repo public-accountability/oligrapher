@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { useSelector } from 'react-redux'
 import Draggable from 'react-draggable'
 import noop from 'lodash/noop'
-import { xy } from '../../util/helpers'
 
 /*
   Wrapper around react-draggable
@@ -10,15 +10,18 @@ import { xy } from '../../util/helpers'
 */
 export default function DraggableComponent(props) {
   const [isDragging, setDragging] = useState(false)
+  const svgZoom = useSelector(state => state.display.svgZoom)
 
   const onDrag = (evt, data) => {
     setDragging(true)
-    props.onDrag(xy(data))
+    const { x, y } = data
+    props.onDrag({ x, y })
   }
 
   const onStop = (evt, data) => {
     if (isDragging) {
-      props.onStop(xy(data))
+      const { x, y } = data
+      props.onStop({ x, y })
       setDragging(false)
     } else {
       props.onClick(evt, data)
@@ -31,7 +34,7 @@ export default function DraggableComponent(props) {
   const draggableProps = { 
     onDrag,
     onStop,
-    scale: props.scale,
+    scale: svgZoom,
     position: props.position,
     handle: props.handle,
     disabled: props.disabled,
@@ -51,14 +54,12 @@ DraggableComponent.propTypes = {
   onDrag: PropTypes.func,
   onClick: PropTypes.func,
   handle: PropTypes.string.isRequired,
-  scale: PropTypes.number,
   position: PropTypes.object,
   disabled: PropTypes.bool,
   enableUserSelectHack: PropTypes.bool
 }
 
 DraggableComponent.defaultProps = {
-  scale: 1,
   position: { x: 0, y: 0 },
   onDrag: noop,
   onClick: noop

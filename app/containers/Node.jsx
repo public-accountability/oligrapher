@@ -28,8 +28,6 @@ export function Node(props) {
     <DraggableComponent
       disabled={!props.editorMode}
       handle=".draggable-node-handle"
-      actualZoom={props.actualZoom}
-      scale={props.draggableScale}
       onStop={props.moveNode}
       onClick={props.clickNode}
       onDrag={props.dragNode}>
@@ -88,7 +86,6 @@ const mapStateToProps = (state, ownProps) => {
     ...node,
     radius: DEFAULT_RADIUS * node.scale,
     id: id,
-    draggableScale: state.display.actualZoom / state.display.zoom,
     editorMode: state.display.modes.editor,
     selected: state.display.selectedNodes.has(id),
     isNewEdgeNode: state.edgeCreation.nodes.includes(id),

@@ -40,6 +40,7 @@ const defaultState = {
   // Many actions trigger a reconfiguration of these menus
   display: {
     zoom: 1,
+    svgZoom: null,
     actualZoom: 1,
     viewBox: null,
     svgSize: null,
