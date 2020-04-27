@@ -4,6 +4,7 @@ import isString from 'lodash/isString'
 import isNumber from 'lodash/isNumber'
 import toNumber from 'lodash/toNumber'
 import isNil from 'lodash/isNil'
+import { useSelector as useReduxSelector } from 'react-redux'
 
 /**
  * works the same as document.getElementById,
@@ -142,4 +143,8 @@ export function createStateUpdater(setStateFunction, attributeName) {
 
 export function isLittleSisId(id) {
   return Number.isFinite(toNumber(id))
+}
+
+export function useSelector(selector) {
+  return useReduxSelector(state => selector(state.present))
 }

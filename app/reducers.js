@@ -1,13 +1,11 @@
 import produce from 'immer'
+import undoable, { includeAction } from 'redux-undo'
 import merge from 'lodash/merge'
-import isEqual from 'lodash/isEqual'
 
 import { translatePoint } from './util/helpers'
-
 import Graph from './graph/graph'
 import Edge from './graph/edge'
 import Caption from './graph/caption'
-
 import FloatingMenu, { toggleEditor } from './util/floatingMenu'
 import EdgeCreation from './util/edgeCreation'
 import { isLittleSisId } from './util/helpers'
@@ -79,7 +77,7 @@ const updateSettings = (settings, key, value) => {
 
 let id, intersectedNode, caption
 
-export default produce((draft, action) => {
+export const reducer = produce((draft, action) => {
   switch(action.type) {
   case 'SET_ACTUAL_ZOOM':
     draft.display.actualZoom = action.actualZoom
@@ -245,3 +243,20 @@ export default produce((draft, action) => {
     return
   }
 }, null)
+
+export default undoable(reducer, { 
+  filter: includeAction([
+    'ADD_NODE',
+    'UPDATE_NODE',
+    'REMOVE_NODE',
+    'MOVE_NODE',
+    'ADD_EDGE',
+    'ADD_EDGES',
+    'UPDATE_EDGE',
+    'REMOVE_EDGE',
+    'ADD_CAPTION',
+    'UPDATE_CAPTION',
+    'MOVE_CAPTION',
+    'DELETE_CAPTION'
+  ]) 
+})

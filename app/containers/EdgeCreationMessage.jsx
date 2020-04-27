@@ -1,8 +1,11 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 
-export function EdgeCreationMessage({ hoveringNode, hoveredNode }) {
+import { useSelector } from '../util/helpers'
+
+export default function EdgeCreationMessage() {
+  const [hoveringNodeId, hoveredNodeId] = useSelector(state => state.edgeCreation.nodes)
+  const hoveringNode = useSelector(state => state.graph.nodes[hoveringNodeId])
+  const hoveredNode = useSelector(state => state.graph.nodes[hoveredNodeId])
   const showMessage = hoveringNode && hoveredNode
  
   return (
@@ -11,19 +14,3 @@ export function EdgeCreationMessage({ hoveringNode, hoveredNode }) {
     </>
   ) 
 }
-
-EdgeCreationMessage.propTypes = {
-  hoveringNode: PropTypes.object,
-  hoveredNode: PropTypes.object
-}
-
-const mapStateToProps = (state) => { 
-  let [hoveringNodeId, hoveredNodeId] = state.edgeCreation.nodes
-
-  return {
-    hoveringNode: state.graph.nodes[hoveringNodeId],
-    hoveredNode: state.graph.nodes[hoveredNodeId]
-  }
-}
-
-export default connect(mapStateToProps)(EdgeCreationMessage)
