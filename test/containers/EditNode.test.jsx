@@ -1,4 +1,5 @@
 import React from 'react'
+import sinon from 'sinon'
 
 import EditNode, { MainPage } from '../../app/containers/EditNode'
 import Graph from '../../app/graph/graph'
@@ -8,7 +9,7 @@ import SizePicker from '../../app/components/SizePicker'
 import { stubDispatch, createMockStore, mountWithStore } from '../testHelpers'
 
 describe('<EditNode>', function() {
-  let node, graph, store, editNode, mockDispatch, mockOpenAddConnections
+  let node, graph, store, editNode, mockDispatch
 
   beforeEach(function() {
     mockDispatch = stubDispatch()
@@ -16,10 +17,9 @@ describe('<EditNode>', function() {
     graph = Graph.new()
     Graph.addNode(graph, node)
     store = createMockStore({ graph })
-    mockOpenAddConnections = sinon.spy()
     editNode = mountWithStore(
       store, 
-      <EditNode id={node.id} openAddConnections={mockOpenAddConnections} />
+      <EditNode id={node.id} />
     )
   })
 
@@ -49,7 +49,8 @@ describe('<EditNode>', function() {
   it("shows add connections link which triggers open add connections", function() {
     let link = editNode.find('.add-connections-link')
     link.simulate("click")
-    expect(mockOpenAddConnections.callCount).to.equal(1)
+    expect(mockDispatch.callCount).to.equal(1)
+    expect(mockDispatch.getCall(0).args[0].type).to.equal('OPEN_ADD_CONNECTIONS')
   })
 
   it("shows delete button which removes node", function() {

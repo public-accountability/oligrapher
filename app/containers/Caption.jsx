@@ -9,8 +9,6 @@ import EditCaptionTextarea from './EditCaptionTextarea'
 export default function Caption({ caption, currentlyEdited }) {
   const dispatch = useDispatch()
   const { id, x, y, width, height } = caption
-  const foreignObjectWidth = width + 100
-  const foreignObjectHeight = height + 100
 
   const clickCaption = useCallback(() => dispatch({ type: 'CLICK_CAPTION', id }), [dispatch, id])
   const updateCaption = useCallback(attributes => dispatch({ type: 'UPDATE_CAPTION', attributes, id }), [dispatch, id])
@@ -31,7 +29,12 @@ export default function Caption({ caption, currentlyEdited }) {
           y={Math.round(y)} 
           width={foreignObjectSize.width} 
           height={foreignObjectSize.height}>
-          { currentlyEdited && <EditCaptionTextarea caption={caption} updateCaption={updateCaption} setForeignObjectSize={setForeignObjectSize} /> }
+          { currentlyEdited &&
+            <EditCaptionTextarea
+              caption={caption}
+              updateCaption={updateCaption}
+              setForeignObjectSize={setForeignObjectSize} />
+          }
           { !currentlyEdited && <CaptionTextbox caption={caption} /> }
         </foreignObject>
       </g>

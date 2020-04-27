@@ -7,10 +7,10 @@ export default function ZoomControl() {
   const zoomOut = () => dispatch({ type: 'ZOOM_OUT' })
 
   return (
-    <div className="oligrapher-zoomcontrol">
+    <div id="oligrapher-zoomcontrol">
       <div>
         <button onClick={zoomIn}>+</button>
-        <button onClick={zoomOut}>-</button>
+        <button onClick={zoomOut}>&ndash;</button>
       </div>
     </div>
   )

@@ -1,19 +1,18 @@
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import LittleSisApi from '../datasources/littlesis3.js'
 
 const POLL_INTERVAL = 10 * 1000
 const FAILURE_LIMIT = 10
 
-export default function LockPoll({ mapId }) {
+export default function LockPoll() {
   const dispatch = useDispatch()
+  const mapId = useSelector(state => state.attributes.id)
   const [status, setStatus] = useState('READY')
   const [failCount, setFailCount] = useState(0)
 
   useEffect(() => {
-    if (!mapId) {
-      console.error('Cannot check lock status without an id')
-    } else if (status === 'READY') {
+    if (mapId && status === 'READY') {
       setStatus('POLLING')
       console.log('Polling for lock...')
 

@@ -61,8 +61,9 @@ $edge_highlight_color: $highlight_blue;
 #oligrapher-header {
     display: flex;
     flex-direction: column;
-    padding-bottom: 1.2em;
     border-bottom: 1.75px solid $header_bottom_border_color;
+    height: 200px;
+    box-sizing: border-box;
 
     /* title and subtitle*/
     h1, h1 input {
@@ -224,19 +225,38 @@ $edge_highlight_color: $highlight_blue;
         cursor: text;
     }
 
-    .oligrapher-zoomcontrol {
+    #oligrapher-zoomcontrol {
         z-index: 15;
         position: absolute;
-        top: 0;
-        right: 0;
-    }
-}
+        top: 5px;
+        right: 5px;
 
-.oligrapher-zoomcontrol > div {
-    display: flex;
-    flex-direction: column;
-    margin-top: 5px;
-    margin-right: 5px;
+        div {
+            display: flex;
+            flex-direction: column;
+            margin-top: 5px;
+            margin-right: 5px;
+        }
+
+        button {
+            border: 1px solid $oligrapher_gray;
+            padding: 5px;
+            padding-bottom: 7px;
+            background-color: white;
+            height: 32px;
+            width: 32px;
+            margin-bottom: 4px;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        button::-moz-focus-inner {
+            border-style: none;
+        }
+
+    }
 }
 
 /* EDITOR */
@@ -286,7 +306,7 @@ $edge_highlight_color: $highlight_blue;
         margin-bottom: 5px;
     }
 
-    .nodetool {
+    .node-tool {
         input {
             display: block;
             margin-bottom: 10px;
@@ -517,7 +537,7 @@ header.edit-menu-header {
     }
 } /* end: .edit-menu-wrapper */
 
-.edit-settings-menu {
+.oligrapher-settings {
     width: 225px;
 
     div.settings-option  {
@@ -534,10 +554,10 @@ header.edit-menu-header {
         color: $oligrapher_font_gray;
         font-size: 1em;
         font-weight: bold;
+        margin-top: 0.5em;
         margin-bottom: 0.5em;
         display: block;
     }
-
 }
 
 .edit-edge-menu {
@@ -712,6 +732,10 @@ g.edge-tool-open .react-draggable-dragging .node-circle {
         &:hover {
             cursor: pointer
         }
+    }
+
+    .edge-highlight {
+        stroke: $highlight_blue;
     }
 }
 

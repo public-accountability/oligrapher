@@ -7,17 +7,10 @@ import pick from 'lodash/pick'
 import { calculateDeltas } from '../util/deltas'
 import { stringOrNumber, stringOrBool } from '../util/types'
 import Curve from '../graph/curve'
-
 import EdgeLine from '../components/graph/EdgeLine'
-import EdgeHighlight from '../components/graph/EdgeHighlight'
 import EdgeHandle from '../components/graph/EdgeHandle'
 import EdgeLabel from '../components/graph/EdgeLabel'
-
 import FloatingMenu from '../util/floatingMenu'
-
-const HIGHLIGHT_COLOR = '#50a3ff'
-
-const calculateEdgeWidth = scale => 1 + (scale - 1) * 5
 
 export function Edge(props) {
   const [isHovering, setHovering] = useState(false)
@@ -36,8 +29,8 @@ export function Edge(props) {
 
   const pickProps = (...propNames) => pick(props, propNames)
 
-  const width = calculateEdgeWidth(props.scale)
-  const startPosition = { x: props.cx, y: props.cy }
+  const width = 1 + (props.scale -1) * 5
+  const startPosition = { x: cx, y: cy }
 
   const onStart = (evt, data) => {
     setStartDrag(data)
@@ -71,7 +64,7 @@ export function Edge(props) {
   }
 
   // Display helpers
-  const showHighlight = false && !isDragging && (props.isBeingEdited || isHovering)
+  const showHighlight = !isDragging && (props.isBeingEdited || isHovering)
   const showLabel = Boolean(props.label)
   edgeLineProps.status = showHighlight ? "highlighted" : edgeLineProps.status
 
@@ -83,7 +76,6 @@ export function Edge(props) {
       onDrag={onDrag}
       onStop={onStop}>
       <g className="oligrapher-edge" id={`edge-${props.id}`}>
-        { showHighlight && <EdgeHighlight color={HIGHLIGHT_COLOR} curve={curve} scale={props.scale} /> }
         <EdgeLine {...edgeLineProps} />
         { showLabel && <EdgeLabel {...edgeLabelProps} /> }
         <EdgeHandle {...edgeHandleProps} />
@@ -137,24 +129,15 @@ const mapStateToProps = (state, ownProps) => {
     ...edge,
     actualZoom: state.display.actualZoom,
     isBeingEdited: id == FloatingMenu.getId(state, 'edge'),
-    edgeToolEnabled: state.display.editor.tool === 'edge',
     editorMode: state.display.modes.editor
   }
 }
-
-// dispatch helpers
-
-const updateEdge = (dispatch, id) => attributes => dispatch({
-  type: 'UPDATE_EDGE',
-  id: id,
-  attributes: attributes
-})
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   const id = ownProps.id.toString()
 
   return {
-    updateEdge: updateEdge(dispatch, id),
+    updateEdge: attributes => dispatch({ type: 'UPDATE_EDGE', id, attributes }),
     clickEdge: () => dispatch({ type: 'CLICK_EDGE', id })
   }
 }

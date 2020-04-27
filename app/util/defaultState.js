@@ -29,7 +29,8 @@ const defaultState = {
       defaultStoryMode: false,
       defaultExploreMode: true,
       storyModeOnly: false,
-      exploreModeOnly: false
+      exploreModeOnly: false,
+      automaticallyAddEdges: true
     },
     editors: [],
     lock: { locked: false }
@@ -45,7 +46,6 @@ const defaultState = {
     viewBox: null,
     svgSize: null,
     offset: { x: 0, y: 0 },
-    headerHeight: 0,
     modes: {
       editor: false,
       story: false
@@ -56,9 +56,7 @@ const defaultState = {
       id: null,
       position: null
     },
-    editor: {
-      tool: null // text, settings
-    },
+    tool: null, // text, settings
     saveMap: null // states: null, 'IN_PROGRESS', 'SUCCESS', 'FAILED'
   },
 
@@ -80,8 +78,7 @@ const defaultState = {
     saveable: true,
     storyable: true,
     draggableNodes: true,
-    draggableEdges: true,
-    automaticallyAddEdges: true
+    draggableEdges: true
   }
 
   // Hooks available to trigger code external to Oligrapher.

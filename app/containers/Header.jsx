@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
@@ -9,24 +9,17 @@ import Subtitle from '../components/Subtitle'
 
 /*
   |------------------------------------------------------------|
-  |  Title (#oligrapher-header-top)                            |                                  |
+  |  Title (#oligrapher-header-top)                            |
   |------------------------------------------------------------|
-  | #oligrapher-header-bottom
-  |
-  |                                      One of:               |
+  |  #oligrapher-header-bottom                                 |
+  |                                                            |
+  |                                        One of:             |
   |  Subtitle                              HeaderMenu          |
   |  Attribution                           HeaderButtons       |
   |------------------------------------------------------------|
 */
 
 export function Header(props) {
-  const divRef = useRef()
-
-  useEffect(() => {
-    const height = divRef.current.getBoundingClientRect().height
-    props.setHeaderHeight(Math.ceil(height))
-  }, [props])
-
   const PROPS = {
     title: {
       text: props.title,
@@ -45,7 +38,7 @@ export function Header(props) {
   }
 
   return (
-   <div id="oligrapher-header" ref={divRef}>
+   <div id="oligrapher-header">
       <div id="oligrapher-header-top">
         <Title {...PROPS.title} />
       </div>
@@ -73,7 +66,6 @@ Header.propTypes = {
   user: PropTypes.shape({ name: PropTypes.string, url: PropTypes.string }),
   updateTitle: PropTypes.func.isRequired,
   updateSubtitle: PropTypes.func.isRequired,
-  setHeaderHeight: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -86,8 +78,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   updateTitle: value => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'title', value: value }),
-  updateSubtitle: value => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'subtitle', value: value }),
-  setHeaderHeight: height => dispatch({ type: 'SET_HEADER_HEIGHT', height })
+  updateSubtitle: value => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'subtitle', value: value })
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header)

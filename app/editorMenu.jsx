@@ -36,15 +36,15 @@ export const MENU = {
   },
   "delete": {
     icon: <FaRegTrashAlt />,
-    title: 'delete'
+    title: 'Delete'
   },
   "settings": {
     icon: <GoGear />,
-    title: 'settings'
+    title: 'Settings'
   },
   "help": {
     icon: <FiHelpCircle />,
-    title: 'help'
+    title: 'Help'
   }
 }
 

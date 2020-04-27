@@ -8,7 +8,7 @@ import DraggableComponent from './DraggableComponent'
 /* Also allows for adding new caption by clicking background */
 export default function Pannable({ children }) {
   const dispatch = useDispatch()
-  const isTextTool = useSelector(state => state.display.editor.tool === 'text')
+  const isTextTool = useSelector(state => state.display.tool === 'text')
   const offset = useSelector(state => state.display.offset)
 
   const className = "pannable" + (isTextTool ? " text-tool" : "")

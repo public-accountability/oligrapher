@@ -9,7 +9,7 @@ import NodeStyleForm from '../components/editor/NodeStyleForm'
 import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
 import { callWithTargetValue, isLittleSisId } from '../util/helpers'
 
-export function MainPage({node, setPage, updateNode, openAddConnections}) {
+export function MainPage({ node, setPage, updateNode, openAddConnections }) {
   const showAddConnections = isLittleSisId(node.id)
 
   return (
@@ -64,13 +64,17 @@ MainPage.propTypes = {
   openAddConnections: PropTypes.func.isRequired
 }
 
-export default function EditNode({ id, openAddConnections }) {
+export default function EditNode({ id }) {
   // possible pages: main, color, size, bio
   const [page, setPage] = useState('main')
-  const dispatch = useDispatch()
+
   const node = useSelector(state => state.graph.nodes[id])
-  const removeNode = () => dispatch({ type: "REMOVE_NODE", id })
-  const updateNode = (attributes) => dispatch({ type: "UPDATE_NODE", id, attributes })
+  const position = useSelector(state => state.display.floatingMenu.position)
+
+  const dispatch = useDispatch()
+  const removeNode = () => dispatch({ type: 'REMOVE_NODE', id })
+  const updateNode = (attributes) => dispatch({ type: 'UPDATE_NODE', id, attributes })
+  const openAddConnections = () => dispatch({ type: 'OPEN_ADD_CONNECTIONS', id, position })
 
   return (
     <div className="oligrapher-node-editor">
@@ -93,6 +97,5 @@ export default function EditNode({ id, openAddConnections }) {
 }
 
 EditNode.propTypes = {
-  id: PropTypes.string.isRequired,
-  openAddConnections: PropTypes.func.isRequired
+  id: PropTypes.string.isRequired
 }

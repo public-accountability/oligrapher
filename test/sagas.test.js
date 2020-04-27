@@ -11,7 +11,7 @@ describe('sagas', function() {
       const automaticallyAddEdges = false
       const allNodeIds = ["1", "2"]
       iterator.next()
-      expect(iterator.next(automaticallyAddEdges))
+      expect(iterator.next({ automaticallyAddEdges }))
       expect(iterator.next(allNodeIds).done).to.be.true
     })
   
@@ -20,7 +20,7 @@ describe('sagas', function() {
       const automaticallyAddEdges = true
       const allNodeIds = ["1", "2"]
       iterator.next()
-      expect(iterator.next(automaticallyAddEdges))
+      expect(iterator.next({ automaticallyAddEdges }))
       expect(iterator.next(allNodeIds).done).to.be.true
     })
   
@@ -29,7 +29,7 @@ describe('sagas', function() {
       const automaticallyAddEdges = true
       const allNodeIds = ["1"]
       iterator.next()
-      iterator.next(automaticallyAddEdges)
+      iterator.next({ automaticallyAddEdges })
       expect(iterator.next(allNodeIds).done).to.be.true
     })
   
@@ -38,7 +38,7 @@ describe('sagas', function() {
       const automaticallyAddEdges = true
       const allNodeIds = ["1", "2"]
       iterator.next()
-      iterator.next(automaticallyAddEdges)
+      iterator.next({ automaticallyAddEdges })
       expect(iterator.next(allNodeIds).value).to.eql(call(addEdges, "1", allNodeIds))
     })
   })

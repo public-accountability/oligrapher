@@ -18,7 +18,7 @@ export function* addEdges(newNodeId, allNodeIds) {
 
 // Automatically fetches edges when a node is added from LittleSis
 export function* addNode(action) {
-  const automaticallyAddEdges = yield select(state => state.settings.automaticallyAddEdges)
+  const { automaticallyAddEdges } = yield select(state => state.attributes.settings)
   const allNodeIds = yield select(state => Object.keys(state.graph.nodes))
 
   if (automaticallyAddEdges && isLittleSisId(action.node.id) && allNodeIds.length > 1) {

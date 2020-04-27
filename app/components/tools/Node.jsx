@@ -19,7 +19,7 @@ export default function NodeTool() {
 
   return (
     <Toolbox title="Add Node">
-      <div className="nodetool">
+      <div className="node-tool">
         <input 
           autoFocus
           type="text"

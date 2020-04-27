@@ -65,16 +65,16 @@ describe('Oligrapher', function() {
 
   it('node tool opens and closes', function() {
     // node tool shouldn't be open
-    let nodeTool = findAll('.nodetool')
+    let nodeTool = findAll('.node-tool')
     expect(nodeTool.length).to.equal(0)
     // click node tool icon
     fireEvent.click(find('.editor-menu-item'))
     // node tool should have opened
-    nodeTool = findAll('.nodetool')
+    nodeTool = findAll('.node-tool')
     expect(nodeTool.length).to.equal(1)
     // close node tool
     fireEvent.click(find('.editor-menu-item'))
-    nodeTool = findAll('.nodetool')
+    nodeTool = findAll('.node-tool')
     // should have closed
     expect(nodeTool.length).to.equal(0)
   })
@@ -91,8 +91,8 @@ describe('Oligrapher', function() {
     sinon.stub(littlesis3, 'getEdges').resolves([])
 
     // click node tool icon and enter search query
-    fireEvent.click(find('.editor-menu-item'))
-    fireEvent.change(find('.nodetool input'), { target: { value: 'kushner' }})
+    fireEvent.click(find('.editor-node-item'))
+    fireEvent.change(find('.node-tool input'), { target: { value: 'kushner' }})
     // wait for results
     await waitFor(() => find('.entity-search-results'))
     // should be two results
@@ -207,5 +207,21 @@ describe('Oligrapher', function() {
     // editor should show the second caption's details
     const textarea2 = find('.oligrapher-caption textarea')
     expect(removeSpaces(textarea2.value)).to.equal(removeSpaces(caption2.textContent))
+  })
+
+  it('opens, closes, and changes settings', function() {
+    // click on settings icon
+    const icon = find('.editor-settings-item')
+    fireEvent.click(icon)
+    // settings should have opened
+    expect(findAll('.oligrapher-settings').length).to.equal(1)
+    // set map to private
+    const checkbox = find('.oligrapher-settings input[type=checkbox]')
+    expect(checkbox.checked).to.be.false
+    fireEvent.click(checkbox)
+    expect(checkbox.checked).to.be.true
+    // close settings
+    fireEvent.click(icon)
+    expect(findAll('.oligrapher-settings').length).to.equal(0)
   })
 })

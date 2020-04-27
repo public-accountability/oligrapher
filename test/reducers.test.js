@@ -23,50 +23,15 @@ describe('Reducer', function() {
 
   describe('TOGGLE_TOOL', function() {
     it('changes tool', function() {
-      const state = { 
-        display: { 
-          editor: { tool: 'node' },
-          floatingMenu: { type: 'node', id: 'abc', position: null }
-        }
-      }
-      const action = { type: 'TOGGLE_TOOL', tool: 'edge'}
-      expect(reducers(state, action).display.editor.tool).to.equal('edge')
+      const state = { display: { tool: 'node' } }
+      const action = { type: 'TOGGLE_TOOL', tool: 'text'}
+      expect(reducers(state, action).display.tool).to.equal('text')
     })
 
     it('closes tool', function() {
-      const state = { 
-        display: { 
-          editor: { tool: 'node' },
-          floatingMenu: { type: 'node', id: 'abc', position: null }
-        }
-      }
+      const state = { display: { tool: 'node' } }
       const action = { type: 'TOGGLE_TOOL', tool: 'node'}
-      expect(reducers(state, action).display.editor.tool).to.be.null
-    })
-
-    it("clears floatingMenu", function() {
-      const state = { 
-        display: { 
-          editor: { tool: 'node' },
-          floatingMenu: { type: 'node', id: 'abc', position: null }
-        }
-      }
-      const action = { type: 'TOGGLE_TOOL', tool: 'edge'}
-      expect(reducers(state, action).display.floatingMenu).to.eql({ type: null, id: null, position: null })
-    })
-
-    it("sets floating menu for settings", function(){
-      const state = { display: { 
-        floatingMenu: { type: null, id: null }, 
-        editor: { tool: 'caption' } 
-      } }
-      const action = { type: 'TOGGLE_TOOL', tool: 'settings'}
-      expect(reducers(state, action)) .to.eql({ 
-        display: { 
-          floatingMenu: { type: 'settings', id: null, position: null }, 
-          editor: { tool: 'settings' } 
-        }
-      })
+      expect(reducers(state, action).display.tool).to.be.null
     })
   })
 

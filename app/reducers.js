@@ -50,19 +50,17 @@ const updateSettings = (settings, key, value) => {
   SET_ACTUAL_ZOOM        | actualZoom
   ZOOM                   | direction
   ADD_NODE               | attributes
-  ADD_NODES              | nodes
   UPDATE_NODE            | id, attributes
   UPDATE_NODES           | attributes
   MOVE_NODE              | id, deltas
   DRAG_NODE              | id, deltas
   UPDATE_EDGE            | id, attributes
   DELETE_EDGE            | id
-  NEW_CAPTION            | event
+  ADD_CAPTION            | event
   UPDATE_CAPTION         | id, attributes
   MOVE_CAPTION           | id, deltas
   DELETE_CAPTION         | [id]
   SET_MODE               | mode, enabled
-  OPEN_TOOL              | item
   OPEN_EDIT_NODE_MENU    | id
   OPEN_EDIT_EDGE_MENU    | id
   OPEN_EDIT_CAPTION_MENU | id
@@ -94,9 +92,6 @@ export default produce((draft, action) => {
     return
   case 'SET_SVG_SIZE':
     draft.display.svgSize = action.size
-    return
-  case 'SET_HEADER_HEIGHT':
-    draft.display.headerHeight = action.height
     return
   case 'ADD_NODE':
     Graph.addNode(draft.graph, action.node, (node) => {
@@ -201,17 +196,9 @@ export default produce((draft, action) => {
     draft.display.modes[action.mode] = action.enabled
     return
   case 'TOGGLE_TOOL':
-    draft.display.editor.tool = (draft.display.editor.tool === action.tool) ? null : action.tool
-
-    // Tools with floating menus that are always open
-    if (['settings', 'style', 'editors'].includes(draft.display.editor.tool)) {
-      FloatingMenu.set(draft, draft.display.editor.tool)
-    } else {
-      FloatingMenu.clear(draft)
-    }
-
+    draft.display.tool = (draft.display.tool === action.tool) ? null : action.tool
     return
-  case 'OPEN_ADD_CONNECTIONS_MENU':
+  case 'OPEN_ADD_CONNECTIONS':
     if (isLittleSisId(action.id)) {
       // no need to transform position as this is only opened from EditNode,
       // which is already positioned

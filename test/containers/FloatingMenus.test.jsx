@@ -9,7 +9,6 @@ import EditNode from '../../app/containers/EditNode'
 import EditEdge from '../../app/containers/EditEdge'
 import AddConnections from '../../app/components/tools/AddConnections'
 import EditCaption from '../../app/containers/EditCaption'
-import Settings from '../../app/containers/Settings'
 import EditMenuSubmitButtons from '../../app/components/editor/EditMenuSubmitButtons'
 
 import Graph from '../../app/graph/graph'
@@ -45,7 +44,6 @@ describe('<FloatingMenus>', function() {
     expect(wrapper.find(EditEdge)).to.have.lengthOf(0)
     expect(wrapper.find(EditCaption)).to.have.lengthOf(0)
     expect(wrapper.find(AddConnections)).to.have.lengthOf(0)
-    expect(wrapper.find(Settings)).to.have.lengthOf(0)
   })
 
   it("shows edit edge menu", function() {

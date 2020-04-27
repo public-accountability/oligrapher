@@ -10,8 +10,8 @@ export default function EditorMenuItem(props) {
   const onClick = () => dispatch({ type: 'TOGGLE_TOOL', tool: props.item })
 
   return (
-    <div className="editor-menu-item" onClick={onClick}>
-      <span>{item.icon}</span>
+    <div className={`editor-menu-item editor-${props.item}-item`} onClick={onClick}>
+      <span title={item.title}>{item.icon}</span>
     </div>
   )
 }
