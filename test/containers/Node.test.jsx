@@ -21,9 +21,10 @@ describe('<Node>', function() {
       url: null,
       color: '#CCC',
       status: 'normal',
+      scale: 2,
       image: 'http://example.com'
     }
-    wrapper = mountWithStore(store, <Node node={node} currentlyEdited={false} />)
+    wrapper = mountWithStore(store, <svg><Node node={node} currentlyEdited={false} /></svg>)
   })
 
   it('renders Draggable', function() {
