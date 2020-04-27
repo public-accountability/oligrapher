@@ -1,24 +1,21 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import Caption from './Caption'
+import FloatingMenu from '../util/floatingMenu'
 
-export function Captions({captionIds}) {
+export default function Captions() {
+  const captions = useSelector(state => state.graph.captions)
+  const editedCaptionId = useSelector(state => FloatingMenu.getId(state, 'caption'))
+
   return (
     <g className="captions">
-      { captionIds.map(id => <Caption key={id} id={id} />) }
+      { Object.keys(captions).map(id => (
+        <Caption 
+          key={id} 
+          caption={captions[id]} 
+          currentlyEdited={id === editedCaptionId} />
+      )) }
     </g>
   )
 }
-
-
-Captions.propTypes = {
-  captionIds: PropTypes.arrayOf(PropTypes.string).isRequired
-}
-
-const mapStateToProps = state => ({
-  captionIds: Object.keys(state.graph.captions)
-})
-
-export default connect(mapStateToProps)(Captions)

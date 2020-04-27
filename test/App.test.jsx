@@ -64,13 +64,18 @@ describe('Oligrapher', function() {
   })
 
   it('node tool opens and closes', function() {
+    // node tool shouldn't be open
     let nodeTool = findAll('.nodetool')
     expect(nodeTool.length).to.equal(0)
+    // click node tool icon
     fireEvent.click(find('.editor-menu-item'))
+    // node tool should have opened
     nodeTool = findAll('.nodetool')
     expect(nodeTool.length).to.equal(1)
+    // close node tool
     fireEvent.click(find('.editor-menu-item'))
     nodeTool = findAll('.nodetool')
+    // should have closed
     expect(nodeTool.length).to.equal(0)
   })
 
@@ -117,7 +122,7 @@ describe('Oligrapher', function() {
     littlesis3.getEdges.restore()
   })
 
-  it('node editor opens and edits node', async function() {
+  it('node editor opens and edits node and switches', async function() {
     const handle = find('.draggable-node-handle')
 
     // react-draggable listens to mousedown and mouseup instead of click
@@ -127,9 +132,11 @@ describe('Oligrapher', function() {
     // but without it draggable's onmouseup gets called twice,
     // (unlike in real browser interaction), and the node editor 
     // gets toggled twice and thus disappears
-
+  
+    // editor should have opened
     const editor = findAll('.oligrapher-node-editor')
     expect(editor.length).to.equal(1)
+    // name input should equal node name
     const label = find('.oligrapher-node .node-label')
     const input = find('.oligrapher-node-editor input')
     expect(removeSpaces(input.value)).to.equal(removeSpaces(label.textContent))
@@ -137,17 +144,25 @@ describe('Oligrapher', function() {
     fireEvent.change(input, { target: { value: 'billie' } })
     // node name should have updated
     expect(find('.oligrapher-node .node-label').textContent).to.equal('billie')
+    // "click" on a second node
+    const node2 = findAll('.oligrapher-node')[1]
+    const handle2 = findAll('.draggable-node-handle')[1]
+    fireEvent.mouseDown(handle2)
+    fireEvent.mouseUp(handle2, { bubbles: false })
+    // editor should show the second node's details
+    const input2 = find('.oligrapher-node-editor input')
+    expect(removeSpaces(input2.value)).to.equal(removeSpaces(node2.textContent))
   })
   
-  it('edge editor opens and edits edge', function() {
+  it('edge editor opens and edits edge and switches', function() {
     const handle = find('.edge-handle')
-
     // see comment for node editor click
     fireEvent.mouseDown(handle)
     fireEvent.mouseUp(handle, { bubbles: false }) 
-
+    // editor should have opened
     const editor = findAll('.oligrapher-edge-editor')
     expect(editor.length).to.equal(1)
+    // label input should equal edge label
     const label = find('.oligrapher-edge .edge-label')
     const input = find('.oligrapher-edge-editor input')
     expect(input.value).to.equal(label.textContent)
@@ -155,17 +170,27 @@ describe('Oligrapher', function() {
     fireEvent.change(input, { target: { value: 'accomplices' } })
     // edge label should have updated
     expect(find('.oligrapher-edge .edge-label').textContent).to.equal('accomplices')
+    // "click" on a second edge
+    const edge2 = findAll('.oligrapher-edge')[1]
+    const handle2 = findAll('.edge-handle')[1]
+    fireEvent.mouseDown(handle2)
+    fireEvent.mouseUp(handle2, { bubbles: false })
+    // editor should show the second edge's details
+    const input2 = find('.oligrapher-edge-editor input')
+    expect(removeSpaces(input2.value)).to.equal(removeSpaces(edge2.textContent))
   })
 
-  it('opens caption editor', function() {
+  it('caption editor opens and switches', function() {
     const caption = find('.oligrapher-caption')
-
     // see comment for node editor click
     fireEvent.mouseDown(caption)
     fireEvent.mouseUp(caption, { bubbles: false })
-
+    // editor should have opened
     const editor = findAll('.oligrapher-caption-editor')
     expect(editor.length).to.equal(1)
+    // change the font size
+    const select = find('.edit-caption-size')
+    fireEvent.change(select, { target: { value: '30' } })
     // change caption text
     const textarea = find('.oligrapher-caption textarea')
     fireEvent.change(textarea, { target: { value: 'terse commentary' } })
@@ -173,6 +198,14 @@ describe('Oligrapher', function() {
     const editorCloseButton = find('.edit-menu-header button')
     fireEvent.click(editorCloseButton)
     // caption text should have updated
-    expect(find('.oligrapher-caption').textContent).to.equal('terse commentary')
+    expect(find('.caption-text').style.fontSize).to.equal('30px')
+    expect(find('.caption-text').textContent).to.equal('terse commentary')
+    // "click" on a second caption
+    const caption2 = findAll('.oligrapher-caption')[1]
+    fireEvent.mouseDown(caption2)
+    fireEvent.mouseUp(caption2, { bubbles: false })
+    // editor should show the second caption's details
+    const textarea2 = find('.oligrapher-caption textarea')
+    expect(removeSpaces(textarea2.value)).to.equal(removeSpaces(caption2.textContent))
   })
 })

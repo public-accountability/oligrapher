@@ -24,20 +24,6 @@ const ZOOM_INTERVAL = 0.2
 //   }
 // }
 
-const convertCaptionSize = (draft, attributes) => {
-  if (!attributes.width || !attributes.height) {
-    return attributes
-  }
-
-  const { svgZoom } = draft.display
-  const { width, height } = attributes
-
-  const captionWidth = width / svgZoom
-  const captionHeight = height / svgZoom
-
-  return {...attributes, width: captionWidth, height: captionHeight }
-}
-
 const updateSettings = (settings, key, value) => {
   settings[key] = value
 
@@ -114,14 +100,11 @@ export default produce((draft, action) => {
     return
   case 'ADD_NODE':
     Graph.addNode(draft.graph, action.node, (node) => {
-      // only show edit box if node is new
+      // only show node editor if node is new
       if (!action.node.id) {
         toggleEditor(draft, node.id, 'node')
       }
     })
-    return
-  case 'ADD_NODES':
-    Graph.addNodes(draft.graph, action.nodes)
     return
   case 'UPDATE_NODE':
     Graph.updateNode(draft.graph, action.id, action.attributes)
@@ -190,7 +173,7 @@ export default produce((draft, action) => {
     toggleEditor(draft, caption.id, 'caption')
     return
   case 'UPDATE_CAPTION':
-    merge(draft.graph.captions[action.id], convertCaptionSize(draft, action.attributes))
+    merge(draft.graph.captions[action.id], action.attributes)
     return
   case 'MOVE_CAPTION':
     merge(draft.graph.captions[action.id], translatePoint(draft.graph.captions[action.id], action.deltas))
@@ -247,17 +230,10 @@ export default produce((draft, action) => {
 
     draft.attributes[action.name] = action.value
     return
-  case 'ADD_CONNECTION':
-    Graph.addConnection(draft.graph, {
-      newNode: action.newNode,
-      newEdge: action.newEdge,
-      existingNodeId: action.existingNodeId
-    })
-    return
   case 'UPDATE_SETTING':
     updateSettings(draft.attributes.settings, action.key, action.value)
     return
-
+    
   // Save map actions
   case 'SAVE_MAP_IN_PROGRESS':
     draft.display.saveMap = 'IN_PROGRESS'

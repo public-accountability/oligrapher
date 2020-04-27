@@ -914,6 +914,18 @@ export const bigGraph = {
       weight: '400',
       font: 'Arial',
       size: '20'
+    },
+    "x2": {
+      id: "x2",
+      text: "Terse commentary!",
+      x: 100,
+      y: 400,
+      scale: 1,
+      width: 100,
+      height: 50,
+      weight: '400',
+      font: 'Arial',
+      size: '20'
     }
   },
   "id": "3638"

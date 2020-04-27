@@ -718,23 +718,6 @@ g.edge-tool-open .react-draggable-dragging .node-circle {
 
 /* captions */
 
-g.caption {
-    span.caption-text {
-        padding: 0.5em;
-        background-color: lightcyan;
-        cursor: default;
-    }
-
-    rect.background-rect {
-        fill: $caption_backgound;
-    }
-}
-g.caption.focused {
-    rect.background-rect {
-        fill: $caption_backgound_focused;
-    }
-}
-
 .caption-text {
     border: 2px solid #ccc;
 }
@@ -757,7 +740,7 @@ g.caption.focused {
     padding: 10px;
 }
 
-.edit-caption select {
+.oligrapher-caption-editor select {
   margin-top: 5px;
   margin-right: 5px;
   background-color: white;
