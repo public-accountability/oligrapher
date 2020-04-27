@@ -6,15 +6,13 @@ import textLines from '../../util/textLines'
 
 const SPACING = 20
 
-export default function NodeLabel(props) {
-  if (!props.name) { return <></> }
+export default function NodeLabel({ node, radius, lineHeight }) {
+  const { name, x, y } = node
+  
+  if (!name) { return <></> }
 
-  const y = props.radius + props.y + SPACING
-  const x = props.x
-  const lineHeight = props.lineHeight || ds.lineHeight
-
-  const lines = textLines(props.name).map((line, i) => (
-    <text key={i} x={x} y={y} dy={i * lineHeight} textAnchor="middle" >
+  const lines = textLines(name).map((line, i) => (
+    <text key={i} x={x} y={radius + y + SPACING} dy={i * (lineHeight || ds.lineHeight)} textAnchor="middle" >
       {line}
     </text>
   ))
@@ -27,9 +25,7 @@ export default function NodeLabel(props) {
 }
 
 NodeLabel.propTypes = {
-  name: PropTypes.string,
+  node: PropTypes.object.isRequired,
   radius: PropTypes.number.isRequired,
-  x: PropTypes.number.isRequired,
-  y: PropTypes.number.isRequired,
   lineHeight: PropTypes.number
 }
