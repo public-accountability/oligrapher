@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
+import { useSelector } from '../util/helpers'
 import Edges from './Edges'
 import Nodes from './Nodes'
 import Captions from './Captions'
@@ -14,7 +15,7 @@ import Zoomable from '../components/graph/Zoomable'
 */
 export default function Graph() {
   const dispatch = useDispatch()
-  const { viewBox, zoom } = useSelector(state => state.display)
+  const { viewBox, zoom, svgSize } = useSelector(state => state.display)
   const headerHeight = 200 // set in css
 
   // used to calculate the actual zoom and caption placement.
@@ -36,11 +37,16 @@ export default function Graph() {
       setSvgSize({ width: Math.floor(width), height: svgHeight })
     }
 
-    handleWindowResize() // run on first render
+    // run on first render or when undo takes us back to 
+    // the initial state where there's no svgSize
+    if (!svgSize) {
+      handleWindowResize()
+    }
+
     window.addEventListener('resize', handleWindowResize)
 
     return () => window.removeEventListener('resize', handleWindowResize)
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [svgSize]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="oligrapher-graph-svg">

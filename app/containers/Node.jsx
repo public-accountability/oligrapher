@@ -1,13 +1,13 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
-import pick from 'lodash/pick'
 
-import DraggableComponent from './../components/graph/DraggableComponent'
-import NodeHalo from './../components/graph/NodeHalo'
-import NodeCircle from './../components/graph/NodeCircle'
-import NodeImage from './../components/graph/NodeImage'
-import NodeLabel from './../components/graph/NodeLabel'
+import { useSelector } from '../util/helpers'
+import DraggableComponent from '../components/graph/DraggableComponent'
+import NodeHalo from '../components/graph/NodeHalo'
+import NodeCircle from '../components/graph/NodeCircle'
+import NodeImage from '../components/graph/NodeImage'
+import NodeLabel from '../components/graph/NodeLabel'
 
 export default function Node({ node, currentlyEdited }) {
   const { id, scale, image } = node

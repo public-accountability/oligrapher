@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
+import { useSelector } from '../util/helpers'
 import SizePicker from '../components/SizePicker'
 import EditNodeColorPage from '../components/editor/EditNodeColorPage'
 import EditNodeBioPage from '../components/editor/EditNodeBioPage'

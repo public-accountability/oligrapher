@@ -1,6 +1,6 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 
+import { useSelector } from '../util/helpers'
 import Node from './Node'
 import FloatingMenu from '../util/floatingMenu'
 

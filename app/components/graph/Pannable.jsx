@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 
+import { useSelector } from '../../util/helpers'
 import DraggableComponent from './DraggableComponent'
 
 /* Allows for the maps to be panned */

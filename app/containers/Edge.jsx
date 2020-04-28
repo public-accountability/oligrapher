@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { DraggableCore } from 'react-draggable'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import pick from 'lodash/pick'
 
+import { useSelector } from '../util/helpers'
 import { calculateDeltas } from '../util/deltas'
 import Curve from '../graph/curve'
 import EdgeLine from '../components/graph/EdgeLine'

@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-// import PropTypes from 'prop-types'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { IoIosPersonAdd, IoMdLink, IoIosMore } from 'react-icons/io'
-import ActionMenu from './ActionMenu'
 
+import { useSelector } from '../util/helpers'
+import ActionMenu from './ActionMenu'
 import saveMapAction from '../util/save'
 
 export default function HeaderButtons() {

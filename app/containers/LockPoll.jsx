@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+
+import { useSelector } from '../util/helpers'
 import LittleSisApi from '../datasources/littlesis3.js'
 
 const POLL_INTERVAL = 10 * 1000

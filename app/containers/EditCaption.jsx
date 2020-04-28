@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
+import { useSelector } from '../util/helpers'
 import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
 import EditCaptionFont from './EditCaptionFont'
 import EditCaptionWeight from './EditCaptionWeight'

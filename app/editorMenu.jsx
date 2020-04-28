@@ -34,13 +34,13 @@ export const MENU = {
     icon: <TiArrowMove />,
     title: 'organize'
   },
-  "delete": {
-    icon: <FaRegTrashAlt />,
-    title: 'Delete'
-  },
   "settings": {
     icon: <GoGear />,
     title: 'Settings'
+  },
+  "delete": {
+    icon: <FaRegTrashAlt />,
+    title: 'Delete Map'
   },
   "help": {
     icon: <FiHelpCircle />,
@@ -56,8 +56,8 @@ export const MENU_ITEMS = [
   // 'story',
   // 'style',
   // 'organize',
-  'delete',
   'settings',
+  'delete',
   'help'
 ]
 

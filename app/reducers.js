@@ -257,6 +257,12 @@ export default undoable(reducer, {
     'ADD_CAPTION',
     'UPDATE_CAPTION',
     'MOVE_CAPTION',
-    'DELETE_CAPTION'
-  ]) 
+    'DELETE_CAPTION',
+  ])
+
+  // here's a simpler alternative but it will include every incremental drag action
+  //
+  // filter: (action, currentState, previousHistory) => {
+  //   return currentState.graph === previousHistory.present.graph
+  // }
 })

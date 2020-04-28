@@ -1,17 +1,22 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
+import { useSelector } from '../util/helpers'
 import HeaderButtons from './HeaderButtons'
 import HeaderMenu from '../components/HeaderMenu'
 
-export function HeaderRight(props) {
-  if (props.editorMode) {
+export default function HeaderRight() {
+  const dispatch = useDispatch()
+  const editMode = useSelector(state => state.display.modes.editor)
+
+  const enableEditorMode = () => dispatch({ type: 'SET_MODE', mode: 'editor', enabled: true })
+
+  if (editMode) {
     return <HeaderButtons />
   } else {
 
     const headerMenuItems = [
-      { text: "Edit", action: props.enableEditorMode },
+      { text: "Edit", action: enableEditorMode },
       { text: "Clone", url: "https://littlesis.org/oligrapher/clone" },
       { text: "Disclaimer", url: "https://littlesis.org/oligrapher/disclaimer" }
     ]
@@ -19,18 +24,3 @@ export function HeaderRight(props) {
     return <HeaderMenu items={headerMenuItems} />
   }
 }
-
-HeaderRight.propTypes = {
-  enableEditorMode: PropTypes.func.isRequired,
-  editorMode: PropTypes.bool.isRequired
-}
-
-const mapStateToProps = state => ({ editorMode: state.display.modes.editor })
-
-const mapDispatchToProps = dispatch => {
-  return {
-    enableEditorMode: () => dispatch({ type: 'SET_MODE', mode: 'editor', enabled: true }) 
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(HeaderRight)

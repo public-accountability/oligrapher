@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { callWithTargetValue } from '../../util/helpers'
 
+import { useSelector } from '../../util/helpers'
 import Toolbox from './Toolbox'
 import LittleSis from '../../datasources/littlesis3'
 

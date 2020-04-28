@@ -1,5 +1,5 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector } from '../util/helpers'
 
 import Edge from './Edge'
 import FloatingMenu from '../util/floatingMenu'

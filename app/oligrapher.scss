@@ -384,6 +384,10 @@ header.edit-menu-header {
     left: 50%;
 }
 
+#oligrapher-undo-redo {
+    pointer-events: auto;
+}
+
 /* This is the "edit and customize node" box */
 /* .edit-edge-menu-wrapper, .edit-node-menu-wrapper, .edit-caption-menu-wrapper { */
 .edit-menu-wrapper {

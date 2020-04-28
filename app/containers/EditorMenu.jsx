@@ -1,5 +1,4 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import { IconContext } from "react-icons/lib"
 
 import { MENU_ITEMS } from '../editorMenu'
@@ -11,7 +10,7 @@ const iconContextValue = {
   color: 'gray'
 }
 
-export function EditorMenu() {
+export default function EditorMenu() {
   return (
     <div className="editor-menu">
       <IconContext.Provider value={iconContextValue} >
@@ -20,5 +19,3 @@ export function EditorMenu() {
     </div>
   )
 }
-
-export default connect()(EditorMenu)

@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
+import { useSelector } from '../../util/helpers'
 import Toolbox from './Toolbox'
 
 const OPTIONS = {

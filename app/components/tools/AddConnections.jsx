@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import uniqBy from 'lodash/uniqBy'
 import isArray from 'lodash/isArray'
 
+import { useSelector } from '../../util/helpers'
 import { findConnections } from '../../datasources/littlesis3'
 import { makeCancelable, callWithTargetValue } from '../../util/helpers'
 import AddConnectionsCategory from './AddConnectionsCategory'

@@ -1,7 +1,8 @@
 import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
+import { useSelector } from '../util/helpers'
 import Graph from '../graph/graph'
 import { callWithTargetValue } from '../util/helpers'
 

@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { useSelector } from 'react-redux'
 import Draggable from 'react-draggable'
 import noop from 'lodash/noop'
+
+import { useSelector } from '../../util/helpers'
 
 /*
   Wrapper around react-draggable

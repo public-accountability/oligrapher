@@ -3,3 +3,4 @@ logs
 node_modules
 /dist/*.js
 NOTES.md
+.vscode

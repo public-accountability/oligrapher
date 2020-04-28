@@ -85,7 +85,7 @@ module.exports = function(env) {
 
     devServer: getDevServerConfig(env),
 
-    devtool: development ? 'inline-source-map' : 'false',
+    devtool: development ? 'eval-source-map' : 'false',
 
     module: {
       rules: [

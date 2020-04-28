@@ -1,11 +1,12 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
+import { useSelector } from '../util/helpers'
 import HeaderRight from './HeaderRight'
 import Attribution from '../components/Attribution'
 import Title from '../components/Title'
 import Subtitle from '../components/Subtitle'
+
 
 /*
   |------------------------------------------------------------|
@@ -19,21 +20,28 @@ import Subtitle from '../components/Subtitle'
   |------------------------------------------------------------|
 */
 
-export function Header(props) {
+export default function Header() {
+  const dispatch = useDispatch()
+  const { title, subtitle, user, date } = useSelector(state => state.attributes)
+  const editMode = useSelector(state => state.display.modes.editor)
+
+  const updateTitle = value => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'title', value })
+  const updateSubtitle = value => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'subtitle', value })
+
   const PROPS = {
     title: {
-      text: props.title,
-      editable: props.editMode,
-      onChange: props.updateTitle
+      text: title,
+      editable: editMode,
+      onChange: updateTitle
     },
     subtitle: {
-      text: props.subtitle,
-      editable: props.editMode,
-      onChange: props.updateSubtitle
+      text: subtitle,
+      editable: editMode,
+      onChange: updateSubtitle
     },
     attribution: {
-      user: props.user,
-      date: props.date
+      user: user,
+      date: date
     }
   }
 
@@ -58,27 +66,3 @@ export function Header(props) {
   )
 }
 
-Header.propTypes = {
-  editMode: PropTypes.bool,
-  title: PropTypes.string,
-  subtitle: PropTypes.string,
-  date: PropTypes.string,
-  user: PropTypes.shape({ name: PropTypes.string, url: PropTypes.string }),
-  updateTitle: PropTypes.func.isRequired,
-  updateSubtitle: PropTypes.func.isRequired,
-}
-
-const mapStateToProps = state => ({
-  editMode: Boolean(state.display.modes.editor),
-  title: state.attributes.title,
-  subtitle: state.attributes.subtitle,
-  user: state.attributes.user,
-  date: state.attributes.date
-})
-
-const mapDispatchToProps = dispatch => ({
-  updateTitle: value => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'title', value: value }),
-  updateSubtitle: value => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'subtitle', value: value })
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Header)

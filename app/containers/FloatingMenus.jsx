@@ -1,7 +1,7 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import Draggable from 'react-draggable'
 
+import { useSelector } from '../util/helpers'
 import EditHeader from '../components/editor/EditMenuHeader'
 import EditNode from './EditNode'
 import EditEdge from './EditEdge'
