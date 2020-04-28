@@ -1,26 +1,21 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import isEqual from 'lodash/isEqual'
+import { useSelector } from 'react-redux'
 
 import Edge from './Edge'
+import FloatingMenu from '../util/floatingMenu'
 
-export function Edges(props) {
+export default function Edges() {
+  const edges = useSelector(state => state.graph.edges)
+  const editedEdgeId = useSelector(state => FloatingMenu.getId(state, 'node'))
+
   return (
     <g className="edges">
-      { props.edgeIds.map(id => <Edge key={id} id={id} />) }
+      { Object.keys(edges).map(id => (
+        <Edge 
+          key={id} 
+          edge={edges[id]} 
+          currentlyEdited={id === editedEdgeId} />
+      )) }
     </g>
   )
 }
-
-Edges.propTypes = {
-  edgeIds: PropTypes.arrayOf(PropTypes.string).isRequired
-}
-
-const mapStateToProps = function(state) {
-  return {
-    edgeIds: Object.keys(state.graph.edges)
-  }
-}
-
-export default connect(mapStateToProps, null, null, { areStatePropsEqual: isEqual })(Edges)

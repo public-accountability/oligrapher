@@ -4,31 +4,26 @@ import PropTypes from 'prop-types'
 const IMAGE_SCALE = 3
 const IMAGE_OPAICTY = 1
 
-// const IMAGE_OPACITY =  {
-//   normal: 1,
-//   highlighted: 1,
-//   faded: 0.2
-// }
-
-export function NodeImage(props) {
-  const clipPathId = `image-clip-${props.id}`
-  const imageWidth = IMAGE_SCALE * props.radius
+export function NodeImage({ node, radius }) {
+  const { id, x, y, image } = node
+  const clipPathId = `image-clip-${id}`
+  const imageWidth = IMAGE_SCALE * radius
 
   return (
     <>
       <clipPath id={clipPathId}>
-        <circle r={props.radius}
-                cx={props.x}
-                cy={props.y}>
+        <circle r={radius}
+                cx={x}
+                cy={y}>
         </circle>
       </clipPath>
 
       {/* The x/y math centers the image inside the circle clippath */}
       <image
-        href={props.image}
+        href={image}
         className="node-image draggable-node-handle"
-        x={props.x - (imageWidth/2)}
-        y={props.y - (imageWidth/2)}
+        x={x - (imageWidth/2)}
+        y={y - (imageWidth/2)}
         height={imageWidth}
         width={imageWidth}
         opacity={IMAGE_OPAICTY}
@@ -40,11 +35,8 @@ export function NodeImage(props) {
 }
 
 NodeImage.propTypes = {
-  id: PropTypes.string.isRequired,
-  x: PropTypes.number.isRequired,
-  y: PropTypes.number.isRequired,
-  radius: PropTypes.number.isRequired,
-  image: PropTypes.string.isRequired
+  node: PropTypes.object.isRequired,
+  radius: PropTypes.number.isRequired
 }
 
 export default React.memo(NodeImage)

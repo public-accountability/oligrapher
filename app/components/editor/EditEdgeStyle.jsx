@@ -28,7 +28,7 @@ export default function EditEdgeStyle({ edge, nodes, updateEdge }) {
   return (
     <div className="edit-edge-style">
       <div>
-        <EdgeEditorNode name={nodes[0].name} />
+        <EdgeEditorNode node={nodes[0]} />
       </div>
       <div> 
         <button className="edge-style-button" onClick={toggleLeftArrow}>{leftArrow}</button>
@@ -38,7 +38,7 @@ export default function EditEdgeStyle({ edge, nodes, updateEdge }) {
         <button className="edge-style-button" onClick={toggleRightArrow}>{rightArrow}</button>
       </div>
       <div>
-        <EdgeEditorNode name={nodes[1].name} />
+        <EdgeEditorNode node={nodes[1]} />
       </div>
     </div>
   )

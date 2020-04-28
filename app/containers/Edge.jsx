@@ -1,25 +1,31 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { DraggableCore } from 'react-draggable'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import pick from 'lodash/pick'
 
 import { calculateDeltas } from '../util/deltas'
-import { stringOrNumber, stringOrBool } from '../util/types'
 import Curve from '../graph/curve'
 import EdgeLine from '../components/graph/EdgeLine'
 import EdgeHandle from '../components/graph/EdgeHandle'
 import EdgeLabel from '../components/graph/EdgeLabel'
-import FloatingMenu from '../util/floatingMenu'
 
-export function Edge(props) {
+export default function Edge({ edge, currentlyEdited }) {
+  const dispatch = useDispatch()
+  const actualZoom = useSelector(state => state.display.actualZoom)
+  const editorMode = useSelector(state => state.display.modes.editor)
+
   const [isHovering, setHovering] = useState(false)
   const [isDragging, setDragging] = useState(false)
   const [startDrag, setStartDrag] = useState()
-  const [geometry, setGeometry] = useState(Curve.calculateGeometry(props))
+  const [geometry, setGeometry] = useState(Curve.calculateGeometry(edge))
   const curve = Curve.from.geometry(geometry)
 
-  const { cx, cy, x1, x2, y1, y2, s1, s2 } = props
+  const { cx, cy, x1, x2, y1, y2, s1, s2, scale, label, id } = edge
+
+  const updateEdge = attributes => dispatch({ type: 'UPDATE_EDGE', id, attributes })
+  const clickEdge = () => dispatch({ type: 'CLICK_EDGE', id })
+
 
   // This resets the curve based on new props when they are passed to an already rendered component
   // This happens after the DRAG_NODE action occurs.
@@ -27,9 +33,9 @@ export function Edge(props) {
     setGeometry(Curve.calculateGeometry({ cx, cy, x1, x2, y1, y2, s1, s2 }))
   }, [cx, cy, x1, x2, y1, y2, s1, s2]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const pickProps = (...propNames) => pick(props, propNames)
+  const pickProps = (...propNames) => pick(edge, propNames)
 
-  const width = 1 + (props.scale -1) * 5
+  const width = 1 + (scale -1) * 5
   const startPosition = { x: cx, y: cy }
 
   const onStart = (evt, data) => {
@@ -38,19 +44,19 @@ export function Edge(props) {
 
   const onDrag = (evt, data) => {
     setDragging(true)
-    const deltas = calculateDeltas(data, startPosition, startDrag, props.actualZoom)
+    const deltas = calculateDeltas(data, startPosition, startDrag, actualZoom)
     setGeometry(
-      Curve.calculateGeometry({...props, cx: deltas.x, cy: deltas.y })
+      Curve.calculateGeometry({...edge, cx: deltas.x, cy: deltas.y })
     )
   }
 
   const onStop = (evt, data) => {
     if (isDragging) {
-      const deltas = calculateDeltas(data, startPosition, startDrag, props.actualZoom)
-      props.updateEdge({ cx: deltas.x, cy: deltas.y })
+      const deltas = calculateDeltas(data, startPosition, startDrag, actualZoom)
+      updateEdge({ cx: deltas.x, cy: deltas.y })
       setDragging(false)
     } else {
-      props.clickEdge()
+      clickEdge()
     }
   }
 
@@ -64,18 +70,18 @@ export function Edge(props) {
   }
 
   // Display helpers
-  const showHighlight = !isDragging && (props.isBeingEdited || isHovering)
-  const showLabel = Boolean(props.label)
+  const showHighlight = !isDragging && (currentlyEdited || isHovering)
+  const showLabel = Boolean(label)
   edgeLineProps.status = showHighlight ? "highlighted" : edgeLineProps.status
 
   return (  
     <DraggableCore
       hanlde=".edge-handle"
-      disabled={!props.editorMode}
+      disabled={!editorMode}
       onStart={onStart}
       onDrag={onDrag}
       onStop={onStop}>
-      <g className="oligrapher-edge" id={`edge-${props.id}`}>
+      <g className="oligrapher-edge" id={`edge-${id}`}>
         <EdgeLine {...edgeLineProps} />
         { showLabel && <EdgeLabel {...edgeLabelProps} /> }
         <EdgeHandle {...edgeHandleProps} />
@@ -85,61 +91,6 @@ export function Edge(props) {
 }
 
 Edge.propTypes = {
-  id: stringOrNumber.isRequired,
-  node1_id: stringOrNumber.isRequired,
-  node2_id: stringOrNumber.isRequired,
-  // display
-  scale: PropTypes.number.isRequired,
-  arrow: stringOrBool.isRequired,
-  label: PropTypes.string,
-  dash: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  url: PropTypes.string,
-  status: PropTypes.string.isRequired,
-  // geometry
-  x1: PropTypes.number.isRequired,
-  y1: PropTypes.number.isRequired,
-  x2: PropTypes.number.isRequired,
-  y2: PropTypes.number.isRequired,
-  cx: PropTypes.number,
-  cy: PropTypes.number,
-  s1: PropTypes.number.isRequired,
-  s2: PropTypes.number.isRequired,
-  actualZoom: PropTypes.number,
-
-  // Actions
-  updateEdge: PropTypes.func.isRequired,
-  clickEdge: PropTypes.func.isRequired,
-
-  // Helpers
-  isBeingEdited: PropTypes.bool,
-  editorMode: PropTypes.bool
+  edge: PropTypes.object.isRequired,
+  currentlyEdited: PropTypes.bool.isRequired
 }
-
-Edge.defaultProps = {
-  dash: false,
-  editorOpen: false,
-  editorMode: false
-}
-
-const mapStateToProps = (state, ownProps) => {
-  const id = ownProps.id.toString()
-  const edge = state.graph.edges[id]
-
-  return {
-    ...edge,
-    actualZoom: state.display.actualZoom,
-    isBeingEdited: id == FloatingMenu.getId(state, 'edge'),
-    editorMode: state.display.modes.editor
-  }
-}
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-  const id = ownProps.id.toString()
-
-  return {
-    updateEdge: attributes => dispatch({ type: 'UPDATE_EDGE', id, attributes }),
-    clickEdge: () => dispatch({ type: 'CLICK_EDGE', id })
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Edge)

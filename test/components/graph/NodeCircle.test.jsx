@@ -2,16 +2,16 @@ import React from 'react'
 import NodeCircle from '../../../app/components/graph/NodeCircle'
 
 describe('<NodeCircle>', function() {
-  let nodeCircle
+  let nodeCircle, node, radius
 
   beforeEach(function(){
-    let props = {
+    node = {
       x: 1,
       y: 2,
-      radius: 40,
-      color: '#ccc',
+      color: '#ccc'
     }
-    nodeCircle  = shallow(<NodeCircle {...props} />)
+    radius = 40
+    nodeCircle  = shallow(<NodeCircle node={node} radius={radius} />)
   })
 
   it("renders circle with correct attributes", function(){

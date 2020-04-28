@@ -1,10 +1,7 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
-
-import noop from 'lodash/noop'
 import pick from 'lodash/pick'
-import { frozenArray } from '../util/helpers'
 
 import DraggableComponent from './../components/graph/DraggableComponent'
 import NodeHalo from './../components/graph/NodeHalo'
@@ -12,105 +9,39 @@ import NodeCircle from './../components/graph/NodeCircle'
 import NodeImage from './../components/graph/NodeImage'
 import NodeLabel from './../components/graph/NodeLabel'
 
-const DEFAULT_RADIUS = 25
-const DEFAULT_COLOR = "#ccc"
+export default function Node({ node, currentlyEdited }) {
+  const { id, scale, image } = node
+  const radius = 25 * scale
 
-const HALO_PROPS = frozenArray('x', 'y', 'radius')
-const CIRCLE_PROPS = frozenArray('x', 'y', 'radius', 'color')
-const IMAGE_PROPS = frozenArray('id', 'x', 'y', 'radius', 'image')
-const LABEL_PROPS = frozenArray('x', 'y', 'name', 'radius', 'status', 'url')
+  const dispatch = useDispatch()
+  const editorMode = useSelector(state => state.display.modes.editor)
+  const isNewEdgeNode = useSelector(state => state.edgeCreation.nodes.includes(id))
 
-export function Node(props) {
-  const showImage = Boolean(props.image)
-  const showHalo = props.selected || props.isNewEdgeNode || props.isBeingEdited
+  const showImage = Boolean(image)
+  const showHalo = isNewEdgeNode || currentlyEdited
+
+  const moveNode = deltas => dispatch({ type: 'MOVE_NODE', id, deltas })
+  const dragNode = deltas => dispatch({ type: 'DRAG_NODE', id, deltas })
+  const clickNode = () => dispatch({ type: 'CLICK_NODE', id })
 
   return (
     <DraggableComponent
-      disabled={!props.editorMode}
+      disabled={!editorMode}
       handle=".draggable-node-handle"
-      onStop={props.moveNode}
-      onClick={props.clickNode}
-      onDrag={props.dragNode}>
-      <g id={"node-" + props.id} className="oligrapher-node">
-        <NodeHalo {...pick(props, HALO_PROPS)} showHalo={showHalo} />
-        <NodeCircle {...pick(props, CIRCLE_PROPS)} />
-        { showImage && <NodeImage {...pick(props, IMAGE_PROPS)} /> }
-        <NodeLabel {...pick(props, LABEL_PROPS)} />
+      onStop={moveNode}
+      onClick={clickNode}
+      onDrag={dragNode}>
+      <g id={"node-" + id} className="oligrapher-node">
+        <NodeHalo node={node} radius={radius} showHalo={showHalo} />
+        <NodeCircle node={node} radius={radius} />
+        { showImage && <NodeImage node={node} radius={radius} /> }
+        <NodeLabel node={node} radius={radius} />
       </g>
     </DraggableComponent>
   )
 }
 
 Node.propTypes = {
-  // Node attributes
-  id: PropTypes.string.isRequired,
-  x: PropTypes.number.isRequired,
-  y: PropTypes.number.isRequired,
-  name: PropTypes.string,
-  url: PropTypes.string,
-  image: PropTypes.string,
-  color: PropTypes.string,
-  status: PropTypes.string.isRequired,
-  // scale: PropTypes.number.isRequired,
-  // Virtual attributes
-  radius: PropTypes.number.isRequired,
-  selected: PropTypes.bool,
-  isNewEdgeNode: PropTypes.bool,
-  isBeingEdited: PropTypes.bool,
-
-  // Actions
-  clickNode: PropTypes.func.isRequired,
-  moveNode: PropTypes.func.isRequired,
-  dragNode: PropTypes.func.isRequired,
-
-  // UI helpers
-  draggableScale: PropTypes.number,
-  editorMode: PropTypes.bool.isRequired
+  node: PropTypes.object.isRequired,
+  currentlyEdited: PropTypes.bool.isRequired
 }
-
-Node.defaultProps = {
-  color: DEFAULT_COLOR,
-  selected: false,
-  isNewEdgeNode: false,
-  isBeingEdited: false,
-  toggleEditNodeMenu: noop
-}
-
-const mapStateToProps = (state, ownProps) => {
-  const id = ownProps.id.toString()
-  const node = state.graph.nodes[id]
-  const { floatingMenu } = state.display
-  const isBeingEdited = ['node', 'connections'].includes(floatingMenu.type) && floatingMenu.id === id
-
-  return {
-    ...node,
-    radius: DEFAULT_RADIUS * node.scale,
-    id: id,
-    editorMode: state.display.modes.editor,
-    selected: state.display.selectedNodes.has(id),
-    isNewEdgeNode: state.edgeCreation.nodes.includes(id),
-    isBeingEdited: isBeingEdited
-  }
-}
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-  const id = ownProps.id.toString()
-
-  return {
-    moveNode: (deltas) => dispatch({ type: 'MOVE_NODE', id, deltas }),
-    dragNode: (deltas) => dispatch({ type: 'DRAG_NODE', id, deltas }),
-    dispatch
-  }
-}
-
-const mergeProps = (stateProps, dispatchProps) => {
-  let { id } = stateProps
-
-  return {
-    ...stateProps,
-    ...dispatchProps,
-    clickNode: () => dispatchProps.dispatch({ type: 'CLICK_NODE', id })
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(Node)
