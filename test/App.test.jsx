@@ -9,6 +9,7 @@ import { createOligrapherStore } from '../app/util/render'
 import stateInitializer from '../app/util/stateInitalizer'
 import * as littlesis3 from '../app/datasources/littlesis3'
 import { removeSpaces } from './testHelpers'
+import edgeCreation from '../app/util/edgeCreation'
 
 describe('Oligrapher', function() {
   let state, store, container, find, findAll
@@ -229,13 +230,34 @@ describe('Oligrapher', function() {
     // count nodes
     const nodeCount = findAll('.oligrapher-node').length
     // "click" node
-    const handle = find('.draggable-node-handle')
-    fireEvent.mouseDown(handle)
-    fireEvent.mouseUp(handle, { bubbles: false }) 
+    const nodeHandle = find('.draggable-node-handle')
+    fireEvent.mouseDown(nodeHandle)
+    fireEvent.mouseUp(nodeHandle, { bubbles: false }) 
     // "click" delete
-    const button = find('.oligrapher-node-editor button[name="delete"]')
-    fireEvent.click(button)
+    fireEvent.click(find('.oligrapher-node-editor button[name="delete"]'))
     // should be one fewer node
     expect(findAll('.oligrapher-node').length).to.equal(nodeCount - 1)
+
+    // count edges
+    const edgeCount = findAll('.oligrapher-edge').length
+    const edgeHandle = find('.edge-handle')
+    // "click" edge
+    fireEvent.mouseDown(edgeHandle)
+    fireEvent.mouseUp(edgeHandle, { bubbles: false })
+    // "click" delete
+    fireEvent.click(find('.oligrapher-edge-editor button[name="delete"]'))
+    // should be one fewer edge
+    expect(findAll('.oligrapher-edge').length).to.equal(edgeCount - 1)
+
+    // count captions
+    const captionCount = findAll('.oligrapher-caption').length
+    const caption = find('.oligrapher-caption')
+    // "click" caption
+    fireEvent.mouseDown(caption)
+    fireEvent.mouseUp(caption, { bubbles: false })
+    // "click" delete
+    fireEvent.click(find('.oligrapher-caption-editor button[name="delete"]'))
+    // should be one fewer caption
+    expect(findAll('.oligrapher-caption').length).to.equal(captionCount - 1)
   })
 })

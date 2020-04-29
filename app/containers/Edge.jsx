@@ -77,7 +77,7 @@ export default function Edge({ edge, currentlyEdited }) {
 
   return (  
     <DraggableCore
-      hanlde=".edge-handle"
+      handle=".edge-handle"
       disabled={!editorMode}
       onStart={onStart}
       onDrag={onDrag}

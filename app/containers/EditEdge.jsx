@@ -12,7 +12,7 @@ import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
 
 export function MainPage({ nodes, edge, updateEdge }) {
   return (
-    <div className="oligrapher-edge-editor">
+    <div>
       <form>
         <div>
           <label>Label</label>
@@ -86,7 +86,7 @@ export default function EditEdge({ id }) {
   )
 
   return (
-    <div>
+    <div className="oligrapher-edge-editor">
       <main>
         { page === 'main' &&
           <MainPage
