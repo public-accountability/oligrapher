@@ -1,5 +1,6 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
+import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
 
 export default function ZoomControl() {
   const dispatch = useDispatch()
@@ -9,8 +10,8 @@ export default function ZoomControl() {
   return (
     <div id="oligrapher-zoomcontrol">
       <div>
-        <button onClick={zoomIn}>+</button>
-        <button onClick={zoomOut}>&ndash;</button>
+        <button onClick={zoomIn}><AiOutlinePlus /></button>
+        <button onClick={zoomOut}><AiOutlineMinus /></button>
       </div>
     </div>
   )

@@ -3,6 +3,7 @@ import { IconContext } from "react-icons/lib"
 
 import { MENU_ITEMS } from '../editorMenu'
 import EditorMenuItem from '../components/editor/EditorMenuItem'
+import UndoRedo from '../components/UndoRedo'
 
 const iconContextValue = {
   size: "35px",
@@ -16,6 +17,7 @@ export default function EditorMenu() {
       <IconContext.Provider value={iconContextValue} >
         { MENU_ITEMS.map(item => <EditorMenuItem key={item} item={item} />) }
       </IconContext.Provider>
+      <UndoRedo />
     </div>
   )
 }

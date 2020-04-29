@@ -16,7 +16,7 @@ import Zoomable from '../components/graph/Zoomable'
 export default function Graph() {
   const dispatch = useDispatch()
   const { viewBox, zoom, svgSize } = useSelector(state => state.display)
-  const headerHeight = 200 // set in css
+  const headerHeight = 190 // set in css
 
   // used to calculate the actual zoom and caption placement.
   const svgRef = useRef(null)

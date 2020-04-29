@@ -8,7 +8,6 @@ import OrganizeTool from '../components/tools/Organize'
 import Settings from '../components/tools/Settings'
 import Editors from '../components/tools/Editors'
 import LockPoll from './LockPoll'
-import UndoRedo from '../components/UndoRedo'
 
 /*
   Container for the editing interfaces
@@ -26,7 +25,6 @@ export default function Editor() {
     <div className={className}>
       <LockPoll />
       <EditorMenu />
-      <UndoRedo />
       { tool === 'node' && <NodeTool /> }
       { tool === 'text' && <TextTool /> }
       { tool === 'organize' && <OrganizeTool /> }

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 
 export const styleForCaption = (caption) => {
   return {
-    backgroundColor: '#ccc',
     fontFamily: caption.font,
     fontSize: caption.size + 'px',
     fontWeight: caption.weight,

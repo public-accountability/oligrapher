@@ -21,12 +21,11 @@ $header_discard_button_bg_color: #6e89a1;
 $header_discard_button_font_color: white;
 
 $oligrapher_blue: #2c63c8;
-$oligrapher_dark_gray: #6e89a1;
+$oligrapher_dark_gray: #888;
 $oligrapher_gray: #b3b3b3;
 $oligrapher_font_gray: #b3b3b3;
 
 $delete_red: #c82c63;
-$editor_menu_item_size: 35px;
 $toolbox_width: 250px;
 
 $caption_backgound: lightgreen;
@@ -61,8 +60,8 @@ $edge_highlight_color: $highlight_blue;
 #oligrapher-header {
     display: flex;
     flex-direction: column;
-    border-bottom: 1.75px solid $header_bottom_border_color;
-    height: 200px;
+    border-bottom: 1px solid #ccc;
+    height: 180px;
     box-sizing: border-box;
 
     /* title and subtitle*/
@@ -195,16 +194,17 @@ $edge_highlight_color: $highlight_blue;
     width: 100%;
 }
 
-/* %floating_menu { */
-/*     z-index: 20; */
-/*     position: absolute; */
-/* } */
-
 %absolute_top_left {
     position: absolute;
     /* position, top, and left places the editor ontop of the SVG element */
     top: 0;
     left: 0;
+}
+
+%box_shadow {
+  -webkit-box-shadow: 0px 0px 20px 2px #eee;
+  -moz-box-shadow: 0px 0px 20px 2p #eee;
+  box-shadow: 0px 0px 20px 2px #eee;
 }
 
 #oligrapher-graph-container {
@@ -228,24 +228,29 @@ $edge_highlight_color: $highlight_blue;
     #oligrapher-zoomcontrol {
         z-index: 15;
         position: absolute;
-        top: 5px;
-        right: 5px;
+        top: 1em;
+        right: 1em;
+        border: 1px solid #ccc;
+        @extend %box_shadow;
 
         div {
             display: flex;
             flex-direction: column;
-            margin-top: 5px;
-            margin-right: 5px;
         }
 
         button {
-            border: 1px solid $oligrapher_gray;
             padding: 5px;
-            padding-bottom: 7px;
+            padding-top: 7px;
+            border: 0;
             background-color: white;
+            color: gray;
             height: 32px;
             width: 32px;
-            margin-bottom: 4px;
+
+            svg {
+              height: 20px;
+              width: 20px;
+            }
         }
 
         button:focus {
@@ -267,27 +272,56 @@ $edge_highlight_color: $highlight_blue;
 }
 
 .editor-menu {
-    @extend %editing_menu;
+    z-index: 100;
+    border: 1px solid #ccc;
+    background-color: white;
+    margin-top: 1em;
     float: left;
-    width: $editor_menu_item_size;
+    width: 40px;
+    padding: 10px;
+    @extend %box_shadow;
 
     .editor-menu-item {
         pointer-events: auto;
-        width: $editor_menu_item_size;
-        height: $editor_menu_item_size;
+        margin: 0;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+        text-align: center;
+        color: gray;
 
-        margin-bottom: 8px;
+        svg {
+            width: 30px;
+            height: 30px;
+        }
 
         &:hover {
             cursor: pointer;
-            background-color: lightgreen;
         }
     }
 
     .editor-menu-icon {}
 }
 
+#oligrapher-undo-redo {
+    pointer-events: auto;
+    float: left;
+    width: 40px;
 
+    button {
+        background-color: white;
+        border: 0px;
+        float: left;
+        width: 20px;
+        padding: 2px;
+        height: 20px;
+        color: gray;
+
+        &:disabled {
+          color: #ccc;
+          cursor: not-allowed;
+        }
+    }
+}
 
 .oligrapher-toolbox {
     @extend %editing_menu;
@@ -370,9 +404,6 @@ header.edit-menu-header {
             border: none;
             margin-left: 0.5em;
             background-color: #FFF;
-            &:hover {
-                box-shadow: -2px 3px 6px $oligrapher_gray
-            }
         }
     }
 }
@@ -384,15 +415,11 @@ header.edit-menu-header {
     left: 50%;
 }
 
-#oligrapher-undo-redo {
-    pointer-events: auto;
-}
-
 /* This is the "edit and customize node" box */
 /* .edit-edge-menu-wrapper, .edit-node-menu-wrapper, .edit-caption-menu-wrapper { */
 .edit-menu-wrapper {
     background-color: white;
-    border: 2px solid $highlight_blue;
+    border: 3px solid $highlight_blue;
     padding: 10px;
 
     header {
@@ -475,6 +502,8 @@ header.edit-menu-header {
         button {
             border: 0;
             border-radius: 2px;
+            height: 2em;
+            color: white;
 
         }
 
@@ -747,11 +776,11 @@ g.edge-tool-open .react-draggable-dragging .node-circle {
 /* captions */
 
 .caption-text {
-    border: 2px solid #ccc;
+    border: 1px solid #ccc;
 }
 
 .edit-caption-textarea {
-    border: 2px solid $highlight_blue;
+    border: 1px solid $highlight_blue;
     overflow-y: scroll;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none;  /* Internet Explorer 10+ */
@@ -762,10 +791,11 @@ g.edge-tool-open .react-draggable-dragging .node-circle {
 }
 
 .caption-text, .edit-caption-textarea {
-    border-top-width: 3px;
+    border-top-width: 1px;
     margin: 0;
     box-sizing: border-box;
-    padding: 10px;
+    padding: 15px;
+    background-color: #f8f8f8;
 }
 
 .oligrapher-caption-editor select {
@@ -785,6 +815,7 @@ g.edge-tool-open .react-draggable-dragging .node-circle {
   padding: 10px;
   width: 300px;
   font-size: 14px;
-  border: 1px solid $oligrapher_gray;
-  background-color: lightgreen;
+  border: 1px solid #ccc;
+  background-color: white;
+  @extend %box_shadow;
 }

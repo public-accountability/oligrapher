@@ -4,14 +4,14 @@ import { generate } from 'shortid'
 
 import { svgCoordinatesFromMouseEvent } from '../util/dimensions'
 
-const captionDefaults = {
+export const captionDefaults = {
   id: null,
   text: null,
   x: null,
   y: null,
   scale: 1,
-  width: 200,
-  height: 100,
+  width: 300,
+  height: 200,
   font: 'Arial',
   size: '20',
   weight: '400'

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ActionCreators } from 'redux-undo'
-import { MdUndo, MdRedo } from 'react-icons/md'
+import { IoIosUndo, IoIosRedo } from 'react-icons/io'
 
 export default function UndoRedo() {
   const dispatch = useDispatch()
@@ -14,16 +14,16 @@ export default function UndoRedo() {
   return (
     <div id="oligrapher-undo-redo">
       <button 
-        title="undo" 
+        title="Undo" 
         disabled={!hasHistory}
         onClick={undo}>
-        <MdUndo />
+        <IoIosUndo />
       </button>
       <button 
-        title="redo" 
+        title="Redo" 
         disabled={!hasFuture}
         onClick={redo}>
-        <MdRedo />
+        <IoIosRedo />
       </button>
     </div>
   )

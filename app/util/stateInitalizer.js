@@ -3,7 +3,7 @@ import Graph from '../graph/graph'
 import Edge from '../graph/edge'
 import Node from '../graph/node'
 // import Curve from '../graph/curve'
-
+import { captionDefaults } from '../graph/caption'
 import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
@@ -51,7 +51,7 @@ export default function stateInitalizer(serializedState) {
   })
 
   keys(state.graph.captions).forEach(captionId => {
-    state.graph.captions[captionId] = flatten(state.graph.captions[captionId])
+    state.graph.captions[captionId] = merge({}, captionDefaults, flatten(state.graph.captions[captionId]))
   })
 
   state.graph = Graph.new(state.graph)
