@@ -1,24 +1,25 @@
 import React from 'react'
-import { Header } from '../../app/containers/Header'
+
+import Header from '../../app/containers/Header'
 import Attribution from '../../app/components/Attribution'
 import Title from '../../app/components/Title'
 import HeaderRight from '../../app/containers/HeaderRight'
-import noop from 'lodash/noop'
+import { createMockStore, mountWithStore } from '../testHelpers'
 
 describe('<Header>', function() {
-  let header
+  let header, store
 
   beforeEach(function(){
-    header = shallow(
-      <Header
-        title="Example Title"
-        subtitle="Example Subtitle"
-        user={{ "name": "Example UserName", "url": "https://example.com" }}
-        editMode={true}
-        updateTitle={noop}
-        updateSubtitle={noop}
-        setHeaderHeight={noop} />
-    )
+    store = createMockStore({
+      attributes: {
+        title: "Example Title",
+        subtitle: "Example Subtitle",
+        user: { "name": "Example UserName", "url": "https://example.com" }
+      },
+      display: { modes: { editor: true } }
+    })
+
+    header = mountWithStore(store, <Header />)
   })
 
   it('has container div', function()  {

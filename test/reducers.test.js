@@ -1,4 +1,4 @@
-import reducers from '../app/reducers'
+import { reducer } from '../app/reducers'
 import Graph from '../app/graph/graph'
 import Node from '../app/graph/node'
 import Edge from '../app/graph/edge'
@@ -16,7 +16,7 @@ describe('Reducer', function() {
 
       const action = {type: 'SET_MODE', mode: 'editor', enabled: true}
 
-      expect(reducers(state, action))
+      expect(reducer(state, action))
         .to.eql({ foo: 'bar', display: { modes: { editor: true, story: false } }})
     })
   })
@@ -25,13 +25,13 @@ describe('Reducer', function() {
     it('changes tool', function() {
       const state = { display: { tool: 'node' } }
       const action = { type: 'TOGGLE_TOOL', tool: 'text'}
-      expect(reducers(state, action).display.tool).to.equal('text')
+      expect(reducer(state, action).display.tool).to.equal('text')
     })
 
     it('closes tool', function() {
       const state = { display: { tool: 'node' } }
       const action = { type: 'TOGGLE_TOOL', tool: 'node'}
-      expect(reducers(state, action).display.tool).to.be.null
+      expect(reducer(state, action).display.tool).to.be.null
     })
   })
 
@@ -42,21 +42,21 @@ describe('Reducer', function() {
         display: { actualZoom: 2, zoom: 1, offset: { x: 50, y: 50 }, floatingMenu: { type: null, id: null, position: null } } 
       }
       const action = { type: 'CLICK_NODE', id: 'xyz' }
-      expect(reducers(state, action).display.floatingMenu)
+      expect(reducer(state, action).display.floatingMenu)
         .to.eql({ type: 'node', id: 'xyz', position: transformPosition(state, { x: 100, y: 100 }, 'node') })
     })
 
     it('closes node editor', function() {
       const state = { display: { floatingMenu: { type: 'node', id: 'xyz', position: { x: 100, y: 100 } } } }
       const action = { type: 'CLICK_NODE', id: 'xyz' }
-      expect(reducers(state, action).display.floatingMenu)
+      expect(reducer(state, action).display.floatingMenu)
         .to.eql({ type: null, id: null, position: null })
     })
 
     it('closes add connections', function() {
       const state = { display: { floatingMenu: { type: 'connections', id: 'xyz', position: { x: 100, y: 100 } } } }
       const action = { type: 'CLICK_NODE', id: 'xyz' }
-      expect(reducers(state, action).display.floatingMenu)
+      expect(reducer(state, action).display.floatingMenu)
         .to.eql({ type: null, id: null, position: null })
     })
   })
@@ -65,7 +65,7 @@ describe('Reducer', function() {
     it('clears floatingMenu', function() {
       const state = { display: { editor: { tool: 'node' }, floatingMenu: { type: 'node', id: 'abc', position: { x: 1, y: 2 } } } }
       const action = { type: 'CLOSE_EDIT_MENU' }
-      expect(reducers(state, action).display.floatingMenu)
+      expect(reducer(state, action).display.floatingMenu)
         .to.eql({ type: null, id: null, position: null })
     })   
   })
@@ -77,7 +77,7 @@ describe('Reducer', function() {
       node = Node.new()
       state = defaultState
       action = { type: 'ADD_NODE', node }
-      nextState = reducers(state, action)
+      nextState = reducer(state, action)
       expect(Object.keys(nextState.graph.nodes)).to.eql([node.id])
     })
 
@@ -85,7 +85,7 @@ describe('Reducer', function() {
       node = { name: "bob" }
       state = defaultState
       action = { type: 'ADD_NODE', node }
-      nextState = reducers(state, action)
+      nextState = reducer(state, action)
       expect(nextState.display.floatingMenu.type).to.equal('node')
       expect(nextState.display.floatingMenu.id).to.not.be.null
       expect(nextState.display.floatingMenu.position).to.not.be.null
@@ -95,7 +95,7 @@ describe('Reducer', function() {
       node = Node.new()
       state = defaultState
       action = { type: 'ADD_NODE', node }
-      nextState = reducers(state, action)
+      nextState = reducer(state, action)
       expect(nextState.display.floatingMenu.type).to.be.null
       expect(nextState.display.floatingMenu.id).to.be.null
       expect(nextState.display.floatingMenu.position).to.be.null
@@ -117,7 +117,7 @@ describe('Reducer', function() {
       Graph.addEdge(graph, e2)
       state = { graph, display: { floatingMenu: { type: 'node', id: n1.id } } }
       action = { type: 'REMOVE_NODE', id: n1.id }
-      nextState = reducers(state, action)  
+      nextState = reducer(state, action)  
     })
 
     it('removes node from graph', function() {
@@ -147,7 +147,7 @@ describe('Reducer', function() {
 
     it('moves edge but not node', function() {
       action = { type: 'DRAG_NODE', id: n1.id, deltas: { x: 50, y: 50 } }
-      nextState = reducers(state, action)
+      nextState = reducer(state, action)
       expect(nextState.graph.nodes[n1.id].x).to.equal(n1.x)
       expect(nextState.graph.nodes[n1.id].y).to.equal(n1.y)
       expect(nextState.graph.edges[e1.id].x1).to.equal(e1.x1 + 50)
@@ -157,7 +157,7 @@ describe('Reducer', function() {
 
     it('detects edge creation', function() {
       action = { type: 'DRAG_NODE', id: n1.id, deltas: { x: 0, y: 100 } }
-      nextState = reducers(state, action)
+      nextState = reducer(state, action)
       expect(nextState.edgeCreation.nodes).to.eql([n1.id, n3.id])
     })
   })
@@ -179,7 +179,7 @@ describe('Reducer', function() {
 
     it('moves node and its edges when no intersection', function() {
       action = { type: 'MOVE_NODE', id: n1.id, deltas: { x: 50, y: 50 } }
-      nextState = reducers(state, action)
+      nextState = reducer(state, action)
       expect(nextState.graph.nodes[n1.id].x).to.equal(n1.x + 50)
       expect(nextState.graph.nodes[n1.id].y).to.equal(n1.y + 50)
       expect(nextState.graph.edges[e1.id].x1).to.equal(e1.x1 + 50)
@@ -189,7 +189,7 @@ describe('Reducer', function() {
 
     it('creates edge but doesnt move node when intersection dected', function() {
       action = { type: 'MOVE_NODE', id: n1.id, deltas: { x: 0, y: 100 } }
-      nextState = reducers(state, action)
+      nextState = reducer(state, action)
       expect(Object.keys(nextState.graph.edges)).to.have.lengthOf(2)
       expect(nextState.graph.nodes[n1.id].x).to.equal(n1.x)
       expect(nextState.graph.nodes[n1.id].y).to.equal(n1.y)
@@ -215,7 +215,7 @@ describe('Reducer', function() {
 
       state = { graph }
       action = { type: 'ADD_EDGES', edges: [e1, e2, e3] }
-      nextState = reducers(state, action)
+      nextState = reducer(state, action)
     })
 
     it('adds only edges with existing nodes', function() {
@@ -239,7 +239,7 @@ describe('Reducer', function() {
 
       state = { graph, display: { floatingMenu: { type: 'edge', id: e2.id } } }
       action = { type: 'REMOVE_EDGE', id: e2.id }
-      nextState = reducers(state, action)  
+      nextState = reducer(state, action)  
     })
 
     it('removes edge from graph', function() {
@@ -261,14 +261,14 @@ describe('Reducer', function() {
       }
       const { xb, y } = Curve.calculateGeometry(edge)
       const action = { type: 'CLICK_EDGE', id: 'xyz' }
-      expect(reducers(state, action).display.floatingMenu)
+      expect(reducer(state, action).display.floatingMenu)
         .to.eql({ type: 'edge', id: 'xyz', position: transformPosition(state, { x: xb, y: y }, 'edge') })
     })
 
     it('closes edge editor', function() {
       const state = { display: { floatingMenu: { type: 'edge', id: 'xyz', position: { x: 100, y: 100 } } } }
       const action = { type: 'CLICK_EDGE', id: 'xyz' }
-      expect(reducers(state, action).display.floatingMenu)
+      expect(reducer(state, action).display.floatingMenu)
         .to.eql({ type: null, id: null, position: null })
     })
   })

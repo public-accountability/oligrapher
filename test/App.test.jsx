@@ -15,7 +15,7 @@ describe('Oligrapher', function() {
 
   beforeEach(function() {
     state = stateInitializer({ 
-      graph: bigGraph,
+      graph: Object.assign({}, bigGraph),
       attributes: {
         title: 'test graph',
         user: { name: 'bozo', url: 'http://example.com' }
@@ -223,5 +223,19 @@ describe('Oligrapher', function() {
     // close settings
     fireEvent.click(icon)
     expect(findAll('.oligrapher-settings').length).to.equal(0)
+  })
+
+  it('deletes node, edge, caption', function() {
+    // count nodes
+    const nodeCount = findAll('.oligrapher-node').length
+    // "click" node
+    const handle = find('.draggable-node-handle')
+    fireEvent.mouseDown(handle)
+    fireEvent.mouseUp(handle, { bubbles: false }) 
+    // "click" delete
+    const button = find('.oligrapher-node-editor button[name="delete"]')
+    fireEvent.click(button)
+    // should be one fewer node
+    expect(findAll('.oligrapher-node').length).to.equal(nodeCount - 1)
   })
 })

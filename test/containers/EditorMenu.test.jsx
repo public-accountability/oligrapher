@@ -1,5 +1,5 @@
 import React from 'react'
-import { EditorMenu } from '../../app/containers/EditorMenu'
+import EditorMenu from '../../app/containers/EditorMenu'
 import EditorMenuItem from '../../app/components/editor/EditorMenuItem'
 
 /*

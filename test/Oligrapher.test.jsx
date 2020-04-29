@@ -1,8 +1,7 @@
 import * as helpers from '../app/util/helpers'
-import * as render from '../app/util/render'
 import Oligrapher from '../app/Oligrapher'
 import ReactDOM from 'react-dom'
-
+import sinon from 'sinon'
 
 
 describe('Oligrapher', function() {
@@ -22,11 +21,12 @@ describe('Oligrapher', function() {
       expect(oli.store).to.exist
     })
 
+    // redux-undo creates "present" prefix to current state
     it ("merges in configuration with default state", function() {
       let oli = new Oligrapher({settings: { debug: true} })
       let state = oli.store.getState()
-      expect(state.settings.debug).to.eql(true)
-      expect(state.graph.nodes).to.eql({})
+      expect(state.present.settings.debug).to.eql(true)
+      expect(state.present.graph.nodes).to.eql({})
     })
 
     it("renders the application once with ReactDOM", function() {

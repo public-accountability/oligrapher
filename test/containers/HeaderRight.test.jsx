@@ -1,23 +1,32 @@
 import React from 'react'
-import { HeaderRight } from '../../app/containers/HeaderRight'
+import sinon from 'sinon'
+
+import HeaderRight from '../../app/containers/HeaderRight'
 import HeaderMenu from '../../app/components/HeaderMenu'
 import HeaderButtons from '../../app/containers/HeaderButtons'
+import { createMockStore, mountWithStore } from '../testHelpers'
 
 describe('<HeaderRight>', function() {
-  it("shows HeaderMenu when not in editor mode", function() {
-    let spy = sinon.spy()
-    let component = shallow(<HeaderRight editorMode={false} enableEditorMode={spy} />)
+  let store, wrapper
 
-    expect(component.find(HeaderMenu)).to.have.lengthOf(1)
-    expect(component.find(HeaderButtons)).to.have.lengthOf(0)
+  it("shows HeaderMenu when not in editor mode", function() {
+    store = createMockStore({
+      display: { modes: { editor: false } }
+    })
+    wrapper = mountWithStore(store, <HeaderRight />)
+
+    expect(wrapper.find(HeaderMenu)).to.have.lengthOf(1)
+    expect(wrapper.find(HeaderButtons)).to.have.lengthOf(0)
 
   })
 
   it("shows HeaderButtons in editor mode", function() {
-    let spy = sinon.spy()
-    let component = shallow(<HeaderRight editorMode={true} enableEditorMode={spy} />)
+    store = createMockStore({
+      display: { modes: { editor: true } }
+    })
+    wrapper = mountWithStore(store, <HeaderRight />)
 
-    expect(component.find(HeaderMenu)).to.have.lengthOf(0)
-    expect(component.find(HeaderButtons)).to.have.lengthOf(1)
+    expect(wrapper.find(HeaderMenu)).to.have.lengthOf(0)
+    expect(wrapper.find(HeaderButtons)).to.have.lengthOf(1)
   })
 })

@@ -13,17 +13,22 @@ import rootSaga from '../sagas'
 
   If preloadedState.settings.debug is true, redux's logger is enabled.
 */
-export const createOligrapherStore = preloadedState => {
+export const createOligrapherStore = initialState => {
+  const undoableState = {
+    past: [],
+    present: initialState,
+    future: []
+  }
   const sagaMiddleware = createSagaMiddleware()
   let middleware = [sagaMiddleware]
 
-  if (preloadedState.settings.debug) {
+  if (initialState.settings.debug) {
     middleware.push(createLogger())
   }
 
   const store = createStore(
     reducers,
-    preloadedState,
+    undoableState,
     applyMiddleware(...middleware)
   )
 

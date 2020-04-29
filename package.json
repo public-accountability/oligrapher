@@ -96,7 +96,8 @@
   "mocha": {
     "require": [
       "@babel/register",
-      "chai/register-expect"
+      "chai/register-expect",
+      "jsdom-global/register"
     ],
     "file": [
       "test/setup.js"
