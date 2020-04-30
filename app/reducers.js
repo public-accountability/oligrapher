@@ -249,6 +249,7 @@ export default undoable(reducer, {
     'ADD_NODE',
     'UPDATE_NODE',
     'REMOVE_NODE',
+    'DRAG_NODE',
     'MOVE_NODE',
     'ADD_EDGE',
     'ADD_EDGES',
@@ -257,8 +258,16 @@ export default undoable(reducer, {
     'ADD_CAPTION',
     'UPDATE_CAPTION',
     'MOVE_CAPTION',
-    'DELETE_CAPTION',
-  ])
+    'DELETE_CAPTION'
+  ]),
+  groupBy: (action) => {
+    // consider all consecutive drags and moves to the same node as one action
+    const type = (action.type === 'DRAG_NODE' ? 'MOVE_NODE' : action.type)
+    return type + (action.id ? ("-" + String(action.id)) : "")
+  },
+  debug: false,
+  ignoreInitialState: true,
+  syncFilter: true
 
   // here's a simpler alternative but it will include every incremental drag action
   //

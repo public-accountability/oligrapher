@@ -9,7 +9,6 @@ import { createOligrapherStore } from '../app/util/render'
 import stateInitializer from '../app/util/stateInitalizer'
 import * as littlesis3 from '../app/datasources/littlesis3'
 import { removeSpaces } from './testHelpers'
-import edgeCreation from '../app/util/edgeCreation'
 
 describe('Oligrapher', function() {
   let state, store, container, find, findAll
@@ -27,7 +26,7 @@ describe('Oligrapher', function() {
     })
 
     store = createOligrapherStore(state)
-    
+
     container = render(
       <Provider store={store}>
         <Root />
@@ -259,5 +258,25 @@ describe('Oligrapher', function() {
     fireEvent.click(find('.oligrapher-caption-editor button[name="delete"]'))
     // should be one fewer caption
     expect(findAll('.oligrapher-caption').length).to.equal(captionCount - 1)
+  })
+
+  it('undoes and redoes changes to graph', async function() {
+    const originalName = find('.oligrapher-node .node-label').textContent
+    // "click" node
+    const nodeHandle = find('.draggable-node-handle')
+    fireEvent.mouseDown(nodeHandle)
+    fireEvent.mouseUp(nodeHandle, { bubbles: false }) 
+    // edit node name
+    const input = find('.oligrapher-node-editor input')
+    fireEvent.change(input, { target: { value: 'billy bob' } })
+    // close editor
+    const closeButton = find('.edit-menu-header button')
+    fireEvent.click(closeButton)
+    // node name should have updated
+    expect(find('.oligrapher-node .node-label').textContent).to.equal('billy bob')
+    // click undo
+    const undo = find('#oligrapher-undo-redo button')
+    fireEvent.click(undo)
+    expect(find('.oligrapher-node .node-label').textContent).to.equal(originalName)
   })
 })
