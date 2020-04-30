@@ -5,8 +5,8 @@ import { IoIosUndo, IoIosRedo } from 'react-icons/io'
 
 export default function UndoRedo() {
   const dispatch = useDispatch()
-  const hasHistory = useSelector(state => state.past.length > 0)
-  const hasFuture = useSelector(state => state.future.length > 0)
+  const hasHistory = useSelector(state => state.graph.past.length > 0)
+  const hasFuture = useSelector(state => state.graph.future.length > 0)
 
   const undo = useCallback(() => dispatch(ActionCreators.undo()), [dispatch])
   const redo = useCallback(() => dispatch(ActionCreators.redo()), [dispatch])

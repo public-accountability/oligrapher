@@ -2,16 +2,13 @@ import at from 'lodash/at'
 import filter from 'lodash/filter'
 import isNumber from 'lodash/isNumber'
 import merge from 'lodash/merge'
-import omit from 'lodash/omit'
 import values from 'lodash/values'
 import pick from 'lodash/pick'
 
-import { translatePoint, rotatePoint, distance } from '../util/helpers'
-import { newNode } from './node'
+import { translatePoint, rotatePoint } from '../util/helpers'
+import { newNode, findIntersectingNode } from './node'
 import { edgeCoordinates, newEdgeFromNodes } from './edge'
 import { calculateGeometry } from './curve'
-
-import nodeDisplaySetting from '../NodeDisplaySettings'
 
 export const GRAPH_PADDING = 100
 const DEFAULT_VIEWBOX = { minX: -200, minY: -200, w: 400, h: 400 }
@@ -153,7 +150,7 @@ export function findFreePositionNear(graph, startPosition) {
 
   do {
     position = positionNear(startPosition, radius)
-    node = intersectingNode(graph, position, null, padding)
+    node = findIntersectingNode(graph.nodes, position, null, padding)
     success = (node === undefined)
     tries += 1
     radius += 20
@@ -301,26 +298,6 @@ export function dragNode(graph, nodeId, deltas) {
   return graph
 }
 
-// {x,y}, {x,y} ---> Boolean
-function intersects(coordinates, node, padding = 20) {
-  const radius = (nodeDisplaySetting.circleRadius * node.scale) + padding
-  return distance(node, coordinates) <= radius
-}
-
-// Returns the intersecting node (including a hard-coded buffer radius)
-// If there are no intersections, this returns undefined
-export function intersectingNode(graph, coordinates, selfId = null, padding = 20) {
-  return values(omit(graph.nodes, selfId)).find(node => intersects(coordinates, node, padding))
-}
-
-export function intersectingNodeFromDrag(graph, nodeId, deltas) {
-  return intersectingNode(
-    graph,
-    translatePoint(getNode(graph, nodeId), deltas),
-    nodeId
-  )
-}
-
 // Add Connections
 
 function addConnection(graph, { existingNodeId, newNode, newEdge }) {
@@ -379,8 +356,6 @@ export default {
   "addCaption": addCaption,
   "moveNode": moveNode,
   "dragNode": dragNode,
-  "intersectingNode": intersectingNode,
-  "intersectingNodeFromDrag": intersectingNodeFromDrag,
   "addConnection": addConnection,
   "connectedNodeIds": connectedNodeIds,
   "arrange": arrangeGraph

@@ -6,7 +6,7 @@ import FloatingMenu from '../util/floatingMenu'
 
 export default function Captions() {
   const captions = useSelector(state => state.graph.captions)
-  const editedCaptionId = useSelector(state => FloatingMenu.getId(state, 'caption'))
+  const editedCaptionId = useSelector(state => FloatingMenu.getId(state.display, 'caption'))
 
   return (
     <g className="captions">

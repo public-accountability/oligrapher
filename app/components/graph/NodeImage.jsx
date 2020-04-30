@@ -9,6 +9,10 @@ export function NodeImage({ node, radius }) {
   const clipPathId = `image-clip-${id}`
   const imageWidth = IMAGE_SCALE * radius
 
+  if (!node.image) {
+    return null
+  }
+
   return (
     <>
       <clipPath id={clipPathId}>

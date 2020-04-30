@@ -1,6 +1,11 @@
 import PropTypes from 'prop-types'
 import merge from 'lodash/merge'
 import { generate } from 'shortid'
+import omit from 'lodash/omit'
+import values from 'lodash/values'
+
+import nodeDisplaySetting from '../NodeDisplaySettings'
+import { translatePoint, distance } from '../util/helpers'
 
 const nodeDefaults = {
   id: null,
@@ -46,4 +51,24 @@ export function newNode(attributes = {}) {
 export default {
   "new": newNode,
   "types": propTypes
+}
+
+// {x,y}, {x,y} ---> Boolean
+function intersects(coordinates, node, padding = 20) {
+  const radius = (nodeDisplaySetting.circleRadius * node.scale) + padding
+  return distance(node, coordinates) <= radius
+}
+
+// Returns the intersecting node (including a hard-coded buffer radius)
+// If there are no intersections, this returns undefined
+export function findIntersectingNode(nodes, coordinates, selfId = null, padding = 20) {
+  return values(omit(nodes, selfId)).find(node => intersects(coordinates, node, padding))
+}
+
+export function findIntersectingNodeFromDrag(nodes, draggedNode, deltas) {
+  return findIntersectingNode(
+    nodes,
+    translatePoint(draggedNode, deltas),
+    draggedNode.id
+  )
 }

@@ -27,6 +27,7 @@ export default function AddConnections({ id }) {
   const [results, setResults] = useState(null)
   const [loading, setLoading] = useState(true)
   const excludeIds = addedNodeIds.concat(connectedNodeIds)
+  console.log(results)
   const visibleResults = isArray(results) 
     ? results.filter(entity => !excludeIds.includes(entity['id']))
     : null

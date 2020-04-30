@@ -145,8 +145,15 @@ export function isLittleSisId(id) {
   return Number.isFinite(toNumber(id))
 }
 
+export const convertSelectorForUndo = selector => (state => selector({
+  graph: state.graph.present,
+  display: state.display,
+  attributes: state.attributes,
+  settings: state.settings
+}))
+
 // redux-undo places the present state at state.present, so we use our own
 // useSelector() to "transparently" make this change to all our selectors
 export function useSelector(selector) {
-  return useReduxSelector(state => selector(state.present))
+  return useReduxSelector(convertSelectorForUndo(selector))
 }

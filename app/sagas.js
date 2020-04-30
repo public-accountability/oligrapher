@@ -1,11 +1,11 @@
 import { put, select as sagaSelect, call, takeEvery, all } from 'redux-saga/effects'
-import { isLittleSisId } from './util/helpers'
+import { isLittleSisId, convertSelectorForUndo } from './util/helpers'
 import { getEdges } from './datasources/littlesis3'
 import { applyZoomToViewBox, computeSvgZoom } from './util/dimensions'
 
 // redux-undo places present state at state.present, so we use our own
 // select() to "transparently" make this change to all our saga selectors
-const select = selector => sagaSelect(state => selector(state.present))
+const select = selector => sagaSelect(convertSelectorForUndo(selector))
 
 // Fetch edges for a LittleSis node and add them to graph
 export function* addEdges(newNodeId, allNodeIds) {

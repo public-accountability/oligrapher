@@ -13,7 +13,7 @@ export default function EditCaption({ id }) {
   const dispatch = useDispatch()
   const caption = useSelector(state => state.graph.captions[id])
 
-  const deleteCaption = useCallback(() => dispatch({ type: 'DELETE_CAPTION', id }), [dispatch, id])
+  const removeCaption = useCallback(() => dispatch({ type: 'REMOVE_CAPTION', id }), [dispatch, id])
   const onChange = useCallback(type => { 
     return callWithTargetValue(value => dispatch({ type: 'UPDATE_CAPTION', id, attributes: { [type]: value } }))
   }, [dispatch, id])
@@ -32,7 +32,7 @@ export default function EditCaption({ id }) {
       <footer>
         <EditMenuSubmitButtons 
           hideSubmitButton={true}
-          handleDelete={deleteCaption}
+          handleDelete={removeCaption}
           page="main" />
       </footer>
     </div>

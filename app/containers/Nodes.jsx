@@ -6,7 +6,7 @@ import FloatingMenu from '../util/floatingMenu'
 
 export default function Nodes() {
   const nodes = useSelector(state => state.graph.nodes)
-  const editedNodeId = useSelector(state => FloatingMenu.getId(state, 'node'))
+  const editedNodeId = useSelector(state => FloatingMenu.getId(state.display, 'node'))
 
   return (
     <g className="nodes">

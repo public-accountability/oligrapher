@@ -1,13 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
+import { MdClose } from 'react-icons/md'
 
-import EditMenuCloseButton from './EditMenuCloseButton'
+export default function EditMenuHeader({ title }) {
+  const dispatch = useDispatch()
 
-export default function EditMenuHeader(props) {
   return (
     <header className="edit-menu-header">
-      <div>{props.title}</div>
-      <div><EditMenuCloseButton /></div>
+      <div>{title}</div>
+      <div>
+        <button onClick={() => dispatch({ type: 'CLOSE_EDITOR' })}>
+          <MdClose />
+        </button>
+      </div>
     </header>
   )
 }

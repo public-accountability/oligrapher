@@ -70,12 +70,11 @@ export default function EditNode({ id }) {
   const [page, setPage] = useState('main')
 
   const node = useSelector(state => state.graph.nodes[id])
-  const position = useSelector(state => state.display.floatingMenu.position)
 
   const dispatch = useDispatch()
   const removeNode = () => dispatch({ type: 'REMOVE_NODE', id })
   const updateNode = (attributes) => dispatch({ type: 'UPDATE_NODE', id, attributes })
-  const openAddConnections = () => dispatch({ type: 'OPEN_ADD_CONNECTIONS', id, position })
+  const openAddConnections = () => dispatch({ type: 'OPEN_ADD_CONNECTIONS', id })
 
   return (
     <div className="oligrapher-node-editor">

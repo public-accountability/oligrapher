@@ -35,6 +35,7 @@ export default function DraggableComponent(props) {
   const draggableProps = { 
     onDrag,
     onStop,
+    onStart: props.onStart,
     scale: svgZoom,
     position: props.position,
     handle: props.handle,
@@ -53,6 +54,7 @@ DraggableComponent.propTypes = {
   children: PropTypes.node.isRequired,
   onStop: PropTypes.func.isRequired,
   onDrag: PropTypes.func,
+  onStart: PropTypes.func,
   onClick: PropTypes.func,
   handle: PropTypes.string.isRequired,
   position: PropTypes.object,

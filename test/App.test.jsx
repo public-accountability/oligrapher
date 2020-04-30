@@ -37,7 +37,7 @@ describe('Oligrapher', function() {
     findAll = (selector) => container.querySelectorAll(selector)
   })
 
-  it('shows title', function() {
+  it.only('shows title', function() {
     const title = findAll('#oligrapher-title')
     expect(title.length).to.equal(1)
   })

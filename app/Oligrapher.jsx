@@ -28,8 +28,8 @@ export default class Oligrapher {
 
   constructor(initialState = {}) {
     this.store = createOligrapherStore(stateInitalizer(initialState))
-    this.element = getElementById(this.store.getState().present.settings.domId)
-    this.graph = () => this.store.getState().present.graph
+    this.element = getElementById(this.store.getState().settings.domId)
+    this.graph = () => this.store.getState().graph
 
     const Application = withStore(this.store)(Root)
 

@@ -8,11 +8,12 @@ import EditEdge from './EditEdge'
 import EditCaption from './EditCaption'
 import AddConnections from '../components/tools/AddConnections'
 import { classNames } from '../util/helpers'
-
+import { floatingMenuPositionSelector } from '../util/floatingMenu'
 
 export default function FloatingMenus() {
   const isEditor = useSelector(state => state.display.modes.editor)
-  const { id, type, position } = useSelector(state => state.display.floatingMenu)
+  const { id, type } = useSelector(state => state.display.floatingMenu)
+  const position = useSelector(floatingMenuPositionSelector)
 
   if (!id || !type || !isEditor ) {
     return null

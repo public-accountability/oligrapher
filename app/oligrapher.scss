@@ -61,7 +61,7 @@ $edge_highlight_color: $highlight_blue;
     display: flex;
     flex-direction: column;
     border-bottom: 1px solid #ccc;
-    height: 180px;
+    height: 190px;
     box-sizing: border-box;
 
     /* title and subtitle*/
@@ -413,6 +413,7 @@ header.edit-menu-header {
     position: absolute;
     top: 50%;
     left: 50%;
+    background-color: white;
 }
 
 /* This is the "edit and customize node" box */

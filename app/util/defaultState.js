@@ -60,12 +60,6 @@ const defaultState = {
     saveMap: null // states: null, 'IN_PROGRESS', 'SUCCESS', 'FAILED'
   },
 
-  // Keeps track of nodes that are dragged over each other
-  // for the purposes of edge creation
-  edgeCreation: {
-    nodes: []
-  },
-
   // Global settings
   // These settings are NOT changable via the settings interface;
   // those are located at above under attributes.settings

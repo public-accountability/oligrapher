@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { DraggableCore } from 'react-draggable'
 import { useDispatch } from 'react-redux'
@@ -24,9 +24,14 @@ export default function Edge({ edge, currentlyEdited }) {
 
   const { cx, cy, x1, x2, y1, y2, s1, s2, scale, label, id } = edge
 
-  const updateEdge = attributes => dispatch({ type: 'UPDATE_EDGE', id, attributes })
-  const clickEdge = () => dispatch({ type: 'CLICK_EDGE', id })
-
+  const updateEdge = useCallback(
+    attributes => dispatch({ type: 'UPDATE_EDGE', id, attributes }), 
+    [dispatch, id]
+  )
+  const clickEdge = useCallback(
+    () => dispatch({ type: 'CLICK_EDGE', id }), 
+    [dispatch, id]
+  )
 
   // This resets the curve based on new props when they are passed to an already rendered component
   // This happens after the DRAG_NODE action occurs.
@@ -39,19 +44,19 @@ export default function Edge({ edge, currentlyEdited }) {
   const width = 1 + (scale -1) * 5
   const startPosition = { x: cx, y: cy }
 
-  const onStart = (evt, data) => {
+  const onStart = useMemo((evt, data) => {
     setStartDrag(data)
-  }
+  }, [])
 
-  const onDrag = (evt, data) => {
+  const onDrag = useCallback((evt, data) => {
     setDragging(true)
     const deltas = calculateDeltas(data, startPosition, startDrag, actualZoom)
     setGeometry(
       Curve.calculateGeometry({...edge, cx: deltas.x, cy: deltas.y })
     )
-  }
+  }, [startPosition, startDrag, actualZoom, edge])
 
-  const onStop = (evt, data) => {
+  const onStop = useCallback((evt, data) => {
     if (isDragging) {
       const deltas = calculateDeltas(data, startPosition, startDrag, actualZoom)
       updateEdge({ cx: deltas.x, cy: deltas.y })
@@ -59,7 +64,7 @@ export default function Edge({ edge, currentlyEdited }) {
     } else {
       clickEdge()
     }
-  }
+  }, [isDragging, startPosition, startDrag, actualZoom, clickEdge, updateEdge])
 
   // Children Props
   const edgeLineProps = { curve, width, isReverse: geometry.is_reverse, ...pickProps('id', 'scale', 'dash', 'status', 'arrow') }

@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
+import generate from 'shortid'
 
 import { useSelector } from '../../util/helpers'
 import DraggableComponent from './DraggableComponent'
@@ -10,15 +11,16 @@ import DraggableComponent from './DraggableComponent'
 export default function Pannable({ children }) {
   const dispatch = useDispatch()
   const isTextTool = useSelector(state => state.display.tool === 'text')
-  const offset = useSelector(state => state.display.offset)
+  const { offset, zoom } = useSelector(state => state.display)
 
   const className = "pannable" + (isTextTool ? " text-tool" : "")
 
   const onClick = useCallback((event) => {
     if (isTextTool) {
-      dispatch({ type: 'ADD_CAPTION', event })
+      // supply caption id so that editor can be toggled
+      dispatch({ type: 'ADD_CAPTION', id: generate(), event, zoom })
     }
-  }, [dispatch, isTextTool])
+  }, [dispatch, isTextTool, zoom])
 
   const onStop = useCallback(offset => {
     dispatch({ type: 'SET_OFFSET', offset })
