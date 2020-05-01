@@ -28,7 +28,7 @@ export default function Caption({ caption, currentlyEdited }) {
           x={Math.round(x)} 
           y={Math.round(y)} 
           width={foreignObjectSize.width} 
-          height={foreignObjectSize.height + 10}>
+          height={foreignObjectSize.height}>
           { currentlyEdited &&
             <EditCaptionTextarea
               caption={caption}

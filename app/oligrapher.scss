@@ -210,7 +210,7 @@ $edge_highlight_color: $highlight_blue;
 #oligrapher-graph-container {
     position: relative;
 
-    .oligrapher-graph-svg {
+    #oligrapher-graph-svg {
         z-index: 1;
     }
 

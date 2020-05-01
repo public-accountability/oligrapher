@@ -18,17 +18,17 @@ export default produce((display, action) => {
     return
   case 'SET_SVG_SIZE':
     display.svgSize = action.size
-    return  
+    return
   case 'ADD_NODE':
     if (!isLittleSisId(action.node.id)) {
-      toggleEditor(display, action.node.id, 'node')
+      toggleEditor(display, 'node', action.node.id)
     }
     return
   case 'REMOVE_NODE':
     FloatingMenu.clear(display)
     return
   case 'CLICK_NODE':
-    toggleEditor(display, action.id, 'node')
+    toggleEditor(display, 'node', action.id)
     return
   case 'DRAG_NODE':
     FloatingMenu.clear(display)
@@ -37,16 +37,16 @@ export default produce((display, action) => {
     FloatingMenu.clear(display)
     return
   case 'CLICK_EDGE':
-    toggleEditor(display, action.id, 'edge')
+    toggleEditor(display, 'edge', action.id)
     return
   case 'ADD_CAPTION':
-    toggleEditor(display, action.id, 'caption')
+    toggleEditor(display, 'caption', action.id)
     return
   case 'REMOVE_CAPTION':
     FloatingMenu.clear(display)
     return
   case 'CLICK_CAPTION':
-    toggleEditor(display, action.id, 'caption')
+    toggleEditor(display, 'caption', action.id)
     return
   case 'ZOOM_IN':
     display.zoom = display.zoom + ZOOM_INTERVAL
@@ -71,7 +71,7 @@ export default produce((display, action) => {
     FloatingMenu.set(display)
     return
   case 'OPEN_EDTIOR':
-    toggleEditor(display, action.id, action.editorType)
+    FloatingMenu.set(display, action.editorType, action.id)
     return
   // Save map actions
   case 'SAVE_MAP_IN_PROGRESS':

@@ -152,6 +152,8 @@ export const convertSelectorForUndo = selector => (state => selector({
   settings: state.settings
 }))
 
+// export const convertSelectorForUndo = selector => selector
+
 // redux-undo places the present state at state.present, so we use our own
 // useSelector() to "transparently" make this change to all our selectors
 export function useSelector(selector) {

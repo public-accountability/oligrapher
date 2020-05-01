@@ -11,18 +11,32 @@ import EdgeLine from '../components/graph/EdgeLine'
 import EdgeHandle from '../components/graph/EdgeHandle'
 import EdgeLabel from '../components/graph/EdgeLabel'
 
-export default function Edge({ edge, currentlyEdited }) {
+export const Edge = React.forwardRef(function Func({ id, currentlyEdited }, edgesRef) {
   const dispatch = useDispatch()
+  const edge = useSelector(state => state.graph.edges[id])
   const actualZoom = useSelector(state => state.display.actualZoom)
   const editorMode = useSelector(state => state.display.modes.editor)
 
   const [isHovering, setHovering] = useState(false)
   const [isDragging, setDragging] = useState(false)
   const [startDrag, setStartDrag] = useState()
-  const [geometry, setGeometry] = useState(Curve.calculateGeometry(edge))
-  const curve = Curve.from.geometry(geometry)
+  const { cx, cy, x1, x2, y1, y2, s1, s2, scale, label } = edge
+  const [geometry, setGeometry] = useState(Curve.calculateGeometry({ cx, cy, x1, x2, y1, y2, s1, s2 }))
+  const curve = useMemo(() => Curve.from.geometry(geometry), [geometry])
 
-  const { cx, cy, x1, x2, y1, y2, s1, s2, scale, label, id } = edge
+  // registers updateEndpoint with graph so that dragged nodes 
+  // can update edges without using the store
+  edgesRef.current[id] = {
+    updateEndpoint: (nodeId, position) => {
+      let newEdge
+      if (nodeId === edge.node1_id) {
+        newEdge = Object.assign({}, edge, { x1: position.x, y1: position.y })
+      } else {
+        newEdge = Object.assign({}, edge, { x2: position.x, y2: position. y })
+      }
+      setGeometry(Curve.calculateGeometry(newEdge))
+    }
+  }
 
   const updateEdge = useCallback(
     attributes => dispatch({ type: 'UPDATE_EDGE', id, attributes }), 
@@ -35,16 +49,16 @@ export default function Edge({ edge, currentlyEdited }) {
 
   // This resets the curve based on new props when they are passed to an already rendered component
   // This happens after the DRAG_NODE action occurs.
-  useEffect(() => {
+  useEffect(() => {  
     setGeometry(Curve.calculateGeometry({ cx, cy, x1, x2, y1, y2, s1, s2 }))
-  }, [cx, cy, x1, x2, y1, y2, s1, s2]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [cx, cy, x1, x2, y1, y2, s1, s2, id])
 
   const pickProps = (...propNames) => pick(edge, propNames)
 
   const width = 1 + (scale -1) * 5
-  const startPosition = { x: cx, y: cy }
+  const startPosition = useMemo(() => ({ x: cx, y: cy }), [cx, cy])
 
-  const onStart = useMemo((evt, data) => {
+  const onStart = useCallback((evt, data) => {
     setStartDrag(data)
   }, [])
 
@@ -71,8 +85,8 @@ export default function Edge({ edge, currentlyEdited }) {
   const edgeLabelProps = { curve, width, ...pickProps('id', 'scale', 'status', 'label') }
   const edgeHandleProps = { 
     curve, width,
-    onMouseEnter: () => setHovering(true),
-    onMouseLeave: () => setHovering(false)
+    onMouseEnter: useCallback(() => setHovering(true), []),
+    onMouseLeave: useCallback(() => setHovering(false), [])
   }
 
   // Display helpers
@@ -94,9 +108,11 @@ export default function Edge({ edge, currentlyEdited }) {
       </g>
     </DraggableCore>
   )
-}
+})
 
 Edge.propTypes = {
-  edge: PropTypes.object.isRequired,
+  id: PropTypes.string.isRequired,
   currentlyEdited: PropTypes.bool.isRequired
 }
+
+export default React.memo(Edge)

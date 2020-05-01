@@ -1,36 +1,27 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import generate from 'shortid'
 
-import { useSelector } from '../../util/helpers'
 import DraggableComponent from './DraggableComponent'
 
 /* Allows for the maps to be panned */
 /* Also allows for adding new caption by clicking background */
-export default function Pannable({ children }) {
-  const dispatch = useDispatch()
-  const isTextTool = useSelector(state => state.display.tool === 'text')
-  const { offset, zoom } = useSelector(state => state.display)
-
+export function Pannable({ children, offset, zoom, isTextTool, addCaption, setOffset }) {
   const className = "pannable" + (isTextTool ? " text-tool" : "")
 
   const onClick = useCallback((event) => {
     if (isTextTool) {
       // supply caption id so that editor can be toggled
-      dispatch({ type: 'ADD_CAPTION', id: generate(), event, zoom })
+      addCaption(event, zoom)
     }
-  }, [dispatch, isTextTool, zoom])
-
-  const onStop = useCallback(offset => {
-    dispatch({ type: 'SET_OFFSET', offset })
-  }, [dispatch])
+  }, [isTextTool, zoom, addCaption])
 
   return (
     <DraggableComponent 
       handle='.pannable-handle' 
       position={offset}
-      onStop={onStop} 
+      onStop={setOffset}
       onClick={onClick}>
       <g className={className}>
         <rect 
@@ -48,9 +39,33 @@ export default function Pannable({ children }) {
 
 Pannable.propTypes = {
   children: PropTypes.node.isRequired,
-  scale: PropTypes.number.isRequired
+  scale: PropTypes.number.isRequired,
+  offset: PropTypes.object.isRequired,
+  zoom: PropTypes.number.isRequired,
+  isTextTool: PropTypes.bool.isRequired,
+  addCaption: PropTypes.func.isRequired,
+  setOffset: PropTypes.func.isRequired
 }
 
 Pannable.defaultProps = {
   scale: 1
 }
+
+const mapStateToProps = state => {
+  const { offset, zoom, tool } = state.display
+
+  return {
+    offset,
+    zoom,
+    isTextTool: tool === 'text'
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    addCaption: (event, zoom) => dispatch({ tyoe: 'ADD_CAPTION', id: generate(), event, zoom }),
+    setOffset: (offset) => dispatch({ type: 'SET_OFFSET', offset })
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Pannable)

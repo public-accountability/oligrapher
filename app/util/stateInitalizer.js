@@ -42,12 +42,13 @@ export function flatten(obj) {
 export default function stateInitalizer(serializedState) {
   const state = merge({}, defaultState, serializedState)
 
-  keys(state.graph.edges).forEach(edgeId => {
-    state.graph.edges[edgeId] = Edge.new(flatten(state.graph.edges[edgeId]))
-  })
-
   keys(state.graph.nodes).forEach(nodeId => {
     state.graph.nodes[nodeId] = Node.new(flatten(state.graph.nodes[nodeId]))
+  })
+
+  keys(state.graph.edges).forEach(edgeId => {
+    state.graph.edges[edgeId] = Edge.new(flatten(state.graph.edges[edgeId]))
+    Graph.registerEdgeWithNodes(state.graph, state.graph.edges[edgeId])
   })
 
   keys(state.graph.captions).forEach(captionId => {

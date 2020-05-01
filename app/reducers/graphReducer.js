@@ -23,11 +23,11 @@ export const reducer = produce((graph, action) => {
     Graph.removeNode(graph, action.id)
     return
   case 'MOVE_NODE':
+    Graph.dragNodeEdges(graph, action.id, action.deltas) // updates node's edges    
     Graph.moveNode(graph, action.id, action.deltas)
-    Graph.dragNode(graph, action.id, { x: 0, y: 0 }) // updates node's edges    
     return
   case 'DRAG_NODE':
-    Graph.dragNode(graph, action.id, action.deltas)
+    Graph.dragNodeEdges(graph, action.id, action.deltas)
     return
   case 'ADD_EDGE':
     Graph.addEdgeIfNodes(graph, action.edge)

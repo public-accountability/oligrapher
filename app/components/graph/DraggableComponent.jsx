@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import Draggable from 'react-draggable'
 import noop from 'lodash/noop'
@@ -13,13 +13,13 @@ export default function DraggableComponent(props) {
   const [isDragging, setDragging] = useState(false)
   const svgZoom = useSelector(state => state.display.svgZoom)
 
-  const onDrag = (evt, data) => {
+  const onDrag = useCallback((evt, data) => {
     setDragging(true)
     const { x, y } = data
     props.onDrag({ x, y })
-  }
+  }, [props])
 
-  const onStop = (evt, data) => {
+  const onStop = useCallback((evt, data) => {
     if (isDragging) {
       const { x, y } = data
       props.onStop({ x, y })
@@ -27,7 +27,7 @@ export default function DraggableComponent(props) {
     } else {
       props.onClick(evt, data)
     }
-  }
+  }, [isDragging, props])
 
   // The setting the position to 0,0 has the effect of ensuring that
   // all drag deltas always start with 0,0.

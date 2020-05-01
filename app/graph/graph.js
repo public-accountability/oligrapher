@@ -225,8 +225,17 @@ export function updateNode(graph, node, attributes) {
   return graph
 }
 
+export function registerEdgeWithNodes(graph, edge) {
+  graph.nodes[edge.node1_id].edgeIds.push(edge.id)
+  graph.nodes[edge.node2_id].edgeIds.push(edge.id)
+
+  return graph
+}
+
 export function addEdge(graph, edge) {
   graph.edges[edge.id] = edge
+  registerEdgeWithNodes(graph, edge)
+
   return graph
 }
 
@@ -283,7 +292,7 @@ export function updateEdgeOffset(oldEdge, newEdge) {
 }
 
 // This updates an edge's curve when one of it's nodes has moved
-export function dragNodeEdge(graph, {edge, node, coordinates}) {
+export function dragNodeEdge(graph, { edge, node, coordinates }) {
   merge(graph.edges[edge.id],
         edgeCoordinates(determineNodeNumber({ edge, node }), coordinates))
   return graph
@@ -291,10 +300,10 @@ export function dragNodeEdge(graph, {edge, node, coordinates}) {
 
 // dragNode() updates the connected edges (if any)
 // It does not change the coordinates of the node that is dragging.
-export function dragNode(graph, nodeId, deltas) {
+export function dragNodeEdges(graph, nodeId, deltas) {
   const node = getNode(graph, nodeId)
   const coordinates = translatePoint(node, deltas) // x,y of location of new node
-  edgesOf(graph, node.id).forEach(edge => dragNodeEdge(graph, {edge, node, coordinates}))
+  edgesOf(graph, node.id).forEach(edge => dragNodeEdge(graph, { edge, node, coordinates }))
   return graph
 }
 
@@ -355,8 +364,9 @@ export default {
   "updateEdge": updateEdge,
   "addCaption": addCaption,
   "moveNode": moveNode,
-  "dragNode": dragNode,
+  "dragNodeEdges": dragNodeEdges,
   "addConnection": addConnection,
   "connectedNodeIds": connectedNodeIds,
-  "arrange": arrangeGraph
+  "arrange": arrangeGraph,
+  "registerEdgeWithNodes": registerEdgeWithNodes
 }

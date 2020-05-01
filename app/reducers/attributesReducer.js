@@ -29,10 +29,12 @@ export default produce((attributes, action) => {
     updateSettings(attributes.settings, action.key, action.value)
     return
   case 'SET_EDITORS':
-    draft.attributes.editors = action.editors
+    attributes.editors = action.editors
     return
   case 'SET_LOCK':
-    draft.attributes.lock = action.lock
-    return  
+    attributes.lock = action.lock
+    return
+  default:
+    return attributes
   }
 }, null)

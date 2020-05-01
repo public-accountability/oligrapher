@@ -8,5 +8,5 @@ export default combineReducers({
   graph: graphReducer,
   display: displayReducer,
   attributes: attributesReducer,
-  settings: (state = null) => state
+  settings: (settings = null) => settings
 })

@@ -1,5 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react'
-import ReactDOM from 'react-dom'
+import React, { useState, useCallback, useContext } from 'react'
 import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 
@@ -9,39 +8,31 @@ import NodeHalo from '../components/graph/NodeHalo'
 import NodeCircle from '../components/graph/NodeCircle'
 import NodeImage from '../components/graph/NodeImage'
 import NodeLabel from '../components/graph/NodeLabel'
-import EdgeCreationMessage from "./EdgeCreationMessage"
-import { findIntersectingNodeFromDrag } from '../graph/node'
+import { NodeDraggingContext } from './Graph'
 
-export default function Node({ node, currentlyEdited }) {
+export function Node({ id, currentlyEdited }) {
   const dispatch = useDispatch()
-  const { id, scale } = node
+  const node = useSelector(state => state.graph.nodes[id])
+  const { scale } = node
   const radius = 25 * scale
-  const [intersectingNode, setIntersectingNode] = useState(null)
   const [dragging, setDragging] = useState(false)
-  const [draggedOver, setDraggedOver] = useState(false)
   const editorMode = useSelector(state => state.display.modes.editor)
-  const { nodes } = useSelector(state => state.graph)
-  const showHalo = currentlyEdited || draggedOver || dragging
+  const showHalo = currentlyEdited || dragging
+
+  const dragContext = useContext(NodeDraggingContext)
 
   const moveNode = useCallback(deltas => {
-    if (intersectingNode) {
-      // return node to original position
-      dispatch({ type: 'MOVE_NODE', id, deltas: { x: 0, y: 0 } })
-      // add edge between this node and intersecting node
-      dispatch({ type: 'ADD_EDGE' }, { node1_id: node.id, node2_id: intersectingNode.id })
-      dispatch({ type: 'OPEN_EDITOR', id, editorType: 'edge' })
-    } else {
-      dispatch({ type: 'MOVE_NODE', id, deltas })
-    }
-
-    setIntersectingNode(null)
+    dragContext.handleNodeMove(node, deltas)
     setDragging(false)
-  }, [dispatch, id, node, intersectingNode])
+    // dispatch({ type: 'MOVE_NODE', id, deltas })
+  }, [node, dragContext])
 
-  const dragNode = useCallback(deltas => {
-    dispatch({ type: 'DRAG_NODE', id, deltas })
-    setIntersectingNode(findIntersectingNodeFromDrag(nodes, node, deltas))
-  }, [dispatch, id, node, nodes])
+  const onDrag = useCallback(deltas => {
+    dragContext.handleNodeDrag(node, deltas)
+    // context.edges[edgeId].updateNodePosition(id, translatePoint(node, deltas))
+    // setIntersectingNode(findIntersectingNodeFromDrag(nodes, node, deltas))
+    // dispatch({ type: 'DRAG_NODE', id, deltas })
+  }, [node, dragContext])
 
   const clickNode = useCallback(() => dispatch({ type: 'CLICK_NODE', id }), [dispatch, id])
   const onStart = useCallback(() => setDragging(true), [])
@@ -54,7 +45,7 @@ export default function Node({ node, currentlyEdited }) {
         onStart={onStart}
         onStop={moveNode}
         onClick={clickNode}
-        onDrag={dragNode}>
+        onDrag={onDrag}>
         <g id={"node-" + id} className="oligrapher-node">
           <NodeHalo node={node} radius={radius} showHalo={showHalo} />
           <NodeCircle node={node} radius={radius} />
@@ -62,17 +53,13 @@ export default function Node({ node, currentlyEdited }) {
           <NodeLabel node={node} radius={radius} />
         </g>
       </DraggableComponent>
-      { intersectingNode && 
-        ReactDOM.createPortal(
-          <EdgeCreationMessage nodes={[node, intersectingNode]} />,
-          document.getElementById('oligrapher-graph-container')
-        )
-      }
     </>
   )
 }
 
 Node.propTypes = {
-  node: PropTypes.object.isRequired,
+  id: PropTypes.string.isRequired,
   currentlyEdited: PropTypes.bool.isRequired
 }
+
+export default React.memo(Node)

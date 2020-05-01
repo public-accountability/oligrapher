@@ -91,7 +91,7 @@ const EDITOR_TYPES = {
   caption: ['caption']
 }
 
-export const toggleEditor = (display, id, type) => {
+export const toggleEditor = (display, type, id) => {
   let isOpen = EDITOR_TYPES[type].includes(getType(display))
   let isBeingEdited = getId(display) === id
 

@@ -17,7 +17,8 @@ const nodeDefaults = {
   type: "circle",
   image: null,
   url: null,
-  color: '#ccc'
+  color: '#ccc',
+  edgeIds: []
 }
 
 export const nodeShape = {
