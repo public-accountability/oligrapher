@@ -16,12 +16,8 @@ const DEFAULT_VIEWBOX = { minX: -200, minY: -200, w: 400, h: 400 }
 const DEFAULT_GRAPH = {
   nodes: {},
   edges: {},
-  captions: {},
-  viewBox: null,
-  actualZoom: null,
-  zoom: 1
+  captions: {}
 }
-
 
 /*
     - Helper Functions
@@ -101,10 +97,7 @@ export const getNode = (graph, nodeId) => graph.nodes[getId(nodeId)]
 export const getEdge = (graph, edgeId) => graph.edges[getId(edgeId)]
 
 export function edgesOf(graph, node) {
-  return filter(
-    values(graph.edges),
-    edge => edge.node1_id == getId(node) || edge.node2_id == getId(node)
-  )
+  return getNode(graph, node).edgeIds.map(id => graph.edges[id])
 }
 
 export function nodesOf(graph, edge) {
@@ -205,7 +198,8 @@ export function addNodes(graph, nodes) {
   return graph
 }
 
-export function removeNode(graph, node) {
+export function removeNode(graph, nodeId) {
+  const node = getNode(graph, nodeId)
   edgesOf(graph, node).forEach(edge => removeEdge(graph, edge))
   delete graph.nodes[getId(node)]
   return graph
@@ -216,7 +210,7 @@ export function updateNode(graph, node, attributes) {
 
   // If scale is changed, update any associated edges
   if (attributes.scale) {
-    edgesOf(graph, getId(node)).forEach(edge => {
+    edgesOf(graph, node).forEach(edge => {
       let attribute = 's' + determineNodeNumber({edge, node})
       graph.edges[edge.id][attribute] = attributes.scale
     })
@@ -228,7 +222,6 @@ export function updateNode(graph, node, attributes) {
 export function registerEdgeWithNodes(graph, edge) {
   graph.nodes[edge.node1_id].edgeIds.push(edge.id)
   graph.nodes[edge.node2_id].edgeIds.push(edge.id)
-
   return graph
 }
 
@@ -303,7 +296,7 @@ export function dragNodeEdge(graph, { edge, node, coordinates }) {
 export function dragNodeEdges(graph, nodeId, deltas) {
   const node = getNode(graph, nodeId)
   const coordinates = translatePoint(node, deltas) // x,y of location of new node
-  edgesOf(graph, node.id).forEach(edge => dragNodeEdge(graph, { edge, node, coordinates }))
+  edgesOf(graph, node).forEach(edge => dragNodeEdge(graph, { edge, node, coordinates }))
   return graph
 }
 

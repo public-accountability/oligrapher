@@ -5,6 +5,7 @@ import Graph from './Graph'
 import Editor from './Editor'
 import FloatingMenus from './FloatingMenus'
 import ZoomControl from '../components/ZoomControl'
+import UserMessage from './UserMessage'
 
 /*
   This is the root container
@@ -37,6 +38,7 @@ export function Root() {
         <Editor />
         <ZoomControl />
         <FloatingMenus />
+        <UserMessage />
       </div>
     </div>
   )

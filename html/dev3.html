@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/><meta charset="UTF-8">
+    <title>Oligrapher Demo</title>
+    <script src="webpack-dev-server.js"></script>
+    <script src="oligrapher-dev.js"></script>
+    <style>
+      body {
+        margin: 0;
+      }
+
+     #oligrapher {
+       width: 100%;
+     }
+    </style>
+  </head>
+
+  <body>
+    <div id="oligrapher"></div>
+
+    <script>
+
+     var graph = {
+       nodes: {},
+       edges: {},
+       captions: {}
+     }
+
+     var oli = new Oligrapher({
+       graph: graph,
+       settings: {
+         debug: true
+       },
+       attributes: {
+         title: "Example Title",
+         date: "January 12, 2018",
+         subtitle: "A longer description of this map. Use this space to give more context.",
+         user: { name: "Kevin", url: "http://littlesis.org/user/kevin" },
+         settings: { private: false },
+         links: [
+           { text: "Edit", url: "https://littlesis.org/oligrapher/edit" },
+           { text: "Clone", url: "https://littlesis.org/oligrapher/clone" },
+           { text: "Disclaimer", url: "https://littlesis.org/oligrapher/disclaimer" }
+         ]
+       },
+       display: {
+         modes: { editor: true },
+         zoom: 1.5
+       }
+     })
+    </script>
+  </body>
+</html>

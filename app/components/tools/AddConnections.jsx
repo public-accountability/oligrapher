@@ -21,7 +21,8 @@ import Graph from '../../graph/graph'
 export default function AddConnections({ id }) {
   const dispatch = useDispatch()
   const graph = useSelector(state => state.graph)
-  const connectedNodeIds = useMemo(() => Graph.connectedNodeIds(graph, id), [graph, id])
+  const node = graph.nodes[id]
+  const connectedNodeIds = useMemo(() => Graph.connectedNodeIds(graph, node), [graph, node])
   const [categoryId, setCategoryId] = useState(0)
   const [addedNodeIds, setAddedNodeIds] = useState([])
   const [results, setResults] = useState(null)

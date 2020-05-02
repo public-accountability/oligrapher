@@ -25,8 +25,8 @@ describe('Oligrapher', function() {
     it ("merges in configuration with default state", function() {
       let oli = new Oligrapher({settings: { debug: true} })
       let state = oli.store.getState()
-      expect(state.present.settings.debug).to.eql(true)
-      expect(state.present.graph.nodes).to.eql({})
+      expect(state.settings.debug).to.eql(true)
+      expect(state.graph.nodes).to.eql({})
     })
 
     it("renders the application once with ReactDOM", function() {

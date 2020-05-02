@@ -9,7 +9,7 @@ export const X_OFFSET = {
 export const Y_OFFSET = {
   node: -200,
   edge: -250,
-  caption: -100
+  caption: -65
 }
 
 export const set = (display, type = null, id = null) => {

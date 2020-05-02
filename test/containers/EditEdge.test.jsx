@@ -23,7 +23,7 @@ describe('<EditEdge>', function() {
     node1 = Node.new({ name: 'Person', url: 'https://example.com' })
     node2 = Node.new({ name: 'Corporation', url: 'https://exmaple.com' })
     edge = Edge.newEdgeFromNodes(node1, node2)
-    FloatingMenu.set(state, 'edge', edge.id)
+    FloatingMenu.set(state.display, 'edge', edge.id)
     Graph.addNodes(state.graph, [node1, node2])
     Graph.addEdge(state.graph, edge)
     remover = sinon.fake()

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from 'react'
+import React, { useState, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 
@@ -8,34 +8,31 @@ import NodeHalo from '../components/graph/NodeHalo'
 import NodeCircle from '../components/graph/NodeCircle'
 import NodeImage from '../components/graph/NodeImage'
 import NodeLabel from '../components/graph/NodeLabel'
-import { NodeDraggingContext } from './Graph'
 
 export function Node({ id, currentlyEdited }) {
   const dispatch = useDispatch()
   const node = useSelector(state => state.graph.nodes[id])
-  const { scale } = node
+  const { scale, name } = node
   const radius = 25 * scale
-  const [dragging, setDragging] = useState(false)
+  const [isDragging, setDragging] = useState(false)
   const editorMode = useSelector(state => state.display.modes.editor)
-  const showHalo = currentlyEdited || dragging
-
-  const dragContext = useContext(NodeDraggingContext)
+  const showHalo = currentlyEdited || isDragging
 
   const moveNode = useCallback(deltas => {
-    dragContext.handleNodeMove(node, deltas)
     setDragging(false)
-    // dispatch({ type: 'MOVE_NODE', id, deltas })
-  }, [node, dragContext])
+    dispatch({ type: 'MOVE_NODE', id, deltas })
+  }, [dispatch, id])
 
+  // the id in the payload, while otherwise redundant, allows redux-undo 
+  // to group drag actions into a single action
   const onDrag = useCallback(deltas => {
-    dragContext.handleNodeDrag(node, deltas)
-    // context.edges[edgeId].updateNodePosition(id, translatePoint(node, deltas))
-    // setIntersectingNode(findIntersectingNodeFromDrag(nodes, node, deltas))
-    // dispatch({ type: 'DRAG_NODE', id, deltas })
-  }, [node, dragContext])
+    dispatch({ type: 'DRAG_NODE', id, node, deltas })
+  }, [dispatch, id, node])
 
-  const clickNode = useCallback(() => dispatch({ type: 'CLICK_NODE', id }), [dispatch, id])
   const onStart = useCallback(() => setDragging(true), [])
+  const clickNode = useCallback(() => dispatch({ type: 'CLICK_NODE', id }), [dispatch, id])
+  const onMouseEnter = useCallback(() => dispatch({ type: 'MOUSE_ENTERED_NODE', name }), [dispatch, name])
+  const onMouseLeave = useCallback(() => dispatch({ type: 'MOUSE_LEFT_NODE' }), [dispatch])
 
   return (
     <>
@@ -46,7 +43,7 @@ export function Node({ id, currentlyEdited }) {
         onStop={moveNode}
         onClick={clickNode}
         onDrag={onDrag}>
-        <g id={"node-" + id} className="oligrapher-node">
+        <g id={"node-" + id} className="oligrapher-node" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
           <NodeHalo node={node} radius={radius} showHalo={showHalo} />
           <NodeCircle node={node} radius={radius} />
           <NodeImage node={node} radius={radius} />

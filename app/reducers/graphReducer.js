@@ -3,8 +3,12 @@ import merge from 'lodash/merge'
 import undoable, { includeAction } from 'redux-undo'
 
 import Graph from '../graph/graph'
+import { findIntersectingNodeFromDrag } from '../graph/node'
+import Edge from '../graph/edge'
 import Caption from '../graph/caption'
 import { translatePoint } from '../util/helpers'
+
+let draggedNode, draggedOverNode, newEdge
 
 export const reducer = produce((graph, action) => {
   switch(action.type) {
@@ -22,12 +26,26 @@ export const reducer = produce((graph, action) => {
   case 'REMOVE_NODE':
     Graph.removeNode(graph, action.id)
     return
-  case 'MOVE_NODE':
-    Graph.dragNodeEdges(graph, action.id, action.deltas) // updates node's edges    
-    Graph.moveNode(graph, action.id, action.deltas)
-    return
   case 'DRAG_NODE':
-    Graph.dragNodeEdges(graph, action.id, action.deltas)
+    Graph.dragNodeEdges(graph, action.node.id, action.deltas)
+    return
+  case 'MOVE_NODE':
+    draggedNode = graph.nodes[action.id]
+    draggedOverNode = findIntersectingNodeFromDrag(
+      graph.nodes, 
+      draggedNode, 
+      action.deltas
+    )
+
+    if (draggedOverNode) {
+      newEdge = Edge.newEdgeFromNodes(draggedNode, draggedOverNode)
+      Graph.addEdge(graph, newEdge)
+      Graph.dragNodeEdges(graph, action.id, { x: 0, y: 0 })
+    } else {
+      Graph.moveNode(graph, action.id, action.deltas)
+      Graph.dragNodeEdges(graph, action.id, { x: 0, y: 0 }) // updates node's edges
+    }
+
     return
   case 'ADD_EDGE':
     Graph.addEdgeIfNodes(graph, action.edge)
@@ -62,34 +80,44 @@ export const reducer = produce((graph, action) => {
   }
 }, null)
 
-export default undoable(reducer, { 
-  filter: includeAction([
-    'ADD_NODE',
-    'UPDATE_NODE',
-    'REMOVE_NODE',
-    'DRAG_NODE',
-    'MOVE_NODE',
-    'ADD_EDGE',
-    'ADD_EDGES',
-    'UPDATE_EDGE',
-    'REMOVE_EDGE',
-    'ADD_CAPTION',
-    'UPDATE_CAPTION',
-    'MOVE_CAPTION',
-    'DELETE_CAPTION'
-  ]),
+export const UNDO_ACTIONS = [
+  'ADD_NODE',
+  'UPDATE_NODE',
+  'REMOVE_NODE',
+  'DRAG_NODE',
+  'MOVE_NODE',
+  'ADD_EDGE',
+  'ADD_EDGES',
+  'UPDATE_EDGE',
+  'REMOVE_EDGE',
+  'ADD_CAPTION',
+  'UPDATE_CAPTION',
+  'MOVE_CAPTION',
+  'REMOVE_CAPTION'
+]
+
+const undoableReducer = undoable(reducer, { 
+  filter: includeAction(UNDO_ACTIONS),
   groupBy: (action) => {
-    // consider all consecutive drags and moves to the same node as one action
+    // consider all consecutive drags and moves for the same node as one action
     const type = (action.type === 'DRAG_NODE' ? 'MOVE_NODE' : action.type)
     return type + (action.id ? ("-" + String(action.id)) : "")
   },
   debug: false,
   ignoreInitialState: true,
   syncFilter: true
-
-  // here's a simpler alternative but it will include every incremental drag action
-  //
-  // filter: (action, currentState, previousHistory) => {
-  //   return currentState.graph === previousHistory.present.graph
-  // }
 })
+
+const flattenStateReducer = (graph, action) => {
+  // include SET_SVG_ZOOM so that state is flattened at the start
+  if (!graph.nodes || UNDO_ACTIONS.concat(['SET_SVG_ZOOM']).includes(action.type)) {
+    return { 
+      ...graph.present,
+      ...graph
+    }
+  } else {
+    return graph
+  }
+}
+
+export default (state, action) => flattenStateReducer(undoableReducer(state, action), action)

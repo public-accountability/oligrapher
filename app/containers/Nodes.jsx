@@ -5,11 +5,14 @@ import { connect } from 'react-redux'
 import Node from './Node'
 import FloatingMenu from '../util/floatingMenu'
 
-export function Nodes({ nodes, editedNodeId }) {
+export function Nodes({ nodes, editedNodeId, draggedNodeId }) {
+  // reorder so that dragged node is painted first
+  const nonDraggedNodeIds = Object.keys(nodes).filter(id => id !== draggedNodeId)
+  const nodeIds = (draggedNodeId ? [draggedNodeId] : []).concat(nonDraggedNodeIds)
 
   return (
     <g className="nodes">
-      { Object.keys(nodes).map(id => (
+      { nodeIds.map(id => (
         <Node 
           key={id} 
           id={id} 
@@ -21,13 +24,15 @@ export function Nodes({ nodes, editedNodeId }) {
 
 Nodes.propTypes = {
   nodes: PropTypes.object.isRequired,
-  editedNodeId: PropTypes.string
+  editedNodeId: PropTypes.string,
+  draggedNodeId: PropTypes.string
 }
 
 const mapStateToProps = state => {
   return {
-    nodes: state.graph.present.nodes,
-    editedNodeId: FloatingMenu.getId(state.display, 'node')
+    nodes: state.graph.nodes,
+    editedNodeId: FloatingMenu.getId(state.display, 'node'),
+    draggedNodeId: state.display.draggedNode ? state.display.draggedNode.id : null
   }
 }
 

@@ -5,19 +5,18 @@ import { connect } from 'react-redux'
 import Edge from './Edge'
 import FloatingMenu from '../util/floatingMenu'
 
-export const Edges = React.forwardRef(function Func({ edges, editedEdgeId }, ref) {
+export function Edges({ edges, editedEdgeId }) {
   return (
     <g className="edges">
       { Object.keys(edges).map(id => (
         <Edge
-          ref={ref}
           key={id} 
           id={id} 
           currentlyEdited={id === editedEdgeId} />
       )) }
     </g>
   )
-})
+}
 
 Edges.propTypes = {
   edges: PropTypes.object.isRequired,
@@ -26,9 +25,9 @@ Edges.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    edges: state.graph.present.edges,
+    edges: state.graph.edges,
     editedEdgeId: FloatingMenu.getId(state.display, 'edge')  
   }
 }
 
-export default connect(mapStateToProps, null, null, { forwardRef: true })(Edges)
+export default connect(mapStateToProps)(Edges)

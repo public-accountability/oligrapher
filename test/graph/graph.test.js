@@ -54,16 +54,17 @@ describe('Graph', function() {
 
     specify("edgesOf", function() {
       let edgesOf = curry(Graph.edgesOf)(graph)
-      expect(edgesOf(n1.id)).to.have.lengthOf(1)
-      expect(edgesOf(n2.id)).to.have.lengthOf(2)
-      expect(edgesOf(n3.id)).to.have.lengthOf(1)
-      expect(edgesOf(n4.id)).to.have.lengthOf(0)
+      expect(edgesOf(n1)).to.have.lengthOf(1)
+      expect(edgesOf(n2)).to.have.lengthOf(2)
+      expect(edgesOf(n3)).to.have.lengthOf(1)
+      expect(edgesOf(n4)).to.have.lengthOf(0)
     })
 
     specify("nodesOf", function() {
       let nodesOf = curry(Graph.nodesOf)(graph)
-      expect(nodesOf(e1)).to.eql([n1, n2])
-      expect(nodesOf(e2.id)).to.eql([n2, n3])
+      // we don't compare the full nodes because adding edges gives the nodes edgeIds
+      expect(nodesOf(e1).map(node => node.id)).to.eql([n1.id, n2.id])
+      expect(nodesOf(e2.id).map(node => node.id)).to.eql([n2.id, n3.id])
     })
   })
 
@@ -198,7 +199,10 @@ describe('Graph', function() {
 
     specify("addEdges", function() {
       expect(g.edges).to.eql({})
-      let edges = [Edge.new(), Edge.new()]
+      let node1 = Node.new()
+      let node2 = Node.new()
+      let edges = [Edge.newEdgeFromNodes(node1, node2), Edge.newEdgeFromNodes(node1, node2)]
+      Graph.addNodes(g, [node1, node2])
       Graph.addEdges(g, edges)
       expect(values(g.edges)).to.have.lengthOf(2)
     })

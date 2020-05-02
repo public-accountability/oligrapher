@@ -5,6 +5,8 @@ import { isLittleSisId } from '../util/helpers'
 
 const ZOOM_INTERVAL = 0.2
 
+let draggedNode, draggedOverNode
+
 export default produce((display, action) => {
   switch(action.type) {
   case 'SET_ACTUAL_ZOOM':
@@ -32,6 +34,24 @@ export default produce((display, action) => {
     return
   case 'DRAG_NODE':
     FloatingMenu.clear(display)
+    display.draggedNode = action.node
+    return
+  case 'MOUSE_ENTERED_NODE':
+    if (display.draggedNode && display.draggedNode.name !== action.name) {
+      display.userMessage = `Create new edge between ${display.draggedNode.name} and ${action.name}`
+    }
+    return
+  case 'MOUSE_LEFT_NODE':
+    display.userMessage = null
+    return
+  case 'MOVE_NODE':
+    display.userMessage = null
+    display.draggedNode = null
+    return
+  case 'ADD_EDGE':
+    if (!isLittleSisId(action.edge.id)) {
+      toggleEditor(display, 'edge', action.edge.id)
+    }
     return
   case 'REMOVE_EDGE':
     FloatingMenu.clear(display)

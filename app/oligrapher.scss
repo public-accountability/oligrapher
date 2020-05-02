@@ -743,6 +743,10 @@ g.edge-tool-open .react-draggable-dragging .node-circle {
     fill: lightyellow;
 }
 
+.oligrapher-node {
+  pointer-events: auto;
+}
+
 .oligrapher-node:hover {
     .node-halo-circle {
         fill: $highlight_blue;
@@ -807,9 +811,9 @@ g.edge-tool-open .react-draggable-dragging .node-circle {
   border: 1px solid $oligrapher_gray;
 }
 
-/* create edge message */
+/* user message */
 
-.oligrapher-edge-creation-message {
+.oligrapher-user-message {
   position: absolute;
   right: 80px;
   top: 20px;

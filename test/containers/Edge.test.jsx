@@ -1,21 +1,21 @@
 import React from 'react'
 import { DraggableCore } from 'react-draggable'
 
-import Edge from '../../app/containers/Edge'
+import { Edge } from '../../app/containers/Edge'
 import EdgeLine from '../../app/components/graph/EdgeLine'
 import EdgeHandle from '../../app/components/graph/EdgeHandle'
 import EdgeLabel from '../../app/components/graph/EdgeLabel'
 import { createMockStore, mountWithStore } from '../testHelpers'
 
 describe('<Edge>', function() {
-  let wrapper, edge, state, store
+  let wrapper, node1, node2, edge, state, store
 
   beforeEach(function() {
-    state = { display: { actualZoom: 1, modes: { editor: true } } }
-    store = createMockStore(state)
+    node1 = { id: "1000" }
+    node2 = { id: "x3" }
     edge = {
       id: "x4",
-      node1_id: 1000,
+      node1_id: "1000",
       node2_id: "x3",
       cx: -25.38628860892241,
       cy: 57.53275876918979,
@@ -32,9 +32,17 @@ describe('<Edge>', function() {
       s1: 2,
       s2: 1
     }
+    state = {
+      graph: { 
+        nodes: { "1000": node1, "x3": node2 },
+        edges: { 'x4': edge } 
+      },
+      display: { actualZoom: 1, modes: { editor: true } }
+    }
+    store = createMockStore(state)
     wrapper = mountWithStore(
       store, 
-      <svg><Edge edge={edge} currentlyEdited={false} /></svg>
+      <svg><Edge id={edge.id} currentlyEdited={false} /></svg>
     )
   })
 

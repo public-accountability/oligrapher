@@ -1,13 +1,13 @@
-export const setNodes = (graph, ids) => {
-  graph.edgeCreation.nodes = ids
+export const setNodes = (display, ids) => {
+  display.edgeCreationNodes = ids
 }
 
-export const clearNodes = (graph) => {
-  setNodes(graph, [])
+export const clearNodes = (display) => {
+  setNodes(display, [])
 }
 
-export const getNodes = (graph) => {
-  return graph.edgeCreation.nodes
+export const getNodes = (display) => {
+  return display.edgeCreationNodes
 }
 
 export default {

@@ -3,13 +3,13 @@ import { Provider } from 'react-redux'
 import { shallow, mount } from 'enzyme'
 
 import { createOligrapherStore } from '../app/util/render'
-import defaultState from '../app/util/defaultState'
+import stateInitializer from '../app/util/stateInitalizer'
 
 import sinon from "sinon"
 import * as reactRedux from "react-redux"
 
 export const createMockStore = (state = {}, options = {}) => {
-  let store = createOligrapherStore(merge({}, defaultState, state))
+  let store = createOligrapherStore(stateInitializer(state))
 
   if (options.dispatch) {
     store.dispatch = options.dispatch

@@ -55,8 +55,15 @@ export default function stateInitalizer(serializedState) {
     state.graph.captions[captionId] = merge({}, captionDefaults, flatten(state.graph.captions[captionId]))
   })
 
-  state.graph = Graph.new(state.graph)
   state.display.viewBox = Graph.calculateViewBox(state.graph)
+
+  // for redux-undo
+  state.graph = {
+    ...state.graph,
+    past: [],
+    present: Graph.new(state.graph),
+    future: []
+  }
 
   return state
 }

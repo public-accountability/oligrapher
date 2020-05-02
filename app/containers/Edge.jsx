@@ -11,7 +11,7 @@ import EdgeLine from '../components/graph/EdgeLine'
 import EdgeHandle from '../components/graph/EdgeHandle'
 import EdgeLabel from '../components/graph/EdgeLabel'
 
-export const Edge = React.forwardRef(function Func({ id, currentlyEdited }, edgesRef) {
+export function Edge({ id, currentlyEdited }) {
   const dispatch = useDispatch()
   const edge = useSelector(state => state.graph.edges[id])
   const actualZoom = useSelector(state => state.display.actualZoom)
@@ -23,20 +23,6 @@ export const Edge = React.forwardRef(function Func({ id, currentlyEdited }, edge
   const { cx, cy, x1, x2, y1, y2, s1, s2, scale, label } = edge
   const [geometry, setGeometry] = useState(Curve.calculateGeometry({ cx, cy, x1, x2, y1, y2, s1, s2 }))
   const curve = useMemo(() => Curve.from.geometry(geometry), [geometry])
-
-  // registers updateEndpoint with graph so that dragged nodes 
-  // can update edges without using the store
-  edgesRef.current[id] = {
-    updateEndpoint: (nodeId, position) => {
-      let newEdge
-      if (nodeId === edge.node1_id) {
-        newEdge = Object.assign({}, edge, { x1: position.x, y1: position.y })
-      } else {
-        newEdge = Object.assign({}, edge, { x2: position.x, y2: position. y })
-      }
-      setGeometry(Curve.calculateGeometry(newEdge))
-    }
-  }
 
   const updateEdge = useCallback(
     attributes => dispatch({ type: 'UPDATE_EDGE', id, attributes }), 
@@ -108,7 +94,7 @@ export const Edge = React.forwardRef(function Func({ id, currentlyEdited }, edge
       </g>
     </DraggableCore>
   )
-})
+}
 
 Edge.propTypes = {
   id: PropTypes.string.isRequired,

@@ -2,7 +2,7 @@ import React from 'react'
 
 import { createMockStore, mountWithStore } from '../testHelpers'
 import DraggableComponent from '../../app/components/graph/DraggableComponent'
-import Node from '../../app/containers/Node'
+import { Node } from '../../app/containers/Node'
 import NodeHalo from '../../app/components/graph/NodeHalo'
 import NodeCircle from '../../app/components/graph/NodeCircle'
 import NodeImage from '../../app/components/graph/NodeImage'
@@ -11,8 +11,6 @@ describe('<Node>', function() {
   let wrapper, node, state, store
 
   beforeEach(function() {
-    state = { display: { modes: { editor: true } } }
-    store = createMockStore(state)
     node = {
       id: 'abc',
       x: 1,
@@ -24,7 +22,12 @@ describe('<Node>', function() {
       scale: 2,
       image: 'http://example.com'
     }
-    wrapper = mountWithStore(store, <svg><Node node={node} currentlyEdited={false} /></svg>)
+    state = { 
+      graph: { nodes: { 'abc': node } },
+      display: { modes: { editor: true } } 
+    }
+    store = createMockStore(state)
+    wrapper = mountWithStore(store, <svg><Node id={node.id} currentlyEdited={false} /></svg>)
   })
 
   it('renders Draggable', function() {
