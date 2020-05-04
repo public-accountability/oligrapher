@@ -3,11 +3,13 @@ import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 
 import { useSelector } from '../util/helpers'
+import EditorHeader from '../components/editor/EditorHeader'
 import SizePicker from '../components/SizePicker'
 import EditNodeColorPage from '../components/editor/EditNodeColorPage'
 import EditNodeBioPage from '../components/editor/EditNodeBioPage'
 import NodeStyleForm from '../components/editor/NodeStyleForm'
 import EditMenuSubmitButtons from '../components/editor/EditMenuSubmitButtons'
+import EditorHotKeys from '../components/EditorHotKeys'
 import { callWithTargetValue, isLittleSisId } from '../util/helpers'
 
 export function MainPage({ node, setPage, updateNode, openAddConnections }) {
@@ -65,7 +67,7 @@ MainPage.propTypes = {
   openAddConnections: PropTypes.func.isRequired
 }
 
-export default function EditNode({ id }) {
+export default function NodeEditor({ id }) {
   // possible pages: main, color, size, bio
   const [page, setPage] = useState('main')
 
@@ -77,25 +79,28 @@ export default function EditNode({ id }) {
   const openAddConnections = () => dispatch({ type: 'OPEN_ADD_CONNECTIONS', id })
 
   return (
-    <div className="oligrapher-node-editor">
-      <main>
-        { page === 'main' && <MainPage node={node} setPage={setPage} updateNode={updateNode} openAddConnections={openAddConnections} /> }
-        { page === 'color' && <EditNodeColorPage color={node.color} updateNode={updateNode}/> }
-        { page === 'size' && <SizePicker scale={node.scale} updateNode={updateNode} /> }
-        { page === 'bio' && <EditNodeBioPage text="Placeholder node bio text" updateNode={updateNode} /> }
-      </main>
+    <EditorHotKeys remove={removeNode}>
+      <div className="oligrapher-node-editor">
+        <EditorHeader title="Customize Node" />
+        <main>
+          { page === 'main' && <MainPage node={node} setPage={setPage} updateNode={updateNode} openAddConnections={openAddConnections} /> }
+          { page === 'color' && <EditNodeColorPage color={node.color} updateNode={updateNode}/> }
+          { page === 'size' && <SizePicker scale={node.scale} updateNode={updateNode} /> }
+          { page === 'bio' && <EditNodeBioPage text="Placeholder node bio text" updateNode={updateNode} /> }
+        </main>
 
-      <footer>
-        <EditMenuSubmitButtons
-          hideSubmitButton={true}
-          handleDelete={removeNode}
-          page={page}
-          setPage={setPage} />
-      </footer>
-    </div>
+        <footer>
+          <EditMenuSubmitButtons
+            hideSubmitButton={true}
+            handleDelete={removeNode}
+            page={page}
+            setPage={setPage} />
+        </footer>
+      </div>
+    </EditorHotKeys>
   )
 }
 
-EditNode.propTypes = {
+NodeEditor.propTypes = {
   id: PropTypes.string.isRequired
 }

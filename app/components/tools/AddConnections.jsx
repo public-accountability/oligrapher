@@ -7,6 +7,7 @@ import isArray from 'lodash/isArray'
 import { useSelector } from '../../util/helpers'
 import { findConnections } from '../../datasources/littlesis3'
 import { makeCancelable, callWithTargetValue } from '../../util/helpers'
+import EditorHeader from '../editor/EditorHeader'
 import AddConnectionsCategory from './AddConnectionsCategory'
 import EntitySearchResults from './EntitySearchResults'
 import Graph from '../../graph/graph'
@@ -82,6 +83,7 @@ export default function AddConnections({ id }) {
 
   return (
     <>
+      <EditorHeader title="AddConnections" />
       <AddConnectionsCategory onChange={changeCategory} />
       <br />
       { status }

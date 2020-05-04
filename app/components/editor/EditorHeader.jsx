@@ -1,16 +1,17 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { MdClose } from 'react-icons/md'
 
-export default function EditMenuHeader({ title }) {
+export default function EditorHeader({ title }) {
   const dispatch = useDispatch()
+  const closeEditor = useCallback(() => dispatch({ type: 'CLOSE_EDITOR' }), [dispatch])
 
   return (
     <header className="edit-menu-header">
       <div>{title}</div>
       <div>
-        <button onClick={() => dispatch({ type: 'CLOSE_EDITOR' })}>
+        <button onClick={closeEditor}>
           <MdClose />
         </button>
       </div>
@@ -18,6 +19,6 @@ export default function EditMenuHeader({ title }) {
   )
 }
 
-EditMenuHeader.propTypes = {
+EditorHeader.propTypes = {
   title: PropTypes.string.isRequired
 }

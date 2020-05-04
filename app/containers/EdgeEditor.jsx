@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 
 import { useSelector } from '../util/helpers'
+import EditorHotKeys from '../components/EditorHotKeys'
+import EditorHeader from '../components/editor/EditorHeader'
 import Graph from '../graph/graph'
 import { callWithTargetValue } from '../util/helpers'
 
@@ -69,7 +71,7 @@ MainPage.propTypes = {
   updateEdge: PropTypes.func.isRequired
 }
 
-export default function EditEdge({ id }) {
+export default function EdgeEditor({ id }) {
   const dispatch = useDispatch()
   const [page, setPage] = useState('main')
   const edge = useSelector(state => state.graph.edges[id])
@@ -86,27 +88,30 @@ export default function EditEdge({ id }) {
   )
 
   return (
-    <div className="oligrapher-edge-editor">
-      <main>
-        { page === 'main' &&
-          <MainPage
-            edge={edge}
-            updateEdge={updateEdge}
-            setPage={setPage}
-            nodes={nodes} />
-        }
-      </main>
-      <footer>
-        <EditMenuSubmitButtons 
-          hideSubmitButton={true}
-          handleDelete={removeEdge}
-          page={page}
-          setPage={setPage} />
-      </footer>
-    </div>
+    <EditorHotKeys remove={removeEdge}>
+      <div className="oligrapher-edge-editor">
+        <EditorHeader title="Customize Edge" />
+        <main>
+          { page === 'main' &&
+            <MainPage
+              edge={edge}
+              updateEdge={updateEdge}
+              setPage={setPage}
+              nodes={nodes} />
+          }
+        </main>
+        <footer>
+          <EditMenuSubmitButtons 
+            hideSubmitButton={true}
+            handleDelete={removeEdge}
+            page={page}
+            setPage={setPage} />
+        </footer>
+      </div>
+    </EditorHotKeys>
   )
 }
 
-EditEdge.propTypes = {
+EdgeEditor.propTypes = {
   id: PropTypes.string.isRequired
 }

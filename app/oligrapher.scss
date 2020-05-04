@@ -408,17 +408,11 @@ header.edit-menu-header {
     }
 }
 
-.oligrapher-edit-menu {
+.oligrapher-floating-editor {
     z-index: 20;
     position: absolute;
     top: 50%;
     left: 50%;
-    background-color: white;
-}
-
-/* This is the "edit and customize node" box */
-/* .edit-edge-menu-wrapper, .edit-node-menu-wrapper, .edit-caption-menu-wrapper { */
-.edit-menu-wrapper {
     background-color: white;
     border: 3px solid $highlight_blue;
     padding: 10px;
@@ -442,7 +436,6 @@ header.edit-menu-header {
         margin-top: 0.75em;
     }
 
-/* .edit-node-menu { */
     form {
         label {
             @extend %edit_menu_title;
@@ -495,7 +488,7 @@ header.edit-menu-header {
         }
     }
 
-    div.edit-menu-submit-buttons {
+    div.editor-submit-buttons {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
@@ -569,7 +562,7 @@ header.edit-menu-header {
         }
 
     }
-} /* end: .edit-menu-wrapper */
+} /* end: .oligrapher-floating-editor */
 
 .oligrapher-settings {
     width: 225px;
@@ -594,7 +587,7 @@ header.edit-menu-header {
     }
 }
 
-.edit-edge-menu {
+.oligrapher-edge-editor {
     width: 300px;
 
     input {
@@ -643,7 +636,7 @@ header.edit-menu-header {
 }
 
 /* add connections tool */
-.edit-connections-menu {
+.oligrapher-connections-editor {
     width: $toolbox_width;
     max-height: 500px;
     overflow-y: scroll;
@@ -804,23 +797,27 @@ g.edge-tool-open .react-draggable-dragging .node-circle {
 }
 
 .oligrapher-caption-editor select {
-  margin-top: 5px;
-  margin-right: 5px;
-  background-color: white;
-  font-size: 0.8em;
-  border: 1px solid $oligrapher_gray;
+    margin-top: 5px;
+    margin-right: 5px;
+    background-color: white;
+    font-size: 0.8em;
+    border: 1px solid $oligrapher_gray;
 }
 
 /* user message */
 
 .oligrapher-user-message {
-  position: absolute;
-  right: 80px;
-  top: 20px;
-  padding: 10px;
-  width: 300px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  background-color: white;
-  @extend %box_shadow;
+    position: absolute;
+    right: 80px;
+    top: 20px;
+    padding: 10px;
+    width: 300px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    background-color: white;
+    @extend %box_shadow;
+}
+
+.nofocus:focus {
+    outline: none;
 }

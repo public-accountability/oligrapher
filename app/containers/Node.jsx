@@ -30,7 +30,10 @@ export function Node({ id, currentlyEdited }) {
   }, [dispatch, id, node])
 
   const onStart = useCallback(() => setDragging(true), [])
-  const clickNode = useCallback(() => dispatch({ type: 'CLICK_NODE', id }), [dispatch, id])
+  const clickNode = useCallback(() => {
+    setDragging(false)
+    dispatch({ type: 'CLICK_NODE', id })
+  }, [dispatch, id])
   const onMouseEnter = useCallback(() => dispatch({ type: 'MOUSE_ENTERED_NODE', name }), [dispatch, name])
   const onMouseLeave = useCallback(() => dispatch({ type: 'MOUSE_LEFT_NODE' }), [dispatch])
 

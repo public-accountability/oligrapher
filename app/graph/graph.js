@@ -220,8 +220,16 @@ export function updateNode(graph, node, attributes) {
 }
 
 export function registerEdgeWithNodes(graph, edge) {
+  edge = getEdge(graph, edge)
   graph.nodes[edge.node1_id].edgeIds.push(edge.id)
   graph.nodes[edge.node2_id].edgeIds.push(edge.id)
+  return graph
+}
+
+export function unregisterEdgeWithNodes(graph, edge) {
+  edge = getEdge(graph, edge)
+  graph.nodes[edge.node1_id].edgeIds = graph.nodes[edge.node1_id].edgeIds.filter(id => id !== edge.id)
+  graph.nodes[edge.node2_id].edgeIds = graph.nodes[edge.node2_id].edgeIds.filter(id => id !== edge.id)
   return graph
 }
 
@@ -253,6 +261,7 @@ export function addEdgeIfNodes(graph, edge) {
 }
 
 export function removeEdge(graph, edge) {
+  unregisterEdgeWithNodes(graph, edge)
   delete graph.edges[getId(edge)]
   return graph
 }

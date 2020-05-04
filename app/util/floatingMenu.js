@@ -2,12 +2,14 @@ import Curve from '../graph/curve'
 
 export const X_OFFSET = {
   node: 120,
+  connections: 120,
   edge: 100,
   caption: -150
 }
 
 export const Y_OFFSET = {
   node: -200,
+  connections: -200,
   edge: -250,
   caption: -65
 }
