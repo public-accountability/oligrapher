@@ -260,7 +260,7 @@ describe('Oligrapher', function() {
     expect(findAll('.oligrapher-caption').length).to.equal(captionCount - 1)
   })
 
-  it('undoes and redoes changes to graph', async function() {
+  it('undoes and redoes changes to graph', function() {
     const originalName = find('.oligrapher-node .node-label').textContent
     // "click" node
     const nodeHandle = find('.draggable-node-handle')
@@ -278,5 +278,36 @@ describe('Oligrapher', function() {
     const undo = find('#oligrapher-undo-redo button')
     fireEvent.click(undo)
     expect(find('.oligrapher-node .node-label').textContent).to.equal(originalName)
+  })
+
+  it('closes node editor when escape key is pressed', function() {
+    const handle = find('.draggable-node-handle')
+    // "click" node
+    fireEvent.mouseDown(handle)
+    fireEvent.mouseUp(handle, { bubbles: false }) 
+    // editor should have opened
+    const editor = findAll('.oligrapher-node-editor')
+    expect(editor.length).to.equal(1)
+    // press escape key
+    fireEvent.keyDown(editor[0], { key: 'Escape', code: 'Escape', keyCode: 27 })
+    // editor should have closed
+    expect(findAll('.oligrapher-node-editor').length).to.equal(0)
+  })
+
+  it('deletes node when backspace key is pressed in node editor', function() {
+    const nodeCount = findAll('.oligrapher-node').length
+    const handle = find('.draggable-node-handle')
+    // "click" node
+    fireEvent.mouseDown(handle)
+    fireEvent.mouseUp(handle, { bubbles: false }) 
+    // editor should have opened
+    const editor = findAll('.oligrapher-node-editor')
+    expect(editor.length).to.equal(1)
+    // press backspace key
+    fireEvent.keyDown(editor[0], { key: 'Backspace', code: 'Backspace', keyCode: 8 })
+    // editor should have closed
+    expect(findAll('.oligrapher-node-editor').length).to.equal(0)
+    // node should have deleted
+    expect(findAll('.oligrapher-node').length).to.equal(nodeCount - 1)
   })
 })

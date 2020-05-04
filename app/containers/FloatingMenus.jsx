@@ -6,7 +6,6 @@ import NodeEditor from './NodeEditor'
 import EdgeEditor from './EdgeEditor'
 import CaptionEditor from './CaptionEditor'
 import AddConnections from '../components/tools/AddConnections'
-import { classNames } from '../util/helpers'
 import { floatingMenuPositionSelector } from '../util/floatingMenu'
 
 export default function FloatingMenus() {
@@ -24,7 +23,7 @@ export default function FloatingMenus() {
   
   return (
     <Draggable key={key} enableUserSelectHack={false} handle=".edit-menu-header" positionOffset={position || undefined}>
-      <div className={ classNames("oligrapher-floating-editor", `oligrapher-${type}-editor`) }>
+      <div className="oligrapher-floating-editor">
         { type === 'node' && <NodeEditor id={id} /> }
         { type === 'connections' && <AddConnections id={id} /> }
         { type === 'edge' && <EdgeEditor id={id} /> }

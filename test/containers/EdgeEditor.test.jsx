@@ -8,14 +8,14 @@ import defaultState from '../../app/util/defaultState'
 import Node from '../../app/graph/node'
 import Edge from '../../app/graph/edge'
 
-import EditEdge, { MainPage } from '../../app/containers/EditEdge'
+import EdgeEditor, { MainPage } from '../../app/containers/EdgeEditor'
 import EditMenuSubmitButtons from '../../app/components/editor/EditMenuSubmitButtons'
 
 import FloatingMenu from '../../app/util/floatingMenu'
 
 import Graph from '../../app/graph/graph'
 
-describe('<EditEdge>', function() {
+describe('<EdgeEditor>', function() {
   let node1, node2, edge, editEdgeMenu, store, state, remover
 
   beforeEach(function() {
@@ -28,7 +28,7 @@ describe('<EditEdge>', function() {
     Graph.addEdge(state.graph, edge)
     remover = sinon.fake()
     store = createMockStore(state, { dispatch: remover })
-    editEdgeMenu = mountWithStore(store, <EditEdge id={edge.id} />)
+    editEdgeMenu = mountWithStore(store, <EdgeEditor id={edge.id} />)
   })
 
   it("renders main edge menu", function() {
