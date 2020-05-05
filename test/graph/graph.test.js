@@ -196,6 +196,17 @@ describe('Graph', function() {
       expect(g.edges).to.eql({})
       Graph.addEdge(g, edge)
       expect(g.edges).to.eql({ [edge.id]: edge })
+      // shouldn't be able to add edge where node1 = node2
+      let weirdEdge = Edge.new({ node1_id: n1.id, node2_id: n1.id })
+      Graph.addEdge(g, weirdEdge)
+      expect(g.edges).to.eql({ [edge.id]: edge })
+    })
+
+    specify("addEdgeIfNodes", function() {
+      expect(g.edges).to.eql({})
+      let weirdEdge = Edge.new({ node1_id: n1.id, node2_id: n1.id })
+      Graph.addEdgeIfNodes(g, weirdEdge)
+      expect(g.edges).to.eql({})
     })
 
     specify("addEdges", function() {

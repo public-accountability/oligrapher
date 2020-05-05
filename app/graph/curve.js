@@ -21,7 +21,7 @@ is_reverse
 import toNumber from 'lodash/toNumber'
 import chunk from  'lodash/chunk'
 
-const curveStrength = 0.5
+export const defaultCurveStrength = 0.5
 const circleRadius = 25
 const circleSpacing = 4
 
@@ -36,7 +36,7 @@ function parseCurveString(str) {
   return chunk(str.replace(/(M|Q)/g, '').trim().split(/[ ]+/).map(toNumber), 2)
 }
 
-export function calculateGeometry(edge) {
+export function calculateGeometry(edge, curveStrength = defaultCurveStrength) {
   let { cx, cy, x1, y1, x2, y2, s1, s2 } = edge
   let r1 = s1 * circleRadius
   let r2 = s2 * circleRadius
@@ -63,7 +63,7 @@ export function calculateGeometry(edge) {
   }
 
   // generate curve offset if it doesn't exist
-  if (!cx || !cy) {
+  if (cx == null || cy == null) {
     cx = -(ya - y) * curveStrength
     cy = (xa - x) * curveStrength
   }

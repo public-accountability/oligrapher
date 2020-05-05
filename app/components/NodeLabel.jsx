@@ -17,7 +17,11 @@ export default function NodeLabel({ node, radius, lineHeight }) {
     </text>
   ))
 
-  return (
+  return node.url ? (
+    <a className="node-label" href={node.url} target="_blank" rel="noopener noreferrer">
+      { lines }
+    </a> 
+  ) : (
     <g className="node-label">
       {lines}
     </g>

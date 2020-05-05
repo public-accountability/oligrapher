@@ -72,11 +72,13 @@ html, body, #oligrapher {
     box-sizing: border-box;
 
     &.oligrapher-header-expanded {
-        flex: 0 1 182px;
+        height: 182px;
+        transition: height 0.05s ease-out;
     }
 
     &.oligrapher-header-collapsed {
-          flex: 0 1 auto;
+        height: 52px; 
+        transition: height 0.05s ease-out;
     }
 
     /* title and subtitle*/

@@ -7,11 +7,11 @@ import pick from 'lodash/pick'
 import { translatePoint, rotatePoint } from '../util/helpers'
 import { newNode, findIntersectingNode } from './node'
 import { edgeCoordinates, newEdgeFromNodes } from './edge'
-import { calculateGeometry } from './curve'
+import { calculateGeometry, defaultCurveStrength } from './curve'
 
 export const GRAPH_PADDING_X = 150
 export const GRAPH_PADDING_Y = 50
-const DEFAULT_VIEWBOX = { minX: -200, minY: -200, w: 400, h: 400 }
+const DEFAULT_VIEWBOX = { minX: -500, minY: -400, w: 1000, h: 800 }
 
 const DEFAULT_GRAPH = {
   nodes: {},
@@ -245,14 +245,85 @@ export function unregisterEdgeWithNodes(graph, edge) {
 }
 
 export function addEdge(graph, edge) {
+  if (edge.node1_id === edge.node2_id) {
+    return graph
+  }
+
   graph.edges[edge.id] = edge
   registerEdgeWithNodes(graph, edge)
 
   return graph
 }
 
-export function addEdges(graph, edges) {
-  edges.forEach(edge => addEdge(graph, edge))
+export function createEdgeIndex(edges) {
+  function addToEdgeIndex(index, edge) {
+    let [id1, id2] = [edge.node1_id, edge.node2_id].sort()
+  
+    // no circular edges
+    if (id1 === id2) {
+      return index
+    }
+  
+    if (index[id1]) {
+      index[id1][id2] = (index[id1][id2] || []).concat([edge])
+    } else {
+      index[id1] = { [id2]: [edge] }
+    }
+  
+    return index
+  }
+
+  return edges.reduce((index, edge) => {
+    return addToEdgeIndex(index, edge)
+  }, {})
+}
+
+// creates multiple edges between the same nodes
+// so that the edges are nicely spaced out
+export function addSimilarEdges(graph, edges) {
+  const count = edges.length
+
+  // single edge is added normally
+  if (count === 1) {
+    addEdgeIfNodes(graph, edges[0])
+    return
+  }
+
+  // curve strength is default if there are only 2 edges
+  // curve strength approaches twice default as number of edges increases 
+  const maxCurveStrength = defaultCurveStrength * (2 - 2/count)
+  const range = maxCurveStrength * 2
+  const step = range / (count - 1)
+  let strength = -maxCurveStrength
+  
+  edges.forEach(edge => {
+    let node1 = getNode(graph, edge.node1_id)
+    let node2 = getNode(graph, edge.node2_id)
+    edge = newEdgeFromNodes(node1, node2, edge)
+    let { cx, cy } = calculateGeometry(edge, strength)
+    edge = merge(edge, { cx, cy })
+    addEdge(graph, edge)
+    strength += step
+  })
+
+}
+
+export function addEdgesIfNodes(graph, edges) {
+  const edgeIndex = createEdgeIndex(edges)
+
+  Object.keys(edgeIndex).forEach(id1 => {    
+    Object.keys(edgeIndex[id1]).forEach(id2 => {
+      const node1 = getNode(graph, id1)
+      const node2 = getNode(graph, id2)
+    
+      if (!node1 || !node2) {
+        return
+      }
+    
+      addSimilarEdges(graph, edgeIndex[id1][id2])
+    })
+  })
+
   return graph
 }
 
@@ -371,8 +442,8 @@ export default {
   "removeNode": removeNode,
   "updateNode": updateNode,
   "addEdge": addEdge,
-  "addEdges": addEdges,
   "addEdgeIfNodes": addEdgeIfNodes,
+  "addEdgesIfNodes": addEdgesIfNodes,
   "removeEdge": removeEdge,
   "updateEdge": updateEdge,
   "addCaption": addCaption,

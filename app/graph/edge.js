@@ -50,9 +50,6 @@ export function newEdgeFromNodes(n1, n2, attributes = {}) {
   edge.x2 = n2.x
   edge.y2 = n2.y
   edge.s2 = n2.scale
-  // if (n1.display.x && n1.display.y) {
-  //   edge.display.curve = Curve.from.nodes(n1, n2)
-  // }
 
   return edge
 }

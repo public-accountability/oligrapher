@@ -51,7 +51,7 @@ export const reducer = produce((graph, action) => {
     Graph.addEdgeIfNodes(graph, action.edge)
     return
   case 'ADD_EDGES':
-    action.edges.forEach(edge => Graph.addEdgeIfNodes(graph, edge))
+    Graph.addEdgesIfNodes(graph, action.edges)
     return
   case 'UPDATE_EDGE':
     Graph.updateEdge(graph, action.id, action.attributes)
