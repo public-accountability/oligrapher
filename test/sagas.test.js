@@ -2,7 +2,7 @@ import { call, put } from 'redux-saga/effects'
 import { testSaga } from 'redux-saga-test-plan'
 import { addNode, addEdges, setActualZoom } from '../app/sagas'
 import { getEdges } from '../app/datasources/littlesis3'
-import { applyZoomToViewBox, computeSvgZoom } from '../app/util/dimensions'
+import { applyZoomToViewBox, computeSvgZoom, computeSvgOffset } from '../app/util/dimensions'
 
 describe('sagas', function() {
   describe ('addNode saga', function() {
@@ -77,8 +77,14 @@ describe('sagas', function() {
       // provide saga with new viewbox and check that it computes svg zoom
       saga.next(viewBox).call(computeSvgZoom, viewBox, svgSize)
 
-      // provide saga with svg zoom and check that it sets svg zoom
-      saga.next(2).put({ type: 'SET_SVG_ZOOM', svgZoom: 2 })
+      // provide saga with svg zoom  and check that it computes svg offset
+      saga.next(2).call(computeSvgOffset, viewBox)
+
+      // provide saga with svg offset and check that it sets svg zoom
+      saga.next({ x: 0, y: 0 }).put({ type: 'SET_SVG_ZOOM', svgZoom: 2 })
+
+      // check that it sets svg offset
+      saga.next().put({ type: 'SET_SVG_OFFSET', svgOffset: { x: 0, y: 0 } })
 
       // check that it sets actual zoom
       saga.next().put({ type: 'SET_ACTUAL_ZOOM', actualZoom: 2 })

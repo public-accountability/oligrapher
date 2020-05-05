@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import ReactResizeDetector from 'react-resize-detector'
@@ -29,7 +29,7 @@ export function Graph({ viewBox, zoom, setSvgSize }) {
 
   return (
     <div id="oligrapher-graph-svg">
-      <Svg outermost={true} viewBox={viewBox} height="500px" preserveAspectRatio="xMidYMid" ref={svgRef}>
+      <Svg outermost={true} viewBox={viewBox} height="500px" ref={svgRef}>
         <Markers />
         <Zoomable zoom={zoom}>
           <Pannable>

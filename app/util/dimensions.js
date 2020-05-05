@@ -38,6 +38,14 @@ export function computeSvgZoom(viewBox, svgSize) {
   return Math.min(xFactor, yFactor)
 }
 
+// Computes how mich the svg viewbox is "off center" from 0, 0
+export function computeSvgOffset(viewBox) {
+  return {
+    x: -(viewBox.minX + Math.trunc(viewBox.w / 2)),
+    y: -(viewBox.minY + Math.trunc(viewBox.h / 2))
+  }
+}
+
 // Event => {xy}
 // Event can be any object with the attributes clientX or clientY
 // This takes a browser mouse event with regular viewpoint coordinates and transforms them into the correct SVG coordinates

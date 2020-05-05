@@ -45,6 +45,7 @@ const defaultState = {
     actualZoom: 1,
     viewBox: null,
     svgSize: null,
+    svgOffset: null,
     offset: { x: 0, y: 0 },
     modes: {
       editor: false,

@@ -3,7 +3,7 @@ import produce from 'immer'
 import FloatingEditor, { toggleEditor } from '../util/floatingEditor'
 import { isLittleSisId } from '../util/helpers'
 
-const ZOOM_INTERVAL = 0.2
+const ZOOM_INTERVAL = 1.2
 
 export default produce((display, action) => {
   switch(action.type) {
@@ -18,6 +18,9 @@ export default produce((display, action) => {
     return
   case 'SET_SVG_SIZE':
     display.svgSize = action.size
+    return
+  case 'SET_SVG_OFFSET':
+    display.svgOffset = action.svgOffset
     return
   case 'ADD_NODE':
     if (!isLittleSisId(action.node.id)) {
@@ -67,10 +70,10 @@ export default produce((display, action) => {
     toggleEditor(display, 'caption', action.id)
     return
   case 'ZOOM_IN':
-    display.zoom = display.zoom + ZOOM_INTERVAL
+    display.zoom = display.zoom * ZOOM_INTERVAL
     return
   case 'ZOOM_OUT':
-    display.zoom = display.zoom - ZOOM_INTERVAL
+    display.zoom = display.zoom / ZOOM_INTERVAL
     return
   case 'SET_MODE':
     display.modes[action.mode] = action.enabled

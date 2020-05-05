@@ -35,6 +35,10 @@ $highlight_blue: #50a3ff;
 $node_highlight_color: $highlight_blue;
 $edge_highlight_color: $highlight_blue;
 
+html, body, #oligrapher {
+  height: 100%;
+}
+
 /*
    This is our outermost div.
 
@@ -54,6 +58,10 @@ $edge_highlight_color: $highlight_blue;
    */
     button, a:hover {
         cursor: pointer;
+    }
+
+    *, ::before, ::after {
+      box-sizing: content-box;
     }
 }
 
@@ -308,6 +316,7 @@ $edge_highlight_color: $highlight_blue;
     float: left;
     width: 40px;
     padding: 10px;
+    box-sizing: content-box;
     @extend %box_shadow;
 
     .editor-menu-item {
@@ -341,6 +350,7 @@ $edge_highlight_color: $highlight_blue;
         border: 0px;
         float: left;
         width: 20px;
+        box-sizing: border-box;
         padding: 2px;
         height: 20px;
         color: gray;
@@ -801,6 +811,12 @@ g.edge-tool-open .react-draggable-dragging .node-circle {
 
 
 /* captions */
+
+#oligrapher-container .oligrapher-caption {
+    foreignObject, textarea, div {
+        box-sizing: border-box;
+    }
+}
 
 .caption-text {
     border: 1px solid #ccc;

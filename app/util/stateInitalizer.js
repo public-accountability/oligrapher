@@ -1,11 +1,12 @@
+import merge from 'lodash/merge'
+import omit from 'lodash/omit'
+
 import defaultState from './defaultState'
 import Graph from '../graph/graph'
 import Edge from '../graph/edge'
 import Node from '../graph/node'
-// import Curve from '../graph/curve'
 import { captionDefaults } from '../graph/caption'
-import merge from 'lodash/merge'
-import omit from 'lodash/omit'
+import { computeSvgOffset } from './dimensions'
 
 const keys = Object.keys
 
@@ -56,6 +57,7 @@ export default function stateInitalizer(serializedState) {
   })
 
   state.display.viewBox = Graph.calculateViewBox(state.graph)
+  state.display.svgOffset = computeSvgOffset(state.display.viewBox)
 
   // for redux-undo
   state.graph = {

@@ -1,7 +1,7 @@
 import { put, select as sagaSelect, call, takeEvery, all } from 'redux-saga/effects'
 import { isLittleSisId, convertSelectorForUndo } from './util/helpers'
 import { getEdges } from './datasources/littlesis3'
-import { applyZoomToViewBox, computeSvgZoom } from './util/dimensions'
+import { applyZoomToViewBox, computeSvgZoom, computeSvgOffset } from './util/dimensions'
 
 // redux-undo places present state at state.present, so we use our own
 // select() to "transparently" make this change to all our saga selectors
@@ -36,7 +36,9 @@ export function* setActualZoom() {
   const { viewBox, zoom, svgSize } = yield select(state => state.display)
   const zoomedViewBox = yield call(applyZoomToViewBox, viewBox, zoom)
   const svgZoom = yield call(computeSvgZoom, zoomedViewBox, svgSize)
+  const svgOffset = yield call(computeSvgOffset, zoomedViewBox)
   yield put({ type: 'SET_SVG_ZOOM', svgZoom })
+  yield put({ type: 'SET_SVG_OFFSET', svgOffset })
   yield put({ type: 'SET_ACTUAL_ZOOM', actualZoom: zoom * svgZoom })
 }
 
