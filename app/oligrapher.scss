@@ -43,7 +43,7 @@ $edge_highlight_color: $highlight_blue;
 #oligrapher-container {
     margin: 0 auto;
     height: 100%;
-    width: 90%;
+    width: calc(100vw - 30px);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -61,32 +61,58 @@ $edge_highlight_color: $highlight_blue;
     display: flex;
     flex-direction: column;
     border-bottom: 1px solid #ccc;
-    height: 190px;
     box-sizing: border-box;
 
+    &.oligrapher-header-expanded {
+        flex: 0 1 182px;
+    }
+
+    &.oligrapher-header-collapsed {
+          flex: 0 1 auto;
+    }
+
     /* title and subtitle*/
-    h1, h1 input {
+    h1 {
         font-size: 42px;
         margin-top: 10px;
         margin-bottom: $header_spacing_between_header / 2;
+        height: 50px;
+        box-sizing: border-box;
+
+        input {
+            font-size: 42px;
+            height: 48px; 
+        }
     }
 
     h2 {
         font-weight: normal;
         font-size: 19px;
         margin-top: $header_spacing_between_header / 2;
+        height: 34px;
 
         input {
-          width: 500px;
+            width: 500px;
+            height: 34px;
+            box-sizing: border-box;
         }
     }
 }
 
-#oligrapher-header-top {}
+#oligrapher-header-toggler {
+    margin: 0 auto;
+    text-align: center;
+    width: 20px;
+    height: 12px;
+    font-size: 0.8em;
+    border: 1px solid #ccc;
+    border-bottom: 0;
+}
 
 #oligrapher-header-bottom {
     display: flex;
     flex-direction: row;
+    margin-top: 10px;
 
     #oligrapher-header-left-wrapper {
         flex-grow: 2;
@@ -143,7 +169,6 @@ $edge_highlight_color: $highlight_blue;
                 left: -100px;
                 z-index: 50;
 
-
                 ul {
                     border: 2px solid $oligrapher_blue;
                     padding: 0.5em;
@@ -172,6 +197,7 @@ $edge_highlight_color: $highlight_blue;
                 text-transform: uppercase;
                 font-size: 10px;
                 font-weight: bold;
+                margin: 0;
 
                 li {
                     line-height: 3em;
@@ -208,10 +234,13 @@ $edge_highlight_color: $highlight_blue;
 }
 
 #oligrapher-graph-container {
+    flex: 1 0 auto;
+
     position: relative;
 
     #oligrapher-graph-svg {
         z-index: 1;
+        height: 100%;
     }
 
     .oligrapher-graph-editor {
@@ -229,7 +258,7 @@ $edge_highlight_color: $highlight_blue;
         z-index: 15;
         position: absolute;
         top: 1em;
-        right: 1em;
+        right: 0;
         border: 1px solid #ccc;
         @extend %box_shadow;
 

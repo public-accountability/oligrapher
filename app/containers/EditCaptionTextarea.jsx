@@ -46,11 +46,7 @@ export default function EditCaptionTextarea({ caption, updateCaption, setForeign
         handleHeight 
         querySelector=".edit-caption-textarea"
         onResize={onResize} 
-        skipOnMount={true}
-        // refreshMode="throttle"
-        // refreshRate={10}
-        // refreshOptions={{ leading: true, trailing: true }} 
-        />
+        skipOnMount={true} />
     </div>
   )
 }

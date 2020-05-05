@@ -1,17 +1,17 @@
 import Curve from '../graph/curve'
 
 export const X_OFFSET = {
-  node: 120,
-  connections: 120,
-  edge: 100,
-  caption: -150
+  node: 150,
+  connections: 150,
+  edge: 130,
+  caption: -180
 }
 
 export const Y_OFFSET = {
-  node: -200,
-  connections: -200,
-  edge: -250,
-  caption: -65
+  node: -230,
+  connections: -230,
+  edge: -280,
+  caption: -87
 }
 
 export const set = (display, type = null, id = null) => {
@@ -57,14 +57,15 @@ export const floatingMenuPositionSelector = state => {
 
 // used to calculate floating menu position based on node or edge position
 export const transformPosition = (display, position, type) => {
-  const xOffset = X_OFFSET[type] || 0
-  const yOffset = Y_OFFSET[type] || 0
+  const { svgZoom } = display
+  const xOffset = X_OFFSET[type]
+  const yOffset = Y_OFFSET[type]
 
   const { x, y } = svgToHtmlPosition(display, position)
 
   return {
-    x: x + xOffset,
-    y: y + yOffset
+    x: x + xOffset * svgZoom,
+    y: y + yOffset * svgZoom
   }
 }
 

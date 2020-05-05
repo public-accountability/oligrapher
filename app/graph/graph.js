@@ -1,5 +1,4 @@
 import at from 'lodash/at'
-import filter from 'lodash/filter'
 import isNumber from 'lodash/isNumber'
 import merge from 'lodash/merge'
 import values from 'lodash/values'
@@ -10,7 +9,8 @@ import { newNode, findIntersectingNode } from './node'
 import { edgeCoordinates, newEdgeFromNodes } from './edge'
 import { calculateGeometry } from './curve'
 
-export const GRAPH_PADDING = 100
+export const GRAPH_PADDING_X = 150
+export const GRAPH_PADDING_Y = 50
 const DEFAULT_VIEWBOX = { minX: -200, minY: -200, w: 400, h: 400 }
 
 const DEFAULT_GRAPH = {
@@ -78,18 +78,29 @@ const minNodeY = nodes => Math.min(...nodes.map(n => n.y))
 const maxNodeX = nodes => Math.max(...nodes.map(n => n.x))
 const maxNodeY = nodes => Math.max(...nodes.map(n => n.y))
 
+const minCaptionX = captions => Math.min(0, ...captions.map(c => c.x))
+const minCaptionY = captions => Math.min(0, ...captions.map(c => c.y))
+const maxCaptionX = captions => Math.max(0, ...captions.map(c => c.x + c.width))
+const maxCaptionY = captions => Math.max(0, ...captions.map(c => c.y + c.height))
+
 // TODO: Nodes with LittleSis IDs
 
 export function stats(graph) {
   const nodes = values(graph.nodes)
+  const captions = values(graph.captions)
 
   return {
     nodeCount: nodes.length,
     edgeCount: values(graph.edges).length,
+    captionCount: captions.length,
     minNodeX: minNodeX(nodes),
     minNodeY: minNodeY(nodes),
     maxNodeX: maxNodeX(nodes),
-    maxNodeY: maxNodeY(nodes)
+    maxNodeY: maxNodeY(nodes),
+    minCaptionX: minCaptionX(captions),
+    minCaptionY: minCaptionY(captions),
+    maxCaptionX: maxCaptionX(captions),
+    maxCaptionY: maxCaptionY(captions)
   }
 }
 
@@ -116,12 +127,12 @@ export function calculateViewBox(graph) {
 
   if (graphStats.nodeCount === 0) {
     return DEFAULT_VIEWBOX
-  }``
+  }
 
-  const minX = graphStats.minNodeX - GRAPH_PADDING
-  const minY = graphStats.minNodeY - GRAPH_PADDING
-  const w = (graphStats.maxNodeX - graphStats.minNodeX) + (GRAPH_PADDING * 2)
-  const h = (graphStats.maxNodeY - graphStats.minNodeY) + (GRAPH_PADDING * 2)
+  const minX = graphStats.minNodeX - GRAPH_PADDING_X
+  const minY = graphStats.minNodeY - GRAPH_PADDING_Y
+  const w = (graphStats.maxNodeX - graphStats.minNodeX) + (GRAPH_PADDING_X * 2)
+  const h = (graphStats.maxNodeY - graphStats.minNodeY) + (GRAPH_PADDING_Y * 2)
 
   return { minX, minY, w, h }
 }

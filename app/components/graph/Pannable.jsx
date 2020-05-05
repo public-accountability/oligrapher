@@ -63,7 +63,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    addCaption: (event, zoom) => dispatch({ tyoe: 'ADD_CAPTION', id: generate(), event, zoom }),
+    addCaption: (event, zoom) => dispatch({ type: 'ADD_CAPTION', id: generate(), event, zoom }),
     setOffset: (offset) => dispatch({ type: 'SET_OFFSET', offset })
   }
 }
