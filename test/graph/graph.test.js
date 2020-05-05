@@ -4,7 +4,8 @@ import Graph, {
   getId,
   determineNodeNumber,
   calculateCenter,
-  GRAPH_PADDING
+  GRAPH_PADDING_X,
+  GRAPH_PADDING_Y
 } from '../../app/graph/graph'
 import Node from '../../app/graph/node'
 import Edge from '../../app/graph/edge'
@@ -353,10 +354,10 @@ describe('Graph', function() {
       n3 = Node.new({ x: 100, y: -50 })
       Graph.addNodes(graph, [n1, n2, n3])
       expect(Graph.calculateViewBox(graph)).to.eql({ 
-        minX: -100 - GRAPH_PADDING, 
-        minY: -100 - GRAPH_PADDING,
-        w: 200 + 2 * GRAPH_PADDING,
-        h: 100 + 2 * GRAPH_PADDING
+        minX: -100 - GRAPH_PADDING_X, 
+        minY: -100 - GRAPH_PADDING_Y,
+        w: 200 + 2 * GRAPH_PADDING_X,
+        h: 100 + 2 * GRAPH_PADDING_Y
       })
     })
   })
