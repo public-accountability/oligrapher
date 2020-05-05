@@ -1,4 +1,6 @@
 import React from 'react'
+import sinon from 'sinon'
+
 import HeaderMenuItem from '../../app/components/HeaderMenuItem'
 
 describe("<HeaderMenuItem>", function() {

@@ -2,9 +2,9 @@ import React from 'react'
 import { act } from "react-dom/test-utils"
 import sinon from 'sinon'
 
-import AddConnections from '../../app/components/tools/AddConnections'
-import EntitySearchResults, { SearchResult } from '../../app/components/tools/EntitySearchResults'
-import { CATEGORIES } from '../../app/components/tools/AddConnectionsCategory'
+import AddConnections from '../../app/components/AddConnections'
+import EntitySearchResults, { SearchResult } from '../../app/components/EntitySearchResults'
+import { CATEGORIES } from '../../app/components/AddConnectionsCategory'
 import Graph from '../../app/graph/graph'
 import Node from '../../app/graph/node'
 import Edge from '../../app/graph/edge'

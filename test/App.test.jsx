@@ -3,7 +3,7 @@ import { render, fireEvent, waitFor } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import sinon from 'sinon'
 
-import { Root } from '../app/containers/Root'
+import { Root } from '../app/components/Root'
 import { bigGraph } from './testData'
 import { createOligrapherStore } from '../app/util/render'
 import stateInitializer from '../app/util/stateInitalizer'
@@ -195,7 +195,7 @@ describe('Oligrapher', function() {
     const textarea = find('.oligrapher-caption textarea')
     fireEvent.change(textarea, { target: { value: 'terse commentary' } })
     // close editor
-    const editorCloseButton = find('.edit-menu-header button')
+    const editorCloseButton = find('.editor-header button')
     fireEvent.click(editorCloseButton)
     // caption text should have updated
     expect(find('.caption-text').style.fontSize).to.equal('30px')
@@ -270,7 +270,7 @@ describe('Oligrapher', function() {
     const input = find('.oligrapher-node-editor input')
     fireEvent.change(input, { target: { value: 'billy bob' } })
     // close editor
-    const closeButton = find('.edit-menu-header button')
+    const closeButton = find('.editor-header button')
     fireEvent.click(closeButton)
     // node name should have updated
     expect(find('.oligrapher-node .node-label').textContent).to.equal('billy bob')

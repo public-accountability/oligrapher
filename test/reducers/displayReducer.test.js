@@ -29,32 +29,32 @@ describe('displayReducer', function() {
 
   describe('CLICK_NODE', function() {
     it('opens node editor', function() {
-      const state = { actualZoom: 2, zoom: 1, offset: { x: 50, y: 50 }, floatingMenu: { type: null, id: null } }
+      const state = { actualZoom: 2, zoom: 1, offset: { x: 50, y: 50 }, floatingEditor: { type: null, id: null } }
       const action = { type: 'CLICK_NODE', id: 'xyz' }
-      expect(reducer(state, action).floatingMenu)
+      expect(reducer(state, action).floatingEditor)
         .to.eql({ type: 'node', id: 'xyz' })
     })
 
     it('closes node editor', function() {
-      const state = { floatingMenu: { type: 'node', id: 'xyz' } }
+      const state = { floatingEditor: { type: 'node', id: 'xyz' } }
       const action = { type: 'CLICK_NODE', id: 'xyz' }
-      expect(reducer(state, action).floatingMenu)
+      expect(reducer(state, action).floatingEditor)
         .to.eql({ type: null, id: null })
     })
 
     it('closes add connections', function() {
-      const state = { floatingMenu: { type: 'connections', id: 'xyz' } }
+      const state = { floatingEditor: { type: 'connections', id: 'xyz' } }
       const action = { type: 'CLICK_NODE', id: 'xyz' }
-      expect(reducer(state, action).floatingMenu)
+      expect(reducer(state, action).floatingEditor)
         .to.eql({ type: null, id: null })
     })
   })
 
   describe('CLOSE_EDITOR', function() {
-    it('clears floatingMenu', function() {
-      const state = { editor: { tool: 'node' }, floatingMenu: { type: 'node', id: 'abc' } }
+    it('clears floatingEditor', function() {
+      const state = { editor: { tool: 'node' }, floatingEditor: { type: 'node', id: 'abc' } }
       const action = { type: 'CLOSE_EDITOR' }
-      expect(reducer(state, action).floatingMenu)
+      expect(reducer(state, action).floatingEditor)
         .to.eql({ type: null, id: null })
     })   
   })
@@ -67,8 +67,8 @@ describe('displayReducer', function() {
       state = defaultState.display
       action = { type: 'ADD_NODE', node }
       nextState = reducer(state, action)
-      expect(nextState.floatingMenu.type).to.equal('node')
-      expect(nextState.floatingMenu.id).to.not.be.null
+      expect(nextState.floatingEditor.type).to.equal('node')
+      expect(nextState.floatingEditor.id).to.not.be.null
     })
 
     it('does not open node editor if node is from LittleSis', function() {
@@ -76,8 +76,8 @@ describe('displayReducer', function() {
       state = defaultState.display
       action = { type: 'ADD_NODE', node }
       nextState = reducer(state, action)
-      expect(nextState.floatingMenu.type).to.be.null
-      expect(nextState.floatingMenu.id).to.be.null
+      expect(nextState.floatingEditor.type).to.be.null
+      expect(nextState.floatingEditor.id).to.be.null
     })
   })
 
@@ -85,14 +85,14 @@ describe('displayReducer', function() {
     let state, action, nextState
 
     beforeEach(function() {
-      state = { floatingMenu: { type: 'node', id: "r2d2" } }
+      state = { floatingEditor: { type: 'node', id: "r2d2" } }
       action = { type: 'REMOVE_NODE', id: "r2d2" }
       nextState = reducer(state, action)  
     })
 
     it('closes floating menu', function() {
-      expect(nextState.floatingMenu.type).to.eql(null)
-      expect(nextState.floatingMenu.id).to.eql(null)
+      expect(nextState.floatingEditor.type).to.eql(null)
+      expect(nextState.floatingEditor.id).to.eql(null)
     })
   })
 
@@ -115,29 +115,29 @@ describe('displayReducer', function() {
     let state, action, nextState
 
     beforeEach(function() {
-      state = { floatingMenu: { type: 'edge', id: "x1" } }
+      state = { floatingEditor: { type: 'edge', id: "x1" } }
       action = { type: 'REMOVE_EDGE', id: "x1" }
       nextState = reducer(state, action)  
     })
 
     it('closes floating menu', function() {
-      expect(nextState.floatingMenu.type).to.eql(null)
-      expect(nextState.floatingMenu.id).to.eql(null)
+      expect(nextState.floatingEditor.type).to.eql(null)
+      expect(nextState.floatingEditor.id).to.eql(null)
     })
   })
 
   describe('CLICK_EDGE', function() {
     it('opens edge editor', function() {
-      const state = { floatingMenu: { type: null, id: null } }
+      const state = { floatingEditor: { type: null, id: null } }
       const action = { type: 'CLICK_EDGE', id: 'xyz' }
-      expect(reducer(state, action).floatingMenu)
+      expect(reducer(state, action).floatingEditor)
         .to.eql({ type: 'edge', id: 'xyz' })
     })
 
     it('closes edge editor', function() {
-      const state = { floatingMenu: { type: 'edge', id: 'xyz' } }
+      const state = { floatingEditor: { type: 'edge', id: 'xyz' } }
       const action = { type: 'CLICK_EDGE', id: 'xyz' }
-      expect(reducer(state, action).floatingMenu)
+      expect(reducer(state, action).floatingEditor)
         .to.eql({ type: null, id: null })
     })
   })

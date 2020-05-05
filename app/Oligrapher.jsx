@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import Graph from './graph/graph'
-import Root from './containers/Root'
+import Root from './components/Root'
 
 import { createOligrapherStore, withStore } from './util/render'
 import stateInitalizer from './util/stateInitalizer'

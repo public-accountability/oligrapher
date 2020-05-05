@@ -1,7 +1,7 @@
 import React from 'react'
 import { act } from "react-dom/test-utils"
-import EntitySearch from '../../app/components/tools/EntitySearch'
-import EntitySearchResults from '../../app/components/tools/EntitySearchResults'
+import EntitySearch from '../../app/components/EntitySearch'
+import EntitySearchResults from '../../app/components/EntitySearchResults'
 import * as littlesis3 from '../../app/datasources/littlesis3'
 import { stubDispatch, createMockStore, mountWithStore } from "../../test/testHelpers"
 import sinon from 'sinon'

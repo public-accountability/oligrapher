@@ -1,7 +1,9 @@
 import React from 'react'
 import * as ReactRedux from 'react-redux'
-import HeaderButtons from '../../app/containers/HeaderButtons'
-import ActionMenu from '../../app/containers/ActionMenu'
+import sinon from 'sinon'
+
+import HeaderButtons from '../../app/components/HeaderButtons'
+import ActionMenu from '../../app/components/ActionMenu'
 
 describe("<HeaderButtons>", function() {
   beforeEach(function() {

@@ -1,7 +1,7 @@
 import React from 'react'
-import NodeTool from '../../app/components/tools/Node'
-import Toolbox from "../../app/components/tools/Toolbox"
-import EntitySearch from "../../app/components/tools/EntitySearch"
+import NodeTool from '../../app/components/NodeTool'
+import Toolbox from "../../app/components/Toolbox"
+import EntitySearch from "../../app/components/EntitySearch"
 import { stubDispatch } from "../../test/testHelpers"
 
 // Currently we have to mock react-redux's useDispatch hook 

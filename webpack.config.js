@@ -136,7 +136,8 @@ module.exports = function(env) {
     resolve: {
       extensions: ['.js', '.jsx'],
       alias: {
-        'react-dom': '@hot-loader/react-dom'
+        'react-dom': env.dev_server ? '@hot-loader/react-dom' : 'react-dom',
+        Components: path.resolve(__dirname, 'app/components/')
       }
     }
   }

@@ -2,7 +2,7 @@ import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import sinon from 'sinon'
 
-import EditEdgeStyle from '../../app/components/editor/EditEdgeStyle'
+import EditEdgeStyle from '../../app/components/EditEdgeStyle'
 import Edge from '../../app/graph/edge'
 import Node from '../../app/graph/node'
 

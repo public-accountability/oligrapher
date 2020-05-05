@@ -1,11 +1,9 @@
 import produce from 'immer'
 
-import FloatingMenu, { toggleEditor } from '../util/floatingMenu'
+import FloatingEditor, { toggleEditor } from '../util/floatingEditor'
 import { isLittleSisId } from '../util/helpers'
 
 const ZOOM_INTERVAL = 0.2
-
-let draggedNode, draggedOverNode
 
 export default produce((display, action) => {
   switch(action.type) {
@@ -27,13 +25,13 @@ export default produce((display, action) => {
     }
     return
   case 'REMOVE_NODE':
-    FloatingMenu.clear(display)
+    FloatingEditor.clear(display)
     return
   case 'CLICK_NODE':
     toggleEditor(display, 'node', action.id)
     return
   case 'DRAG_NODE':
-    FloatingMenu.clear(display)
+    FloatingEditor.clear(display)
     display.draggedNode = action.node
     return
   case 'MOUSE_ENTERED_NODE':
@@ -54,7 +52,7 @@ export default produce((display, action) => {
     }
     return
   case 'REMOVE_EDGE':
-    FloatingMenu.clear(display)
+    FloatingEditor.clear(display)
     return
   case 'CLICK_EDGE':
     toggleEditor(display, 'edge', action.id)
@@ -63,7 +61,7 @@ export default produce((display, action) => {
     toggleEditor(display, 'caption', action.id)
     return
   case 'REMOVE_CAPTION':
-    FloatingMenu.clear(display)
+    FloatingEditor.clear(display)
     return
   case 'CLICK_CAPTION':
     toggleEditor(display, 'caption', action.id)
@@ -82,16 +80,16 @@ export default produce((display, action) => {
     return
   case 'OPEN_ADD_CONNECTIONS':
     if (isLittleSisId(action.id)) {
-      FloatingMenu.set(display, 'connections', action.id)
+      FloatingEditor.set(display, 'connections', action.id)
     } else {
       console.error(`Cannot find connections unless the entity is a LittlesSis Entity. id == ${action.id}`)
     }
     return
   case 'CLOSE_EDITOR':
-    FloatingMenu.set(display)
+    FloatingEditor.set(display)
     return
   case 'OPEN_EDTIOR':
-    FloatingMenu.set(display, action.editorType, action.id)
+    FloatingEditor.set(display, action.editorType, action.id)
     return
   // Save map actions
   case 'SAVE_MAP_IN_PROGRESS':
