@@ -25,11 +25,11 @@ export function Node({ id, currentlyEdited }) {
 
   // the id in the payload, while otherwise redundant, allows redux-undo 
   // to group drag actions into a single action
-  const onDrag = useCallback(deltas => {
+  const dragNode = useCallback(deltas => {
     dispatch({ type: 'DRAG_NODE', id, node, deltas })
   }, [dispatch, id, node])
 
-  const onStart = useCallback(() => setDragging(true), [])
+  const startDrag = useCallback(() => setDragging(true), [])
   const clickNode = useCallback(() => {
     setDragging(false)
     dispatch({ type: 'CLICK_NODE', id })
@@ -42,10 +42,10 @@ export function Node({ id, currentlyEdited }) {
       <DraggableComponent
         disabled={!editorMode}
         handle=".draggable-node-handle"
-        onStart={onStart}
+        onStart={startDrag}
         onStop={moveNode}
         onClick={clickNode}
-        onDrag={onDrag}>
+        onDrag={dragNode}>
         <g id={"node-" + id} className="oligrapher-node" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
           <NodeHalo node={node} radius={radius} showHalo={showHalo} />
           <NodeCircle node={node} radius={radius} />

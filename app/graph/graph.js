@@ -305,7 +305,6 @@ export function addSimilarEdges(graph, edges) {
     addEdge(graph, edge)
     strength += step
   })
-
 }
 
 export function addEdgesIfNodes(graph, edges) {
@@ -444,6 +443,7 @@ export default {
   "addEdge": addEdge,
   "addEdgeIfNodes": addEdgeIfNodes,
   "addEdgesIfNodes": addEdgesIfNodes,
+  "addSimilarEdges": addSimilarEdges,
   "removeEdge": removeEdge,
   "updateEdge": updateEdge,
   "addCaption": addCaption,

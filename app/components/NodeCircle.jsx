@@ -5,7 +5,7 @@ export function NodeCircle({ node, radius }) {
   const { x, y, color } = node
 
   return (
-    <circle className="node-circke draggable-node-handle"
+    <circle className="node-circle draggable-node-handle"
       onDragEnter={() => console.log("dragenter")}
       cx={x}
       cy={y}

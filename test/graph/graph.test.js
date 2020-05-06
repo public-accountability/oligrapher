@@ -9,7 +9,7 @@ import Graph, {
 } from '../../app/graph/graph'
 import Node from '../../app/graph/node'
 import Edge from '../../app/graph/edge'
-import { xy } from '../../app/util/helpers'
+import { xy, distance } from '../../app/util/helpers'
 
 describe('Graph', function() {
   describe("Helpers", function() {
@@ -50,7 +50,7 @@ describe('Graph', function() {
       e2 = Edge.newEdgeFromNodes(n2, n3)
       graph = Graph.new()
       Graph.addNodes(graph, [n1, n2, n3, n4])
-      Graph.addEdges(graph, [e1, e2])
+      Graph.addEdgesIfNodes(graph, [e1, e2])
     })
 
     specify("edgesOf", function() {
@@ -209,14 +209,21 @@ describe('Graph', function() {
       expect(g.edges).to.eql({})
     })
 
-    specify("addEdges", function() {
+    specify("addSimilarEdges", function() {
       expect(g.edges).to.eql({})
-      let node1 = Node.new()
-      let node2 = Node.new()
-      let edges = [Edge.newEdgeFromNodes(node1, node2), Edge.newEdgeFromNodes(node1, node2)]
+      let node1 = Node.new({ x: -100, y: -100 })
+      let node2 = Node.new({ x: 100, y: 100 })
+      let edges = [1, 2, 3].map(() => Edge.newEdgeFromNodes(node1, node2))
       Graph.addNodes(g, [node1, node2])
-      Graph.addEdges(g, edges)
-      expect(values(g.edges)).to.have.lengthOf(2)
+      Graph.addSimilarEdges(g, edges)
+      edges = values(g.edges)
+      // control points for these edges should be reasonably far apart
+      let { cx: x1, cy: y1 } = edges[0]
+      let { cx: x2, cy: y2 } = edges[1]
+      let { cx: x3, cy: y3 } = edges[2]
+      expect(distance({ x: x1, y: y1 }, { x: x2, y: y2 })).to.be.above(20)
+      expect(distance({ x: x2, y: y2 }, { x: x3, y: y3 })).to.be.above(20)
+      expect(distance({ x: x1, y: y1 }, { x: x3, y: y3 })).to.be.above(20)
     })
 
     specify("removeEdge", function() {
@@ -254,7 +261,7 @@ describe('Graph', function() {
       edge2 = Edge.newEdgeFromNodes(node2, node3)
       graph = Graph.new()
       Graph.addNodes(graph, [node1, node2, node3])
-      Graph.addEdges(graph, [edge1, edge2])
+      Graph.addEdgesIfNodes(graph, [edge1, edge2])
     })
 
     specify('moveNode', function() {
@@ -350,7 +357,7 @@ describe('Graph', function() {
       e1 = Edge.newEdgeFromNodes(n1, n2)
       e2 = Edge.newEdgeFromNodes(n1, n3)
       Graph.addNodes(graph, [n1, n2, n3, n4])
-      Graph.addEdges(graph, [e1, e2])
+      Graph.addEdgesIfNodes(graph, [e1, e2])
       expect(Graph.connectedNodeIds(graph, n1)).to.have.members([n2.id, n3.id])
     })
   })
