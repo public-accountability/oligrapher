@@ -72,13 +72,15 @@ html, body, #oligrapher {
     box-sizing: border-box;
 
     &.oligrapher-header-expanded {
+        // flex: 0 0 182px;
         height: 182px;
-        transition: height 0.05s ease-out;
+        transition: height 0.1s ease-out;
     }
 
     &.oligrapher-header-collapsed {
-        height: 52px; 
-        transition: height 0.05s ease-out;
+        // flex: 0 0 52px; 
+        height: 52px;
+        transition: height 0.1s ease-out;
     }
 
     /* title and subtitle*/
@@ -244,8 +246,8 @@ html, body, #oligrapher {
 }
 
 #oligrapher-graph-container {
-    flex: 1 0 auto;
-
+    flex: 1 2 auto;
+    overflow: hidden;
     position: relative;
 
     #oligrapher-graph-svg {
@@ -456,7 +458,6 @@ header.editor-header {
     left: 50%;
     background-color: white;
     border: 3px solid $highlight_blue;
-    padding: 10px;
 
     header {
         font-size: 18px;
@@ -605,31 +606,60 @@ header.editor-header {
     }
 } /* end: .oligrapher-floating-editor */
 
-.oligrapher-settings {
-    width: 225px;
+#oligrapher-container div.oligrapher-node-editor {
+    width: 235px;
+    height: 355px;
+    padding: 10px;
+    box-sizing: border-box;
+}
 
-    div.settings-option  {
-        font-size: 0.8em;
-        display: flex;
+/* add connections tool */
+#oligrapher-container div.oligrapher-add-connections {
+    width: 235px;
+    height: 355px;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-y: scroll;
+}
 
-        >div:nth-child(1) {
-            flex-grow: 4;
-        }
+.add-connections-category {
+    margin-top: 10px;
+}
 
+.add-connections-results {
+    max-height: 300px;
+    overflow: auto;
+
+    .result-loading-svg {
+        margin-left: 3px;
+        stroke: $oligrapher_blue;
     }
 
-    label {
-        color: $oligrapher_font_gray;
-        font-size: 1em;
-        font-weight: bold;
-        margin-top: 0.5em;
-        margin-bottom: 0.5em;
-        display: block;
+    div.add-connections-entity {
+        font-size: 12px;
+        border: 1px solid #fff;
+
+        div {
+            display: inline-block;
+            padding: 2px;
+        }
+
+        div.entity-blurb {
+            pointer-events: none;
+        }
+
+        &:hover {
+            cursor: pointer;
+            border: 1px solid black;
+        }
     }
 }
 
-.oligrapher-edge-editor {
-    width: 300px;
+#oligrapher-container div.oligrapher-edge-editor {
+    width: 325px;
+    height: 415px;
+    padding: 10px;
+    box-sizing: border-box;
 
     input {
       width: 280px;
@@ -676,49 +706,34 @@ header.editor-header {
     }
 }
 
-/* add connections tool */
-.oligrapher-connections-editor {
-    width: $toolbox_width;
-    max-height: 500px;
-    overflow-y: scroll;
+#oligrapher-container div.oligrapher-caption-editor {
+    width: 230px;
+    height: 165px;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
-.add-connections-category {
-    margin-top: 10px;
-}
+.oligrapher-settings {
+    width: 225px;
 
-.add-connections-results {
-    max-height: 300px;
-    overflow: auto;
+    div.settings-option  {
+        font-size: 0.8em;
+        display: flex;
 
-    .result-loading-svg {
-        margin-left: 3px;
-        stroke: $oligrapher_blue;
-    }
-
-    div.add-connections-entity {
-        font-size: 12px;
-        border: 1px solid #fff;
-
-        div {
-            display: inline-block;
-            padding: 2px;
-        }
-
-        div.entity-name {}
-
-        div.entity-blurb {
-            pointer-events: none;
-        }
-
-
-        &:hover {
-            cursor: pointer;
-            border: 1px solid black;
+        >div:nth-child(1) {
+            flex-grow: 4;
         }
 
     }
 
+    label {
+        color: $oligrapher_font_gray;
+        font-size: 1em;
+        font-weight: bold;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+        display: block;
+    }
 }
 
 .add-editors-body {

@@ -27,16 +27,16 @@ export default function Header() {
   const dispatch = useDispatch()
   const { title, subtitle, user, date } = useSelector(state => state.attributes)
   const editMode = useSelector(state => state.display.modes.editor)
-  const [isCollapsed, setCollapsed] = useState(false)
+  const isCollapsed = useSelector(state => state.display.headerIsCollapsed)
 
-  const updateTitle = useCallback(value => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'title', value }), [])
-  const updateSubtitle = useCallback(value => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'subtitle', value }), [])
-  const expand = useCallback(() => setCollapsed(false), [])
-  const collapse = useCallback(() => setCollapsed(true), [])
+  const updateTitle = useCallback(value => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'title', value }), [dispatch])
+  const updateSubtitle = useCallback(value => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'subtitle', value }), [dispatch])
+  const expand = useCallback(() => dispatch({ type: 'EXPAND_HEADER' }), [dispatch])
+  const collapse = useCallback(() => dispatch({ type: 'COLLAPSE_HEADER' }), [dispatch])
   const className = isCollapsed ? "oligrapher-header-collapsed" : "oligrapher-header-expanded"
 
   return (
-   <div id="oligrapher-header" className={className}>
+    <div id="oligrapher-header" className={className}>
       { isCollapsed || (
         <div id="oligrapher-header-top">
           <Title text={title} editable={editMode} onChange={updateTitle} />

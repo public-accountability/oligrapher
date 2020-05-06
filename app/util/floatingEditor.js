@@ -14,6 +14,20 @@ export const Y_OFFSET = {
   caption: -5
 }
 
+const X_SIZE = {
+  node: 235,
+  connections: 235,
+  edge: 325,
+  caption: 230
+}
+
+const Y_SIZE = {
+  node: 355,
+  connections: 355,
+  edge: 415,
+  caption: 165
+}
+
 export const set = (display, type = null, id = null) => {
   display.floatingEditor.type = type
   display.floatingEditor.id = id
@@ -49,11 +63,42 @@ export const floatingEditorPositionSelector = state => {
     return null
   }
 
-  return transformPosition(
+  return keepWithinScreen(state.display, transformPosition(
     state.display, 
     getPosition(state.graph, id, type),
     type
-  )
+  ), type)
+}
+
+export const keepWithinScreen = (display, position, type) => {
+  let { x, y } = position
+  const width = X_SIZE[type]
+  const height = Y_SIZE[type]
+  const { height: svgHeight } = display.svgSize 
+  const headerHeight = window.innerHeight - svgHeight
+  const top = headerHeight + svgHeight / 2 + y
+  const bottom = top + height
+  const left = window.innerWidth / 2 + x
+  const right = left + width
+  const BUFFER = 20
+
+  if (top < BUFFER) {
+    y += BUFFER - top
+  }
+
+  if (bottom > window.innerHeight - BUFFER) {
+    y -= bottom - window.innerHeight + BUFFER
+  }
+
+  if (left < BUFFER) {
+    x += (BUFFER - left)
+  }
+
+  if (right > window.innerWidth - BUFFER) {
+    x -= right - window.innerWidth + BUFFER
+  }
+  
+  return { x, y }
 }
 
 // used to calculate floating editor position based on node or edge position

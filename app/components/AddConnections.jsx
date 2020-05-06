@@ -82,12 +82,12 @@ export default function AddConnections({ id }) {
   }
 
   return (
-    <>
+    <div className="oligrapher-add-connections">
       <EditorHeader title="AddConnections" />
       <AddConnectionsCategory onChange={changeCategory} />
       <br />
       { status }
-    </>
+    </div>
   )
 }
 

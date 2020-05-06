@@ -44,9 +44,10 @@ const defaultState = {
     svgZoom: null,
     actualZoom: 1,
     viewBox: null,
-    svgSize: null,
+    svgSize: null, // { width: 500, height: 500 },
     svgOffset: null,
     offset: { x: 0, y: 0 },
+    headerIsCollapsed: false,
     modes: {
       editor: false,
       story: false

@@ -1,7 +1,6 @@
-import React, { useRef } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import ReactResizeDetector from 'react-resize-detector'
 
 import Edges from './Edges'
 import Nodes from './Nodes'
@@ -14,37 +13,39 @@ import Zoomable from './Zoomable'
 /*
   The core component that displays the graph
 */
-export function Graph({ viewBox, zoom, setSvgSize }) {
+export function Graph({ viewBox, zoom, svgSize, headerIsCollapsed, setSvgSize }) {
   // used to calculate the actual zoom and caption placement.
   const svgRef = useRef(null)
+  const [svgHeight, setSvgHeight] = useState(500)
 
-  const handleResize = function() {
+  const handleResize = () => {
     const windowHeight = window.innerHeight
-    const headerHeight = document.getElementById("oligrapher-header").getBoundingClientRect().height
+    const headerHeight = headerIsCollapsed ? 52 : 182
     const svgHeight = Math.floor(windowHeight - headerHeight - 10)
-    svgRef.current.style.height = (svgHeight) + "px"
     const { width } = svgRef.current.getBoundingClientRect()
     setSvgSize({ width: Math.floor(width), height: svgHeight })
+    setSvgHeight(svgHeight)
   }
 
+  useEffect(handleResize, [headerIsCollapsed])
+  
   return (
     <div id="oligrapher-graph-svg">
-      <Svg outermost={true} viewBox={viewBox} height="500px" ref={svgRef}>
+      <Svg outermost={true} viewBox={viewBox} height={svgHeight + "px"} ref={svgRef}>
         <Markers />
         <Zoomable zoom={zoom}>
           <Pannable>
-            <Edges />
-            <Nodes />
-            <Captions />
+            {/* don't show graph until svgSize has been set */}
+            { svgSize ? (
+              <>
+                <Edges />
+                <Nodes />
+                <Captions />
+              </>
+            ) : <></> }
           </Pannable>
         </Zoomable>
       </Svg>
-      <ReactResizeDetector
-        handleWidth
-        handleHeight
-        querySelector="#oligrapher-graph-svg"
-        onResize={handleResize}
-        skipOnMount={false} />
     </div>
   )
 }
@@ -53,15 +54,16 @@ Graph.propTypes = {
   viewBox: PropTypes.object.isRequired,
   zoom: PropTypes.number.isRequired,
   svgSize: PropTypes.object,
+  headerIsCollapsed: PropTypes.bool.isRequired,
   setSvgSize: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => {
-  const { viewBox, zoom, svgSize } = state.display
+  const { viewBox, zoom, svgSize, headerIsCollapsed } = state.display
   const { nodes } = state.graph
 
   return {
-    viewBox, zoom, svgSize, nodes
+    viewBox, zoom, svgSize, headerIsCollapsed, nodes
   }
 }
 

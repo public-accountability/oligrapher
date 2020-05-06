@@ -22,6 +22,12 @@ export default produce((display, action) => {
   case 'SET_SVG_OFFSET':
     display.svgOffset = action.svgOffset
     return
+  case 'COLLAPSE_HEADER':
+    display.headerIsCollapsed = true
+    return
+  case 'EXPAND_HEADER':
+    display.headerIsCollapsed = false
+    return
   case 'ADD_NODE':
     if (!isLittleSisId(action.node.id)) {
       toggleEditor(display, 'node', action.node.id)
