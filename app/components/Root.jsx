@@ -7,6 +7,8 @@ import FloatingEditors from './FloatingEditors'
 import ZoomControl from './ZoomControl'
 import UserMessage from './UserMessage'
 
+export const ROOT_CONTAINER_ID = "oligrapher-container"
+
 /*
   This is the root container
 
@@ -31,10 +33,10 @@ import UserMessage from './UserMessage'
 */
 export function Root() {
   return (
-    <div id="oligrapher-container">
+    <div id={ROOT_CONTAINER_ID}>
       <Header />
       <div id="oligrapher-graph-container">
-        <Graph />
+        <Graph rootContainerId={ROOT_CONTAINER_ID} />
         <Editor />
         <ZoomControl />
         <FloatingEditors />

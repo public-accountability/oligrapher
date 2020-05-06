@@ -52,7 +52,7 @@ export const svgToHtmlPosition = (display, position) => {
   // to be honest i don't fully understand why svgOffset has to be divided by zoom
   return {
     x: Math.trunc((position.x + offset.x + svgOffset.x / zoom) * svgZoom),
-    y: Math.trunc((position.y + offset.y + svgOffset.y / zoom) * svgZoom)
+    y: Math.trunc((position.y + offset.y + svgOffset.y / zoom) * svgZoom) + display.containerYOffset
   }
 }
 

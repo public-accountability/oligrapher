@@ -13,16 +13,26 @@ import Zoomable from './Zoomable'
 /*
   The core component that displays the graph
 */
-export function Graph({ viewBox, zoom, svgSize, headerIsCollapsed, setSvgSize }) {
+export function Graph(props) {
   // used to calculate the actual zoom and caption placement.
   const svgRef = useRef(null)
   const [svgHeight, setSvgHeight] = useState(500)
 
+  const {
+    viewBox, zoom, svgSize, headerIsCollapsed, setSvgSize, 
+    setContainerYOffset, rootContainerId 
+  } = props
+
   const handleResize = () => {
-    const windowHeight = window.innerHeight
+    const containerTop = document
+      .getElementById(rootContainerId)
+      .getBoundingClientRect()
+      .top
+    const containerHeight = window.innerHeight - containerTop
     const headerHeight = headerIsCollapsed ? 52 : 182
-    const svgHeight = Math.floor(windowHeight - headerHeight - 10)
+    const svgHeight = Math.floor(containerHeight - headerHeight - 10)
     const { width } = svgRef.current.getBoundingClientRect()
+    setContainerYOffset(Math.floor(containerTop))
     setSvgSize({ width: Math.floor(width), height: svgHeight })
     setSvgHeight(svgHeight)
   }
@@ -55,7 +65,9 @@ Graph.propTypes = {
   zoom: PropTypes.number.isRequired,
   svgSize: PropTypes.object,
   headerIsCollapsed: PropTypes.bool.isRequired,
-  setSvgSize: PropTypes.func.isRequired
+  setSvgSize: PropTypes.func.isRequired,
+  setContainerYOffset: PropTypes.func.isRequired,
+  rootContainerId: PropTypes.string.isRequired
 }
 
 const mapStateToProps = state => {
@@ -69,7 +81,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setSvgSize: size => dispatch({ type: 'SET_SVG_SIZE', size })
+    setSvgSize: size => dispatch({ type: 'SET_SVG_SIZE', size }),
+    setContainerYOffset: offset => dispatch({ type: 'SET_CONTAINER_Y_OFFSET', offset })
   }
 }
 
