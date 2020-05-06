@@ -29,13 +29,14 @@ const edgeDefaults = {
 export function newEdge(attributes = {}) {
   let edge = merge({}, edgeDefaults, attributes)
 
-  if (!edge.id) {
+  if (edge.id) {
+    edge.id = String(edge.id)
+  } else {
     edge.id = generate()
   }
 
-  if (isNumber(edge.id)) {
-    edge.id = edge.id.toString()
-  }
+  edge.node1_id = String(edge.node1_id)
+  edge.node2_id = String(edge.node2_id)
 
   return edge
 }

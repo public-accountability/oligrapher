@@ -291,7 +291,7 @@ export function addSimilarEdges(graph, edges) {
 
   // curve strength is default if there are only 2 edges
   // curve strength approaches twice default as number of edges increases 
-  const maxCurveStrength = defaultCurveStrength * (2 - 2/count)
+  const maxCurveStrength = defaultCurveStrength * (3 - 2/count)
   const range = maxCurveStrength * 2
   const step = range / (count - 1)
   let strength = -maxCurveStrength

@@ -39,6 +39,10 @@ html, body, #oligrapher {
   height: 100%;
 }
 
+html body div#oligrapher {
+  padding: 0;
+}
+
 /*
    This is our outermost div.
 
@@ -490,6 +494,7 @@ header.editor-header {
             margin-bottom: 0.8em;
             border: 0.8px solid $oligrapher_font_gray;
             font-size: 1em;
+            line-height: 1em;
 
         }
     }

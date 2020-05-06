@@ -42,7 +42,9 @@ export const propTypes = {
 export function newNode(attributes = {}) {
   let node = merge({}, nodeDefaults, attributes)
 
-  if (!node.id) {
+  if (node.id) {
+    node.id = String(node.id)
+  } else {
     node.id = generate()
   }
 

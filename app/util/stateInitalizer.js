@@ -18,42 +18,49 @@ export function flatten(obj) {
   return merge(omit(obj, 'display'), obj.display)
 }
 
-// // Oligrapher 2 used to store these properties: { cx, cy, x1, y1, x2, y2, s1, s2 } on the `display` elements.
-// // It was replaced with the `curve` and `isReverse` field
-// function transformEdge(legacyEdge) {
-//   // return early if already in new format
-//   if (legacyEdge.display.curve) {
-//     return legacyEdge
-//   }
-//   const geometry = Curve.util.calculateGeometry(legacyEdge.display)
-//   const curve = Curve.from.geometry(geometry)
-//   const isReverse = geometry.is_reverse
+function convertNodes(nodes) {
+  return Object.fromEntries(
+    keys(nodes).map(id => [
+      String(id),
+      Node.new(flatten(nodes[id]))
+    ])
+  )
+}
 
-//   return merge(
-//     pick(legacyEdge, ['id', 'node1_id', 'node2_id']),
-//     { display: pick(legacyEdge.display, ['status', 'label', 'scale', 'arrow', 'dash', 'url']) },
-//     { display: { curve, isReverse } }
-//   )
-// }
+function convertEdges(edges) {
+  return Object.fromEntries(
+    keys(edges).map(id => [
+      String(id),
+      Edge.new(flatten(edges[id]))
+    ])
+  )
+}
+
+function convertCaptions(captions) {
+  return Object.fromEntries(
+    keys(captions).map(id => [
+      String(id),
+      merge({}, captionDefaults, flatten(captions[id]))
+    ])
+  )
+}
 
 /*
   Transforms oligrapher's serialized state (plain json) into correct format
   and/or converts legacy data.
 */
 export default function stateInitalizer(serializedState) {
-  const state = merge({}, defaultState, serializedState)
+  let state = merge({}, defaultState, serializedState)
 
-  keys(state.graph.nodes).forEach(nodeId => {
-    state.graph.nodes[nodeId] = Node.new(flatten(state.graph.nodes[nodeId]))
-  })
+  state.graph = {
+    nodes: convertNodes(state.graph.nodes),
+    edges: convertEdges(state.graph.edges),
+    captions: convertCaptions(state.graph.captions),
+    id: String(state.graph.id)
+  }
 
-  keys(state.graph.edges).forEach(edgeId => {
-    state.graph.edges[edgeId] = Edge.new(flatten(state.graph.edges[edgeId]))
-    Graph.registerEdgeWithNodes(state.graph, state.graph.edges[edgeId])
-  })
-
-  keys(state.graph.captions).forEach(captionId => {
-    state.graph.captions[captionId] = merge({}, captionDefaults, flatten(state.graph.captions[captionId]))
+  keys(state.graph.edges).forEach(id => {
+    Graph.registerEdgeWithNodes(state.graph, state.graph.edges[id])
   })
 
   state.display.viewBox = Graph.calculateViewBox(state.graph)
