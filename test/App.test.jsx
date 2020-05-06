@@ -9,7 +9,6 @@ import { createOligrapherStore } from '../app/util/render'
 import stateInitializer from '../app/util/stateInitalizer'
 import * as littlesis3 from '../app/datasources/littlesis3'
 import { removeSpaces } from './testHelpers'
-import { svgCoordinatesFromMouseEvent, screenCoordinatesFromSvgCoordinates, SVG_ID } from '../app/util/dimensions'
 
 describe('Oligrapher', function() {
   let state, store, container, find, findAll
