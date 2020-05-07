@@ -124,7 +124,8 @@ html body div#oligrapher {
     text-align: center;
     width: 20px;
     height: 12px;
-    font-size: 0.8em;
+    font-size: 13px;
+    line-height: 12px;
     border: 1px solid #ccc;
     border-bottom: 0;
 }
@@ -470,6 +471,7 @@ header.editor-header {
     left: 50%;
     background-color: white;
     border: 3px solid $highlight_blue;
+    line-height: 1em;
 
     header {
         font-size: 18px;
