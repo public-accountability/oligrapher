@@ -29,8 +29,8 @@ export function Graph(props) {
       .getBoundingClientRect()
       .top
     const containerHeight = window.innerHeight - containerTop
-    const headerHeight = headerIsCollapsed ? 52 : 182
-    const svgHeight = Math.floor(containerHeight - headerHeight - 10)
+    const headerHeight = headerIsCollapsed ? 52 : 148
+    const svgHeight = Math.floor(containerHeight - headerHeight)
     const { width } = svgRef.current.getBoundingClientRect()
     setContainerYOffset(Math.floor(containerTop))
     setSvgSize({ width: Math.floor(width), height: svgHeight })

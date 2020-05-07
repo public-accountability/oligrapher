@@ -78,7 +78,7 @@ html body div#oligrapher {
 
     &.oligrapher-header-expanded {
         // flex: 0 0 182px;
-        height: 182px;
+        height: 148px;
         transition: height 0.1s ease-out;
     }
 
@@ -92,7 +92,7 @@ html body div#oligrapher {
     h1 {
         font-size: 42px;
         margin-top: 10px;
-        margin-bottom: $header_spacing_between_header / 2;
+        margin-bottom: 5px;
         height: 50px;
         box-sizing: border-box;
 
@@ -104,14 +104,17 @@ html body div#oligrapher {
 
     h2 {
         font-weight: normal;
-        font-size: 19px;
-        margin-top: $header_spacing_between_header / 2;
+        font-size: 18px;
+        margin-top: 0;
+        margin-bottom: 0;
         height: 34px;
 
         input {
             width: 500px;
             height: 34px;
             box-sizing: border-box;
+            font-size: 15px;
+            line-height: 1em;
         }
     }
 }
@@ -129,7 +132,6 @@ html body div#oligrapher {
 #oligrapher-header-bottom {
     display: flex;
     flex-direction: row;
-    margin-top: 10px;
 
     #oligrapher-header-left-wrapper {
         flex-grow: 2;
@@ -146,6 +148,8 @@ html body div#oligrapher {
         }
 
         #oligrapher-attribution {
+            font-size: 0.9em;
+            line-height: 1.2em;
 
             a {
                 color: $link_color;
@@ -164,7 +168,9 @@ html body div#oligrapher {
         align-self: flex-end;
 
         .oligrapher-header-buttons  {
-            >div {
+          margin-top: 11px;
+
+          >div {
                 display: inline-block;
                 margin-right: 0.5em;
                 cursor: pointer;
@@ -217,7 +223,7 @@ html body div#oligrapher {
                 margin: 0;
 
                 li {
-                    line-height: 3em;
+                    line-height: 2em;
                     a {
                         text-decoration: none;
                         color: $header_menu_item_color;
@@ -265,6 +271,7 @@ html body div#oligrapher {
         z-index: 10;
         width: 100%;
         pointer-events: none;
+        line-height: 1.2em;
     }
 
     .text-tool {
@@ -345,8 +352,6 @@ html body div#oligrapher {
             cursor: pointer;
         }
     }
-
-    .editor-menu-icon {}
 }
 
 #oligrapher-undo-redo {
@@ -386,6 +391,7 @@ html body div#oligrapher {
         font-size: 20px;
         font-weight: bold;
         margin-bottom: 5px;
+        line-height: 1.5em;
     }
 
     .node-tool {
@@ -422,6 +428,7 @@ html body div#oligrapher {
     .entity-search-description {
         font-size: 0.8em;
         color: $oligrapher_dark_gray;
+        line-height: 1em;
     }
 
     a.entity-external-link {

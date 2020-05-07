@@ -52,7 +52,7 @@ export const svgToHtmlPosition = (display, position) => {
   // to be honest i don't fully understand why svgOffset has to be divided by zoom
   return {
     x: Math.trunc((position.x + offset.x + svgOffset.x / zoom) * svgZoom),
-    y: Math.trunc((position.y + offset.y + svgOffset.y / zoom) * svgZoom) + display.containerYOffset
+    y: Math.trunc((position.y + offset.y + svgOffset.y / zoom) * svgZoom) - display.containerYOffset
   }
 }
 
@@ -74,28 +74,29 @@ export const keepWithinScreen = (display, position, type) => {
   let { x, y } = position
   const width = X_SIZE[type]
   const height = Y_SIZE[type]
-  const { height: svgHeight } = display.svgSize 
+  const { width: svgWidth, height: svgHeight } = display.svgSize 
   const headerHeight = window.innerHeight - svgHeight
   const top = headerHeight + svgHeight / 2 + y
   const bottom = top + height
+  const horizontalPadding = (window.innerWidth - svgWidth) / 2
   const left = window.innerWidth / 2 + x
   const right = left + width
   const BUFFER = 20
 
-  if (top < BUFFER) {
-    y += BUFFER - top
+  if (top < headerHeight + BUFFER) {
+    y += headerHeight + BUFFER - top
   }
 
   if (bottom > window.innerHeight - BUFFER) {
     y -= bottom - window.innerHeight + BUFFER
   }
 
-  if (left < BUFFER) {
-    x += (BUFFER - left)
+  if (left < horizontalPadding + BUFFER) {
+    x += (horizontalPadding + BUFFER - left)
   }
 
-  if (right > window.innerWidth - BUFFER) {
-    x -= right - window.innerWidth + BUFFER
+  if (right > window.innerWidth - horizontalPadding - BUFFER) {
+    x -= right - window.innerWidth + horizontalPadding + BUFFER
   }
   
   return { x, y }
