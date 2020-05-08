@@ -23,7 +23,7 @@ export default function Editor() {
 
   return (
     <div className={className}>
-      <LockPoll />
+      {/* <LockPoll /> */}
       <EditorMenu />
       { tool === 'node' && <NodeTool /> }
       { tool === 'text' && <TextTool /> }

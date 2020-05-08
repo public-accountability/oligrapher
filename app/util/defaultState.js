@@ -15,10 +15,8 @@ const defaultState = {
     subtitle: null,
     date: null,
     oligrapher_version: 3,
-    user: {
-      name: null,
-      url: null
-    },
+    user: null,
+    owner: null,
     // These are rendered in the Header Menu
     links: [],
     // will be displayed in editor mode. It is used by LittleSis.org
@@ -61,7 +59,9 @@ const defaultState = {
     draggedNode: null,
     draggedOverNode: null,
     tool: null, // text, settings
-    saveMap: null // states: null, 'IN_PROGRESS', 'SUCCESS', 'FAILED'
+    saveMapStatus: null, // states: null, 'REQUESTED', 'SUCCESS', 'FAILED'
+    cloneMapStatus: null, // states: null, 'REQUESTED', 'SUCCESS', 'FAILED'
+    deleteMapStatus: null // states: null, 'REQUESTED', 'SUCCESS', 'FAILED'
   },
 
   // Global settings

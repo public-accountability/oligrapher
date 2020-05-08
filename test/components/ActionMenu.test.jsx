@@ -2,15 +2,18 @@ import React from 'react'
 import sinon from 'sinon'
 
 import ActionMenu from '../../app/components/ActionMenu'
-import { stubDispatch } from "../testHelpers"
+import { stubDispatch, mountWithStore, createMockStore } from "../testHelpers"
 
 describe("<ActionMenu>", function() {
-  let dispatchSpy, actionMenu, toggleSpy
+  let store, dispatchSpy, actionMenu, toggleSpy
 
   beforeEach(function() {
     dispatchSpy = stubDispatch()
     toggleSpy = sinon.spy()
-    actionMenu = shallow(<ActionMenu toggleActionMenu={toggleSpy} />)
+    store = createMockStore({
+      attributes: { id: 1 }
+    })
+    actionMenu = mountWithStore(store, <ActionMenu toggleActionMenu={toggleSpy} />)
   })
 
   afterEach(function() {

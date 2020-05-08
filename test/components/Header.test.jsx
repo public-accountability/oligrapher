@@ -14,7 +14,8 @@ describe('<Header>', function() {
       attributes: {
         title: "Example Title",
         subtitle: "Example Subtitle",
-        user: { "name": "Example UserName", "url": "https://example.com" }
+        user: { id: "1", "name": "Bob", "url": "https://example.com" },
+        owner: { id: "1", "name": "Bob", "url": "https://example.com" }
       },
       display: { modes: { editor: true } }
     })

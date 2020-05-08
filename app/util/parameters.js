@@ -37,7 +37,7 @@
 export default function(state) {
   return {
     id: state.attributes.id,
-    graph_data: state.graph,
+    graph_data: state.graph.present,
     attributes: {
       title: state.attributes.title,
       description: state.attributes.subtitle,

@@ -10,6 +10,7 @@ const urls = {
   getRelationship: id => `${API_URL}/api/relationships/${id}`,
   createOligrapher: () => `${API_URL}/oligrapher`,
   updateOligrapher: id => `${API_URL}/oligrapher/${id}`,
+  cloneOligrapher: id => `${API_URL}/oligrapher/${id}/clone`,
   deleteOligrapher: id => `${API_URL}/oligrapher/${id}`,
   editors: id => `${API_URL}/oligrapher/${id}/editors`,
   lock: id => `${API_URL}/oligrapher/${id}/lock`
@@ -78,14 +79,6 @@ export function getEdges(entity1Id, entity2Ids) {
     .json()
 }
 
-export function getRelationship(id) {
-  validateId(id)
-
-  return wretch(urls.getRelationship(id))
-    .get()
-    .json()
-}
-
 export function createOligrapher(data) {
   return wretch(urls.createOligrapher())
     .options({ credentials: "same-origin" })
@@ -104,6 +97,16 @@ export function updateOligrapher(data) {
     .json()
 }
 
+export function cloneOligrapher(id) {
+  validateId(id)
+
+  return wretch(urls.cloneOligrapher(id))
+    .options({ credentials: "same-origin" })
+    .headers(headers())
+    .post()
+    .json()
+}
+
 export function deleteOligrapher(id) {
   validateId(id)
 
@@ -111,6 +114,14 @@ export function deleteOligrapher(id) {
     .options({ credentials: "same-origin" })
     .headers(headers())
     .delete()
+    .json()
+}
+
+export const oligrapher = {
+  create: createOligrapher,
+  update: updateOligrapher,
+  "delete": deleteOligrapher,
+  "clone": cloneOligrapher
 }
 
 export function getEditors(id) {
@@ -144,13 +155,27 @@ function lockTakeover(id) {
   return wretch(urls.lock(id)).headers(headers()).post().json()
 }
 
+export const paramsForSave = state => {
+  return {
+    id: Number(state.attributes.id),
+    graph_data: state.graph.present,
+    attributes: {
+      title: state.attributes.title,
+      description: state.attributes.subtitle,
+      is_private: state.attributes.settings.private,
+      is_cloneable: state.attributes.settings.clone
+    }
+  }
+}
+
 export default {
   findNodes,
   findConnections,
-  getRelationship,
+  getEdges,
   createOligrapher,
   updateOligrapher,
   deleteOligrapher,
+  cloneOligrapher,
   getEditors,
   addEditor,
   removeEditor,
@@ -160,10 +185,5 @@ export default {
     get: getEditors(id),
     add: addEditor(id),
     remove: removeEditor(id)
-  }),
-  oligrapher: {
-    create: createOligrapher,
-    update: updateOligrapher,
-    "delete": deleteOligrapher
-  }
+  })
 }

@@ -21,7 +21,11 @@ describe('<HeaderRight>', function() {
 
   it("shows HeaderButtons in editor mode", function() {
     store = createMockStore({
-      display: { modes: { editor: true } }
+      display: { modes: { editor: true } },
+      attributes: {
+        user: { id: "1", name: "Bob" },
+        owner: { id: "1", name: "Bob" }
+      }
     })
     wrapper = mountWithStore(store, <HeaderRight />)
 

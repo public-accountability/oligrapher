@@ -193,7 +193,7 @@ html body div#oligrapher {
                 position: absolute;
                 top: 15px;
                 left: -100px;
-                z-index: 50;
+                z-index: 1;
 
                 ul {
                     border: 2px solid $oligrapher_blue;
@@ -648,16 +648,15 @@ header.editor-header {
     height: 355px;
     padding: 10px;
     box-sizing: border-box;
-    overflow-y: scroll;
 }
 
 .add-connections-category {
     margin-top: 10px;
 }
 
-.add-connections-results {
-    max-height: 300px;
-    overflow: auto;
+.oligrapher-add-connections .entity-search-results {
+    max-height: 285px;
+    overflow-y: scroll;
 
     .result-loading-svg {
         margin-left: 3px;
@@ -902,7 +901,7 @@ g.edge-tool-open .react-draggable-dragging .node-circle {
     right: 80px;
     top: 20px;
     padding: 10px;
-    width: 300px;
+    max-width: 300px;
     font-size: 14px;
     border: 1px solid #ccc;
     background-color: white;
@@ -911,4 +910,13 @@ g.edge-tool-open .react-draggable-dragging .node-circle {
 
 .nofocus:focus {
     outline: none;
+}
+
+.modal-buttons {
+    text-align: center;
+    margin-top: 20px;
+    font-family: Helvetica, Arial, sans-serif;
+
+    button {
+    }
 }

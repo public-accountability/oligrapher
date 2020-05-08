@@ -74,7 +74,7 @@ export const reducer = produce((graph, action) => {
     return
   case 'REMOVE_CAPTION':
     delete graph.captions[action.id]
-    return    
+    return
   default:
     return
   }

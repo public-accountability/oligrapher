@@ -57,7 +57,7 @@ export const MENU_ITEMS = [
   // 'style',
   // 'organize',
   'settings',
-  'delete',
+  // 'delete',
   'help'
 ]
 

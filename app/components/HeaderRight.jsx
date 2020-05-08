@@ -1,26 +1,38 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useSelector } from '../util/helpers'
 import HeaderButtons from './HeaderButtons'
 import HeaderMenu from './HeaderMenu'
+import { userIsOwnerSelector } from '../util/selectors'
 
 export default function HeaderRight() {
   const dispatch = useDispatch()
   const editMode = useSelector(state => state.display.modes.editor)
+  const userIsOwner = useSelector(userIsOwnerSelector)
+  const user = useSelector(state => state.attributes.user)
+  const isCloneable = useSelector(state => state.attributes.settings.clone)
 
-  const enableEditorMode = () => dispatch({ type: 'SET_MODE', mode: 'editor', enabled: true })
+  const enableEditorMode = useCallback(
+    () => dispatch({ type: 'SET_MODE', mode: 'editor', enabled: true }), 
+    [dispatch]
+  )
 
-  if (editMode) {
+  if (userIsOwner && editMode) {
     return <HeaderButtons />
-  } else {
-
-    const headerMenuItems = [
-      { text: "Edit", action: enableEditorMode },
-      { text: "Clone", url: "https://littlesis.org/oligrapher/clone" },
-      { text: "Disclaimer", url: "https://littlesis.org/oligrapher/disclaimer" }
-    ]
-
-    return <HeaderMenu items={headerMenuItems} />
   }
+
+  let headerMenuItems = [
+    { text: "Disclaimer", url: "https://littlesis.org/oligrapher/disclaimer" }
+  ]
+
+  if (userIsOwner || (user && isCloneable)) {
+    headerMenuItems.unshift({ text: "Clone", url: "https://littlesis.org/oligrapher/clone" })
+  }
+
+  if (userIsOwner) {
+    headerMenuItems.unshift({ text: "Edit", action: enableEditorMode })
+  }
+
+  return <HeaderMenu items={headerMenuItems} />
 }

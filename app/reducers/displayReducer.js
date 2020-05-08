@@ -104,17 +104,55 @@ export default produce((display, action) => {
     FloatingEditor.set(display, action.editorType, action.id)
     return
   // Save map actions
-  case 'SAVE_MAP_IN_PROGRESS':
-    display.saveMap = 'IN_PROGRESS'
+  case 'SAVE_REQUESTED':
+    display.saveMapStatus = 'REQUESTED'
+    display.userMessage = 'Saving map...'
     return
-  case 'SAVE_MAP_SUCCESS':
-    display.saveMap = 'SUCCESS'
+  case 'SAVE_SUCCESS':
+    display.saveMapStatus = 'SUCCESS'
+    display.userMessage = 'Saved map :)'
     return
-  case 'SAVE_MAP_FAILED':
-    display.saveMap = 'FAILED'
+  case 'SAVE_FAILED':
+    display.saveMapStatus = 'FAILED'
+    display.userMessage = 'Failed to save map :('
     return
-  case 'SAVE_MAP_RESET':
-    display.saveMap = null
+  case 'SAVE_RESET':
+    display.saveMapStatus = null
+    display.userMessage = null
+    return
+  // Clone map actions
+  case 'CLONE_REQUESTED':
+    display.cloneMapStatus = 'REQUESTED'
+    display.userMessage = 'Cloning map...'
+    return
+  case 'CLONE_SUCCESS':
+    display.cloneMapStatus = 'SUCCESS'
+    display.userMessage = 'Cloned map :)'
+    return
+  case 'CLONE_FAILED':
+    display.cloneMapStatus = 'FAILED'
+    display.userMessage = 'Failed to clone map :('
+    return
+  case 'CLONE_RESET':
+    display.cloneMapStatus = null
+    display.userMessage = null
+    return
+  // Clone map actions
+  case 'DELETE_REQUESTED':
+    display.deleteMapStatus = 'REQUESTED'
+    display.userMessage = 'Deleting map...'
+    return
+  case 'DELETE_SUCCESS':
+    display.deleteMapStatus = 'SUCCESS'
+    display.userMessage = 'Deleted map :)'
+    return
+  case 'DELETE_FAILED':
+    display.deleteMapStatus = 'FAILED'
+    display.userMessage = 'Failed to delete map :('
+    return
+  case 'DELETE_RESET':
+    display.cloneMapStatus = null
+    display.userMessage = null
     return
   default:
     return

@@ -34,11 +34,11 @@ const renderDate = function(date) {
 }
 
 
-export default function Attribution(props) {
+export default function Attribution({ user, date }) {
   return (
     <div id="oligrapher-attribution">
-      {renderUser(props.user)}
-      {renderDate(props.date)}
+      {renderUser(user)}
+      {renderDate(date)}
     </div>
   )
 }

@@ -10,6 +10,8 @@ import stateInitializer from '../app/util/stateInitalizer'
 import * as littlesis3 from '../app/datasources/littlesis3'
 import { removeSpaces } from './testHelpers'
 
+const sandbox = sinon.createSandbox()
+
 describe('Oligrapher', function() {
   let state, store, container, find, findAll
 
@@ -17,8 +19,10 @@ describe('Oligrapher', function() {
     state = stateInitializer({ 
       graph: Object.assign({}, bigGraph),
       attributes: {
+        id: '1',
         title: 'test graph',
-        user: { name: 'bozo', url: 'http://example.com' }
+        user: { id: '1', name: 'bozo', url: 'http://example.com' },
+        owner: { id: '1', name: 'bozo', url: 'http://example.com' }
       },
       display: {
         modes: { editor: true }
@@ -35,6 +39,10 @@ describe('Oligrapher', function() {
 
     find = (selector) => container.querySelector(selector)
     findAll = (selector) => container.querySelectorAll(selector)
+  })
+
+  afterEach(function() {
+    sandbox.restore()
   })
 
   it('shows title', function() {
@@ -87,8 +95,8 @@ describe('Oligrapher', function() {
       { id: "1", name: "papa kushner", description: null, image: null, url: null },
       { id: "2", name: "baby kushner", description: null, image: null, url: null }
     ]
-    sinon.stub(littlesis3, 'findNodes').returns(Promise.resolve(nodeData))
-    sinon.stub(littlesis3, 'getEdges').resolves([])
+    sandbox.stub(littlesis3, 'findNodes').returns(Promise.resolve(nodeData))
+    sandbox.stub(littlesis3, 'getEdges').resolves([])
 
     // click node tool icon and enter search query
     fireEvent.click(find('.editor-node-item'))
@@ -105,7 +113,7 @@ describe('Oligrapher', function() {
     expect(removeSpaces(find('#node-1 .node-label').textContent)).to.equal(removeSpaces(nodeData[0].name))
     // assume that automatic edge fetch has one result
     littlesis3.getEdges.restore()
-    sinon.stub(littlesis3, 'getEdges').resolves([
+    sandbox.stub(littlesis3, 'getEdges').resolves([
       { id: "1", node1_id: "1", node2_id: "2", label: "family", arrow: false, dash: false, url: null }
     ])
     // click second result
@@ -118,8 +126,6 @@ describe('Oligrapher', function() {
       expect(find('#edge-1 .edge-label').textContent).to.equal("family")
     })
     // unstub api
-    littlesis3.findNodes.restore()
-    littlesis3.getEdges.restore()
   })
 
   it('node editor opens and edits node and switches', async function() {
@@ -309,5 +315,59 @@ describe('Oligrapher', function() {
     expect(findAll('.oligrapher-node-editor').length).to.equal(0)
     // node should have deleted
     expect(findAll('.oligrapher-node').length).to.equal(nodeCount - 1)
+  })
+
+  it('saves map', async function() {
+    const promise = new Promise(resolve => setTimeout(() => resolve(), 500))
+    sandbox.stub(littlesis3.oligrapher, 'update').returns(promise)
+    // click save button
+    const button = find('#oligrapher-header button[name="save"]')
+    fireEvent.click(button)
+    // user message should indicate saving
+    const message = find('.oligrapher-user-message')
+    expect(message.textContent).to.equal("Saving map...")
+    // user message should eventually indicate saved
+    await waitFor(() => expect(message.textContent).to.equal("Saved map :)"))
+    // user message should eventually disappear
+    await waitFor(() => expect(findAll('.oligrapher-user-message').length).to.equal(0), { timeout: 5000 })
+  }).timeout(6000)
+
+  it('clones map (failure)', async function() {
+    const promise = new Promise((resolve, reject) => setTimeout(() => reject(), 500))
+    sandbox.stub(littlesis3.oligrapher, 'clone').returns(promise)
+    // open menu
+    const toggle = find('.toggle-action-menu')
+    fireEvent.click(toggle)
+    // click clone
+    const item = Array.from(findAll('.header-action-menu li')).find(li => li.textContent === 'Clone')
+    fireEvent.click(item)
+    // user message should indicate cloning
+    const message = find('.oligrapher-user-message')
+    expect(message.textContent).to.equal("Cloning map...")
+    // user message should eventually indicate failed
+    await waitFor(() => expect(message.textContent).to.equal("Failed to clone map :("))
+    // user message should eventually disappear
+    await waitFor(() => expect(findAll('.oligrapher-user-message').length).to.equal(0), { timeout: 5000 })
+  }).timeout(6000)
+
+  // can't figure out how to make this test work, the modal doesn't seem to appear
+  xit('deletes map', async function() {
+    const promise = new Promise(resolve => setTimeout(() => resolve(), 500))
+    sandbox.stub(littlesis3.oligrapher, 'delete').returns(promise)
+    // open menu
+    const toggle = find('.toggle-action-menu')
+    fireEvent.click(toggle)
+    // click delete
+    const item = Array.from(findAll('.header-action-menu li')).find(li => li.textContent === 'Delete')
+    fireEvent.click(item)
+    // confirmation modal should appear
+    expect(findAll('.confirm-delete').length).to.equal(1)
+    // click on delete button
+    const button = find('.confirm-delete button[name="delete"]')
+    fireEvent.click(button)
+    // user message should indicate deleting
+    const message = find('.oligrapher-user-message')
+    expect(message.textContent).to.equal("Deleting map...")
+    // unfortunately we can't test the redirect because we can't stub window.location.replace :()
   })
 })
