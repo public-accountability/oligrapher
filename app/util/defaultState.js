@@ -45,7 +45,6 @@ const defaultState = {
     svgSize: null, // { width: 500, height: 500 },
     svgOffset: null,
     offset: { x: 0, y: 0 },
-    containerYOffset: 0,
     headerIsCollapsed: false,
     modes: {
       editor: false,

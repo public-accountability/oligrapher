@@ -19,8 +19,7 @@ export function Graph(props) {
   const [svgHeight, setSvgHeight] = useState(500)
 
   const {
-    viewBox, zoom, svgSize, headerIsCollapsed, setSvgSize, 
-    setContainerYOffset, rootContainerId 
+    viewBox, zoom, svgSize, headerIsCollapsed, setSvgSize, rootContainerId 
   } = props
 
   const handleResize = () => {
@@ -32,7 +31,6 @@ export function Graph(props) {
     const headerHeight = headerIsCollapsed ? 52 : 148
     const svgHeight = Math.floor(containerHeight - headerHeight)
     const { width } = svgRef.current.getBoundingClientRect()
-    setContainerYOffset(Math.floor(containerTop))
     setSvgSize({ width: Math.floor(width), height: svgHeight })
     setSvgHeight(svgHeight)
   }
@@ -66,7 +64,6 @@ Graph.propTypes = {
   svgSize: PropTypes.object,
   headerIsCollapsed: PropTypes.bool.isRequired,
   setSvgSize: PropTypes.func.isRequired,
-  setContainerYOffset: PropTypes.func.isRequired,
   rootContainerId: PropTypes.string.isRequired
 }
 
@@ -81,8 +78,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setSvgSize: size => dispatch({ type: 'SET_SVG_SIZE', size }),
-    setContainerYOffset: offset => dispatch({ type: 'SET_CONTAINER_Y_OFFSET', offset })
+    setSvgSize: size => dispatch({ type: 'SET_SVG_SIZE', size })
   }
 }
 

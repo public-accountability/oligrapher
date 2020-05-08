@@ -1,7 +1,8 @@
 import { put, select as sagaSelect, call, takeEvery, all } from 'redux-saga/effects'
 import { isLittleSisId, convertSelectorForUndo } from './util/helpers'
-import { oligrapher, getEdges, paramsForSave } from './datasources/littlesis3'
+import { oligrapher, getEdges } from './datasources/littlesis3'
 import { applyZoomToViewBox, computeSvgZoom, computeSvgOffset } from './util/dimensions'
+import { paramsForSaveSelector } from './util/selectors'
 
 // redux-undo places present state at state.present, so we use our own
 // select() to "transparently" make this change to all our saga selectors
@@ -77,7 +78,7 @@ export function* setActualZoom() {
 
 // Attempt to save map
 export function* save() {
-  const params = yield select(paramsForSave)
+  const params = yield select(paramsForSaveSelector)
   const { id } = params
   const requestType = id ? 'update' : 'create'
 

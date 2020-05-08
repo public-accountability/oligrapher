@@ -22,9 +22,6 @@ export default produce((display, action) => {
   case 'SET_SVG_OFFSET':
     display.svgOffset = action.svgOffset
     return
-  case 'SET_CONTAINER_Y_OFFSET':
-    display.containerYOffset = action.offset
-    return
   case 'COLLAPSE_HEADER':
     display.headerIsCollapsed = true
     return

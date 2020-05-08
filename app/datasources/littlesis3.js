@@ -155,19 +155,6 @@ function lockTakeover(id) {
   return wretch(urls.lock(id)).headers(headers()).post().json()
 }
 
-export const paramsForSave = state => {
-  return {
-    id: Number(state.attributes.id),
-    graph_data: state.graph.present,
-    attributes: {
-      title: state.attributes.title,
-      description: state.attributes.subtitle,
-      is_private: state.attributes.settings.private,
-      is_cloneable: state.attributes.settings.clone
-    }
-  }
-}
-
 export default {
   findNodes,
   findConnections,
