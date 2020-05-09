@@ -129,10 +129,17 @@ export function calculateViewBox(graph) {
     return DEFAULT_VIEWBOX
   }
 
-  const minX = graphStats.minNodeX - GRAPH_PADDING_X
-  const minY = graphStats.minNodeY - GRAPH_PADDING_Y
-  const w = (graphStats.maxNodeX - graphStats.minNodeX) + (GRAPH_PADDING_X * 2)
-  const h = (graphStats.maxNodeY - graphStats.minNodeY) + (GRAPH_PADDING_Y * 2)
+  const { 
+    minNodeX, minNodeY, maxNodeX, maxNodeY,
+    minCaptionX, minCaptionY, maxCaptionX, maxCaptionY
+  } = graphStats
+
+  const minX = Math.min(minNodeX, minCaptionX) - GRAPH_PADDING_X
+  const minY = Math.min(minNodeY, minCaptionY) - GRAPH_PADDING_Y
+  const maxX = Math.max(maxNodeX, maxCaptionX) + GRAPH_PADDING_X
+  const maxY = Math.max(maxNodeY, maxCaptionY) + GRAPH_PADDING_Y
+  const w = maxX - minX
+  const h = maxY - minY
 
   return { minX, minY, w, h }
 }

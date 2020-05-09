@@ -9,6 +9,7 @@ import Graph, {
 } from '../../app/graph/graph'
 import Node from '../../app/graph/node'
 import Edge from '../../app/graph/edge'
+import Caption from '../../app/graph/caption'
 import { xy, distance } from '../../app/util/helpers'
 
 describe('Graph', function() {
@@ -363,19 +364,21 @@ describe('Graph', function() {
   })
 
   describe('calculateViewBox', function() {
-    let graph, n1, n2, n3
+    let graph, n1, n2, n3, c
 
     it('returns padded viewbox', function() {
       graph = Graph.new()
       n1 = Node.new({ x: -100, y: 0 })
       n2 = Node.new({ x: 50, y: -100 })
       n3 = Node.new({ x: 100, y: -50 })
+      c = Caption.new({ x: 50, y: 50, width: 100, height: 100 })
       Graph.addNodes(graph, [n1, n2, n3])
+      Graph.addCaption(graph, c)
       expect(Graph.calculateViewBox(graph)).to.eql({ 
         minX: -100 - GRAPH_PADDING_X, 
         minY: -100 - GRAPH_PADDING_Y,
-        w: 200 + 2 * GRAPH_PADDING_X,
-        h: 100 + 2 * GRAPH_PADDING_Y
+        w: 250 + 2 * GRAPH_PADDING_X,
+        h: 250 + 2 * GRAPH_PADDING_Y
       })
     })
   })
