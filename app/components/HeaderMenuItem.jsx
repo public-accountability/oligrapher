@@ -10,19 +10,19 @@ import isFunction from 'lodash/isFunction'
   that function is set to the onClick action.
 
 */
-export default function HeaderMenuItem(props) {
-  let linkAttrs = { text: props.text }
+export default function HeaderMenuItem({ text, action, url }) {
+  let linkAttrs = {}
 
-  if (props.action) {
+  if (action) {
     linkAttrs.href = '#'
-    linkAttrs.onClick = props.action
+    linkAttrs.onClick = action
   } else {
-    linkAttrs.href = props.url
+    linkAttrs.href = url
   }
 
   return (
     <li>
-      <a {...linkAttrs}>{props.text}</a>
+      <a {...linkAttrs}>{text}</a>
     </li>
   )
 }

@@ -207,13 +207,18 @@ html body div#oligrapher {
 
                 li {
                     font-size: 0.8em;
-                    padding-top: 0.3em;
-                    padding-bottom: 0.3em;
+                    padding-top: 0.2em;
+                    padding-bottom: 0.2em;
                     list-style: none;
 
                     &:hover {
                         background-color: $oligrapher_gray;
                     }
+                }
+                
+                hr {
+                    margin-top: 0.3em;
+                    margin-bottom: 0.3em;
                 }
             }
 
@@ -299,17 +304,21 @@ html body div#oligrapher {
         }
 
         button {
-            padding: 5px;
-            padding-top: 7px;
+            padding: 8px;
             border: 0;
             background-color: white;
             color: gray;
-            height: 32px;
-            width: 32px;
+            height: 30px;
+            width: 30px;
+            border-bottom: 1px solid #eee;
+            line-height: 1em;
+            font-size: 1em;
+            box-sizing: border-box;
 
             svg {
-              height: 20px;
-              width: 20px;
+              height: 14px;
+              width: 14px;
+              vertical-align: baseline;
             }
         }
 
@@ -353,6 +362,7 @@ html body div#oligrapher {
         svg {
             width: 30px;
             height: 30px;
+            vertical-align: baseline;
         }
 
         &:hover {

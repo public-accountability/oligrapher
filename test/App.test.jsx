@@ -318,7 +318,7 @@ describe('Oligrapher', function() {
   })
 
   it('saves map', async function() {
-    const promise = new Promise(resolve => setTimeout(() => resolve(), 500))
+    const promise = new Promise(resolve => setTimeout(() => resolve(), 10))
     sandbox.stub(littlesis3.oligrapher, 'update').returns(promise)
     // click save button
     const button = find('#oligrapher-header button[name="save"]')
@@ -333,7 +333,7 @@ describe('Oligrapher', function() {
   }).timeout(6000)
 
   it('clones map (failure)', async function() {
-    const promise = new Promise((resolve, reject) => setTimeout(() => reject(), 500))
+    const promise = new Promise((resolve, reject) => setTimeout(() => reject(), 10))
     sandbox.stub(littlesis3.oligrapher, 'clone').returns(promise)
     // open menu
     const toggle = find('.toggle-action-menu')
@@ -352,7 +352,7 @@ describe('Oligrapher', function() {
 
   // can't figure out how to make this test work, the modal doesn't seem to appear
   xit('deletes map', async function() {
-    const promise = new Promise(resolve => setTimeout(() => resolve(), 500))
+    const promise = new Promise(resolve => setTimeout(() => resolve(), 10))
     sandbox.stub(littlesis3.oligrapher, 'delete').returns(promise)
     // open menu
     const toggle = find('.toggle-action-menu')
@@ -372,7 +372,7 @@ describe('Oligrapher', function() {
   })
 
   it('opens and closes action menu', function() {
-    const promise = new Promise(resolve => setTimeout(() => resolve(), 500))
+    const promise = new Promise(resolve => setTimeout(() => resolve(), 10))
     sandbox.stub(littlesis3.oligrapher, 'clone').returns(promise)
     // click action menu toggler
     const toggle = find('.toggle-action-menu')
@@ -394,7 +394,7 @@ describe('Oligrapher', function() {
     expect(findAll('.header-action-menu').length).to.equal(0)
   })
 
-  it('switches to present mode', function() {
+  it('switches to present mode and back to editor mode', function() {
     // editor menu should be visible
     expect(findAll('.oligrapher-graph-editor').length).to.equal(1)
     // click action menu toggler
@@ -407,5 +407,10 @@ describe('Oligrapher', function() {
     fireEvent.click(item)
     // editor menu should disappear
     expect(findAll('.oligrapher-graph-editor').length).to.equal(0)
+    // click "Edit"
+    const edit = find('#oligrapher-header-menu-wrapper a')
+    fireEvent.click(edit)
+    // editor menu should appear
+    expect(findAll('.oligrapher-graph-editor').length).to.equal(1)
   })
 })

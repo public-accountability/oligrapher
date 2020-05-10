@@ -18,6 +18,11 @@ export default function HeaderRight() {
     [dispatch]
   )
 
+  const clone = useCallback(
+    () => dispatch({ type: 'CLONE_REQUESTED' }),
+    [dispatch]
+  )
+
   if (userIsOwner && editMode) {
     return <HeaderButtons />
   }
@@ -27,7 +32,7 @@ export default function HeaderRight() {
   ]
 
   if (userIsOwner || (user && isCloneable)) {
-    headerMenuItems.unshift({ text: "Clone", url: "https://littlesis.org/oligrapher/clone" })
+    headerMenuItems.unshift({ text: "Clone", action: clone })
   }
 
   if (userIsOwner) {
