@@ -164,7 +164,7 @@ html body div#oligrapher {
 
     #oligrapher-header-right-wrapper {
         flex-grow: 0;
-        margin-right: 1em;
+        margin-right: 0.5em;
         margin-left: auto; /* This pushes the flex item to the right */
         align-self: flex-end;
 
@@ -188,12 +188,16 @@ html body div#oligrapher {
                 font-size: 14.5px;
             }
 
+            .header-action-menu-wrapper:focus {
+                outline: none;
+            }
+
             div.header-action-menu {
                 background-color: #FFF;
                 position: absolute;
                 top: 15px;
-                left: -100px;
-                z-index: 1;
+                left: -30px;
+                z-index: 2;
 
                 ul {
                     border: 2px solid $oligrapher_blue;
@@ -282,7 +286,7 @@ html body div#oligrapher {
     }
 
     #oligrapher-zoomcontrol {
-        z-index: 15;
+        z-index: 1;
         position: absolute;
         top: 1em;
         right: 0;

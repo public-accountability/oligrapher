@@ -9,7 +9,7 @@ import { paramsForSaveSelector } from './util/selectors'
 const select = selector => sagaSelect(convertSelectorForUndo(selector))
 
 const delay = time => new Promise(resolve => setTimeout(resolve, time))
-const RESET_DELAY = 5000
+const RESET_DELAY = process.env.TEST ? 100 : 5000
 
 export default function* rootSaga() {
   yield all([

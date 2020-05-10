@@ -370,4 +370,42 @@ describe('Oligrapher', function() {
     expect(message.textContent).to.equal("Deleting map...")
     // unfortunately we can't test the redirect because we can't stub window.location.replace :()
   })
+
+  it('opens and closes action menu', function() {
+    const promise = new Promise(resolve => setTimeout(() => resolve(), 500))
+    sandbox.stub(littlesis3.oligrapher, 'clone').returns(promise)
+    // click action menu toggler
+    const toggle = find('.toggle-action-menu')
+    fireEvent.click(toggle)
+    // action menu should appear
+    expect(findAll('.header-action-menu').length).to.equal(1)
+    // click on node tool
+    const nodeToolIcon = find('.editor-node-item')
+    fireEvent.click(nodeToolIcon)
+    // action menu should disappear
+    expect(findAll('.header-action-menu').length).to.equal(0)
+    // click action menu toggler
+    fireEvent.click(toggle)
+    expect(findAll('.header-action-menu').length).to.equal(1)
+    // click "Clone"
+    const item = Array.from(findAll('.header-action-menu li')).find(li => li.textContent === 'Clone')
+    fireEvent.click(item)
+    // action menu should disappear
+    expect(findAll('.header-action-menu').length).to.equal(0)
+  })
+
+  it('switches to present mode', function() {
+    // editor menu should be visible
+    expect(findAll('.oligrapher-graph-editor').length).to.equal(1)
+    // click action menu toggler
+    const toggle = find('.toggle-action-menu')
+    fireEvent.click(toggle)
+    // action menu should appear
+    expect(findAll('.header-action-menu').length).to.equal(1)
+    // click on "Present"
+    const item = Array.from(findAll('.header-action-menu li')).find(li => li.textContent === 'Present')
+    fireEvent.click(item)
+    // editor menu should disappear
+    expect(findAll('.oligrapher-graph-editor').length).to.equal(0)
+  })
 })

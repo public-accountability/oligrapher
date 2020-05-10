@@ -1,20 +1,27 @@
-import React, { useCallback, useState } from 'react'
-import PropTypes from 'prop-types'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ReactModal from 'react-modal'
+import { IoIosMore } from 'react-icons/io'
 
-export default function ActionMenu({toggleActionMenu}) {
+export default function ActionMenu() {
   const dispatch = useDispatch()
-  const [showModal, setShowModal] = useState(false)
   const { id } = useSelector(state => state.attributes)
   const rootElement = document.querySelector("#oligrapher-container")
+  const divRef = useRef()
+
+  const [showModal, setShowModal] = useState(false)
+  const openModal = useCallback(() => setShowModal(true), [])
+
+  const [menuIsOpen, setMenuIsOpen] = useState(false) 
+  const toggleMenu = useCallback(() => setMenuIsOpen(!menuIsOpen), [menuIsOpen])
+  const closeMenu = useCallback(() => setMenuIsOpen(false), [])
 
   const openEditorsMenu = useCallback(
     function() {
       dispatch({ type: 'OPEN_TOOL', item: 'editors' })
-      toggleActionMenu()
+      closeMenu()
     },
-    [dispatch, toggleActionMenu]
+    [dispatch, closeMenu]
   )
 
   const presentMap = useCallback(
@@ -22,14 +29,24 @@ export default function ActionMenu({toggleActionMenu}) {
     [dispatch]
   )
 
-  const cloneMap = useCallback(() => dispatch({ type: 'CLONE_REQUESTED' }), [dispatch])
+  const cloneMap = useCallback(() => {
+    dispatch({ type: 'CLONE_REQUESTED' })
+    closeMenu()
+  }, [dispatch, closeMenu])
  
-  const openModal = useCallback(() => setShowModal(true), [])
   const cancelDelete = useCallback(() => setShowModal(false), [])
+ 
   const handleDelete = useCallback(() => {
     dispatch({ type: 'DELETE_REQUESTED' })
     setShowModal(false)
-  }, [dispatch])
+    closeMenu()
+  }, [dispatch, closeMenu])
+
+  useEffect(() => {
+    if (menuIsOpen) {
+      divRef.current.focus()
+    }
+  }, [menuIsOpen])
 
   const modalStyle = {
     content: {
@@ -48,27 +65,34 @@ export default function ActionMenu({toggleActionMenu}) {
   }
 
   return (
-    <>
-      <div style={{position: "relative"}}>
-        <div className="header-action-menu">
-          <ul>
-            <li onClick={presentMap}>
-              Present
-            </li>
-            <li onClick={openEditorsMenu}>
-              Editors
-            </li>
-            <hr />
-            <li onClick={cloneMap}>Clone</li>
-            { id && <li onClick={openModal}>Delete</li> }
-            {/* <li>Create New</li> */}
-            {/* <hr /> */}
-            {/* <li>Share</li>
-            <li>Print</li>
-            <li>Export</li> */}
-          </ul>
-        </div>
+    <div className="header-action-menu-wrapper" ref={divRef} tabIndex="0" onBlur={closeMenu}>
+      <div>
+        <span className="toggle-action-menu" onClick={toggleMenu}><IoIosMore /></span>
       </div>
+
+      { menuIsOpen && 
+        <div style={{position: "relative"}}>
+          <div className="header-action-menu">
+            <ul>
+              <li onClick={presentMap}>
+                Present
+              </li>
+              <li onClick={openEditorsMenu}>
+                Editors
+              </li>
+              <hr />
+              <li onClick={cloneMap}>Clone</li>
+              { id && <li onClick={openModal}>Delete</li> }
+              {/* <li>Create New</li> */}
+              {/* <hr /> */}
+              {/* <li>Share</li>
+              <li>Print</li>
+              <li>Export</li> */}
+            </ul>
+          </div>
+        </div>
+      }
+
       <ReactModal 
         isOpen={showModal} 
         appElement={rootElement} 
@@ -84,11 +108,6 @@ export default function ActionMenu({toggleActionMenu}) {
           </div>
         </div>
       </ReactModal>    
-    </>
+    </div>
   )
-}
-
-
-ActionMenu.propTypes = {
-  toggleActionMenu: PropTypes.func.isRequired
 }
