@@ -3,6 +3,7 @@ import isNumber from 'lodash/isNumber'
 import merge from 'lodash/merge'
 import values from 'lodash/values'
 import pick from 'lodash/pick'
+import Springy from 'springy'
 
 import { translatePoint, rotatePoint } from '../util/helpers'
 import { newNode, findIntersectingNode } from './node'
@@ -435,6 +436,55 @@ function arrangeGraph(graph, arrangement) {
   return graph
 }
 
+export function forceLayout(graph, steps = 1000) {
+  let layout = buildForceLayout(graph)
+  let nodeCount = Object.keys(graph.nodes).length
+  let edgeCount = Object.keys(graph.edges).length
+
+  steps = Math.round(steps / ((nodeCount + edgeCount) / 50))
+
+  for (var i = 0; i < steps; i++) {
+    layout.tick(0.01)
+  }
+
+  layout.eachNode((node, point) => {
+    graph.nodes[node.id].x = point.p.x * 50
+    graph.nodes[node.id].y = point.p.y * 50
+  })
+
+  // remove curve control points so that they're recalculated
+  Object.values(graph.edges).forEach(edge => {
+    const { id, node1_id, node2_id } = edge
+    const node1 = graph.nodes[node1_id]
+    const node2 = graph.nodes[node2_id]
+    graph.edges[id] = merge(
+      edge,
+      edgeCoordinates(1, node1),
+      edgeCoordinates(2, node2),
+      { cx: null, cy: null }
+    )
+  })
+
+  return graph
+}
+
+function buildForceLayout(graph) {
+  let gr = new Springy.Graph()
+
+  let nodeIds = Object.keys(graph.nodes)
+  let edges = values(graph.edges).map(e => [e.node1_id, e.node2_id])
+
+  gr.addNodes(...nodeIds)
+  gr.addEdges(...edges)
+
+  let stiffness = 200.0
+  let repulsion = 300.0
+  let damping = 0.5
+  let minEnergyThreshold = 0.1
+
+  return new Springy.Layout.ForceDirected(gr, stiffness, repulsion, damping, minEnergyThreshold);
+}
+
 export default {
   "new": newGraph,
   "stats": stats,
@@ -459,5 +509,6 @@ export default {
   "addConnection": addConnection,
   "connectedNodeIds": connectedNodeIds,
   "arrange": arrangeGraph,
+  "forceLayout": forceLayout,
   "registerEdgeWithNodes": registerEdgeWithNodes
 }

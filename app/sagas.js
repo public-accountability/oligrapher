@@ -1,8 +1,11 @@
 import { put, select as sagaSelect, call, takeEvery, all } from 'redux-saga/effects'
+import cloneDeep from 'lodash/cloneDeep'
+
 import { isLittleSisId, convertSelectorForUndo } from './util/helpers'
-import { oligrapher, getEdges } from './datasources/littlesis3'
+import { oligrapher, editors, getEdges } from './datasources/littlesis3'
 import { applyZoomToViewBox, computeSvgZoom, computeSvgOffset } from './util/dimensions'
 import { paramsForSaveSelector } from './util/selectors'
+import { forceLayout } from './graph/graph'
 
 // redux-undo places present state at state.present, so we use our own
 // select() to "transparently" make this change to all our saga selectors
@@ -17,7 +20,10 @@ export default function* rootSaga() {
     watchZoom(),
     watchSave(),
     watchClone(),
-    watchDelete()
+    watchDelete(),
+    watchForceLayout(),
+    watchAddEditor(),
+    watchRemoveEditor()
   ])
 } 
 
@@ -39,6 +45,18 @@ export function* watchClone() {
 
 export function* watchDelete() {
   yield takeEvery(['DELETE_REQUESTED'], deleteMap)
+}
+
+export function* watchForceLayout() {
+  yield takeEvery(['FORCE_LAYOUT_REQUESTED'], generateForceLayout)  
+}
+
+export function* watchAddEditor() {
+  yield takeEvery(['ADD_EDITOR_REQUESTED'], addEditor)  
+}
+
+export function* watchRemoveEditor() {
+  yield takeEvery(['REMOVE_EDITOR_REQUESTED'], removeEditor)  
 }
 
 // Automatically fetches edges when a node is added from LittleSis
@@ -105,7 +123,7 @@ export function* clone() {
   try {
     const results = yield call(oligrapher.clone, Number(id))
     yield put({ type: 'CLONE_SUCCESS' })
-    window.open(results.url, '_blank')
+    window.open(results.redirect_url, '_blank')
   } catch(error) {
     yield put({ type: 'CLONE_FAILED' })
   }
@@ -128,4 +146,42 @@ export function* deleteMap() {
 
   yield call(delay, RESET_DELAY)
   yield put({ type: 'DELETE_RESET' })
+}
+
+export function* generateForceLayout() {
+  const graph = yield select(state => state.graph.present)
+  yield call(delay, 50)
+  const newGraph = yield call(forceLayout, cloneDeep(graph))
+  yield put({ type: 'APPLY_FORCE_LAYOUT', graph: newGraph })
+}
+
+export function* addEditor(action) {
+  const { username } = action
+  const id = yield select(state => state.attributes.id)
+  
+  try {
+    const results = yield call(editors.add, id, username)
+    yield put({ type: 'ADD_EDITOR_SUCCESS', editors: results.editors })
+  } catch(error) {
+    yield put({ type: 'ADD_EDITOR_FAILED' })    
+  }
+
+  yield call(delay, RESET_DELAY)
+  yield put({ type: 'ADD_EDITOR_RESET' })
+}
+
+export function* removeEditor(action) {
+  const { username } = action
+  const id = yield select(state => state.attributes.id)
+  
+  try {
+    console.log(id, username)
+    const results = yield call(editors.remove, id, username)
+    yield put({ type: 'REMOVE_EDITOR_SUCCESS', editors: results.editors })
+  } catch(error) {
+    yield put({ type: 'REMOVE_EDITOR_FAILED' })    
+  }
+
+  yield call(delay, RESET_DELAY)
+  yield put({ type: 'REMOVE_EDITOR_RESET' })
 }

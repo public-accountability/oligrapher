@@ -1,18 +1,13 @@
 import React from 'react'
 // Icons
-import { FaRegCircle, FaBezierCurve, FaFlipboard, FaTv, FaRegEdit, FaRegTrashAlt } from "react-icons/fa"
-import { FiHelpCircle } from 'react-icons/fi'
+import { FaRegCircle, FaBezierCurve, FaFlipboard, FaTv, FaRegEdit, FaRegTrashAlt, FaUsersCog } from "react-icons/fa"
+import { FiHelpCircle, FiUsers } from 'react-icons/fi'
 import { GoTextSize, GoGear } from 'react-icons/go'
-import { TiArrowMove } from 'react-icons/ti'
 
 export const MENU = {
   "node": {
     icon: <FaRegCircle />,
     title: 'Add Node'
-  },
-  "edge": {
-    icon: <FaBezierCurve />,
-    title: 'Add edge'
   },
   "text": {
     icon: <GoTextSize />,
@@ -31,12 +26,16 @@ export const MENU = {
     title: 'Style Nodes'
   },
   "organize": {
-    icon: <TiArrowMove />,
-    title: 'organize'
+    icon: <FaBezierCurve />,
+    title: 'Organize Map'
   },
   "settings": {
     icon: <GoGear />,
     title: 'Settings'
+  },
+  "editors": {
+    icon: <FiUsers />,
+    title: 'Editors'
   },
   "delete": {
     icon: <FaRegTrashAlt />,
@@ -55,8 +54,9 @@ export const MENU_ITEMS = [
   // TODO:
   // 'story',
   // 'style',
-  // 'organize',
+  'organize',
   'settings',
+  'editors',
   // 'delete',
   'help'
 ]

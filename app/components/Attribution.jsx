@@ -1,21 +1,23 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const renderUser = function(user) {
-  const link = (
-    <a href={user.url} target="_blank" rel="noopener noreferrer">
-      {user.name}
-    </a>
+const renderUsers = function(users) {
+  const name = user => (
+    user.url 
+      ? <a href={user.url} target="_blank" rel="noopener noreferrer">
+          {user.name}
+        </a>
+      : user.name
   )
-  const name = user.url ? link : user.name
 
-  if (!name) {
-    return null
-  }
+  const names = users.map(name).reduce((prev, current, i) => {
+    const separator = (i == users.length - 1) ? ' and ' : ', '
+    return [prev, separator, current]
+  })
 
   return (
     <div id="oligrapher-attribution-user">
-      <span>by {name}</span>
+      <span>by {names}</span>
     </div>
   )
 }
@@ -34,20 +36,17 @@ const renderDate = function(date) {
 }
 
 
-export default function Attribution({ user, date }) {
+export default function Attribution({ users, date }) {
   return (
     <div id="oligrapher-attribution">
-      {renderUser(user)}
+      {renderUsers(users)}
       {renderDate(date)}
     </div>
   )
 }
 
 Attribution.propTypes = {
-  user: PropTypes.shape({
-    name: PropTypes.string,
-    url: PropTypes.string
-  }),
+  users: PropTypes.array.isRequired,
   date: PropTypes.string
 }
 

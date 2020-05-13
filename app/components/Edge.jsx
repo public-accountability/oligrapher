@@ -15,7 +15,6 @@ export function Edge({ id, currentlyEdited }) {
   const dispatch = useDispatch()
   const edge = useSelector(state => state.graph.edges[id])
   const actualZoom = useSelector(state => state.display.actualZoom)
-  const editorMode = useSelector(state => state.display.modes.editor)
 
   const [isHovering, setHovering] = useState(false)
   const [isDragging, setDragging] = useState(false)
@@ -83,7 +82,6 @@ export function Edge({ id, currentlyEdited }) {
   return (  
     <DraggableCore
       handle=".edge-handle"
-      disabled={!editorMode}
       onStart={onStart}
       onDrag={onDrag}
       onStop={onStop}>

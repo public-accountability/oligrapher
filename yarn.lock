@@ -7835,6 +7835,11 @@ split-string@^3.0.1, split-string@^3.0.2:
   dependencies:
     extend-shallow "^3.0.0"
 
+springy@^2.8.0:
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/springy/-/springy-2.8.0.tgz#43d8cb04fd8b1376e8bbb4513fa4f978c24f088f"
+  integrity sha512-PXtwxjww53H/8c+ng3zxMJwNRN/KPv6DKA8ITHi6lW57gfzty0wV/N8ZeTmgfO0ElfQip8W/1iVZk1d5ne4L+g==
+
 sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"

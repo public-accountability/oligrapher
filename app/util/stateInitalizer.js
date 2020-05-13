@@ -7,7 +7,7 @@ import Edge from '../graph/edge'
 import Node from '../graph/node'
 import { captionDefaults } from '../graph/caption'
 import { computeSvgOffset } from './dimensions'
-import { userIsOwnerSelector } from './selectors'
+import { userIsEditorSelector } from './selectors'
 
 const keys = Object.keys
 
@@ -63,7 +63,7 @@ export default function stateInitalizer(serializedState) {
     Graph.registerEdgeWithNodes(state.graph, state.graph.edges[id])
   })
 
-  state.display.modes.editor = userIsOwnerSelector(state)
+  state.display.modes.editor = userIsEditorSelector(state)
   state.display.viewBox = Graph.calculateViewBox(state.graph)
   state.display.svgOffset = computeSvgOffset(state.display.viewBox)
 

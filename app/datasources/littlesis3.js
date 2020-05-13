@@ -133,17 +133,23 @@ export function getEditors(id) {
     .json()
 }
 
-const editorAction = action => curry((id, username) => {
+const editorAction = action => (id, username) => {
   validateId(id)
 
   return wretch(urls.editors(id))
     .headers(headers())
-    .post({ editor: { action: action, username: username } })
+    .post({ editor: { action, username } })
     .json()
-})
+}
 
 export const addEditor = editorAction('add')
 export const removeEditor = editorAction('remove')
+
+export const editors = {
+  get: getEditors,
+  add: addEditor,
+  remove: removeEditor
+}
 
 function lock(id) {
   validateId(id)
@@ -167,10 +173,5 @@ export default {
   addEditor,
   removeEditor,
   lock,
-  lockTakeover,
-  editors: id => ({
-    get: getEditors(id),
-    add: addEditor(id),
-    remove: removeEditor(id)
-  })
+  lockTakeover
 }

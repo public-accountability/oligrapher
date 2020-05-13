@@ -77,13 +77,6 @@ const defaultState = {
     draggableNodes: true,
     draggableEdges: true
   }
-
-  // Hooks available to trigger code external to Oligrapher.
-  // `onSave` is used by LittleSis.org to sync the graph with the LittleSis server
-  // hooks: {
-  //   onSave: null, // function(state) { null },
-  //   onNav:  null // function(state, index) { null }
-  // }
 }
 
 export default Object.freeze(defaultState)

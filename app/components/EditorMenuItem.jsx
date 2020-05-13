@@ -1,21 +1,22 @@
-import React from 'react'
+import React, { useCallback} from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 
 import MENU from '../editorMenu'
 
-export default function EditorMenuItem(props) {
-  const item = MENU[props.item]
+export default function EditorMenuItem({ item }) {
+  const { title, icon } = MENU[item]
   const dispatch = useDispatch()
-  const onClick = () => dispatch({ type: 'TOGGLE_TOOL', tool: props.item })
+  const onClick = useCallback(() => dispatch({ type: 'TOGGLE_TOOL', tool: item }), [dispatch, item])
 
   return (
-    <div className={`editor-menu-item editor-${props.item}-item`} onClick={onClick}>
-      <span title={item.title}>{item.icon}</span>
+    <div className={`editor-menu-item editor-${item}-item`} onClick={onClick}>
+      <span title={title}>{icon}</span>
     </div>
   )
 }
 
 EditorMenuItem.propTypes = {
-  item: PropTypes.oneOf(Object.keys(MENU)).isRequired
+  item: PropTypes.oneOf(Object.keys(MENU)).isRequired,
+  onClick: PropTypes.func
 }

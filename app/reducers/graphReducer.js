@@ -1,6 +1,7 @@
 import produce from 'immer'
 import merge from 'lodash/merge'
 import undoable, { includeAction } from 'redux-undo'
+import { generate } from 'shortid'
 
 import Graph from '../graph/graph'
 import { findIntersectingNodeFromDrag } from '../graph/node'
@@ -74,7 +75,9 @@ export const reducer = produce((graph, action) => {
     return
   case 'REMOVE_CAPTION':
     delete graph.captions[action.id]
-    return
+    return    
+  case 'APPLY_FORCE_LAYOUT':
+    return action.graph
   default:
     return
   }
@@ -93,14 +96,25 @@ export const UNDO_ACTIONS = [
   'ADD_CAPTION',
   'UPDATE_CAPTION',
   'MOVE_CAPTION',
-  'REMOVE_CAPTION'
+  'REMOVE_CAPTION',
+  'APPLY_FORCE_LAYOUT'
 ]
 
 const undoableReducer = undoable(reducer, { 
   filter: includeAction(UNDO_ACTIONS),
   groupBy: (action) => {
+    let { type } = action
+
+    // force layouts shouldn't be grouped
+    if (type === 'APPLY_FORCE_LAYOUT') {
+      type = generate()
+    }
+
     // consider all consecutive drags and moves for the same node as one action
-    const type = (action.type === 'DRAG_NODE' ? 'MOVE_NODE' : action.type)
+    if (type === 'DRAG_NODE') {
+      type = 'MOVE_NODE'
+    }
+
     return type + (action.id ? ("-" + String(action.id)) : "")
   },
   debug: false,

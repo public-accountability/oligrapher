@@ -3,9 +3,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import ReactModal from 'react-modal'
 import { IoIosMore } from 'react-icons/io'
 
+import { userIsOwnerSelector } from '../util/selectors'
+
 export default function ActionMenu() {
   const dispatch = useDispatch()
   const { id } = useSelector(state => state.attributes)
+  const userIsOwner = useSelector(userIsOwnerSelector)
+  const isCloneable = useSelector(state => state.attributes.settings.clone)
   const rootElement = document.querySelector("#oligrapher-container")
   const divRef = useRef()
 
@@ -15,14 +19,6 @@ export default function ActionMenu() {
   const [menuIsOpen, setMenuIsOpen] = useState(false) 
   const toggleMenu = useCallback(() => setMenuIsOpen(!menuIsOpen), [menuIsOpen])
   const closeMenu = useCallback(() => setMenuIsOpen(false), [])
-
-  const openEditorsMenu = useCallback(
-    function() {
-      dispatch({ type: 'OPEN_TOOL', item: 'editors' })
-      closeMenu()
-    },
-    [dispatch, closeMenu]
-  )
 
   const presentMap = useCallback(
     () => dispatch({ type: 'SET_MODE', mode: 'editor', enabled: false }),
@@ -77,17 +73,10 @@ export default function ActionMenu() {
               <li onClick={presentMap}>
                 Present
               </li>
-              <li onClick={openEditorsMenu}>
-                Editors
-              </li>
-              <hr />
-              <li onClick={cloneMap}>Clone</li>
-              { id && <li onClick={openModal}>Delete</li> }
-              {/* <li>Create New</li> */}
-              {/* <hr /> */}
-              {/* <li>Share</li>
-              <li>Print</li>
-              <li>Export</li> */}
+              {/* ActionMenu is visible to editors but only owners can clone or delete */}
+              { userIsOwner && <hr /> }
+              { (userIsOwner || isCloneable) && <li onClick={cloneMap}>Clone</li> }
+              { userIsOwner && id && <li onClick={openModal}>Delete</li> }
             </ul>
           </div>
         </div>

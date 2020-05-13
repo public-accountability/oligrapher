@@ -25,7 +25,7 @@ import Subtitle from './Subtitle'
 
 export default function Header() {
   const dispatch = useDispatch()
-  const { title, subtitle, owner, date } = useSelector(state => state.attributes)
+  const { title, subtitle, owner, editors, date } = useSelector(state => state.attributes)
   const editMode = useSelector(state => state.display.modes.editor)
   const isCollapsed = useSelector(state => state.display.headerIsCollapsed)
 
@@ -34,6 +34,7 @@ export default function Header() {
   const expand = useCallback(() => dispatch({ type: 'EXPAND_HEADER' }), [dispatch])
   const collapse = useCallback(() => dispatch({ type: 'COLLAPSE_HEADER' }), [dispatch])
   const className = isCollapsed ? "oligrapher-header-collapsed" : "oligrapher-header-expanded"
+  const users = [owner].concat(editors.filter(e => !e.pending))
 
   return (
     <div id="oligrapher-header" className={className}>
@@ -47,7 +48,7 @@ export default function Header() {
         { isCollapsed || (
           <div id="oligrapher-header-left-wrapper">
             <Subtitle text={subtitle} editable={editMode} onChange={updateSubtitle} />
-            { owner && <Attribution user={owner} date={date} /> }
+            { owner && <Attribution users={users} date={date} /> }
           </div>
         ) }
 

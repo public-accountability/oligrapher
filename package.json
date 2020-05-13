@@ -52,6 +52,7 @@
     "redux-thunk": "^2.3.0",
     "redux-undo": "^1.0.1",
     "shortid": "^2.2.15",
+    "springy": "^2.8.0",
     "wretch": "^1.7.1"
   },
   "devDependencies": {

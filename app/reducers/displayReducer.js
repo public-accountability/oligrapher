@@ -151,6 +151,36 @@ export default produce((display, action) => {
     display.cloneMapStatus = null
     display.userMessage = null
     return
+  case 'FORCE_LAYOUT_REQUESTED':
+    display.userMessage = 'Generating force-directed layout...'
+    return
+  case 'APPLY_FORCE_LAYOUT':
+    display.userMessage = null
+    return
+  case 'ADD_EDITOR_REQUESTED':
+    display.userMessage = 'Adding editor...'
+    return
+  case 'ADD_EDITOR_SUCCESS':
+    display.userMessage = 'Added editor :)'
+    return
+  case 'ADD_EDITOR_FAILED':
+    display.userMessage = 'Failed to add editor :('
+    return
+  case 'ADD_EDITOR_RESET':
+    display.userMessage = null
+    return
+  case 'REMOVE_EDITOR_REQUESTED':
+    display.userMessage = 'Removing editor...'
+    return
+  case 'REMOVE_EDITOR_SUCCESS':
+    display.userMessage = 'Removed editor :)'
+    return
+  case 'REMOVE_EDITOR_FAILED':
+    display.userMessage = 'Failed to remove editor :('
+    return
+  case 'REMOVE_EDITOR_RESET':
+    display.userMessage = null
+    return
   default:
     return
   }

@@ -1,82 +1,66 @@
-import React, { useState } from 'react'
+import React, { useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { callWithTargetValue } from '../util/helpers'
+import { IoMdCloseCircle } from 'react-icons/io'
 
 import { useSelector } from '../util/helpers'
 import Toolbox from './Toolbox'
-import LittleSis from '../datasources/littlesis3'
 
-const addEditorAction = (setLoading, oligrapherId) => username => dispatch => {
-  if (!oligrapherId) {
-    throw new Error('Cannot add editors to maps without an id')
+export function EditorsList({ editors, removeEditor }) {
+  if (editors.length === 0) {
+    return <div><em>This map has no other editors.</em></div>
   }
 
-  setLoading(true)
-
-  LittleSis
-    .editors(oligrapherId)
-    .add(username)
-    .then( json => {
-      setLoading(false)
-      dispatch({ type: 'SET_EDITORS', editors: json.editors })
-    })
-    .catch( err => {
-      console.error(err)
-      setLoading(false)
-    })
+  return (
+    <div className="oligrapher-editors-list">
+      { editors.map(editor => (
+        <div key={editor.name}>
+          <a href={editor.url} target="_blank" rel="noopener noreferrer">{editor.name}</a>
+          &nbsp;
+          <span>{editor.pending ? "(pending)" : ""}</span>
+          &nbsp;
+          <a onClick={() => removeEditor(editor.name)}><IoMdCloseCircle /></a>
+        </div>
+      )) }
+    </div>
+  )
 }
 
-function EditorList({editors}) {
-  return <span>{editors.join(', ')}</span>
-}
-
-EditorList.propTypes = {
-  editors: PropTypes.arrayOf(PropTypes.string).isRequired
+EditorsList.propTypes = {
+  editors: PropTypes.array.isRequired,
+  removeEditor: PropTypes.func.isRequired
 }
 
 export default function Editors() {
   const dispatch = useDispatch()
-  const [username, setUsername] = useState('')
-  const [message, setMessage] = useState('')
-  const [loading, setLoading] = useState(false)
   const editors = useSelector(state => state.attributes.editors)
   const oligrapherId = useSelector(state => state.attributes.id)
-  const submitUsername =  addEditorAction(setLoading, oligrapherId)
 
+  const inputRef = useRef()
+  const addEditor = useCallback(() => {
+    if (inputRef.current.value) {
+      dispatch({ type: 'ADD_EDITOR_REQUESTED', username: inputRef.current.value })
+      inputRef.current.value = null
+    }
+  }, [dispatch])
+
+  const removeEditor = useCallback(username => dispatch({ type: 'REMOVE_EDITOR_REQUESTED', username }), [dispatch])
 
   return (
-    <Toolbox title="Add Editors">
-      <div className="add-editors-body">
-        <div className="add-editors-fields">
-          <input type="type"
-                value={username}
-                onChange={callWithTargetValue(setUsername)}
-                placeholder="Enter username" />
+    <Toolbox title="Editors">
+      <div className="oligrapher-editors">
 
-          {/*This field is in our designs but it doesn't do anything right now. */}
-          <textarea row="3"
-                    cols="25"
-                    value={message}
-                    onChange={callWithTargetValue(setMessage)}
-                    placeholder="Message" />
+        <EditorsList editors={editors} removeEditor={removeEditor} />
+
+        { !oligrapherId && <div><em>You must save this map before you can add editors.</em></div> }
+
+        <div className="oligrapher-editors-input">
+          <input type="text" placeholder="Enter username" ref={inputRef} />
+          &nbsp;
+          <button onClick={addEditor}>Add</button>
         </div>
 
-        <hr />
-
-        <div className="add-editors-bottom-row">
-          <div>
-            <label> editors </label>
-            <EditorList editors={editors} />
-          </div>
-          <div>
-            <button name="submit"
-                    onClick={() => dispatch(submitUsername(username)) }
-                    disabled={loading}>
-              ✓
-            </button>
-          </div>
-        </div>
+        After you add an editor they must visit this page to confirm.
       </div>
     </Toolbox>
   )

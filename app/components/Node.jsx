@@ -15,7 +15,6 @@ export function Node({ id, currentlyEdited }) {
   const { scale, name } = node
   const radius = 25 * scale
   const [isDragging, setDragging] = useState(false)
-  const editorMode = useSelector(state => state.display.modes.editor)
   const showHalo = currentlyEdited || isDragging
 
   const moveNode = useCallback(deltas => {
@@ -40,7 +39,6 @@ export function Node({ id, currentlyEdited }) {
   return (
     <>
       <DraggableComponent
-        disabled={!editorMode}
         handle=".draggable-node-handle"
         onStart={startDrag}
         onStop={moveNode}

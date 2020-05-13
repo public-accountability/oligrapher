@@ -43,6 +43,17 @@ html body div#oligrapher {
   padding: 0;
 }
 
+.pending-editor-notice {
+    background-color: pink;
+    text-align: center;
+    font-size: 0.8em;
+    padding: 0.5em;
+
+    form, button {
+        display: inline-block;
+    }
+}
+
 /*
    This is our outermost div.
 
@@ -778,34 +789,41 @@ header.editor-header {
     }
 }
 
-.add-editors-body {
-    margin-top: 1em;
+#oligrapher-container div.oligrapher-editors {
+    font-size: 14px;
 
-    div.add-editors-fields {
-        margin: 1em;
-        input, textarea {
-            width: 100%;
+    div.oligrapher-editors-input {
+        margin-top: 10px;
+        margin-bottom: 10px;
+
+        input {
+            width: 150px;
+            line-height: 1em;
+            height: 28px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
             padding: 5px;
-        }
-        textarea {
-            margin-top: 1em;
-        }
-    }
-
-    div.add-editors-bottom-row {
-        display: flex;
-        justify-content: space-between;
-
-        label {
-            font-size: 10px;
+            box-sizing: border-box;
         }
 
         button {
-            background: $button_bg_color;
-            color: $button_font_color;
+            width: 40px;
+            height: 28px;
+            padding: 0;
+            box-sizing: border-box;
+            border: 0;
+            border-radius: 3px;
+            background-color: $oligrapher_blue;
+            color: white;
         }
     }
 
+    div.oligrapher-editors-list {
+        span {
+            color: gray;
+            font-size: 0.8em;
+        }
+    }
 }
 
 div.lock {
@@ -908,6 +926,29 @@ g.edge-tool-open .react-draggable-dragging .node-circle {
     border: 1px solid $oligrapher_gray;
 }
 
+.organize-map {
+    margin-top: 10px;
+
+    a {
+        display: inline-block;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        height: 30px;
+        width: 30px;
+        padding: 5px;
+
+        &:hover {
+            background-color: #eee;
+        }
+    }
+
+    svg {
+        height: 30px;
+        width: 30px;
+        color: gray;
+    }
+}
+
 /* user message */
 
 .oligrapher-user-message {
@@ -930,7 +971,4 @@ g.edge-tool-open .react-draggable-dragging .node-circle {
     text-align: center;
     margin-top: 20px;
     font-family: Helvetica, Arial, sans-serif;
-
-    button {
-    }
 }

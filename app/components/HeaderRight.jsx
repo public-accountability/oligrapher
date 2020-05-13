@@ -4,12 +4,13 @@ import { useDispatch } from 'react-redux'
 import { useSelector } from '../util/helpers'
 import HeaderButtons from './HeaderButtons'
 import HeaderMenu from './HeaderMenu'
-import { userIsOwnerSelector } from '../util/selectors'
+import { userIsOwnerSelector, userCanEditSelector } from '../util/selectors'
 
 export default function HeaderRight() {
   const dispatch = useDispatch()
   const editMode = useSelector(state => state.display.modes.editor)
   const userIsOwner = useSelector(userIsOwnerSelector)
+  const userCanEdit = useSelector(userCanEditSelector)
   const user = useSelector(state => state.attributes.user)
   const isCloneable = useSelector(state => state.attributes.settings.clone)
 
@@ -23,7 +24,7 @@ export default function HeaderRight() {
     [dispatch]
   )
 
-  if (userIsOwner && editMode) {
+  if (userCanEdit && editMode) {
     return <HeaderButtons />
   }
 
@@ -35,7 +36,7 @@ export default function HeaderRight() {
     headerMenuItems.unshift({ text: "Clone", action: clone })
   }
 
-  if (userIsOwner) {
+  if (userCanEdit) {
     headerMenuItems.unshift({ text: "Edit", action: enableEditorMode })
   }
 
