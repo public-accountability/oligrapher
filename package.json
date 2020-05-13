@@ -32,6 +32,7 @@
   "homepage": "https://littlesis.org/oligrapher",
   "dependencies": {
     "@hot-loader/react-dom": "^16.13.0",
+    "@material-ui/core": "^4.9.14",
     "@public-accountability/littlesis-api": "^0.0.7",
     "immer": "^5.3.6",
     "lodash": "^4.17.15",
@@ -42,7 +43,6 @@
     "react-draggable": "^4.2.0",
     "react-hotkeys-hook": "^2.1.3",
     "react-icons": "^3.9.0",
-    "react-modal": "^3.11.2",
     "react-redux": "^7.2.0",
     "react-resize-detector": "^4.2.3",
     "react-select": "^3.0.8",

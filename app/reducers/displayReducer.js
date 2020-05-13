@@ -87,6 +87,9 @@ export default produce((display, action) => {
   case 'TOGGLE_TOOL':
     display.tool = (display.tool === action.tool) ? null : action.tool
     return
+  case 'CLOSE_TOOL':
+    display.tool = null
+    return
   case 'OPEN_ADD_CONNECTIONS':
     if (isLittleSisId(action.id)) {
       FloatingEditor.set(display, 'connections', action.id)

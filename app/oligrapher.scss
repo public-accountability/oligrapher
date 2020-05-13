@@ -180,7 +180,7 @@ html body div#oligrapher {
         align-self: flex-end;
 
         .oligrapher-header-buttons  {
-          margin-top: 11px;
+          margin-top: 8px;
 
           >div {
                 display: inline-block;
@@ -420,6 +420,14 @@ html body div#oligrapher {
         font-weight: bold;
         margin-bottom: 5px;
         line-height: 1.5em;
+
+        button {
+            float: right;
+            border: none;
+            margin-left: 0.5em;
+            margin-top: 0.5em;
+            background-color: #FFF;
+        }
     }
 
     .node-tool {

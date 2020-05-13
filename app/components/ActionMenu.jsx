@@ -1,8 +1,11 @@
-import React, { useCallback, useState, useEffect, useRef } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import ReactModal from 'react-modal'
 import { IoIosMore } from 'react-icons/io'
+import IconButton from '@material-ui/core/IconButton'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
 
+import ConfirmDelete from './ConfirmDelete'
 import { userIsOwnerSelector } from '../util/selectors'
 
 export default function ActionMenu() {
@@ -10,15 +13,16 @@ export default function ActionMenu() {
   const { id } = useSelector(state => state.attributes)
   const userIsOwner = useSelector(userIsOwnerSelector)
   const isCloneable = useSelector(state => state.attributes.settings.clone)
-  const rootElement = document.querySelector("#oligrapher-container")
-  const divRef = useRef()
+
+  const [anchorEl, setAnchorEl] = useState() 
+  const openMenu = useCallback(event => setAnchorEl(event.currentTarget), [])
+  const closeMenu = useCallback(() => setAnchorEl(null), [])
 
   const [showModal, setShowModal] = useState(false)
-  const openModal = useCallback(() => setShowModal(true), [])
-
-  const [menuIsOpen, setMenuIsOpen] = useState(false) 
-  const toggleMenu = useCallback(() => setMenuIsOpen(!menuIsOpen), [menuIsOpen])
-  const closeMenu = useCallback(() => setMenuIsOpen(false), [])
+  const openModal = useCallback(() => {
+    setShowModal(true)
+    closeMenu()
+  }, [closeMenu])
 
   const presentMap = useCallback(
     () => dispatch({ type: 'SET_MODE', mode: 'editor', enabled: false }),
@@ -35,68 +39,27 @@ export default function ActionMenu() {
   const handleDelete = useCallback(() => {
     dispatch({ type: 'DELETE_REQUESTED' })
     setShowModal(false)
-    closeMenu()
-  }, [dispatch, closeMenu])
-
-  useEffect(() => {
-    if (menuIsOpen) {
-      divRef.current.focus()
-    }
-  }, [menuIsOpen])
-
-  const modalStyle = {
-    content: {
-      top: '50%',
-      left: '50%',
-      right: 'auto',
-      bottom: 'auto',
-      marginRight: '-50%',
-      transform: 'translate(-50%, -50%)',
-      zIndex: 30
-    },
-    overlay: {
-      backgroundColor: "rgba(192, 192, 192, 0.5)",
-      zIndex: 20
-    }
-  }
+  }, [dispatch])
 
   return (
-    <div className="header-action-menu-wrapper" ref={divRef} tabIndex="0" onBlur={closeMenu}>
-      <div>
-        <span className="toggle-action-menu" onClick={toggleMenu}><IoIosMore /></span>
-      </div>
+    <div className="header-action-menu-wrapper">
+      <IconButton aria-controls="simple-menu" aria-haspopup="true" size="small" onClick={openMenu}>
+        <IoIosMore />
+      </IconButton>
 
-      { menuIsOpen && 
-        <div style={{position: "relative"}}>
-          <div className="header-action-menu">
-            <ul>
-              <li onClick={presentMap}>
-                Present
-              </li>
-              {/* ActionMenu is visible to editors but only owners can clone or delete */}
-              { userIsOwner && <hr /> }
-              { (userIsOwner || isCloneable) && <li onClick={cloneMap}>Clone</li> }
-              { userIsOwner && id && <li onClick={openModal}>Delete</li> }
-            </ul>
-          </div>
-        </div>
-      }
+      <Menu
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={closeMenu}
+      >
+        <MenuItem dense={true} onClick={presentMap}>Present</MenuItem>
+        {/* ActionMenu is visible to editors but only owners can clone or delete */}
+        { (userIsOwner || isCloneable) && <MenuItem dense={true} onClick={cloneMap}>Clone</MenuItem> }
+        { userIsOwner && id && <MenuItem dense={true} onClick={openModal}>Delete</MenuItem> }
+      </Menu>
 
-      <ReactModal 
-        isOpen={showModal} 
-        appElement={rootElement} 
-        style={modalStyle}
-        contentLabel="Confirm delete"
-        onRequestClose={cancelDelete}>
-        <div className="confirm-delete">
-          <div>Are you sure you want to delete this map?</div>
-          <div className="modal-buttons">
-            <button className="modal-button" name="delete" onClick={handleDelete}>Delete</button>
-            &nbsp;&nbsp;&nbsp;
-            <button className="modal-button" name="cancel" onClick={cancelDelete}>Cancel</button>
-          </div>
-        </div>
-      </ReactModal>    
+      <ConfirmDelete open={showModal} close={cancelDelete} deleteMap={handleDelete} />
     </div>
   )
 }

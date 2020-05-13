@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 const renderUsers = function(users) {
   const name = user => (
     user.url 
-      ? <a href={user.url} target="_blank" rel="noopener noreferrer">
+      ? <a key={user.name} href={user.url} target="_blank" rel="noopener noreferrer">
           {user.name}
         </a>
       : user.name

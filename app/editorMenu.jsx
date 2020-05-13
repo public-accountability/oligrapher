@@ -1,6 +1,6 @@
 import React from 'react'
 // Icons
-import { FaRegCircle, FaBezierCurve, FaFlipboard, FaTv, FaRegEdit, FaRegTrashAlt, FaUsersCog } from "react-icons/fa"
+import { FaRegCircle, FaBezierCurve, FaFlipboard, FaTv, FaRegEdit, FaRegTrashAlt } from "react-icons/fa"
 import { FiHelpCircle, FiUsers } from 'react-icons/fi'
 import { GoTextSize, GoGear } from 'react-icons/go'
 
@@ -11,7 +11,7 @@ export const MENU = {
   },
   "text": {
     icon: <GoTextSize />,
-    title: 'Add Caption'
+    title: 'Add Text'
   },
   "legend": {
     icon: <FaFlipboard />,

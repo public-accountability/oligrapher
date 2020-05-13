@@ -1,11 +1,14 @@
 import React from 'react'
 import { hot } from 'react-hot-loader/root'
+import { ThemeProvider } from '@material-ui/core/styles'
+
 import Header from './Header'
 import Graph from './Graph'
 import Editor from './Editor'
 import FloatingEditors from './FloatingEditors'
 import ZoomControl from './ZoomControl'
 import UserMessage from './UserMessage'
+import { muiTheme } from '../util/helpers'
 
 export const ROOT_CONTAINER_ID = "oligrapher-container"
 
@@ -34,14 +37,16 @@ export const ROOT_CONTAINER_ID = "oligrapher-container"
 export function Root() {
   return (
     <div id={ROOT_CONTAINER_ID}>
-      <Header />
-      <div id="oligrapher-graph-container">
-        <Graph rootContainerId={ROOT_CONTAINER_ID} />
-        <Editor />
-        <ZoomControl />
-        <FloatingEditors />
-        <UserMessage />
-      </div>
+      <ThemeProvider theme={muiTheme}>
+        <Header />
+        <div id="oligrapher-graph-container">
+          <Graph rootContainerId={ROOT_CONTAINER_ID} />
+          <Editor />
+          <ZoomControl />
+          <FloatingEditors />
+          <UserMessage />
+        </div>
+      </ThemeProvider>
     </div>
   )
 }

@@ -5,6 +5,7 @@ import isNumber from 'lodash/isNumber'
 import toNumber from 'lodash/toNumber'
 import isNil from 'lodash/isNil'
 import { useSelector as useReduxSelector } from 'react-redux'
+import { createMuiTheme } from '@material-ui/core/styles'
 
 /**
  * works the same as document.getElementById,
@@ -161,3 +162,32 @@ export const convertSelectorForUndo = selector => selector
 export function useSelector(selector) {
   return useReduxSelector(convertSelectorForUndo(selector))
 }
+
+export const muiTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#2c63c8',
+    },
+    secondary: {
+      main: '#c82c63'
+    }
+  },
+  typography: {
+    button: {
+      textTransform: 'none'
+    }
+  },
+  overrides: {
+    MuiDialogActions: {
+      root: {
+        padding: '1em',
+        justifyContent: 'center'
+      }
+    },
+    MuiButton: {
+      root: {
+        minWidth: 'none'
+      }
+    }
+  }
+})
