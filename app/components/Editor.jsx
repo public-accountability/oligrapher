@@ -7,6 +7,7 @@ import TextTool from './TextTool'
 import OrganizeTool from './OrganizeTool'
 import Settings from './Settings'
 import Editors from './Editors'
+import Help from './Help'
 import Lock from './Lock'
 import LockPoll from './LockPoll'
 
@@ -32,6 +33,7 @@ export default function Editor() {
       { tool === 'organize' && <OrganizeTool /> }
       { tool === 'settings' && <Settings /> }
       { tool === 'editors' && <Editors /> }
+      { tool === 'help' && <Help /> }
     </div>
   )
 }

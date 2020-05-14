@@ -40,8 +40,8 @@ describe('Oligrapher', function() {
       </Provider>
     ).container
 
-    find = (selector) => container.querySelector(selector)
-    findAll = (selector) => container.querySelectorAll(selector)
+    find = (selector, root) => (root || container).querySelector(selector)
+    findAll = (selector, root) => (root || container).querySelectorAll(selector)
   })
 
   afterEach(function() {
@@ -354,7 +354,7 @@ describe('Oligrapher', function() {
   }).timeout(6000)
 
   // can't figure out how to make this test work, the modal doesn't seem to appear
-  xit('deletes map', async function() {
+  it('deletes map', async function() {
     const promise = new Promise(resolve => setTimeout(() => resolve(), 10))
     sandbox.stub(littlesis3.oligrapher, 'delete').returns(promise)
     // open menu
@@ -364,14 +364,16 @@ describe('Oligrapher', function() {
     const item = Array.from(findAll('.header-action-menu li')).find(li => li.textContent === 'Delete')
     fireEvent.click(item)
     // confirmation modal should appear
-    expect(findAll('.confirm-delete').length).to.equal(1)
+    expect(findAll('#confirm-delete', document.body).length).to.equal(1)
     // click on delete button
-    const button = find('.confirm-delete button[name="delete"]')
+    const button = find('#confirm-delete-button', document.body)
     fireEvent.click(button)
     // user message should indicate deleting
     const message = find('.oligrapher-user-message')
     expect(message.textContent).to.equal("Deleting map...")
-    // unfortunately we can't test the redirect because we can't stub window.location.replace :()
+    // modal should disappear
+    await waitFor(() => expect(findAll('#confirm-delete', document.body).length).to.equal(0))
+    // unfortunately we can't test the redirect because we can't stub window.location.replace :(
   })
 
   it('opens and closes action menu', function() {
@@ -415,5 +417,37 @@ describe('Oligrapher', function() {
     fireEvent.click(edit)
     // editor menu should appear
     expect(findAll('.oligrapher-graph-editor').length).to.equal(1)
+  })
+
+  it('opens and closes disclaimer', async function() {
+    // click action menu toggler
+    const toggle = find('.toggle-action-menu')
+    fireEvent.click(toggle)
+    // action menu should appear
+    expect(findAll('.header-action-menu').length).to.equal(1)
+    // click on "Present"
+    const item = Array.from(findAll('.header-action-menu li')).find(li => li.textContent === 'Present')
+    fireEvent.click(item)
+    // click on disclaimer link
+    const link = Array.from(findAll('#oligrapher-header-menu-wrapper li a')).find(a => a.textContent === 'Disclaimer')
+    fireEvent.click(link)
+    // disclaimer should appear
+    expect(findAll('#oligrapher-disclaimer', document.body).length).to.equal(1)
+    // click button
+    const button = find('#oligrapher-disclaimer button', document.body)
+    fireEvent.click(button)
+    // disclaimer should disappear
+    await waitFor(() => expect(findAll('#oligrapher-disclaimer', document.body).length).to.equal(0))
+  })
+
+  it('opens and closes help', function() {
+    // click on help button
+    fireEvent.click(find('.editor-help-item'))
+    // help box should appear
+    expect(findAll('#oligrapher-help').length).to.equal(1)
+    // click on close button
+    fireEvent.click(find('#oligrapher-help button'))
+    // help box should disappear
+    expect(findAll('#oligrapher-help').length).to.equal(0)
   })
 })

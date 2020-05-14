@@ -1,9 +1,10 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useSelector } from '../util/helpers'
 import HeaderButtons from './HeaderButtons'
 import HeaderMenu from './HeaderMenu'
+import Disclaimer from './Disclaimer'
 import { userIsOwnerSelector, userCanEditSelector } from '../util/selectors'
 
 export default function HeaderRight() {
@@ -13,6 +14,7 @@ export default function HeaderRight() {
   const userCanEdit = useSelector(userCanEditSelector)
   const user = useSelector(state => state.attributes.user)
   const isCloneable = useSelector(state => state.attributes.settings.clone)
+  const [showModal, setShowModal] = useState(false)
 
   const enableEditorMode = useCallback(
     () => dispatch({ type: 'SET_MODE', mode: 'editor', enabled: true }), 
@@ -24,12 +26,15 @@ export default function HeaderRight() {
     [dispatch]
   )
 
+  const showDisclaimer = useCallback(() => setShowModal(true), [])
+  const hideDisclaimer = useCallback(() => setShowModal(false), [])
+
   if (userCanEdit && editMode) {
     return <HeaderButtons />
   }
 
   let headerMenuItems = [
-    { text: "Disclaimer", url: "https://littlesis.org/oligrapher/disclaimer" }
+    { text: "Disclaimer", action: showDisclaimer }
   ]
 
   if (userIsOwner || (user && isCloneable)) {
@@ -40,5 +45,10 @@ export default function HeaderRight() {
     headerMenuItems.unshift({ text: "Edit", action: enableEditorMode })
   }
 
-  return <HeaderMenu items={headerMenuItems} />
+  return (
+    <>
+      <HeaderMenu items={headerMenuItems} />
+      <Disclaimer open={showModal} close={hideDisclaimer} />
+    </>
+  )
 }

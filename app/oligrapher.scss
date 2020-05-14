@@ -404,6 +404,21 @@ html body div#oligrapher {
     }
 }
 
+%toolbox_header {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    line-height: 1.5em;
+
+    button {
+        float: right;
+        border: none;
+        margin-left: 0.5em;
+        margin-top: 0;
+        background-color: #FFF;
+    }
+}
+
 .oligrapher-toolbox {
     @extend %editing_menu;
     position: absolute;
@@ -416,18 +431,7 @@ html body div#oligrapher {
     background-color: white;
 
     header {
-        font-size: 20px;
-        font-weight: bold;
-        margin-bottom: 5px;
-        line-height: 1.5em;
-
-        button {
-            float: right;
-            border: none;
-            margin-left: 0.5em;
-            margin-top: 0.5em;
-            background-color: #FFF;
-        }
+        @extend %toolbox_header;
     }
 
     .node-tool {
@@ -832,6 +836,20 @@ header.editor-header {
             font-size: 0.8em;
         }
     }
+}
+
+#oligrapher-help {
+    width: 500px;
+    height: 500px;
+    padding: 2em;
+    position: absolute;
+    right: 1em;
+    top: 1em;
+    pointer-events: auto;
+
+    header {
+        @extend %toolbox_header;
+    }   
 }
 
 div.lock {

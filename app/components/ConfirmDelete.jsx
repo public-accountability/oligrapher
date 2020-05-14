@@ -7,6 +7,7 @@ import {
 export default function ConfirmDelete({ open, close, deleteMap }) {
   return (
     <Dialog
+      id="confirm-delete"
       open={open}
       onClose={close}
       aria-describedby="alert-dialog-description"
@@ -17,10 +18,10 @@ export default function ConfirmDelete({ open, close, deleteMap }) {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={close} variant="contained" color="default" textTransform="none">
+        <Button onClick={close} variant="contained" color="default">
           Cancel
         </Button>
-        <Button onClick={deleteMap} variant="contained" color="secondary" textTransform="none">
+        <Button id="confirm-delete-button" onClick={deleteMap} variant="contained" color="secondary">
           Delete
         </Button>
       </DialogActions>
