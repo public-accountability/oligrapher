@@ -9,7 +9,6 @@ export default function ConfirmDelete({ open, close, deleteMap }) {
     <Dialog
       open={open}
       onClose={close}
-      aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
       <DialogContent>

@@ -151,7 +151,7 @@ export const editors = {
   remove: removeEditor
 }
 
-function lock(id) {
+export function lock(id) {
   validateId(id)
   return wretch(urls.lock(id)).headers(headers()).get().json()
 }

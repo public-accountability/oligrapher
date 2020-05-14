@@ -7,6 +7,7 @@ import TextTool from './TextTool'
 import OrganizeTool from './OrganizeTool'
 import Settings from './Settings'
 import Editors from './Editors'
+import Lock from './Lock'
 import LockPoll from './LockPoll'
 
 /*
@@ -23,7 +24,8 @@ export default function Editor() {
 
   return (
     <div className={className}>
-      {/* <LockPoll /> */}
+      <Lock />
+      <LockPoll />
       <EditorMenu />
       { tool === 'node' && <NodeTool /> }
       { tool === 'text' && <TextTool /> }

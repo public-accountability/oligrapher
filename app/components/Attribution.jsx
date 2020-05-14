@@ -16,7 +16,7 @@ const renderUsers = function(users) {
   })
 
   return (
-    <div id="oligrapher-attribution-user">
+    <div id="oligrapher-attribution-users">
       <span>by {names}</span>
     </div>
   )

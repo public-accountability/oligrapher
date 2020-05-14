@@ -16,6 +16,9 @@ describe('Oligrapher', function() {
   let state, store, container, find, findAll
 
   beforeEach(function() {
+    sandbox.stub(littlesis3, 'lock').resolves({
+      user_has_lock: true
+    })
     state = stateInitializer({ 
       graph: Object.assign({}, bigGraph),
       attributes: {
@@ -51,7 +54,7 @@ describe('Oligrapher', function() {
   })
 
   it('shows user', function() {
-    const userLink = find('#oligrapher-attribution-user a')
+    const userLink = find('#oligrapher-attribution-users a')
     expect(userLink.innerHTML).to.equal('bozo')
     expect(userLink.href).to.contain('http://example.com')
   })
@@ -321,7 +324,7 @@ describe('Oligrapher', function() {
     const promise = new Promise(resolve => setTimeout(() => resolve(), 10))
     sandbox.stub(littlesis3.oligrapher, 'update').returns(promise)
     // click save button
-    const button = find('#oligrapher-header button[name="save"]')
+    const button = find('#oligrapher-save-button')
     fireEvent.click(button)
     // user message should indicate saving
     const message = find('.oligrapher-user-message')

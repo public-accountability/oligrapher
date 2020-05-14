@@ -29,10 +29,17 @@ export default function HeaderButtons() {
 
   return (
     <div className="oligrapher-header-buttons">
-      <Button onClick={saveMap} disabled={isSaving} disableElevation={true} variant="contained" size="small" color="primary">Save</Button>
-      {/* <div>
-        <button name="save" onClick={saveMap} disabled={isSaving}>Save</button>
-      </div> */}
+      <Button 
+        id="oligrapher-save-button" 
+        onClick={saveMap} 
+        disabled={isSaving} 
+        disableElevation={true} 
+        variant="contained" 
+        size="small" 
+        color="primary"
+      >
+        Save
+      </Button>
 
       &nbsp;
 

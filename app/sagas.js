@@ -12,7 +12,7 @@ import { forceLayout } from './graph/graph'
 const select = selector => sagaSelect(convertSelectorForUndo(selector))
 
 const delay = time => new Promise(resolve => setTimeout(resolve, time))
-const RESET_DELAY = process.env.TEST ? 10 : 5000
+const RESET_DELAY = process.env.NODE_ENV === 'test' ? 10 : 5000
 
 export default function* rootSaga() {
   yield all([

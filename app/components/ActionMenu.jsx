@@ -1,9 +1,6 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { IoIosMore } from 'react-icons/io'
-import IconButton from '@material-ui/core/IconButton'
-import Menu from '@material-ui/core/Menu'
-import MenuItem from '@material-ui/core/MenuItem'
 
 import ConfirmDelete from './ConfirmDelete'
 import { userIsOwnerSelector } from '../util/selectors'
@@ -13,16 +10,14 @@ export default function ActionMenu() {
   const { id } = useSelector(state => state.attributes)
   const userIsOwner = useSelector(userIsOwnerSelector)
   const isCloneable = useSelector(state => state.attributes.settings.clone)
-
-  const [anchorEl, setAnchorEl] = useState() 
-  const openMenu = useCallback(event => setAnchorEl(event.currentTarget), [])
-  const closeMenu = useCallback(() => setAnchorEl(null), [])
+  const divRef = useRef()
 
   const [showModal, setShowModal] = useState(false)
-  const openModal = useCallback(() => {
-    setShowModal(true)
-    closeMenu()
-  }, [closeMenu])
+  const openModal = useCallback(() => setShowModal(true), [])
+
+  const [menuIsOpen, setMenuIsOpen] = useState(false) 
+  const toggleMenu = useCallback(() => setMenuIsOpen(!menuIsOpen), [menuIsOpen])
+  const closeMenu = useCallback(() => setMenuIsOpen(false), [])
 
   const presentMap = useCallback(
     () => dispatch({ type: 'SET_MODE', mode: 'editor', enabled: false }),
@@ -39,25 +34,36 @@ export default function ActionMenu() {
   const handleDelete = useCallback(() => {
     dispatch({ type: 'DELETE_REQUESTED' })
     setShowModal(false)
-  }, [dispatch])
+    closeMenu()
+  }, [dispatch, closeMenu])
+
+  useEffect(() => {
+    if (menuIsOpen) {
+      divRef.current.focus()
+    }
+  }, [menuIsOpen])
 
   return (
-    <div className="header-action-menu-wrapper">
-      <IconButton aria-controls="simple-menu" aria-haspopup="true" size="small" onClick={openMenu}>
-        <IoIosMore />
-      </IconButton>
+    <div className="header-action-menu-wrapper" ref={divRef} tabIndex="0" onBlur={closeMenu}>
+      <div>
+        <span className="toggle-action-menu" onClick={toggleMenu}><IoIosMore /></span>
+      </div>
 
-      <Menu
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={closeMenu}
-      >
-        <MenuItem dense={true} onClick={presentMap}>Present</MenuItem>
-        {/* ActionMenu is visible to editors but only owners can clone or delete */}
-        { (userIsOwner || isCloneable) && <MenuItem dense={true} onClick={cloneMap}>Clone</MenuItem> }
-        { userIsOwner && id && <MenuItem dense={true} onClick={openModal}>Delete</MenuItem> }
-      </Menu>
+      { menuIsOpen && 
+        <div style={{position: "relative"}}>
+          <div className="header-action-menu">
+            <ul>
+              <li onClick={presentMap}>
+                Present
+              </li>
+              {/* ActionMenu is visible to editors but only owners can clone or delete */}
+              { userIsOwner && <hr /> }
+              { (userIsOwner || isCloneable) && <li onClick={cloneMap}>Clone</li> }
+              { userIsOwner && id && <li onClick={openModal}>Delete</li> }
+            </ul>
+          </div>
+        </div>
+      }
 
       <ConfirmDelete open={showModal} close={cancelDelete} deleteMap={handleDelete} />
     </div>

@@ -1,18 +1,37 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React, { useCallback } from 'react'
+import { useDispatch } from 'react-redux'
+import { 
+  Button, Dialog, DialogActions, DialogContent, DialogContentText 
+} from '@material-ui/core'
 
-export default function Lock({username}) {
-  return (
-    <div className="lock">
-      <h1>Sorry!</h1>
-      <p>
-        <strong>{username}</strong> is editing this map right now.
-        Get in touch with your team to get editing control.
-      </p>
-    </div>
+import { useSelector } from '../util/helpers'
+
+export default function Lock() {
+  const dispatch = useDispatch()
+  const closeEditor = useCallback(
+    () => dispatch({ type: 'SET_MODE', mode: 'editor', enabled: false }), 
+    [dispatch]
   )
-}
 
-Lock.propTypes = {
-  username: PropTypes.string.isRequired
+  const { user_has_lock, name } = useSelector(state => state.attributes.lock)
+
+  return (
+    <Dialog
+      open={!user_has_lock}
+      onClose={closeEditor}
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          <strong>{name}</strong> is editing this map right now.
+          Get in touch with your team to get editing control.
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={closeEditor} variant="contained" color="default">
+          Close
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
 }

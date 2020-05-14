@@ -31,7 +31,11 @@ const defaultState = {
       automaticallyAddEdges: true
     },
     editors: [],
-    lock: { locked: false }
+    lock: { 
+      locked: false, 
+      user_has_lock: true,
+      name: null
+    }
   },
 
   // This section of the state is not sync'd with the server;
