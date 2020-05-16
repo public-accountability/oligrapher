@@ -339,10 +339,10 @@ describe('Oligrapher', function() {
     const promise = new Promise((resolve, reject) => setTimeout(() => reject(), 10))
     sandbox.stub(littlesis3.oligrapher, 'clone').returns(promise)
     // open menu
-    const toggle = find('.toggle-action-menu')
+    const toggle = find('#toggle-action-menu')
     fireEvent.click(toggle)
     // click clone
-    const item = Array.from(findAll('.header-action-menu li')).find(li => li.textContent === 'Clone')
+    const item = Array.from(findAll('#header-action-menu li', document.body)).find(li => li.textContent === 'Clone')
     fireEvent.click(item)
     // user message should indicate cloning
     const message = find('.oligrapher-user-message')
@@ -358,10 +358,10 @@ describe('Oligrapher', function() {
     const promise = new Promise(resolve => setTimeout(() => resolve(), 10))
     sandbox.stub(littlesis3.oligrapher, 'delete').returns(promise)
     // open menu
-    const toggle = find('.toggle-action-menu')
+    const toggle = find('#toggle-action-menu')
     fireEvent.click(toggle)
     // click delete
-    const item = Array.from(findAll('.header-action-menu li')).find(li => li.textContent === 'Delete')
+    const item = Array.from(findAll('#header-action-menu li', document.body)).find(li => li.textContent === 'Delete')
     fireEvent.click(item)
     // confirmation modal should appear
     expect(findAll('#confirm-delete', document.body).length).to.equal(1)
@@ -376,39 +376,38 @@ describe('Oligrapher', function() {
     // unfortunately we can't test the redirect because we can't stub window.location.replace :(
   })
 
-  it('opens and closes action menu', function() {
+  it('opens and closes action menu', async function() {
     const promise = new Promise(resolve => setTimeout(() => resolve(), 10))
     sandbox.stub(littlesis3.oligrapher, 'clone').returns(promise)
     // click action menu toggler
-    const toggle = find('.toggle-action-menu')
+    const toggle = find('#toggle-action-menu')
     fireEvent.click(toggle)
     // action menu should appear
-    expect(findAll('.header-action-menu').length).to.equal(1)
-    // click on node tool
-    const nodeToolIcon = find('.editor-node-item')
-    fireEvent.click(nodeToolIcon)
+    expect(findAll('#header-action-menu', document.body).length).to.equal(1)
+    // press escape key
+    fireEvent.keyDown(find('#header-action-menu', document.body), { key: 'Escape', code: 'Escape', keyCode: 27 })
     // action menu should disappear
-    expect(findAll('.header-action-menu').length).to.equal(0)
+    await waitFor(() => expect(findAll('#header-action-menu', document.body).length).to.equal(0))
     // click action menu toggler
     fireEvent.click(toggle)
-    expect(findAll('.header-action-menu').length).to.equal(1)
+    expect(findAll('#header-action-menu', document.body).length).to.equal(1)
     // click "Clone"
-    const item = Array.from(findAll('.header-action-menu li')).find(li => li.textContent === 'Clone')
+    const item = Array.from(findAll('#header-action-menu li', document.body)).find(li => li.textContent === 'Clone')
     fireEvent.click(item)
     // action menu should disappear
-    expect(findAll('.header-action-menu').length).to.equal(0)
+    await waitFor(() => expect(findAll('#header-action-menu', document.body).length).to.equal(0))
   })
 
   it('switches to present mode and back to editor mode', function() {
     // editor menu should be visible
     expect(findAll('.oligrapher-graph-editor').length).to.equal(1)
     // click action menu toggler
-    const toggle = find('.toggle-action-menu')
+    const toggle = find('#toggle-action-menu')
     fireEvent.click(toggle)
     // action menu should appear
-    expect(findAll('.header-action-menu').length).to.equal(1)
+    expect(findAll('#header-action-menu', document.body).length).to.equal(1)
     // click on "Present"
-    const item = Array.from(findAll('.header-action-menu li')).find(li => li.textContent === 'Present')
+    const item = Array.from(findAll('#header-action-menu li', document.body)).find(li => li.textContent === 'Present')
     fireEvent.click(item)
     // editor menu should disappear
     expect(findAll('.oligrapher-graph-editor').length).to.equal(0)
@@ -421,12 +420,12 @@ describe('Oligrapher', function() {
 
   it('opens and closes disclaimer', async function() {
     // click action menu toggler
-    const toggle = find('.toggle-action-menu')
+    const toggle = find('#toggle-action-menu')
     fireEvent.click(toggle)
     // action menu should appear
-    expect(findAll('.header-action-menu').length).to.equal(1)
+    expect(findAll('#header-action-menu', document.body).length).to.equal(1)
     // click on "Present"
-    const item = Array.from(findAll('.header-action-menu li')).find(li => li.textContent === 'Present')
+    const item = Array.from(findAll('#header-action-menu li', document.body)).find(li => li.textContent === 'Present')
     fireEvent.click(item)
     // click on disclaimer link
     const link = Array.from(findAll('#oligrapher-header-menu-wrapper li a')).find(a => a.textContent === 'Disclaimer')
