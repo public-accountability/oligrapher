@@ -1,10 +1,18 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-import { MENU_ITEMS } from '../editorMenu'
 import EditorMenuItem from './EditorMenuItem'
 import UndoRedo from './UndoRedo'
 import { userIsOwnerSelector } from '../util/selectors'
+
+const MENU_ITEMS = [
+  'node',
+  'text',
+  'organize',
+  'settings',
+  'editors',
+  'help'
+]
 
 export default function EditorMenu() {
   const isOwner = useSelector(userIsOwnerSelector)

@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 import pick from 'lodash/pick'
 
 import { useSelector } from '../util/helpers'
-import { calculateDeltas } from '../util/deltas'
+import { calculateDeltas } from '../util/geometry'
 import Curve from '../graph/curve'
 import EdgeLine from './EdgeLine'
 import EdgeHandle from './EdgeHandle'

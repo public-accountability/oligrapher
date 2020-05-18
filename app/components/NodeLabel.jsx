@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import ds from '../NodeDisplaySettings'
 import textLines from '../util/textLines'
 
 const SPACING = 20
+const LINE_HEIGHT = 20
 
 export default function NodeLabel({ node, radius, lineHeight }) {
   const { name, x, y } = node
@@ -12,7 +12,7 @@ export default function NodeLabel({ node, radius, lineHeight }) {
   if (!name) { return <></> }
 
   const lines = textLines(name).map((line, i) => (
-    <text key={i} x={x} y={radius + y + SPACING} dy={i * (lineHeight || ds.lineHeight)} textAnchor="middle" >
+    <text key={i} x={x} y={radius + y + SPACING} dy={i * (lineHeight || LINE_HEIGHT)} textAnchor="middle" >
       {line}
     </text>
   ))

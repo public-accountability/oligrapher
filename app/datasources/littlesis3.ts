@@ -1,25 +1,32 @@
 import wretch from 'wretch'
 import curry from 'lodash/curry'
 
+import { Editor, LockState } from '../util/defaultState'
+import { Graph } from '../graph/graph'
+import { ArrowType } from '../graph/arrow'
+
+declare var API_URL: string
+declare var PRODUCTION: string
+
 // API_URL is defined by webpack.DefinePlugin
 // see webpack.config.js
 const urls = {
   findNodes: () => `${API_URL}/oligrapher/find_nodes`,
   findConnections: () => `${API_URL}/oligrapher/find_connections`,
   getEdges: () => `${API_URL}/oligrapher/get_edges`,
-  getRelationship: id => `${API_URL}/api/relationships/${id}`,
+  getRelationship: (id: string) => `${API_URL}/api/relationships/${id}`,
   createOligrapher: () => `${API_URL}/oligrapher`,
-  updateOligrapher: id => `${API_URL}/oligrapher/${id}`,
-  cloneOligrapher: id => `${API_URL}/oligrapher/${id}/clone`,
-  deleteOligrapher: id => `${API_URL}/oligrapher/${id}`,
-  editors: id => `${API_URL}/oligrapher/${id}/editors`,
-  lock: id => `${API_URL}/oligrapher/${id}/lock`
+  updateOligrapher: (id: number) => `${API_URL}/oligrapher/${id}`,
+  cloneOligrapher: (id: number) => `${API_URL}/oligrapher/${id}/clone`,
+  deleteOligrapher: (id: number) => `${API_URL}/oligrapher/${id}`,
+  editors: (id: number) => `${API_URL}/oligrapher/${id}/editors`,
+  lock: (id: number) => `${API_URL}/oligrapher/${id}/lock`
 }
 
-const isInteger = x => RegExp('^[0-9]+$').test(x.toString())
+const isInteger = (x: any): boolean => RegExp('^[0-9]+$').test(x.toString())
 
-const getCsrfToken = () => {
-  const token = document.head.querySelector('meta[name="csrf-token"]')?.content
+const getCsrfToken = (): string => {
+  const token = (document.head.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content
 
   if (token) {
     return token
@@ -36,19 +43,53 @@ const headers = () => ({
   'X-CSRF-Token': getCsrfToken()
 })
 
-const validateId = id => {
+const validateId = (id: number): void => {
   if (!id) {
     throw new Error('Missing id')
-  }
-
-  if (!isInteger(id)) {
-    throw new Error(`id is not valid integer`)
   }
 }
 
 // API
 
-export function findNodes(query) {
+interface LsNode {
+  id: string,
+  name: string,
+  description?: string,
+  image?: string,
+  url: string
+}
+
+interface LsEdge {
+  id: string,
+  node1_id: string,
+  node2_id: string,
+  label: string,
+  arrow: ArrowType | null,
+  dash: boolean,
+  url: string
+}
+
+interface LsNodeWithEdge extends LsNode {
+  edge: LsEdge
+}
+
+export interface LsMap {
+  id: number,
+  graph_data: Graph,
+  attributes: {
+    title: string,
+    description: string,
+    is_private: boolean,
+    is_cloneable: boolean,
+    settings: string
+  }
+}
+
+interface LsRedirect {
+  url: string
+}
+
+export function findNodes(query: string): Promise<LsNode[]> {
   if (!query) {
     return Promise.resolve([])
   }
@@ -59,8 +100,8 @@ export function findNodes(query) {
     .json()
 }
 
-export function findConnections(entityId, categoryId = null) {
-  let params = { entity_id: entityId, num: 30 }
+export function findConnections(entityId: string, categoryId?: string): Promise<LsNodeWithEdge[]> {
+  let params = { entity_id: entityId, num: 30 } as any
 
   if (categoryId) {
     params.category_id = categoryId
@@ -72,14 +113,14 @@ export function findConnections(entityId, categoryId = null) {
     .json()
 }
 
-export function getEdges(entity1Id, entity2Ids) {
+export function getEdges(entity1Id: string, entity2Ids: string[]): Promise<LsEdge[]> {
   return wretch(urls.getEdges())
     .query({ entity1_id: entity1Id, entity2_ids: entity2Ids.join(',') })
     .get()
     .json()
 }
 
-export function createOligrapher(data) {
+export function createOligrapher(data: LsMap): Promise<LsRedirect> {
   return wretch(urls.createOligrapher())
     .options({ credentials: "same-origin" })
     .headers(headers())
@@ -87,7 +128,7 @@ export function createOligrapher(data) {
     .json()
 }
 
-export function updateOligrapher(data) {
+export function updateOligrapher(data: LsMap): Promise<any> {
   validateId(data.id)
 
   return wretch(urls.updateOligrapher(data.id))
@@ -97,7 +138,7 @@ export function updateOligrapher(data) {
     .json()
 }
 
-export function cloneOligrapher(id) {
+export function cloneOligrapher(id: number): Promise<LsRedirect> {
   validateId(id)
 
   return wretch(urls.cloneOligrapher(id))
@@ -107,7 +148,7 @@ export function cloneOligrapher(id) {
     .json()
 }
 
-export function deleteOligrapher(id) {
+export function deleteOligrapher(id: number): Promise<LsRedirect> {
   validateId(id)
 
   return wretch(urls.deleteOligrapher(id))
@@ -124,16 +165,7 @@ export const oligrapher = {
   "clone": cloneOligrapher
 }
 
-export function getEditors(id) {
-  validateId(id)
-
-  return wretch(urls.editors(id))
-    .headers(headers())
-    .get()
-    .json()
-}
-
-const editorAction = action => (id, username) => {
+const editorAction = (action: string) => (id: number, username: string): Promise<{ editors: Editor[] }> => {
   validateId(id)
 
   return wretch(urls.editors(id))
@@ -146,17 +178,16 @@ export const addEditor = editorAction('add')
 export const removeEditor = editorAction('remove')
 
 export const editors = {
-  get: getEditors,
   add: addEditor,
   remove: removeEditor
 }
 
-export function lock(id) {
+export function lock(id: number): Promise<LockState> {
   validateId(id)
   return wretch(urls.lock(id)).headers(headers()).get().json()
 }
 
-function lockTakeover(id) {
+function lockTakeover(id: number) {
   validateId(id)
   return wretch(urls.lock(id)).headers(headers()).post().json()
 }
@@ -169,7 +200,6 @@ export default {
   updateOligrapher,
   deleteOligrapher,
   cloneOligrapher,
-  getEditors,
   addEditor,
   removeEditor,
   lock,

@@ -90,6 +90,15 @@ module.exports = function(env) {
     module: {
       rules: [
         {
+          test: /\.ts(x?)$/,
+          exclude: /node_modules/,
+          use: [
+            {
+              loader: "ts-loader"
+            }
+          ]
+        },
+        {
           test: /\.jsx?$/,
           exclude: /node_modules\/(?!(@public-accountability.*?\\.js$))/,
           use: [
@@ -121,6 +130,11 @@ module.exports = function(env) {
               options: { limit: 30000 }
             }
           ]
+        },
+        {
+          enforce: "pre",
+          test: /\.js$/,
+          loader: "source-map-loader"
         }
       ]
     },
@@ -134,7 +148,7 @@ module.exports = function(env) {
     ].filter(Boolean),
 
     resolve: {
-      extensions: ['.js', '.jsx'],
+      extensions: ['.js', '.jsx', '.ts', '.tsx'],
       alias: {
         'react-dom': env.dev_server ? '@hot-loader/react-dom' : 'react-dom',
         Components: path.resolve(__dirname, 'app/components/')

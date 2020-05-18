@@ -1,3 +1,6 @@
+import { State, DisplayState, FloatingEditorType } from './defaultState'
+import { Point } from './geometry'
+import { Graph } from '../graph/graph'
 import Curve from '../graph/curve'
 
 export const X_OFFSET = {
@@ -28,25 +31,25 @@ const Y_SIZE = {
   caption: 165
 }
 
-export const set = (display, type = null, id = null) => {
+export const set = (display: DisplayState, type: FloatingEditorType | null = null, id: string | null = null): void => {
   display.floatingEditor.type = type
   display.floatingEditor.id = id
 }
 
-export const clear = display => {
+export const clear = (display: DisplayState): void => {
   set(display, null, null)
 }
 
-export const getId = (display, type) => {
+export const getId = (display: DisplayState, type?: FloatingEditorType): string | null => {
   return (!type || type === display.floatingEditor.type)
     ? display.floatingEditor.id
     : null
 }
 
-export const getType = display => display.floatingEditor.type
+export const getType = (display: DisplayState): FloatingEditorType | null => display.floatingEditor.type
 
 // converts position of svg element to equivalent html position
-export const svgToHtmlPosition = (display, position) => {
+export const svgToHtmlPosition = (display: DisplayState, position: Point): Point => {
   const { zoom, svgZoom, offset, svgOffset } = display
 
   // to be honest i don't fully understand why svgOffset has to be divided by zoom
@@ -56,7 +59,7 @@ export const svgToHtmlPosition = (display, position) => {
   }
 }
 
-export const floatingEditorPositionSelector = state => {
+export const floatingEditorPositionSelector = (state: State): Point | null => {
   const { id, type } = state.display.floatingEditor
 
   if (!id || !type) {
@@ -70,11 +73,11 @@ export const floatingEditorPositionSelector = state => {
   ), type)
 }
 
-export const keepWithinScreen = (display, position, type) => {
+export const keepWithinScreen = (display: DisplayState, position: Point, type: FloatingEditorType): Point => {
   let { x, y } = position
   const width = X_SIZE[type]
   const height = Y_SIZE[type]
-  const { width: svgWidth, height: svgHeight } = display.svgSize 
+  const { width: svgWidth, height: svgHeight } = display.svgSize
   const headerHeight = window.innerHeight - svgHeight
   const top = headerHeight + svgHeight / 2 + y
   const bottom = top + height
@@ -103,7 +106,7 @@ export const keepWithinScreen = (display, position, type) => {
 }
 
 // used to calculate floating editor position based on node or edge position
-export const transformPosition = (display, position, type) => {
+export const transformPosition = (display: DisplayState, position: Point, type: FloatingEditorType): Point => {
   const xOffset = X_OFFSET[type]
   const yOffset = Y_OFFSET[type]
 
@@ -115,7 +118,7 @@ export const transformPosition = (display, position, type) => {
   }
 }
 
-export const getPosition = (graph, id, type) => {
+export const getPosition = (graph: Graph, id: string, type: FloatingEditorType): Point => {
   let x, y, xb
 
   if (type === 'node' || type === 'connections') {
@@ -128,10 +131,8 @@ export const getPosition = (graph, id, type) => {
     return { x: xb, y }
   }
 
-  if (type === 'caption') {
-    ({ x, y } = graph.captions[id])
-    return { x, y }
-  }
+  ({ x, y } = graph.captions[id])
+  return { x, y }
 }
 
 const EDITOR_TYPES = {
@@ -140,8 +141,8 @@ const EDITOR_TYPES = {
   caption: ['caption']
 }
 
-export const toggleEditor = (display, type, id) => {
-  let isOpen = EDITOR_TYPES[type].includes(getType(display))
+export const toggleEditor = (display: DisplayState, type: 'node' | 'edge' | 'caption', id: string): void => {
+  let isOpen = EDITOR_TYPES[type].includes(getType(display) as string)
   let isBeingEdited = getId(display) === id
 
   if (isOpen && isBeingEdited) {

@@ -7,7 +7,7 @@ import Graph from '../graph/graph'
 import { findIntersectingNodeFromDrag } from '../graph/node'
 import Edge from '../graph/edge'
 import Caption from '../graph/caption'
-import { translatePoint } from '../util/helpers'
+import { translatePoint } from '../util/geometry'
 
 let draggedNode, draggedOverNode, newEdge
 
@@ -33,7 +33,7 @@ export const reducer = produce((graph, action) => {
   case 'MOVE_NODE':
     draggedNode = graph.nodes[action.id]
     draggedOverNode = findIntersectingNodeFromDrag(
-      graph.nodes, 
+      Object.values(graph.nodes), 
       draggedNode, 
       action.deltas
     )

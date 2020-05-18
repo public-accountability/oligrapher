@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useSelector, makeCancelable } from '../util/helpers'
-import { lock } from '../datasources/littlesis3.js'
+import { lock } from '../datasources/littlesis3'
 
 const POLL_INTERVAL = 10 * 1000
 const FAILURE_LIMIT = 10

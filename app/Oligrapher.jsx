@@ -3,14 +3,11 @@ import ReactDOM from 'react-dom'
 
 import Graph from './graph/graph'
 import Root from './components/Root'
-
 import { createOligrapherStore, withStore } from './util/render'
 import stateInitalizer from './util/stateInitalizer'
-import { getElementById } from './util/helpers'
-
+import LittleSisApi from './datasources/littlesis3'
 import './oligrapher.scss'
 
-import LittleSisApi from './datasources/littlesis3'
 
 /*
   Main entry point of Oligrapher.
@@ -28,7 +25,7 @@ export default class Oligrapher {
 
   constructor(initialState = {}) {
     this.store = createOligrapherStore(stateInitalizer(initialState))
-    this.element = getElementById(this.store.getState().settings.domId)
+    this.element = document.getElementById(this.store.getState().settings.domId)
     this.graph = () => this.store.getState().graph
 
     const Application = withStore(this.store)(Root)

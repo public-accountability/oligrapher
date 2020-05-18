@@ -10,7 +10,7 @@ import Graph, {
 import Node from '../../app/graph/node'
 import Edge from '../../app/graph/edge'
 import Caption from '../../app/graph/caption'
-import { xy, distance } from '../../app/util/helpers'
+import { xy, distance } from '../../app/util/geometry'
 
 describe('Graph', function() {
   describe("Helpers", function() {
@@ -279,70 +279,6 @@ describe('Graph', function() {
     it("calculates for default graph", function() {
       let graph = Graph.new()
       expect(calculateCenter(graph)).to.eql({ x: 0, y: 0 })
-    })
-  })
-
-  describe('addConnection()', function() {
-    let graph, node, newNode, newEdge
-
-    beforeEach(function() {
-      graph = Graph.new()
-      node = Node.new()
-      newNode = Node.new()
-      newEdge = Edge.newEdgeFromNodes(node, newNode, { id: "someid" })
-      Graph.addNode(graph, node)
-    })
-
-    it("creates a new node", function() {
-      expect(values(graph.nodes)).to.have.lengthOf(1)
-
-      Graph.addConnection(graph, { 
-        existingNodeId: node.id,
-        newNode,
-        newEdge 
-      })
-
-      expect(values(graph.nodes)).to.have.lengthOf(2)
-    })
-
-    it("creates a new edge", function() {
-      expect(values(graph.edges)).to.have.lengthOf(0)
-
-      Graph.addConnection(graph, { 
-        existingNodeId: node.id,
-        newNode,
-        newEdge
-      })
-
-      expect(values(graph.edges)).to.have.lengthOf(1)
-    })
-
-    it("sets the edge id to be the same as the relationship id", function() {
-      Graph.addConnection(graph, { 
-        existingNodeId: node.id,
-        newNode,
-        newEdge
-      })
-
-      expect(graph.edges[newEdge.id]).to.be.ok
-    })
-
-    it("doesn't add existing node or edge", function() {
-      let node2 = Node.new()
-      Graph.addNode(graph, node2)
-      let edge = Edge.newEdgeFromNodes(node, node2, { id: "someid" })
-      Graph.addEdge(graph, edge)
-      newNode.id = node2.id
-      newEdge.id = edge.id
-
-      Graph.addConnection(graph, { 
-        existingNodeId: node.id,
-        newNode,
-        newEdge
-      })
-      
-      expect(values(graph.nodes)).to.have.lengthOf(2)
-      expect(values(graph.edges)).to.have.lengthOf(1)
     })
   })
 

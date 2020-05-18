@@ -3,7 +3,7 @@
    Used by <NodeLabel>
 
 */
-export default function textLines(text) {
+export default function textLines(text: string): string[] {
   if (text.length <= 18 || text.indexOf(' ') === -1) {
     return [text]
   }

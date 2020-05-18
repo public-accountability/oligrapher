@@ -19,11 +19,19 @@ export function flatten(obj) {
   return merge(omit(obj, 'display'), obj.display)
 }
 
+export function idToString(obj) {
+  return merge(obj, { id: String(obj.id) })
+}
+
+export function nodeIdsToString(obj) {
+  return merge(obj, { node1_id: String(obj.node1_id), node2_id: String(obj.node2_id) })
+}
+
 function convertNodes(nodes) {
   return Object.fromEntries(
     keys(nodes).map(id => [
       String(id),
-      Node.new(flatten(nodes[id]))
+      Node.new(idToString(flatten(nodes[id])))
     ])
   )
 }
@@ -32,7 +40,7 @@ function convertEdges(edges) {
   return Object.fromEntries(
     keys(edges).map(id => [
       String(id),
-      Edge.new(flatten(edges[id]))
+      Edge.new(idToString(nodeIdsToString(flatten(edges[id]))))
     ])
   )
 }
@@ -41,7 +49,7 @@ function convertCaptions(captions) {
   return Object.fromEntries(
     keys(captions).map(id => [
       String(id),
-      merge({}, captionDefaults, flatten(captions[id]))
+      merge({}, captionDefaults, idToString(flatten(captions[id])))
     ])
   )
 }
@@ -60,7 +68,7 @@ export default function stateInitalizer(serializedState) {
   }
 
   keys(state.graph.edges).forEach(id => {
-    Graph.registerEdgeWithNodes(state.graph, state.graph.edges[id])
+    Graph.registerEdgeWithNodes(state.graph, id)
   })
 
   state.display.modes.editor = userCanEditSelector(state)

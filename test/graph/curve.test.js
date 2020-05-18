@@ -1,7 +1,7 @@
 import Curve from '../../app/graph/curve'
 import Node from '../../app/graph/node'
 
-import { xy } from '../../app/util/helpers'
+import { xy } from '../../app/util/geometry'
 
 describe('Curve', function() {
   describe('helper functions', function() {

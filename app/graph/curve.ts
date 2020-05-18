@@ -1,3 +1,9 @@
+import toNumber from 'lodash/toNumber'
+import chunk from  'lodash/chunk'
+
+import { Point } from '../util/geometry'
+import { Edge } from './edge'
+
 /*
 data store
 --------------------------------------------
@@ -18,25 +24,33 @@ cx, cy            curve offset (stored in)
 is_reverse
 */
 
-import toNumber from 'lodash/toNumber'
-import chunk from  'lodash/chunk'
+export interface CurveGeometry {
+  x: number,
+  y: number,
+  cx: number,
+  cy: number,
+  xa: number,
+  ya: number,
+  xb: number,
+  yb: number,
+  is_reverse: boolean  
+}
 
 export const defaultCurveStrength = 0.5
 const circleRadius = 25
 const circleSpacing = 4
 
-function midpoint(start, end) {
+function midpoint(start: Point, end: Point): Point {
   let x = (start.x + end.x) / 2
   let y = (start.y + end.y) / 2
-  return {x, y}
+  return { x, y }
 }
 
-// string --> [ [int, int] ]
-function parseCurveString(str) {
+function parseCurveString(str: string) {
   return chunk(str.replace(/(M|Q)/g, '').trim().split(/[ ]+/).map(toNumber), 2)
 }
 
-export function calculateGeometry(edge, curveStrength = defaultCurveStrength) {
+export function calculateGeometry(edge: Edge, curveStrength: number = defaultCurveStrength): CurveGeometry {
   let { cx, cy, x1, y1, x2, y2, s1, s2 } = edge
   let r1 = s1 * circleRadius
   let r2 = s2 * circleRadius
@@ -99,7 +113,7 @@ export function calculateGeometry(edge, curveStrength = defaultCurveStrength) {
 }
 
 // `M ${xa}, ${ya} Q ${x + cx}, ${y + cy}, ${xb}, ${yb}`,
-export function curveFromGeometry(geometry) {
+export function curveFromGeometry(geometry: CurveGeometry): string {
   const start = [geometry.xa, geometry.ya]
   const control = [(geometry.x + geometry.cx), (geometry.y + geometry.cy)]
   const end = [geometry.xb, geometry.yb]
@@ -110,7 +124,7 @@ export default {
   calculateGeometry: calculateGeometry,
   from: {
     geometry: curveFromGeometry,
-    edge: edge => curveFromGeometry(calculateGeometry(edge)),
+    edge: (edge: Edge) => curveFromGeometry(calculateGeometry(edge)),
   },
   util: {
     midpoint: midpoint,

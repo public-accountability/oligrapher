@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { isFunctionIfEditable } from '../util/types'
+
 import { callWithTargetValue } from '../util/helpers'
 
-export default function Subtitle({text, editable, onChange}) {
+export default function Subtitle({ text, editable, onChange }) {
   if (!text && !editable) { return null }
 
   return (
@@ -25,5 +25,5 @@ export default function Subtitle({text, editable, onChange}) {
 Subtitle.propTypes = {
   text: PropTypes.string,
   editable: PropTypes.bool.isRequired,
-  onChange: isFunctionIfEditable
+  onChange: PropTypes.func
 }

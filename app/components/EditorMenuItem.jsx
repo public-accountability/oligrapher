@@ -1,8 +1,52 @@
 import React, { useCallback} from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
+import { FaRegCircle, FaBezierCurve, FaFlipboard, FaTv, FaRegEdit, FaRegTrashAlt } from "react-icons/fa"
+import { FiHelpCircle, FiUsers } from 'react-icons/fi'
+import { GoTextSize, GoGear } from 'react-icons/go'
 
-import MENU from '../editorMenu'
+const MENU = {
+  "node": {
+    icon: <FaRegCircle />,
+    title: 'Add Node'
+  },
+  "text": {
+    icon: <GoTextSize />,
+    title: 'Add Text'
+  },
+  "legend": {
+    icon: <FaFlipboard />,
+    title: 'Add Legend'
+  },
+  "story": {
+    icon: <FaTv />,
+    title: 'story'
+  },
+  "style": {
+    icon: <FaRegEdit />,
+    title: 'Style Nodes'
+  },
+  "organize": {
+    icon: <FaBezierCurve />,
+    title: 'Organize Map'
+  },
+  "settings": {
+    icon: <GoGear />,
+    title: 'Settings'
+  },
+  "editors": {
+    icon: <FiUsers />,
+    title: 'Editors'
+  },
+  "delete": {
+    icon: <FaRegTrashAlt />,
+    title: 'Delete Map'
+  },
+  "help": {
+    icon: <FiHelpCircle />,
+    title: 'Help'
+  }
+}
 
 export default function EditorMenuItem({ item }) {
   const { title, icon } = MENU[item]

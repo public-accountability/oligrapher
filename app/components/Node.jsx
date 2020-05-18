@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 
+import { NODE_RADIUS } from '../graph/node'
 import { useSelector } from '../util/helpers'
 import DraggableComponent from './DraggableComponent'
 import NodeHalo from './NodeHalo'
@@ -13,7 +14,7 @@ export function Node({ id, currentlyEdited }) {
   const dispatch = useDispatch()
   const node = useSelector(state => state.graph.nodes[id])
   const { scale, name } = node
-  const radius = 25 * scale
+  const radius = NODE_RADIUS * scale
   const [isDragging, setDragging] = useState(false)
   const showHalo = currentlyEdited || isDragging
 

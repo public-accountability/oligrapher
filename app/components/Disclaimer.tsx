@@ -1,10 +1,9 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import * as React from 'react'
 import { 
   Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle
 } from '@material-ui/core'
 
-export default function Disclaimer({ open, close }) {
+export default function Disclaimer({ open, close }: DisclaimerProps) {
   return (
     <Dialog
       id="oligrapher-disclaimer"
@@ -29,7 +28,7 @@ export default function Disclaimer({ open, close }) {
   )
 }
 
-Disclaimer.propTypes = {
-  open: PropTypes.bool.isRequired,
-  close: PropTypes.func.isRequired
+export interface DisclaimerProps {
+  open: boolean,
+  close: () => void
 } 
