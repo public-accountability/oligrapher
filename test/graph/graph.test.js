@@ -1,7 +1,6 @@
 import curry from 'lodash/curry'
 import values from 'lodash/values'
 import Graph, {
-  getId,
   determineNodeNumber,
   calculateCenter,
   GRAPH_PADDING_X,
@@ -14,14 +13,6 @@ import { xy, distance } from '../../app/util/geometry'
 
 describe('Graph', function() {
   describe("Helpers", function() {
-    specify('getId', function() {
-      expect(getId('one')).to.eql('one')
-      expect(getId(123)).to.eql('123')
-      expect(() => getId({ foo: 'bar' })).to.throw()
-      expect(() => getId(()=>{})).to.throw()
-      expect(getId({id: 123})).to.eql('123')
-    })
-
     specify("new()", function() {
       let g = Graph.new()
       expect(g.nodes).to.eql({})
@@ -33,9 +24,9 @@ describe('Graph', function() {
       let n1 = Node.new()
       let n2 = Node.new()
       let edge = Edge.newEdgeFromNodes(n1, n2)
-      expect(determineNodeNumber({edge, node: n1})).to.eql(1)
-      expect(determineNodeNumber({edge, node: n2})).to.eql(2)
-      expect(() => determineNodeNumber({edge, node: Node.new()})).to.throw(/Edge is not connected/)
+      expect(determineNodeNumber(edge, n1.id)).to.eql(1)
+      expect(determineNodeNumber(edge, n2.id)).to.eql(2)
+      expect(() => determineNodeNumber(edge, "fakenodeid")).to.throw(/Edge is not connected/)
     })
   })
 
@@ -56,16 +47,16 @@ describe('Graph', function() {
 
     specify("edgesOf", function() {
       let edgesOf = curry(Graph.edgesOf)(graph)
-      expect(edgesOf(n1)).to.have.lengthOf(1)
-      expect(edgesOf(n2)).to.have.lengthOf(2)
-      expect(edgesOf(n3)).to.have.lengthOf(1)
-      expect(edgesOf(n4)).to.have.lengthOf(0)
+      expect(edgesOf(n1.id)).to.have.lengthOf(1)
+      expect(edgesOf(n2.id)).to.have.lengthOf(2)
+      expect(edgesOf(n3.id)).to.have.lengthOf(1)
+      expect(edgesOf(n4.id)).to.have.lengthOf(0)
     })
 
     specify("nodesOf", function() {
       let nodesOf = curry(Graph.nodesOf)(graph)
       // we don't compare the full nodes because adding edges gives the nodes edgeIds
-      expect(nodesOf(e1).map(node => node.id)).to.eql([n1.id, n2.id])
+      expect(nodesOf(e1.id).map(node => node.id)).to.eql([n1.id, n2.id])
       expect(nodesOf(e2.id).map(node => node.id)).to.eql([n2.id, n3.id])
     })
   })
@@ -113,7 +104,7 @@ describe('Graph', function() {
       let g = Graph.new()
       let n = Node.new()
       expect(g.nodes).to.eql({})
-      Graph.addNode(g, n)
+      Graph.addNode(g, n, true)
       expect(g.nodes[n.id]).to.be.ok
       expect(xy(g.nodes[n.id])).to.eql({ x: 0, y: 0 })
     })
@@ -122,8 +113,8 @@ describe('Graph', function() {
       let g = Graph.new()
       let n1 = Node.new()
       let n2 = Node.new()
-      Graph.addNode(g, n1)
-      Graph.addNode(g, n2)
+      Graph.addNode(g, n1, true)
+      Graph.addNode(g, n2, true)
       expect(xy(g.nodes[n2.id])).not.to.eql({ x: 0, y: 0 })
     })
 
@@ -142,12 +133,10 @@ describe('Graph', function() {
       expect(g.nodes[n.id]).not.to.be.ok
       Graph.addNode(g, n)
       expect(g.nodes[n.id]).to.be.ok
-      Graph.removeNode(g, n)
+      Graph.removeNode(g, n.id)
       expect(g.nodes[n.id]).not.to.be.ok
       Graph.addNode(g, n)
       expect(g.nodes[n.id]).to.be.ok
-      Graph.removeNode(g, n.id)
-      expect(g.nodes[n.id]).not.to.be.ok
     })
 
     specify("updateNode", function() {
@@ -166,7 +155,7 @@ describe('Graph', function() {
       Graph.addNodes(g, [n1, n2])
       let e = Edge.new( { node1_id: n1.id, node2_id: n2.id })
       Graph.addEdge(g, e)
-      Graph.removeNode(g, n2)
+      Graph.removeNode(g, n2.id)
       expect(Object.keys(g.nodes)).to.eql([n1.id])
       expect(Object.values(g.edges)).to.have.lengthOf(0)
     })
@@ -230,7 +219,7 @@ describe('Graph', function() {
     specify("removeEdge", function() {
       Graph.addEdge(g, edge)
       expect(g.edges).to.eql({ [edge.id]: edge })
-      Graph.removeEdge(g, edge)
+      Graph.removeEdge(g, edge.id)
       expect(g.edges).to.eql({})
     })
 
@@ -243,9 +232,9 @@ describe('Graph', function() {
 
     specify("updateEdge", function() {
       Graph.addEdge(g, edge)
-      expect(g.edges[edge.id].url).to.eql(null)
-      expect(g.edges[edge.id].label).to.eql(null)
-      Graph.updateEdge(g, edge.id, { url: 'http://example.com', label: 'example label'})
+      expect(g.edges[edge.id].url).not.to.be.ok
+      expect(g.edges[edge.id].label).to.eql("New Edge")
+      Graph.updateEdge(g, edge.id, { url: 'http://example.com', label: 'example label' })
       expect(g.edges[edge.id].url).to.eql('http://example.com')
       expect(g.edges[edge.id].label).to.eql('example label')
     })
@@ -295,7 +284,7 @@ describe('Graph', function() {
       e2 = Edge.newEdgeFromNodes(n1, n3)
       Graph.addNodes(graph, [n1, n2, n3, n4])
       Graph.addEdgesIfNodes(graph, [e1, e2])
-      expect(Graph.connectedNodeIds(graph, n1)).to.have.members([n2.id, n3.id])
+      expect(Graph.connectedNodeIds(graph, n1.id)).to.have.members([n2.id, n3.id])
     })
   })
 

@@ -1,4 +1,3 @@
-import * as helpers from '../app/util/helpers'
 import Oligrapher from '../app/Oligrapher'
 import ReactDOM from 'react-dom'
 import sinon from 'sinon'
@@ -8,12 +7,12 @@ describe('Oligrapher', function() {
   describe('new Oligrapher.jsx()', function() {
     beforeEach(function() {
       sinon.stub(ReactDOM, 'render')
-      sinon.stub(helpers, 'getElementById').returns("FakeElement")
+      sinon.stub(document, 'getElementById').returns("FakeElement")
     })
 
     afterEach(function() {
       ReactDOM.render.restore()
-      helpers.getElementById.restore()
+      document.getElementById.restore()
     })
 
     it("sets the store", function() {

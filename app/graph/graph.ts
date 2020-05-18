@@ -220,12 +220,12 @@ export function newGraph(attributes: GraphAttributes = {}): Graph {
   return merge({}, DEFAULT_GRAPH, attributes)
 }
 
-export function addNode(graph: Graph, attributes: NodeAttributes): Graph {
+export function addNode(graph: Graph, attributes: NodeAttributes, findPosition: boolean = false): Graph {
   let node = newNode(attributes)
 
   // Place the node at random spaced position near the graph center, 
   // unless coordinates are provided
-  if (!(isNumber(node.x) && isNumber(node.y))) {
+  if (findPosition || !isNumber(node.x) || !isNumber(node.y)) {
     merge(node, findFreePositionNear(graph, calculateCenter(graph)))
   }
 

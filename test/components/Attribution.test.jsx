@@ -1,4 +1,6 @@
 import React from 'react'
+import { shallow } from 'enzyme'
+
 import Attribution from '../../app/components/Attribution'
 
 describe("<Attribution>", function(){

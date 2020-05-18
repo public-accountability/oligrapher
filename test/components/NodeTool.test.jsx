@@ -1,4 +1,6 @@
 import React from 'react'
+import { shallow } from 'enzyme'
+
 import NodeTool from '../../app/components/NodeTool'
 import Toolbox from "../../app/components/Toolbox"
 import EntitySearch from "../../app/components/EntitySearch"

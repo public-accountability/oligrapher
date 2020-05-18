@@ -1,4 +1,5 @@
 import React from 'react'
+import { shallow } from 'enzyme'
 
 import HeaderMenu from '../../app/components/HeaderMenu'
 import HeaderMenuItem from '../../app/components/HeaderMenuItem'
@@ -26,11 +27,4 @@ describe("<HeaderMenu>", function() {
     expect(menu.find(HeaderMenuItem).length).to.equal(2)
 
   })
-
-  // it('produces correct html', function() {
-  //   let headerMenuItem = shallow(<HeaderMenuItem text="About" url="https://example.com/about" />)
-  //   expect(headerMenuItem.html()).to.equal(
-  //     "<li><a href=\"https://example.com/about\">About</a></li>"
-  //   )
-  // })
 })

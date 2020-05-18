@@ -1,4 +1,6 @@
 import React from 'react'
+import { shallow } from 'enzyme'
+
 import NodeCircle from '../../app/components/NodeCircle'
 
 describe('<NodeCircle>', function() {

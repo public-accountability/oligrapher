@@ -1,4 +1,6 @@
 import React from 'react'
+import { shallow } from 'enzyme'
+
 import Svg from '../../app/components/Svg'
 
 describe('<Svg>', function() {

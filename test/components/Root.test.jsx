@@ -1,4 +1,6 @@
 import React from 'react'
+import { shallow } from 'enzyme'
+
 import { Root } from '../../app/components/Root'
 import Header from '../../app/components/Header'
 import Graph from '../../app/components/Graph'

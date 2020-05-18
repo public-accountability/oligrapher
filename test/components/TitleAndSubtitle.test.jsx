@@ -1,4 +1,6 @@
 import React from 'react'
+import { shallow } from 'enzyme'
+
 import Title from '../../app/components/Title'
 import Subtitle from '../../app/components/Subtitle'
 

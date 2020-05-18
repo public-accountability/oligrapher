@@ -1,28 +1,28 @@
 import values from 'lodash/values'
-import * as helpers from '../../app/util/helpers'
+import sinon from 'sinon'
+
 import Node from '../../app/graph/node'
 import stateInitalizer, { flatten } from '../../app/util/stateInitalizer'
 
 describe('stateInitalizer', function() {
   const fakeElement = { height: 100, width: 100 }
+  let node, serializedState
 
   beforeEach(function() {
-    sinon.stub(helpers, 'getElementById').returns(fakeElement)
+    sinon.stub(document, 'getElementById').returns(fakeElement)
+    node = Node.new()
+    serializedState = {
+      graph: {
+        nodes: {
+          [node.id]: node
+        }
+      }
+    }
   })
 
   afterEach(function() {
-    helpers.getElementById.restore()
+    document.getElementById.restore()
   })
-
-  let node = Node.new()
-
-  let serializedState = {
-    graph: {
-      nodes: {
-        [node.id]: node
-      }
-    }
-  }
 
   it('initializes the graph', function(){
     let initialState = stateInitalizer(serializedState)
