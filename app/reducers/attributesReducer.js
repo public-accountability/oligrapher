@@ -15,7 +15,11 @@ export default produce((attributes, action) => {
     attributes.editors = action.editors
     return  
   case 'SET_LOCK':
-    attributes.lock = action.lock
+    attributes.lock = {
+      locked: action.lock.locked,
+      userHasLock: action.lock.user_has_lock,
+      name: action.lock.name
+    }
     return
   case 'SAVE_SUCCESS':
     if (!attributes.id) {

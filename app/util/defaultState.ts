@@ -31,7 +31,7 @@ export interface UserSettings {
 
 export interface LockState {
   locked: boolean,
-  user_has_lock: boolean,
+  userHasLock: boolean,
   name: string | null
 }
 
@@ -40,12 +40,13 @@ export interface AttributesState {
   title: string | null,
   subtitle: string | null,
   date: string | null,
-  oligrapher_version: number | null,
+  version: number | null,
   user: User | null,
   owner: User | null,
   settings: UserSettings
   editors: Editor[],
-  lock: LockState
+  lock: LockState,
+  shareUrl: string | null
 }
 
 export type FloatingEditorType = "node" | "connections" | "edge" | "caption"
@@ -104,7 +105,7 @@ const defaultState: State = {
     title: null,
     subtitle: null,
     date: null,
-    oligrapher_version: 3,
+    version: 3,
     user: null,
     owner: null,
     // will be displayed in editor mode. It is used by LittleSis.org
@@ -121,9 +122,10 @@ const defaultState: State = {
     editors: [],
     lock: { 
       locked: false, 
-      user_has_lock: true,
+      userHasLock: true,
       name: null
-    }
+    },
+    shareUrl: null
   },
 
   // This section of the state is not sync'd with the server;

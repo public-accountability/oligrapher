@@ -8,24 +8,26 @@ import ConfirmSave from './ConfirmSave'
 
 export default function HeaderButtons() {
   const dispatch = useDispatch()
-  const [showModal, setShowModal] = useState(false)
+  const [showSave, setShowSave] = useState(false)
   const isSaving = useSelector(state => state.display.saveMapStatus === 'REQUESTED')
-  const version = useSelector(state => state.attributes.oligrapher_version)
+  const version = useSelector(state => state.attributes.version)
 
   const saveMap = useCallback(() => {
     if (version === 3) {
       dispatch({ type: 'SAVE_REQUESTED' })
     } else {
-      setShowModal(true)
+      setShowSave(true)
     }
-  }, [version, dispatch, setShowModal])
+  }, [version, dispatch])
 
   const confirmSaveMap = useCallback(() => {
     dispatch({ type: 'SAVE_REQUESTED' })
-    setShowModal(false)
+    setShowSave(false)
   }, [dispatch])
 
-  const closeModal = useCallback(() => setShowModal(false), [setShowModal])
+  const closeSave = useCallback(() => setShowSave(false), [])
+  const closeShare = useCallback(() => setShowShare(false), [])
+
 
   return (
     <div className="oligrapher-header-buttons">
@@ -47,7 +49,7 @@ export default function HeaderButtons() {
         <ActionMenu />
       </div>
 
-      <ConfirmSave open={showModal} close={closeModal} save={confirmSaveMap} />
+      <ConfirmSave open={showSave} close={closeSave} save={confirmSaveMap} />
     </div>
   )
 }

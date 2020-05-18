@@ -4,6 +4,7 @@ import { IoIosMore } from 'react-icons/io'
 import { IconButton, Menu, MenuItem } from '@material-ui/core'
 
 import ConfirmDelete from './ConfirmDelete'
+import ShareModal from './ShareModal'
 import { userIsOwnerSelector } from '../util/selectors'
 
 export default function ActionMenu() {
@@ -11,17 +12,27 @@ export default function ActionMenu() {
   const { id } = useSelector(state => state.attributes)
   const userIsOwner = useSelector(userIsOwnerSelector)
   const isCloneable = useSelector(state => state.attributes.settings.clone)
+  const isPrivate = useSelector(state => state.attributes.settings.private)
+  const shareUrl = useSelector(state => state.attributes.shareUrl)
+
   const toggleRef = useRef()
 
   const [open, setOpen] = useState(false)
   const openMenu = useCallback(() => setOpen(true), [])
   const closeMenu = useCallback(() => setOpen(false), [])
 
-  const [showModal, setShowModal] = useState(false)
-  const openModal = useCallback(() => {
-    setShowModal(true)
+  const [showConfirm, setShowConfirm] = useState(false)
+  const openConfirm = useCallback(() => {
+    setShowConfirm(true)
     closeMenu()
   }, [closeMenu])
+
+  const [showShare, setShowShare] = useState(false)
+  const openShare = useCallback(() => {
+    setShowShare(true)
+    closeMenu()
+  }, [closeMenu])
+  const closeShare = useCallback(() => setShowShare(false), [])
 
   const presentMap = useCallback(
     () => dispatch({ type: 'SET_MODE', mode: 'editor', enabled: false }),
@@ -33,12 +44,16 @@ export default function ActionMenu() {
     closeMenu()
   }, [dispatch, closeMenu])
  
-  const cancelDelete = useCallback(() => setShowModal(false), [])
+  const cancelDelete = useCallback(() => setShowConfirm(false), [])
  
   const handleDelete = useCallback(() => {
     dispatch({ type: 'DELETE_REQUESTED' })
-    setShowModal(false)
+    setShowConfirm(false)
   }, [dispatch])
+
+  const canShare = userIsOwner && isPrivate && shareUrl
+  const canClone = userIsOwner || isCloneable
+  const canDelete = userIsOwner && id
 
   return (
     <div className="header-action-menu-wrapper">
@@ -54,12 +69,14 @@ export default function ActionMenu() {
         transitionDuration={0}
       >
         <MenuItem dense={true} onClick={presentMap}>Present</MenuItem>
-        {/* ActionMenu is visible to editors but only owners can clone or delete */}
-        { (userIsOwner || isCloneable) && <MenuItem dense={true} onClick={cloneMap}>Clone</MenuItem> }
-        { userIsOwner && id && <MenuItem dense={true} onClick={openModal}>Delete</MenuItem> }
+        {/* ActionMenu is visible to editors but only owners can share or clone or delete */}
+        { canShare && <MenuItem dense={true} onClick={openShare}>Share</MenuItem> }
+        { canClone && <MenuItem dense={true} onClick={cloneMap}>Clone</MenuItem> }
+        { canDelete && <MenuItem dense={true} onClick={openConfirm}>Delete</MenuItem> }
       </Menu>
 
-      <ConfirmDelete open={showModal} close={cancelDelete} deleteMap={handleDelete} />
+      <ConfirmDelete open={showConfirm} close={cancelDelete} deleteMap={handleDelete} />
+      <ShareModal open={showShare} close={closeShare} url={shareUrl} />
     </div>
   )
 }

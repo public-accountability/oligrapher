@@ -25,7 +25,8 @@ describe('Oligrapher', function() {
         id: '1',
         title: 'test graph',
         user: { id: '1', name: 'bozo', url: 'http://example.com' },
-        owner: { id: '1', name: 'bozo', url: 'http://example.com' }
+        owner: { id: '1', name: 'bozo', url: 'http://example.com' },
+        shareUrl: "http://ecxample.com/share"
       },
       display: {
         modes: { editor: true }
@@ -448,5 +449,43 @@ describe('Oligrapher', function() {
     fireEvent.click(find('#oligrapher-help button'))
     // help box should disappear
     expect(findAll('#oligrapher-help').length).to.equal(0)
+  })
+
+  it('opens and closes share modal', async function() {
+    // click on settings icon
+    const icon = find('.editor-settings-item')
+    fireEvent.click(icon)
+    // set map to private
+    const checkbox = find('.oligrapher-settings input[type=checkbox]')
+    fireEvent.click(checkbox)
+    // close settings
+    fireEvent.click(icon)
+    // click action menu toggler
+    const toggle = find('#toggle-action-menu')
+    fireEvent.click(toggle)
+    // click on share
+    const item = Array.from(findAll('#header-action-menu li', document.body)).find(li => li.textContent === 'Share')
+    fireEvent.click(item)
+    // action menu should disappear
+    await waitFor(() => expect(findAll('#header-action-menu', document.body).length).to.equal(0))
+    // share modal should appear
+    expect(findAll('#oligrapher-share', document.body).length).to.equal(1)
+    // click OK
+    const button = find('#oligrapher-share button', document.body)
+    fireEvent.click(button)
+    // share modal should disappear
+    await waitFor(() => expect(findAll('#oligrapher-share', document.body).length).to.equal(0))
+    // click action menu toggler
+    fireEvent.click(toggle)
+    // click on present
+    const present = Array.from(findAll('#header-action-menu li', document.body)).find(li => li.textContent === 'Present')
+    fireEvent.click(present)
+    // share link should appear
+    const link = Array.from(findAll('#oligrapher-header-menu-wrapper li a')).find(a => a.textContent === 'Share')
+    expect(link).to.be.ok
+    // click share
+    fireEvent.click(link)
+    // share modal should appear
+    expect(findAll('#oligrapher-share', document.body).length).to.equal(1)
   })
 })

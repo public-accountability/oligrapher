@@ -13,11 +13,11 @@ export default function Lock() {
     [dispatch]
   )
 
-  const { user_has_lock, name } = useSelector(state => state.attributes.lock)
+  const { userHasLock, name } = useSelector(state => state.attributes.lock)
 
   return (
     <Dialog
-      open={!user_has_lock}
+      open={!userHasLock}
       onClose={closeEditor}
       aria-describedby="alert-dialog-description"
     >
