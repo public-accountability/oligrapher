@@ -739,17 +739,17 @@ header.editor-header {
         }
 
         .edge-style-button {
-          position: relative;
-          top: -18px;
-          font-size: 0.8em;
-          background-color: #fff;
-          color: #000;
-          border: 1px solid #ccc;
-          text-align: center;
-          padding: 0px;
-          width: 35px;
-          font-size: 1.3em;
-          margin-top: 3px;
+            position: relative;
+            top: -18px;
+            font-size: 0.8em;
+            background-color: #fff;
+            color: #000;
+            border: 1px solid #ccc;
+            text-align: center;
+            padding: 0px;
+            width: 35px;
+            font-size: 1.3em;
+            margin-top: 3px;
         }
       }
 
@@ -759,8 +759,8 @@ header.editor-header {
 
     .edit-edge-scale {
         input {
-          margin: 0;
-          width: 30px;
+            margin: 0;
+            width: 30px;
         }
 
         input[type='range'] {
@@ -864,27 +864,19 @@ div.lock {
 }
 
 
-/*
-NODES
-
-g.oligrapher-node.react-draggable
-    g.node-circle-group
-        circle.node-circle
-        circle.node-handle
-*/
-
-/* while dragging for edge mode*/
-g.edge-tool-open .react-draggable-dragging .node-circle {
-    fill: lightyellow;
-}
+/* NODES */
 
 .oligrapher-node {
-  pointer-events: auto;
+    pointer-events: auto;
+
+    &:hover {
+        .node-halo-circle {
+            fill: $highlight_blue;
+    }
 }
 
-.oligrapher-node:hover {
-    .node-halo-circle {
-        fill: $highlight_blue;
+    a.node-label:hover {
+        text-decoration: none;
     }
 }
 

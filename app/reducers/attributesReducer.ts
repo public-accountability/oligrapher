@@ -1,12 +1,14 @@
 import produce from 'immer'
 
-export default produce((attributes, action) => {
+import { AttributesState, UserSettings } from '../util/defaultState'
+
+export default produce((attributes: AttributesState, action: any): void => {
   switch(action.type) {
   case 'UPDATE_ATTRIBUTE':
-    attributes[action.name] = action.value
+    (attributes as any)[action.name] = action.value
     return
   case 'UPDATE_SETTING':
-    attributes.settings[action.key] = action.value
+    attributes.settings[action.key as keyof UserSettings] = action.value
     return
   case 'ADD_EDITOR_SUCCESS':
     attributes.editors = action.editors
@@ -27,6 +29,6 @@ export default produce((attributes, action) => {
     }
     return
   default:
-    return attributes
+    return
   }
 }, null)

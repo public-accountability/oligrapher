@@ -3,32 +3,37 @@ import merge from 'lodash/merge'
 import undoable, { includeAction } from 'redux-undo'
 import { generate } from 'shortid'
 
-import Graph from '../graph/graph'
+import {
+  Graph, addNode, updateNode, removeNode, dragNodeEdges, moveNode,
+  addEdge, addEdgeIfNodes, addEdgesIfNodes, updateEdge, removeEdge,
+  addCaption
+} from '../graph/graph'
 import { findIntersectingNodeFromDrag } from '../graph/node'
 import Edge from '../graph/edge'
 import Caption from '../graph/caption'
 import { translatePoint } from '../util/geometry'
+import { GraphState } from '../util/defaultState'
 
 let draggedNode, draggedOverNode, newEdge
 
-export const reducer = produce((graph, action) => {
+export const reducer = produce((graph: Graph, action: any) => {
   switch(action.type) {
   case 'ADD_NODE':
-    Graph.addNode(graph, action.node, true)
+    addNode(graph, action.node, true)
     return
   case 'UPDATE_NODE':
-    Graph.updateNode(graph, action.id, action.attributes)
+    updateNode(graph, action.id, action.attributes)
     return
   case 'UPDATE_NODES':
-    action.nodeIds.forEach(nodeId => {
-      Graph.updateNode(graph, nodeId, action.attributes)
+    action.nodeIds.forEach((nodeId: string) => {
+      updateNode(graph, nodeId, action.attributes)
     })
     return
   case 'REMOVE_NODE':
-    Graph.removeNode(graph, action.id)
+    removeNode(graph, action.id)
     return
   case 'DRAG_NODE':
-    Graph.dragNodeEdges(graph, action.node.id, action.deltas)
+    dragNodeEdges(graph, action.node.id, action.deltas)
     return
   case 'MOVE_NODE':
     draggedNode = graph.nodes[action.id]
@@ -40,30 +45,30 @@ export const reducer = produce((graph, action) => {
 
     if (draggedOverNode) {
       newEdge = Edge.newEdgeFromNodes(draggedNode, draggedOverNode)
-      Graph.addEdge(graph, newEdge)
-      Graph.dragNodeEdges(graph, action.id, { x: 0, y: 0 })
+      addEdge(graph, newEdge)
     } else {
-      Graph.moveNode(graph, action.id, action.deltas)
-      Graph.dragNodeEdges(graph, action.id, { x: 0, y: 0 }) // updates node's edges
+      moveNode(graph, action.id, action.deltas)
     }
+
+    dragNodeEdges(graph, action.id, { x: 0, y: 0 })
 
     return
   case 'ADD_EDGE':
-    Graph.addEdgeIfNodes(graph, action.edge)
+    addEdgeIfNodes(graph, action.edge)
     return
   case 'ADD_EDGES':
-    Graph.addEdgesIfNodes(graph, action.edges)
+    addEdgesIfNodes(graph, action.edges)
     return
   case 'UPDATE_EDGE':
-    Graph.updateEdge(graph, action.id, action.attributes)
+    updateEdge(graph, action.id, action.attributes)
     return
   // Reserving "DELETE" for future ability to delete data from littlesis backend
   case 'REMOVE_EDGE':
-    Graph.removeEdge(graph, action.id)
+    removeEdge(graph, action.id)
     return
   case 'ADD_CAPTION':
-    Graph.addCaption(graph, merge(
-      Caption.fromEvent(action.event, action.zoom), 
+    addCaption(graph, merge(
+      Caption.fromEvent(action.event),
       { id: action.id }
     ))
     return
@@ -100,6 +105,7 @@ export const UNDO_ACTIONS = [
   'APPLY_FORCE_LAYOUT'
 ]
 
+// @ts-ignore
 const undoableReducer = undoable(reducer, { 
   filter: includeAction(UNDO_ACTIONS),
   groupBy: (action) => {
@@ -122,7 +128,7 @@ const undoableReducer = undoable(reducer, {
   syncFilter: true
 })
 
-const flattenStateReducer = (graph, action) => {
+const flattenStateReducer = (graph: GraphState, action: any) => {
   // include SET_SVG_ZOOM so that state is flattened at the start
   if (!graph.nodes || UNDO_ACTIONS.concat(['SET_SVG_ZOOM']).includes(action.type)) {
     return { 
@@ -134,4 +140,5 @@ const flattenStateReducer = (graph, action) => {
   }
 }
 
-export default (state, action) => flattenStateReducer(undoableReducer(state, action), action)
+// @ts-ignore
+export default (state: GraphState, action: any) => flattenStateReducer(undoableReducer(state, action), action)

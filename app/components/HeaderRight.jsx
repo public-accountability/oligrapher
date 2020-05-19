@@ -21,7 +21,7 @@ export default function HeaderRight() {
   const [showShare, setShowShare] = useState(false)
 
   const enableEditorMode = useCallback(
-    () => dispatch({ type: 'SET_MODE', mode: 'editor', enabled: true }), 
+    () => dispatch({ type: 'SET_EDITOR_MODE', enabled: true }), 
     [dispatch]
   )
 

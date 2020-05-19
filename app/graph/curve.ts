@@ -76,7 +76,7 @@ export function calculateGeometry(edge: Edge, curveStrength: number = defaultCur
     is_reverse = true
   }
 
-  // generate curve offset if it doesn't exist
+  // generate control point if it doesn't exist
   if (cx == null || cy == null) {
     cx = -(ya - y) * curveStrength
     cy = (xa - x) * curveStrength

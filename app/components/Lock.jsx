@@ -9,7 +9,7 @@ import { useSelector } from '../util/helpers'
 export default function Lock() {
   const dispatch = useDispatch()
   const closeEditor = useCallback(
-    () => dispatch({ type: 'SET_MODE', mode: 'editor', enabled: false }), 
+    () => dispatch({ type: 'SET_EDITOR_MODE', enabled: false }), 
     [dispatch]
   )
 

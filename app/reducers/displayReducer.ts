@@ -2,10 +2,11 @@ import produce from 'immer'
 
 import FloatingEditor, { toggleEditor } from '../util/floatingEditor'
 import { isLittleSisId } from '../util/helpers'
+import { DisplayState } from '../util/defaultState'
 
 const ZOOM_INTERVAL = 1.2
 
-export default produce((display, action) => {
+export default produce((display: DisplayState, action: any): void => {
   switch(action.type) {
   case 'SET_ACTUAL_ZOOM':
     display.actualZoom = action.actualZoom
@@ -81,8 +82,8 @@ export default produce((display, action) => {
   case 'ZOOM_OUT':
     display.zoom = display.zoom / ZOOM_INTERVAL
     return
-  case 'SET_MODE':
-    display.modes[action.mode] = action.enabled
+  case 'SET_EDITOR_MODE':
+    display.modes.editor = action.enabled
     return
   case 'TOGGLE_TOOL':
     display.tool = (display.tool === action.tool) ? null : action.tool

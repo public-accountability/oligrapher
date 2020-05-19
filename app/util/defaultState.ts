@@ -1,5 +1,6 @@
 import { Point } from './geometry'
 import { Graph, Viewbox } from '../graph/graph'
+import { Node } from '../graph/node'
 
 export interface GraphState extends Graph {
   present: Graph
@@ -51,6 +52,8 @@ export interface AttributesState {
 
 export type FloatingEditorType = "node" | "connections" | "edge" | "caption"
 
+export type AsyncStatus = "REQUESTED" | "SUCCESS" | "FAILED" | null
+
 export interface DisplayState {
   zoom: number,
   svgZoom: number,
@@ -65,12 +68,12 @@ export interface DisplayState {
     type: FloatingEditorType | null,
     id: string | null
   },
-  draggedNode: string | null,
-  draggedOverNode: string | null,
+  draggedNode: Node | null,
   tool: "node" | "text" | "organize" | "settings" | "editors" | "help" | null,
-  saveMapStatus: "REQUESTED" | "SUCCESS" | "FAILED" | null
-  cloneMapStatus: "REQUESTED" | "SUCCESS" | "FAILED" | null
-  deleteMapStatus: "REQUESTED" | "SUCCESS" | "FAILED" | null
+  saveMapStatus: AsyncStatus,
+  cloneMapStatus: AsyncStatus,
+  deleteMapStatus: AsyncStatus,
+  userMessage: string | null
 }
 
 export interface SettingsState {
@@ -148,11 +151,11 @@ const defaultState: State = {
       id: null
     },
     draggedNode: null,
-    draggedOverNode: null,
     tool: null,
     saveMapStatus: null,
     cloneMapStatus: null,
-    deleteMapStatus: null
+    deleteMapStatus: null,
+    userMessage: null
   },
 
   // Global settings

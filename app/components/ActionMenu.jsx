@@ -35,7 +35,7 @@ export default function ActionMenu() {
   const closeShare = useCallback(() => setShowShare(false), [])
 
   const presentMap = useCallback(
-    () => dispatch({ type: 'SET_MODE', mode: 'editor', enabled: false }),
+    () => dispatch({ type: 'SET_EDITOR_MODE', enabled: false }),
     [dispatch]
   )
 

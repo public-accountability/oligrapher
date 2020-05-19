@@ -3,13 +3,13 @@ import Node from '../../app/graph/node'
 import defaultState from '../../app/util/defaultState'
 
 describe('displayReducer', function() {
-  describe('SET_MODE', function() {
+  describe('SET_EDITOR_MODE', function() {
     it('changes editor to true', function() {
-      const state = { modes: { editor: false, story: false } }
-      const action = { type: 'SET_MODE', mode: 'editor', enabled: true }
+      const state = { modes: { editor: false } }
+      const action = { type: 'SET_EDITOR_MODE', enabled: true }
 
       expect(reducer(state, action))
-        .to.eql({ modes: { editor: true, story: false } })
+        .to.eql({ modes: { editor: true } })
     })
   })
 

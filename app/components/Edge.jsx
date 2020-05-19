@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { DraggableCore } from 'react-draggable'
 import { useDispatch } from 'react-redux'
@@ -21,6 +21,7 @@ export function Edge({ id, currentlyEdited }) {
   const [startDrag, setStartDrag] = useState()
   const { cx, cy, x1, x2, y1, y2, s1, s2, scale, label } = edge
   const [geometry, setGeometry] = useState(Curve.calculateGeometry({ cx, cy, x1, x2, y1, y2, s1, s2 }))
+  const [startPosition, setStartPosition] = useState()
   const curve = useMemo(() => Curve.from.geometry(geometry), [geometry])
 
   const updateEdge = useCallback(
@@ -38,14 +39,11 @@ export function Edge({ id, currentlyEdited }) {
     setGeometry(Curve.calculateGeometry({ cx, cy, x1, x2, y1, y2, s1, s2 }))
   }, [cx, cy, x1, x2, y1, y2, s1, s2, id])
 
-  const pickProps = (...propNames) => pick(edge, propNames)
-
-  const width = 1 + (scale -1) * 5
-  const startPosition = useMemo(() => ({ x: cx, y: cy }), [cx, cy])
-
   const onStart = useCallback((evt, data) => {
     setStartDrag(data)
-  }, [])
+    // edge may not have a set control point
+    setStartPosition({ x: cx || geometry.cx, y: cy || geometry.cy })
+  }, [cx, cy, geometry])
 
   const onDrag = useCallback((evt, data) => {
     setDragging(true)
@@ -66,6 +64,8 @@ export function Edge({ id, currentlyEdited }) {
   }, [isDragging, startPosition, startDrag, actualZoom, clickEdge, updateEdge])
 
   // Children Props
+  const pickProps = (...propNames) => pick(edge, propNames)
+  const width = 1 + (scale -1) * 5
   const edgeLineProps = { curve, width, isReverse: geometry.is_reverse, ...pickProps('id', 'scale', 'dash', 'status', 'arrow') }
   const edgeLabelProps = { curve, width, ...pickProps('id', 'scale', 'status', 'label') }
   const edgeHandleProps = { 
