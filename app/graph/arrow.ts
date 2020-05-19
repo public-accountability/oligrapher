@@ -21,7 +21,7 @@ interface Marker {
 // see components/graph/Markers
 const MARKER_END: Marker = {
   normal: "url(#marker1)",
-  highlighted: "url(#highlightedmarker1"
+  highlighted: "url(#highlightedmarker1)"
 }
 const MARKER_START: Marker = {
   normal: "url(#marker2)",
