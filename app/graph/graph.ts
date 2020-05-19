@@ -8,7 +8,7 @@ import Springy from 'springy'
 
 import { Point, translatePoint, rotatePoint } from '../util/geometry'
 import { Node, NodeAttributes, newNode, findIntersectingNode } from './node'
-import { Edge, EdgeAttributes, edgeCoordinates, newEdgeFromNodes } from './edge'
+import { Edge, EdgeAttributes, edgeCoordinates, newEdgeFromNodes, determineNodeNumber } from './edge'
 import { Caption } from './caption'
 import { calculateGeometry, defaultCurveStrength } from './curve'
 
@@ -58,49 +58,12 @@ const DEFAULT_GRAPH: Graph = {
 }
 
 /*
-    - Helper Functions
     - Stats & Getters
     - ViewBox Calculations
     - Graph Functions
     - Dragging
     - Add Connections
 */
-
-
-/// Helper Functions  //
-
-// Allows functions to accept a node object or an id.
-// For example: 400, "400", and { id: 400 } all return "400"
-// Often used like this: ` this.graph.nodes[getId(node)] `
-// export function getId(thing: { id?: string } | number | string): string {
-//   if (typeof thing === 'string') {
-//     return thing
-//   } else if (typeof thing === 'object') {
-//     if (thing.id) {
-//       return getId(thing.id)
-//     } else {
-//       throw new Error("getId() failed: the object does not have the property 'id'")
-//     }
-//   } else if (typeof thing === 'number') {
-//     return thing.toString()
-//   } else if (typeof thing === 'undefined') {
-//     throw new Error("getId() called with an undefined argument")
-//   } else {
-//     throw new Error("getId() only accepts Strings, Objects, and numbers")
-//   }
-// }
-
-// Which node (node 1 or node 2) is the node of the edge -- can be either 1 or 2
-export function determineNodeNumber(edge: Edge, nodeId: string): number {
-  if (edge.node1_id === nodeId) {
-    return 1
-  } else if (edge.node2_id === nodeId) {
-    return 2
-  } else {
-    throw new Error("Edge is not connected to the node")
-  }
-}
-
 
 // Stats, Getters, and Calculations
 
@@ -109,6 +72,11 @@ const minNodeY = (nodes: Array<Node>): number => Math.min(...nodes.map(n => n.y)
 const maxNodeX = (nodes: Array<Node>): number => Math.max(...nodes.map(n => n.x))
 const maxNodeY = (nodes: Array<Node>): number => Math.max(...nodes.map(n => n.y))
 
+const minEdgeX = (edges: Array<Edge>): number => Math.min(...edges.map(e => e.cx || 0))
+const minEdgeY = (edges: Array<Edge>): number => Math.min(...edges.map(e => e.cy || 0))
+const maxEdgeX = (edges: Array<Edge>): number => Math.max(...edges.map(e => e.cx || 0))
+const maxEdgeY = (edges: Array<Edge>): number => Math.max(...edges.map(e => e.cy || 0))
+
 const minCaptionX = (captions: Array<Caption>): number => Math.min(0, ...captions.map(c => c.x))
 const minCaptionY = (captions: Array<Caption>): number => Math.min(0, ...captions.map(c => c.y))
 const maxCaptionX = (captions: Array<Caption>): number => Math.max(0, ...captions.map(c => c.x + c.width))
@@ -116,6 +84,7 @@ const maxCaptionY = (captions: Array<Caption>): number => Math.max(0, ...caption
 
 export function stats(graph: Graph) {
   const nodes = values(graph.nodes)
+  const edges = values(graph.edges)
   const captions = values(graph.captions)
 
   return {
@@ -126,6 +95,10 @@ export function stats(graph: Graph) {
     minNodeY: minNodeY(nodes),
     maxNodeX: maxNodeX(nodes),
     maxNodeY: maxNodeY(nodes),
+    minEdgeX: minEdgeX(edges),
+    minEdgeY: minEdgeY(edges),
+    maxEdgeX: maxEdgeX(edges),
+    maxEdgeY: maxEdgeY(edges),
     minCaptionX: minCaptionX(captions),
     minCaptionY: minCaptionY(captions),
     maxCaptionX: maxCaptionX(captions),
@@ -145,7 +118,6 @@ export function nodesOf(graph: Graph, edgeId: string): Array<Node> {
   return [node1_id, node2_id].map(id => getNode(graph, id))
 }
 
-
 // ViewBox Calculations
 
 // output: { minX, minY, w, h }
@@ -161,13 +133,14 @@ export function calculateViewBox(graph: Graph): Viewbox {
 
   const { 
     minNodeX, minNodeY, maxNodeX, maxNodeY,
+    minEdgeX, minEdgeY, maxEdgeX, maxEdgeY,
     minCaptionX, minCaptionY, maxCaptionX, maxCaptionY
   } = graphStats
 
-  const minX = Math.min(minNodeX, minCaptionX) - GRAPH_PADDING_X
-  const minY = Math.min(minNodeY, minCaptionY) - GRAPH_PADDING_Y
-  const maxX = Math.max(maxNodeX, maxCaptionX) + GRAPH_PADDING_X
-  const maxY = Math.max(maxNodeY, maxCaptionY) + GRAPH_PADDING_Y
+  const minX = Math.min(minNodeX, minEdgeX, minCaptionX) - GRAPH_PADDING_X
+  const minY = Math.min(minNodeY, minEdgeY, minCaptionY) - GRAPH_PADDING_Y
+  const maxX = Math.max(maxNodeX, maxEdgeX, maxCaptionX) + GRAPH_PADDING_X
+  const maxY = Math.max(maxNodeY, maxEdgeY, maxCaptionY) + GRAPH_PADDING_Y + 50
   const w = maxX - minX
   const h = maxY - minY
 
@@ -264,11 +237,29 @@ export function addEdgeIdToNode(graph: Graph, nodeId: string, edgeId: string): G
   return graph
 }
 
+export function updateEdgeFromNodes(graph: Graph, edgeId: string): Graph {
+  let { node1_id, node2_id } = getEdge(graph, edgeId)
+  let node1 = getNode(graph, node1_id )
+  let node2 = getNode(graph, node2_id )
+
+  updateEdge(graph, edgeId, {
+    x1: node1.x,
+    y1: node1.y,
+    x2: node2.x,
+    y2: node2.y,
+    s1: node1.scale,
+    s2: node2.scale
+  })
+
+  return graph
+}
+
 export function registerEdgeWithNodes(graph: Graph, edgeId: string): Graph {
-  let edge = getEdge(graph, edgeId)
-  if (!edge) { console.log(graph, edgeId) }
-  addEdgeIdToNode(graph, edge.node1_id, edgeId)
-  addEdgeIdToNode(graph, edge.node2_id, edgeId)
+  let { node1_id, node2_id, x1, x2, y1, y2 } = getEdge(graph, edgeId)
+
+  addEdgeIdToNode(graph, node1_id, edgeId)
+  addEdgeIdToNode(graph, node2_id, edgeId)
+
   return graph
 }
 

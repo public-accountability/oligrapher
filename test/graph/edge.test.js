@@ -1,6 +1,6 @@
 // import Graph from '../../app/graph/graph'
 import Node from '../../app/graph/node'
-import Edge, { edgeCoordinates } from '../../app/graph/edge'
+import Edge, { edgeCoordinates, determineNodeNumber } from '../../app/graph/edge'
 
 describe('Edge', function() {
   describe("Edge.new", function() {
@@ -39,5 +39,14 @@ describe('Edge', function() {
     it('updates node 2 position', function() {
       expect(edgeCoordinates(2, newNodeCoords)).to.eql({x2: 100, y2: 200})
     })
+  })
+
+  specify('determineNodeNumber', function() {
+    let n1 = Node.new()
+    let n2 = Node.new()
+    let edge = Edge.newEdgeFromNodes(n1, n2)
+    expect(determineNodeNumber(edge, n1.id)).to.eql(1)
+    expect(determineNodeNumber(edge, n2.id)).to.eql(2)
+    expect(() => determineNodeNumber(edge, "fakenodeid")).to.throw(/Edge is not connected/)
   })
 })

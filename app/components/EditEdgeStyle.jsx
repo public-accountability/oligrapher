@@ -31,11 +31,12 @@ export default function EditEdgeStyle({ edge, nodes, updateEdge }) {
         <EdgeEditorNode node={nodes[0]} />
       </div>
       <div> 
-        <button className="edge-style-button" onClick={toggleLeftArrow}>{leftArrow}</button>
+        <button className="edge-style-button" onClick={toggleLeftArrow} title="Toggle arrow">{leftArrow}</button>
+        <button className="edge-style-button" onClick={toggleDash} title="Toggle dashes">{dash}</button>
         &nbsp;
-        <button className="edge-style-button" onClick={toggleDash}>{dash}</button>
-        &nbsp;
-        <button className="edge-style-button" onClick={toggleRightArrow}>{rightArrow}</button>
+        <button className="edge-style-button" onClick={toggleRightArrow} title="Toggle arrow">{rightArrow}</button>
+        <br />
+        <small>toggle dashes and arrows</small>
       </div>
       <div>
         <EdgeEditorNode node={nodes[1]} />

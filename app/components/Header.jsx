@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { MdExpandMore, MdExpandLess } from 'react-icons/md'
 
@@ -45,7 +45,7 @@ export default function Header() {
       ) }
 
       <div id="oligrapher-header-bottom">
-        { isCollapsed || (
+        { isCollapsed ? <Title text={title} editable={false} /> : (
           <div id="oligrapher-header-left-wrapper">
             <Subtitle text={subtitle} editable={editMode} onChange={updateSubtitle} />
             { owner && <Attribution users={users} date={date} /> }

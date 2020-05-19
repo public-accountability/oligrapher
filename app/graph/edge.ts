@@ -84,6 +84,17 @@ export function edgeCoordinates(nodeNumber: number, coordinates: Point) {
   }
 }
 
+// Which node (node 1 or node 2) is the node of the edge -- can be either 1 or 2
+export function determineNodeNumber(edge: Edge, nodeId: string): number {
+  if (edge.node1_id === nodeId) {
+    return 1
+  } else if (edge.node2_id === nodeId) {
+    return 2
+  } else {
+    throw new Error("Edge is not connected to the node")
+  }
+}
+
 export const edgeShape = {
   id: PropTypes.string.isRequired,
   node1_id: PropTypes.string.isRequired,

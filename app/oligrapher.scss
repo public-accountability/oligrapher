@@ -97,6 +97,18 @@ html body div#oligrapher {
         // flex: 0 0 52px; 
         height: 52px;
         transition: height 0.1s ease-out;
+
+        #oligrapher-header-top {
+            display: flex;
+            flex-direction: row;
+        }
+
+        h1#oligrapher-title {
+            margin-top: 7px;
+            margin-bottom: 0;
+            font-size: 30px;
+            height: 30px;
+        }
     }
 
     /* title and subtitle*/
@@ -738,6 +750,10 @@ header.editor-header {
             display: inline-block;
         }
 
+        small {
+            font-size: 10px;
+        }
+
         .edge-style-button {
             position: relative;
             top: -18px;
@@ -749,6 +765,7 @@ header.editor-header {
             padding: 0px;
             width: 35px;
             font-size: 1.3em;
+            line-height: 1em;
             margin-top: 3px;
         }
       }

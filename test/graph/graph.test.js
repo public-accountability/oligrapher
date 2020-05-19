@@ -19,15 +19,6 @@ describe('Graph', function() {
       expect(g.edges).to.eql({})
       expect(Graph.new()).not.to.eq(Graph.new())
     })
-
-    specify('determineNodeNumber', function() {
-      let n1 = Node.new()
-      let n2 = Node.new()
-      let edge = Edge.newEdgeFromNodes(n1, n2)
-      expect(determineNodeNumber(edge, n1.id)).to.eql(1)
-      expect(determineNodeNumber(edge, n2.id)).to.eql(2)
-      expect(() => determineNodeNumber(edge, "fakenodeid")).to.throw(/Edge is not connected/)
-    })
   })
 
   describe("Getters", function() {
