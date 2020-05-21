@@ -16,7 +16,7 @@ const MENU_ITEMS = [
 
 export default function EditorMenu() {
   const isOwner = useSelector(userIsOwnerSelector)
-  const items = isOwner ? MENU_ITEMS : MENU_ITEMS.filter(i => i !== 'editors')
+  const items = isOwner ? MENU_ITEMS : MENU_ITEMS.filter(i => !['editors', 'settings'].includes(i))
 
   return (
     <div className="editor-menu">

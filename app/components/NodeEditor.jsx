@@ -6,7 +6,6 @@ import { useSelector } from '../util/helpers'
 import EditorHeader from './EditorHeader'
 import SizePicker from './SizePicker'
 import EditNodeColorPage from './EditNodeColorPage'
-import EditNodeBioPage from './EditNodeBioPage'
 import NodeStyleForm from './NodeStyleForm'
 import EditorSubmitButtons from './EditorSubmitButtons'
 import EditorHotKeys from './EditorHotKeys'
@@ -86,7 +85,6 @@ export default function NodeEditor({ id }) {
           { page === 'main' && <MainPage node={node} setPage={setPage} updateNode={updateNode} openAddConnections={openAddConnections} /> }
           { page === 'color' && <EditNodeColorPage color={node.color} updateNode={updateNode}/> }
           { page === 'size' && <SizePicker scale={node.scale} updateNode={updateNode} /> }
-          { page === 'bio' && <EditNodeBioPage text="Placeholder node bio text" updateNode={updateNode} /> }
         </main>
 
         <footer>

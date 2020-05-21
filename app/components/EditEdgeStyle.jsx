@@ -32,6 +32,7 @@ export default function EditEdgeStyle({ edge, nodes, updateEdge }) {
       </div>
       <div> 
         <button className="edge-style-button" onClick={toggleLeftArrow} title="Toggle arrow">{leftArrow}</button>
+        &nbsp;
         <button className="edge-style-button" onClick={toggleDash} title="Toggle dashes">{dash}</button>
         &nbsp;
         <button className="edge-style-button" onClick={toggleRightArrow} title="Toggle arrow">{rightArrow}</button>

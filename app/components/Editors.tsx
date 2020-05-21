@@ -1,42 +1,16 @@
 import React, { useCallback, useRef } from 'react'
-import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { IoMdCloseCircle } from 'react-icons/io'
 
 import { useSelector } from '../util/helpers'
 import Toolbox from './Toolbox'
-
-export function EditorsList({ editors, removeEditor }) {
-  if (editors.length === 0) {
-    return <div><em>This map has no other editors.</em></div>
-  }
-
-  return (
-    <div className="oligrapher-editors-list">
-      { editors.map(editor => (
-        <div key={editor.name}>
-          <a href={editor.url} target="_blank" rel="noopener noreferrer">{editor.name}</a>
-          &nbsp;
-          <span>{editor.pending ? "(pending)" : ""}</span>
-          &nbsp;
-          <a onClick={() => removeEditor(editor.name)}><IoMdCloseCircle /></a>
-        </div>
-      )) }
-    </div>
-  )
-}
-
-EditorsList.propTypes = {
-  editors: PropTypes.array.isRequired,
-  removeEditor: PropTypes.func.isRequired
-}
+import EditorsList from './EditorsList'
 
 export default function Editors() {
   const dispatch = useDispatch()
   const editors = useSelector(state => state.attributes.editors)
   const oligrapherId = useSelector(state => state.attributes.id)
-
-  const inputRef = useRef()
+  const inputRef = useRef() as any
+ 
   const addEditor = useCallback(() => {
     if (inputRef.current.value) {
       dispatch({ type: 'ADD_EDITOR_REQUESTED', username: inputRef.current.value })

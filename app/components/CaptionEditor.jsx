@@ -16,6 +16,7 @@ export default function CaptionEditor({ id }) {
   const caption = useSelector(state => state.graph.captions[id])
 
   const removeCaption = useCallback(() => dispatch({ type: 'REMOVE_CAPTION', id }), [dispatch, id])
+
   const onChange = useCallback(type => { 
     return callWithTargetValue(value => dispatch({ type: 'UPDATE_CAPTION', id, attributes: { [type]: value } }))
   }, [dispatch, id])

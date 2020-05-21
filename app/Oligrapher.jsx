@@ -1,9 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
 
 import Graph from './graph/graph'
 import Root from './components/Root'
-import { createOligrapherStore, withStore } from './util/render'
+import { createOligrapherStore } from './util/store'
 import stateInitalizer from './util/stateInitalizer'
 import LittleSisApi from './datasources/littlesis3'
 import './oligrapher.scss'
@@ -28,8 +29,11 @@ export default class Oligrapher {
     this.element = document.getElementById(this.store.getState().settings.domId)
     this.graph = () => this.store.getState().graph
 
-    const Application = withStore(this.store)(Root)
-
-    ReactDOM.render(<Application />, this.element)
+    ReactDOM.render(
+      <Provider store={this.store}>
+        <Root />
+      </Provider>, 
+      this.element
+    )
   }
 }

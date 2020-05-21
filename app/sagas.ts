@@ -6,12 +6,13 @@ import { oligrapher, editors, getEdges } from './datasources/littlesis3'
 import { applyZoomToViewBox, computeSvgZoom, computeSvgOffset } from './util/dimensions'
 import { paramsForSaveSelector } from './util/selectors'
 import { forceLayout } from './graph/graph'
+import { Selector } from './util/selectors'
 
 // redux-undo places present state at state.present, so we use our own
 // select() to "transparently" make this change to all our saga selectors
-const select = selector => sagaSelect(convertSelectorForUndo(selector))
+const select = (selector: Selector) => sagaSelect(convertSelectorForUndo(selector))
 
-const delay = time => new Promise(resolve => setTimeout(resolve, time))
+const delay = (time: number) => new Promise(resolve => setTimeout(resolve, time))
 const RESET_DELAY = process.env.NODE_ENV === 'test' ? 10 : 5000
 
 export default function* rootSaga() {
@@ -60,7 +61,7 @@ export function* watchRemoveEditor() {
 }
 
 // Automatically fetches edges when a node is added from LittleSis
-export function* addNode(action) {
+export function* addNode(action: any) {
   const { automaticallyAddEdges } = yield select(state => state.attributes.settings)
   const allNodeIds = yield select(state => Object.keys(state.graph.nodes))
 
@@ -70,7 +71,7 @@ export function* addNode(action) {
 }
 
 // Fetch edges for a LittleSis node and add them to graph
-export function* addEdges(newNodeId, allNodeIds) {
+export function* addEdges(newNodeId: string, allNodeIds: string[]) {
   try {
     const results = yield call(getEdges, newNodeId, allNodeIds)
 
@@ -155,7 +156,7 @@ export function* generateForceLayout() {
   yield put({ type: 'APPLY_FORCE_LAYOUT', graph: newGraph })
 }
 
-export function* addEditor(action) {
+export function* addEditor(action: any) {
   const { username } = action
   const id = yield select(state => state.attributes.id)
   
@@ -170,12 +171,11 @@ export function* addEditor(action) {
   yield put({ type: 'ADD_EDITOR_RESET' })
 }
 
-export function* removeEditor(action) {
+export function* removeEditor(action: any) {
   const { username } = action
   const id = yield select(state => state.attributes.id)
   
   try {
-    console.log(id, username)
     const results = yield call(editors.remove, id, username)
     yield put({ type: 'REMOVE_EDITOR_SUCCESS', editors: results.editors })
   } catch(error) {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { SketchPicker } from 'react-color'
 
@@ -10,9 +10,9 @@ const COLOR_OPTIONS = [
 ]
 
 export default function EditNodeColorPage({ color, updateNode }) {
-  const handleColorChange = color => {
+  const handleColorChange = useCallback(color => {
     updateNode({ color: color.hex })
-  }
+  }, [updateNode])
 
   return <SketchPicker color={color} presetColors={COLOR_OPTIONS} onChangeComplete={handleColorChange}/>
 }

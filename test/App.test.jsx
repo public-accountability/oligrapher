@@ -5,7 +5,7 @@ import sinon from 'sinon'
 
 import { Root } from '../app/components/Root'
 import { bigGraph } from './testData'
-import { createOligrapherStore } from '../app/util/render'
+import { createOligrapherStore } from '../app/util/store'
 import stateInitializer from '../app/util/stateInitalizer'
 import * as littlesis3 from '../app/datasources/littlesis3'
 import { removeSpaces } from './testHelpers'

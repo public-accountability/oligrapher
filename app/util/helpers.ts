@@ -64,8 +64,6 @@ export function isLittleSisId(id: any): boolean {
 
 export const convertSelectorForUndo = (selector: Selector): Selector => selector
 
-// redux-undo places the present state at state.present, so we use our own
-// useSelector() to "transparently" make this change to all our selectors
 function useConvertedSelector(selector: Selector) {
   return useSelector(convertSelectorForUndo(selector))
 }

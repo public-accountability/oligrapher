@@ -2,7 +2,7 @@ import React from 'react'
 import { Provider } from 'react-redux'
 import { shallow, mount } from 'enzyme'
 
-import { createOligrapherStore } from '../app/util/render'
+import { createOligrapherStore } from '../app/util/store'
 import stateInitializer from '../app/util/stateInitalizer'
 
 import sinon from "sinon"

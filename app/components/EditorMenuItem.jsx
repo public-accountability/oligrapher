@@ -14,18 +14,6 @@ const MENU = {
     icon: <GoTextSize />,
     title: 'Add Text'
   },
-  "legend": {
-    icon: <FaFlipboard />,
-    title: 'Add Legend'
-  },
-  "story": {
-    icon: <FaTv />,
-    title: 'story'
-  },
-  "style": {
-    icon: <FaRegEdit />,
-    title: 'Style Nodes'
-  },
   "organize": {
     icon: <FaBezierCurve />,
     title: 'Organize Map'
@@ -37,10 +25,6 @@ const MENU = {
   "editors": {
     icon: <FiUsers />,
     title: 'Editors'
-  },
-  "delete": {
-    icon: <FaRegTrashAlt />,
-    title: 'Delete Map'
   },
   "help": {
     icon: <FiHelpCircle />,
