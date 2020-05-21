@@ -1,21 +1,20 @@
 import React, { useCallback, useState, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { IoIosMore } from 'react-icons/io'
 import { IconButton, Menu, MenuItem } from '@material-ui/core'
 
 import ConfirmDelete from './ConfirmDelete'
 import ShareModal from './ShareModal'
+import { useSelector } from '../util/helpers'
 import { userIsOwnerSelector } from '../util/selectors'
 
 export default function ActionMenu() {
   const dispatch = useDispatch()
-  const { id } = useSelector(state => state.attributes)
+  const { id, shareUrl } = useSelector(state => state.attributes)
   const userIsOwner = useSelector(userIsOwnerSelector)
-  const isCloneable = useSelector(state => state.attributes.settings.clone)
-  const isPrivate = useSelector(state => state.attributes.settings.private)
-  const shareUrl = useSelector(state => state.attributes.shareUrl)
+  const { clone: isCloneable, private: isPrivate } = useSelector(state => state.attributes.settings)
 
-  const toggleRef = useRef()
+  const toggleRef = useRef() as React.RefObject<HTMLButtonElement>
 
   const [open, setOpen] = useState(false)
   const openMenu = useCallback(() => setOpen(true), [])
@@ -46,7 +45,7 @@ export default function ActionMenu() {
  
   const cancelDelete = useCallback(() => setShowConfirm(false), [])
  
-  const handleDelete = useCallback(() => {
+  const confirmDelete = useCallback(() => {
     dispatch({ type: 'DELETE_REQUESTED' })
     setShowConfirm(false)
   }, [dispatch])
@@ -75,7 +74,7 @@ export default function ActionMenu() {
         { canDelete && <MenuItem dense={true} onClick={openConfirm}>Delete</MenuItem> }
       </Menu>
 
-      <ConfirmDelete open={showConfirm} close={cancelDelete} deleteMap={handleDelete} />
+      <ConfirmDelete open={showConfirm} cancel={cancelDelete} confirm={confirmDelete} />
       <ShareModal open={showShare} close={closeShare} url={shareUrl} />
     </div>
   )

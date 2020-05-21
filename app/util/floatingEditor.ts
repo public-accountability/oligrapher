@@ -1,7 +1,7 @@
 import { State, DisplayState, FloatingEditorType } from './defaultState'
 import { Point } from './geometry'
 import { Graph } from '../graph/graph'
-import Curve from '../graph/curve'
+import { edgeToCurve } from '../graph/curve'
 
 export const X_OFFSET = {
   node: 50,
@@ -127,7 +127,7 @@ export const getPosition = (graph: Graph, id: string, type: FloatingEditorType):
   }
 
   if (type === 'edge') {
-    ({ xb, y } = Curve.calculateGeometry(graph.edges[id]))
+    ({ xb, y } = edgeToCurve(graph.edges[id]))
     return { x: xb, y }
   }
 

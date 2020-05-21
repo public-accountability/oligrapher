@@ -10,7 +10,7 @@ import { Point, translatePoint, rotatePoint } from '../util/geometry'
 import { Node, NodeAttributes, newNode, findIntersectingNode } from './node'
 import { Edge, EdgeAttributes, edgeCoordinates, newEdgeFromNodes, determineNodeNumber } from './edge'
 import { Caption } from './caption'
-import { calculateGeometry, defaultCurveStrength } from './curve'
+import { edgeToCurve, defaultCurveStrength } from './curve'
 
 export interface NodeMap {
   [key: string]: Node
@@ -331,7 +331,7 @@ export function addSimilarEdges(graph: Graph, edges: Array<Edge>): Graph {
     let node1 = getNode(graph, edge.node1_id)
     let node2 = getNode(graph, edge.node2_id)
     edge = newEdgeFromNodes(node1, node2, edge)
-    let { cx, cy } = calculateGeometry(edge, strength)
+    let { cx, cy } = edgeToCurve(edge, strength)
     edge = merge(edge, { cx, cy })
     addEdge(graph, edge)
     strength += step

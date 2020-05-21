@@ -1,15 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-
-import CustomizeButton from './CustomizeButton'
+import { MdPhotoSizeSelectSmall, MdFormatColorFill } from "react-icons/md"
 
 export default function NodeStyleForm({ setPage }) {
   return (
     <div className="style-form">
       <div>Style</div>
       <div>
-        <CustomizeButton icon="size" onClick={() => setPage('size')} />
-        <CustomizeButton icon="color" onClick={() => setPage('color')} />
+        <span className="entity-size-icon" onClick={() => setPage('size')}>
+          <MdPhotoSizeSelectSmall />
+        </span>
+
+        <span className="entity-color-icon" onClick={() => setPage('color')}>
+          <MdFormatColorFill />
+        </span>
       </div>
     </div>
   )

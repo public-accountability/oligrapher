@@ -11,7 +11,7 @@ export interface GraphState extends Graph {
 export interface User {
   id: number,
   name: string,
-  url?: string
+  url: string
 }
 
 export interface Editor {

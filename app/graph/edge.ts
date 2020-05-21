@@ -3,17 +3,32 @@ import merge from 'lodash/merge'
 import { generate } from 'shortid'
 
 import { Node } from './node'
+import { ArrowType } from './arrow'
 import { Point } from '../util/geometry'
 import { stringOrBool } from '../util/types'
+
+export interface EdgeGeometry {
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  s1: number,
+  s2: number
+  cx?: number,
+  cy?: number,
+}
+
+export type EdgeStatusType = 'normal' | 'highlighted' | 'faded'
 
 export interface EdgeAttributes {
   id?: string,
   node1_id?: string,
   node2_id?: string,
   scale?: number,
-  arrow?: boolean,
+  arrow?: ArrowType,
   dash?: boolean,
   label?: string,
+  status?: EdgeStatusType
   url?: string,
   x1?: number,
   y1?: number,
@@ -30,9 +45,9 @@ export interface Edge extends EdgeAttributes {
   node1_id: string,
   node2_id: string,
   label: string,
-  status: string,
+  status: EdgeStatusType,
   scale: number,
-  arrow: boolean,
+  arrow: ArrowType,
   dash: boolean,
   x1: number,
   y1: number,
@@ -43,16 +58,16 @@ export interface Edge extends EdgeAttributes {
 }
 
 export interface EdgeDefaults extends EdgeAttributes {
-  status: string,
+  status: EdgeStatusType,
   scale: number,
-  arrow: boolean,
+  arrow: ArrowType,
   dash: boolean
 }
 
 const edgeDefaults: EdgeDefaults = {
   status: "normal",
   scale: 1,
-  arrow: false,
+  arrow: null,
   dash: false
 }
 

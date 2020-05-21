@@ -29,7 +29,6 @@ function convertEdgeAttributes(obj: Edge): Edge {
   return merge(obj, {
     node1_id: String(obj.node1_id),
     node2_id: String(obj.node2_id),
-    arrow: Boolean(obj.arrow),
     dash: Boolean(obj.dash)
   })
 }

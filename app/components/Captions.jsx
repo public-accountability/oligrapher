@@ -10,10 +10,10 @@ export default function Captions() {
 
   return (
     <g className="captions">
-      { Object.keys(captions).map(id => (
+      { Object.entries(captions).map(([id, caption]) => (
         <Caption 
           key={id} 
-          caption={captions[id]} 
+          caption={caption} 
           currentlyEdited={id === editedCaptionId} />
       )) }
     </g>

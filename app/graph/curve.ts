@@ -2,7 +2,7 @@ import toNumber from 'lodash/toNumber'
 import chunk from  'lodash/chunk'
 
 import { Point } from '../util/geometry'
-import { Edge } from './edge'
+import { EdgeGeometry } from './edge'
 
 /*
 data store
@@ -24,7 +24,7 @@ cx, cy            curve offset (stored in)
 is_reverse
 */
 
-export interface CurveGeometry {
+export interface Curve {
   x: number,
   y: number,
   cx: number,
@@ -40,17 +40,17 @@ export const defaultCurveStrength = 0.5
 const circleRadius = 25
 const circleSpacing = 4
 
-function midpoint(start: Point, end: Point): Point {
+export function midpoint(start: Point, end: Point): Point {
   let x = (start.x + end.x) / 2
   let y = (start.y + end.y) / 2
   return { x, y }
 }
 
-function parseCurveString(str: string) {
+export function parseCurveString(str: string) {
   return chunk(str.replace(/(M|Q)/g, '').trim().split(/[ ]+/).map(toNumber), 2)
 }
 
-export function calculateGeometry(edge: Edge, curveStrength: number = defaultCurveStrength): CurveGeometry {
+export function edgeToCurve(edge: EdgeGeometry, curveStrength: number = defaultCurveStrength): Curve {
   let { cx, cy, x1, y1, x2, y2, s1, s2 } = edge
   let r1 = s1 * circleRadius
   let r2 = s2 * circleRadius
@@ -113,21 +113,9 @@ export function calculateGeometry(edge: Edge, curveStrength: number = defaultCur
 }
 
 // `M ${xa}, ${ya} Q ${x + cx}, ${y + cy}, ${xb}, ${yb}`,
-export function curveFromGeometry(geometry: CurveGeometry): string {
-  const start = [geometry.xa, geometry.ya]
-  const control = [(geometry.x + geometry.cx), (geometry.y + geometry.cy)]
-  const end = [geometry.xb, geometry.yb]
+export function curveToBezier({ x, y, xa, ya, xb, yb, cx, cy }: Curve): string {
+  const start = [xa, ya]
+  const control = [(x + cx), (y + cy)]
+  const end = [xb, yb]
   return "M " + start.join(' ') + " Q " + control.concat(end).join(' ')
-}
-
-export default {
-  calculateGeometry: calculateGeometry,
-  from: {
-    geometry: curveFromGeometry,
-    edge: (edge: Edge) => curveFromGeometry(calculateGeometry(edge)),
-  },
-  util: {
-    midpoint: midpoint,
-    parseCurveString: parseCurveString
-  }
 }

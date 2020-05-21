@@ -13,7 +13,7 @@
 //
 // str, boolean -> str
 
-export type ArrowType = '1->2' | '2->1' | 'both'
+export type ArrowType = '1->2' | '2->1' | 'both' | null
 interface Marker {
   [key: string]: string
 }

@@ -4,33 +4,33 @@ import {
   Button, Dialog, DialogActions, DialogContent, DialogContentText 
 } from '@material-ui/core'
 
-export default function ConfirmDelete({ open, close, deleteMap }) {
+export default function ConfirmSave({ open, close, save }: ConfirmSaveProps) {
   return (
     <Dialog
-      id="confirm-delete"
       open={open}
       onClose={close}
       aria-describedby="alert-dialog-description"
     >
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          Are you sure you want to delete this map?
+          This map was created with the previous vesion of Oligrapher. 
+          If you save the map with this version, <strong>you will no longer be able to view or edit it with the previous version</strong>.
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={close} variant="contained" color="default">
           Cancel
         </Button>
-        <Button id="confirm-delete-button" onClick={deleteMap} variant="contained" color="secondary">
-          Delete
+        <Button onClick={save} variant="contained" color="primary">
+          Save
         </Button>
       </DialogActions>
     </Dialog>
   )
 }
 
-ConfirmDelete.propTypes = {
-  open: PropTypes.bool.isRequired,
-  close: PropTypes.func.isRequired,
-  deleteMap: PropTypes.func.isRequired
+interface ConfirmSaveProps {
+  open: boolean,
+  close: () => void,
+  save: () => void
 }

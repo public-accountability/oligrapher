@@ -16,11 +16,6 @@ describe("<Attribution>", function(){
     expect(component.find('a').at(1).prop('href')).to.equal(users[1].url)
   })
 
-  it("renders user without link", function(){
-    let component = shallow(<Attribution users={[{ name: "TestName" }]} />)
-    expect(component.find('a').length).to.equal(0)
-  })
-
   it("renders date", function(){
     let component = shallow(<Attribution users={[{ name: "TestName" }]} date="Test Date"/>)
     expect(component.find('#oligrapher-attribution-date').text())
