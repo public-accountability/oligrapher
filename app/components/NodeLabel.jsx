@@ -16,6 +16,28 @@ export default function NodeLabel({ node, perLineMax }) {
   const lineHeight = fontSize * 1.25
   const radius = NODE_RADIUS * scale
 
+  const rects = textLines(name, perLineMax).map((line, i) => {
+    const width = line.length * 8
+    const height = lineHeight
+    const dy = radius + 4 + (i * lineHeight)
+
+    return (
+      <rect
+        key={i}
+        className="nodeLabelRect"
+        fill="#fff"
+        opacity="1"
+        rx={5}
+        ry={5}
+        x={x - width/2}
+        width={width}
+        height={height}
+        y={y + dy}
+        filter="url(#blur)"
+        />
+    )
+  })
+
   const lines = textLines(name, perLineMax).map((line, i) => (
     <text
       key={i}
@@ -29,13 +51,19 @@ export default function NodeLabel({ node, perLineMax }) {
     </text>
   ))
 
-  return node.url ? (
-    <a className="node-label" href={node.url} target="_blank" rel="noopener noreferrer">
-      { lines }
-    </a> 
-  ) : (
-    <g className="node-label">
-      {lines}
+  return (
+    <g>
+      { rects }
+
+      { node.url ? (
+        <a className="node-label" href={node.url} target="_blank" rel="noopener noreferrer">
+          { lines }
+        </a> 
+      ) : (
+        <g className="node-label">
+          {lines}
+        </g>
+      ) }
     </g>
   )
 }

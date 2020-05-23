@@ -909,6 +909,10 @@ div.lock {
 #oligrapher-container .oligrapher-node {
     pointer-events: auto;
 
+    &.react-draggable-dragging {
+      pointer-events: none;
+    }
+
     &:hover {
         .node-halo-circle {
             fill: $highlight_blue;

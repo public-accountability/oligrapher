@@ -43,7 +43,14 @@ export function Node({ id, currentlyEdited }) {
         onStop={moveNode}
         onClick={clickNode}
         onDrag={dragNode}>
-        <g id={"node-" + id} className="oligrapher-node" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+        <g 
+          id={"node-" + id} 
+          className="oligrapher-node" 
+          onMouseEnter={onMouseEnter} 
+          onMouseLeave={onMouseLeave}
+          onDragOver={onMouseEnter}
+          onDragLeave={onMouseLeave}
+        >
           <NodeHalo node={node} showHalo={showHalo} />
           <NodeCircle node={node} />
           <NodeImage node={node} />

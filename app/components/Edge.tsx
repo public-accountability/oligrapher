@@ -62,7 +62,7 @@ export function Edge({ id, currentlyEdited }: EdgeProps) {
   }, [isDragging, startPosition, startDrag, actualZoom, clickEdge, updateEdge])
 
   // Children Props
-  const width = 1 + (scale -1) * 5
+  const width = 2 + (scale -1) * 3
   const edgeLineProps = { bezier, width, isReverse: curve.is_reverse, id, scale, dash, status, arrow }
   const edgeLabelProps = { bezier, width, id, scale, status, arrow, label }
   const edgeHandleProps = { 

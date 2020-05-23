@@ -8,7 +8,7 @@ import FloatingEditor from '../util/floatingEditor'
 export function Nodes({ nodes, editedNodeId, draggedNodeId }) {
   // reorder so that dragged node is painted first
   const nonDraggedNodeIds = Object.keys(nodes).filter(id => id !== draggedNodeId)
-  const nodeIds = (draggedNodeId ? [draggedNodeId] : []).concat(nonDraggedNodeIds)
+  const nodeIds = nonDraggedNodeIds.concat(draggedNodeId ? [draggedNodeId] : [])
 
   return (
     <g className="nodes">
