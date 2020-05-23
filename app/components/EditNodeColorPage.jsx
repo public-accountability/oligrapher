@@ -14,7 +14,13 @@ export default function EditNodeColorPage({ color, updateNode }) {
     updateNode({ color: color.hex })
   }, [updateNode])
 
-  return <SketchPicker color={color} presetColors={COLOR_OPTIONS} onChangeComplete={handleColorChange}/>
+  return (
+    <SketchPicker
+      color={color}
+      presetColors={COLOR_OPTIONS}
+      onChangeComplete={handleColorChange}
+      style={{ boxShadow: 'none' }} />
+  )
 }
 
 EditNodeColorPage.propTypes = {

@@ -1,10 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { NODE_RADIUS } from '../graph/node'
+
 const HALO_WIDTH = 6
 
-export function NodeHalo({ node, radius, showHalo }) {
-  const { x, y } = node
+export function NodeHalo({ node, showHalo }) {
+  const { x, y, scale } = node
+  const radius = NODE_RADIUS * scale
 
   return (
     <circle
@@ -18,7 +21,6 @@ export function NodeHalo({ node, radius, showHalo }) {
 
 NodeHalo.propTypes = {
   node: PropTypes.object.isRequired,
-  radius: PropTypes.number.isRequired,
   showHalo: PropTypes.bool
 }
 

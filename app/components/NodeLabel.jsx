@@ -2,17 +2,29 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import textLines from '../util/textLines'
+import { NODE_RADIUS } from '../graph/node'
 
-const SPACING = 20
-const LINE_HEIGHT = 20
+const FONT_SIZE = 16
 
-export default function NodeLabel({ node, radius, lineHeight }) {
-  const { name, x, y } = node
-  
-  if (!name) { return <></> }
+export default function NodeLabel({ node, perLineMax }) {
+  const { name, x, y, scale } = node
 
-  const lines = textLines(name).map((line, i) => (
-    <text key={i} x={x} y={radius + y + SPACING} dy={i * (lineHeight || LINE_HEIGHT)} textAnchor="middle" >
+  // we use a cube root so that font size and line height 
+  // don't grow too much as node scale increases
+  const scalePower = scale > 1 ? 1/3 : 1
+  const fontSize = FONT_SIZE * Math.pow(scale, scalePower)
+  const lineHeight = fontSize * 1.25
+  const radius = NODE_RADIUS * scale
+
+  const lines = textLines(name, perLineMax).map((line, i) => (
+    <text
+      key={i}
+      x={x}
+      y={radius + y + lineHeight}
+      dy={i * lineHeight}
+      textAnchor="middle"
+      fontSize={fontSize + 'px'}
+    >
       {line}
     </text>
   ))
@@ -30,6 +42,5 @@ export default function NodeLabel({ node, radius, lineHeight }) {
 
 NodeLabel.propTypes = {
   node: PropTypes.object.isRequired,
-  radius: PropTypes.number.isRequired,
-  lineHeight: PropTypes.number
+  perLineMax: PropTypes.number
 }

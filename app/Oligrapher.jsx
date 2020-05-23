@@ -9,7 +9,6 @@ import stateInitalizer from './util/stateInitalizer'
 import LittleSisApi from './datasources/littlesis3'
 import './oligrapher.scss'
 
-
 /*
   Main entry point of Oligrapher.
 

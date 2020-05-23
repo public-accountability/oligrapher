@@ -7,14 +7,13 @@ import CaptionTextbox from './CaptionTextbox'
 import EditCaptionTextarea from './EditCaptionTextarea'
 
 export default function Caption({ caption, currentlyEdited }) {
-  const dispatch = useDispatch()
   const { id, x, y, width, height } = caption
+  const [foreignObjectSize, setForeignObjectSize] = useState({ width, height })
 
+  const dispatch = useDispatch()
   const clickCaption = useCallback(() => dispatch({ type: 'CLICK_CAPTION', id }), [dispatch, id])
   const updateCaption = useCallback(attributes => dispatch({ type: 'UPDATE_CAPTION', attributes, id }), [dispatch, id])
   const moveCaption = useCallback(deltas => dispatch({ type: 'MOVE_CAPTION', deltas, id }), [dispatch, id])
-
-  const [foreignObjectSize, setForeignObjectSize] = useState({ width, height })
 
   return (
     <DraggableComponent

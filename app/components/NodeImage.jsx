@@ -1,13 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { NODE_RADIUS } from '../graph/node'
+
 const IMAGE_SCALE = 3
 const IMAGE_OPAICTY = 1
 
-export function NodeImage({ node, radius }) {
-  const { id, x, y, image } = node
-  const clipPathId = `image-clip-${id}`
+export function NodeImage({ node }) {
+  const { id, x, y, image, scale } = node
+  const radius = NODE_RADIUS * scale
   const imageWidth = IMAGE_SCALE * radius
+  const clipPathId = `image-clip-${id}`
 
   if (!node.image) {
     return null
@@ -39,8 +42,7 @@ export function NodeImage({ node, radius }) {
 }
 
 NodeImage.propTypes = {
-  node: PropTypes.object.isRequired,
-  radius: PropTypes.number.isRequired
+  node: PropTypes.object.isRequired
 }
 
 export default React.memo(NodeImage)

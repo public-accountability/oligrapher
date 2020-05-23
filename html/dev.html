@@ -1,32 +1,84 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/><meta charset="UTF-8">
-    <title>Oligrapher Demo</title>
-    <script src="webpack-dev-server.js"></script>
-    <script src="oligrapher-dev.js"></script>
-    <style>
-      html { height: 100%; }
-      body {
-        margin: 0;
-        height: 100%;
-      }
-
-      #oligrapher {
-        width: 100%;
-        height: 100%;
-      }
-
-      #navbar {
-        height: 0px;
-        width: 100%;
-        background-color: #eee;
-      }
-    </style>
+    <title>Oligrapher</title>
+    <link rel="stylesheet" media="all" href="http://127.0.0.1:8080/assets/oligrapher.self-b9be264d39611bf605184a8a9ff5912b1a19a97162cd059b7f4b531612082f04.css?body=1" />
+    <link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=Muli:semibold" />
+    <meta name="csrf-param" content="authenticity_token" />
+    <meta name="csrf-token" content="ilVDtBMQkU2KS6iFmZRS3olt/h/PXpy3lWAuRCnwTUgzRKjMMiQ0S4gMNridFddjLoDwNGtv/Pxr94PFnj8LFA==" />
+    <script src="http://localhost:8090/webpack-dev-server.js"></script>
+    <script src="http://localhost:8090/oligrapher-dev.js"></script>
   </head>
 
   <body>
-    <div id="navbar"></div>
+    <div id="top">
+      
+
+  <nav class="navbar navbar-expand-md fixed-top navbar-light bg-light" id="main-navbar-container">
+  
+  <div id="navbar-content-wrapper" class="navbar-full-width">
+    
+    <div id="navbar-content">
+      <div id="brand mr-auto">
+	<a href="/home/dashboard"><img src="http://127.0.0.1:8080/assets/lilsis-logo-trans-200-74169fd94db9637c31388ad2060b48720f94450b40c45c23a3889cf480f02c52.png" /></a>
+      </div>
+
+      <div class="collapse navbar-collapse">
+	
+
+  <ul class="nav mr-auto ml-2">
+	<li class="nav-item dropdown">
+	  <a class="nav-link dropdown-toggle" href="#" id="navbar-header-user_1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">user_1</a>
+	  <div class="dropdown-menu"><a class="dropdown-item" href="/home/maps">Maps</a><a class="dropdown-item" href="/home/lists">Lists</a><a class="dropdown-item" href="/users/user_1/edits">Edits</a><div class="dropdown-divider"></div><a class="dropdown-item" href="/users/edit">Settings</a><a class="dropdown-item" href="/logout">Logout</a></div>
+</li>
+	<li class="nav-item dropdown">
+	  <a class="nav-link dropdown-toggle" href="#" id="navbar-header-Explore" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Explore</a>
+	  <div class="dropdown-menu"><a class="dropdown-item" href="/maps">Maps</a><a class="dropdown-item" href="/lists">Lists</a><a class="dropdown-item" href="/tags">Tags</a><a class="dropdown-item" href="/edits">Edits</a></div>
+</li>
+	<li class="nav-item dropdown">
+	  <a class="nav-link dropdown-toggle" href="#" id="navbar-header-Add" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add</a>
+	  <div class="dropdown-menu"><a class="dropdown-item" href="/entities/new">Entity</a><a class="dropdown-item" href="/lists/new">List</a><a class="dropdown-item" href="/maps/new">Map</a></div>
+</li>
+	<li class="nav-item dropdown">
+	  <a class="nav-link dropdown-toggle" href="#" id="navbar-header-Help" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Help</a>
+	  <div class="dropdown-menu"><a class="dropdown-item" href="/toolkit">Toolkit</a><a class="dropdown-item" href="/help">Help</a><a class="dropdown-item" href="/bug_report">Report a bug</a></div>
+</li>
+	<li class="nav-item dropdown">
+	  <a class="nav-link dropdown-toggle" href="#" id="navbar-header-About" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">About</a>
+	  <div class="dropdown-menu"><a class="dropdown-item" href="/about">LittleSis</a><a class="dropdown-item" href="/features">Features</a><a class="dropdown-item" href="/team">Our Team</a><a class="dropdown-item" href="https://news.littlesis.org">Blog</a><a class="dropdown-item" href="/api">Data API</a><a class="dropdown-item" href="https://github.com/public-accountability/littlesis-rails">Source Code</a><a class="dropdown-item" href="/disclaimer">Disclaimer</a><a class="dropdown-item" href="/contact">Contact Us</a><a class="dropdown-item" href="https://public-accountability.org/category/job/">Jobs</a><a class="dropdown-item" href="/donate">Donate</a></div>
+</li>
+  </ul>
+
+
+
+	
+	<div id="top_donate_link">
+	  <span><strong><a id="donate-link-button" href="/donate">Donate</a></strong></span>
+	</div>
+
+	
+<form action="/search" method="get" role="search" id="navbar-search">
+  <div class="input-group">
+    <input type="text" name="q" class="form-control" placeholder="Search LittleSis" />
+    <div class="input-group-append">
+      <button type="submit" class="btn btn-clear" style="border-color: #ccc;">
+	<span class="glyphicon glyphicon-search"></span>
+      </button>
+    </div>
+  </div>
+</form>
+
+      </div>
+
+      <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+	   <span class="navbar-toggler-icon"></span>
+	   </button> -->
+    </div>
+  </div>
+</nav>
+
+    </div>
+
     <div id="oligrapher"></div>
 
     <script>

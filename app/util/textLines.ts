@@ -3,12 +3,12 @@
    Used by <NodeLabel>
 
 */
-export default function textLines(text: string): string[] {
-  if (text.length <= 18 || text.indexOf(' ') === -1) {
+export default function textLines(text: string, perLineMax?: number): string[] {
+  perLineMax = perLineMax ? perLineMax : text.length < 40 ? 18 : 25
+
+  if (text.length <= perLineMax || text.indexOf(' ') === -1) {
     return [text]
   }
-
-  const perLineMax = text.length < 40 ? 18 : 25
 
   const words = text.split(/\s+/g)
 

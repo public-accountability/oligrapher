@@ -106,6 +106,14 @@ module.exports = function(env) {
           ]
         },
         {
+          test: /\.(woff2?|ttf|eot|otf|svg)$/,
+          use: [
+            {
+              loader: 'url-loader'
+            }
+          ]
+        },
+        {
           test: /\.scss$/,
           use: [
             {
@@ -119,15 +127,6 @@ module.exports = function(env) {
               options: {
                 implementation: require('sass')
               }
-            }
-          ]
-        },
-        {
-          test: /\.(woff2?|ttf|eot|svg)$/,
-          use:  [
-            {
-              loader: 'url-loader',
-              options: { limit: 30000 }
             }
           ]
         },

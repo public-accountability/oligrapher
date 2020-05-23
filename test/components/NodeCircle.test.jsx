@@ -10,15 +10,15 @@ describe('<NodeCircle>', function() {
     node = {
       x: 1,
       y: 2,
-      color: '#ccc'
+      color: '#ccc',
+      scale: 2
     }
-    radius = 40
-    nodeCircle  = shallow(<NodeCircle node={node} radius={radius} />)
+    nodeCircle  = shallow(<NodeCircle node={node} />)
   })
 
   it("renders circle with correct attributes", function(){
     let circle = nodeCircle.find('circle').first()
-    expect(circle.prop('r')).to.eql(40)
+    expect(circle.prop('r')).to.eql(50)
     expect(circle.prop('fill')).to.eql('#ccc')
     expect(circle.prop('cx')).to.eql(1)
     expect(circle.prop('cy')).to.eql(2)

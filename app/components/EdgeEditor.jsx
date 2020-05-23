@@ -41,7 +41,7 @@ export function MainPage({ nodes, edge, updateEdge }) {
             placeholder="pixels"
             value={edge.scale}
             min="1"
-            max="3"
+            max="2.5"
             step="0.5"
             onChange={callWithTargetValue(scale => updateEdge({ scale }))} />
           &nbsp; <input type="text" value={edge.scale} size="2" disabled></input>

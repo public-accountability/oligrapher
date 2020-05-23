@@ -1,8 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-export function NodeCircle({ node, radius }) {
-  const { x, y, color } = node
+import { NODE_RADIUS } from '../graph/node'
+
+export function NodeCircle({ node }) {
+  const { x, y, color, scale } = node
+  const radius = NODE_RADIUS * scale
 
   return (
     <circle className="node-circle draggable-node-handle"
@@ -15,8 +18,7 @@ export function NodeCircle({ node, radius }) {
 }
 
 NodeCircle.propTypes = {
-  node: PropTypes.object.isRequired,
-  radius: PropTypes.number.isRequired
+  node: PropTypes.object.isRequired
 }
 
 export default React.memo(NodeCircle)

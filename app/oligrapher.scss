@@ -566,6 +566,8 @@ header.editor-header {
     }
 
     .style-form {
+        padding-bottom: 10px;
+
         >div:nth-child(1) {
             @extend %edit_menu_title;
         }
@@ -574,14 +576,17 @@ header.editor-header {
             margin-top: 0.25em;
             display: flex;
             flex-direction: row;
+            justify-content: space-evenly;
 
-            >div {
+            >span {
                 flex-grow: 1;
 
                 svg {
                     cursor: pointer;
                     display: block;
                     margin: auto;
+                    height: 20px;
+                    width: 20px;
                 }
 
                 &:not(:last-child) {
@@ -591,12 +596,12 @@ header.editor-header {
         }
     }
 
-    a.add-node-bio-link, a.add-connections-link {
+    a.add-connections-link {
         display: block;
         font-size: 14px;
         color: $oligrapher_blue;
         font-weight: bold;
-        margin-bottom: 0.5em;
+        margin-top: 0.5em;
         text-decoration: none;
         &:hover {
             text-decoration: underline;
@@ -677,12 +682,18 @@ header.editor-header {
         }
 
     }
+
+    div.sketch-picker {
+        box-shadow: none !important;
+        padding: 8px !important;
+        padding-bottom: 0 !important;
+    }
 } /* end: .oligrapher-floating-editor */
 
 
 #oligrapher-container div.oligrapher-node-editor {
     width: 235px;
-    height: 355px;
+    height: 390px;
     padding: 10px;
     box-sizing: border-box;
 
@@ -754,19 +765,25 @@ header.editor-header {
             font-size: 10px;
         }
 
-        .edge-style-button {
+        .edge-style-buttons {
             position: relative;
-            top: -18px;
+            top: -5px;
+            padding-left: 8px;
+            padding-right: 8px;
+            color: #888;
+        }
+
+        .edge-style-button {
             font-size: 0.8em;
             background-color: #fff;
             color: #000;
             border: 1px solid #ccc;
             text-align: center;
             padding: 0px;
+            padding-top: 1px;
             width: 35px;
             font-size: 1.3em;
             line-height: 1em;
-            margin-top: 3px;
         }
       }
 
@@ -883,18 +900,30 @@ div.lock {
 
 /* NODES */
 
-.oligrapher-node {
+@font-face {
+  font-family: 'Helvetica Neue Medium';
+  font-weight: normal;
+  src: url(./fonts/HelveticaNeueLTStdMd.otf) format('opentype');
+}
+
+#oligrapher-container .oligrapher-node {
     pointer-events: auto;
 
     &:hover {
         .node-halo-circle {
             fill: $highlight_blue;
+        }
     }
-}
 
-    a.node-label:hover {
-        text-decoration: none;
+    .node-label text {
+        font-family: 'Helvetica Neue Medium';
+        fill: #222;
     }
+
+    a:hover {
+      text-decoration: none;
+    }
+
 }
 
 .react-draggable-dragging {
@@ -927,6 +956,7 @@ div.lock {
 #oligrapher-container .oligrapher-caption {
     foreignObject, textarea, div {
         box-sizing: border-box;
+        line-height: 1.2em;
     }
 }
 

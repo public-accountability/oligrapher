@@ -2,7 +2,6 @@ import React, { useState, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import { NODE_RADIUS } from '../graph/node'
 import { useSelector } from '../util/helpers'
 import DraggableComponent from './DraggableComponent'
 import NodeHalo from './NodeHalo'
@@ -13,8 +12,7 @@ import NodeLabel from './NodeLabel'
 export function Node({ id, currentlyEdited }) {
   const dispatch = useDispatch()
   const node = useSelector(state => state.graph.nodes[id])
-  const { scale, name } = node
-  const radius = NODE_RADIUS * scale
+  const { name } = node
   const [isDragging, setDragging] = useState(false)
   const showHalo = currentlyEdited || isDragging
 
@@ -46,10 +44,10 @@ export function Node({ id, currentlyEdited }) {
         onClick={clickNode}
         onDrag={dragNode}>
         <g id={"node-" + id} className="oligrapher-node" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-          <NodeHalo node={node} radius={radius} showHalo={showHalo} />
-          <NodeCircle node={node} radius={radius} />
-          <NodeImage node={node} radius={radius} />
-          <NodeLabel node={node} radius={radius} />
+          <NodeHalo node={node} showHalo={showHalo} />
+          <NodeCircle node={node} />
+          <NodeImage node={node} />
+          <NodeLabel node={node} />
         </g>
       </DraggableComponent>
     </>
