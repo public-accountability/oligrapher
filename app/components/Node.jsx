@@ -51,10 +51,10 @@ export function Node({ id, currentlyEdited }) {
           onDragOver={onMouseEnter}
           onDragLeave={onMouseLeave}
         >
+          <NodeLabel node={node} />
           <NodeHalo node={node} showHalo={showHalo} />
           <NodeCircle node={node} />
           <NodeImage node={node} />
-          <NodeLabel node={node} />
         </g>
       </DraggableComponent>
     </>
