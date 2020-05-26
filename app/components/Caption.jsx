@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 
 import DraggableComponent from './DraggableComponent'
 import CaptionTextbox from './CaptionTextbox'
-import EditCaptionTextarea from './EditCaptionTextarea'
+import CaptionEditorTextarea from './CaptionEditorTextarea'
 
 export default function Caption({ caption, currentlyEdited }) {
   const { id, x, y, width, height } = caption
@@ -29,7 +29,7 @@ export default function Caption({ caption, currentlyEdited }) {
           width={foreignObjectSize.width} 
           height={foreignObjectSize.height}>
           { currentlyEdited &&
-            <EditCaptionTextarea
+            <CaptionEditorTextarea
               caption={caption}
               updateCaption={updateCaption}
               setForeignObjectSize={setForeignObjectSize} />

@@ -21,8 +21,6 @@ export default function CaptionEditorTextarea({ caption, updateCaption, setForei
       node.focus()
     }
 
-    // onResize()
-
     // save resize on close
     return () => {
       const { width, height } = node.style
