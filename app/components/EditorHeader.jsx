@@ -10,11 +10,9 @@ export default function EditorHeader({ title }) {
   return (
     <header className="editor-header">
       <div>{title}</div>
-      <div>
-        <button onClick={closeEditor}>
-          <MdClose />
-        </button>
-      </div>
+      <button onClick={closeEditor}>
+        <MdClose />
+      </button>
     </header>
   )
 }

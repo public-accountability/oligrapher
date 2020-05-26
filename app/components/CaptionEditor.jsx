@@ -1,15 +1,28 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
+import range from 'lodash/range'
+import toString from 'lodash/toString'
 
 import { useSelector } from '../util/helpers'
 import EditorHotKeys from './EditorHotKeys'
 import EditorHeader from './EditorHeader'
 import EditorSubmitButtons from './EditorSubmitButtons'
-import EditCaptionFont from './EditCaptionFont'
-import EditCaptionWeight from './EditCaptionWeight'
-import EditCaptionSize from './EditCaptionSize'
+import CaptionEditorSelect from './CaptionEditorSelect'
 import { callWithTargetValue } from '../util/helpers'
+
+const FONT_FAMILY_OPTIONS = [
+  { value: 'Arial', label: 'Arial' },
+  { value: 'Monospace', label: 'Monospace'},
+  { value: 'Times New Roman', label: 'Times New Roman' }
+]
+
+const FONT_WEIGHT_OPTIONS = [
+  { value: '400', label: 'Normal'},
+  { value: '700', label: 'Bold' }
+]
+
+const FONT_SIZE_OPTIONS = range(8, 31, 2).map(toString).map(i => ({ value: i, label: i }))
 
 export default function CaptionEditor({ id }) {  
   const dispatch = useDispatch()
@@ -28,10 +41,10 @@ export default function CaptionEditor({ id }) {
         <main>
           <label>Font</label>
           <br />
-          <EditCaptionFont value={caption.font} onChange={onChange('font')} />
+          <CaptionEditorSelect name='font' value={caption.font} onChange={onChange} options={FONT_FAMILY_OPTIONS} width={150} />
           <br />
-          <EditCaptionWeight value={caption.weight} onChange={onChange('weight')} />
-          <EditCaptionSize value={caption.size} onChange={onChange('size')} />
+          <CaptionEditorSelect name='weight' value={caption.weight} onChange={onChange} options={FONT_WEIGHT_OPTIONS} width={100} />
+          <CaptionEditorSelect name='size' value={caption.size} onChange={onChange} options={FONT_SIZE_OPTIONS} width={55} />
         </main>
 
         <footer>

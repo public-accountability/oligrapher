@@ -37,8 +37,8 @@ export interface CaptionDefaults extends CaptionAttributes {
 }
 
 export const captionDefaults: CaptionDefaults = {
-  width: 300,
-  height: 200,
+  width: 200,
+  height: 100,
   font: 'Arial',
   size: '20',
   weight: '400'

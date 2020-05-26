@@ -6,7 +6,7 @@ import { createMuiTheme } from '@material-ui/core/styles'
 
 import { Selector } from './selectors'
 
-export function classNames(...classes: Array<string>): string {
+export function classNames(...classes: Array<string | undefined>): string {
   return classes.filter(Boolean).join(' ')
 }
 
@@ -94,6 +94,12 @@ export const muiTheme = createMuiTheme({
     MuiButton: {
       root: {
         minWidth: 'none'
+      }
+    },
+    MuiSelect: {
+      root: {
+        padding: 5,
+        paddingLeft: 10
       }
     }
   }

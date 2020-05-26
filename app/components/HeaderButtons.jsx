@@ -45,9 +45,7 @@ export default function HeaderButtons() {
 
       &nbsp;
 
-      <div>
-        <ActionMenu />
-      </div>
+      <ActionMenu />
 
       <ConfirmSave open={showSave} close={closeSave} save={confirmSaveMap} />
     </div>

@@ -38,7 +38,7 @@ export default function Settings() {
             <label>{label}</label>
             { Object.keys(OPTIONS[label]).map(key => (
               <div className="settings-option" key={key}>
-                <div>{OPTIONS[label][key]}: </div>
+                <div className="settings-option-name">{OPTIONS[label][key]}: </div>
                 <div>
                   <input type="checkbox" name={key} checked={settings[key]} onChange={onChange} />
                 </div>

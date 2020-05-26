@@ -35,23 +35,8 @@ $highlight_blue: #50a3ff;
 $node_highlight_color: $highlight_blue;
 $edge_highlight_color: $highlight_blue;
 
-html, body, #oligrapher {
+html, body, div#oligrapher {
   height: 100%;
-}
-
-html body div#oligrapher {
-  padding: 0;
-}
-
-.pending-editor-notice {
-    background-color: pink;
-    text-align: center;
-    font-size: 0.8em;
-    padding: 0.5em;
-
-    form, button {
-        display: inline-block;
-    }
 }
 
 /*
@@ -60,89 +45,78 @@ html body div#oligrapher {
    It's a flex container with two children: #oligrapher-header and #oligrapher-graph
 */
 #oligrapher-container {
-    margin: 0 auto;
-    height: 100%;
-    width: calc(100vw - 30px);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    font-family: Helvetica, Arial;
+  margin: 0 auto;
+  height: 100%;
+  width: calc(100vw - 30px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-family: Helvetica, Arial, sans-serif;
 
-    /*
-       changes to all elements of certian type
-   */
-    button, a:hover {
-        cursor: pointer;
-    }
-
-    *, ::before, ::after {
-      box-sizing: content-box;
-      font-family: Helvetica, Arial, sans-serif;
-    }
+  button, a:hover {
+    cursor: pointer;
+  }
 }
 
-#oligrapher-header {
-    display: flex;
-    flex-direction: column;
-    border-bottom: 1px solid #ccc;
+#oligrapher-container #oligrapher-header {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #ccc;
+  box-sizing: border-box;
+
+  &.oligrapher-header-expanded {
+    height: 148px;
+    transition: height 0.1s ease-out;
+  }
+
+  &.oligrapher-header-collapsed {
+    height: 52px;
+    transition: height 0.1s ease-out;
+
+    #oligrapher-header-top {
+      display: flex;
+      flex-direction: row;
+    }
+
+    h1#oligrapher-title {
+      margin-top: 7px;
+      margin-bottom: 0;
+      font-size: 30px;
+      height: 30px;
+    }
+  }
+
+  /* title and subtitle*/
+  h1 {
+    font-size: 42px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    height: 50px;
     box-sizing: border-box;
 
-    &.oligrapher-header-expanded {
-        // flex: 0 0 182px;
-        height: 148px;
-        transition: height 0.1s ease-out;
+    input {
+      font-size: 42px;
+      height: 48px; 
     }
+  }
 
-    &.oligrapher-header-collapsed {
-        // flex: 0 0 52px; 
-        height: 52px;
-        transition: height 0.1s ease-out;
+  h2 {
+    font-weight: normal;
+    font-size: 18px;
+    margin-top: 0;
+    margin-bottom: 0;
+    height: 34px;
 
-        #oligrapher-header-top {
-            display: flex;
-            flex-direction: row;
-        }
-
-        h1#oligrapher-title {
-            margin-top: 7px;
-            margin-bottom: 0;
-            font-size: 30px;
-            height: 30px;
-        }
+    input {
+      width: 500px;
+      height: 34px;
+      box-sizing: border-box;
+      font-size: 15px;
+      line-height: 1em;
     }
+  }
 
-    /* title and subtitle*/
-    h1 {
-        font-size: 42px;
-        margin-top: 10px;
-        margin-bottom: 5px;
-        height: 50px;
-        box-sizing: border-box;
-
-        input {
-            font-size: 42px;
-            height: 48px; 
-        }
-    }
-
-    h2 {
-        font-weight: normal;
-        font-size: 18px;
-        margin-top: 0;
-        margin-bottom: 0;
-        height: 34px;
-
-        input {
-            width: 500px;
-            height: 34px;
-            box-sizing: border-box;
-            font-size: 15px;
-            line-height: 1em;
-        }
-    }
-}
-
-#oligrapher-header-toggler {
+  #oligrapher-header-toggler {
     margin: 0 auto;
     text-align: center;
     width: 20px;
@@ -151,138 +125,60 @@ html body div#oligrapher {
     line-height: 12px;
     border: 1px solid #ccc;
     border-bottom: 0;
-}
+  }
 
-#oligrapher-header-bottom {
+  #oligrapher-header-bottom {
     display: flex;
     flex-direction: row;
 
     #oligrapher-header-left-wrapper {
-        flex-grow: 2;
-        padding-right: 1.5em;
+      flex-grow: 2;
+      padding-right: 1.5em;
 
-        @media (min-width: 600px) {
-            padding-right: 0;
-            max-width: 70%;
+      @media (min-width: 600px) {
+        padding-right: 0;
+        max-width: 70%;
+      }
+
+      @media (min-width: 900px) {
+        padding-right: 0;
+        max-width: 60%;
+      }
+
+      #oligrapher-attribution {
+        font-size: 0.9em;
+        line-height: 1.2em;
+
+        a {
+          color: $link_color;
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: underline;
+          }
         }
-
-        @media (min-width: 900px) {
-            padding-right: 0;
-            max-width: 60%;
-        }
-
-        #oligrapher-attribution {
-            font-size: 0.9em;
-            line-height: 1.2em;
-
-            a {
-                color: $link_color;
-                text-decoration: none;
-                &:hover {
-                    text-decoration: underline;
-                }
-            }
-        }
+      }
     }
 
     #oligrapher-header-right-wrapper {
-        flex-grow: 0;
-        margin-right: 0.5em;
-        margin-left: auto; /* This pushes the flex item to the right */
-        align-self: flex-end;
+      flex-grow: 0;
+      margin-right: 0.5em;
+      margin-left: auto; /* This pushes the flex item to the right */
+      align-self: flex-end;
 
-        .oligrapher-header-buttons  {
-          margin-top: 8px;
+      .oligrapher-header-buttons  {
+        margin-top: 8px;
 
-          >div {
-                display: inline-block;
-                margin-right: 0.5em;
-                cursor: pointer;
-            }
-
-            button[name="save"] {
-                border-radius: 3px;
-                border: 0;
-                padding: 0.3em;
-                margin-right: 0.2em;
-                background: $header_save_button_bg_color;
-                color: $header_save_button_font_color;
-                line-height: normal;
-                font-size: 14.5px;
-            }
-
-            .header-action-menu-wrapper:focus {
-                outline: none;
-            }
-
-            div.header-action-menu {
-                background-color: #FFF;
-                position: absolute;
-                top: 15px;
-                left: -30px;
-                z-index: 2;
-
-                ul {
-                    border: 2px solid $oligrapher_blue;
-                    padding: 0.5em;
-                    margin: 0;
-                }
-
-                li {
-                    font-size: 0.8em;
-                    padding-top: 0.2em;
-                    padding-bottom: 0.2em;
-                    list-style: none;
-
-                    &:hover {
-                        background-color: $oligrapher_gray;
-                    }
-                }
-                
-                hr {
-                    margin-top: 0.3em;
-                    margin-bottom: 0.3em;
-                }
-            }
-
+        .header-action-menu-wrapper {
+          display: inline-block;
         }
 
-
-        #oligrapher-header-menu-wrapper {
-            ul {
-                list-style-type: none;
-                padding: 0;
-                text-transform: uppercase;
-                font-size: 10px;
-                font-weight: bold;
-                margin: 0;
-
-                li {
-                    line-height: 2em;
-                    a {
-                        text-decoration: none;
-                        color: $header_menu_item_color;
-
-                        &:hover {
-                            color: $header_menu_item_color_hover;
-                        }
-                    }
-                }
-            }
+        #toggle-action-menu:focus {
+          outline: none;
         }
+      }
     }
-}
-
-#oligrapher-graph {
-    height: 100%;
-    width: 100%;
-}
-
-%absolute_top_left {
-    position: absolute;
-    /* position, top, and left places the editor ontop of the SVG element */
-    top: 0;
-    left: 0;
+  }
 }
 
 %box_shadow {
@@ -291,610 +187,603 @@ html body div#oligrapher {
   box-shadow: 0px 0px 20px 2px #eee;
 }
 
-#oligrapher-graph-container {
-    flex: 1 2 auto;
-    overflow: hidden;
-    position: relative;
+#oligrapher-container #oligrapher-graph-container {
+  flex: 1 2 auto;
+  overflow: hidden;
+  position: relative;
 
-    #oligrapher-graph-svg {
-        z-index: 1;
-        height: 100%;
+  #oligrapher-graph-svg {
+    z-index: 1;
+    height: 100%;
+  }
+
+  .oligrapher-graph-editor {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    z-index: 10;
+    width: 100%;
+    pointer-events: none;
+    line-height: 1.2em;
+  }
+
+  .text-tool {
+    cursor: text;
+  }
+
+  #oligrapher-zoomcontrol {
+    z-index: 1;
+    position: absolute;
+    top: 1em;
+    right: 0;
+    border: 1px solid #ccc;
+    @extend %box_shadow;
+
+    div {
+      display: flex;
+      flex-direction: column;
     }
 
-    .oligrapher-graph-editor {
-        @extend %absolute_top_left;
-        z-index: 10;
-        width: 100%;
-        pointer-events: none;
-        line-height: 1.2em;
+    button {
+      padding: 8px;
+      border: 0;
+      background-color: white;
+      color: gray;
+      height: 30px;
+      width: 30px;
+      border-bottom: 1px solid #eee;
+      line-height: 1em;
+      font-size: 1em;
+      box-sizing: border-box;
+
+      &:focus {
+        outline: none;
+      }
+
+      &::-moz-focus-inner {
+        border-style: none;
+      }
+
+      svg {
+        height: 14px;
+        width: 14px;
+        vertical-align: baseline;
+      }
     }
-
-    .text-tool {
-        cursor: text;
-    }
-
-    #oligrapher-zoomcontrol {
-        z-index: 1;
-        position: absolute;
-        top: 1em;
-        right: 0;
-        border: 1px solid #ccc;
-        @extend %box_shadow;
-
-        div {
-            display: flex;
-            flex-direction: column;
-        }
-
-        button {
-            padding: 8px;
-            border: 0;
-            background-color: white;
-            color: gray;
-            height: 30px;
-            width: 30px;
-            border-bottom: 1px solid #eee;
-            line-height: 1em;
-            font-size: 1em;
-            box-sizing: border-box;
-
-            svg {
-              height: 14px;
-              width: 14px;
-              vertical-align: baseline;
-            }
-        }
-
-        button:focus {
-            outline: none;
-        }
-
-        button::-moz-focus-inner {
-            border-style: none;
-        }
-
-    }
+  }
 }
 
 /* EDITOR */
 
-%editing_menu {
-    margin-top: 1em;
-    margin-left: 1em;
-}
+#oligrapher-container .oligrapher-graph-editor .editor-menu {
+  z-index: 100;
+  border: 1px solid #ccc;
+  background-color: white;
+  margin-top: 1em;
+  float: left;
+  width: 40px;
+  padding: 10px;
+  box-sizing: content-box;
+  @extend %box_shadow;
 
-.editor-menu {
-    z-index: 100;
-    border: 1px solid #ccc;
-    background-color: white;
-    margin-top: 1em;
-    float: left;
-    width: 40px;
-    padding: 10px;
-    box-sizing: content-box;
-    @extend %box_shadow;
+  .editor-menu-item {
+    pointer-events: auto;
+    margin: 0;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    text-align: center;
+    color: gray;
 
-    .editor-menu-item {
-        pointer-events: auto;
-        margin: 0;
-        margin-top: 0.5em;
-        margin-bottom: 0.5em;
-        text-align: center;
-        color: gray;
-
-        svg {
-            width: 30px;
-            height: 30px;
-            vertical-align: baseline;
-        }
-
-        &:hover {
-            cursor: pointer;
-        }
+    svg {
+      width: 30px;
+      height: 30px;
+      vertical-align: baseline;
     }
-}
 
-#oligrapher-undo-redo {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  #oligrapher-undo-redo {
     pointer-events: auto;
     float: left;
     width: 40px;
 
     button {
-        background-color: white;
-        border: 0px;
-        float: left;
-        width: 20px;
-        box-sizing: border-box;
-        padding: 2px;
-        height: 20px;
-        color: gray;
+      background-color: white;
+      border: 0px;
+      float: left;
+      width: 20px;
+      box-sizing: border-box;
+      padding: 2px;
+      height: 20px;
+      color: gray;
 
-        &:disabled {
-          color: #ccc;
-          cursor: not-allowed;
-        }
+      &:disabled {
+        color: #ccc;
+        cursor: not-allowed;
+      }
     }
+  }
 }
 
 %toolbox_header {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 5px;
-    line-height: 1.5em;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  line-height: 1.5em;
 
-    button {
-        float: right;
-        border: none;
-        margin-left: 0.5em;
-        margin-top: 0;
-        background-color: #FFF;
-    }
+  button {
+    float: right;
+    border: none;
+    margin-left: 0.5em;
+    margin-top: 0;
+    background-color: #FFF;
+  }
 }
 
-.oligrapher-toolbox {
-    @extend %editing_menu;
-    position: absolute;
-    top: 0;
-    left: 60px;
-    pointer-events: auto;
-    border: 2px solid $highlight_blue;
-    padding: 10px;
-    width: $toolbox_width;
-    background-color: white;
+#oligrapher-container .oligrapher-graph-editor .oligrapher-toolbox {
+  margin-top: 1em;
+  margin-left: 1em;
+  position: absolute;
+  top: 0;
+  left: 60px;
+  pointer-events: auto;
+  border: 2px solid $highlight_blue;
+  padding: 10px;
+  width: $toolbox_width;
+  background-color: white;
 
-    header {
-        @extend %toolbox_header;
+  header {
+    @extend %toolbox_header;
+  }
+
+  .node-tool {
+    font-size: 14px;
+
+    input {
+      display: block;
+      margin-bottom: 10px;
     }
-
-    .node-tool {
-        input {
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        a {
-            cursor: pointer;
-            color: $oligrapher_blue;
-            font-weight: bold;
-        }
-
-        hr { 
-            border: 0; 
-            height: 1px;
-            background: $oligrapher_font_gray;
-        }
-    }
-}
-
-.entity-search-result {
-    font-size: 15px;
-    margin-top: 10px;
 
     a {
-        cursor: pointer;
-        color: $oligrapher_blue;
-        font-weight: bold;
-        font-size: 1.1em;
+      cursor: pointer;
+      color: $oligrapher_blue;
+      font-weight: bold;
     }
 
-    .entity-search-description {
-        font-size: 0.8em;
-        color: $oligrapher_dark_gray;
-        line-height: 1em;
+    hr { 
+      border: 0; 
+      height: 1px;
+      background: $oligrapher_font_gray;
     }
-
-    a.entity-external-link {
-        margin-left: 5px;
-        font-size: 0.8em;
-        font-weight: normal;
-        color: $oligrapher_dark_gray;
-    }
+  }
 }
 
-%edit_menu_title {
-    margin-bottom: 0.25em;
-    color: $oligrapher_dark_gray;
-    font-size: 12px;
+#oligrapher-container .entity-search-result {
+  font-size: 15px;
+  margin-top: 10px;
+
+  a {
+    cursor: pointer;
+    color: $oligrapher_blue;
     font-weight: bold;
+    font-size: 1.1em;
+  }
+
+  .entity-search-description {
+    font-size: 0.8em;
+    color: $oligrapher_dark_gray;
+    line-height: 6px;
+  }
+
+  a.entity-external-link {
+    margin-left: 5px;
+    font-size: 0.8em;
+    font-weight: normal;
+    color: $oligrapher_dark_gray;
+  }
 }
 
-header.editor-header {
-    >div {
-        display: inline-block;
-        cursor: grab;
-    }
 
-    >div:nth-child(2) {
-        float: right;
+/* FLOATING EDITORS */
 
-        button {
-            border: none;
-            margin-left: 0.5em;
-            background-color: #FFF;
-        }
-    }
+%editor_label {
+  margin-bottom: 0.25em;
+  color: $oligrapher_dark_gray;
+  font-size: 12px;
+  font-weight: bold;
 }
 
-.oligrapher-floating-editor {
-    z-index: 20;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    background-color: white;
-    border: 3px solid $highlight_blue;
-    line-height: 1em;
+#oligrapher-container .oligrapher-floating-editor {
+  z-index: 20;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-color: white;
+  border: 3px solid $highlight_blue;
+  line-height: 1em;
 
-    header {
-        font-size: 18px;
-        font-weight: bold;
-        margin: 0 auto;
-        text-align: center;
+  header.editor-header {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 5px auto;
+    text-align: center;
+
+    div {
+      display: inline-block;
+      cursor: grab;
+    }
+    
+    button {
+      display: inline-block;
+      margin-left: 10px;
+      padding: 0;
+      border: none;
+      background-color: #FFF;
+    }
+  }
+
+  main {
+    margin-top: 0.5em;
+
+    label {
+      @extend %editor_label;
+    }
+  }
+
+  footer {
+    margin-top: 0.75em;
+  }
+
+  form {
+    label {
+      @extend %editor_label;
+      display: block;
     }
 
-    main {
-        margin-top: 0.5em;
+    input {
+      padding: 0.25em;
+      margin-bottom: 0.8em;
+      border: 0.8px solid $oligrapher_font_gray;
+      font-size: 1em;
+      line-height: 1em;
+    }
+  }
 
-        label {
-            @extend %edit_menu_title;
-        }
+  hr {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    border: 1px solid;
+  }
+
+  .editor-page-buttons {
+    padding-bottom: 10px;
+
+    label {
+      @extend %editor_label;
     }
 
-    footer {
-        margin-top: 0.75em;
+    div {
+      margin-top: 0.25em;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+
+      span {
+        flex-grow: 1;
+
+        svg {
+          cursor: pointer;
+          display: block;
+          margin: auto;
+          height: 20px;
+          width: 20px;
+        }
+
+        &:not(:last-child) {
+          border-right: 1px gray solid;
+        }
+      }
+    }
+  }
+
+  div.editor-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    button {
+      border: 0;
+      border-radius: 2px;
+      height: 2em;
+      color: white;
     }
 
-    form {
-        label {
-            @extend %edit_menu_title;
-            display: block;
-        }
+    button[name="delete"] {
+      background-color: $delete_red;
 
-        input {
-            padding: 0.25em;
-            margin-bottom: 0.8em;
-            border: 0.8px solid $oligrapher_font_gray;
-            font-size: 1em;
-            line-height: 1em;
-
-        }
+      &:hover {
+        background-color: color.scale($delete_red, $lightness: 30%);
+      }
     }
 
-    hr {
-        margin-top: 0.5em;
-        margin-bottom: 0.5em;
-        border: 1px solid;
+    button[name="back"] {
+      background-color: $oligrapher_dark_gray;
+    }
+  }
+
+  .sizepicker {
+    display: flex;
+    flex-direction: row;
+    margin-left: 2em;
+    margin-bottom: 1em;
+    font-size: 10px;
+    text-align: center;
+
+    .circle-wrapper {
+      height: 50px;
+      position: relative;
+      margin-bottom: 0.5em;
     }
 
-    .style-form {
-        padding-bottom: 10px;
+    .circle {
+      background-color: #ccc;
+      border-radius: 50%;
+      position: absolute;
+      bottom: 0;
+      cursor: pointer;
 
-        >div:nth-child(1) {
-            @extend %edit_menu_title;
-        }
-
-        >div:nth-child(2) {
-            margin-top: 0.25em;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-evenly;
-
-            >span {
-                flex-grow: 1;
-
-                svg {
-                    cursor: pointer;
-                    display: block;
-                    margin: auto;
-                    height: 20px;
-                    width: 20px;
-                }
-
-                &:not(:last-child) {
-                    border-right: 1px gray solid;
-                }
-            }
-        }
+      &:hover {
+        border: 1px solid chartreuse;
+      }
     }
 
-    a.add-connections-link {
-        display: block;
-        font-size: 14px;
-        color: $oligrapher_blue;
-        font-weight: bold;
-        margin-top: 0.5em;
-        text-decoration: none;
-        &:hover {
-            text-decoration: underline;
-        }
+    .current {
+      border: 1px solid $highlight_blue;
     }
 
-    div.editor-submit-buttons {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-
-        button {
-            border: 0;
-            border-radius: 2px;
-            height: 2em;
-            color: white;
-
-        }
-
-        button[name="delete"] {
-            background-color: $delete_red;
-
-            &:hover {
-                background-color: color.scale($delete_red, $lightness: 30%);
-            }
-        }
-
-        button[name="back"] {
-            background-color: $oligrapher_dark_gray;
-
-            /* &:hover { */
-            /*     background-color: scale($oligrapher_dark_gray, -30%); */
-            /* } */
-        }
-
-        button[name="update"] {
-            background-color: $highlight_blue;
-
-            /* &:hover { */
-            /*     background-color: scale($oligrapher_blue, -30%); */
-            /* } */
-        }
-
+    > div {
+      margin-right: 1em;
     }
+  }
 
-    .sizepicker {
-        display: flex;
-        flex-direction: row;
-        margin-left: 2em;
-        margin-bottom: 1em;
-        font-size: 10px;
-        text-align: center;
-
-        .circle-wrapper {
-            height: 50px;
-            position: relative;
-            margin-bottom: 0.5em;
-        }
-
-        .circle {
-            background-color: #ccc;
-            border-radius: 50%;
-            position: absolute;
-            bottom: 0;
-            cursor: pointer;
-
-            &:hover {
-                border: 1px solid chartreuse;
-            }
-        }
-
-        .current {
-            border: 1px solid $highlight_blue;
-        }
-
-        > div {
-            margin-right: 1em;
-        }
-
-    }
-
-    div.sketch-picker {
-        box-shadow: none !important;
-        padding: 8px !important;
-        padding-bottom: 0 !important;
-    }
+  div.sketch-picker {
+    box-shadow: none !important;
+    padding: 8px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
 } /* end: .oligrapher-floating-editor */
 
 
 #oligrapher-container div.oligrapher-node-editor {
-    width: 235px;
-    height: 390px;
-    padding: 10px;
-    box-sizing: border-box;
+  width: 235px;
+  height: 390px;
+  padding: 10px;
+  box-sizing: border-box;
 
-    input {
-        width: 200px;
+  input {
+    width: 200px;
+  }
+
+  a.add-connections-link {
+    display: block;
+    font-size: 14px;
+    color: $oligrapher_blue;
+    font-weight: bold;
+    margin-top: 0.5em;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
     }
+  }
 }
 
 /* add connections tool */
 #oligrapher-container div.oligrapher-add-connections {
-    width: 235px;
-    height: 355px;
-    padding: 10px;
-    box-sizing: border-box;
-}
+  width: 235px;
+  height: 355px;
+  padding: 10px;
+  box-sizing: border-box;
 
-.add-connections-category {
+  .add-connections-category {
     margin-top: 10px;
-}
+  }  
 
-.oligrapher-add-connections .entity-search-results {
+  .entity-search-results {
     max-height: 285px;
     overflow-y: scroll;
-
-    .result-loading-svg {
-        margin-left: 3px;
-        stroke: $oligrapher_blue;
-    }
-
-    div.add-connections-entity {
-        font-size: 12px;
-        border: 1px solid #fff;
-
-        div {
-            display: inline-block;
-            padding: 2px;
-        }
-
-        div.entity-blurb {
-            pointer-events: none;
-        }
-
-        &:hover {
-            cursor: pointer;
-            border: 1px solid black;
-        }
-    }
+  }
 }
 
+
 #oligrapher-container div.oligrapher-edge-editor {
-    width: 325px;
-    height: 415px;
-    padding: 10px;
-    box-sizing: border-box;
+  width: 325px;
+  height: 415px;
+  padding: 10px;
+  box-sizing: border-box;
 
+  input {
+    width: 280px;
+  }
+
+  .edit-edge-style {
+    width: 100%;
+    padding-top: 10px;
+
+    div {
+      display: inline-block;
+    }
+
+    small {
+      font-size: 10px;
+    }
+
+    .edge-style-buttons {
+      position: relative;
+      top: -5px;
+      padding-left: 8px;
+      padding-right: 8px;
+      color: #888;
+    }
+
+    .edge-style-button {
+      font-size: 0.8em;
+      background-color: #fff;
+      color: #000;
+      border: 1px solid #ccc;
+      text-align: center;
+      padding: 0px;
+      padding-top: 1px;
+      width: 35px;
+      font-size: 1.3em;
+      line-height: 1em;
+    }
+  }
+
+  .node-label {
+    font-size: 0.6em;
+  }
+
+  .edit-edge-scale {
     input {
-      width: 280px;
+      margin: 0;
+      width: 30px;
     }
 
-    .edit-edge-style {
-        width: 100%;
-        padding-top: 10px;
-
-        div {
-            display: inline-block;
-        }
-
-        small {
-            font-size: 10px;
-        }
-
-        .edge-style-buttons {
-            position: relative;
-            top: -5px;
-            padding-left: 8px;
-            padding-right: 8px;
-            color: #888;
-        }
-
-        .edge-style-button {
-            font-size: 0.8em;
-            background-color: #fff;
-            color: #000;
-            border: 1px solid #ccc;
-            text-align: center;
-            padding: 0px;
-            padding-top: 1px;
-            width: 35px;
-            font-size: 1.3em;
-            line-height: 1em;
-        }
-      }
-
-    .node-label {
-        font-size: 0.6em;
-     }
-
-    .edit-edge-scale {
-        input {
-            margin: 0;
-            width: 30px;
-        }
-
-        input[type='range'] {
-            position: relative;
-            top: 8px;
-            width: 100px;
-        }
+    input[type='range'] {
+      position: relative;
+      top: 8px;
+      width: 100px;
     }
+  }
 }
 
 #oligrapher-container div.oligrapher-caption-editor {
-    width: 230px;
-    height: 165px;
-    padding: 10px;
+  width: 230px;
+  height: 175px;
+  padding: 10px;
+  box-sizing: border-box;
+
+  select {
+    margin-top: 5px;
+    margin-right: 5px;
+    background-color: white;
+    font-size: 0.8em;
+    border: 1px solid $oligrapher_gray;
+  }
+}
+
+#oligrapher-container .oligrapher-graph-editor .oligrapher-settings {
+  width: 225px;
+
+  div.settings-option  {
+    font-size: 0.8em;
+    display: flex;
+
+    div.settings-option-name {
+      flex-grow: 4;
+    }
+  }
+
+  label {
+    color: $oligrapher_font_gray;
+    font-size: 1em;
+    font-weight: bold;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    display: block;
+  }
+}
+
+#oligrapher-container .oligrapher-graph-editor .organize-map {
+  margin-top: 10px;
+
+  a {
+    display: inline-block;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    height: 42px;
+    width: 42px;
+    padding: 5px;
     box-sizing: border-box;
+
+    &:hover {
+      background-color: #eee;
+    }
+  }
+
+  svg {
+    height: 30px;
+    width: 30px;
+    color: gray;
+  }
 }
 
-.oligrapher-settings {
-    width: 225px;
-
-    div.settings-option  {
-        font-size: 0.8em;
-        display: flex;
-
-        >div:nth-child(1) {
-            flex-grow: 4;
-        }
-
-    }
-
-    label {
-        color: $oligrapher_font_gray;
-        font-size: 1em;
-        font-weight: bold;
-        margin-top: 0.5em;
-        margin-bottom: 0.5em;
-        display: block;
-    }
-}
 
 #oligrapher-container div.oligrapher-editors {
-    font-size: 14px;
+  font-size: 14px;
 
-    div.oligrapher-editors-input {
-        margin-top: 10px;
-        margin-bottom: 10px;
+  div.oligrapher-editors-input {
+    margin-top: 10px;
+    margin-bottom: 10px;
 
-        input {
-            width: 150px;
-            line-height: 1em;
-            height: 28px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            padding: 5px;
-            box-sizing: border-box;
-        }
-
-        button {
-            width: 40px;
-            height: 28px;
-            padding: 0;
-            box-sizing: border-box;
-            border: 0;
-            border-radius: 3px;
-            background-color: $oligrapher_blue;
-            color: white;
-        }
+    input {
+      width: 150px;
+      line-height: 1em;
+      height: 28px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      padding: 5px;
+      box-sizing: border-box;
     }
 
-    div.oligrapher-editors-list {
-        span {
-            color: gray;
-            font-size: 0.8em;
-        }
+    button {
+      width: 40px;
+      height: 28px;
+      padding: 0;
+      box-sizing: border-box;
+      border: 0;
+      border-radius: 3px;
+      background-color: $oligrapher_blue;
+      color: white;
     }
+  }
+
+  div.oligrapher-editors-list {
+    span {
+      color: gray;
+      font-size: 0.8em;
+    }
+  }
 }
 
 #oligrapher-help {
-    width: 500px;
-    height: 500px;
-    padding: 2em;
-    position: absolute;
-    right: 1em;
-    top: 1em;
-    pointer-events: auto;
+  width: 500px;
+  height: 500px;
+  padding: 2em;
+  position: absolute;
+  right: 1em;
+  top: 1em;
+  pointer-events: auto;
 
-    header {
-        @extend %toolbox_header;
-    }   
+  header {
+    @extend %toolbox_header;
+  }   
 }
 
 div.lock {
-    z-index: 20;
-    position: absolute;
-    top: 20%;
-    left: 20%;
-    width: 25em;
-    background-color: white;
-    border: 2px solid $oligrapher_blue;
-    padding: 10px;
+  z-index: 20;
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 25em;
+  background-color: white;
+  border: 2px solid $oligrapher_blue;
+  padding: 10px;
 }
 
 
@@ -906,138 +795,99 @@ div.lock {
   src: url(./fonts/HelveticaNeueLTStdMd.otf) format('opentype');
 }
 
-#oligrapher-container .oligrapher-node {
-    pointer-events: auto;
+#oligrapher-container #oligrapher-graph-container .oligrapher-node {
+  pointer-events: auto;
 
-    &.react-draggable-dragging {
-      pointer-events: none;
+  &.react-draggable-dragging {
+    pointer-events: none;
+  }
+
+  &:hover {
+    .node-halo-circle {
+      fill: $highlight_blue;
     }
+  }
 
-    &:hover {
-        .node-halo-circle {
-            fill: $highlight_blue;
-        }
-    }
+  .node-label text {
+    font-family: 'Helvetica Neue Medium';
+    fill: #222;
+  }
 
-    .node-label text {
-        font-family: 'Helvetica Neue Medium';
-        fill: #222;
-    }
-
-    a:hover {
-      text-decoration: none;
-    }
-
-}
-
-.react-draggable-dragging {
-    cursor: grabbing;
+  a:hover {
+    text-decoration: none;
+  }
 }
 
 /* EDGES */
 
-.oligrapher-edge {
+#oligrapher-container #oligrapher-graph-container .oligrapher-edge {
 
-    .edge-handle {
-        stroke: #fff;
-        stroke-width: 25;
-        stroke-opacity: 0;
-        fill: none;
+  .edge-handle {
+    stroke: #fff;
+    stroke-width: 25;
+    stroke-opacity: 0;
+    fill: none;
 
-        &:hover {
-            cursor: pointer
-        }
+    &:hover {
+      cursor: pointer
     }
+  }
 
-    .edge-highlight {
-        stroke: $highlight_blue;
-    }
+  .edge-highlight {
+    stroke: $highlight_blue;
+  }
 }
 
 
 /* captions */
 
-#oligrapher-container .oligrapher-caption {
-    foreignObject, textarea, div {
-        box-sizing: border-box;
-        line-height: 1.2em;
-    }
-}
+#oligrapher-container #oligrapher-graph-container .oligrapher-caption {
+  foreignObject, textarea, div {
+    box-sizing: border-box;
+    line-height: 1.2em;
+  }
 
-.caption-text {
-    border: 1px solid #ccc;
-}
+  .caption-text {
+    border: 1px solid white;
+  }  
 
-.edit-caption-textarea {
+  .edit-caption-textarea {
+    resize: both;
     border: 1px solid $highlight_blue;
     overflow-y: scroll;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none;  /* Internet Explorer 10+ */
-}
-.edit-caption-textarea::-webkit-scrollbar { /* WebKit */
+  }
+
+  .edit-caption-textarea::-webkit-scrollbar { /* WebKit */
     width: 0;
     height: 0;
-}
+  }
 
-.caption-text, .edit-caption-textarea {
-    border-top-width: 1px;
+  .caption-text, .edit-caption-textarea {
     margin: 0;
     box-sizing: border-box;
     padding: 15px;
-    background-color: #f8f8f8;
-}
-
-.oligrapher-caption-editor select {
-    margin-top: 5px;
-    margin-right: 5px;
     background-color: white;
-    font-size: 0.8em;
-    border: 1px solid $oligrapher_gray;
-}
-
-.organize-map {
-    margin-top: 10px;
-
-    a {
-        display: inline-block;
-        border: 1px solid #ddd;
-        border-radius: 3px;
-        height: 30px;
-        width: 30px;
-        padding: 5px;
-
-        &:hover {
-            background-color: #eee;
-        }
-    }
-
-    svg {
-        height: 30px;
-        width: 30px;
-        color: gray;
-    }
+  }
 }
 
 /* user message */
 
-.oligrapher-user-message {
-    position: absolute;
-    right: 80px;
-    top: 20px;
-    padding: 10px;
-    max-width: 300px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    background-color: white;
-    @extend %box_shadow;
+#oligrapher-container .oligrapher-user-message {
+  position: absolute;
+  right: 80px;
+  top: 20px;
+  padding: 10px;
+  max-width: 300px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  background-color: white;
+  @extend %box_shadow;
 }
 
-.nofocus:focus {
-    outline: none;
-}
+/* etc */
 
-.modal-buttons {
-    text-align: center;
-    margin-top: 20px;
-    font-family: Helvetica, Arial, sans-serif;
+#oligrapher-container #oligrapher-graph-container .react-draggable-dragging {
+  cursor: grabbing;
 }

@@ -28,7 +28,7 @@ const Y_SIZE = {
   node: 390,
   connections: 355,
   edge: 415,
-  caption: 165
+  caption: 175
 }
 
 export const set = (display: DisplayState, type: FloatingEditorType | null = null, id: string | null = null): void => {

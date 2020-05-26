@@ -4,8 +4,8 @@ import { MdPhotoSizeSelectSmall, MdFormatColorFill } from "react-icons/md"
 
 export default function NodeStyleForm({ setPage }) {
   return (
-    <div className="style-form">
-      <div>Style</div>
+    <div className="editor-page-buttons">
+      <label>Style</label>
       <div>
         <span className="entity-size-icon" onClick={() => setPage('size')}>
           <MdPhotoSizeSelectSmall />

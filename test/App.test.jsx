@@ -190,7 +190,7 @@ describe('Oligrapher', function() {
     expect(removeSpaces(input2.value)).to.equal(removeSpaces(edge2.textContent))
   })
 
-  it('caption editor opens and switches', function() {
+  it('caption editor opens and switches', async function() {
     const caption = find('.oligrapher-caption')
     // see comment for node editor click
     fireEvent.mouseDown(caption)
@@ -198,9 +198,14 @@ describe('Oligrapher', function() {
     // editor should have opened
     const editor = findAll('.oligrapher-caption-editor')
     expect(editor.length).to.equal(1)
-    // change the font size
-    const select = find('.edit-caption-size')
-    fireEvent.change(select, { target: { value: '30' } })
+    // "click" the size menu
+    const select = find('#caption-editor-select-size')
+    fireEvent.mouseDown(select)
+    fireEvent.mouseUp(select)
+    await waitFor(() => expect(findAll('#caption-editor-select-menu', document.body).length).to.equal(1))
+    // click "30" option
+    const option = Array.from(findAll('#caption-editor-select-menu ul li', document.body)).find(li => li.textContent === '30')
+    fireEvent.click(option)
     // change caption text
     const textarea = find('.oligrapher-caption textarea')
     fireEvent.change(textarea, { target: { value: 'terse commentary' } })
