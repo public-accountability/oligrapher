@@ -16,7 +16,7 @@ export default function DraggableComponent(props) {
   const onDrag = useCallback((evt, data) => {
     setDragging(true)
     const { x, y } = data
-    props.onDrag({ x, y })
+    return props.onDrag({ x, y })
   }, [props])
 
   const onStop = useCallback((evt, data) => {
@@ -59,11 +59,13 @@ DraggableComponent.propTypes = {
   handle: PropTypes.string.isRequired,
   position: PropTypes.object,
   disabled: PropTypes.bool,
+  dragDisabled: PropTypes.bool,
   enableUserSelectHack: PropTypes.bool
 }
 
 DraggableComponent.defaultProps = {
   position: { x: 0, y: 0 },
   onDrag: noop,
-  onClick: noop
+  onClick: noop,
+  onStart: noop
 }

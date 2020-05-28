@@ -15,27 +15,28 @@ export function Node({ id, currentlyEdited, selected }) {
   const { name } = node
   const isSelecting = useSelector(state => state.display.selection.isSelecting)
   const selectedNodeIds = useSelector(state => state.display.selection.node)
+  const isMultipleSelection = selected && selectedNodeIds.length > 1
   const [isDragging, setDragging] = useState(false)
   const showHalo = selected || currentlyEdited || isDragging
 
   const moveNode = useCallback(deltas => {
     setDragging(false)
-    if (selected && selectedNodeIds.length > 1) {
-      dispatch({ type: 'MOVE_NODES', id, nodeIds: selectedNodeIds, deltas })
+    if (isMultipleSelection) {
+      return false
     } else {
       dispatch({ type: 'MOVE_NODE', id, deltas })
     }
-  }, [dispatch, id, selected, selectedNodeIds])
+  }, [dispatch, id, isMultipleSelection])
 
   // the id in the payload, while otherwise redundant, allows redux-undo 
   // to group drag actions into a single action
   const dragNode = useCallback(deltas => {
-    if (selected && selectedNodeIds.length > 1) {
-      dispatch({ type: 'DRAG_NODES', id, nodeIds: selectedNodeIds, deltas })
+    if (isMultipleSelection) {
+      return false
     } else {
       dispatch({ type: 'DRAG_NODE', id, deltas })
     }
-  }, [dispatch, id, selected, selectedNodeIds])
+  }, [dispatch, id, isMultipleSelection])
 
   const startDrag = useCallback(() => setDragging(true), [])
   const clickNode = useCallback(() => {
@@ -50,28 +51,26 @@ export function Node({ id, currentlyEdited, selected }) {
   const onMouseLeave = useCallback(() => dispatch({ type: 'MOUSE_LEFT_NODE' }), [dispatch])
 
   return (
-    <>
-      <DraggableComponent
-        handle=".draggable-node-handle"
-        onStart={startDrag}
-        onStop={moveNode}
-        onClick={clickNode}
-        onDrag={dragNode}>
-        <g 
-          id={"node-" + id} 
-          className="oligrapher-node" 
-          onMouseEnter={onMouseEnter} 
-          onMouseLeave={onMouseLeave}
-          onDragOver={onMouseEnter}
-          onDragLeave={onMouseLeave}
-        >
-          <NodeLabel node={node} />
-          <NodeHalo node={node} showHalo={showHalo} />
-          <NodeCircle node={node} />
-          <NodeImage node={node} />
-        </g>
-      </DraggableComponent>
-    </>
+    <DraggableComponent
+      handle=".draggable-node-handle"
+      onStart={startDrag}
+      onStop={moveNode}
+      onClick={clickNode}
+      onDrag={dragNode}>
+      <g 
+        id={"node-" + id} 
+        className="oligrapher-node" 
+        onMouseEnter={onMouseEnter} 
+        onMouseLeave={onMouseLeave}
+        onDragOver={onMouseEnter}
+        onDragLeave={onMouseLeave}
+      >
+        <NodeLabel node={node} />
+        <NodeHalo node={node} showHalo={showHalo} />
+        <NodeCircle node={node} />
+        <NodeImage node={node} />
+      </g>
+    </DraggableComponent>
   )
 }
 

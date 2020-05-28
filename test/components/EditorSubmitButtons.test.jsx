@@ -22,14 +22,14 @@ describe('<EditorSubmitButtons>', function() {
     })
   
     it("renders a submit button which calls the submit handler", function() {
-      let button = submitButtons.find("button[name='update']")
+      let button = submitButtons.find("button").filterWhere(n => n.text() === 'Apply')
       expect(button).to.have.lengthOf(1)
       button.simulate("click")
       expect(submitter.calledOnce).to.be.true
     })
   
     it("renders a delete button which calls the delete handler", function() {
-      let button = submitButtons.find("button[name='delete']")
+      let button = submitButtons.find("button").filterWhere(n => n.text() === 'Delete')
       expect(button).to.have.lengthOf(1)
       button.simulate("click")
       expect(deleter.calledOnce).to.be.true
@@ -51,7 +51,7 @@ describe('<EditorSubmitButtons>', function() {
     })
 
     it("renders a back button which calls setPage", function() {
-      let button = submitButtons.find("button[name='back']")
+      let button = submitButtons.find("button").filterWhere(n => n.text() === 'Back')
       expect(button).to.have.lengthOf(1)
       button.simulate("click")
       expect(pageSetter.calledOnce).to.be.true

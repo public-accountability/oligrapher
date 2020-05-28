@@ -240,17 +240,17 @@ describe('Oligrapher', function() {
     expect(findAll('.oligrapher-settings').length).to.equal(0)
   })
 
-  it('deletes node, edge, caption', function() {
+  it('deletes node, edge, caption', async function() {
     // count nodes
     const nodeCount = findAll('.oligrapher-node').length
     // "click" node
     const nodeHandle = find('.draggable-node-handle')
     fireEvent.mouseDown(nodeHandle)
     fireEvent.mouseUp(nodeHandle, { bubbles: false }) 
-    // "click" delete
-    fireEvent.click(find('.oligrapher-node-editor button[name="delete"]'))
+    // click delete
+    fireEvent.click(find('.oligrapher-node-editor footer button'))
     // should be one fewer node
-    expect(findAll('.oligrapher-node').length).to.equal(nodeCount - 1)
+    await waitFor(() => expect(findAll('.oligrapher-node').length).to.equal(nodeCount - 1))
 
     // count edges
     const edgeCount = findAll('.oligrapher-edge').length
@@ -258,8 +258,8 @@ describe('Oligrapher', function() {
     // "click" edge
     fireEvent.mouseDown(edgeHandle)
     fireEvent.mouseUp(edgeHandle, { bubbles: false })
-    // "click" delete
-    fireEvent.click(find('.oligrapher-edge-editor button[name="delete"]'))
+    // click delete
+    fireEvent.click(find('.oligrapher-edge-editor footer button'))
     // should be one fewer edge
     expect(findAll('.oligrapher-edge').length).to.equal(edgeCount - 1)
 
@@ -269,8 +269,8 @@ describe('Oligrapher', function() {
     // "click" caption
     fireEvent.mouseDown(caption)
     fireEvent.mouseUp(caption, { bubbles: false })
-    // "click" delete
-    fireEvent.click(find('.oligrapher-caption-editor button[name="delete"]'))
+    // click delete
+    fireEvent.click(find('.oligrapher-caption-editor footer button'))
     // should be one fewer caption
     expect(findAll('.oligrapher-caption').length).to.equal(captionCount - 1)
   })

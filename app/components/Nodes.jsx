@@ -2,23 +2,40 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
+import NodeSelection from './NodeSelection'
 import Node from './Node'
 import FloatingEditor from '../util/floatingEditor'
 import { getSelection } from '../util/selection'
 
 export function Nodes({ nodes, editedNodeId, draggedNodeId, selectedNodeIds }) {
-  // reorder so that dragged node is painted first
-  const nonDraggedNodeIds = Object.keys(nodes).filter(id => id !== draggedNodeId)
-  const nodeIds = nonDraggedNodeIds.concat(draggedNodeId ? [draggedNodeId] : [])
+  let unselectedNodeIds = Object.keys(nodes).filter(id => !selectedNodeIds.includes(id))
+
+  if (unselectedNodeIds.includes(draggedNodeId)) {
+    // reorder so that dragged node is painted first
+    let nonDraggedNodeIds = unselectedNodeIds.filter(id => id !== draggedNodeId)
+    unselectedNodeIds = nonDraggedNodeIds.concat([draggedNodeId])
+  }
 
   return (
     <g className="nodes">
-      { nodeIds.map(id => (
+      { selectedNodeIds.length > 0 && 
+        <NodeSelection nodeIds={selectedNodeIds}>
+          { selectedNodeIds.map(id => (
+            <Node 
+              key={id} 
+              id={id} 
+              currentlyEdited={id === editedNodeId} 
+              selected={true} />
+          )) }
+        </NodeSelection>
+      }
+
+      { unselectedNodeIds.map(id => (
         <Node 
           key={id} 
           id={id} 
           currentlyEdited={id === editedNodeId} 
-          selected={selectedNodeIds.includes(id)} />
+          selected={false} />
       )) }
     </g>
   )

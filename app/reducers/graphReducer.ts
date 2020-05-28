@@ -36,12 +36,7 @@ export const reducer = produce((graph: Graph, action: any): void => {
     dragNodeEdges(graph, action.id, action.deltas)
     return
   case 'DRAG_NODES':
-    dragNodeEdges(graph, action.id, action.deltas)    
-    // action.nodeIds.filter((id: string) => id !== action.id).forEach((id: string) => {
-    //   moveNode(graph, id, action.deltas)
-    //   dragNodeEdges(graph, id, action.deltas)    
-    // })
-
+    action.nodeIds.forEach((id: string) => dragNodeEdges(graph, id, action.deltas))
     return
   case 'MOVE_NODE':
     draggedNode = graph.nodes[action.id]
@@ -62,9 +57,6 @@ export const reducer = produce((graph: Graph, action: any): void => {
 
     return
   case 'MOVE_NODES':
-    action.nodeIds.filter((id: string) => id !== action.id).forEach((id: string) => {
-      dragNodeEdges(graph, id, action.deltas)    
-    })
     action.nodeIds.forEach((id: string) => moveNode(graph, id, action.deltas))
     return
   case 'ADD_EDGE':

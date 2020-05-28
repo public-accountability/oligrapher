@@ -37,6 +37,7 @@ export default produce((display: DisplayState, action: any): void => {
     return
   case 'REMOVE_NODE':
     FloatingEditor.clear(display)
+    swapSelection(display, 'node', action.id)
     return
   case 'CLICK_NODE':
     clearSelection(display)
@@ -203,6 +204,9 @@ export default produce((display: DisplayState, action: any): void => {
       Boolean(action.singleSelect)
     )
     FloatingEditor.clear(display)
+    return
+  case 'CLEAR_SELECTION':
+    clearSelection(display)
     return
   default:
     return

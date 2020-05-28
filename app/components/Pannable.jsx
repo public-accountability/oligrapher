@@ -7,15 +7,17 @@ import DraggableComponent from './DraggableComponent'
 
 /* Allows for the maps to be panned */
 /* Also allows for adding new caption by clicking background */
-export function Pannable({ children, offset, zoom, isTextTool, addCaption, setOffset }) {
+export function Pannable({ children, offset, zoom, isTextTool, addCaption, setOffset, clearSelection }) {
   const className = "pannable" + (isTextTool ? " text-tool" : "")
 
   const onClick = useCallback((event) => {
     if (isTextTool) {
       // supply caption id so that editor can be toggled
       addCaption(event, zoom)
+    } else {
+      clearSelection()
     }
-  }, [isTextTool, zoom, addCaption])
+  }, [isTextTool, zoom, addCaption, clearSelection])
 
   return (
     <DraggableComponent 
@@ -44,7 +46,8 @@ Pannable.propTypes = {
   zoom: PropTypes.number.isRequired,
   isTextTool: PropTypes.bool.isRequired,
   addCaption: PropTypes.func.isRequired,
-  setOffset: PropTypes.func.isRequired
+  setOffset: PropTypes.func.isRequired,
+  clearSelection: PropTypes.func.isRequired
 }
 
 Pannable.defaultProps = {
@@ -64,7 +67,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     addCaption: (event, zoom) => dispatch({ type: 'ADD_CAPTION', id: generate(), event, zoom }),
-    setOffset: (offset) => dispatch({ type: 'SET_OFFSET', offset })
+    setOffset: (offset) => dispatch({ type: 'SET_OFFSET', offset }),
+    clearSelection: () => dispatch({ type: 'CLEAR_SELECTION' })
   }
 }
 

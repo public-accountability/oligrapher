@@ -40,7 +40,7 @@ describe('<EdgeEditor>', function() {
   })
 
   it("renders a delete button", function() {
-    let button = editEdgeMenu.find("button[name='delete']")
+    let button = editEdgeMenu.find("footer button")
     expect(button).to.have.lengthOf(1)
     button.simulate("click")
     expect(remover.calledOnce).to.be.true

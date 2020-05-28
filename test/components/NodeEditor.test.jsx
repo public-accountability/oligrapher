@@ -53,7 +53,7 @@ describe('<NodeEditor>', function() {
   })
 
   it("shows delete button which removes node", function() {
-    let button = nodeEditor.find("button[name='delete']")
+    let button = nodeEditor.find("footer button")
     expect(button).to.have.lengthOf(1)
     button.simulate("click")
     expect(mockDispatch.callCount).to.equal(1)

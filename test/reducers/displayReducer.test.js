@@ -85,7 +85,7 @@ describe('displayReducer', function() {
     let state, action, nextState
 
     beforeEach(function() {
-      state = { floatingEditor: { type: 'node', id: "r2d2" } }
+      state = { floatingEditor: { type: 'node', id: "r2d2" }, selection: { node: [] } }
       action = { type: 'REMOVE_NODE', id: "r2d2" }
       nextState = reducer(state, action)  
     })

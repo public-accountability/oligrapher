@@ -219,7 +219,8 @@ export function removeNode(graph: Graph, nodeId: string): Graph {
 }
 
 export function updateNode(graph: Graph, nodeId: string, attributes: NodeAttributes): Graph {
-  merge(graph.nodes[nodeId], attributes)
+  // assign instead of merge so that edgeIds can be updated with fewer ids
+  Object.assign(graph.nodes[nodeId], attributes)
 
   // If scale is changed, update any associated edges
   if (attributes.scale) {

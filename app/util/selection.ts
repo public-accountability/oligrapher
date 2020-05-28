@@ -10,8 +10,6 @@ export function swapSelection(display: DisplayState, type: SelectionType, id: st
     ids.splice(index, 1)
   }
 
-  console.log(ids)
-
   display.selection[type] = ids
 }
 
