@@ -5,7 +5,6 @@ import { useHotkeys } from 'react-hotkeys-hook'
 export default function Selectable({ children }: SelectableProps) {
   const dispatch = useDispatch()
   const setSelecting = useCallback(isSelecting => {
-    console.debug("isSelecting:", isSelecting)
     dispatch({ type: 'SET_SELECTING', isSelecting })
   }, [dispatch])
 

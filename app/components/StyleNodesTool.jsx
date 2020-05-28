@@ -31,7 +31,7 @@ export default function StyleNodesMenu() {
 
   const handleSubmit = useCallback(() => {
     const attributes = pick({ image, color, scale }, page)
-    dispatch({ type: 'UPDATE_NODES',  nodeIds, attributes: attributes })
+    dispatch({ type: 'UPDATE_NODES',  nodeIds, attributes })
   }, [dispatch, nodeIds, image, color, scale, page])
 
   return (
@@ -42,7 +42,7 @@ export default function StyleNodesMenu() {
             <EditNodeColorPage color={color} onChange={setColor} colors={colors} />
           }
 
-          { page === 'size' && 
+          { page === 'scale' && 
             <SizePicker scale={scale} onChange={setScale} />
           }
 
@@ -62,7 +62,7 @@ export default function StyleNodesMenu() {
               <MdFormatColorFill />
             </span>
 
-            <span title="Size" className="entity-size-icon" onClick={() => setPage('size')}>
+            <span title="Size" className="entity-size-icon" onClick={() => setPage('scale')}>
               <MdPhotoSizeSelectSmall />
             </span>
 

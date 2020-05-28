@@ -9,6 +9,7 @@ import { createOligrapherStore } from '../app/util/store'
 import stateInitializer from '../app/util/stateInitalizer'
 import * as littlesis3 from '../app/datasources/littlesis3'
 import { removeSpaces } from './testHelpers'
+import { NODE_RADIUS } from '../app/graph/node'
 
 const sandbox = sinon.createSandbox()
 
@@ -492,5 +493,39 @@ describe('Oligrapher', function() {
     fireEvent.click(link)
     // share modal should appear
     expect(findAll('#oligrapher-share', document.body).length).to.equal(1)
+  })
+
+  it('selects multiple nodes and styles them', function() {
+    // shouldn't be any selected nodes
+    expect(findAll('.selected-nodes .oligrapher-node').length).to.equal(0)
+    // find first five nodes
+    const handles = Array.from(findAll('.draggable-node-handle')).slice(0, 5)
+    // hold shift key
+    fireEvent.keyDown(document.body, { key: 'Shift', code: 'ShiftLeft', keyCode: 16 })
+    // "click" nodes
+    handles.forEach(handle => {
+      fireEvent.mouseDown(handle)
+      fireEvent.mouseUp(handle, { bubbles: false })
+    })
+    // release shift key
+    fireEvent.keyUp(document.body, { key: 'Shift', code: 'ShiftLeft', keyCode: 16 })
+    // five nodes should be selected
+    expect(findAll('.selected-nodes .oligrapher-node').length).to.equal(5)
+    // click style editor icon
+    fireEvent.click(find('.editor-menu .editor-style-item'))
+    // style editor should be open
+    expect(findAll('.oligrapher-style-nodes').length).to.equal(1)
+    // style editor should indicate 5 nodes selected
+    expect(find('.oligrapher-style-nodes-count').textContent).to.equal('Nodes selected: 5')
+    // click size icon in style editor
+    fireEvent.click(find('.oligrapher-style-nodes .entity-size-icon'))
+    // click largest circle
+    const circles = findAll('.oligrapher-style-nodes .sizepicker .circle')
+    fireEvent.click(circles[circles.length - 1])
+    // click apply button
+    fireEvent.click(find('.oligrapher-style-nodes footer button'))
+    // selected nodes should be 3x normal size
+    const nodeSizes = Array.from(findAll('.selected-nodes .node-circle')).map(circle => circle.getAttribute('r'))
+    expect(nodeSizes).to.eql(new Array(5).fill(String(NODE_RADIUS * 3)))
   })
 })
