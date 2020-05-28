@@ -54,6 +54,15 @@ export type FloatingEditorType = "node" | "connections" | "edge" | "caption"
 
 export type AsyncStatus = "REQUESTED" | "SUCCESS" | "FAILED" | null
 
+export type SelectionType = "node" | "edge" | "caption"
+
+export interface Selection {
+  node: string[],
+  edge: string[],
+  caption: string[],
+  isSelecting: boolean
+}
+
 export interface DisplayState {
   zoom: number,
   svgZoom: number,
@@ -73,7 +82,8 @@ export interface DisplayState {
   saveMapStatus: AsyncStatus,
   cloneMapStatus: AsyncStatus,
   deleteMapStatus: AsyncStatus,
-  userMessage: string | null
+  userMessage: string | null,
+  selection: Selection
 }
 
 export interface SettingsState {
@@ -155,7 +165,13 @@ const defaultState: State = {
     saveMapStatus: null,
     cloneMapStatus: null,
     deleteMapStatus: null,
-    userMessage: null
+    userMessage: null,
+    selection: {
+      node: [],
+      edge: [],
+      caption: [],
+      isSelecting: false
+    }  
   },
 
   // Global settings

@@ -6,11 +6,11 @@ const sizes = [1, 1.5, 2, 3]
 const pixelMultiplier = 15
 
 // number, function, number ---> element
-function circle(currentScale, scaleChoice, updateNode) {
+function circle(currentScale, scaleChoice, onChange) {
   const pixelSize = (pixelMultiplier * scaleChoice).toString() + 'px'
   const wrapperStyle = { width: pixelSize }
   const circleStyle = { width: pixelSize, height: pixelSize }
-  const onClick = () => updateNode({ scale: scaleChoice })
+  const onClick = () => onChange(scaleChoice)
   const text = scaleChoice.toString() + 'x'
   const circleClass = classNames('circle', scaleChoice === currentScale ? 'current' : false)
 
@@ -24,15 +24,15 @@ function circle(currentScale, scaleChoice, updateNode) {
   )
 }
 
-export default function SizePicker({ scale, updateNode }) {
+export default function SizePicker({ scale, onChange }) {
   return (
     <div className="sizepicker">
-      { sizes.map(size => circle(scale, size, updateNode)) }
+      { sizes.map(size => circle(scale, size, onChange)) }
     </div>
   )
 }
 
 SizePicker.propTypes = {
   scale: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  updateNode: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired
 }

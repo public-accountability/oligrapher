@@ -4,6 +4,7 @@ import { useSelector } from '../util/helpers'
 import EditorMenu from './EditorMenu'
 import NodeTool from './NodeTool'
 import TextTool from './TextTool'
+import StyleNodesTool from './StyleNodesTool'
 import OrganizeTool from './OrganizeTool'
 import Settings from './Settings'
 import Editors from './Editors'
@@ -30,6 +31,7 @@ export default function Editor() {
       <EditorMenu />
       { tool === 'node' && <NodeTool /> }
       { tool === 'text' && <TextTool /> }
+      { tool === 'style' && <StyleNodesTool /> }
       { tool === 'organize' && <OrganizeTool /> }
       { tool === 'settings' && <Settings /> }
       { tool === 'editors' && <Editors /> }

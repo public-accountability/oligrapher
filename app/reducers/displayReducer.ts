@@ -1,6 +1,7 @@
 import produce from 'immer'
 
 import FloatingEditor, { toggleEditor } from '../util/floatingEditor'
+import { swapSelection, clearSelection } from '../util/selection'
 import { isLittleSisId } from '../util/helpers'
 import { DisplayState } from '../util/defaultState'
 
@@ -38,7 +39,13 @@ export default produce((display: DisplayState, action: any): void => {
     FloatingEditor.clear(display)
     return
   case 'CLICK_NODE':
+    clearSelection(display)
     toggleEditor(display, 'node', action.id)
+
+    // select node if editing it
+    if (FloatingEditor.getId(display, 'node') === action.id) {
+      swapSelection(display, 'node', action.id)
+    }
     return
   case 'DRAG_NODE':
     FloatingEditor.clear(display)
@@ -184,6 +191,18 @@ export default produce((display: DisplayState, action: any): void => {
     return
   case 'REMOVE_EDITOR_RESET':
     display.userMessage = null
+    return
+  case 'SET_SELECTING':
+    display.selection.isSelecting = action.isSelecting
+    return
+  case 'SWAP_NODE_SELECTION':
+    swapSelection(
+      display,
+      'node',
+      action.nodeId,
+      Boolean(action.singleSelect)
+    )
+    FloatingEditor.clear(display)
     return
   default:
     return

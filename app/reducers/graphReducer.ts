@@ -16,7 +16,7 @@ import { GraphState } from '../util/defaultState'
 
 let draggedNode, draggedOverNode, newEdge
 
-export const reducer = produce((graph: Graph, action: any) => {
+export const reducer = produce((graph: Graph, action: any): void => {
   switch(action.type) {
   case 'ADD_NODE':
     addNode(graph, action.node, true)
@@ -33,7 +33,15 @@ export const reducer = produce((graph: Graph, action: any) => {
     removeNode(graph, action.id)
     return
   case 'DRAG_NODE':
-    dragNodeEdges(graph, action.node.id, action.deltas)
+    dragNodeEdges(graph, action.id, action.deltas)
+    return
+  case 'DRAG_NODES':
+    dragNodeEdges(graph, action.id, action.deltas)    
+    // action.nodeIds.filter((id: string) => id !== action.id).forEach((id: string) => {
+    //   moveNode(graph, id, action.deltas)
+    //   dragNodeEdges(graph, id, action.deltas)    
+    // })
+
     return
   case 'MOVE_NODE':
     draggedNode = graph.nodes[action.id]
@@ -52,6 +60,12 @@ export const reducer = produce((graph: Graph, action: any) => {
 
     dragNodeEdges(graph, action.id, { x: 0, y: 0 })
 
+    return
+  case 'MOVE_NODES':
+    action.nodeIds.filter((id: string) => id !== action.id).forEach((id: string) => {
+      dragNodeEdges(graph, id, action.deltas)    
+    })
+    action.nodeIds.forEach((id: string) => moveNode(graph, id, action.deltas))
     return
   case 'ADD_EDGE':
     addEdgeIfNodes(graph, action.edge)
@@ -91,9 +105,12 @@ export const reducer = produce((graph: Graph, action: any) => {
 export const UNDO_ACTIONS = [
   'ADD_NODE',
   'UPDATE_NODE',
+  'UPDATE_NODES',
   'REMOVE_NODE',
   'DRAG_NODE',
+  'DRAG_NODES',
   'MOVE_NODE',
+  'MOVE_NODES',
   'ADD_EDGE',
   'ADD_EDGES',
   'UPDATE_EDGE',
@@ -116,12 +133,18 @@ const undoableReducer = undoable(reducer, {
       type = generate()
     }
 
-    // consider all consecutive drags and moves for the same node as one action
+    // consider all consecutive drags and moves for the same node(s) as one action
     if (type === 'DRAG_NODE') {
       type = 'MOVE_NODE'
     }
 
-    return type + (action.id ? ("-" + String(action.id)) : "")
+    if (type == 'DRAG_NODES') {
+      type = 'MOVE_NODES'
+    }
+
+    let ids = action.nodeIds ? action.nodeIds.join(',') : action.id
+
+    return type + (ids ? ("-" + String(ids)) : "")
   },
   debug: false,
   ignoreInitialState: true,

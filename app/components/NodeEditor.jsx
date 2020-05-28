@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 
@@ -67,14 +67,16 @@ MainPage.propTypes = {
 }
 
 export default function NodeEditor({ id }) {
-  // possible pages: main, color, size, bio
+  // possible pages: main, color, size
   const [page, setPage] = useState('main')
-
   const node = useSelector(state => state.graph.nodes[id])
+  const colors = useSelector(state => Object.values(state.graph.nodes).map(node => node.color))
 
   const dispatch = useDispatch()
-  const removeNode = () => dispatch({ type: 'REMOVE_NODE', id })
-  const updateNode = (attributes) => dispatch({ type: 'UPDATE_NODE', id, attributes })
+  const removeNode = useCallback(() => dispatch({ type: 'REMOVE_NODE', id }), [dispatch, id])
+  const updateNode = useCallback(attributes => dispatch({ type: 'UPDATE_NODE', id, attributes }), [dispatch, id])
+  const handleColorChange = useCallback(color => updateNode({ color }), [updateNode])
+  const handleScaleChange = useCallback(scale => updateNode({ scale }), [updateNode])
   const openAddConnections = () => dispatch({ type: 'OPEN_ADD_CONNECTIONS', id })
 
   return (
@@ -83,8 +85,8 @@ export default function NodeEditor({ id }) {
         <EditorHeader title="Customize Node" />
         <main>
           { page === 'main' && <MainPage node={node} setPage={setPage} updateNode={updateNode} openAddConnections={openAddConnections} /> }
-          { page === 'color' && <EditNodeColorPage color={node.color} updateNode={updateNode}/> }
-          { page === 'size' && <SizePicker scale={node.scale} updateNode={updateNode} /> }
+          { page === 'color' && <EditNodeColorPage color={node.color} onChange={handleColorChange} colors={colors} /> }
+          { page === 'size' && <SizePicker scale={node.scale} onChange={handleScaleChange} /> }
         </main>
 
         <footer>

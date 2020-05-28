@@ -7,11 +7,11 @@ export default function NodeStyleForm({ setPage }) {
     <div className="editor-page-buttons">
       <label>Style</label>
       <div>
-        <span className="entity-size-icon" onClick={() => setPage('size')}>
+        <span title="Size" className="entity-size-icon" onClick={() => setPage('size')}>
           <MdPhotoSizeSelectSmall />
         </span>
 
-        <span className="entity-color-icon" onClick={() => setPage('color')}>
+        <span title="Color" className="entity-color-icon" onClick={() => setPage('color')}>
           <MdFormatColorFill />
         </span>
       </div>

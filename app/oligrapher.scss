@@ -125,6 +125,7 @@ html, body, div#oligrapher {
     line-height: 12px;
     border: 1px solid #ccc;
     border-bottom: 0;
+    cursor: pointer;
   }
 
   #oligrapher-header-bottom {
@@ -256,6 +257,13 @@ html, body, div#oligrapher {
 
 /* EDITOR */
 
+%editor_label {
+  margin-bottom: 0.25em;
+  color: $oligrapher_dark_gray;
+  font-size: 12px;
+  font-weight: bold;
+}
+
 #oligrapher-container .oligrapher-graph-editor .editor-menu {
   z-index: 100;
   border: 1px solid #ccc;
@@ -279,6 +287,14 @@ html, body, div#oligrapher {
       width: 30px;
       height: 30px;
       vertical-align: baseline;
+    }
+
+    &.disabled {
+      color: #ccc;
+      
+      &:hover { 
+        cursor: not-allowed;
+      }
     }
 
     &:hover {
@@ -387,15 +403,118 @@ html, body, div#oligrapher {
   }
 }
 
+/* COMMON NODE EDITING */
+
+#oligrapher-container .oligrapher-graph-editor, #oligrapher-container .oligrapher-floating-editor {
+  .editor-page-buttons {
+    padding-bottom: 10px;
+
+    label {
+      @extend %editor_label;
+    }
+
+    div {
+      margin-top: 0.25em;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+
+      span {
+        flex-grow: 1;
+
+        svg {
+          cursor: pointer;
+          display: block;
+          margin: auto;
+          height: 20px;
+          width: 20px;
+        }
+
+        &:not(:last-child) {
+          border-right: 1px gray solid;
+        }
+      }
+    }
+  }
+
+  .sizepicker {
+    display: flex;
+    flex-direction: row;
+    margin-left: 1em;
+    margin-bottom: 1em;
+    font-size: 10px;
+    text-align: center;
+
+    .circle-wrapper {
+      height: 50px;
+      position: relative;
+      margin-bottom: 0.5em;
+    }
+
+    .circle {
+      background-color: #ccc;
+      border-radius: 50%;
+      position: absolute;
+      bottom: 0;
+      cursor: pointer;
+
+      &:hover {
+        border: 1px solid chartreuse;
+      }
+    }
+
+    .current {
+      border: 1px solid $highlight_blue;
+    }
+
+    > div {
+      margin-right: 1em;
+    }
+  }
+
+  div.sketch-picker {
+    box-shadow: none !important;
+    padding: 8px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+
+    >div:nth-child(1) {
+      height: 75px;
+      padding-bottom: 0 !important;
+    }
+
+    input {
+      box-sizing: content-box;
+    }
+  }
+
+  div.editor-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    button {
+      border: 0;
+      border-radius: 2px;
+      height: 2em;
+      color: white;
+    }
+
+    button[name="delete"] {
+      background-color: $delete_red;
+
+      &:hover {
+        background-color: color.scale($delete_red, $lightness: 30%);
+      }
+    }
+
+    button[name="back"] {
+      background-color: $oligrapher_dark_gray;
+    }
+  }
+}
 
 /* FLOATING EDITORS */
-
-%editor_label {
-  margin-bottom: 0.25em;
-  color: $oligrapher_dark_gray;
-  font-size: 12px;
-  font-weight: bold;
-}
 
 #oligrapher-container .oligrapher-floating-editor {
   z-index: 20;
@@ -458,110 +577,12 @@ html, body, div#oligrapher {
     margin-bottom: 0.5em;
     border: 1px solid;
   }
-
-  .editor-page-buttons {
-    padding-bottom: 10px;
-
-    label {
-      @extend %editor_label;
-    }
-
-    div {
-      margin-top: 0.25em;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-evenly;
-
-      span {
-        flex-grow: 1;
-
-        svg {
-          cursor: pointer;
-          display: block;
-          margin: auto;
-          height: 20px;
-          width: 20px;
-        }
-
-        &:not(:last-child) {
-          border-right: 1px gray solid;
-        }
-      }
-    }
-  }
-
-  div.editor-buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-
-    button {
-      border: 0;
-      border-radius: 2px;
-      height: 2em;
-      color: white;
-    }
-
-    button[name="delete"] {
-      background-color: $delete_red;
-
-      &:hover {
-        background-color: color.scale($delete_red, $lightness: 30%);
-      }
-    }
-
-    button[name="back"] {
-      background-color: $oligrapher_dark_gray;
-    }
-  }
-
-  .sizepicker {
-    display: flex;
-    flex-direction: row;
-    margin-left: 2em;
-    margin-bottom: 1em;
-    font-size: 10px;
-    text-align: center;
-
-    .circle-wrapper {
-      height: 50px;
-      position: relative;
-      margin-bottom: 0.5em;
-    }
-
-    .circle {
-      background-color: #ccc;
-      border-radius: 50%;
-      position: absolute;
-      bottom: 0;
-      cursor: pointer;
-
-      &:hover {
-        border: 1px solid chartreuse;
-      }
-    }
-
-    .current {
-      border: 1px solid $highlight_blue;
-    }
-
-    > div {
-      margin-right: 1em;
-    }
-  }
-
-  div.sketch-picker {
-    box-shadow: none !important;
-    padding: 8px !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-  }
 } /* end: .oligrapher-floating-editor */
 
 
 #oligrapher-container div.oligrapher-node-editor {
   width: 235px;
-  height: 390px;
+  height: 370px;
   padding: 10px;
   box-sizing: border-box;
 
@@ -590,11 +611,12 @@ html, body, div#oligrapher {
   box-sizing: border-box;
 
   .add-connections-category {
-    margin-top: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
   }  
 
   .entity-search-results {
-    max-height: 285px;
+    max-height: 260px;
     overflow-y: scroll;
   }
 }
@@ -674,6 +696,37 @@ html, body, div#oligrapher {
     background-color: white;
     font-size: 0.8em;
     border: 1px solid $oligrapher_gray;
+  }
+}
+
+#oligrapher-container .oligrapher-graph-editor .oligrapher-style-nodes {
+  margin-top: 0.5em;
+
+  label {
+    @extend %editor_label;
+  }
+
+  main {
+    height: 230px;
+  }
+
+  div.editor-page-buttons {
+    padding-bottom: 0;
+  }
+
+  hr {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+
+  footer {
+    margin-top: 1em;
+  }
+
+  .oligrapher-style-nodes-count {
+    font-style: italic;
+    display: inline-block;
+    margin-left: 1em;
   }
 }
 
@@ -802,11 +855,11 @@ div.lock {
     pointer-events: none;
   }
 
-  &:hover {
-    .node-halo-circle {
-      fill: $highlight_blue;
-    }
-  }
+  // &:hover {
+  //   .node-halo-circle {
+  //     fill: $highlight_blue;
+  //   }
+  // }
 
   .node-label text {
     font-family: 'Helvetica Neue Medium';

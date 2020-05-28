@@ -8,6 +8,7 @@ import { userIsOwnerSelector } from '../util/selectors'
 const MENU_ITEMS = [
   'node',
   'text',
+  'style',
   'organize',
   'settings',
   'editors',
@@ -16,7 +17,7 @@ const MENU_ITEMS = [
 
 export default function EditorMenu() {
   const isOwner = useSelector(userIsOwnerSelector)
-  const items = isOwner ? MENU_ITEMS : MENU_ITEMS.filter(i => !['editors', 'settings'].includes(i))
+  let items = isOwner ? MENU_ITEMS : MENU_ITEMS.filter(i => !['editors', 'settings'].includes(i))
 
   return (
     <div className="editor-menu">

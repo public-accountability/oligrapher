@@ -1,11 +1,14 @@
 import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
+import { useHotkeys } from 'react-hotkeys-hook'
 import { MdClose } from 'react-icons/md'
 
 //  This isn't a box of tools. It's a box with one tool
 export default function Toolbox({ title, children }: ToolboxProps) {
   const dispatch = useDispatch()
-  const closeTool = useCallback(() => dispatch({ type: 'CLOSE_TOOL' }), [dispatch])
+  const closeTool: () => void = useCallback(() => dispatch({ type: 'CLOSE_TOOL' }), [dispatch])
+
+  useHotkeys('escape', closeTool, { filter: () => true })
 
   return (
     <div className="oligrapher-toolbox">

@@ -1,7 +1,7 @@
 import React, { useCallback} from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { FaRegCircle, FaBezierCurve, FaFlipboard, FaTv, FaRegEdit, FaRegTrashAlt } from "react-icons/fa"
+import { FaRegCircle, FaBezierCurve, FaRegEdit } from "react-icons/fa"
 import { FiHelpCircle, FiUsers } from 'react-icons/fi'
 import { GoTextSize, GoGear } from 'react-icons/go'
 
@@ -13,6 +13,10 @@ const MENU = {
   "text": {
     icon: <GoTextSize />,
     title: 'Add Text'
+  },
+  "style": {
+    icon: <FaRegEdit />,
+    title: 'Style Selected Nodes'
   },
   "organize": {
     icon: <FaBezierCurve />,

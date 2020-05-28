@@ -37,7 +37,7 @@ export default function HeaderButtons() {
         disabled={isSaving} 
         disableElevation={true} 
         variant="contained" 
-        size="small" 
+        size="small"
         color="primary"
       >
         Save

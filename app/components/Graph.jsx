@@ -10,6 +10,7 @@ import Markers from './Markers'
 import Filters from './Filters'
 import Pannable from './Pannable'
 import Zoomable from './Zoomable'
+import Selectable from './Selectable'
 
 /*
   The core component that displays the graph
@@ -47,11 +48,11 @@ export function Graph(props) {
           <Pannable>
             {/* don't show graph until svgSize has been set */}
             { svgSize ? (
-              <>
+              <Selectable>
                 <Edges />
                 <Nodes />
                 <Captions />
-              </>
+              </Selectable>
             ) : <></> }
           </Pannable>
         </Zoomable>

@@ -9,29 +9,43 @@ import NodeCircle from './NodeCircle'
 import NodeImage from './NodeImage'
 import NodeLabel from './NodeLabel'
 
-export function Node({ id, currentlyEdited }) {
+export function Node({ id, currentlyEdited, selected }) {
   const dispatch = useDispatch()
   const node = useSelector(state => state.graph.nodes[id])
   const { name } = node
+  const isSelecting = useSelector(state => state.display.selection.isSelecting)
+  const selectedNodeIds = useSelector(state => state.display.selection.node)
   const [isDragging, setDragging] = useState(false)
-  const showHalo = currentlyEdited || isDragging
+  const showHalo = selected || currentlyEdited || isDragging
 
   const moveNode = useCallback(deltas => {
     setDragging(false)
-    dispatch({ type: 'MOVE_NODE', id, deltas })
-  }, [dispatch, id])
+    if (selected && selectedNodeIds.length > 1) {
+      dispatch({ type: 'MOVE_NODES', id, nodeIds: selectedNodeIds, deltas })
+    } else {
+      dispatch({ type: 'MOVE_NODE', id, deltas })
+    }
+  }, [dispatch, id, selected, selectedNodeIds])
 
   // the id in the payload, while otherwise redundant, allows redux-undo 
   // to group drag actions into a single action
   const dragNode = useCallback(deltas => {
-    dispatch({ type: 'DRAG_NODE', id, node, deltas })
-  }, [dispatch, id, node])
+    if (selected && selectedNodeIds.length > 1) {
+      dispatch({ type: 'DRAG_NODES', id, nodeIds: selectedNodeIds, deltas })
+    } else {
+      dispatch({ type: 'DRAG_NODE', id, deltas })
+    }
+  }, [dispatch, id, selected, selectedNodeIds])
 
   const startDrag = useCallback(() => setDragging(true), [])
   const clickNode = useCallback(() => {
     setDragging(false)
-    dispatch({ type: 'CLICK_NODE', id })
-  }, [dispatch, id])
+    if (isSelecting) {
+      dispatch({ type: 'SWAP_NODE_SELECTION', nodeId: id })
+    } else {
+      dispatch({ type: 'CLICK_NODE', id })
+    }
+  }, [dispatch, isSelecting, id])
   const onMouseEnter = useCallback(() => dispatch({ type: 'MOUSE_ENTERED_NODE', name }), [dispatch, name])
   const onMouseLeave = useCallback(() => dispatch({ type: 'MOUSE_LEFT_NODE' }), [dispatch])
 
@@ -63,7 +77,8 @@ export function Node({ id, currentlyEdited }) {
 
 Node.propTypes = {
   id: PropTypes.string.isRequired,
-  currentlyEdited: PropTypes.bool.isRequired
+  currentlyEdited: PropTypes.bool.isRequired,
+  selected: PropTypes.bool.isRequired
 }
 
 export default React.memo(Node)
