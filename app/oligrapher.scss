@@ -400,6 +400,9 @@ html, body, div#oligrapher {
     font-size: 0.8em;
     font-weight: normal;
     color: $oligrapher_dark_gray;
+    line-height: 1.1em;
+    position: relative;
+    top: -2px;
   }
 }
 
