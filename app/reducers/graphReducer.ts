@@ -19,7 +19,7 @@ let draggedNode, draggedOverNode, newEdge
 export const reducer = produce((graph: Graph, action: any): void => {
   switch(action.type) {
   case 'ADD_NODE':
-    addNode(graph, action.node, true)
+    addNode(graph, action.node, action.position || true)
     return
   case 'UPDATE_NODE':
     updateNode(graph, action.id, action.attributes)

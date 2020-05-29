@@ -193,13 +193,17 @@ export function newGraph(attributes: GraphAttributes = {}): Graph {
   return merge({}, DEFAULT_GRAPH, attributes)
 }
 
-export function addNode(graph: Graph, attributes: NodeAttributes, findPosition: boolean = false): Graph {
+export function addNode(graph: Graph, attributes: NodeAttributes, position: boolean | Point = false): Graph {
   let node = newNode(attributes)
 
-  // Place the node at random spaced position near the graph center, 
-  // unless coordinates are provided
-  if (findPosition || !isNumber(node.x) || !isNumber(node.y)) {
-    merge(node, findFreePositionNear(graph, calculateCenter(graph)))
+  // Place the node at random spaced position near a provided point 
+  // or the graph center, unless coordinates are provided
+  if (position || !isNumber(node.x) || !isNumber(node.y)) {
+    if (typeof position !== 'object') {
+      position = calculateCenter(graph)
+    }
+
+    merge(node, findFreePositionNear(graph, position))
   }
 
   graph.nodes[node.id] = node
@@ -277,6 +281,10 @@ export function unregisterEdgeWithNodes(graph: Graph, edgeId: string): Graph {
 }
 
 export function addEdge(graph: Graph, edge: Edge): Graph {
+  if (graph.edges[edge.id]) {
+    return graph
+  }
+
   if (edge.node1_id === edge.node2_id) {
     return graph
   }

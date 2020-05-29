@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
-import uniqBy from 'lodash/uniqBy'
 import isArray from 'lodash/isArray'
 
 import { useSelector } from '../util/helpers'
@@ -22,6 +21,7 @@ import Graph from '../graph/graph'
 export default function AddConnections({ id }) {
   const dispatch = useDispatch()
   const graph = useSelector(state => state.graph)
+  const { x, y } = useSelector(state => state.graph.nodes[id])
   const connectedNodeIds = useMemo(() => Graph.connectedNodeIds(graph, id), [graph, id])
   const [categoryId, setCategoryId] = useState(0)
   const [addedNodeIds, setAddedNodeIds] = useState([])
@@ -33,10 +33,10 @@ export default function AddConnections({ id }) {
     : null
 
   const addConnection = useCallback(node => {
-    dispatch({ type: 'ADD_NODE', node })
-    dispatch({ type: 'ADD_EDGE', edge: node.edge })
+    dispatch({ type: 'ADD_NODE', node, position: { x, y } })
+    dispatch({ type: 'ADD_EDGES', edges: node.edges })
     setAddedNodeIds(addedNodeIds.concat([node.id]))
-  }, [dispatch, addedNodeIds])
+  }, [dispatch, addedNodeIds, x, y])
 
   const changeCategory = useCallback(callWithTargetValue(value => {
     setCategoryId(parseInt(value))
@@ -49,8 +49,7 @@ export default function AddConnections({ id }) {
 
     httpRequest
       .promise
-      .then(entities => {
-        let results = uniqBy(entities, 'id') // ..Until we figure out the best way handle the case where there are multiple relationship between the same entity
+      .then(results => {
         setResults(results)
         setLoading(false)
       })
@@ -83,7 +82,7 @@ export default function AddConnections({ id }) {
   return (
     <div className="oligrapher-add-connections">
       <EditorHeader title="AddConnections" />
-      <AddConnectionsCategory onChange={changeCategory} />
+      <AddConnectionsCategory categoryId={categoryId} onChange={changeCategory} />
       <br />
       { status }
     </div>

@@ -528,4 +528,37 @@ describe('Oligrapher', function() {
     const nodeSizes = Array.from(findAll('.selected-nodes .node-circle')).map(circle => circle.getAttribute('r'))
     expect(nodeSizes).to.eql(new Array(5).fill(String(NODE_RADIUS * 3)))
   })
+
+  it('adds connections', async function() {
+    const initNodeCount = Object.keys(bigGraph.nodes).length
+    const initEdgeCount = Object.keys(bigGraph.edges).length
+    const nodeId = Object.keys(bigGraph.nodes)[0]
+    // stub littlesis requests
+    const nodeData = [
+      { id: "1", name: "papa kushner", description: null, image: null, url: null, edges: [
+        { id: "100", node1_id: nodeId, node2_id: "1", label: "pals", arrow: null, dash: false, url: null }
+      ] },
+      { id: "2", name: "baby kushner", description: null, image: null, url: null, edges: [
+        { id: "101", node1_id: nodeId, node2_id: "2", label: "benefactor", arrow: null, dash: false, url: null }
+      ] }
+    ]
+    sandbox.stub(littlesis3, 'findConnections').returns(Promise.resolve(nodeData))
+    sandbox.stub(littlesis3, 'getEdges').resolves([])
+    // "click" on node
+    const handle = find(`#node-${nodeId} .draggable-node-handle`)
+    fireEvent.mouseDown(handle)
+    fireEvent.mouseUp(handle, { bubbles: false })
+    // click on add connections
+    fireEvent.click(find('.add-connections-link'))
+    // add connections should have appeared
+    expect(findAll('.oligrapher-add-connections').length).to.equal(1)
+    // there should be two results
+    await waitFor(() => expect(findAll('.oligrapher-add-connections .entity-search-result').length).to.equal(2))
+    // click first result
+    const results = findAll('.oligrapher-add-connections .entity-search-result a')
+    fireEvent.click(results[0])
+    // there should be one more node and one more edge
+    expect(findAll('.oligrapher-node').length).to.equal(initNodeCount + 1)
+    expect(findAll('.oligrapher-edge').length).to.equal(initEdgeCount + 1)
+  })
 })
