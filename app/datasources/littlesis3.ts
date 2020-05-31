@@ -4,6 +4,8 @@ import curry from 'lodash/curry'
 import { Editor, LockState } from '../util/defaultState'
 import { Graph } from '../graph/graph'
 import { ArrowType } from '../graph/arrow'
+import { Node } from '../graph/node'
+import { Edge } from '../graph/edge'
 
 declare var API_URL: string
 declare var PRODUCTION: string
@@ -15,6 +17,7 @@ const urls = {
   findConnections: () => `${API_URL}/oligrapher/find_connections`,
   getEdges: () => `${API_URL}/oligrapher/get_edges`,
   getRelationship: (id: string) => `${API_URL}/api/relationships/${id}`,
+  getInterlocks: () => `${API_URL}/oligrapher/get_interlocks`,
   createOligrapher: () => `${API_URL}/oligrapher`,
   updateOligrapher: (id: number) => `${API_URL}/oligrapher/${id}`,
   cloneOligrapher: (id: number) => `${API_URL}/oligrapher/${id}/clone`,
@@ -116,6 +119,13 @@ export function findConnections(entityId: string, categoryId?: string): Promise<
 export function getEdges(entity1Id: string, entity2Ids: string[]): Promise<LsEdge[]> {
   return wretch(urls.getEdges())
     .query({ entity1_id: entity1Id, entity2_ids: entity2Ids.join(',') })
+    .get()
+    .json()
+}
+
+export function getInterlocks(entity1Id: string, entity2Id: string, entityIds: string[]): Promise<{ nodes: Node[], edges: Edge[] }> {
+  return wretch(urls.getInterlocks())
+    .query({ entity1_id: entity1Id, entity2_id: entity2Id, entity_ids: entityIds.join(','), num: 10 })
     .get()
     .json()
 }

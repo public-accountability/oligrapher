@@ -2,7 +2,7 @@ import { put, select as sagaSelect, call, takeEvery, all } from 'redux-saga/effe
 import cloneDeep from 'lodash/cloneDeep'
 
 import { isLittleSisId, convertSelectorForUndo } from './util/helpers'
-import { oligrapher, editors, getEdges } from './datasources/littlesis3'
+import { oligrapher, editors, getEdges, getInterlocks } from './datasources/littlesis3'
 import { applyZoomToViewBox, computeSvgZoom, computeSvgOffset } from './util/dimensions'
 import { paramsForSaveSelector } from './util/selectors'
 import { forceLayout } from './graph/graph'
@@ -24,7 +24,8 @@ export default function* rootSaga() {
     watchDelete(),
     watchForceLayout(),
     watchAddEditor(),
-    watchRemoveEditor()
+    watchRemoveEditor(),
+    watchInterlocks()
   ])
 } 
 
@@ -58,6 +59,10 @@ export function* watchAddEditor() {
 
 export function* watchRemoveEditor() {
   yield takeEvery(['REMOVE_EDITOR_REQUESTED'], removeEditor)  
+}
+
+export function* watchInterlocks() {
+  yield takeEvery(['INTERLOCKS_REQUESTED'], interlocks)  
 }
 
 // Automatically fetches edges when a node is added from LittleSis
@@ -184,4 +189,20 @@ export function* removeEditor(action: any) {
 
   yield call(delay, RESET_DELAY)
   yield put({ type: 'REMOVE_EDITOR_RESET' })
+}
+
+export function* interlocks(action: any): any {
+  const [node1Id, node2Id] = yield select(state => state.display.selection.node)
+  const nodeIds = yield select(state => Object.keys(state.graph.nodes).filter(isLittleSisId))
+
+  try {
+    const { nodes, edges } = yield call(getInterlocks, node1Id, node2Id, nodeIds)
+    yield put({ type: 'INTERLOCKS_SUCCESS', node1Id, node2Id, nodes, edges })
+  } catch(error) {
+    console.log(error)
+    yield put({ type: 'INTERLOCKS_FAILED' })
+  }
+
+  yield call(delay, RESET_DELAY)
+  yield put({ type: 'INTERLOCKS_RESET' })
 }

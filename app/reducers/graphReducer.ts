@@ -4,9 +4,9 @@ import undoable, { includeAction } from 'redux-undo'
 import { generate } from 'shortid'
 
 import {
-  Graph, addNode, updateNode, removeNode, dragNodeEdges, moveNode,
+  Graph, addNode, addNodes, updateNode, removeNode, dragNodeEdges, moveNode,
   addEdge, addEdgeIfNodes, addEdgesIfNodes, updateEdge, removeEdge,
-  addCaption
+  addCaption, addInterlocks
 } from '../graph/graph'
 import { findIntersectingNodeFromDrag } from '../graph/node'
 import Edge from '../graph/edge'
@@ -89,6 +89,9 @@ export const reducer = produce((graph: Graph, action: any): void => {
     return    
   case 'APPLY_FORCE_LAYOUT':
     return action.graph
+  case 'INTERLOCKS_SUCCESS':
+    addInterlocks(graph, action.node1Id, action.node2Id, action.nodes, action.edges)
+    return
   default:
     return
   }

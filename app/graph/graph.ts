@@ -1,8 +1,7 @@
-import at from 'lodash/at'
 import isNumber from 'lodash/isNumber'
 import merge from 'lodash/merge'
+import assign from 'lodash/assign'
 import values from 'lodash/values'
-import pick from 'lodash/pick'
 // @ts-ignore
 import Springy from 'springy'
 
@@ -476,6 +475,29 @@ function buildForceLayout(graph: Graph) {
   let minEnergyThreshold = 0.1
 
   return new Springy.Layout.ForceDirected(gr, stiffness, repulsion, damping, minEnergyThreshold);
+}
+
+export function addInterlocks(graph: Graph, node1Id: string, node2Id: string, nodes: Node[], edges: Edge[]) {
+  const n1 = graph.nodes[node1Id]
+  const n2 = graph.nodes[node2Id]
+  const { x: x1, y: y1 } = n1
+  const { x: x2, y: y2 } = n2
+
+  const midX = (x1 + x2)/2
+  const midY = (y1 + y2)/2
+  const angle = Math.atan2(x1 - x2, y2 - y1)
+  const num = Object.keys(nodes).length
+  const spacing = Math.max(50, 200 - (num * 10));
+
+  nodes.forEach((node: Node, i: number) => {
+    const x = midX + Math.cos(angle) * (-(num-1)*spacing/2 + i*spacing);
+    const y = midY + Math.sin(angle) * (-(num-1)*spacing/2 + i*spacing);
+    addNode(graph, merge(node, { x, y }))
+  })
+
+  addEdgesIfNodes(graph, edges)
+
+  return graph
 }
 
 export default {

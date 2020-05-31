@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { FaRegCircle, FaBezierCurve, FaRegEdit } from "react-icons/fa"
 import { FiHelpCircle, FiUsers } from 'react-icons/fi'
 import { GoTextSize, GoGear } from 'react-icons/go'
+import { GiLinkedRings } from 'react-icons/gi'
 
 const MENU = {
   "node": {
@@ -17,6 +18,10 @@ const MENU = {
   "style": {
     icon: <FaRegEdit />,
     title: 'Style Selected Nodes'
+  },
+  "interlocks": {
+    icon: <GiLinkedRings />,
+    title: 'Interlocks'
   },
   "organize": {
     icon: <FaBezierCurve />,

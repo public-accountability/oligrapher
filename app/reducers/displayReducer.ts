@@ -193,6 +193,18 @@ export default produce((display: DisplayState, action: any): void => {
   case 'REMOVE_EDITOR_RESET':
     display.userMessage = null
     return
+  case 'INTERLOCKS_REQUESTED':
+    display.userMessage = 'Fetching interlocks...'
+    return
+  case 'INTERLOCKS_SUCCESS':
+    display.userMessage = 'Fetched interlocks :)'
+    return
+  case 'INTERLOCKS_FAILURE':
+    display.userMessage = 'Failed to fetch interlocks :('
+    return
+  case 'INTERLOCKS_RESET':
+    display.userMessage = null
+    return
   case 'SET_SELECTING':
     display.selection.isSelecting = action.isSelecting
     return

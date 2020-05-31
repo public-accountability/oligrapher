@@ -9,6 +9,7 @@ const MENU_ITEMS = [
   'node',
   'text',
   'style',
+  'interlocks',
   'organize',
   'settings',
   'editors',
