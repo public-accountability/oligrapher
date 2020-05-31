@@ -906,7 +906,7 @@ div.lock {
   }
 
   .caption-text {
-    border: 1px solid white;
+    border: 1px solid rgba(0, 0, 0, 0);
   }  
 
   .edit-caption-textarea {
@@ -926,7 +926,7 @@ div.lock {
     margin: 0;
     box-sizing: border-box;
     padding: 15px;
-    background-color: white;
+    background-color: rgba(0, 0, 0, 0);
   }
 }
 

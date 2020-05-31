@@ -561,4 +561,43 @@ describe('Oligrapher', function() {
     expect(findAll('.oligrapher-node').length).to.equal(initNodeCount + 1)
     expect(findAll('.oligrapher-edge').length).to.equal(initEdgeCount + 1)
   })
+
+  it('adds interlocks', async function() {
+    const initNodeCount = Object.keys(bigGraph.nodes).length
+    const initEdgeCount = Object.keys(bigGraph.edges).length
+    // get ids of two nodes we're going to select
+    const [node1Id, node2Id] = Array.from(findAll('.oligrapher-node')).map(node => node.id.split('-')[1])
+    // stub littlesis requests
+    const interlocksData = { nodes: [
+      { id: "1", name: "baby kushner", description: null, image: null, url: null }
+    ], edges: [
+      { id: "100", node1_id: node1Id, node2_id: "1", label: "pals", arrow: null, dash: false, url: null },
+      { id: "101", node1_id: node2Id, node2_id: "1", label: "besties", arrow: null, dash: false, url: null }
+    ] }
+    sandbox.stub(littlesis3, 'getInterlocks').returns(Promise.resolve(interlocksData))
+    sandbox.stub(littlesis3, 'getEdges').resolves([])
+    // click on interlocks icon
+    const icon = find('.editor-interlocks-item')
+    fireEvent.click(icon)
+    // interlocks should have opened
+    expect(findAll('.oligrapher-interlocks').length).to.equal(1)
+    // button should be disabled
+    expect(find('.oligrapher-interlocks button').disabled).to.equal(true)
+    // select two nodes
+    const handles = Array.from(findAll('.draggable-node-handle')).slice(0, 2)
+    fireEvent.keyDown(document.body, { key: 'Shift', code: 'ShiftLeft', keyCode: 16 })
+    handles.forEach(handle => {
+      fireEvent.mouseDown(handle)
+      fireEvent.mouseUp(handle, { bubbles: false })
+    })
+    fireEvent.keyUp(document.body, { key: 'Shift', code: 'ShiftLeft', keyCode: 16 })
+    // button should be enabled
+    expect(find('.oligrapher-interlocks button').disabled).to.equal(false)
+    // click button
+    fireEvent.click(find('.oligrapher-interlocks button'))
+    // should be one more node
+    await waitFor(() => expect(findAll('.oligrapher-node').length).to.equal(initNodeCount + 1))
+    // should be two more edges
+    await waitFor(() => expect(findAll('.oligrapher-edge').length).to.equal(initEdgeCount + 2))
+  })
 })
