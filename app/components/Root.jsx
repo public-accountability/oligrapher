@@ -1,6 +1,8 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { hot } from 'react-hot-loader/root'
 import { ThemeProvider } from '@material-ui/core/styles'
+import { Grid } from '@material-ui/core'
 
 import Header from './Header'
 import Graph from './Graph'
@@ -8,6 +10,7 @@ import Editor from './Editor'
 import FloatingEditors from './FloatingEditors'
 import ZoomControl from './ZoomControl'
 import UserMessage from './UserMessage'
+import Annotations from './Annotations'
 import { muiTheme } from '../util/helpers'
 
 export const ROOT_CONTAINER_ID = "oligrapher-container"
@@ -35,17 +38,30 @@ export const ROOT_CONTAINER_ID = "oligrapher-container"
 
 */
 export function Root() {
+  const { show, list } = useSelector(state => state.display.annotations)
+  const editMode = useSelector(state => state.display.modes.editor)
+  const showAnnotations = (editMode && show) || (!editMode && list.length > 0)
+
   return (
     <div id={ROOT_CONTAINER_ID}>
       <ThemeProvider theme={muiTheme}>
         <Header />
-        <div id="oligrapher-graph-container">
-          <Graph rootContainerId={ROOT_CONTAINER_ID} />
-          <Editor />
-          <ZoomControl />
-          <FloatingEditors />
-          <UserMessage />
-        </div>
+        <Grid container spacing={0}>
+          <Grid item xs={12} md={showAnnotations ? 8 : 12}>
+            <div id="oligrapher-graph-container">
+              <Graph rootContainerId={ROOT_CONTAINER_ID} />
+              <Editor />
+              <ZoomControl />
+              <FloatingEditors />
+              <UserMessage />
+            </div>
+          </Grid>
+          { showAnnotations &&
+            <Grid item xs={12} md={4}>
+              <Annotations />
+            </Grid>
+          }
+        </Grid>
       </ThemeProvider>
     </div>
   )

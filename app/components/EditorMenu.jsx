@@ -11,6 +11,7 @@ const MENU_ITEMS = [
   'style',
   'interlocks',
   'organize',
+  'annotations',
   'settings',
   'editors',
   'help'

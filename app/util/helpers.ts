@@ -1,10 +1,12 @@
-import { SyntheticEvent } from 'react'
+import { SyntheticEvent, useState, useCallback } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import isFunction from 'lodash/isFunction'
 import toNumber from 'lodash/toNumber'
-import { useSelector } from 'react-redux'
 import { createMuiTheme } from '@material-ui/core/styles'
 
 import { Selector } from './selectors'
+import { StateWithHistory } from './defaultState'
+import ConfirmSave from '../components/ConfirmSave'
 
 export function classNames(...classes: Array<string | undefined>): string {
   return classes.filter(Boolean).join(' ')
@@ -53,6 +55,30 @@ export function isLittleSisId(id: any): boolean {
   return Number.isFinite(toNumber(id))
 }
 
+export function useSaveMap() {
+  const dispatch = useDispatch()
+  const [open, setOpen] = useState(false)
+  const isSaving = useSelector<StateWithHistory>(state => state.display.saveMapStatus === 'REQUESTED')
+  const version = useSelector<StateWithHistory>(state => state.attributes.version)
+
+  const saveMap = useCallback(() => {
+    if (version === 3) {
+      dispatch({ type: 'SAVE_REQUESTED' })
+    } else {
+      setOpen(true)
+    }
+  }, [version, dispatch])
+
+  const save = useCallback(() => {
+    dispatch({ type: 'SAVE_REQUESTED' })
+    setOpen(false)
+  }, [dispatch])
+
+  const close = useCallback(() => setOpen(false), [])
+
+  return { isSaving, saveMap, confirmSave: ConfirmSave({ open, close, save })  }
+}
+
 // For now, this isn't needed because we flatten state.graph after every action:
 //
 // export const convertSelectorForUndo = selector => (state => selector({
@@ -71,6 +97,14 @@ function useConvertedSelector(selector: Selector) {
 export { useConvertedSelector as useSelector }
 
 export const muiTheme = createMuiTheme({
+  props: {
+    MuiButtonBase: {
+      disableRipple: true
+    },
+    MuiButton: {
+      disableElevation: true
+    }
+  },
   palette: {
     primary: {
       main: '#2c63c8',
@@ -100,6 +134,23 @@ export const muiTheme = createMuiTheme({
       root: {
         padding: 5,
         paddingLeft: 10
+      }
+    },
+    MuiInput: {
+      root: {
+        border: '1px solid #eee',
+        padding: '0.5em'
+      },
+      underline: {
+        '&:hover::before': {
+          border: '0 !important'
+        },
+        '&::before': {
+          border: 0
+        },
+        '&::after': {
+          border: 0
+        }
       }
     }
   }

@@ -808,39 +808,44 @@
         }
       },
       "captions": {
-         "x1": {
-           id: "x1",
-           text: "A sophisticated observation about what's going on in this map",
-           x: 400,
-           y: 100,
-           scale: 1,
-           width: 250,
-           height: 150,
-           weight: '400',
-           font: 'Arial',
-           size: '20'
-         }
-       }
-     }
+        "x1": {
+          id: "x1",
+          text: "A sophisticated observation about what's going on in this map",
+          x: 400,
+          y: 100,
+          scale: 1,
+          width: 250,
+          height: 150,
+          weight: '400',
+          font: 'Arial',
+          size: '20'
+        }
+      }
+    }
 
-     var oli = new Oligrapher({
-       graph: graph,
-       settings: {
-         debug: true
-       },
-       attributes: {
-         id: "3686",
-         title: "Example Title",
-         date: "January 12, 2018",
-         subtitle: "A longer description of this map. Use this space to give more context.",
-         user: { id: "1", name: "Kevin", url: "http://littlesis.org/user/kevin" },
-         owner: { id: "1", name: "Kevin", url: "http://littlesis.org/user/kevin" },
-         settings: { private: false }
-       },
-       display: {
-         modes: { editor: true }
-       }
-     })
+    var oli = new Oligrapher({
+      graph: graph,
+      settings: {
+        debug: true
+      },
+      attributes: {
+        id: "3686",
+        title: "Example Title",
+        date: "January 12, 2018",
+        subtitle: "A longer description of this map. Use this space to give more context.",
+        user: { id: "1", name: "Kevin", url: "http://littlesis.org/user/kevin" },
+        owner: { id: "1", name: "Kevin", url: "http://littlesis.org/user/kevin" },
+        settings: { private: false }
+      },
+      display: {
+        modes: { editor: true },
+        annotations: {
+          list: [],
+          currentIndex: 0,
+          show: true
+        }
+      }
+    })
     </script>
   </body>
 </html>

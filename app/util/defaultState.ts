@@ -1,6 +1,7 @@
 import { Point } from './geometry'
 import { Graph, Viewbox } from '../graph/graph'
 import { Node } from '../graph/node'
+import { Annotation } from '../util/annotations'
 
 export interface GraphState extends Graph {
   present: Graph
@@ -63,6 +64,12 @@ export interface Selection {
   isSelecting: boolean
 }
 
+export interface AnnotationsState {
+  list: Annotation[],
+  currentIndex: number,
+  show: boolean
+}
+
 export interface DisplayState {
   zoom: number,
   svgZoom: number,
@@ -83,13 +90,15 @@ export interface DisplayState {
   cloneMapStatus: AsyncStatus,
   deleteMapStatus: AsyncStatus,
   userMessage: string | null,
-  selection: Selection
+  selection: Selection,
+  annotations: AnnotationsState
 }
 
 export interface SettingsState {
   debug: boolean,
   domId: string
 }
+
 
 export interface State {
   graph: Graph,
@@ -171,7 +180,12 @@ const defaultState: State = {
       edge: [],
       caption: [],
       isSelecting: false
-    }  
+    },
+    annotations: {
+      list: [],
+      currentIndex: 0,
+      show: false
+    }
   },
 
   // Global settings

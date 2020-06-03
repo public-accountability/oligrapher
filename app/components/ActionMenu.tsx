@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { IoIosMore } from 'react-icons/io'
 import { IconButton, Menu, MenuItem } from '@material-ui/core'
 
-import ConfirmDelete from './ConfirmDelete'
+import Confirm from './Confirm'
 import ShareModal from './ShareModal'
 import { useSelector } from '../util/helpers'
 import { userIsOwnerSelector } from '../util/selectors'
@@ -74,7 +74,12 @@ export default function ActionMenu() {
         { canDelete && <MenuItem dense={true} onClick={openConfirm}>Delete</MenuItem> }
       </Menu>
 
-      <ConfirmDelete open={showConfirm} cancel={cancelDelete} confirm={confirmDelete} />
+      <Confirm
+        open={showConfirm}
+        message={'Are you sure you want to delete this map?'}
+        cancel={{ label: 'Cancel', onClick: cancelDelete }}
+        confirm={{ label: 'Delete', onClick: confirmDelete }} 
+        />
       <ShareModal open={showShare} close={closeShare} url={shareUrl} />
     </div>
   )

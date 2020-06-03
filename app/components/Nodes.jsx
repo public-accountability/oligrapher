@@ -18,6 +18,14 @@ export function Nodes({ nodes, editedNodeId, draggedNodeId, selectedNodeIds }) {
 
   return (
     <g className="nodes">
+      { unselectedNodeIds.map(id => (
+        <Node 
+          key={id} 
+          id={id} 
+          currentlyEdited={id === editedNodeId} 
+          selected={false} />
+      )) }
+
       { selectedNodeIds.length > 0 && 
         <NodeSelection nodeIds={selectedNodeIds}>
           { selectedNodeIds.map(id => (
@@ -29,14 +37,6 @@ export function Nodes({ nodes, editedNodeId, draggedNodeId, selectedNodeIds }) {
           )) }
         </NodeSelection>
       }
-
-      { unselectedNodeIds.map(id => (
-        <Node 
-          key={id} 
-          id={id} 
-          currentlyEdited={id === editedNodeId} 
-          selected={false} />
-      )) }
     </g>
   )
 }

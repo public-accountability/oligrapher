@@ -5,6 +5,7 @@ import { FaRegCircle, FaBezierCurve, FaRegEdit } from "react-icons/fa"
 import { FiHelpCircle, FiUsers } from 'react-icons/fi'
 import { GoTextSize, GoGear } from 'react-icons/go'
 import { GiLinkedRings } from 'react-icons/gi'
+import { AiOutlineFundProjectionScreen } from 'react-icons/ai'
 
 const MENU = {
   "node": {
@@ -27,6 +28,10 @@ const MENU = {
     icon: <FaBezierCurve />,
     title: 'Organize Map'
   },
+  "annotations": {
+    icon: <AiOutlineFundProjectionScreen />,
+    title: 'Annotations'
+  },
   "settings": {
     icon: <GoGear />,
     title: 'Settings'
@@ -44,7 +49,9 @@ const MENU = {
 export default function EditorMenuItem({ item }) {
   const { title, icon } = MENU[item]
   const dispatch = useDispatch()
-  const onClick = useCallback(() => dispatch({ type: 'TOGGLE_TOOL', tool: item }), [dispatch, item])
+  const toggleTool = useCallback(() => dispatch({ type: 'TOGGLE_TOOL', tool: item }), [dispatch, item])
+  const toggleAnnotations = useCallback(() => dispatch({ type: 'TOGGLE_ANNOTATIONS' }), [dispatch])
+  const onClick = item === 'annotations' ? toggleAnnotations : toggleTool
 
   return (
     <div className={`editor-menu-item editor-${item}-item`} onClick={onClick}>

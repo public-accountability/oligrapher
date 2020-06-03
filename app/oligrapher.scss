@@ -944,6 +944,48 @@ div.lock {
   @extend %box_shadow;
 }
 
+/* ANNOTATIONS */
+
+#oligrapher-container #oligrapher-annotations {
+  padding: 1em;
+  margin-left: 1em;
+}
+
+#oligrapher-container #oligrapher-annotations-list {
+  margin-top: 0.5em;
+}
+
+#oligrapher-container .annotation-list-item {
+  padding: 0.5em;
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+
+  &.annotation-list-item-current {
+    background-color: #eee;
+  }
+}
+
+#oligrapher-container #oligrapher-annotation-form {
+  margin-top: 1em;
+
+  div {
+    margin-bottom: 0.5em;
+    width: 100%;
+  }
+
+  input {
+    padding: 0;
+  }
+
+  #oligrapher-annotation-form-title {
+    font-size: 2em;
+  }
+
+  #oligrapher-annotation-form-text {
+    font-size: 0.9em;
+  }
+}
+
 /* etc */
 
 #oligrapher-container #oligrapher-graph-container .react-draggable-dragging {

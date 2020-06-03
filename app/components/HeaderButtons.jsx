@@ -1,33 +1,11 @@
-import React, { useCallback, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React from 'react'
 import { Button } from '@material-ui/core'
 
-import { useSelector } from '../util/helpers'
 import ActionMenu from './ActionMenu'
-import ConfirmSave from './ConfirmSave'
+import { useSaveMap } from '../util/helpers'
 
 export default function HeaderButtons() {
-  const dispatch = useDispatch()
-  const [showSave, setShowSave] = useState(false)
-  const isSaving = useSelector(state => state.display.saveMapStatus === 'REQUESTED')
-  const version = useSelector(state => state.attributes.version)
-
-  const saveMap = useCallback(() => {
-    if (version === 3) {
-      dispatch({ type: 'SAVE_REQUESTED' })
-    } else {
-      setShowSave(true)
-    }
-  }, [version, dispatch])
-
-  const confirmSaveMap = useCallback(() => {
-    dispatch({ type: 'SAVE_REQUESTED' })
-    setShowSave(false)
-  }, [dispatch])
-
-  const closeSave = useCallback(() => setShowSave(false), [])
-  const closeShare = useCallback(() => setShowShare(false), [])
-
+  const { isSaving, saveMap, confirmSave } = useSaveMap()
 
   return (
     <div className="oligrapher-header-buttons">
@@ -47,7 +25,7 @@ export default function HeaderButtons() {
 
       <ActionMenu />
 
-      <ConfirmSave open={showSave} close={closeSave} save={confirmSaveMap} />
+      {confirmSave}
     </div>
   )
 }
