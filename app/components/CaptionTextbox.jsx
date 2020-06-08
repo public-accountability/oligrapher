@@ -11,12 +11,13 @@ export const styleForCaption = (caption) => {
   }
 }
 
-export default function CaptionTextbox({ caption }) {
+export default function CaptionTextbox({ caption, highlighted }) {
   const style = styleForCaption(caption)
+  const className = "caption-text" + (highlighted ? " caption-text-highlighted" : "")
 
   return (
     <div 
-      className="caption-text"
+      className={className}
       style={style}>
       { caption.text }
     </div>
@@ -24,5 +25,6 @@ export default function CaptionTextbox({ caption }) {
 }
 
 CaptionTextbox.propTypes = {
-  caption: PropTypes.object.isRequired
+  caption: PropTypes.object.isRequired,
+  highlighted: PropTypes.bool.isRequired
 }

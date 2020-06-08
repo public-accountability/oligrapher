@@ -38,7 +38,7 @@ export const ROOT_CONTAINER_ID = "oligrapher-container"
 
 */
 export function Root() {
-  const { show, list } = useSelector(state => state.display.annotations)
+  const { show, list } = useSelector(state => state.annotations)
   const editMode = useSelector(state => state.display.modes.editor)
   const showAnnotations = (editMode && show) || (!editMode && list.length > 0)
 

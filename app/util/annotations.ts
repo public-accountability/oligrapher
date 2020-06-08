@@ -1,7 +1,7 @@
 import { generate } from 'shortid'
 import merge from 'lodash/merge'
 
-import { DisplayState } from './defaultState'
+import { AnnotationsState } from './defaultState'
 
 export interface AnnotationAttributes {
   id?: string,
@@ -34,33 +34,34 @@ export function newAnnotation(attributes?: AnnotationAttributes): Annotation {
   return merge(defaults(), attributes)
 }
 
-export const createAnnotation = (display: DisplayState): void => {
-  display.annotations.list.push(newAnnotation())
-  display.annotations.currentIndex = display.annotations.list.length - 1
+export const createAnnotation = (annotations: AnnotationsState): void => {
+  annotations.list.push(newAnnotation())
+  annotations.currentIndex = annotations.list.length - 1
 }
 
-export const moveAnnotation = (display: DisplayState, from: number, to: number): void => {
-  let { list, currentIndex, show } = display.annotations
+export const moveAnnotation = (annotations: AnnotationsState, from: number, to: number): void => {
+  let { list, currentIndex } = annotations
   const currentId = list[currentIndex].id
   list.splice(to, 0, list.splice(from, 1)[0])
   currentIndex = list.findIndex(item => item.id === currentId)
 
-  display.annotations = { list, currentIndex, show }
+  annotations.list = list
+  annotations.currentIndex = currentIndex
 }
 
-export const showAnnotation = (display: DisplayState, index: number): void => {
-  display.annotations.currentIndex = index
+export const showAnnotation = (annotations: AnnotationsState, index: number): void => {
+  annotations.currentIndex = index
 }
 
-export const updateAnnotation = (display: DisplayState, id: string, attributes: AnnotationAttributes): void => {
-  const index = display.annotations.list.findIndex(item => item.id === id)
+export const updateAnnotation = (annotations: AnnotationsState, id: string, attributes: AnnotationAttributes): void => {
+  const index = annotations.list.findIndex(item => item.id === id)
 
   Object.entries(attributes).forEach(([key, value]) => {
-    display.annotations.list[index][key as keyof Annotation] = value
+    annotations.list[index][key as keyof Annotation] = value
   })
 }
 
-export const removeAnnotation = (display: DisplayState, id: string): void => {
-  display.annotations.currentIndex = Math.max(0, display.annotations.currentIndex - 1)
-  display.annotations.list = display.annotations.list.filter(item => item.id !== id)
+export const removeAnnotation = (annotations: AnnotationsState, id: string): void => {
+  annotations.currentIndex = Math.max(0, annotations.currentIndex - 1)
+  annotations.list = annotations.list.filter(item => item.id !== id)
 }

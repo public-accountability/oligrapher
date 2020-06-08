@@ -11,6 +11,7 @@ import Filters from './Filters'
 import Pannable from './Pannable'
 import Zoomable from './Zoomable'
 import Selectable from './Selectable'
+import { calculateViewBox } from '../graph/graph'
 
 /*
   The core component that displays the graph
@@ -70,8 +71,27 @@ Graph.propTypes = {
   rootContainerId: PropTypes.string.isRequired
 }
 
+const calculateAnnotationViewBox = state => {
+  const { list, currentIndex } = state.annotations
+  const annotation = list[currentIndex]
+
+  if (annotation) {
+    let { nodes, edges, captions } = state.graph
+    const { nodeIds, edgeIds, captionIds } = annotation
+
+    nodes = Object.values(nodes).filter(node => nodeIds.includes(node.id))
+    edges = Object.values(edges).filter(edge => edgeIds.includes(edge.id))
+    captions = Object.values(captions).filter(caption => captionIds.includes(caption.id))
+
+    return calculateViewBox(nodes, edges, captions)
+  } else {
+    return state.display.viewBox
+  }
+}
+
 const mapStateToProps = state => {
-  const { viewBox, zoom, svgSize, headerIsCollapsed } = state.display
+  const viewBox = calculateAnnotationViewBox(state)
+  const { zoom, svgSize, headerIsCollapsed } = state.display
   const { nodes } = state.graph
 
   return {

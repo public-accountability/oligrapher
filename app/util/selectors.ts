@@ -26,7 +26,8 @@ export const paramsForSaveSelector = (state: StateWithHistory): LsMap => {
       description: state.attributes.subtitle as string,
       is_private: state.attributes.settings.private,
       is_cloneable: state.attributes.settings.clone,
-      settings: JSON.stringify(state.attributes.settings)
+      settings: JSON.stringify(state.attributes.settings),
+      annotations_data: JSON.stringify(state.annotations.list)
     }
   }
 }

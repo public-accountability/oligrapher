@@ -5,7 +5,7 @@ import flow from 'lodash/flow'
 import defaultState, { StateWithHistory } from './defaultState'
 import { 
   Graph, NodeMap, EdgeMap, CaptionMap,
-  newGraph, calculateViewBox, updateEdgeFromNodes, registerEdgeWithNodes 
+  newGraph, calculateViewBoxFromGraph, updateEdgeFromNodes, registerEdgeWithNodes 
 } from '../graph/graph'
 import { Edge, newEdge } from '../graph/edge'
 import { Node, newNode } from '../graph/node'
@@ -86,8 +86,10 @@ export default function stateInitalizer(legacyState: any): StateWithHistory {
   state.graph = convertGraph(state.graph)
 
   state.display.modes.editor = userCanEditSelector(state)
-  state.display.viewBox = calculateViewBox(state.graph)
+  state.display.viewBox = calculateViewBoxFromGraph(state.graph)
   state.display.svgOffset = computeSvgOffset(state.display.viewBox)
+
+  state.annotations.show = state.annotations.list.length > 0
 
   // for redux-undo
   state.graph = {

@@ -1,6 +1,6 @@
 import isNumber from 'lodash/isNumber'
 import merge from 'lodash/merge'
-import assign from 'lodash/assign'
+import uniq from 'lodash/uniq'
 import values from 'lodash/values'
 // @ts-ignore
 import Springy from 'springy'
@@ -81,14 +81,28 @@ const minCaptionY = (captions: Array<Caption>): number => Math.min(0, ...caption
 const maxCaptionX = (captions: Array<Caption>): number => Math.max(0, ...captions.map(c => c.x + c.width))
 const maxCaptionY = (captions: Array<Caption>): number => Math.max(0, ...captions.map(c => c.y + c.height))
 
-export function stats(graph: Graph) {
-  const nodes = values(graph.nodes)
-  const edges = values(graph.edges)
-  const captions = values(graph.captions)
+interface GraphStats {
+  nodeCount: number,
+  edgeCount: number,
+  captionCount: number,
+  minNodeX: number,
+  minNodeY: number,
+  maxNodeX: number,
+  maxNodeY: number,
+  minEdgeX: number,
+  minEdgeY: number,
+  maxEdgeX: number,
+  maxEdgeY: number,
+  minCaptionX: number,
+  minCaptionY: number,
+  maxCaptionX: number,
+  maxCaptionY: number
+}
 
+export function stats(nodes: Node[], edges: Edge[], captions: Caption[]): GraphStats {
   return {
     nodeCount: nodes.length,
-    edgeCount: values(graph.edges).length,
+    edgeCount: edges.length,
     captionCount: captions.length,
     minNodeX: minNodeX(nodes),
     minNodeY: minNodeY(nodes),
@@ -122,9 +136,8 @@ export function nodesOf(graph: Graph, edgeId: string): Array<Node> {
 // output: { minX, minY, w, h }
 // These values are used to create the viewBox attribute for the outermost SVG,
 // which is effectively the smallest rectangle that can be fit around all nodes.
-export function calculateViewBox(graph: Graph): Viewbox {
-  // const zoom = graph.zoom
-  const graphStats = stats(graph)
+export function calculateViewBox(nodes: Node[], edges: Edge[], captions: Caption[]): Viewbox {
+  const graphStats = stats(nodes, edges, captions)
 
   if (graphStats.nodeCount === 0) {
     return DEFAULT_VIEWBOX
@@ -146,9 +159,17 @@ export function calculateViewBox(graph: Graph): Viewbox {
   return { minX, minY, w, h }
 }
 
+export function calculateViewBoxFromGraph(graph: Graph): Viewbox {
+  return calculateViewBox(
+    Object.values(graph.nodes),
+    Object.values(graph.edges),
+    Object.values(graph.captions)
+  )
+}
+
 // Returns the geometric center point of a graph's viewbox
 export function calculateCenter(graph: Graph): Point {
-  const vb = calculateViewBox(graph)
+  const vb = calculateViewBoxFromGraph(graph)
   const x = vb.minX + (vb.w / 2)
   const y = vb.minY + (vb.h / 2)
   return { x, y }
@@ -237,7 +258,7 @@ export function updateNode(graph: Graph, nodeId: string, attributes: NodeAttribu
 }
 
 export function addEdgeIdToNode(graph: Graph, nodeId: string, edgeId: string): Graph {
-  updateNode(graph, nodeId, { edgeIds: getNode(graph, nodeId).edgeIds.concat([edgeId]) })
+  updateNode(graph, nodeId, { edgeIds: uniq(getNode(graph, nodeId).edgeIds.concat([edgeId])) })
   return graph
 }
 

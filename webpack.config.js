@@ -114,7 +114,7 @@ module.exports = function(env) {
           ]
         },
         {
-          test: /\.scss$/,
+          test: /\.s?css$/,
           use: [
             {
               loader: 'style-loader'

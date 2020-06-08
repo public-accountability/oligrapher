@@ -890,10 +890,6 @@ div.lock {
       cursor: pointer
     }
   }
-
-  .edge-highlight {
-    stroke: $highlight_blue;
-  }
 }
 
 
@@ -907,7 +903,7 @@ div.lock {
 
   .caption-text {
     border: 1px solid rgba(0, 0, 0, 0);
-  }  
+  }
 
   .edit-caption-textarea {
     resize: both;
@@ -927,6 +923,10 @@ div.lock {
     box-sizing: border-box;
     padding: 15px;
     background-color: rgba(0, 0, 0, 0);
+  }
+
+  .caption-text.caption-text-highlighted {
+    text-shadow: 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00;
   }
 }
 
@@ -949,6 +949,32 @@ div.lock {
 #oligrapher-container #oligrapher-annotations {
   padding: 1em;
   margin-left: 1em;
+
+  .oligrapher-annotations-header {
+    position: relative;
+    top: 5px;
+    font-size: 28px;
+    font-weight: bold;
+    margin-right: 1em;
+  }
+
+  .oligrapher-annotation-title {
+    font-size: 2em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+
+  .oligrapher-annotation-text {
+    line-height: 1.3em;
+
+    blockquote {
+      color: #666;
+      border-left: 5px solid #ccc;
+      margin: 1.5em 10px;
+      padding: 0.5em 10px;
+      quotes: "\201C""\201D""\2018""\2019";
+    }
+  }
 }
 
 #oligrapher-container #oligrapher-annotations-list {
@@ -968,9 +994,17 @@ div.lock {
 #oligrapher-container #oligrapher-annotation-form {
   margin-top: 1em;
 
-  div {
+  .oligrapher-annotation-form-title {
     margin-bottom: 0.5em;
     width: 100%;
+  }
+
+  .oligrapher-annotation-form-text {
+    margin-bottom: 0.5em;
+  }
+
+  .ck-content {
+    height: 200px;
   }
 
   input {

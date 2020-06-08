@@ -90,8 +90,7 @@ export interface DisplayState {
   cloneMapStatus: AsyncStatus,
   deleteMapStatus: AsyncStatus,
   userMessage: string | null,
-  selection: Selection,
-  annotations: AnnotationsState
+  selection: Selection
 }
 
 export interface SettingsState {
@@ -102,6 +101,7 @@ export interface SettingsState {
 
 export interface State {
   graph: Graph,
+  annotations: AnnotationsState,
   attributes: AttributesState,
   display: DisplayState,
   settings: SettingsState
@@ -118,6 +118,12 @@ const defaultState: State = {
     nodes: {},
     edges: {},
     captions: {}
+  },
+
+  annotations: {
+    list: [],
+    currentIndex: 0,
+    show: false
   },
 
   // Graph attributes and metadata
@@ -180,11 +186,6 @@ const defaultState: State = {
       edge: [],
       caption: [],
       isSelecting: false
-    },
-    annotations: {
-      list: [],
-      currentIndex: 0,
-      show: false
     }
   },
 

@@ -33,8 +33,10 @@ export default function AddConnections({ id }) {
     : null
 
   const addConnection = useCallback(node => {
+    const { edges } = node
+    delete node['edges']
     dispatch({ type: 'ADD_NODE', node, position: { x, y } })
-    dispatch({ type: 'ADD_EDGES', edges: node.edges })
+    dispatch({ type: 'ADD_EDGES', edges })
     setAddedNodeIds(addedNodeIds.concat([node.id]))
   }, [dispatch, addedNodeIds, x, y])
 

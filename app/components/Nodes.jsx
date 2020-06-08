@@ -7,7 +7,7 @@ import Node from './Node'
 import FloatingEditor from '../util/floatingEditor'
 import { getSelection } from '../util/selection'
 
-export function Nodes({ nodes, editedNodeId, draggedNodeId, selectedNodeIds }) {
+export function Nodes({ nodes, editedNodeId, draggedNodeId, selectedNodeIds, highlightedNodeIds }) {
   let unselectedNodeIds = Object.keys(nodes).filter(id => !selectedNodeIds.includes(id))
 
   if (unselectedNodeIds.includes(draggedNodeId)) {
@@ -15,7 +15,7 @@ export function Nodes({ nodes, editedNodeId, draggedNodeId, selectedNodeIds }) {
     let nonDraggedNodeIds = unselectedNodeIds.filter(id => id !== draggedNodeId)
     unselectedNodeIds = nonDraggedNodeIds.concat([draggedNodeId])
   }
-
+  
   return (
     <g className="nodes">
       { unselectedNodeIds.map(id => (
@@ -23,7 +23,8 @@ export function Nodes({ nodes, editedNodeId, draggedNodeId, selectedNodeIds }) {
           key={id} 
           id={id} 
           currentlyEdited={id === editedNodeId} 
-          selected={false} />
+          selected={false}
+          highlighted={highlightedNodeIds.includes(id)} />
       )) }
 
       { selectedNodeIds.length > 0 && 
@@ -33,7 +34,8 @@ export function Nodes({ nodes, editedNodeId, draggedNodeId, selectedNodeIds }) {
               key={id} 
               id={id} 
               currentlyEdited={id === editedNodeId} 
-              selected={true} />
+              selected={true}
+              highlighted={highlightedNodeIds.includes(id)} />
           )) }
         </NodeSelection>
       }
@@ -45,15 +47,19 @@ Nodes.propTypes = {
   nodes: PropTypes.object.isRequired,
   editedNodeId: PropTypes.string,
   draggedNodeId: PropTypes.string,
-  selectedNodeIds: PropTypes.array.isRequired
+  selectedNodeIds: PropTypes.array.isRequired,
+  highlightedNodeIds: PropTypes.array.isRequired
 }
 
 const mapStateToProps = state => {
+  const { list, currentIndex } = state.annotations
+
   return {
     nodes: state.graph.nodes,
     editedNodeId: FloatingEditor.getId(state.display, 'node'),
     draggedNodeId: state.display.draggedNode ? state.display.draggedNode.id : null,
-    selectedNodeIds: getSelection(state.display, 'node')
+    selectedNodeIds: getSelection(state.display, 'node'),
+    highlightedNodeIds: list[currentIndex]?.nodeIds || []
   }
 }
 

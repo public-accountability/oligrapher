@@ -223,24 +223,6 @@ export default produce((display: DisplayState, action: any): void => {
   case 'CLEAR_SELECTION':
     clearSelection(display)
     return
-  case 'TOGGLE_ANNOTATIONS':
-    display.annotations.show = !display.annotations.show
-    return
-  case 'CREATE_ANNOTATION':
-    createAnnotation(display)
-    return
-  case 'MOVE_ANNOTATION':
-    moveAnnotation(display, action.from, action.to)
-    return
-  case 'SHOW_ANNOTATION':
-    showAnnotation(display, action.index)
-    return
-  case 'UPDATE_ANNOTATION':
-    updateAnnotation(display, action.id, action.attributes)
-    return
-  case 'REMOVE_ANNOTATION':
-    removeAnnotation(display, action.id)
-    return
   default:
     return
   }

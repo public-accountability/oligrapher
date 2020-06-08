@@ -9,7 +9,7 @@ import NodeCircle from './NodeCircle'
 import NodeImage from './NodeImage'
 import NodeLabel from './NodeLabel'
 
-export function Node({ id, currentlyEdited, selected }) {
+export function Node({ id, currentlyEdited, selected, highlighted }) {
   const dispatch = useDispatch()
   const node = useSelector(state => state.graph.nodes[id])
   const { name } = node
@@ -66,7 +66,7 @@ export function Node({ id, currentlyEdited, selected }) {
         onDragLeave={onMouseLeave}
       >
         <NodeLabel node={node} />
-        <NodeHalo node={node} showHalo={showHalo} />
+        <NodeHalo node={node} selected={showHalo} highlighted={highlighted} />
         <NodeCircle node={node} />
         <NodeImage node={node} />
       </g>
@@ -77,7 +77,8 @@ export function Node({ id, currentlyEdited, selected }) {
 Node.propTypes = {
   id: PropTypes.string.isRequired,
   currentlyEdited: PropTypes.bool.isRequired,
-  selected: PropTypes.bool.isRequired
+  selected: PropTypes.bool.isRequired,
+  highlighted: PropTypes.bool.isRequired
 }
 
 export default React.memo(Node)

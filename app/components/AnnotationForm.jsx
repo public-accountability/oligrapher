@@ -5,6 +5,7 @@ import { Input, Button } from '@material-ui/core'
 
 import { callWithTargetValue } from '../util/helpers'
 import Confirm from './Confirm'
+import AnnotationTextEditor from './AnnotationTextEditor'
 
 export default function AnnotationForm({ annotation }) {
   const { id, title, text } = annotation
@@ -18,7 +19,7 @@ export default function AnnotationForm({ annotation }) {
   const remove = useCallback(() => dispatch({ type: 'REMOVE_ANNOTATION', id }), [dispatch, id])
 
   const updateTitle = useCallback(callWithTargetValue(title => update({ title })), [update])
-  const updateText = useCallback(callWithTargetValue(text => update({ text })), [update])
+  const updateText = useCallback(text => update({ text }), [update])
 
   const [showConfirm, setShowConfirm] = useState(false)
   const openConfirm = useCallback(() => setShowConfirm(true), [])
@@ -30,25 +31,21 @@ export default function AnnotationForm({ annotation }) {
 
   return (
     <div id="oligrapher-annotation-form">
-      <Input
-        id="oligrapher-annotation-form-title"
-        placeholder="Annotation title"
-        value={title}
-        onChange={updateTitle}
-        />
+      <div className="oligrapher-annotation-form-title">
+        <Input
+          id="oligrapher-annotation-form-title"
+          placeholder="Annotation title"
+          value={title}
+          onChange={updateTitle}
+          />
+      </div>
 
-      <br />
-
-      <Input
-        id="oligrapher-annotation-form-text"
-        placeholder="Annotation text"
-        multiline
-        rows={10}
-        value={text}
-        onChange={updateText}
-        />
-
-      <br />
+      <div className="oligrapher-annotation-form-text">
+        <AnnotationTextEditor
+          text={text}
+          onChange={updateText}
+          />
+      </div>
 
       <Button
         variant="contained"

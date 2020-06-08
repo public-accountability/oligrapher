@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button } from '@material-ui/core'
 
+import Annotation from './Annotation'
 import AnnotationList from './AnnotationList'
 import AnnotationForm from './AnnotationForm'
 
@@ -9,7 +10,8 @@ export default function Annotations() {
   const dispatch = useDispatch()
   const create = useCallback(() => dispatch({ type: 'CREATE_ANNOTATION' }), [dispatch])
 
-  const { list, currentIndex } = useSelector(state => state.display.annotations)
+  const editing = useSelector(state => state.display.modes.editor)
+  const { list, currentIndex } = useSelector(state => state.annotations)
   const annotation = list[currentIndex]
 
   const prev = useCallback(
@@ -25,6 +27,8 @@ export default function Annotations() {
   return (
     <div id="oligrapher-annotations">
       <div id="oligrapher-annotations-nav">
+        { editing && <span className="oligrapher-annotations-header">Edit Annotations</span> }
+
         <Button 
           variant="outlined" 
           onClick={prev}
@@ -38,19 +42,23 @@ export default function Annotations() {
         >Next</Button>
       </div>
 
-      <AnnotationList list={list} currentIndex={currentIndex} />
+      { !editing && <Annotation annotation={annotation} /> }
+
+      { editing && <AnnotationList list={list} currentIndex={currentIndex} /> }
 
       <br />
 
-      <Button
-        onClick={create}
-        variant="outlined"
-        size="small"
-      >
-        Add Annotation
-      </Button>
+      { editing && (
+        <Button
+          onClick={create}
+          variant="outlined"
+          size="small"
+        >
+          Add Annotation
+        </Button>
+      ) }
 
-      { annotation && <AnnotationForm annotation={annotation} /> }
+      { editing && annotation && <AnnotationForm annotation={annotation} key={annotation.id} /> }
     </div>
   )
 }

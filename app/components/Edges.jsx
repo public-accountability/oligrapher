@@ -5,14 +5,15 @@ import { connect } from 'react-redux'
 import Edge from './Edge'
 import FloatingEditor from '../util/floatingEditor'
 
-export function Edges({ edges, editedEdgeId }) {
+export function Edges({ edges, editedEdgeId, highlightedEdgeIds }) {
   return (
     <g className="edges">
       { Object.keys(edges).map(id => (
         <Edge
           key={id} 
           id={id} 
-          currentlyEdited={id === editedEdgeId} />
+          currentlyEdited={id === editedEdgeId}
+          highlighted={highlightedEdgeIds.includes(id)} />
       )) }
     </g>
   )
@@ -20,13 +21,17 @@ export function Edges({ edges, editedEdgeId }) {
 
 Edges.propTypes = {
   edges: PropTypes.object.isRequired,
-  editedEdgeId: PropTypes.string
+  editedEdgeId: PropTypes.string,
+  highlightedEdgeIds: PropTypes.array.isRequired
 }
 
 const mapStateToProps = state => {
+  const { list, currentIndex } = state.annotations
+
   return {
     edges: state.graph.edges,
-    editedEdgeId: FloatingEditor.getId(state.display, 'edge')  
+    editedEdgeId: FloatingEditor.getId(state.display, 'edge'),
+    highlightedEdgeIds: list[currentIndex]?.edgeIds || []
   }
 }
 

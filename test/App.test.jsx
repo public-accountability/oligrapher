@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, fireEvent, waitFor } from '@testing-library/react'
+import { render, fireEvent, waitFor, getByText } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import sinon from 'sinon'
 
@@ -10,6 +10,7 @@ import stateInitializer from '../app/util/stateInitalizer'
 import * as littlesis3 from '../app/datasources/littlesis3'
 import { removeSpaces } from './testHelpers'
 import { NODE_RADIUS } from '../app/graph/node'
+import * as AnnotationTextEditor from '../app/components/AnnotationTextEditor'
 
 const sandbox = sinon.createSandbox()
 
@@ -22,6 +23,11 @@ describe('Oligrapher', function() {
     })
     state = stateInitializer({ 
       graph: Object.assign({}, bigGraph),
+      annotations: {
+        list: [],
+        currentIndex: 0,
+        show: false
+      },
       attributes: {
         id: '1',
         title: 'test graph',
@@ -105,7 +111,7 @@ describe('Oligrapher', function() {
 
     // click node tool icon and enter search query
     fireEvent.click(find('.editor-node-item'))
-    fireEvent.change(find('.node-tool input'), { target: { value: 'kushner' }})
+    fireEvent.change(find('.node-tool input'), { target: { value: 'kushner' } })
     // wait for results
     await waitFor(() => find('.entity-search-results'))
     // should be two results
@@ -134,7 +140,8 @@ describe('Oligrapher', function() {
   })
 
   it('node editor opens and edits node and switches', async function() {
-    const handle = find('.draggable-node-handle')
+    const nodeId = find('.oligrapher-node').id
+    const handle = find(`#${nodeId} .draggable-node-handle`)
 
     // react-draggable listens to mousedown and mouseup instead of click
     fireEvent.mouseDown(handle)
@@ -148,13 +155,13 @@ describe('Oligrapher', function() {
     const editor = findAll('.oligrapher-node-editor')
     expect(editor.length).to.equal(1)
     // name input should equal node name
-    const label = find('.oligrapher-node .node-label')
+    const label = find(`#${nodeId } .node-label`)
     const input = find('.oligrapher-node-editor input')
     expect(removeSpaces(input.value)).to.equal(removeSpaces(label.textContent))
     // edit node name
     fireEvent.change(input, { target: { value: 'billie' } })
     // node name should have updated
-    expect(find('.oligrapher-node .node-label').textContent).to.equal('billie')
+    expect(find(`#${nodeId} .node-label`).textContent).to.equal('billie')
     // "click" on a second node
     const node2 = findAll('.oligrapher-node')[1]
     const handle2 = findAll('.draggable-node-handle')[1]
@@ -277,9 +284,10 @@ describe('Oligrapher', function() {
   })
 
   it('undoes and redoes changes to graph', function() {
-    const originalName = find('.oligrapher-node .node-label').textContent
+    const nodeId = find('.oligrapher-node').id
+    const originalName = find(`#${nodeId} .node-label`).textContent
     // "click" node
-    const nodeHandle = find('.draggable-node-handle')
+    const nodeHandle = find(`#${nodeId} .draggable-node-handle`)
     fireEvent.mouseDown(nodeHandle)
     fireEvent.mouseUp(nodeHandle, { bubbles: false }) 
     // edit node name
@@ -289,11 +297,11 @@ describe('Oligrapher', function() {
     const closeButton = find('.editor-header button')
     fireEvent.click(closeButton)
     // node name should have updated
-    expect(find('.oligrapher-node .node-label').textContent).to.equal('billy bob')
+    expect(find(`#${nodeId} .node-label`).textContent).to.equal('billy bob')
     // click undo
     const undo = find('#oligrapher-undo-redo button')
     fireEvent.click(undo)
-    expect(find('.oligrapher-node .node-label').textContent).to.equal(originalName)
+    expect(find(`#${nodeId} .node-label`).textContent).to.equal(originalName)
   })
 
   it('closes node editor when escape key is pressed', function() {
@@ -371,15 +379,15 @@ describe('Oligrapher', function() {
     const item = Array.from(findAll('#header-action-menu li', document.body)).find(li => li.textContent === 'Delete')
     fireEvent.click(item)
     // confirmation modal should appear
-    expect(findAll('#confirm-delete', document.body).length).to.equal(1)
+    expect(findAll('#oligrapher-confirm', document.body).length).to.equal(1)
     // click on delete button
-    const button = find('#confirm-delete-button', document.body)
+    const button = find('#oligrapher-confirm-button', document.body)
     fireEvent.click(button)
     // user message should indicate deleting
     const message = find('.oligrapher-user-message')
     expect(message.textContent).to.equal("Deleting map...")
     // modal should disappear
-    await waitFor(() => expect(findAll('#confirm-delete', document.body).length).to.equal(0))
+    await waitFor(() => expect(findAll('#oligrapher-confirm', document.body).length).to.equal(0))
     // unfortunately we can't test the redirect because we can't stub window.location.replace :(
   })
 
@@ -599,5 +607,39 @@ describe('Oligrapher', function() {
     await waitFor(() => expect(findAll('.oligrapher-node').length).to.equal(initNodeCount + 1))
     // should be two more edges
     await waitFor(() => expect(findAll('.oligrapher-edge').length).to.equal(initEdgeCount + 2))
+  })
+
+  it('creates, shows, and updates, and removes annotations', function() {
+    // stub AnnotationTextEditor because CKEditor hangs the test
+    sandbox.stub(AnnotationTextEditor, 'default').returns(<div>text editor</div>)
+    // click on annotations icon
+    const icon = find('.editor-annotations-item')
+    fireEvent.click(icon)
+    // should show annotations editor
+    expect(findAll('#oligrapher-annotations').length).to.equal(1)
+    // should be no annotations in list
+    expect(findAll('.annotation-list-item').length).to.equal(0)
+    // click "add annotation" button twice
+    const button = getByText(container, 'Add Annotation')
+    fireEvent.click(button)
+    fireEvent.click(button)
+    // should be two annotations in list
+    expect(findAll('.annotation-list-item').length).to.equal(2)
+    // second annotation should be current
+    expect(find('.annotation-list-item-current').textContent).to.contain('2.')
+    // click on first annotation in list
+    fireEvent.click(find('.annotation-list-item'))
+    // first annotation should be current
+    expect(find('.annotation-list-item-current').textContent).to.contain('1.')
+    // edit annotation title
+    const title = find('#oligrapher-annotation-form-title')
+    fireEvent.change(title, { target: { value: 'New Title' } })
+    // title in list should have changed
+    expect(find('.annotation-list-item-current').textContent).to.equal('1. New Title')
+    // click remove button
+    const remove = getByText(container, 'Remove')
+    fireEvent.click(remove)
+    // should be one annotation
+    expect(findAll('.annotation-list-item').length).to.equal(1)
   })
 })

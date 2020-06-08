@@ -8,8 +8,9 @@ import { Curve, edgeToCurve, curveToBezier } from '../graph/curve'
 import EdgeLine from './EdgeLine'
 import EdgeHandle from './EdgeHandle'
 import EdgeLabel from './EdgeLabel'
+import EdgeHighlight from './EdgeHighlight'
 
-export function Edge({ id, currentlyEdited }: EdgeProps) {
+export function Edge({ id, currentlyEdited, highlighted }: EdgeProps) {
   const dispatch = useDispatch()
   const edge = useSelector(state => state.graph.edges[id])
   const actualZoom = useSelector(state => state.display.actualZoom)
@@ -63,6 +64,7 @@ export function Edge({ id, currentlyEdited }: EdgeProps) {
 
   // Children Props
   const width = 1.5 + (scale -1) * 3
+  const edgeHighlightProps = { bezier, width }
   const edgeLineProps = { bezier, width, isReverse: curve.is_reverse, id, scale, dash, status, arrow }
   const edgeLabelProps = { bezier, width, id, scale, status, arrow, label }
   const edgeHandleProps = { 
@@ -83,6 +85,7 @@ export function Edge({ id, currentlyEdited }: EdgeProps) {
       onDrag={onDrag}
       onStop={onStop}>
       <g className="oligrapher-edge" id={`edge-${id}`}>
+        { highlighted && <EdgeHighlight {...edgeHighlightProps} /> }
         <EdgeLine {...edgeLineProps} />
         { showLabel && <EdgeLabel {...edgeLabelProps} /> }
         <EdgeHandle {...edgeHandleProps} />
@@ -93,7 +96,8 @@ export function Edge({ id, currentlyEdited }: EdgeProps) {
 
 interface EdgeProps {
   id: string,
-  currentlyEdited: boolean
+  currentlyEdited: boolean,
+  highlighted: boolean
 }
 
 export default React.memo(Edge)

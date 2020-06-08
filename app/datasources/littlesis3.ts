@@ -6,6 +6,7 @@ import { Graph } from '../graph/graph'
 import { ArrowType } from '../graph/arrow'
 import { Node } from '../graph/node'
 import { Edge } from '../graph/edge'
+import { Annotation } from '../util/annotations'
 
 declare var API_URL: string
 declare var PRODUCTION: string
@@ -84,7 +85,8 @@ export interface LsMap {
     description: string,
     is_private: boolean,
     is_cloneable: boolean,
-    settings: string
+    settings: string,
+    annotations_data: string
   }
 }
 

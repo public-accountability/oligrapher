@@ -87,8 +87,9 @@ describe('<AddConnections>', function() {
   })
 
   it('adds node and edge and filters added node from results', async function() {
+    let edges =  [{ id: "101", node1_id: node1.id, node2_id: "1" }]
     let data = [
-      { id: "1", name: "Bob", description: "a person", image: null, url: null, edges: [{ id: "101", node1_id: node1.id, node2_id: "1" }] },
+      { id: "1", name: "Bob", description: "a person", image: null, url: null, edges },
       { id: "2", name: "Babs", description: "another person", image: null, url: null, edges: [{ id: "102", node1_id: node1.id, node2_id: "2" }] }
     ]
     response = Promise.resolve(data)
@@ -112,7 +113,7 @@ describe('<AddConnections>', function() {
     let action = mockDispatch.getCall(0).args[0]
     expect(action.type).to.equal('ADD_NODE')
     expect(action.node.id).to.equal("1")
-    expect(mockDispatch.getCall(1).args[0]).to.eql({ type: 'ADD_EDGES', edges: data[0].edges })
+    expect(mockDispatch.getCall(1).args[0]).to.eql({ type: 'ADD_EDGES', edges })
     expect(wrapper.find(SearchResult)).to.have.length(1)
     expect(wrapper.find('.entity-search-result a').text()).to.equal("Babs")
   })

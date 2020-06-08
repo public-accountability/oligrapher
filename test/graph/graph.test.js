@@ -53,28 +53,28 @@ describe('Graph', function() {
   })
 
   describe("Stats", function() {
-    let graph
+    let nodes, edges, captions
 
     beforeEach(function() {
       let n1 = Node.new({ x: -10, y: 30 })
       let n2 = Node.new({ x: 0, y: -30 })
       let n3 = Node.new({ x: 10, y: 0 })
       let edge = Edge.newEdgeFromNodes(n1, n2)
-      graph = Graph.new()
-      Graph.addNodes(graph, [n1, n2, n3])
-      Graph.addEdge(graph, edge)
+      nodes = [n1, n2, n3]
+      edges = [edge]
+      captions =[]
     })
 
     specify("nodeCount", function() {
-      expect(Graph.stats(graph).nodeCount).to.eql(3)
+      expect(Graph.stats(nodes, edges, captions).nodeCount).to.eql(3)
     })
 
     specify("edgeCount", function() {
-      expect(Graph.stats(graph).edgeCount).to.eql(1)
+      expect(Graph.stats(nodes, edges, captions).edgeCount).to.eql(1)
     })
 
     specify("min and max node XY values", function() {
-      let stats = Graph.stats(graph)
+      let stats = Graph.stats(nodes, edges, captions)
       expect(stats.minNodeX).to.eql(-10)
       expect(stats.minNodeY).to.eql(-30)
       expect(stats.maxNodeX).to.eql(10)
@@ -280,17 +280,17 @@ describe('Graph', function() {
   })
 
   describe('calculateViewBox', function() {
-    let graph, n1, n2, n3, c
+    let n1, n2, n3, c, nodes, edges, captions
 
     it('returns padded viewbox', function() {
-      graph = Graph.new()
       n1 = Node.new({ x: -100, y: 0 })
       n2 = Node.new({ x: 50, y: -100 })
       n3 = Node.new({ x: 100, y: -50 })
       c = Caption.new({ x: 50, y: 50, width: 100, height: 100 })
-      Graph.addNodes(graph, [n1, n2, n3])
-      Graph.addCaption(graph, c)
-      expect(Graph.calculateViewBox(graph)).to.eql({ 
+      nodes = [n1, n2, n3]
+      edges = []
+      captions = [c]
+      expect(Graph.calculateViewBox(nodes, edges, captions)).to.eql({ 
         minX: -100 - GRAPH_PADDING_X, 
         minY: -100 - GRAPH_PADDING_Y,
         w: 250 + 2 * GRAPH_PADDING_X,

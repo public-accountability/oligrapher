@@ -7,6 +7,10 @@ import FloatingEditor from '../util/floatingEditor'
 export default function Captions() {
   const captions = useSelector(state => state.graph.captions)
   const editedCaptionId = useSelector(state => FloatingEditor.getId(state.display, 'caption'))
+  const highlightedCaptionIds = useSelector(state => {
+    const { list, currentIndex } = state.annotations
+    return list[currentIndex]?.captionIds || []
+  })
 
   return (
     <g className="captions">
@@ -14,7 +18,8 @@ export default function Captions() {
         <Caption 
           key={id} 
           caption={caption} 
-          currentlyEdited={id === editedCaptionId} />
+          currentlyEdited={id === editedCaptionId} 
+          highlighted={highlightedCaptionIds.includes(id)} />
       )) }
     </g>
   )
