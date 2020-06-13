@@ -8,7 +8,7 @@ import Confirm from './Confirm'
 import AnnotationTextEditor from './AnnotationTextEditor'
 
 export default function AnnotationForm({ annotation }) {
-  const { id, title, text } = annotation
+  const { id, header, text } = annotation
   const textIsLong = text.length > 30
 
   const dispatch = useDispatch()
@@ -18,7 +18,7 @@ export default function AnnotationForm({ annotation }) {
 
   const remove = useCallback(() => dispatch({ type: 'REMOVE_ANNOTATION', id }), [dispatch, id])
 
-  const updateTitle = useCallback(callWithTargetValue(title => update({ title })), [update])
+  const updateHeader = useCallback(callWithTargetValue(header => update({ header })), [update])
   const updateText = useCallback(text => update({ text }), [update])
 
   const [showConfirm, setShowConfirm] = useState(false)
@@ -31,12 +31,12 @@ export default function AnnotationForm({ annotation }) {
 
   return (
     <div id="oligrapher-annotation-form">
-      <div className="oligrapher-annotation-form-title">
+      <div className="oligrapher-annotation-form-header">
         <Input
-          id="oligrapher-annotation-form-title"
-          placeholder="Annotation title"
-          value={title}
-          onChange={updateTitle}
+          id="oligrapher-annotation-form-header"
+          placeholder="Annotation header"
+          value={header}
+          onChange={updateHeader}
           />
       </div>
 

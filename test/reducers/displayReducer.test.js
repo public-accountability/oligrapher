@@ -5,11 +5,25 @@ import defaultState from '../../app/util/defaultState'
 describe('displayReducer', function() {
   describe('SET_EDITOR_MODE', function() {
     it('changes editor to true', function() {
-      const state = { modes: { editor: false } }
+      const state = { 
+        modes: { editor: false },
+        floatingEditor: { type: null, id: null }
+      }
       const action = { type: 'SET_EDITOR_MODE', enabled: true }
 
-      expect(reducer(state, action))
-        .to.eql({ modes: { editor: true } })
+      expect(reducer(state, action).modes)
+        .to.eql({ editor: true })
+    })
+
+    it('clears floating editor', function() {
+      const state = { 
+        modes: { editor: false },
+        floatingEditor: { type: 'node', id: 'abc' }
+      }
+      const action = { type: 'SET_EDITOR_MODE', enabled: true }
+
+      expect(reducer(state, action).floatingEditor)
+        .to.eql({ type: null, id: null })
     })
   })
 

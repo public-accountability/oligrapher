@@ -15,7 +15,9 @@ import * as AnnotationTextEditor from '../app/components/AnnotationTextEditor'
 const sandbox = sinon.createSandbox()
 
 describe('Oligrapher', function() {
-  let state, store, container, find, findAll
+  let state, store, container, find, findAll, 
+    clickHeaderMenuItem, clickActionMenuItem, clickPresent, clickEdit, clickIcon,
+    clickHandle, expectCount
 
   beforeEach(function() {
     sandbox.stub(littlesis3, 'lock').resolves({
@@ -26,7 +28,14 @@ describe('Oligrapher', function() {
       annotations: {
         list: [],
         currentIndex: 0,
-        show: false
+        sources: {
+          id: 'sources',
+          header: 'Sources',
+          text: '<div><a href="http://example.com">example</a></div>',
+          nodeIds: [],
+          edgeIds: [],
+          captionIds: []
+        }
       },
       attributes: {
         id: '1',
@@ -50,6 +59,40 @@ describe('Oligrapher', function() {
 
     find = (selector, root) => (root || container).querySelector(selector)
     findAll = (selector, root) => (root || container).querySelectorAll(selector)
+
+    clickHeaderMenuItem = key => {
+      fireEvent.click(
+        Array.from(findAll('#oligrapher-header-menu button', document.body)).find(button => button.textContent === key)
+      )
+    }
+
+    clickActionMenuItem = key => {
+      fireEvent.click(find('#toggle-action-menu'))
+      fireEvent.click(
+        Array.from(findAll('#header-action-menu li', document.body)).find(li => li.textContent === key)
+      )
+    }
+
+    clickPresent = () => clickActionMenuItem('Present')
+    clickEdit = () => clickHeaderMenuItem('Edit')
+    
+    clickIcon = key => {
+      fireEvent.click(find(`.editor-${key}-item`))
+    }
+
+    clickHandle = handle => {
+      // react-draggable listens to mousedown and mouseup instead of click
+      fireEvent.mouseDown(handle)
+      fireEvent.mouseUp(handle, { bubbles: false }) 
+      // unclear why bubbles: false is necessary above, 
+      // but without it draggable's onmouseup gets called twice,
+      // (unlike in real browser interaction), and the node editor 
+      // gets toggled twice and thus disappears
+    }
+
+    expectCount = (selector, count) => {
+      expect(findAll(selector, document.body).length).to.equal(count)
+    }
   })
 
   afterEach(function() {
@@ -110,7 +153,7 @@ describe('Oligrapher', function() {
     sandbox.stub(littlesis3, 'getEdges').resolves([])
 
     // click node tool icon and enter search query
-    fireEvent.click(find('.editor-node-item'))
+    clickIcon('node')
     fireEvent.change(find('.node-tool input'), { target: { value: 'kushner' } })
     // wait for results
     await waitFor(() => find('.entity-search-results'))
@@ -120,7 +163,7 @@ describe('Oligrapher', function() {
     // click on first result
     fireEvent.click(resultLinks[0])
     // should have added a node
-    expect(findAll('.oligrapher-node').length).to.equal(initNodeCount + 1)
+    expectCount('.oligrapher-node', initNodeCount + 1)
     expect(removeSpaces(find('#node-1 .node-label').textContent)).to.equal(removeSpaces(nodeData[0].name))
     // assume that automatic edge fetch has one result
     littlesis3.getEdges.restore()
@@ -130,10 +173,10 @@ describe('Oligrapher', function() {
     // click second result
     fireEvent.click(resultLinks[1])
     // two nodes should exist
-    expect(findAll('.oligrapher-node').length).to.equal(initNodeCount + 2)
+    expectCount('.oligrapher-node', initNodeCount + 2)
     // should eventually add the edge
     await waitFor(() => {
-      expect(findAll('.oligrapher-edge').length).to.equal(initEdgeCount + 1)
+      expectCount('.oligrapher-edge', initEdgeCount + 1)
       expect(find('#edge-1 .edge-label').textContent).to.equal("family")
     })
     // unstub api
@@ -142,18 +185,9 @@ describe('Oligrapher', function() {
   it('node editor opens and edits node and switches', async function() {
     const nodeId = find('.oligrapher-node').id
     const handle = find(`#${nodeId} .draggable-node-handle`)
-
-    // react-draggable listens to mousedown and mouseup instead of click
-    fireEvent.mouseDown(handle)
-    fireEvent.mouseUp(handle, { bubbles: false }) 
-    // unclear why bubbles: false is necessary above, 
-    // but without it draggable's onmouseup gets called twice,
-    // (unlike in real browser interaction), and the node editor 
-    // gets toggled twice and thus disappears
-  
+    clickHandle(handle)
     // editor should have opened
-    const editor = findAll('.oligrapher-node-editor')
-    expect(editor.length).to.equal(1)
+    expectCount('.oligrapher-node-editor', 1)
     // name input should equal node name
     const label = find(`#${nodeId } .node-label`)
     const input = find('.oligrapher-node-editor input')
@@ -165,8 +199,7 @@ describe('Oligrapher', function() {
     // "click" on a second node
     const node2 = findAll('.oligrapher-node')[1]
     const handle2 = findAll('.draggable-node-handle')[1]
-    fireEvent.mouseDown(handle2)
-    fireEvent.mouseUp(handle2, { bubbles: false })
+    clickHandle(handle2)
     // editor should show the second node's details
     const input2 = find('.oligrapher-node-editor input')
     expect(removeSpaces(input2.value)).to.equal(removeSpaces(node2.textContent))
@@ -174,12 +207,9 @@ describe('Oligrapher', function() {
   
   it('edge editor opens and edits edge and switches', function() {
     const handle = find('.edge-handle')
-    // see comment for node editor click
-    fireEvent.mouseDown(handle)
-    fireEvent.mouseUp(handle, { bubbles: false }) 
+    clickHandle(handle)
     // editor should have opened
-    const editor = findAll('.oligrapher-edge-editor')
-    expect(editor.length).to.equal(1)
+    expectCount('.oligrapher-edge-editor', 1)
     // label input should equal edge label
     const label = find('.oligrapher-edge .edge-label')
     const input = find('.oligrapher-edge-editor input')
@@ -191,8 +221,7 @@ describe('Oligrapher', function() {
     // "click" on a second edge
     const edge2 = findAll('.oligrapher-edge')[1]
     const handle2 = findAll('.edge-handle')[1]
-    fireEvent.mouseDown(handle2)
-    fireEvent.mouseUp(handle2, { bubbles: false })
+    clickHandle(handle2)
     // editor should show the second edge's details
     const input2 = find('.oligrapher-edge-editor input')
     expect(removeSpaces(input2.value)).to.equal(removeSpaces(edge2.textContent))
@@ -200,12 +229,9 @@ describe('Oligrapher', function() {
 
   it('caption editor opens and switches', async function() {
     const caption = find('.oligrapher-caption')
-    // see comment for node editor click
-    fireEvent.mouseDown(caption)
-    fireEvent.mouseUp(caption, { bubbles: false })
+    clickHandle(caption)
     // editor should have opened
-    const editor = findAll('.oligrapher-caption-editor')
-    expect(editor.length).to.equal(1)
+    expectCount('.oligrapher-caption-editor', 1)
     // "click" the size menu
     const select = find('#caption-editor-select-size')
     fireEvent.mouseDown(select)
@@ -225,8 +251,7 @@ describe('Oligrapher', function() {
     expect(find('.caption-text').textContent).to.equal('terse commentary')
     // "click" on a second caption
     const caption2 = findAll('.oligrapher-caption')[1]
-    fireEvent.mouseDown(caption2)
-    fireEvent.mouseUp(caption2, { bubbles: false })
+    clickHandle(caption2)
     // editor should show the second caption's details
     const textarea2 = find('.oligrapher-caption textarea')
     expect(removeSpaces(textarea2.value)).to.equal(removeSpaces(caption2.textContent))
@@ -234,18 +259,17 @@ describe('Oligrapher', function() {
 
   it('opens, closes, and changes settings', function() {
     // click on settings icon
-    const icon = find('.editor-settings-item')
-    fireEvent.click(icon)
+    clickIcon('settings')
     // settings should have opened
-    expect(findAll('.oligrapher-settings').length).to.equal(1)
+    expectCount('.oligrapher-settings', 1)
     // set map to private
-    const checkbox = find('.oligrapher-settings input[type=checkbox]')
+    const checkbox = find('.oligrapher-settings input[name=private]')
     expect(checkbox.checked).to.be.false
     fireEvent.click(checkbox)
     expect(checkbox.checked).to.be.true
     // close settings
-    fireEvent.click(icon)
-    expect(findAll('.oligrapher-settings').length).to.equal(0)
+    clickIcon('settings')
+    expectCount('.oligrapher-settings', 0)
   })
 
   it('deletes node, edge, caption', async function() {
@@ -253,34 +277,29 @@ describe('Oligrapher', function() {
     const nodeCount = findAll('.oligrapher-node').length
     // "click" node
     const nodeHandle = find('.draggable-node-handle')
-    fireEvent.mouseDown(nodeHandle)
-    fireEvent.mouseUp(nodeHandle, { bubbles: false }) 
+    clickHandle(nodeHandle)
     // click delete
     fireEvent.click(find('.oligrapher-node-editor footer button'))
     // should be one fewer node
-    await waitFor(() => expect(findAll('.oligrapher-node').length).to.equal(nodeCount - 1))
-
+    await waitFor(() => expectCount('.oligrapher-node', nodeCount - 1))
     // count edges
     const edgeCount = findAll('.oligrapher-edge').length
     const edgeHandle = find('.edge-handle')
     // "click" edge
-    fireEvent.mouseDown(edgeHandle)
-    fireEvent.mouseUp(edgeHandle, { bubbles: false })
+    clickHandle(edgeHandle)
     // click delete
     fireEvent.click(find('.oligrapher-edge-editor footer button'))
     // should be one fewer edge
-    expect(findAll('.oligrapher-edge').length).to.equal(edgeCount - 1)
-
+    expectCount('.oligrapher-edge', edgeCount - 1)
     // count captions
     const captionCount = findAll('.oligrapher-caption').length
     const caption = find('.oligrapher-caption')
     // "click" caption
-    fireEvent.mouseDown(caption)
-    fireEvent.mouseUp(caption, { bubbles: false })
+    clickHandle(caption)
     // click delete
     fireEvent.click(find('.oligrapher-caption-editor footer button'))
     // should be one fewer caption
-    expect(findAll('.oligrapher-caption').length).to.equal(captionCount - 1)
+    expectCount('.oligrapher-caption', captionCount - 1)
   })
 
   it('undoes and redoes changes to graph', function() {
@@ -288,8 +307,7 @@ describe('Oligrapher', function() {
     const originalName = find(`#${nodeId} .node-label`).textContent
     // "click" node
     const nodeHandle = find(`#${nodeId} .draggable-node-handle`)
-    fireEvent.mouseDown(nodeHandle)
-    fireEvent.mouseUp(nodeHandle, { bubbles: false }) 
+    clickHandle(nodeHandle)
     // edit node name
     const input = find('.oligrapher-node-editor input')
     fireEvent.change(input, { target: { value: 'billy bob' } })
@@ -305,34 +323,32 @@ describe('Oligrapher', function() {
   })
 
   it('closes node editor when escape key is pressed', function() {
+    // click node
     const handle = find('.draggable-node-handle')
-    // "click" node
-    fireEvent.mouseDown(handle)
-    fireEvent.mouseUp(handle, { bubbles: false }) 
+    clickHandle(handle)
     // editor should have opened
     const editor = findAll('.oligrapher-node-editor')
     expect(editor.length).to.equal(1)
     // press escape key
     fireEvent.keyDown(editor[0], { key: 'Escape', code: 'Escape', keyCode: 27 })
     // editor should have closed
-    expect(findAll('.oligrapher-node-editor').length).to.equal(0)
+    expectCount('.oligrapher-node-editor', 0)
   })
 
   it('deletes node when backspace key is pressed in node editor', function() {
     const nodeCount = findAll('.oligrapher-node').length
-    const handle = find('.draggable-node-handle')
     // "click" node
-    fireEvent.mouseDown(handle)
-    fireEvent.mouseUp(handle, { bubbles: false }) 
+    const handle = find('.draggable-node-handle')
+    clickHandle(handle)
     // editor should have opened
     const editor = findAll('.oligrapher-node-editor')
     expect(editor.length).to.equal(1)
     // press backspace key
     fireEvent.keyDown(editor[0], { key: 'Backspace', code: 'Backspace', keyCode: 8 })
     // editor should have closed
-    expect(findAll('.oligrapher-node-editor').length).to.equal(0)
+    expectCount('.oligrapher-node-editor', 0)
     // node should have deleted
-    expect(findAll('.oligrapher-node').length).to.equal(nodeCount - 1)
+    expectCount('.oligrapher-node', nodeCount - 1)
   })
 
   it('saves map', async function() {
@@ -347,39 +363,29 @@ describe('Oligrapher', function() {
     // user message should eventually indicate saved
     await waitFor(() => expect(message.textContent).to.equal("Saved map :)"))
     // user message should eventually disappear
-    await waitFor(() => expect(findAll('.oligrapher-user-message').length).to.equal(0), { timeout: 5000 })
+    await waitFor(() => expectCount('.oligrapher-user-message', 0), { timeout: 5000 })
   }).timeout(6000)
 
   it('clones map (failure)', async function() {
     const promise = new Promise((resolve, reject) => setTimeout(() => reject(), 10))
     sandbox.stub(littlesis3.oligrapher, 'clone').returns(promise)
-    // open menu
-    const toggle = find('#toggle-action-menu')
-    fireEvent.click(toggle)
-    // click clone
-    const item = Array.from(findAll('#header-action-menu li', document.body)).find(li => li.textContent === 'Clone')
-    fireEvent.click(item)
+    clickActionMenuItem('Clone')
     // user message should indicate cloning
     const message = find('.oligrapher-user-message')
     expect(message.textContent).to.equal("Cloning map...")
     // user message should eventually indicate failed
     await waitFor(() => expect(message.textContent).to.equal("Failed to clone map :("))
     // user message should eventually disappear
-    await waitFor(() => expect(findAll('.oligrapher-user-message').length).to.equal(0), { timeout: 5000 })
+    await waitFor(() => expectCount('.oligrapher-user-message', 0), { timeout: 5000 })
   }).timeout(6000)
 
   // can't figure out how to make this test work, the modal doesn't seem to appear
   it('deletes map', async function() {
     const promise = new Promise(resolve => setTimeout(() => resolve(), 10))
     sandbox.stub(littlesis3.oligrapher, 'delete').returns(promise)
-    // open menu
-    const toggle = find('#toggle-action-menu')
-    fireEvent.click(toggle)
-    // click delete
-    const item = Array.from(findAll('#header-action-menu li', document.body)).find(li => li.textContent === 'Delete')
-    fireEvent.click(item)
+    clickActionMenuItem('Delete')
     // confirmation modal should appear
-    expect(findAll('#oligrapher-confirm', document.body).length).to.equal(1)
+    expectCount('#oligrapher-confirm', 1)
     // click on delete button
     const button = find('#oligrapher-confirm-button', document.body)
     fireEvent.click(button)
@@ -398,131 +404,98 @@ describe('Oligrapher', function() {
     const toggle = find('#toggle-action-menu')
     fireEvent.click(toggle)
     // action menu should appear
-    expect(findAll('#header-action-menu', document.body).length).to.equal(1)
+    expectCount('#header-action-menu', 1)
     // press escape key
     fireEvent.keyDown(find('#header-action-menu', document.body), { key: 'Escape', code: 'Escape', keyCode: 27 })
     // action menu should disappear
-    await waitFor(() => expect(findAll('#header-action-menu', document.body).length).to.equal(0))
+    await waitFor(() => expectCount('#header-action-menu', 0))
     // click action menu toggler
     fireEvent.click(toggle)
-    expect(findAll('#header-action-menu', document.body).length).to.equal(1)
+    expectCount('#header-action-menu', 1)
     // click "Clone"
     const item = Array.from(findAll('#header-action-menu li', document.body)).find(li => li.textContent === 'Clone')
     fireEvent.click(item)
     // action menu should disappear
-    await waitFor(() => expect(findAll('#header-action-menu', document.body).length).to.equal(0))
+    await waitFor(() => expectCount('#header-action-menu', 0))
   })
 
   it('switches to present mode and back to editor mode', function() {
     // editor menu should be visible
-    expect(findAll('.oligrapher-graph-editor').length).to.equal(1)
-    // click action menu toggler
-    const toggle = find('#toggle-action-menu')
-    fireEvent.click(toggle)
-    // action menu should appear
-    expect(findAll('#header-action-menu', document.body).length).to.equal(1)
-    // click on "Present"
-    const item = Array.from(findAll('#header-action-menu li', document.body)).find(li => li.textContent === 'Present')
-    fireEvent.click(item)
+    expectCount('.oligrapher-graph-editor', 1)
+    clickPresent()
     // editor menu should disappear
-    expect(findAll('.oligrapher-graph-editor').length).to.equal(0)
-    // click "Edit"
-    const edit = find('#oligrapher-header-menu-wrapper a')
-    fireEvent.click(edit)
+    expectCount('.oligrapher-graph-editor', 0)
+    clickEdit()
+    // menu should disappear
+    expectCount('#oligrapher-header-menu-menu', 0)
     // editor menu should appear
-    expect(findAll('.oligrapher-graph-editor').length).to.equal(1)
+    expectCount('.oligrapher-graph-editor', 1)
   })
 
   it('opens and closes disclaimer', async function() {
-    // click action menu toggler
-    const toggle = find('#toggle-action-menu')
-    fireEvent.click(toggle)
-    // action menu should appear
-    expect(findAll('#header-action-menu', document.body).length).to.equal(1)
-    // click on "Present"
-    const item = Array.from(findAll('#header-action-menu li', document.body)).find(li => li.textContent === 'Present')
-    fireEvent.click(item)
-    // click on disclaimer link
-    const link = Array.from(findAll('#oligrapher-header-menu-wrapper li a')).find(a => a.textContent === 'Disclaimer')
-    fireEvent.click(link)
+    clickPresent()
+    clickHeaderMenuItem('Disclaimer')
     // disclaimer should appear
-    expect(findAll('#oligrapher-disclaimer', document.body).length).to.equal(1)
+    expectCount('#oligrapher-disclaimer', 1)
     // click button
-    const button = find('#oligrapher-disclaimer button', document.body)
-    fireEvent.click(button)
+    fireEvent.click(find('#oligrapher-disclaimer button', document.body))
     // disclaimer should disappear
-    await waitFor(() => expect(findAll('#oligrapher-disclaimer', document.body).length).to.equal(0))
+    await waitFor(() => expectCount('#oligrapher-disclaimer', 0))
   })
 
   it('opens and closes help', function() {
     // click on help button
     fireEvent.click(find('.editor-help-item'))
     // help box should appear
-    expect(findAll('#oligrapher-help').length).to.equal(1)
+    expectCount('#oligrapher-help', 1)
     // click on close button
     fireEvent.click(find('#oligrapher-help button'))
     // help box should disappear
-    expect(findAll('#oligrapher-help').length).to.equal(0)
+    expectCount('#oligrapher-help', 0)
   })
 
   it('opens and closes share modal', async function() {
     // click on settings icon
-    const icon = find('.editor-settings-item')
-    fireEvent.click(icon)
+    clickIcon('settings')
     // set map to private
     const checkbox = find('.oligrapher-settings input[type=checkbox]')
     fireEvent.click(checkbox)
     // close settings
-    fireEvent.click(icon)
-    // click action menu toggler
-    const toggle = find('#toggle-action-menu')
-    fireEvent.click(toggle)
-    // click on share
-    const item = Array.from(findAll('#header-action-menu li', document.body)).find(li => li.textContent === 'Share')
-    fireEvent.click(item)
+    clickIcon('settings')
+    clickActionMenuItem('Share')
     // action menu should disappear
-    await waitFor(() => expect(findAll('#header-action-menu', document.body).length).to.equal(0))
+    await waitFor(() => expectCount('#header-action-menu', 0))
     // share modal should appear
-    expect(findAll('#oligrapher-share', document.body).length).to.equal(1)
+    expectCount('#oligrapher-share', 1)
     // click OK
-    const button = find('#oligrapher-share button', document.body)
-    fireEvent.click(button)
+    fireEvent.click(find('#oligrapher-share button', document.body))
     // share modal should disappear
-    await waitFor(() => expect(findAll('#oligrapher-share', document.body).length).to.equal(0))
-    // click action menu toggler
-    fireEvent.click(toggle)
-    // click on present
-    const present = Array.from(findAll('#header-action-menu li', document.body)).find(li => li.textContent === 'Present')
-    fireEvent.click(present)
-    // share link should appear
-    const link = Array.from(findAll('#oligrapher-header-menu-wrapper li a')).find(a => a.textContent === 'Share')
-    expect(link).to.be.ok
-    // click share
-    fireEvent.click(link)
+    await waitFor(() => expectCount('#oligrapher-share', 0))
+    clickPresent()
+    clickHeaderMenuItem('Share')
     // share modal should appear
-    expect(findAll('#oligrapher-share', document.body).length).to.equal(1)
+    expectCount('#oligrapher-share', 1)
   })
 
   it('selects multiple nodes and styles them', function() {
     // shouldn't be any selected nodes
-    expect(findAll('.selected-nodes .oligrapher-node').length).to.equal(0)
+    expectCount('.selected-nodes .oligrapher-node', 0)
     // find first five nodes
     const handles = Array.from(findAll('.draggable-node-handle')).slice(0, 5)
     // hold shift key
     fireEvent.keyDown(document.body, { key: 'Shift', code: 'ShiftLeft', keyCode: 16 })
     // "click" nodes
     handles.forEach(handle => {
-      fireEvent.mouseDown(handle)
-      fireEvent.mouseUp(handle, { bubbles: false })
+      clickHandle(handle)
     })
     // release shift key
     fireEvent.keyUp(document.body, { key: 'Shift', code: 'ShiftLeft', keyCode: 16 })
     // five nodes should be selected
-    expect(findAll('.selected-nodes .oligrapher-node').length).to.equal(5)
+    expectCount('.selected-nodes .oligrapher-node', 5)
     // click style editor icon
     fireEvent.click(find('.editor-menu .editor-style-item'))
     // style editor should be open
-    expect(findAll('.oligrapher-style-nodes').length).to.equal(1)
+    expectCount('.oligrapher-style-nodes', 1)
     // style editor should indicate 5 nodes selected
     expect(find('.oligrapher-style-nodes-count').textContent).to.equal('Nodes selected: 5')
     // click size icon in style editor
@@ -559,15 +532,15 @@ describe('Oligrapher', function() {
     // click on add connections
     fireEvent.click(find('.add-connections-link'))
     // add connections should have appeared
-    expect(findAll('.oligrapher-add-connections').length).to.equal(1)
+    expectCount('.oligrapher-add-connections', 1)
     // there should be two results
-    await waitFor(() => expect(findAll('.oligrapher-add-connections .entity-search-result').length).to.equal(2))
+    await waitFor(() => expectCount('.oligrapher-add-connections .entity-search-result', 2))
     // click first result
     const results = findAll('.oligrapher-add-connections .entity-search-result a')
     fireEvent.click(results[0])
     // there should be one more node and one more edge
-    expect(findAll('.oligrapher-node').length).to.equal(initNodeCount + 1)
-    expect(findAll('.oligrapher-edge').length).to.equal(initEdgeCount + 1)
+    expectCount('.oligrapher-node', initNodeCount + 1)
+    expectCount('.oligrapher-edge', initEdgeCount + 1)
   })
 
   it('adds interlocks', async function() {
@@ -588,15 +561,14 @@ describe('Oligrapher', function() {
     const icon = find('.editor-interlocks-item')
     fireEvent.click(icon)
     // interlocks should have opened
-    expect(findAll('.oligrapher-interlocks').length).to.equal(1)
+    expectCount('.oligrapher-interlocks', 1)
     // button should be disabled
     expect(find('.oligrapher-interlocks button').disabled).to.equal(true)
     // select two nodes
     const handles = Array.from(findAll('.draggable-node-handle')).slice(0, 2)
     fireEvent.keyDown(document.body, { key: 'Shift', code: 'ShiftLeft', keyCode: 16 })
     handles.forEach(handle => {
-      fireEvent.mouseDown(handle)
-      fireEvent.mouseUp(handle, { bubbles: false })
+      clickHandle(handle)
     })
     fireEvent.keyUp(document.body, { key: 'Shift', code: 'ShiftLeft', keyCode: 16 })
     // button should be enabled
@@ -604,9 +576,9 @@ describe('Oligrapher', function() {
     // click button
     fireEvent.click(find('.oligrapher-interlocks button'))
     // should be one more node
-    await waitFor(() => expect(findAll('.oligrapher-node').length).to.equal(initNodeCount + 1))
+    await waitFor(() => expectCount('.oligrapher-node', initNodeCount + 1))
     // should be two more edges
-    await waitFor(() => expect(findAll('.oligrapher-edge').length).to.equal(initEdgeCount + 2))
+    await waitFor(() => expectCount('.oligrapher-edge', initEdgeCount + 2))
   })
 
   it('creates, shows, and updates, and removes annotations', function() {
@@ -616,15 +588,15 @@ describe('Oligrapher', function() {
     const icon = find('.editor-annotations-item')
     fireEvent.click(icon)
     // should show annotations editor
-    expect(findAll('#oligrapher-annotations').length).to.equal(1)
+    expectCount('#oligrapher-annotations', 1)
     // should be no annotations in list
-    expect(findAll('.annotation-list-item').length).to.equal(0)
+    expectCount('.annotation-list-item', 0)
     // click "add annotation" button twice
     const button = getByText(container, 'Add Annotation')
     fireEvent.click(button)
     fireEvent.click(button)
     // should be two annotations in list
-    expect(findAll('.annotation-list-item').length).to.equal(2)
+    expectCount('.annotation-list-item', 2)
     // second annotation should be current
     expect(find('.annotation-list-item-current').textContent).to.contain('2.')
     // click on first annotation in list
@@ -632,14 +604,116 @@ describe('Oligrapher', function() {
     // first annotation should be current
     expect(find('.annotation-list-item-current').textContent).to.contain('1.')
     // edit annotation title
-    const title = find('#oligrapher-annotation-form-title')
-    fireEvent.change(title, { target: { value: 'New Title' } })
+    const title = find('#oligrapher-annotation-form-header')
+    fireEvent.change(title, { target: { value: 'New Header' } })
     // title in list should have changed
-    expect(find('.annotation-list-item-current').textContent).to.equal('1. New Title')
+    expect(find('.annotation-list-item-current').textContent).to.equal('1. New Header')
     // click remove button
     const remove = getByText(container, 'Remove')
     fireEvent.click(remove)
     // should be one annotation
-    expect(findAll('.annotation-list-item').length).to.equal(1)
+    expectCount('.annotation-list-item', 1)
+  })
+
+  it('highlights nodes, edges, captions', function() {
+    // stub AnnotationTextEditor because CKEditor hangs the test
+    sandbox.stub(AnnotationTextEditor, 'default').returns(<div>text editor</div>)
+    // click on annotations icon
+    const icon = find('.editor-annotations-item')
+    fireEvent.click(icon)
+    // add annotation
+    const button = getByText(container, 'Add Annotation')
+    fireEvent.click(button)
+    // control-click two nodes
+    const nodes = Array.from(findAll('.draggable-node-handle')).slice(0, 2)
+    fireEvent.keyDown(document.body, { key: 'Control', code: 'ControlLeft', keyCode: 17 })
+    nodes.forEach(node => {
+      clickHandle(node)
+    })
+    fireEvent.keyUp(document.body, { key: 'Control', code: 'ControlLeft', keyCode: 17 })
+    // two nodes should be highlighted
+    expectCount('.node-halo-highlighted', 2)
+    // control-click two edges
+    const edges = Array.from(findAll('.edge-handle')).slice(0, 2)
+    fireEvent.keyDown(document.body, { key: 'Control', code: 'ControlLeft', keyCode: 17 })
+    edges.forEach(edge => {
+      clickHandle(edge)
+    })
+    fireEvent.keyUp(document.body, { key: 'Control', code: 'ControlLeft', keyCode: 17 })
+    // two edges should be highlighted
+    expectCount('.edge-highlight', 2)
+    // control-click two captions
+    const captions = Array.from(findAll('.caption-text')).slice(0, 2)
+    fireEvent.keyDown(document.body, { key: 'Control', code: 'ControlLeft', keyCode: 17 })
+    captions.forEach(caption => {
+      clickHandle(caption)
+    })
+    fireEvent.keyUp(document.body, { key: 'Control', code: 'ControlLeft', keyCode: 17 })
+    // two captions should be highlighted
+    expectCount('.caption-text-highlighted', 2)
+  })
+
+  it('shows annotations in presentation mode', function() {
+    // stub AnnotationTextEditor because CKEditor hangs the test
+    sandbox.stub(AnnotationTextEditor, 'default').returns(<div>text editor</div>)
+    clickIcon('settings')
+    // click on list sources checkbox
+    const checkbox = find('input[name=list_sources]')
+    fireEvent.click(checkbox)
+    clickIcon('annotations')
+    // add two annotations
+    let button = getByText(container, 'Add Annotation')
+    fireEvent.click(button)
+    fireEvent.click(button)
+    // control-click two nodes
+    const nodes = Array.from(findAll('.draggable-node-handle')).slice(0, 2)
+    fireEvent.keyDown(document.body, { key: 'Control', code: 'ControlLeft', keyCode: 17 })
+    nodes.forEach(node => {
+      clickHandle(node)
+    })
+    fireEvent.keyUp(document.body, { key: 'Control', code: 'ControlLeft', keyCode: 17 })
+    clickActionMenuItem('Present')
+    // should show three annotations
+    const circles = findAll('.tracker-circle')
+    expect(circles.length).to.equal(3)
+    // click second tracker circle
+    fireEvent.click(circles[1])
+    // two nodes should be highlighted
+    expectCount('.node-halo-highlighted', 2)
+    // click third tracker circle
+    fireEvent.click(circles[2])
+    // should show sources
+    expect(find('.oligrapher-annotation-header').textContent).to.equal('Sources')
+    expect(find('.oligrapher-annotation-text').textContent).to.contain('example')
+    // click on Annotations button
+    button = getByText(container, 'Annotations')
+    fireEvent.click(button)
+    // should hide annotations
+    expectCount('#oligrapher-annotations', 0)
+  })
+
+  it('changes annotation settings', function() {
+    // stub AnnotationTextEditor because CKEditor hangs the test
+    sandbox.stub(AnnotationTextEditor, 'default').returns(<div>text editor</div>)
+    clickIcon('settings')
+    // click on explore mode only
+    let checkbox = find('input[name=exploreModeOnly]')
+    fireEvent.click(checkbox)
+    clickIcon('annotations')
+    // add two annotations
+    let button = getByText(container, 'Add Annotation')
+    fireEvent.click(button)
+    fireEvent.click(button)
+    clickPresent()
+    // annotations should be hidden
+    expectCount('#oligrapher-annotations', 0)
+    clickEdit()
+    clickIcon('settings')
+    // click on story mode only
+    checkbox = find('input[name=storyModeOnly]')
+    fireEvent.click(checkbox)
+    clickPresent()
+    expectCount('#oligrapher-annotations', 1)
+    expectCount('#oligrapher-annotations-toggler', 0)
   })
 })

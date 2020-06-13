@@ -25,7 +25,7 @@ const X_SIZE = {
 }
 
 const Y_SIZE = {
-  node: 370,
+  node: 390,
   connections: 370,
   edge: 415,
   caption: 175

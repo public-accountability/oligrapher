@@ -14,6 +14,7 @@ export function Edge({ id, currentlyEdited, highlighted }: EdgeProps) {
   const dispatch = useDispatch()
   const edge = useSelector(state => state.graph.edges[id])
   const actualZoom = useSelector(state => state.display.actualZoom)
+  const { isHighlighting } = useSelector(state => state.annotations)
 
   const [isHovering, setHovering] = useState(false)
   const [isDragging, setDragging] = useState(false)
@@ -27,10 +28,13 @@ export function Edge({ id, currentlyEdited, highlighted }: EdgeProps) {
     attributes => dispatch({ type: 'UPDATE_EDGE', id, attributes }), 
     [dispatch, id]
   )
-  const clickEdge = useCallback(
-    () => dispatch({ type: 'CLICK_EDGE', id }), 
-    [dispatch, id]
-  )
+  const clickEdge = useCallback(() => {
+    if (isHighlighting) {
+      dispatch({ type: 'SWAP_EDGE_HIGHLIGHT', id })
+    } else {
+      dispatch({ type: 'CLICK_EDGE', id })
+    }
+  }, [dispatch, id, isHighlighting])
 
   // This resets the curve based on new props when they are passed to an already rendered component
   // This happens after the DRAG_NODE action occurs.

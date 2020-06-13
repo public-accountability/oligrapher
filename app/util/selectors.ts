@@ -17,6 +17,34 @@ export const userCanEditSelector: Selector = state => {
   return userIsOwnerSelector(state) || userIsEditorSelector(state)
 }
 
+export const annotationsListSelector: Selector = state => {
+  const { list_sources } = state.attributes.settings
+  const { list, sources } = state.annotations
+  const editing = state.display.modes.editor
+  
+  return (!editing && list_sources && sources) ? list.concat([sources]) : list
+}
+
+export const showAnnotationsSelector: Selector = state => {
+  const list = annotationsListSelector(state)
+  const { editor: editMode, story: storyMode } = state.display.modes
+  const { storyModeOnly, exploreModeOnly } = state.attributes.settings
+
+  if (editMode) {
+    return storyMode
+  }
+
+  if (exploreModeOnly) {
+    return false
+  }
+
+  if (storyModeOnly || storyMode) {
+    return list.length > 0
+  }
+
+  return false
+}
+
 export const paramsForSaveSelector = (state: StateWithHistory): LsMap => {
   return {
     id: Number(state.attributes.id),
@@ -26,6 +54,7 @@ export const paramsForSaveSelector = (state: StateWithHistory): LsMap => {
       description: state.attributes.subtitle as string,
       is_private: state.attributes.settings.private,
       is_cloneable: state.attributes.settings.clone,
+      list_sources: state.attributes.settings.list_sources,
       settings: JSON.stringify(state.attributes.settings),
       annotations_data: JSON.stringify(state.annotations.list)
     }

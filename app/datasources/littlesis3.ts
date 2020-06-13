@@ -85,6 +85,7 @@ export interface LsMap {
     description: string,
     is_private: boolean,
     is_cloneable: boolean,
+    list_sources: boolean,
     settings: string,
     annotations_data: string
   }

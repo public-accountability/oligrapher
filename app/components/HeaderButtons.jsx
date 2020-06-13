@@ -5,7 +5,7 @@ import ActionMenu from './ActionMenu'
 import { useSaveMap } from '../util/helpers'
 
 export default function HeaderButtons() {
-  const { isSaving, saveMap, confirmSave } = useSaveMap()
+  const { isSaving, saveMap, confirmSave, emptySave } = useSaveMap()
 
   return (
     <div className="oligrapher-header-buttons">
@@ -26,6 +26,7 @@ export default function HeaderButtons() {
       <ActionMenu />
 
       {confirmSave}
+      {emptySave}
     </div>
   )
 }

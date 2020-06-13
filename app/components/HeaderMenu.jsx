@@ -1,30 +1,60 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import HeaderMenuItem from './HeaderMenuItem'
+import React, { useCallback, useState, useRef } from 'react'
+import { useDispatch } from 'react-redux'
+import { Button } from '@material-ui/core'
 
-export default function HeaderMenu(props) {
+import { useSelector } from '../util/helpers'
+import AnnotationsToggler from './AnnotationsToggler'
+import Disclaimer from './Disclaimer'
+import ShareModal from './ShareModal'
+import { userIsOwnerSelector, userCanEditSelector } from '../util/selectors'
+
+
+export default function HeaderMenu() {
+  const dispatch = useDispatch()
+  const userIsOwner = useSelector(userIsOwnerSelector)
+  const userCanEdit = useSelector(userCanEditSelector)
+  const user = useSelector(state => state.attributes.user)
+  const isCloneable = useSelector(state => state.attributes.settings.clone)
+  const isPrivate = useSelector(state => state.attributes.settings.private)
+  const shareUrl = useSelector(state => state.attributes.shareUrl)
+  const [showDisclaimer, setShowDisclaimer] = useState(false)
+  const [showShare, setShowShare] = useState(false)
+  const canClone = userIsOwner || (user && isCloneable)
+  const canShare = userIsOwner && isPrivate && shareUrl
+
+  const enableEditorMode = useCallback(
+    () => dispatch({ type: 'SET_EDITOR_MODE', enabled: true }), 
+    [dispatch]
+  )
+
+  const clone = useCallback(() => dispatch({ type: 'CLONE_REQUESTED' }), [dispatch])
+  
+  const openShare = useCallback(() => setShowShare(true), [])
+  const closeShare = useCallback(() => setShowShare(false), [])
+
+  const openDisclaimer = useCallback(() => setShowDisclaimer(true), [])
+  const closeDisclaimer = useCallback(() => setShowDisclaimer(false), [])
+
   return (
-    <div id="oligrapher-header-menu-wrapper">
-      <ul>
-      {
-        props.items.map(item => (
-          <HeaderMenuItem key={item.text}
-            text={item.text}
-            action={item.action}
-            url={item.url} />
-        ))
+    <div id="oligrapher-header-menu">
+      <AnnotationsToggler />
+
+      { userCanEdit &&
+        <Button size="small" variant="outlined" onClick={enableEditorMode}>Edit</Button> 
       }
-      </ul>
+
+      { canShare &&
+        <Button size="small" variant="outlined" onClick={openShare}>Share</Button>
+      }
+      
+      { canClone &&
+        <Button size="small" variant="outlined" onClick={clone}>Clone</Button>
+      }
+      
+      <Button size="small" variant="outlined" onClick={openDisclaimer}>Disclaimer</Button>
+
+      <Disclaimer open={showDisclaimer} close={closeDisclaimer} />
+      <ShareModal open={showShare} close={closeShare} url={shareUrl} />
     </div>
   )
-}
-
-
-HeaderMenu.propTypes = {
-  "items": PropTypes.array.isRequired
-}
-
-
-HeaderMenu.defaultProps = {
-  "items": []
 }

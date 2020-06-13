@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import DraggableComponent from './DraggableComponent'
 import CaptionTextbox from './CaptionTextbox'
@@ -9,9 +9,16 @@ import CaptionEditorTextarea from './CaptionEditorTextarea'
 export default function Caption({ caption, currentlyEdited, highlighted }) {
   const { id, x, y, width, height } = caption
   const [foreignObjectSize, setForeignObjectSize] = useState({ width, height })
+  const { isHighlighting } = useSelector(state => state.annotations)
 
   const dispatch = useDispatch()
-  const clickCaption = useCallback(() => dispatch({ type: 'CLICK_CAPTION', id }), [dispatch, id])
+  const onClick = useCallback(() => {
+    if (isHighlighting) {
+      dispatch({ type: 'SWAP_CAPTION_HIGHLIGHT', id })
+    } else {
+      dispatch({ type: 'CLICK_CAPTION', id })
+    }
+  }, [dispatch, id, isHighlighting])
   const updateCaption = useCallback(attributes => dispatch({ type: 'UPDATE_CAPTION', attributes, id }), [dispatch, id])
   const moveCaption = useCallback(deltas => dispatch({ type: 'MOVE_CAPTION', deltas, id }), [dispatch, id])
 
@@ -20,7 +27,7 @@ export default function Caption({ caption, currentlyEdited, highlighted }) {
       disabled={currentlyEdited}
       enableUserSelectHack={currentlyEdited}
       onStop={moveCaption}
-      onClick={clickCaption}
+      onClick={onClick}
       handle=".oligrapher-caption">
       <g className="oligrapher-caption" id={`caption-${id}`} >
         <foreignObject 

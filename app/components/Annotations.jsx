@@ -5,14 +5,20 @@ import { Button } from '@material-ui/core'
 import Annotation from './Annotation'
 import AnnotationList from './AnnotationList'
 import AnnotationForm from './AnnotationForm'
+import AnnotationsNav from './AnnotationsNav'
+import AnnotationsTracker from './AnnotationsTracker'
+import { MdClose } from 'react-icons/md'
+import { annotationsListSelector } from '../util/selectors'
 
 export default function Annotations() {
   const dispatch = useDispatch()
   const create = useCallback(() => dispatch({ type: 'CREATE_ANNOTATION' }), [dispatch])
 
   const editing = useSelector(state => state.display.modes.editor)
-  const { list, currentIndex } = useSelector(state => state.annotations)
+  const { currentIndex } = useSelector(state => state.annotations)
+  const list = useSelector(annotationsListSelector)
   const annotation = list[currentIndex]
+  const { storyModeOnly } = useSelector(state => state.attributes.settings)
 
   const prev = useCallback(
     () => dispatch({ type: 'SHOW_ANNOTATION', index: currentIndex - 1 }), 
@@ -24,22 +30,40 @@ export default function Annotations() {
     [dispatch, currentIndex]
   )
 
+  const show = useCallback(
+    index => dispatch({ type: 'SHOW_ANNOTATION', index }),
+    [dispatch]
+  )
+
+  const close = useCallback(() => dispatch({ type: 'TOGGLE_ANNOTATIONS' }), [dispatch])
+
   return (
     <div id="oligrapher-annotations">
       <div id="oligrapher-annotations-nav">
         { editing && <span className="oligrapher-annotations-header">Edit Annotations</span> }
 
-        <Button 
-          variant="outlined" 
-          onClick={prev}
-          disabled={currentIndex === 0}
-        >Prev</Button>
-        &nbsp;
-        <Button 
-          variant="outlined"
-          onClick={next}
-          disabled={currentIndex > list.length - 2 }
-        >Next</Button>
+        { !editing && list.length > 1 &&
+          <AnnotationsNav
+            count={list.length}
+            currentIndex={currentIndex}
+            prev={prev}
+            next={next}
+            />
+        }
+
+        { !editing && list.length > 1 &&
+          <AnnotationsTracker
+            count={list.length}
+            currentIndex={currentIndex}
+            show={show}
+            />
+        }
+
+        { !storyModeOnly &&
+          <div className="oligrapher-annotations-close" onClick={close} title="Hide annotations">
+            <MdClose />
+          </div>
+        }
       </div>
 
       { !editing && <Annotation annotation={annotation} /> }
@@ -58,7 +82,12 @@ export default function Annotations() {
         </Button>
       ) }
 
-      { editing && annotation && <AnnotationForm annotation={annotation} key={annotation.id} /> }
+      { editing && annotation &&
+        <AnnotationForm
+          annotation={annotation}
+          key={annotation.id}
+          />
+      }
     </div>
   )
 }

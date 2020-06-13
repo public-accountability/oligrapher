@@ -521,6 +521,14 @@ export function addInterlocks(graph: Graph, node1Id: string, node2Id: string, no
   return graph
 }
 
+export function hasContents(graph: Graph): boolean {
+  const nodeCount = Object.values(graph.nodes).length
+  const edgeCount = Object.values(graph.edges).length
+  const captionCount = Object.values(graph.captions).length
+
+  return nodeCount + edgeCount + captionCount > 0
+}
+
 export default {
   "new": newGraph,
   "stats": stats,

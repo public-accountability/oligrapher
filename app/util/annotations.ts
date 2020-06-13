@@ -5,7 +5,7 @@ import { AnnotationsState } from './defaultState'
 
 export interface AnnotationAttributes {
   id?: string,
-  title?: string,
+  header?: string,
   text?: string,
   nodeIds?: string[],
   edgeIds?: string[],
@@ -14,7 +14,7 @@ export interface AnnotationAttributes {
 
 export interface Annotation {
   id: string,
-  title: string,
+  header: string,
   text: string,
   nodeIds: string[],
   edgeIds: string[],
@@ -23,7 +23,7 @@ export interface Annotation {
 
 const defaults = (): Annotation => ({
   id: generate(),
-  title: 'New Annotation',
+  header: 'New Annotation',
   text: '',
   nodeIds: [],
   edgeIds: [],
@@ -64,4 +64,25 @@ export const updateAnnotation = (annotations: AnnotationsState, id: string, attr
 export const removeAnnotation = (annotations: AnnotationsState, id: string): void => {
   annotations.currentIndex = Math.max(0, annotations.currentIndex - 1)
   annotations.list = annotations.list.filter(item => item.id !== id)
+}
+
+export const swapHighlight = (annotations: AnnotationsState, type: ('node' | 'edge' | 'caption'), id: string): void => {
+  const { list, currentIndex } = annotations
+  const annotation = list[currentIndex]
+
+  if (!annotation) {
+    return
+  }
+
+  const key = (type + 'Ids') as ('nodeIds' | 'edgeIds' | 'captionIds')
+  let ids = annotation[key] as string[]
+  const index = ids.indexOf(id)
+
+  if (index === -1) {
+    ids = ids.concat(id)
+  } else {
+    ids.splice(index, 1)
+  }
+
+  annotations.list[currentIndex][key] = ids
 }

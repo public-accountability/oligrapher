@@ -24,6 +24,7 @@ export interface Editor {
 export interface UserSettings {
   private: boolean,
   clone: boolean,
+  list_sources: boolean,
   defaultStoryMode: boolean,
   defaultExploreMode: boolean,
   storyModeOnly: boolean,
@@ -67,7 +68,9 @@ export interface Selection {
 export interface AnnotationsState {
   list: Annotation[],
   currentIndex: number,
-  show: boolean
+  sources: Annotation | null,
+  show: boolean,
+  isHighlighting: boolean
 }
 
 export interface DisplayState {
@@ -79,7 +82,7 @@ export interface DisplayState {
   svgOffset: Point,
   offset: Point,
   headerIsCollapsed: boolean,
-  modes: { editor: boolean },
+  modes: { editor: boolean, story: boolean },
   floatingEditor: {
     type: FloatingEditorType | null,
     id: string | null
@@ -123,7 +126,9 @@ const defaultState: State = {
   annotations: {
     list: [],
     currentIndex: 0,
-    show: false
+    sources: null,
+    show: false,
+    isHighlighting: false
   },
 
   // Graph attributes and metadata
@@ -139,10 +144,11 @@ const defaultState: State = {
     // will be displayed in editor mode. It is used by LittleSis.org
     // to create additional buttons that set various map privacy settings.
     settings: {
-      "private": false,
+      private: false,
       clone: true,
-      defaultStoryMode: false,
-      defaultExploreMode: true,
+      list_sources: false,
+      defaultStoryMode: true,
+      defaultExploreMode: false,
       storyModeOnly: false,
       exploreModeOnly: false,
       automaticallyAddEdges: true
@@ -169,7 +175,8 @@ const defaultState: State = {
     offset: { x: 0, y: 0 },
     headerIsCollapsed: false,
     modes: {
-      editor: false
+      editor: false,
+      story: false
     },
     floatingEditor: {
       type: null,

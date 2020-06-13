@@ -76,6 +76,16 @@ function convertGraph(graph: { nodes: any, edges: any, captions: any }): Graph {
   return newGraph
 }
 
+function calculateStoryMode(state: any): boolean {
+  const editMode = state.display.modes.editor
+
+  if (editMode) {
+    return state.annotations.list.length > 0
+  }
+
+  return state.attributes.defaultStoryMode
+}
+
 /*
   Converts legacy oligrapher data, performs initial display state calculations,
   and adds graph history.
@@ -89,7 +99,7 @@ export default function stateInitalizer(legacyState: any): StateWithHistory {
   state.display.viewBox = calculateViewBoxFromGraph(state.graph)
   state.display.svgOffset = computeSvgOffset(state.display.viewBox)
 
-  state.annotations.show = state.annotations.list.length > 0
+  state.display.modes.story = calculateStoryMode(state)
 
   // for redux-undo
   state.graph = {

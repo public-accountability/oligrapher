@@ -7,6 +7,8 @@ import { createMuiTheme } from '@material-ui/core/styles'
 import { Selector } from './selectors'
 import { StateWithHistory } from './defaultState'
 import ConfirmSave from '../components/ConfirmSave'
+import EmptySave from '../components/EmptySave'
+import { hasContents } from '../graph/graph'
 
 export function classNames(...classes: Array<string | undefined>): string {
   return classes.filter(Boolean).join(' ')
@@ -57,26 +59,35 @@ export function isLittleSisId(id: any): boolean {
 
 export function useSaveMap() {
   const dispatch = useDispatch()
-  const [open, setOpen] = useState(false)
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [emptyOpen, setEmptyOpen] = useState(false)
   const isSaving = useSelector<StateWithHistory>(state => state.display.saveMapStatus === 'REQUESTED')
   const version = useSelector<StateWithHistory>(state => state.attributes.version)
+  const isEmpty = useSelector<StateWithHistory>(state => !hasContents(state.graph))
 
   const saveMap = useCallback(() => {
-    if (version === 3) {
+    if (isEmpty) {
+      setEmptyOpen(true)
+    } else if (version === 3) {
       dispatch({ type: 'SAVE_REQUESTED' })
     } else {
-      setOpen(true)
+      setConfirmOpen(true)
     }
-  }, [version, dispatch])
+  }, [version, dispatch, isEmpty])
 
   const save = useCallback(() => {
     dispatch({ type: 'SAVE_REQUESTED' })
-    setOpen(false)
+    setConfirmOpen(false)
   }, [dispatch])
 
-  const close = useCallback(() => setOpen(false), [])
+  const closeConfirm = useCallback(() => setConfirmOpen(false), [])
+  const closeEmpty = useCallback(() => setEmptyOpen(false), [])
 
-  return { isSaving, saveMap, confirmSave: ConfirmSave({ open, close, save })  }
+  return { 
+    isSaving, saveMap, 
+    confirmSave: ConfirmSave({ open: confirmOpen, close: closeConfirm, save }),
+    emptySave: EmptySave({ open: emptyOpen, close: closeEmpty })
+  }
 }
 
 // For now, this isn't needed because we flatten state.graph after every action:
@@ -107,7 +118,7 @@ export const muiTheme = createMuiTheme({
   },
   palette: {
     primary: {
-      main: '#2c63c8',
+      main: '#0c7fff',
     },
     secondary: {
       main: '#c82c63'

@@ -7,8 +7,9 @@
   SCSS nesting is used here, even when not necessary,
   to help us navigate the DOM tree.
 */
+$oligrapher_blue: #0c7fff;
 $font_color: black;
-$link_color: #2c63c8;
+$link_color: $oligrapher_blue;
 $button_bg_color: #2c63c8;
 $button_font_color: white;
 $header_menu_item_color: $font_color;
@@ -20,7 +21,6 @@ $header_save_button_font_color: $button_font_color;
 $header_discard_button_bg_color: #6e89a1;
 $header_discard_button_font_color: white;
 
-$oligrapher_blue: #2c63c8;
 $oligrapher_dark_gray: #888;
 $oligrapher_gray: #b3b3b3;
 $oligrapher_font_gray: #b3b3b3;
@@ -31,9 +31,8 @@ $toolbox_width: 250px;
 $caption_backgound: lightgreen;
 $caption_backgound_focused: lightcoral;
 
-$highlight_blue: #50a3ff;
-$node_highlight_color: $highlight_blue;
-$edge_highlight_color: $highlight_blue;
+$node_highlight_color: $oligrapher_blue;
+$edge_highlight_color: $oligrapher_blue;
 
 html, body, div#oligrapher {
   height: 100%;
@@ -47,7 +46,6 @@ html, body, div#oligrapher {
 #oligrapher-container {
   margin: 0 auto;
   height: 100%;
-  width: calc(100vw - 30px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -56,15 +54,22 @@ html, body, div#oligrapher {
   button, a:hover {
     cursor: pointer;
   }
+
+  a {
+    color: $link_color;
+  }
 }
 
 #oligrapher-container #oligrapher-header {
   display: flex;
   flex-direction: column;
+  width: calc(100vw - 30px);
+  margin: 0 auto;
   border-bottom: 1px solid #ccc;
   box-sizing: border-box;
 
   &.oligrapher-header-expanded {
+    min-height: 148px;
     height: 148px;
     transition: height 0.1s ease-out;
   }
@@ -95,6 +100,7 @@ html, body, div#oligrapher {
     box-sizing: border-box;
 
     input {
+      font-family: Helvetica, Arial, sans-serif;
       font-size: 42px;
       height: 48px; 
     }
@@ -111,6 +117,7 @@ html, body, div#oligrapher {
       width: 500px;
       height: 34px;
       box-sizing: border-box;
+      font-family: Helvetica, Arial, sans-serif;
       font-size: 15px;
       line-height: 1em;
     }
@@ -167,6 +174,12 @@ html, body, div#oligrapher {
       margin-left: auto; /* This pushes the flex item to the right */
       align-self: flex-end;
 
+      #oligrapher-header-menu {
+        button {
+          margin-left: 0.5em;
+        }
+      }
+
       .oligrapher-header-buttons  {
         margin-top: 8px;
 
@@ -185,7 +198,16 @@ html, body, div#oligrapher {
 %box_shadow {
   -webkit-box-shadow: 0px 0px 20px 2px #eee;
   -moz-box-shadow: 0px 0px 20px 2p #eee;
-  box-shadow: 0px 0px 20px 2px #eee;
+  box-shadow: 0px 0px 20px 2px rgba(128, 128, 128, 0.3);
+}
+
+#oligrapher-container .MuiGrid-container {
+  flex: 1 2 auto;
+  overflow: hidden;
+}
+
+#oligrapher-container .MuiGrid-item {
+  height: 100%;
 }
 
 #oligrapher-container #oligrapher-graph-container {
@@ -201,7 +223,7 @@ html, body, div#oligrapher {
   .oligrapher-graph-editor {
     position: absolute;
     top: 0;
-    left: 0;
+    left: 15px;
 
     z-index: 10;
     width: 100%;
@@ -217,7 +239,7 @@ html, body, div#oligrapher {
     z-index: 1;
     position: absolute;
     top: 1em;
-    right: 0;
+    right: 15px;
     border: 1px solid #ccc;
     @extend %box_shadow;
 
@@ -230,7 +252,6 @@ html, body, div#oligrapher {
       padding: 8px;
       border: 0;
       background-color: white;
-      color: gray;
       height: 30px;
       width: 30px;
       border-bottom: 1px solid #eee;
@@ -260,8 +281,17 @@ html, body, div#oligrapher {
 %editor_label {
   margin-bottom: 0.25em;
   color: $oligrapher_dark_gray;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: bold;
+}
+
+%editor_input {
+  font-size: 14px;
+  line-height: 1em;
+  height: 28px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 5px;
 }
 
 #oligrapher-container .oligrapher-graph-editor .editor-menu {
@@ -348,10 +378,11 @@ html, body, div#oligrapher {
   top: 0;
   left: 60px;
   pointer-events: auto;
-  border: 2px solid $highlight_blue;
+  border: 3px solid $oligrapher_blue;
   padding: 10px;
   width: $toolbox_width;
   background-color: white;
+  @extend %box_shadow;
 
   header {
     @extend %toolbox_header;
@@ -363,6 +394,7 @@ html, body, div#oligrapher {
     input {
       display: block;
       margin-bottom: 10px;
+      @extend %editor_input;
     }
 
     a {
@@ -410,6 +442,10 @@ html, body, div#oligrapher {
 /* COMMON NODE EDITING */
 
 #oligrapher-container .oligrapher-graph-editor, #oligrapher-container .oligrapher-floating-editor {
+  > div { 
+    @extend %box_shadow;
+  }
+  
   .editor-page-buttons {
     padding-bottom: 10px;
 
@@ -463,12 +499,12 @@ html, body, div#oligrapher {
       cursor: pointer;
 
       &:hover {
-        border: 1px solid chartreuse;
+        border: 1px solid #ffff00;
       }
     }
 
     .current {
-      border: 1px solid $highlight_blue;
+      border: 2px solid $oligrapher_blue;
     }
 
     > div {
@@ -526,14 +562,13 @@ html, body, div#oligrapher {
   top: 50%;
   left: 50%;
   background-color: white;
-  border: 3px solid $highlight_blue;
+  border: 3px solid $oligrapher_blue;
   line-height: 1em;
 
   header.editor-header {
     font-size: 18px;
     font-weight: bold;
-    margin: 5px auto;
-    text-align: center;
+    margin-bottom: 1em;
 
     div {
       display: inline-block;
@@ -541,7 +576,7 @@ html, body, div#oligrapher {
     }
     
     button {
-      display: inline-block;
+      float: right;
       margin-left: 10px;
       padding: 0;
       border: none;
@@ -565,14 +600,14 @@ html, body, div#oligrapher {
     label {
       @extend %editor_label;
       display: block;
+      margin-bottom: 5px;
+      margin-top: 5px;
     }
 
     input {
-      padding: 0.25em;
+      width: 100%;
       margin-bottom: 0.8em;
-      border: 0.8px solid $oligrapher_font_gray;
-      font-size: 1em;
-      line-height: 1em;
+      @extend %editor_input;
     }
   }
 
@@ -586,23 +621,20 @@ html, body, div#oligrapher {
 
 #oligrapher-container div.oligrapher-node-editor {
   width: 235px;
-  height: 370px;
+  height: 390px;
   padding: 10px;
   box-sizing: border-box;
 
-  input {
-    width: 200px;
-  }
-
   a.add-connections-link {
     display: block;
-    font-size: 14px;
+    font-size: 16px;
     color: $oligrapher_blue;
     font-weight: bold;
-    margin-top: 0.5em;
+    margin-top: 10px;
     text-decoration: none;
+
     &:hover {
-      text-decoration: underline;
+      text-decoration: none;
     }
   }
 }
@@ -629,13 +661,9 @@ html, body, div#oligrapher {
 
 #oligrapher-container div.oligrapher-edge-editor {
   width: 325px;
-  height: 415px;
+  height: 430px;
   padding: 10px;
   box-sizing: border-box;
-
-  input {
-    width: 280px;
-  }
 
   .edit-edge-style {
     width: 100%;
@@ -678,13 +706,14 @@ html, body, div#oligrapher {
   .edit-edge-scale {
     input {
       margin: 0;
-      width: 30px;
+      width: 35px;
     }
 
     input[type='range'] {
       position: relative;
       top: 8px;
       width: 100px;
+      outline: none;
     }
   }
 }
@@ -860,12 +889,6 @@ div.lock {
     pointer-events: none;
   }
 
-  // &:hover {
-  //   .node-halo-circle {
-  //     fill: $highlight_blue;
-  //   }
-  // }
-
   .node-label text {
     font-family: 'Helvetica Neue Medium';
     fill: #222;
@@ -873,6 +896,23 @@ div.lock {
 
   a:hover {
     text-decoration: none;
+  }
+
+  .node-halo {
+    fill: none;
+
+    &.node-halo-selected {
+      fill: $oligrapher_blue;
+    }
+
+    &.node-halo-highlighted {
+      fill: #ffff00;
+    }
+
+    &.node-halo-selected.node-halo-highlighted {
+      stroke: $oligrapher_blue;
+      stroke-width: 2;
+    }
   }
 }
 
@@ -907,7 +947,7 @@ div.lock {
 
   .edit-caption-textarea {
     resize: both;
-    border: 1px solid $highlight_blue;
+    border: 1px solid $oligrapher_blue;
     overflow-y: scroll;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none;  /* Internet Explorer 10+ */
@@ -932,33 +972,76 @@ div.lock {
 
 /* user message */
 
-#oligrapher-container .oligrapher-user-message {
-  position: absolute;
-  right: 80px;
-  top: 20px;
+%message {
   padding: 10px;
-  max-width: 300px;
   font-size: 14px;
   border: 1px solid #ccc;
   background-color: white;
   @extend %box_shadow;
 }
 
+#oligrapher-container .oligrapher-user-message {
+  position: absolute;
+  right: 80px;
+  top: 20px;
+  max-width: 300px;
+  @extend %message;
+}
+
 /* ANNOTATIONS */
 
 #oligrapher-container #oligrapher-annotations {
+  border-left: 1px solid #eee;
   padding: 1em;
-  margin-left: 1em;
+  padding-right: 0;
+  margin-right: 15px;
+  height: 100%;
 
-  .oligrapher-annotations-header {
+  #oligrapher-annotations-tracker {
+    display: inline-block;
+    margin-left: 5px;
     position: relative;
     top: 5px;
+
+    .tracker-circle {
+      display: inline-block;
+      margin-left: 5px;
+      height: 20px;
+      width: 20px;
+      border-radius: 10px;
+      background-color: #ccc;
+      cursor: pointer;
+    }
+
+    .tracker-circle-selected {
+      background-color: $oligrapher_blue;
+    }
+  }
+
+  .oligrapher-annotations-close {
+    float: right;
+    position: relative;
+    top: 5px;
+    cursor: pointer;
+
+    svg {
+      height: 20px;
+      width: 20px;
+    }
+  }
+
+  .oligrapher-annotations-header {
     font-size: 28px;
     font-weight: bold;
     margin-right: 1em;
   }
 
-  .oligrapher-annotation-title {
+  .oligrapher-annotation {
+    height: 90%;
+    overflow-y: auto;
+  }
+
+  .oligrapher-annotation-header {
     font-size: 2em;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
@@ -994,7 +1077,7 @@ div.lock {
 #oligrapher-container #oligrapher-annotation-form {
   margin-top: 1em;
 
-  .oligrapher-annotation-form-title {
+  .oligrapher-annotation-form-header {
     margin-bottom: 0.5em;
     width: 100%;
   }
@@ -1011,13 +1094,19 @@ div.lock {
     padding: 0;
   }
 
-  #oligrapher-annotation-form-title {
+  #oligrapher-annotation-form-header {
     font-size: 2em;
   }
 
   #oligrapher-annotation-form-text {
     font-size: 0.9em;
   }
+}
+
+#oligrapher-annotations-toggler {
+  background-color: #f8f8f8;
+  border-color: #ddd;
+  margin-right: 0.5em;
 }
 
 /* etc */

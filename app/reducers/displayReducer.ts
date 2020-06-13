@@ -76,6 +76,7 @@ export default produce((display: DisplayState, action: any): void => {
     FloatingEditor.clear(display)
     return
   case 'CLICK_EDGE':
+    clearSelection(display)
     toggleEditor(display, 'edge', action.id)
     return
   case 'ADD_CAPTION':
@@ -85,6 +86,7 @@ export default produce((display: DisplayState, action: any): void => {
     FloatingEditor.clear(display)
     return
   case 'CLICK_CAPTION':
+    clearSelection(display)
     toggleEditor(display, 'caption', action.id)
     return
   case 'ZOOM_IN':
@@ -94,7 +96,13 @@ export default produce((display: DisplayState, action: any): void => {
     display.zoom = display.zoom / ZOOM_INTERVAL
     return
   case 'SET_EDITOR_MODE':
+    clearSelection(display)
+    display.tool = null
+    FloatingEditor.clear(display)
     display.modes.editor = action.enabled
+    return
+  case 'TOGGLE_ANNOTATIONS':
+    display.modes.story = !display.modes.story
     return
   case 'TOGGLE_TOOL':
     display.tool = (display.tool === action.tool) ? null : action.tool
@@ -215,7 +223,7 @@ export default produce((display: DisplayState, action: any): void => {
     swapSelection(
       display,
       'node',
-      action.nodeId,
+      action.id,
       Boolean(action.singleSelect)
     )
     FloatingEditor.clear(display)

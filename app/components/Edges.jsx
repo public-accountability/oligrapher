@@ -26,12 +26,13 @@ Edges.propTypes = {
 }
 
 const mapStateToProps = state => {
+  const storyMode = state.display.modes.story
   const { list, currentIndex } = state.annotations
 
   return {
     edges: state.graph.edges,
     editedEdgeId: FloatingEditor.getId(state.display, 'edge'),
-    highlightedEdgeIds: list[currentIndex]?.edgeIds || []
+    highlightedEdgeIds: storyMode ? (list[currentIndex]?.edgeIds || []) : []
   }
 }
 

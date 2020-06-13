@@ -13,11 +13,12 @@ export function Node({ id, currentlyEdited, selected, highlighted }) {
   const dispatch = useDispatch()
   const node = useSelector(state => state.graph.nodes[id])
   const { name } = node
-  const isSelecting = useSelector(state => state.display.selection.isSelecting)
+  const { isSelecting } = useSelector(state => state.display.selection)
+  const { isHighlighting } = useSelector(state => state.annotations)
   const selectedNodeIds = useSelector(state => state.display.selection.node)
   const isMultipleSelection = selected && selectedNodeIds.length > 1
   const [isDragging, setDragging] = useState(false)
-  const showHalo = selected || currentlyEdited || isDragging
+  const showHalo = !isHighlighting && (selected || currentlyEdited || isDragging)
 
   const moveNode = useCallback(deltas => {
     setDragging(false)
@@ -42,11 +43,13 @@ export function Node({ id, currentlyEdited, selected, highlighted }) {
   const clickNode = useCallback(() => {
     setDragging(false)
     if (isSelecting) {
-      dispatch({ type: 'SWAP_NODE_SELECTION', nodeId: id })
+      dispatch({ type: 'SWAP_NODE_SELECTION', id })
+    } else if (isHighlighting) {
+      dispatch({ type: 'SWAP_NODE_HIGHLIGHT', id })
     } else {
       dispatch({ type: 'CLICK_NODE', id })
     }
-  }, [dispatch, isSelecting, id])
+  }, [dispatch, isSelecting, isHighlighting, id])
   const onMouseEnter = useCallback(() => dispatch({ type: 'MOUSE_ENTERED_NODE', name }), [dispatch, name])
   const onMouseLeave = useCallback(() => dispatch({ type: 'MOUSE_LEFT_NODE' }), [dispatch])
 

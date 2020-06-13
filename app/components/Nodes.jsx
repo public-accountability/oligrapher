@@ -52,6 +52,7 @@ Nodes.propTypes = {
 }
 
 const mapStateToProps = state => {
+  const storyMode = state.display.modes.story
   const { list, currentIndex } = state.annotations
 
   return {
@@ -59,7 +60,7 @@ const mapStateToProps = state => {
     editedNodeId: FloatingEditor.getId(state.display, 'node'),
     draggedNodeId: state.display.draggedNode ? state.display.draggedNode.id : null,
     selectedNodeIds: getSelection(state.display, 'node'),
-    highlightedNodeIds: list[currentIndex]?.nodeIds || []
+    highlightedNodeIds: storyMode ? (list[currentIndex]?.nodeIds || []) : []
   }
 }
 

@@ -8,14 +8,14 @@ const OPTIONS = {
   'Privacy': {
     "private": "Set map to private",
     "clone": "Allow map cloning",
+    "list_sources": "Show source links"
   },
-  // STORY MODE IS NOT IMPLEMENTED YET
-  // 'View': {
-  //   "defaultStoryMode": "Default: Story Mode",
-  //   "defaultExploreMode": "Default: Explore Mode",
-  //   "storyModeOnly": "Story Mode Only",
-  //   "exploreModeOnly": "Explore Mode Only",
-  // },
+  'View': {
+    "defaultStoryMode": "Default: Story Mode",
+    "defaultExploreMode": "Default: Explore Mode",
+    "storyModeOnly": "Story Mode Only",
+    "exploreModeOnly": "Explore Mode Only",
+  },
   'Editing': {
     "automaticallyAddEdges": "Automatically add edges"
   }

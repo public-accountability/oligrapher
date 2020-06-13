@@ -12,6 +12,7 @@ import ZoomControl from './ZoomControl'
 import UserMessage from './UserMessage'
 import Annotations from './Annotations'
 import { muiTheme } from '../util/helpers'
+import { showAnnotationsSelector } from '../util/selectors'
 
 export const ROOT_CONTAINER_ID = "oligrapher-container"
 
@@ -35,12 +36,10 @@ export const ROOT_CONTAINER_ID = "oligrapher-container"
   editing interface (<Editor>)
 
   It needs rendered inside a Redux Provider
-
 */
+
 export function Root() {
-  const { show, list } = useSelector(state => state.annotations)
-  const editMode = useSelector(state => state.display.modes.editor)
-  const showAnnotations = (editMode && show) || (!editMode && list.length > 0)
+  const showAnnotations = useSelector(showAnnotationsSelector)
 
   return (
     <div id={ROOT_CONTAINER_ID}>

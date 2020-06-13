@@ -8,15 +8,17 @@ const HALO_WIDTH = 6
 export function NodeHalo({ node, selected, highlighted }) {
   const { x, y, scale } = node
   const radius = NODE_RADIUS * scale
-  const fill = selected ? "#50a3ff" : ( highlighted ? "#ffff00" : "none" )
+  const className = "node-halo"
+    + (selected ? " node-halo-selected" : "")
+    + (highlighted ? " node-halo-highlighted" : "")
 
   return (
     <circle
-      className="node-halo-circle"
+      className={className}
       cx={x}
       cy={y}
       r={radius + HALO_WIDTH}
-      fill={fill} />
+      />
   )
 }
 

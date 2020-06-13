@@ -8,8 +8,9 @@ export default function Captions() {
   const captions = useSelector(state => state.graph.captions)
   const editedCaptionId = useSelector(state => FloatingEditor.getId(state.display, 'caption'))
   const highlightedCaptionIds = useSelector(state => {
+    const storyMode = state.display.modes.story
     const { list, currentIndex } = state.annotations
-    return list[currentIndex]?.captionIds || []
+    return storyMode ? (list[currentIndex]?.captionIds || []) : []
   })
 
   return (

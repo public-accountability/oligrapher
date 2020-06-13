@@ -11,6 +11,7 @@ import Filters from './Filters'
 import Pannable from './Pannable'
 import Zoomable from './Zoomable'
 import Selectable from './Selectable'
+import Highlightable from './Highlightable'
 import { calculateViewBox } from '../graph/graph'
 
 /*
@@ -22,7 +23,7 @@ export function Graph(props) {
   const [svgHeight, setSvgHeight] = useState(500)
 
   const {
-    viewBox, zoom, svgSize, headerIsCollapsed, setSvgSize, rootContainerId 
+    viewBox, zoom, svgSize, headerIsCollapsed, setSvgSize, rootContainerId , storyMode
   } = props
 
   const handleResize = () => {
@@ -38,7 +39,7 @@ export function Graph(props) {
     setSvgHeight(svgHeight)
   }
 
-  useEffect(handleResize, [headerIsCollapsed])
+  useEffect(handleResize, [headerIsCollapsed, storyMode])
   
   return (
     <div id="oligrapher-graph-svg">
@@ -50,9 +51,11 @@ export function Graph(props) {
             {/* don't show graph until svgSize has been set */}
             { svgSize ? (
               <Selectable>
-                <Edges />
-                <Nodes />
-                <Captions />
+                <Highlightable>
+                  <Edges />
+                  <Nodes />
+                  <Captions />
+                </Highlightable>
               </Selectable>
             ) : <></> }
           </Pannable>
@@ -68,16 +71,27 @@ Graph.propTypes = {
   svgSize: PropTypes.object,
   headerIsCollapsed: PropTypes.bool.isRequired,
   setSvgSize: PropTypes.func.isRequired,
-  rootContainerId: PropTypes.string.isRequired
+  rootContainerId: PropTypes.string.isRequired,
+  storyMode: PropTypes.bool.isRequired
 }
 
 const calculateAnnotationViewBox = state => {
+  // show normal viewbox if editing or annotations hidden
+  if (state.display.modes.editor || !state.display.modes.story) {
+    return state.display.viewBox
+  }
+
   const { list, currentIndex } = state.annotations
   const annotation = list[currentIndex]
 
   if (annotation) {
     let { nodes, edges, captions } = state.graph
     const { nodeIds, edgeIds, captionIds } = annotation
+
+    // show normal viewbox if no highlights
+    if (nodeIds.length + edgeIds.length + captionIds.length === 0) {
+      return state.display.viewBox
+    }
 
     nodes = Object.values(nodes).filter(node => nodeIds.includes(node.id))
     edges = Object.values(edges).filter(edge => edgeIds.includes(edge.id))
@@ -92,10 +106,10 @@ const calculateAnnotationViewBox = state => {
 const mapStateToProps = state => {
   const viewBox = calculateAnnotationViewBox(state)
   const { zoom, svgSize, headerIsCollapsed } = state.display
-  const { nodes } = state.graph
+  const storyMode = state.display.modes.story
 
   return {
-    viewBox, zoom, svgSize, headerIsCollapsed, nodes
+    viewBox, zoom, svgSize, headerIsCollapsed, storyMode
   }
 }
 

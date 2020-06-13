@@ -57,7 +57,7 @@ export default function AnnotationList({ list, currentIndex }) {
                       provided.draggableProps.style
                     )}
                   >
-                    {index + 1}. {item.title}
+                    {index + 1}. {item.header}
                   </div>
                 )}
               </Draggable>
