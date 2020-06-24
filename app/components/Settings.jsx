@@ -14,10 +14,11 @@ const OPTIONS = {
     "defaultStoryMode": "Default: Story Mode",
     "defaultExploreMode": "Default: Explore Mode",
     "storyModeOnly": "Story Mode Only",
-    "exploreModeOnly": "Explore Mode Only",
+    "exploreModeOnly": "Explore Mode Only"
   },
   'Editing': {
-    "automaticallyAddEdges": "Automatically add edges"
+    "automaticallyAddEdges": "Automatically add edges",
+    "scrollToZoom": "Scroll to zoom"
   }
 }
 

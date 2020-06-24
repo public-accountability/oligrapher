@@ -90,10 +90,10 @@ export default produce((display: DisplayState, action: any): void => {
     toggleEditor(display, 'caption', action.id)
     return
   case 'ZOOM_IN':
-    display.zoom = display.zoom * ZOOM_INTERVAL
+    display.zoom = display.zoom * (action.interval || ZOOM_INTERVAL)
     return
   case 'ZOOM_OUT':
-    display.zoom = display.zoom / ZOOM_INTERVAL
+    display.zoom = display.zoom / (action.interval || ZOOM_INTERVAL)
     return
   case 'SET_EDITOR_MODE':
     clearSelection(display)

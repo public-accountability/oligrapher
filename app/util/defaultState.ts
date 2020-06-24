@@ -29,7 +29,8 @@ export interface UserSettings {
   defaultExploreMode: boolean,
   storyModeOnly: boolean,
   exploreModeOnly: boolean,
-  automaticallyAddEdges: boolean
+  automaticallyAddEdges: boolean,
+  scrollToZoom: boolean
 }
 
 export interface LockState {
@@ -151,7 +152,8 @@ const defaultState: State = {
       defaultExploreMode: false,
       storyModeOnly: false,
       exploreModeOnly: false,
-      automaticallyAddEdges: true
+      automaticallyAddEdges: true,
+      scrollToZoom: false
     },
     editors: [],
     lock: { 
