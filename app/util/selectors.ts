@@ -4,7 +4,7 @@ import { LsMap } from '../datasources/littlesis3'
 export type Selector = (state: StateWithHistory) => any
 
 export const userIsOwnerSelector: Selector = state => {
-  return state.attributes.user 
+  return state.attributes.user
     && (!state.attributes.owner || state.attributes.owner.id === state.attributes.user.id)
 }
 

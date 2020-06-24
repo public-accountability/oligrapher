@@ -83,7 +83,7 @@ function calculateStoryMode(state: any): boolean {
     return state.annotations.list.length > 0
   }
 
-  return state.attributes.defaultStoryMode
+  return state.attributes.settings.defaultStoryMode
 }
 
 /*

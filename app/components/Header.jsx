@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { MdExpandMore, MdExpandLess } from 'react-icons/md'
+import { Hidden } from '@material-ui/core'
 
 import { useSelector } from '../util/helpers'
 import HeaderRight from './HeaderRight'
@@ -38,24 +39,38 @@ export default function Header() {
 
   return (
     <div id="oligrapher-header" className={className}>
-      { isCollapsed || (
-        <div id="oligrapher-header-top">
-          <Title text={title} editable={editMode} onChange={updateTitle} />
-        </div>
-      ) }
+      { isCollapsed && 
+        <div id="oligrapher-header-bottom">
+          <Title text={title} editable={false} />
 
-      <div id="oligrapher-header-bottom">
-        { isCollapsed ? <Title text={title} editable={false} /> : (
-          <div id="oligrapher-header-left-wrapper">
-            <Subtitle text={subtitle} editable={editMode} onChange={updateSubtitle} />
-            { owner && <Attribution users={users} date={date} /> }
+          <div id="oligrapher-header-right-wrapper">
+            <HeaderRight />
           </div>
-        ) }
-
-        <div id="oligrapher-header-right-wrapper">
-          <HeaderRight />
         </div>
-      </div>
+      }
+
+      { !isCollapsed &&
+        <>
+          <div id="oligrapher-header-top">
+            <Title text={title} editable={editMode} onChange={updateTitle} />
+          </div>
+
+          <Hidden xsDown>
+            <div id="oligrapher-header-bottom">
+              <div id="oligrapher-header-left-wrapper">
+                <Subtitle text={subtitle} editable={editMode} onChange={updateSubtitle} />
+                { owner && <Attribution users={users} date={date} /> }
+              </div>
+
+              <Hidden smDown>
+                <div id="oligrapher-header-right-wrapper">
+                  <HeaderRight />
+                </div>
+              </Hidden>
+            </div>
+          </Hidden>
+        </>
+      }
 
       { editMode &&
         <div id="oligrapher-header-toggler">

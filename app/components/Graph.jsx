@@ -17,32 +17,17 @@ import { calculateViewBox } from '../graph/graph'
 /*
   The core component that displays the graph
 */
-export function Graph(props) {
+const Graph = React.forwardRef(function GraphFunc(props, ref) {
   // used to calculate the actual zoom and caption placement.
   const svgRef = useRef(null)
   const [svgHeight, setSvgHeight] = useState(500)
 
   const {
-    viewBox, zoom, svgSize, headerIsCollapsed, setSvgSize, rootContainerId , storyMode
+    viewBox, zoom, svgSize, headerIsCollapsed, setSvgSize, storyMode
   } = props
-
-  const handleResize = () => {
-    const containerTop = document
-      .getElementById(rootContainerId)
-      .getBoundingClientRect()
-      .top
-    const containerHeight = window.innerHeight - containerTop
-    const headerHeight = headerIsCollapsed ? 52 : 148
-    const svgHeight = Math.floor(containerHeight - headerHeight)
-    const { width } = svgRef.current.getBoundingClientRect()
-    setSvgSize({ width: Math.floor(width), height: svgHeight })
-    setSvgHeight(svgHeight)
-  }
-
-  useEffect(handleResize, [headerIsCollapsed, storyMode])
   
   return (
-    <div id="oligrapher-graph-svg">
+    <div id="oligrapher-graph-svg" style={{ height: svgHeight + "px" }} ref={ref}>
       <Svg outermost={true} viewBox={viewBox} height={svgHeight + "px"} ref={svgRef}>
         <Filters />
         <Markers />
@@ -63,7 +48,7 @@ export function Graph(props) {
       </Svg>
     </div>
   )
-}
+})
 
 Graph.propTypes = {
   viewBox: PropTypes.object.isRequired,

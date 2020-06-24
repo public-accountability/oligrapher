@@ -38,6 +38,10 @@ html, body, div#oligrapher {
   height: 100%;
 }
 
+body {
+  margin: 0;
+}
+
 /*
    This is our outermost div.
 
@@ -60,7 +64,7 @@ html, body, div#oligrapher {
   }
 }
 
-#oligrapher-container #oligrapher-header {
+#oligrapher-container #oligrapher-header, #oligrapher-container #oligrapher-header-condensed {
   display: flex;
   flex-direction: column;
   width: calc(100vw - 30px);
@@ -143,16 +147,6 @@ html, body, div#oligrapher {
       flex-grow: 2;
       padding-right: 1.5em;
 
-      @media (min-width: 600px) {
-        padding-right: 0;
-        max-width: 70%;
-      }
-
-      @media (min-width: 900px) {
-        padding-right: 0;
-        max-width: 60%;
-      }
-
       #oligrapher-attribution {
         font-size: 0.9em;
         line-height: 1.2em;
@@ -203,11 +197,11 @@ html, body, div#oligrapher {
 
 #oligrapher-container .MuiGrid-container {
   flex: 1 2 auto;
-  overflow: hidden;
+  // overflow: hidden;
 }
 
 #oligrapher-container .MuiGrid-item {
-  height: 100%;
+  // height: 100%;
 }
 
 #oligrapher-container #oligrapher-graph-container {
@@ -217,7 +211,7 @@ html, body, div#oligrapher {
 
   #oligrapher-graph-svg {
     z-index: 1;
-    height: 100%;
+    height: 95%;
   }
 
   .oligrapher-graph-editor {
@@ -990,33 +984,59 @@ div.lock {
 
 /* ANNOTATIONS */
 
+#oligrapher-container #oligrapher-annotations-condensed {
+  padding: 0.5em;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 35%;
+  width: 100%;
+  background-color: white;
+  box-sizing: border-box;
+
+  .oligrapher-annotation {
+    overflow-y: scroll;
+  }
+
+  .oligrapher-annotation-header {
+    font-size: 1.5em;
+    margin-top: 0;
+    margin-bottom: 0.5em;
+  }
+
+  .oligrapher-annotation-text {
+    font-size: 0.9em;
+  }
+}
+
+#oligrapher-container #oligrapher-annotations-tracker {
+  display: inline-block;
+  margin-left: 5px;
+  margin-bottom: 1em;
+  position: relative;
+  top: 5px;
+
+  .tracker-circle {
+    display: inline-block;
+    margin-left: 5px;
+    height: 20px;
+    width: 20px;
+    border-radius: 10px;
+    background-color: #ccc;
+    cursor: pointer;
+  }
+
+  .tracker-circle-selected {
+    background-color: $oligrapher_blue;
+  }
+}
+
 #oligrapher-container #oligrapher-annotations {
   border-left: 1px solid #eee;
   padding: 1em;
   padding-right: 0;
   margin-right: 15px;
   height: 100%;
-
-  #oligrapher-annotations-tracker {
-    display: inline-block;
-    margin-left: 5px;
-    position: relative;
-    top: 5px;
-
-    .tracker-circle {
-      display: inline-block;
-      margin-left: 5px;
-      height: 20px;
-      width: 20px;
-      border-radius: 10px;
-      background-color: #ccc;
-      cursor: pointer;
-    }
-
-    .tracker-circle-selected {
-      background-color: $oligrapher_blue;
-    }
-  }
 
   .oligrapher-annotations-close {
     float: right;
@@ -1043,7 +1063,7 @@ div.lock {
 
   .oligrapher-annotation-header {
     font-size: 2em;
-    margin-top: 0.5em;
+    margin-top: 0;
     margin-bottom: 0.5em;
   }
 
