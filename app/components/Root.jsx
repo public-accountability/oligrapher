@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useCallback } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import React from 'react'
+import { useSelector } from 'react-redux'
 import { hot } from 'react-hot-loader/root'
 import { ThemeProvider } from '@material-ui/core/styles'
 import { Grid, Hidden } from '@material-ui/core'
@@ -19,42 +19,24 @@ import { showAnnotationsSelector } from '../util/selectors'
 export const ROOT_CONTAINER_ID = "oligrapher-container"
 
 export function Root() {
-  const dispatch = useDispatch()
   const showAnnotations = useSelector(showAnnotationsSelector)
-  const { headerIsCollapsed } = useSelector(state => state.display)
-  const storyMode = useSelector(state => state.display.modes.story)
-
-  const graphRef = useRef()
-  const annotationsRef = useRef()
-
-  const setSvgSize = useCallback(size => {
-    dispatch({ type: 'SET_SVG_SIZE', size })
-  }, [dispatch])
-
-  useEffect(() => {
-    const graphTop = graphRef.current.getBoundingClientRect().top
-    const annotationsTop = annotationsRef.current.getBoundingClientRect().top || window.innerHeight
-    const height = Math.floor(annotationsTop - graphTop)
-    console.log(graphTop, annotationsTop, height, window.innerHeight)
-
-    const { width } = graphRef.current.getBoundingClientRect()
-    setSvgSize({ width: Math.floor(width), height })
-  }, [headerIsCollapsed, storyMode])
 
   return (
     <div id={ROOT_CONTAINER_ID}>
       <ThemeProvider theme={muiTheme}>
-        <Hidden smDown>
+        <Hidden xsDown>
           <Header />
         </Hidden>
-        <Hidden mdUp>
+        <Hidden smUp>
           <CondensedHeader />
         </Hidden>
         <Grid container spacing={0}>
           <Grid item xs={12} md={showAnnotations ? 8 : 12}>
             <div id="oligrapher-graph-container">
-              <Graph rootContainerId={ROOT_CONTAINER_ID} ref={graphRef} />
-              <Editor />
+              <Graph rootContainerId={ROOT_CONTAINER_ID} />
+              <Hidden xsDown>
+                <Editor />
+              </Hidden>
               <ZoomControl />
               <FloatingEditors />
               <UserMessage />
@@ -62,18 +44,17 @@ export function Root() {
           </Grid>
           { showAnnotations &&
             <Hidden smDown>
-              <Grid item xs={12} md={4}>
+              <Grid item xs={4}>
                 <Annotations />
               </Grid>
             </Hidden>
           }
-
-          <Hidden mdUp>
-            <Grid item xs={12}>
-              <CondensedAnnotations ref={annotationsRef} />
-            </Grid>
-          </Hidden>
         </Grid>
+        { showAnnotations &&
+          <Hidden mdUp>
+            <CondensedAnnotations />
+          </Hidden>
+        }
       </ThemeProvider>
     </div>
   )

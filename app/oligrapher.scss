@@ -75,12 +75,10 @@ body {
   &.oligrapher-header-expanded {
     min-height: 148px;
     height: 148px;
-    transition: height 0.1s ease-out;
   }
 
   &.oligrapher-header-collapsed {
     height: 52px;
-    transition: height 0.1s ease-out;
 
     #oligrapher-header-top {
       display: flex;
@@ -107,6 +105,12 @@ body {
       font-family: Helvetica, Arial, sans-serif;
       font-size: 42px;
       height: 48px; 
+    }
+
+    a {
+      color: black;
+      text-decoration: none;
+      font-weight: normal;
     }
   }
 
@@ -985,27 +989,41 @@ div.lock {
 /* ANNOTATIONS */
 
 #oligrapher-container #oligrapher-annotations-condensed {
-  padding: 0.5em;
+  padding: 1em;
   position: fixed;
   bottom: 0;
   left: 0;
-  height: 35%;
+  height: 28%;
   width: 100%;
-  background-color: white;
   box-sizing: border-box;
+  padding-bottom: 0;
 
   .oligrapher-annotation {
     overflow-y: scroll;
+    background-color: white;
+    height: calc(100% - 40px);
   }
 
   .oligrapher-annotation-header {
-    font-size: 1.5em;
-    margin-top: 0;
-    margin-bottom: 0.5em;
+    font-size: 1em;
+    font-weight: bold;
+    margin-top: 0.5em;
+    margin-bottom: 0;
   }
 
   .oligrapher-annotation-text {
-    font-size: 0.9em;
+    font-size: 1em;
+    line-height: 1.4em;
+
+    p {
+      margin-top: 0.5em;
+      margin-bottom: 0.5em;
+    }
+  }
+
+  #oligrapher-annotations-tracker .tracker-circle {
+    height: 15px;
+    width: 15px;
   }
 }
 
@@ -1057,12 +1075,12 @@ div.lock {
   }
 
   .oligrapher-annotation {
-    height: 90%;
     overflow-y: auto;
   }
 
   .oligrapher-annotation-header {
     font-size: 2em;
+    line-height: 1.2em;
     margin-top: 0;
     margin-bottom: 0.5em;
   }
@@ -1127,6 +1145,24 @@ div.lock {
   background-color: #f8f8f8;
   border-color: #ddd;
   margin-right: 0.5em;
+}
+
+#oligrapher-embed-form {
+  padding: 0.8em;
+  width: 500px;
+  background-color: #f8f8f8;
+
+  input {
+    width: 50px;
+  }
+
+  textarea {
+    width: 100%;
+    margin-top: 0.8em;
+    height: 100px;
+    resize: none;
+    padding: 0.5em;
+  }
 }
 
 /* etc */

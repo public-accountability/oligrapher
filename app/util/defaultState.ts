@@ -70,7 +70,6 @@ export interface AnnotationsState {
   list: Annotation[],
   currentIndex: number,
   sources: Annotation | null,
-  show: boolean,
   isHighlighting: boolean
 }
 
@@ -79,6 +78,8 @@ export interface DisplayState {
   svgZoom: number,
   actualZoom: number,
   viewBox: Viewbox | null,
+  svgTop: number,
+  svgBottom: number | null,
   svgSize: { width: number, height: number },
   svgOffset: Point,
   offset: Point,
@@ -99,7 +100,8 @@ export interface DisplayState {
 
 export interface SettingsState {
   debug: boolean,
-  domId: string
+  domId: string,
+  embed: boolean
 }
 
 
@@ -128,7 +130,6 @@ const defaultState: State = {
     list: [],
     currentIndex: 0,
     sources: null,
-    show: false,
     isHighlighting: false
   },
 
@@ -172,6 +173,8 @@ const defaultState: State = {
     svgZoom: 1,
     actualZoom: 1,
     viewBox: null,
+    svgTop: 0,
+    svgBottom: null,
     svgSize: { width: 0, height: 0 },
     svgOffset: { x: 0, y: 0 },
     offset: { x: 0, y: 0 },
@@ -203,7 +206,8 @@ const defaultState: State = {
   // those are located at above under attributes.settings
   settings: {
     debug: false,
-    domId: 'oligrapher'
+    domId: 'oligrapher',
+    embed: false
   }
 }
 

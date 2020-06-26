@@ -6,6 +6,7 @@ import { useSelector } from '../util/helpers'
 import AnnotationsToggler from './AnnotationsToggler'
 import Disclaimer from './Disclaimer'
 import ShareModal from './ShareModal'
+import EmbedForm from './EmbedForm'
 import { userIsOwnerSelector, userCanEditSelector } from '../util/selectors'
 
 
@@ -19,6 +20,7 @@ export default function HeaderMenu() {
   const shareUrl = useSelector(state => state.attributes.shareUrl)
   const [showDisclaimer, setShowDisclaimer] = useState(false)
   const [showShare, setShowShare] = useState(false)
+  const [showEmbed, setShowEmbed] = useState(false)
   const canClone = userIsOwner || (user && isCloneable)
   const canShare = userIsOwner && isPrivate && shareUrl
 
@@ -35,6 +37,10 @@ export default function HeaderMenu() {
   const openDisclaimer = useCallback(() => setShowDisclaimer(true), [])
   const closeDisclaimer = useCallback(() => setShowDisclaimer(false), [])
 
+  const embedRef = useRef()
+  const openEmbed = useCallback(() => setShowEmbed(true), [])
+  const closeEmbed = useCallback(() => setShowEmbed(false), [])
+
   return (
     <div id="oligrapher-header-menu">
       <AnnotationsToggler />
@@ -46,15 +52,18 @@ export default function HeaderMenu() {
       { canShare &&
         <Button size="small" variant="outlined" onClick={openShare}>Share</Button>
       }
-      
+
       { canClone &&
         <Button size="small" variant="outlined" onClick={clone}>Clone</Button>
       }
-      
+
+      <Button size="small" variant="outlined" onClick={openEmbed} ref={embedRef}>Embed</Button>
+
       <Button size="small" variant="outlined" onClick={openDisclaimer}>Disclaimer</Button>
 
       <Disclaimer open={showDisclaimer} close={closeDisclaimer} />
       <ShareModal open={showShare} close={closeShare} url={shareUrl} />
+      <EmbedForm open={showEmbed} anchor={embedRef.current} close={closeEmbed} />
     </div>
   )
 }

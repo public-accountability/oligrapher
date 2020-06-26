@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { MdExpandMore, MdExpandLess } from 'react-icons/md'
 import { Hidden } from '@material-ui/core'
@@ -37,8 +37,14 @@ export default function Header() {
   const className = isCollapsed ? "oligrapher-header-collapsed" : "oligrapher-header-expanded"
   const users = [owner].concat(editors.filter(e => !e.pending))
 
+  const divRef = useRef()
+
+  useEffect(() => {
+    dispatch({ type: 'SET_SVG_TOP', svgTop: divRef.current.getBoundingClientRect().bottom })
+  }, [dispatch, isCollapsed])
+
   return (
-    <div id="oligrapher-header" className={className}>
+    <div id="oligrapher-header" className={className} ref={divRef}>
       { isCollapsed && 
         <div id="oligrapher-header-bottom">
           <Title text={title} editable={false} />
@@ -55,20 +61,16 @@ export default function Header() {
             <Title text={title} editable={editMode} onChange={updateTitle} />
           </div>
 
-          <Hidden xsDown>
-            <div id="oligrapher-header-bottom">
-              <div id="oligrapher-header-left-wrapper">
-                <Subtitle text={subtitle} editable={editMode} onChange={updateSubtitle} />
-                { owner && <Attribution users={users} date={date} /> }
-              </div>
-
-              <Hidden smDown>
-                <div id="oligrapher-header-right-wrapper">
-                  <HeaderRight />
-                </div>
-              </Hidden>
+          <div id="oligrapher-header-bottom">
+            <div id="oligrapher-header-left-wrapper">
+              <Subtitle text={subtitle} editable={editMode} onChange={updateSubtitle} />
+              { owner && <Attribution users={users} date={date} /> }
             </div>
-          </Hidden>
+
+            <div id="oligrapher-header-right-wrapper">
+              <HeaderRight />
+            </div>
+          </div>
         </>
       }
 

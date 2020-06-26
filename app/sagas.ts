@@ -17,8 +17,9 @@ const RESET_DELAY = process.env.NODE_ENV === 'test' ? 10 : 5000
 
 export default function* rootSaga() {
   yield all([
-    watchAddNode(),
+    watchSvgHeight(),
     watchZoom(),
+    watchAddNode(),
     watchSave(),
     watchClone(),
     watchDelete(),
@@ -27,14 +28,18 @@ export default function* rootSaga() {
     watchRemoveEditor(),
     watchInterlocks()
   ])
-} 
+}
 
-export function* watchAddNode() {
-  yield takeEvery('ADD_NODE', addNode)
+export function* watchSvgHeight() {
+  yield takeEvery(['SET_SVG_TOP', 'SET_SVG_BOTTOM'], setSvgHeight)
 }
 
 export function* watchZoom() {
-  yield takeEvery(['ZOOM_IN', 'ZOOM_OUT', 'SET_SVG_SIZE'], setActualZoom)
+  yield takeEvery(['ZOOM_IN', 'ZOOM_OUT', 'SET_SVG_HEIGHT', 'SET_SVG_WIDTH'], setActualZoom)
+}
+
+export function* watchAddNode() {
+  yield takeEvery('ADD_NODE', addNode)
 }
 
 export function* watchSave() {
@@ -65,6 +70,24 @@ export function* watchInterlocks() {
   yield takeEvery(['INTERLOCKS_REQUESTED'], interlocks)  
 }
 
+export function* setSvgHeight(action: any) {
+  const { svgTop, svgBottom, svgWidth } = yield select(state => state.display)
+  const height = (svgBottom || window.innerHeight) - svgTop
+  yield put({ type: 'SET_SVG_HEIGHT', height })
+}
+
+// Calculate actual zoom = user-set zoom (zoom) x automatic svg zoom.
+// Triggered by initial render, user zoom changes, and svg resize.
+export function* setActualZoom() {
+  const { viewBox, zoom, svgSize } = yield select(state => state.display)
+  const zoomedViewBox = yield call(applyZoomToViewBox, viewBox, zoom)
+  const svgZoom = yield call(computeSvgZoom, zoomedViewBox, svgSize)
+  const svgOffset = yield call(computeSvgOffset, zoomedViewBox)
+  yield put({ type: 'SET_SVG_ZOOM', svgZoom })
+  yield put({ type: 'SET_SVG_OFFSET', svgOffset })
+  yield put({ type: 'SET_ACTUAL_ZOOM', actualZoom: zoom * svgZoom })
+}
+
 // Automatically fetches edges when a node is added from LittleSis
 export function* addNode(action: any) {
   const { automaticallyAddEdges } = yield select(state => state.attributes.settings)
@@ -86,18 +109,6 @@ export function* addEdges(newNodeId: string, allNodeIds: string[]) {
   } catch(err) {
     console.error("Couldn't get edges for new node:", err)
   }
-}
-
-// Calculate actual zoom = user-set zoom (zoom) x automatic svg zoom.
-// Triggered by initial render, user zoom changes, and svg resize.
-export function* setActualZoom() {
-  const { viewBox, zoom, svgSize } = yield select(state => state.display)
-  const zoomedViewBox = yield call(applyZoomToViewBox, viewBox, zoom)
-  const svgZoom = yield call(computeSvgZoom, zoomedViewBox, svgSize)
-  const svgOffset = yield call(computeSvgOffset, zoomedViewBox)
-  yield put({ type: 'SET_SVG_ZOOM', svgZoom })
-  yield put({ type: 'SET_SVG_OFFSET', svgOffset })
-  yield put({ type: 'SET_ACTUAL_ZOOM', actualZoom: zoom * svgZoom })
 }
 
 // Attempt to save map
@@ -199,7 +210,6 @@ export function* interlocks(action: any): any {
     const { nodes, edges } = yield call(getInterlocks, node1Id, node2Id, nodeIds)
     yield put({ type: 'INTERLOCKS_SUCCESS', node1Id, node2Id, nodes, edges })
   } catch(error) {
-    console.log(error)
     yield put({ type: 'INTERLOCKS_FAILED' })
   }
 

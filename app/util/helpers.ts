@@ -90,6 +90,18 @@ export function useSaveMap() {
   }
 }
 
+type RectCallback = (rect: DOMRect | null) => void
+
+export function useClientRect(callback: RectCallback) {
+  return useCallback((node: HTMLElement) => {
+    if (node) {
+      callback(node.getBoundingClientRect())
+    } else {
+      callback(null)
+    }
+  }, [])
+}
+
 // For now, this isn't needed because we flatten state.graph after every action:
 //
 // export const convertSelectorForUndo = selector => (state => selector({

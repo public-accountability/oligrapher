@@ -12,8 +12,9 @@ export default function AnnotationsNav({ count, currentIndex, prev, next, size }
         disabled={currentIndex === 0}
       >Prev</Button>
       &nbsp;
-      <Button 
-        variant="outlined"
+      <Button
+        variant="contained"
+        color="primary"
         size={size}
         onClick={next}
         disabled={currentIndex > count - 2 }

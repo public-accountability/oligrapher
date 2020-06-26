@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
@@ -17,24 +17,26 @@ import { calculateViewBox } from '../graph/graph'
 /*
   The core component that displays the graph
 */
-const Graph = React.forwardRef(function GraphFunc(props, ref) {
-  // used to calculate the actual zoom and caption placement.
-  const svgRef = useRef(null)
-  const [svgHeight, setSvgHeight] = useState(500)
-
+export function Graph(props) {
   const {
-    viewBox, zoom, svgSize, headerIsCollapsed, setSvgSize, storyMode
+    viewBox, zoom, svgSize: { width, height }, setSvgWidth, storyMode
   } = props
+
+  const svgRef = useRef(null)
+
+  useEffect(() => {
+    setSvgWidth(svgRef.current.getBoundingClientRect().width)
+  }, [setSvgWidth, storyMode])
   
   return (
-    <div id="oligrapher-graph-svg" style={{ height: svgHeight + "px" }} ref={ref}>
-      <Svg outermost={true} viewBox={viewBox} height={svgHeight + "px"} ref={svgRef}>
+    <div id="oligrapher-graph-svg" style={{ height: height + "px" }}>
+      <Svg outermost={true} viewBox={viewBox} height={height + "px"} ref={svgRef}>
         <Filters />
         <Markers />
         <Zoomable zoom={zoom}>
           <Pannable>
-            {/* don't show graph until svgSize has been set */}
-            { svgSize ? (
+            {/* don't show graph until svg dimensions have been set */}
+            { height && width ? (
               <Selectable>
                 <Highlightable>
                   <Edges />
@@ -48,14 +50,13 @@ const Graph = React.forwardRef(function GraphFunc(props, ref) {
       </Svg>
     </div>
   )
-})
+}
 
 Graph.propTypes = {
   viewBox: PropTypes.object.isRequired,
   zoom: PropTypes.number.isRequired,
   svgSize: PropTypes.object,
-  headerIsCollapsed: PropTypes.bool.isRequired,
-  setSvgSize: PropTypes.func.isRequired,
+  setSvgWidth: PropTypes.func.isRequired,
   rootContainerId: PropTypes.string.isRequired,
   storyMode: PropTypes.bool.isRequired
 }
@@ -90,17 +91,17 @@ const calculateAnnotationViewBox = state => {
 
 const mapStateToProps = state => {
   const viewBox = calculateAnnotationViewBox(state)
-  const { zoom, svgSize, headerIsCollapsed } = state.display
+  const { zoom, svgSize} = state.display
   const storyMode = state.display.modes.story
 
   return {
-    viewBox, zoom, svgSize, headerIsCollapsed, storyMode
+    viewBox, zoom, svgSize, storyMode
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    setSvgSize: size => dispatch({ type: 'SET_SVG_SIZE', size })
+    setSvgWidth: width => dispatch({ type: 'SET_SVG_WIDTH', width })
   }
 }
 

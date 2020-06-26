@@ -12,6 +12,18 @@ const ZOOM_INTERVAL = 1.2
 
 export default produce((display: DisplayState, action: any): void => {
   switch(action.type) {
+  case 'SET_SVG_TOP':
+    display.svgTop = action.svgTop
+    return
+  case 'SET_SVG_BOTTOM':
+    display.svgBottom = action.svgBottom
+    return
+  case 'SET_SVG_WIDTH':
+    display.svgSize.width = action.width
+    return
+  case 'SET_SVG_HEIGHT':
+    display.svgSize.height = action.height
+    return
   case 'SET_ACTUAL_ZOOM':
     display.actualZoom = action.actualZoom
     return
@@ -20,9 +32,6 @@ export default produce((display: DisplayState, action: any): void => {
     return
   case 'SET_OFFSET':
     display.offset = action.offset
-    return
-  case 'SET_SVG_SIZE':
-    display.svgSize = action.size
     return
   case 'SET_SVG_OFFSET':
     display.svgOffset = action.svgOffset

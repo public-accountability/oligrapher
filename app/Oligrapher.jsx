@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 
 import Graph from './graph/graph'
 import Root from './components/Root'
+import EmbeddedRoot from './components/EmbeddedRoot'
 import { createOligrapherStore } from './util/store'
 import stateInitalizer from './util/stateInitalizer'
 import LittleSisApi from './datasources/littlesis3'
@@ -27,10 +28,11 @@ export default class Oligrapher {
     this.store = createOligrapherStore(stateInitalizer(initialState))
     this.element = document.getElementById(this.store.getState().settings.domId)
     this.graph = () => this.store.getState().graph
+    const isEmbedded = this.store.getState().settings.embed
 
     ReactDOM.render(
       <Provider store={this.store}>
-        <Root />
+        { isEmbedded ? <EmbeddedRoot /> : <Root /> }
       </Provider>, 
       this.element
     )

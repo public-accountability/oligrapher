@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import { callWithTargetValue } from '../util/helpers'
 
-export default function Title({ text, editable, onChange }) {
+export default function Title({ text, editable, onChange, url }) {
 
   return (
     <h1 id="oligrapher-title">
@@ -12,7 +12,7 @@ export default function Title({ text, editable, onChange }) {
         ? <input value={text}
             onChange={callWithTargetValue(onChange)}
             placeholder="Title" />
-        : text
+        : url ? <a href={url} target="_blank" rel="noreferrer" title="View this map on LittleSis">{text}</a> : text
       }
     </h1>
   )
@@ -21,5 +21,6 @@ export default function Title({ text, editable, onChange }) {
 Title.propTypes = {
   text: PropTypes.string.isRequired,
   editable: PropTypes.bool.isRequired,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  url: PropTypes.string
 }

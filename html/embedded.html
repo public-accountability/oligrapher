@@ -756,14 +756,16 @@
     var oli = new Oligrapher({
       graph: graph,
       settings: {
-        debug: true
+        debug: true,
+        embed: true,
+        url: "http://localhost:8090/dev.html"
       },
       attributes: {
         id: "3686",
         title: "Example Title",
         date: "January 12, 2018",
         subtitle: "A longer description of this map. Use this space to give more context.",
-        user: null,
+        user: { id: 1, name: "user_1" },
         owner: { id: "1", name: "Kevin", url: "http://littlesis.org/user/kevin" },
         settings: { private: false, list_sources: true }
       },
@@ -775,7 +777,7 @@
             "edgeIds": [],
             "captionIds": [],
             "header": "First Annotation",
-            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Blah blah blah.</p>"
           }
         ],
         currentIndex: 0,
