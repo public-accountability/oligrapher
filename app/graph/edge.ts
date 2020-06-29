@@ -7,6 +7,8 @@ import { ArrowType } from './arrow'
 import { Point } from '../util/geometry'
 import { stringOrBool } from '../util/types'
 
+export type EdgeStatusType = "normal" | "highlighted" | "faded" | "selected"
+
 export interface EdgeGeometry {
   x1: number,
   y1: number,
@@ -18,8 +20,6 @@ export interface EdgeGeometry {
   cy?: number,
 }
 
-export type EdgeStatusType = 'normal' | 'highlighted' | 'faded'
-
 export interface EdgeAttributes {
   id?: string,
   node1_id?: string,
@@ -28,7 +28,6 @@ export interface EdgeAttributes {
   arrow?: ArrowType,
   dash?: boolean,
   label?: string,
-  status?: EdgeStatusType
   url?: string,
   x1?: number,
   y1?: number,
@@ -45,7 +44,6 @@ export interface Edge extends EdgeAttributes {
   node1_id: string,
   node2_id: string,
   label: string,
-  status: EdgeStatusType,
   scale: number,
   arrow: ArrowType,
   dash: boolean,
@@ -58,14 +56,12 @@ export interface Edge extends EdgeAttributes {
 }
 
 export interface EdgeDefaults extends EdgeAttributes {
-  status: EdgeStatusType,
   scale: number,
   arrow: ArrowType,
   dash: boolean
 }
 
 const edgeDefaults: EdgeDefaults = {
-  status: "normal",
   scale: 1,
   arrow: null,
   dash: false

@@ -4,13 +4,17 @@ import PropTypes from 'prop-types'
 import { NODE_RADIUS } from '../graph/node'
 
 const IMAGE_SCALE = 3
-const IMAGE_OPAICTY = 1
 
-export function NodeImage({ node }) {
+export function NodeImage({ node, status }) {
   const { id, x, y, image, scale } = node
   const radius = NODE_RADIUS * scale
   const imageWidth = IMAGE_SCALE * radius
   const clipPathId = `image-clip-${id}`
+  const opacity = {
+    normal: "1",
+    highlighted: "1",
+    faded: "0.2"
+  }[status]
 
   if (!node.image) {
     return null
@@ -33,7 +37,7 @@ export function NodeImage({ node }) {
         y={y - (imageWidth/2)}
         height={imageWidth}
         width={imageWidth}
-        opacity={IMAGE_OPAICTY}
+        opacity={opacity}
         clipPath={`url(#${clipPathId})`}
         onDragStart={(e) => e.preventDefault()} // to prevent HTML5 drag-n-drop (draggable="false" used to work)
       />

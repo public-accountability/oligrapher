@@ -45,6 +45,23 @@ export const showAnnotationsSelector: Selector = state => {
   return false
 }
 
+export const currentAnnotationSelector: Selector = state => {
+  const list = annotationsListSelector(state)
+  const { currentIndex } = state.annotations
+  return list[currentIndex]
+}
+
+export const annotationHasHighlightsSelector: Selector = state => {
+  const annotation = currentAnnotationSelector(state)
+
+  if (!annotation) {
+    return false
+  }
+
+  const { nodeIds, edgeIds, captionIds } = annotation
+  return nodeIds.length + edgeIds.length + captionIds.length > 0
+}
+
 export const paramsForSaveSelector = (state: StateWithHistory): LsMap => {
   return {
     id: Number(state.attributes.id),

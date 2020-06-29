@@ -6,8 +6,30 @@ import NodeSelection from './NodeSelection'
 import Node from './Node'
 import FloatingEditor from '../util/floatingEditor'
 import { getSelection } from '../util/selection'
+import { annotationHasHighlightsSelector } from '../util/selectors'
 
-export function Nodes({ nodes, editedNodeId, draggedNodeId, selectedNodeIds, highlightedNodeIds }) {
+const calculateStatus = (id, highlightedIds, annotationHasHighlights, editMode) => {
+  if (!annotationHasHighlights) {
+    return "normal"
+  }
+
+  if (highlightedIds.includes(id)) {
+    return "highlighted"
+  }
+
+  if (editMode) {
+    return "normal"
+  }
+
+  return "faded"
+}
+
+export function Nodes(props) {
+  const { 
+    nodes, editedNodeId, draggedNodeId, selectedNodeIds, 
+    highlightedNodeIds, annotationHasHighlights, editMode 
+  } = props
+
   let unselectedNodeIds = Object.keys(nodes).filter(id => !selectedNodeIds.includes(id))
 
   if (unselectedNodeIds.includes(draggedNodeId)) {
@@ -24,7 +46,7 @@ export function Nodes({ nodes, editedNodeId, draggedNodeId, selectedNodeIds, hig
           id={id} 
           currentlyEdited={id === editedNodeId} 
           selected={false}
-          highlighted={highlightedNodeIds.includes(id)} />
+          status={calculateStatus(id, highlightedNodeIds, annotationHasHighlights, editMode)} />
       )) }
 
       { selectedNodeIds.length > 0 && 
@@ -35,7 +57,7 @@ export function Nodes({ nodes, editedNodeId, draggedNodeId, selectedNodeIds, hig
               id={id} 
               currentlyEdited={id === editedNodeId} 
               selected={true}
-              highlighted={highlightedNodeIds.includes(id)} />
+              status={calculateStatus(id, highlightedNodeIds, annotationHasHighlights, editMode)} />
           )) }
         </NodeSelection>
       }
@@ -48,7 +70,9 @@ Nodes.propTypes = {
   editedNodeId: PropTypes.string,
   draggedNodeId: PropTypes.string,
   selectedNodeIds: PropTypes.array.isRequired,
-  highlightedNodeIds: PropTypes.array.isRequired
+  highlightedNodeIds: PropTypes.array.isRequired,
+  annotationHasHighlights: PropTypes.bool.isRequired,
+  editMode: PropTypes.bool.isRequired
 }
 
 const mapStateToProps = state => {
@@ -60,7 +84,9 @@ const mapStateToProps = state => {
     editedNodeId: FloatingEditor.getId(state.display, 'node'),
     draggedNodeId: state.display.draggedNode ? state.display.draggedNode.id : null,
     selectedNodeIds: getSelection(state.display, 'node'),
-    highlightedNodeIds: storyMode ? (list[currentIndex]?.nodeIds || []) : []
+    highlightedNodeIds: storyMode ? (list[currentIndex]?.nodeIds || []) : [],
+    annotationHasHighlights: annotationHasHighlightsSelector(state),
+    editMode: state.display.modes.editor
   }
 }
 

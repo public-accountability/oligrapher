@@ -6,8 +6,9 @@ export default function EdgeLabel({ id, width, bezier, status, label, scale }: E
   const curveId = `edge-curve-${id}`
 
   const color = {
-    normal: "#999",
-    highlighted: "#444",
+    normal: "#444",
+    selected: "#000",
+    highlighted: "#000",
     faded: "#ddd"
   }[status]
 

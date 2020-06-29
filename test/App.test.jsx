@@ -2,6 +2,7 @@ import React from 'react'
 import { render, fireEvent, waitFor, getByText } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import sinon from 'sinon'
+import mediaQuery from 'css-mediaquery'
 
 import { Root } from '../app/components/Root'
 import { bigGraph } from './testData'
@@ -12,6 +13,14 @@ import { removeSpaces } from './testHelpers'
 import { NODE_RADIUS } from '../app/graph/node'
 import * as AnnotationTextEditor from '../app/components/AnnotationTextEditor'
 
+function createMatchMedia(width) {
+  return query => ({
+    matches: mediaQuery.match(query, { width }),
+    addListener: () => {},
+    removeListener: () => {},
+  })
+}
+
 const sandbox = sinon.createSandbox()
 
 describe('Oligrapher', function() {
@@ -20,6 +29,7 @@ describe('Oligrapher', function() {
     clickHandle, expectCount
 
   beforeEach(function() {
+    window.matchMedia = createMatchMedia(window.innerWidth)
     sandbox.stub(littlesis3, 'lock').resolves({
       user_has_lock: true
     })
@@ -715,5 +725,23 @@ describe('Oligrapher', function() {
     clickPresent()
     expectCount('#oligrapher-annotations', 1)
     expectCount('#oligrapher-annotations-toggler', 0)
+  })
+
+  it('opens and updates and closes embed form', async function() {
+    clickPresent()
+    // open mebed form
+    clickHeaderMenuItem('Embed')
+    expectCount('#oligrapher-embed-form', 1)
+    // change width
+    fireEvent.change(find('#oligrapher-embed-form input:nth-child(1)', document.body), { target: { value: '1000' } })
+    const textarea = find('#oligrapher-embed-form textarea', document.body)
+    // code should show new width
+    expect(textarea.textContent).to.contain('width="1000"')
+    // change height
+    fireEvent.change(find('#oligrapher-embed-form input:nth-child(2)', document.body), { target: { value: '1000' } })
+    // code should show new height
+    expect(textarea.textContent).to.contain('height="1000"')
+    clickHeaderMenuItem('Embed')
+    await waitFor(() => expectCount('#oligrapher-embed-form', 0))
   })
 })

@@ -21,11 +21,15 @@ interface Marker {
 // see components/graph/Markers
 const MARKER_END: Marker = {
   normal: "url(#marker1)",
-  highlighted: "url(#highlightedmarker1)"
+  highlighted: "url(#highlightedmarker1)",
+  faded: "url(#fadedmarker1)",
+  selected: "url(#selectedmarker1)"
 }
 const MARKER_START: Marker = {
   normal: "url(#marker2)",
-  highlighted: "url(#highlightedmarker2)"
+  highlighted: "url(#highlightedmarker2)",
+  faded: "url(#fadedmarker2)",
+  selected: "url(#selectedmarker2)"
 }
 
 // String, Bool => String

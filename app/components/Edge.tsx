@@ -4,13 +4,14 @@ import { useDispatch } from 'react-redux'
 
 import { useSelector } from '../util/helpers'
 import { Point, calculateDeltas } from '../util/geometry'
-import { Curve, edgeToCurve, curveToBezier } from '../graph/curve'
+import { edgeToCurve, curveToBezier } from '../graph/curve'
+import { EdgeStatusType } from '../graph/edge'
 import EdgeLine from './EdgeLine'
 import EdgeHandle from './EdgeHandle'
 import EdgeLabel from './EdgeLabel'
 import EdgeHighlight from './EdgeHighlight'
 
-export function Edge({ id, currentlyEdited, highlighted }: EdgeProps) {
+export function Edge({ id, currentlyEdited, status }: EdgeProps) {
   const dispatch = useDispatch()
   const edge = useSelector(state => state.graph.edges[id])
   const actualZoom = useSelector(state => state.display.actualZoom)
@@ -19,10 +20,12 @@ export function Edge({ id, currentlyEdited, highlighted }: EdgeProps) {
   const [isHovering, setHovering] = useState(false)
   const [isDragging, setDragging] = useState(false)
   const [startDrag, setStartDrag] = useState<Point>({ x: 0, y: 0 })
-  const { cx, cy, x1, x2, y1, y2, s1, s2, scale, label, dash, status, arrow } = edge
+  const { cx, cy, x1, x2, y1, y2, s1, s2, scale, label, dash, arrow } = edge
   const [curve, setCurve] = useState(edgeToCurve({ cx, cy, x1, x2, y1, y2, s1, s2 }))
   const [startPosition, setStartPosition] = useState<Point>({ x: 0, y: 0 })
   const bezier = useMemo(() => curveToBezier(curve), [curve])
+  const selected = !isDragging && (currentlyEdited || isHovering)
+  status = selected ? "selected" : status
 
   const updateEdge = useCallback(
     attributes => dispatch({ type: 'UPDATE_EDGE', id, attributes }), 
@@ -78,9 +81,8 @@ export function Edge({ id, currentlyEdited, highlighted }: EdgeProps) {
   }
 
   // Display helpers
-  const showHighlight = !isDragging && (currentlyEdited || isHovering)
   const showLabel = Boolean(label)
-  edgeLineProps.status = showHighlight ? "highlighted" : edgeLineProps.status
+  edgeLineProps.status = selected ? "selected" : edgeLineProps.status
 
   return (  
     <DraggableCore
@@ -89,7 +91,7 @@ export function Edge({ id, currentlyEdited, highlighted }: EdgeProps) {
       onDrag={onDrag}
       onStop={onStop}>
       <g className="oligrapher-edge" id={`edge-${id}`}>
-        { highlighted && <EdgeHighlight {...edgeHighlightProps} /> }
+        { ["highlighted", "selected"].includes(status) && <EdgeHighlight {...edgeHighlightProps} /> }
         <EdgeLine {...edgeLineProps} />
         { showLabel && <EdgeLabel {...edgeLabelProps} /> }
         <EdgeHandle {...edgeHandleProps} />
@@ -101,7 +103,7 @@ export function Edge({ id, currentlyEdited, highlighted }: EdgeProps) {
 interface EdgeProps {
   id: string,
   currentlyEdited: boolean,
-  highlighted: boolean
+  status: EdgeStatusType
 }
 
 export default React.memo(Edge)

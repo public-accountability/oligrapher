@@ -6,8 +6,14 @@ import { NODE_RADIUS } from '../graph/node'
 
 const FONT_SIZE = 16
 
-export default function NodeLabel({ node, perLineMax }) {
+export default function NodeLabel({ node, perLineMax, status }) {
   const { name, x, y, scale } = node
+
+  const color = {
+    normal: "#000",
+    highlighted: "#000",
+    faded: "#ddd"
+  }[status]
 
   // we use a cube root so that font size and line height 
   // don't grow too much as node scale increases
@@ -46,6 +52,7 @@ export default function NodeLabel({ node, perLineMax }) {
       dy={i * lineHeight}
       textAnchor="middle"
       fontSize={fontSize + 'px'}
+      fill={color}
     >
       {line}
     </text>

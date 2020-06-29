@@ -6,10 +6,11 @@ import { useSelector } from '../util/helpers'
 import DraggableComponent from './DraggableComponent'
 import NodeHalo from './NodeHalo'
 import NodeCircle from './NodeCircle'
+import NodeBgCircle from './NodeBgCircle'
 import NodeImage from './NodeImage'
 import NodeLabel from './NodeLabel'
 
-export function Node({ id, currentlyEdited, selected, highlighted }) {
+export function Node({ id, currentlyEdited, selected, status }) {
   const dispatch = useDispatch()
   const node = useSelector(state => state.graph.nodes[id])
   const { name } = node
@@ -68,10 +69,11 @@ export function Node({ id, currentlyEdited, selected, highlighted }) {
         onDragOver={onMouseEnter}
         onDragLeave={onMouseLeave}
       >
-        <NodeLabel node={node} />
-        <NodeHalo node={node} selected={showHalo} highlighted={highlighted} />
-        <NodeCircle node={node} />
-        <NodeImage node={node} />
+        <NodeLabel node={node} status={status} />
+        <NodeHalo node={node} selected={showHalo} highlighted={status === "highlighted"} />
+        <NodeBgCircle node={node} />
+        <NodeCircle node={node} status={status} />
+        <NodeImage node={node} status={status} />
       </g>
     </DraggableComponent>
   )
@@ -81,7 +83,7 @@ Node.propTypes = {
   id: PropTypes.string.isRequired,
   currentlyEdited: PropTypes.bool.isRequired,
   selected: PropTypes.bool.isRequired,
-  highlighted: PropTypes.bool.isRequired
+  status: PropTypes.bool.isRequired
 }
 
 export default React.memo(Node)

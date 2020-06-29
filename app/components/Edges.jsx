@@ -4,8 +4,29 @@ import { connect } from 'react-redux'
 
 import Edge from './Edge'
 import FloatingEditor from '../util/floatingEditor'
+import { annotationHasHighlightsSelector } from '../util/selectors'
 
-export function Edges({ edges, editedEdgeId, highlightedEdgeIds }) {
+const calculateStatus = (id, highlightedIds, annotationHasHighlights, editMode) => {
+  if (!annotationHasHighlights) {
+    return "normal"
+  }
+
+  if (highlightedIds.includes(id)) {
+    return "highlighted"
+  }
+
+  if (editMode) {
+    return "normal"
+  }
+
+  return "faded"
+}
+
+export function Edges(props) {
+  const { 
+    edges, editedEdgeId, highlightedEdgeIds, annotationHasHighlights, editMode 
+  } = props
+
   return (
     <g className="edges">
       { Object.keys(edges).map(id => (
@@ -13,7 +34,7 @@ export function Edges({ edges, editedEdgeId, highlightedEdgeIds }) {
           key={id} 
           id={id} 
           currentlyEdited={id === editedEdgeId}
-          highlighted={highlightedEdgeIds.includes(id)} />
+          status={calculateStatus(id, highlightedEdgeIds, annotationHasHighlights, editMode)} />
       )) }
     </g>
   )
@@ -22,7 +43,9 @@ export function Edges({ edges, editedEdgeId, highlightedEdgeIds }) {
 Edges.propTypes = {
   edges: PropTypes.object.isRequired,
   editedEdgeId: PropTypes.string,
-  highlightedEdgeIds: PropTypes.array.isRequired
+  highlightedEdgeIds: PropTypes.array.isRequired,
+  annotationHasHighlights: PropTypes.bool.isRequired,
+  editMode: PropTypes.bool.isRequired
 }
 
 const mapStateToProps = state => {
@@ -32,7 +55,9 @@ const mapStateToProps = state => {
   return {
     edges: state.graph.edges,
     editedEdgeId: FloatingEditor.getId(state.display, 'edge'),
-    highlightedEdgeIds: storyMode ? (list[currentIndex]?.edgeIds || []) : []
+    highlightedEdgeIds: storyMode ? (list[currentIndex]?.edgeIds || []) : [],
+    annotationHasHighlights: annotationHasHighlightsSelector(state),
+    editMode: state.display.modes.editor
   }
 }
 

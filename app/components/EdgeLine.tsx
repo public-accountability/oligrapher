@@ -6,7 +6,8 @@ import Arrow, { ArrowType } from '../graph/arrow'
 export function EdgeLine({ id, bezier, width, dash, status, arrow, isReverse }: EdgeLineProps) {
   const color = {
     normal: "#999",
-    highlighted: "#50a3ff",
+    highlighted: "#444",
+    selected: "#444",
     faded: "#ddd"
   }[status]
 

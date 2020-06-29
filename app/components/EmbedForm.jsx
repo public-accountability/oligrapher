@@ -28,6 +28,7 @@ export default function EmbedForm({ open, anchor, close, }) {
         vertical: 40,
         horizontal: 'left',
       }}
+      transitionDuration={0}
     >
       <div id="oligrapher-embed-form">
         <div>
@@ -36,7 +37,7 @@ export default function EmbedForm({ open, anchor, close, }) {
           Height: <input type="text" value={height} onChange={onHeightChange} />
         </div>
         
-        <textarea ref={textareaRef} onClick={selectAll} value={code}></textarea>
+        <textarea ref={textareaRef} onClick={selectAll} value={code} readOnly={true}></textarea>
       </div>
     </Popover>
   )

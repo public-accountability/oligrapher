@@ -38,7 +38,7 @@ export default function HeaderMenu() {
   const closeDisclaimer = useCallback(() => setShowDisclaimer(false), [])
 
   const embedRef = useRef()
-  const openEmbed = useCallback(() => setShowEmbed(true), [])
+  const toggleEmbed = useCallback(() => setShowEmbed(!showEmbed), [showEmbed])
   const closeEmbed = useCallback(() => setShowEmbed(false), [])
 
   return (
@@ -57,7 +57,7 @@ export default function HeaderMenu() {
         <Button size="small" variant="outlined" onClick={clone}>Clone</Button>
       }
 
-      <Button size="small" variant="outlined" onClick={openEmbed} ref={embedRef}>Embed</Button>
+      <Button size="small" variant="outlined" onClick={toggleEmbed} ref={embedRef}>Embed</Button>
 
       <Button size="small" variant="outlined" onClick={openDisclaimer}>Disclaimer</Button>
 

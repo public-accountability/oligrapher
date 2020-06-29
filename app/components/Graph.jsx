@@ -13,13 +13,14 @@ import Zoomable from './Zoomable'
 import Selectable from './Selectable'
 import Highlightable from './Highlightable'
 import { calculateViewBox } from '../graph/graph'
+import { currentAnnotationSelector } from '../util/selectors'
 
 /*
   The core component that displays the graph
 */
 export function Graph(props) {
   const {
-    viewBox, zoom, svgSize: { width, height }, setSvgWidth, storyMode
+    viewBox, zoom, svgSize: { height }, setSvgWidth, storyMode
   } = props
 
   const svgRef = useRef(null)
@@ -35,16 +36,13 @@ export function Graph(props) {
         <Markers />
         <Zoomable zoom={zoom}>
           <Pannable>
-            {/* don't show graph until svg dimensions have been set */}
-            { height && width ? (
-              <Selectable>
-                <Highlightable>
-                  <Edges />
-                  <Nodes />
-                  <Captions />
-                </Highlightable>
-              </Selectable>
-            ) : <></> }
+            <Selectable>
+              <Highlightable>
+                <Edges />
+                <Nodes />
+                <Captions />
+              </Highlightable>
+            </Selectable>
           </Pannable>
         </Zoomable>
       </Svg>
@@ -67,8 +65,7 @@ const calculateAnnotationViewBox = state => {
     return state.display.viewBox
   }
 
-  const { list, currentIndex } = state.annotations
-  const annotation = list[currentIndex]
+  const annotation = currentAnnotationSelector(state)
 
   if (annotation) {
     let { nodes, edges, captions } = state.graph
