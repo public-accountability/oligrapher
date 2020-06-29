@@ -16,7 +16,15 @@ export default function AnnotationForm({ annotation }) {
     dispatch({ type: 'UPDATE_ANNOTATION', id, attributes  })
   }, [dispatch, id])
 
-  const remove = useCallback(() => dispatch({ type: 'REMOVE_ANNOTATION', id }), [dispatch, id])
+  const clearHighlights = useCallback(
+    () => dispatch({ type: 'CLEAR_HIGHLIGHTS' }),
+    [dispatch]
+  )
+
+  const remove = useCallback(
+    () => dispatch({ type: 'REMOVE_ANNOTATION', id }), 
+    [dispatch, id]
+  )
 
   const updateHeader = useCallback(callWithTargetValue(header => update({ header })), [update])
   const updateText = useCallback(text => update({ text }), [update])
@@ -47,13 +55,24 @@ export default function AnnotationForm({ annotation }) {
           />
       </div>
 
-      <Button
-        variant="contained"
-        size="small"
-        color="secondary"
-        onClick={textIsLong ? openConfirm : remove}>
-        Remove
-      </Button>
+      <div className="oligrapher-annotation-form-actions">
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={clearHighlights}>
+          Clear Highlighting
+        </Button>
+
+        <br />
+
+        <Button
+          variant="contained"
+          size="small"
+          color="secondary"
+          onClick={textIsLong ? openConfirm : remove}>
+          Remove
+        </Button>
+      </div>
 
       <Confirm
         open={showConfirm}

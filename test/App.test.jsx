@@ -625,7 +625,7 @@ describe('Oligrapher', function() {
     expectCount('.annotation-list-item', 1)
   })
 
-  it('highlights nodes, edges, captions', function() {
+  it('highlights and clears nodes, edges, captions', function() {
     // stub AnnotationTextEditor because CKEditor hangs the test
     sandbox.stub(AnnotationTextEditor, 'default').returns(<div>text editor</div>)
     // click on annotations icon
@@ -661,6 +661,12 @@ describe('Oligrapher', function() {
     fireEvent.keyUp(document.body, { key: 'Control', code: 'ControlLeft', keyCode: 17 })
     // two captions should be highlighted
     expectCount('.caption-text-highlighted', 2)
+    // click on Clear Highlighting button
+    fireEvent.click(getByText(container, 'Clear Highlighting'))
+    // nothing should be highlighted
+    expectCount('.node-halo-highlighted', 0)
+    expectCount('.edge-highlight', 0)
+    expectCount('.caption-text-highlighted', 0)
   })
 
   it('shows annotations in presentation mode', function() {

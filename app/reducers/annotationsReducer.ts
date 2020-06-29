@@ -4,7 +4,7 @@ import { AnnotationsState } from '../util/defaultState'
 
 import { 
   createAnnotation, moveAnnotation, showAnnotation, updateAnnotation, removeAnnotation,
-  swapHighlight
+  swapHighlight, clearHighlights
 } from '../util/annotations'
 
 const ZOOM_INTERVAL = 1.2
@@ -22,6 +22,9 @@ export default produce((annotations: AnnotationsState, action: any): void => {
     return
   case 'UPDATE_ANNOTATION':
     updateAnnotation(annotations, action.id, action.attributes)
+    return
+  case 'CLEAR_HIGHLIGHTS':
+    clearHighlights(annotations)
     return
   case 'REMOVE_ANNOTATION':
     removeAnnotation(annotations, action.id)

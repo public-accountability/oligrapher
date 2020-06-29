@@ -57,6 +57,23 @@ export function isLittleSisId(id: any): boolean {
   return Number.isFinite(toNumber(id))
 }
 
+export const calculateStatus = (id: string, highlightedIds: string[], annotationHasHighlights: boolean, editMode: boolean): string => {
+  if (!annotationHasHighlights) {
+    return "normal"
+  }
+
+  if (highlightedIds.includes(id)) {
+    return "highlighted"
+  }
+
+  if (editMode) {
+    return "normal"
+  }
+
+  return "faded"
+}
+
+
 export function useSaveMap() {
   const dispatch = useDispatch()
   const [confirmOpen, setConfirmOpen] = useState(false)

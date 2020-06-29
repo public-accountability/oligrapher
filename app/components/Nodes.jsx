@@ -6,23 +6,8 @@ import NodeSelection from './NodeSelection'
 import Node from './Node'
 import FloatingEditor from '../util/floatingEditor'
 import { getSelection } from '../util/selection'
+import { calculateStatus } from '../util/helpers'
 import { annotationHasHighlightsSelector } from '../util/selectors'
-
-const calculateStatus = (id, highlightedIds, annotationHasHighlights, editMode) => {
-  if (!annotationHasHighlights) {
-    return "normal"
-  }
-
-  if (highlightedIds.includes(id)) {
-    return "highlighted"
-  }
-
-  if (editMode) {
-    return "normal"
-  }
-
-  return "faded"
-}
 
 export function Nodes(props) {
   const { 

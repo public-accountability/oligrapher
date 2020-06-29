@@ -86,3 +86,10 @@ export const swapHighlight = (annotations: AnnotationsState, type: ('node' | 'ed
 
   annotations.list[currentIndex][key] = ids
 }
+
+export const clearHighlights = (annotations: AnnotationsState): void => {
+  const { currentIndex } = annotations
+  annotations.list[currentIndex].nodeIds = []
+  annotations.list[currentIndex].edgeIds = []
+  annotations.list[currentIndex].captionIds = []
+}

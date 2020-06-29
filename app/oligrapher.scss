@@ -966,6 +966,10 @@ div.lock {
   .caption-text.caption-text-highlighted {
     text-shadow: 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00;
   }
+
+  .caption-text.caption-text-faded {
+    color: #ddd;
+  }
 }
 
 /* user message */
@@ -1138,6 +1142,10 @@ div.lock {
 
   #oligrapher-annotation-form-text {
     font-size: 0.9em;
+  }
+
+  .oligrapher-annotation-form-actions button {
+    margin-bottom: 0.5em;
   }
 }
 

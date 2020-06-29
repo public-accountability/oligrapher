@@ -6,7 +6,7 @@ import DraggableComponent from './DraggableComponent'
 import CaptionTextbox from './CaptionTextbox'
 import CaptionEditorTextarea from './CaptionEditorTextarea'
 
-export default function Caption({ caption, currentlyEdited, highlighted }) {
+export default function Caption({ caption, currentlyEdited, status }) {
   const { id, x, y, width, height } = caption
   const [foreignObjectSize, setForeignObjectSize] = useState({ width, height })
   const { isHighlighting } = useSelector(state => state.annotations)
@@ -41,7 +41,7 @@ export default function Caption({ caption, currentlyEdited, highlighted }) {
               updateCaption={updateCaption}
               setForeignObjectSize={setForeignObjectSize} />
           }
-          { !currentlyEdited && <CaptionTextbox caption={caption} highlighted={highlighted} /> }
+          { !currentlyEdited && <CaptionTextbox caption={caption} status={status} /> }
         </foreignObject>
       </g>
     </DraggableComponent>
@@ -51,7 +51,7 @@ export default function Caption({ caption, currentlyEdited, highlighted }) {
 Caption.propTypes = {
   caption: PropTypes.object.isRequired,
   currentlyEdited: PropTypes.bool.isRequired,
-  highlighted: PropTypes.bool.isRequired
+  status: PropTypes.string.isRequired
 }
 
 Caption.defaultProps = {

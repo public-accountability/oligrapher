@@ -6,7 +6,6 @@ import { useSelector } from '../util/helpers'
 import DraggableComponent from './DraggableComponent'
 import NodeHalo from './NodeHalo'
 import NodeCircle from './NodeCircle'
-import NodeBgCircle from './NodeBgCircle'
 import NodeImage from './NodeImage'
 import NodeLabel from './NodeLabel'
 
@@ -71,7 +70,6 @@ export function Node({ id, currentlyEdited, selected, status }) {
       >
         <NodeLabel node={node} status={status} />
         <NodeHalo node={node} selected={showHalo} highlighted={status === "highlighted"} />
-        <NodeBgCircle node={node} />
         <NodeCircle node={node} status={status} />
         <NodeImage node={node} status={status} />
       </g>
