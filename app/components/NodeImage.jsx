@@ -7,15 +7,24 @@ const IMAGE_SCALE = 3
 const IMAGE_OPAICTY = 1
 
 export function NodeImage({ node }) {
-  const { id, x, y, image, scale } = node
+  const { id, x, y, image, scale, ix, iy } = node
   const radius = NODE_RADIUS * scale
   const imageWidth = IMAGE_SCALE * radius
   const clipPathId = `image-clip-${id}`
+  var image_x = (x - (imageWidth/2))
+  var image_y = (y - (imageWidth/2))
 
   if (!node.image) {
     return null
   }
 
+  if (typeof ix !== 'undefined' && ix) {
+      var image_x = (image_x + ix)
+  }
+
+  if (typeof iy !== 'undefined' && iy) {
+      var image_y = (image_y + iy)
+  }
   return (
     <>
       <clipPath id={clipPathId}>
@@ -29,8 +38,8 @@ export function NodeImage({ node }) {
       <image
         href={image}
         className="node-image draggable-node-handle"
-        x={x - (imageWidth/2)}
-        y={y - (imageWidth/2)}
+        x={image_x}
+        y={image_y}
         height={imageWidth}
         width={imageWidth}
         opacity={IMAGE_OPAICTY}
