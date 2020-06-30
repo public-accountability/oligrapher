@@ -46,10 +46,6 @@ export interface Viewbox {
   h: number
 }
 
-export const GRAPH_PADDING_X = 150
-export const GRAPH_PADDING_Y = 50
-const DEFAULT_VIEWBOX: Viewbox = { minX: -500, minY: -400, w: 1000, h: 800 }
-
 const DEFAULT_GRAPH: Graph = {
   nodes: {},
   edges: {},
@@ -65,21 +61,23 @@ const DEFAULT_GRAPH: Graph = {
 */
 
 // Stats, Getters, and Calculations
-
 const minNodeX = (nodes: Array<Node>): number => Math.min(...nodes.map(n => n.x))
 const minNodeY = (nodes: Array<Node>): number => Math.min(...nodes.map(n => n.y))
 const maxNodeX = (nodes: Array<Node>): number => Math.max(...nodes.map(n => n.x))
 const maxNodeY = (nodes: Array<Node>): number => Math.max(...nodes.map(n => n.y))
 
-const minEdgeX = (edges: Array<Edge>): number => Math.min(...edges.map(e => e.cx || 0))
-const minEdgeY = (edges: Array<Edge>): number => Math.min(...edges.map(e => e.cy || 0))
-const maxEdgeX = (edges: Array<Edge>): number => Math.max(...edges.map(e => e.cx || 0))
-const maxEdgeY = (edges: Array<Edge>): number => Math.max(...edges.map(e => e.cy || 0))
+const edgeControlPointX = (edge: Edge): number => ((edge.x1 + edge.x2) / 2) + (edge.cx || 0)
+const edgeControlPointY = (edge: Edge): number => ((edge.y1 + edge.y2) / 2) + (edge.cy || 0)
 
-const minCaptionX = (captions: Array<Caption>): number => Math.min(0, ...captions.map(c => c.x))
-const minCaptionY = (captions: Array<Caption>): number => Math.min(0, ...captions.map(c => c.y))
-const maxCaptionX = (captions: Array<Caption>): number => Math.max(0, ...captions.map(c => c.x + c.width))
-const maxCaptionY = (captions: Array<Caption>): number => Math.max(0, ...captions.map(c => c.y + c.height))
+const minEdgeX = (edges: Array<Edge>): number => Math.min(...edges.map(edgeControlPointX))
+const minEdgeY = (edges: Array<Edge>): number => Math.min(...edges.map(edgeControlPointY))
+const maxEdgeX = (edges: Array<Edge>): number => Math.max(...edges.map(edgeControlPointX))
+const maxEdgeY = (edges: Array<Edge>): number => Math.max(...edges.map(edgeControlPointY))
+
+const minCaptionX = (captions: Array<Caption>): number => Math.min(...captions.map(c => c.x))
+const minCaptionY = (captions: Array<Caption>): number => Math.min(...captions.map(c => c.y))
+const maxCaptionX = (captions: Array<Caption>): number => Math.max(...captions.map(c => c.x + c.width))
+const maxCaptionY = (captions: Array<Caption>): number => Math.max(...captions.map(c => c.y + c.height))
 
 interface GraphStats {
   nodeCount: number,
@@ -133,10 +131,32 @@ export function nodesOf(graph: Graph, edgeId: string): Array<Node> {
 
 // ViewBox Calculations
 
+type PaddingType = {
+  left: number,
+  right: number,
+  top: number,
+  bottom: number
+}
+
+export const GRAPH_PADDING_X = 100
+export const GRAPH_PADDING_Y = 50
+const DEFAULT_PADDING: PaddingType = {
+  left: GRAPH_PADDING_X,
+  right: GRAPH_PADDING_X,
+  top: GRAPH_PADDING_Y,
+  bottom: GRAPH_PADDING_Y
+}
+const DEFAULT_VIEWBOX: Viewbox = { minX: -500, minY: -400, w: 1000, h: 800 }
+
 // output: { minX, minY, w, h }
 // These values are used to create the viewBox attribute for the outermost SVG,
 // which is effectively the smallest rectangle that can be fit around all nodes.
-export function calculateViewBox(nodes: Node[], edges: Edge[], captions: Caption[]): Viewbox {
+export function calculateViewBox(
+  nodes: Node[],
+  edges: Edge[],
+  captions: Caption[],
+  padding: PaddingType = DEFAULT_PADDING
+): Viewbox {
   const graphStats = stats(nodes, edges, captions)
 
   if (graphStats.nodeCount === 0) {
@@ -149,14 +169,23 @@ export function calculateViewBox(nodes: Node[], edges: Edge[], captions: Caption
     minCaptionX, minCaptionY, maxCaptionX, maxCaptionY
   } = graphStats
 
-  const minX = Math.min(minNodeX, minEdgeX, minCaptionX) - GRAPH_PADDING_X
-  const minY = Math.min(minNodeY, minEdgeY, minCaptionY) - GRAPH_PADDING_Y
-  const maxX = Math.max(maxNodeX, maxEdgeX, maxCaptionX) + GRAPH_PADDING_X
-  const maxY = Math.max(maxNodeY, maxEdgeY, maxCaptionY) + GRAPH_PADDING_Y + 50
+  const minX = Math.min(minNodeX, minEdgeX, minCaptionX) - padding.left
+  const minY = Math.min(minNodeY, minEdgeY, minCaptionY) - padding.top
+  const maxX = Math.max(maxNodeX, maxEdgeX, maxCaptionX) + padding.right
+  const maxY = Math.max(maxNodeY, maxEdgeY, maxCaptionY) + padding.bottom
   const w = maxX - minX
   const h = maxY - minY
 
-  return { minX, minY, w, h }
+  // adjustments to enforce minimum 400x300 viewbox
+  const diffX = Math.max(400 - w, 0)
+  const diffY = Math.max(300 - h, 0)
+
+  return {
+    minX: minX - diffX / 2,
+    minY: minY - diffY / 2,
+    w: w + diffX,
+    h: h + diffY
+  }
 }
 
 export function calculateViewBoxFromGraph(graph: Graph): Viewbox {

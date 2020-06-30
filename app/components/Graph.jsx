@@ -80,7 +80,14 @@ const calculateAnnotationViewBox = state => {
     edges = Object.values(edges).filter(edge => edgeIds.includes(edge.id))
     captions = Object.values(captions).filter(caption => captionIds.includes(caption.id))
 
-    return calculateViewBox(nodes, edges, captions)
+    const padding = {
+      left: 80,
+      right: 80,
+      top: 50,
+      bottom: 100
+    }
+
+    return calculateViewBox(nodes, edges, captions, padding)
   } else {
     return state.display.viewBox
   }
