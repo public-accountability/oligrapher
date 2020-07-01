@@ -1,8 +1,8 @@
 import React from 'react'
 
 import HeaderRight from '../../app/components/HeaderRight'
-import HeaderMenu from '../../app/components/HeaderMenu'
-import HeaderButtons from '../../app/components/HeaderButtons'
+import HeaderActions from '../../app/components/HeaderActions'
+import HeaderEditActions from '../../app/components/HeaderEditActions'
 import { createMockStore, mountWithStore } from '../testHelpers'
 
 describe('<HeaderRight>', function() {
@@ -14,8 +14,8 @@ describe('<HeaderRight>', function() {
     })
     wrapper = mountWithStore(store, <HeaderRight />)
 
-    expect(wrapper.find(HeaderMenu)).to.have.lengthOf(1)
-    expect(wrapper.find(HeaderButtons)).to.have.lengthOf(0)
+    expect(wrapper.find(HeaderActions)).to.have.lengthOf(1)
+    expect(wrapper.find(HeaderEditActions)).to.have.lengthOf(0)
 
   })
 
@@ -29,7 +29,7 @@ describe('<HeaderRight>', function() {
     })
     wrapper = mountWithStore(store, <HeaderRight />)
 
-    expect(wrapper.find(HeaderMenu)).to.have.lengthOf(0)
-    expect(wrapper.find(HeaderButtons)).to.have.lengthOf(1)
+    expect(wrapper.find(HeaderActions)).to.have.lengthOf(0)
+    expect(wrapper.find(HeaderEditActions)).to.have.lengthOf(1)
   })
 })

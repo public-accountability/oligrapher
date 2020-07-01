@@ -25,7 +25,7 @@ const sandbox = sinon.createSandbox()
 
 describe('Oligrapher', function() {
   let state, store, container, find, findAll, 
-    clickHeaderMenuItem, clickActionMenuItem, clickPresent, clickEdit, clickIcon,
+    clickHeaderAction, clickPresent, clickEdit, clickIcon,
     clickHandle, expectCount
 
   beforeEach(function() {
@@ -70,21 +70,15 @@ describe('Oligrapher', function() {
     find = (selector, root) => (root || container).querySelector(selector)
     findAll = (selector, root) => (root || container).querySelectorAll(selector)
 
-    clickHeaderMenuItem = key => {
-      fireEvent.click(
-        Array.from(findAll('#oligrapher-header-menu button', document.body)).find(button => button.textContent === key)
-      )
-    }
-
-    clickActionMenuItem = key => {
+    clickHeaderAction = key => {
       fireEvent.click(find('#toggle-action-menu'))
       fireEvent.click(
         Array.from(findAll('#header-action-menu li', document.body)).find(li => li.textContent === key)
       )
     }
 
-    clickPresent = () => clickActionMenuItem('Present')
-    clickEdit = () => clickHeaderMenuItem('Edit')
+    clickPresent = () => clickHeaderAction('Present')
+    clickEdit = () => clickHeaderAction('Edit')
     
     clickIcon = key => {
       fireEvent.click(find(`.editor-${key}-item`))
@@ -379,7 +373,7 @@ describe('Oligrapher', function() {
   it('clones map (failure)', async function() {
     const promise = new Promise((resolve, reject) => setTimeout(() => reject(), 10))
     sandbox.stub(littlesis3.oligrapher, 'clone').returns(promise)
-    clickActionMenuItem('Clone')
+    clickHeaderAction('Clone')
     // user message should indicate cloning
     const message = find('.oligrapher-user-message')
     expect(message.textContent).to.equal("Cloning map...")
@@ -393,7 +387,7 @@ describe('Oligrapher', function() {
   it('deletes map', async function() {
     const promise = new Promise(resolve => setTimeout(() => resolve(), 10))
     sandbox.stub(littlesis3.oligrapher, 'delete').returns(promise)
-    clickActionMenuItem('Delete')
+    clickHeaderAction('Delete')
     // confirmation modal should appear
     expectCount('#oligrapher-confirm', 1)
     // click on delete button
@@ -444,7 +438,7 @@ describe('Oligrapher', function() {
 
   it('opens and closes disclaimer', async function() {
     clickPresent()
-    clickHeaderMenuItem('Disclaimer')
+    clickHeaderAction('Disclaimer')
     // disclaimer should appear
     expectCount('#oligrapher-disclaimer', 1)
     // click button
@@ -472,7 +466,7 @@ describe('Oligrapher', function() {
     fireEvent.click(checkbox)
     // close settings
     clickIcon('settings')
-    clickActionMenuItem('Share')
+    clickHeaderAction('Share')
     // action menu should disappear
     await waitFor(() => expectCount('#header-action-menu', 0))
     // share modal should appear
@@ -482,7 +476,7 @@ describe('Oligrapher', function() {
     // share modal should disappear
     await waitFor(() => expectCount('#oligrapher-share', 0))
     clickPresent()
-    clickHeaderMenuItem('Share')
+    clickHeaderAction('Share')
     // share modal should appear
     expectCount('#oligrapher-share', 1)
   })
@@ -688,7 +682,7 @@ describe('Oligrapher', function() {
       clickHandle(node)
     })
     fireEvent.keyUp(document.body, { key: 'Control', code: 'ControlLeft', keyCode: 17 })
-    clickActionMenuItem('Present')
+    clickHeaderAction('Present')
     // should show three annotations
     const circles = findAll('.tracker-circle')
     expect(circles.length).to.equal(3)
@@ -736,7 +730,8 @@ describe('Oligrapher', function() {
   it('opens and updates and closes embed form', async function() {
     clickPresent()
     // open mebed form
-    clickHeaderMenuItem('Embed')
+    const button = getByText(container, "Embed")
+    fireEvent.click(button)
     expectCount('#oligrapher-embed-form', 1)
     // change width
     fireEvent.change(find('#oligrapher-embed-form input:nth-child(1)', document.body), { target: { value: '1000' } })
@@ -747,7 +742,7 @@ describe('Oligrapher', function() {
     fireEvent.change(find('#oligrapher-embed-form input:nth-child(2)', document.body), { target: { value: '1000' } })
     // code should show new height
     expect(textarea.textContent).to.contain('height="1000"')
-    clickHeaderMenuItem('Embed')
+    fireEvent.click(button)
     await waitFor(() => expectCount('#oligrapher-embed-form', 0))
   })
 })

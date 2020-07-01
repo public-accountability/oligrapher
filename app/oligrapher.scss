@@ -114,12 +114,18 @@ body {
     }
   }
 
-  h2 {
-    font-weight: normal;
-    font-size: 18px;
+  #oligrapher-header-subtitle-wrapper {
     margin-top: 0;
     margin-bottom: 0;
     height: 34px;
+    font-size: 15px;
+    line-height: 1em;
+
+    h2 {
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 1em;  
+    }
 
     input {
       width: 500px;
@@ -147,8 +153,13 @@ body {
     display: flex;
     flex-direction: row;
 
+    &:not(.editing) {
+      margin-bottom: 0.5em;
+    }
+
     #oligrapher-header-left-wrapper {
       flex-grow: 2;
+      flex-shrink: 2;
       padding-right: 1.5em;
 
       #oligrapher-attribution {
@@ -168,19 +179,16 @@ body {
 
     #oligrapher-header-right-wrapper {
       flex-grow: 0;
+      flex-shrink: 0;
       margin-right: 0.5em;
       margin-left: auto; /* This pushes the flex item to the right */
       align-self: flex-end;
 
-      #oligrapher-header-menu {
-        button {
-          margin-left: 0.5em;
-        }
+      button {
+        margin-right: 5px;
       }
 
-      .oligrapher-header-buttons  {
-        margin-top: 8px;
-
+      .oligrapher-header-actions, .oligrapher-header-edit-actions  {
         .header-action-menu-wrapper {
           display: inline-block;
         }
@@ -202,10 +210,6 @@ body {
 #oligrapher-container .MuiGrid-container {
   flex: 1 2 auto;
   // overflow: hidden;
-}
-
-#oligrapher-container .MuiGrid-item {
-  // height: 100%;
 }
 
 #oligrapher-container #oligrapher-graph-container {
@@ -1089,6 +1093,10 @@ div.lock {
     margin-bottom: 0.5em;
   }
 
+  .oligrapher-annotations-actions button {
+    margin-left: 0.5em;
+  }
+
   .oligrapher-annotation-text {
     line-height: 1.3em;
 
@@ -1122,6 +1130,10 @@ div.lock {
   .oligrapher-annotation-form-header {
     margin-bottom: 0.5em;
     width: 100%;
+
+    .MuiInput-root {
+      border-color: #ccc;
+    }
   }
 
   .oligrapher-annotation-form-text {
@@ -1144,15 +1156,19 @@ div.lock {
     font-size: 0.9em;
   }
 
-  .oligrapher-annotation-form-actions button {
+  .oligrapher-annotation-highlighting-tip {
+    background-color: #ffe;
+    padding: 0.7em;
+    font-size: 14px;
+    line-height: 1.4em;
+    margin-top: 1em;
     margin-bottom: 0.5em;
-  }
-}
 
-#oligrapher-annotations-toggler {
-  background-color: #f8f8f8;
-  border-color: #ddd;
-  margin-right: 0.5em;
+    button {
+      margin-top: 0.8em;
+      background-color: white;
+    }
+  }
 }
 
 #oligrapher-embed-form {

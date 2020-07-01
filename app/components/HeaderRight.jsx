@@ -1,8 +1,8 @@
 import React from 'react'
 
 import { useSelector } from '../util/helpers'
-import HeaderButtons from './HeaderButtons'
-import HeaderMenu from './HeaderMenu'
+import HeaderEditActions from './HeaderEditActions'
+import HeaderActions from './HeaderActions'
 import { userCanEditSelector } from '../util/selectors'
 
 export default function HeaderRight() {
@@ -10,8 +10,8 @@ export default function HeaderRight() {
   const userCanEdit = useSelector(userCanEditSelector)
 
   if (userCanEdit && editMode) {
-    return <HeaderButtons />
+    return <HeaderEditActions />
   } else {
-    return <HeaderMenu />
+    return <HeaderActions />
   }
 }

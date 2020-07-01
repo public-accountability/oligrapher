@@ -1,7 +1,6 @@
 import curry from 'lodash/curry'
 import values from 'lodash/values'
 import Graph, {
-  determineNodeNumber,
   calculateCenter,
   GRAPH_PADDING_X,
   GRAPH_PADDING_Y
@@ -294,7 +293,7 @@ describe('Graph', function() {
         minX: -100 - GRAPH_PADDING_X, 
         minY: -100 - GRAPH_PADDING_Y,
         w: 250 + 2 * GRAPH_PADDING_X,
-        h: 250 + 2 * GRAPH_PADDING_Y + 50
+        h: 250 + 2 * GRAPH_PADDING_Y
       })
     })
   })

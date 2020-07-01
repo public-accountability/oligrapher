@@ -4,6 +4,7 @@ import { Button } from '@material-ui/core'
 
 import Annotation from './Annotation'
 import AnnotationList from './AnnotationList'
+import RemoveAnnotationButton from './RemoveAnnotationButton'
 import AnnotationForm from './AnnotationForm'
 import AnnotationsNav from './AnnotationsNav'
 import AnnotationsTracker from './AnnotationsTracker'
@@ -73,13 +74,17 @@ export default function Annotations() {
       <br />
 
       { editing && (
-        <Button
-          onClick={create}
-          variant="outlined"
-          size="small"
-        >
-          Add Annotation
-        </Button>
+        <div className="oligrapher-annotations-actions">
+          <Button
+            onClick={create}
+            variant="outlined"
+            size="small"
+          >
+            Add Annotation
+          </Button>
+
+          { annotation && <RemoveAnnotationButton annotation={annotation} /> }
+        </div>
       ) }
 
       { editing && annotation &&

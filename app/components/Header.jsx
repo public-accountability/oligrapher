@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { MdExpandMore, MdExpandLess } from 'react-icons/md'
-import { Hidden } from '@material-ui/core'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 
 import { useSelector } from '../util/helpers'
 import HeaderRight from './HeaderRight'
@@ -17,8 +17,8 @@ import Subtitle from './Subtitle'
   |  #oligrapher-header-bottom                                 |
   |                                                            |
   |                                        One of:             |
-  |  Subtitle                              HeaderMenu          |
-  |  Attribution                           HeaderButtons       |
+  |  Subtitle                              HeaderActions       |
+  |  Attribution                           HeaderEditActions   |
   |                                                            |
   |                       size toggler                         |
   |------------------------------------------------------------|
@@ -34,8 +34,11 @@ export default function Header() {
   const updateSubtitle = useCallback(value => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'subtitle', value }), [dispatch])
   const expand = useCallback(() => dispatch({ type: 'EXPAND_HEADER' }), [dispatch])
   const collapse = useCallback(() => dispatch({ type: 'COLLAPSE_HEADER' }), [dispatch])
-  const className = isCollapsed ? "oligrapher-header-collapsed" : "oligrapher-header-expanded"
+  const className = editMode ? (isCollapsed ? "oligrapher-header-collapsed" : "oligrapher-header-expanded") : ""
   const users = [owner].concat(editors.filter(e => !e.pending))
+
+  const screenIsSmall = useMediaQuery(theme => theme.breakpoints.down('sm'))
+  const hideAttribution = !editMode && screenIsSmall
 
   const divRef = useRef()
 
@@ -61,10 +64,10 @@ export default function Header() {
             <Title text={title} editable={editMode} onChange={updateTitle} />
           </div>
 
-          <div id="oligrapher-header-bottom">
+          <div id="oligrapher-header-bottom" className={editMode ? "editing" : ""}>
             <div id="oligrapher-header-left-wrapper">
               <Subtitle text={subtitle} editable={editMode} onChange={updateSubtitle} />
-              { owner && <Attribution users={users} date={date} /> }
+              { !hideAttribution && owner && <Attribution users={users} date={date} /> }
             </div>
 
             <div id="oligrapher-header-right-wrapper">

@@ -1,10 +1,12 @@
 import React from 'react'
+import { ThemeProvider } from '@material-ui/core/styles'
 
 import Header from '../../app/components/Header'
 import Attribution from '../../app/components/Attribution'
 import Title from '../../app/components/Title'
 import HeaderRight from '../../app/components/HeaderRight'
 import { createMockStore, mountWithStore } from '../testHelpers'
+import { muiTheme } from '../../app/util/helpers'
 
 describe('<Header>', function() {
   let header, store
@@ -20,7 +22,11 @@ describe('<Header>', function() {
       display: { modes: { editor: true } }
     })
 
-    header = mountWithStore(store, <Header />)
+    header = mountWithStore(store, 
+      <ThemeProvider theme={muiTheme}>
+        <Header />
+      </ThemeProvider>
+    )
   })
 
   it('has container div', function()  {

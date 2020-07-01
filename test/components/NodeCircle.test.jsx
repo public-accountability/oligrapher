@@ -13,7 +13,7 @@ describe('<NodeCircle>', function() {
       color: '#ccc',
       scale: 2
     }
-    nodeCircle  = shallow(<NodeCircle node={node} />)
+    nodeCircle  = shallow(<NodeCircle node={node} status="normal" />)
   })
 
   it("renders circle with correct attributes", function(){

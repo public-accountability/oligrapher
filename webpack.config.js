@@ -53,7 +53,10 @@ function getDevServerConfig(env) {
       port: 8090,
       serveIndex: true,
       historyApiFallback: true,
-      hot: true
+      hot: true,
+      watchOptions: {
+        ignored: [/node_modules/]
+      }
     }
   } else {
     return undefined

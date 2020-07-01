@@ -1,15 +1,13 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { Input, Button } from '@material-ui/core'
 
 import { callWithTargetValue } from '../util/helpers'
-import Confirm from './Confirm'
 import AnnotationTextEditor from './AnnotationTextEditor'
 
 export default function AnnotationForm({ annotation }) {
   const { id, header, text } = annotation
-  const textIsLong = text.length > 30
 
   const dispatch = useDispatch()
   const update = useCallback(attributes => {
@@ -21,21 +19,8 @@ export default function AnnotationForm({ annotation }) {
     [dispatch]
   )
 
-  const remove = useCallback(
-    () => dispatch({ type: 'REMOVE_ANNOTATION', id }), 
-    [dispatch, id]
-  )
-
   const updateHeader = useCallback(callWithTargetValue(header => update({ header })), [update])
   const updateText = useCallback(text => update({ text }), [update])
-
-  const [showConfirm, setShowConfirm] = useState(false)
-  const openConfirm = useCallback(() => setShowConfirm(true), [])
-  const closeConfirm = useCallback(() => setShowConfirm(false), [])
-  const confirmRemove = useCallback(() => {
-    remove()
-    setShowConfirm(false)
-  }, [remove])
 
   return (
     <div id="oligrapher-annotation-form">
@@ -55,31 +40,16 @@ export default function AnnotationForm({ annotation }) {
           />
       </div>
 
-      <div className="oligrapher-annotation-form-actions">
+      <div className="oligrapher-annotation-highlighting-tip">
+        Press control and click on nodes, edges, or texts to add or remove highlights from this annotation.
+        <br />
         <Button
           variant="outlined"
           size="small"
           onClick={clearHighlights}>
           Clear Highlighting
         </Button>
-
-        <br />
-
-        <Button
-          variant="contained"
-          size="small"
-          color="secondary"
-          onClick={textIsLong ? openConfirm : remove}>
-          Remove
-        </Button>
       </div>
-
-      <Confirm
-        open={showConfirm}
-        message={'Are you sure you want to remove this annotation?'}
-        cancel={{ label: 'Cancel', onClick: closeConfirm }}
-        confirm={{ label: 'Remove', onClick: confirmRemove }}
-        />
     </div>
   )
 }

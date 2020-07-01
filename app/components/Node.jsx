@@ -13,12 +13,13 @@ export function Node({ id, currentlyEdited, selected, status }) {
   const dispatch = useDispatch()
   const node = useSelector(state => state.graph.nodes[id])
   const { name } = node
+  const editMode = useSelector(state => state.display.modes.editor)
   const { isSelecting } = useSelector(state => state.display.selection)
   const { isHighlighting } = useSelector(state => state.annotations)
   const selectedNodeIds = useSelector(state => state.display.selection.node)
   const isMultipleSelection = selected && selectedNodeIds.length > 1
   const [isDragging, setDragging] = useState(false)
-  const showHalo = !isHighlighting && (selected || currentlyEdited || isDragging)
+  const showSelection = editMode && !isHighlighting && (selected || currentlyEdited || isDragging)
 
   const moveNode = useCallback(deltas => {
     setDragging(false)
@@ -69,7 +70,7 @@ export function Node({ id, currentlyEdited, selected, status }) {
         onDragLeave={onMouseLeave}
       >
         <NodeLabel node={node} status={status} />
-        <NodeHalo node={node} selected={showHalo} highlighted={status === "highlighted"} />
+        <NodeHalo node={node} selected={showSelection} highlighted={status === "highlighted"} />
         <NodeCircle node={node} status={status} />
         <NodeImage node={node} status={status} />
       </g>
@@ -81,7 +82,7 @@ Node.propTypes = {
   id: PropTypes.string.isRequired,
   currentlyEdited: PropTypes.bool.isRequired,
   selected: PropTypes.bool.isRequired,
-  status: PropTypes.bool.isRequired
+  status: PropTypes.string.isRequired
 }
 
 export default React.memo(Node)
