@@ -153,7 +153,7 @@ module.exports = function(env) {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
       alias: {
         'react-dom': env.dev_server ? '@hot-loader/react-dom' : 'react-dom',
-        Components: path.resolve(__dirname, 'app/components/')
+        'material-ui': 'material-ui/es'
       }
     }
   }

@@ -1,7 +1,9 @@
 import React, { useCallback, useState, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { IoIosMore } from 'react-icons/io'
-import { IconButton, Menu, MenuItem } from '@material-ui/core'
+import IconButton from '@material-ui/core/IconButton'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
 
 import Confirm from './Confirm'
 import ShareModal from './ShareModal'

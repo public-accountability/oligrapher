@@ -474,7 +474,7 @@ export function dragNodeEdges(graph: Graph, nodeId: string, deltas: Point): Grap
 
 function connectedNodeIds(graph: Graph, nodeId: string): Array<string> {
   let nodeIds = edgesOf(graph, nodeId).map(edge => [edge.node1_id, edge.node2_id]).flat()
-  return [...new Set(nodeIds)].filter(id => id != nodeId)
+  return uniq(nodeIds).filter(id => id != nodeId)
 }
 
 export function forceLayout(graph: Graph, steps:number = 1000): Graph {
