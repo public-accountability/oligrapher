@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import CKEditor from '@ckeditor/ckeditor5-react'
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import ClassicEditor from 'ClassicEditor'
 
 export default function AnnotationTextEditor({ text, onChange }) {  
   const cleanup = useCallback(string => (string === '' ? null : string), [])
@@ -10,10 +10,10 @@ export default function AnnotationTextEditor({ text, onChange }) {
   }, [onChange, cleanup])
 
   const config = {
-    placeholder: 'Annotation body',
+    placeholder: 'Annotation text',
     toolbar: [
       'bold', 'italic', 'link', 'bulletedList', 'numberedList',
-      'indent', 'outdent', 'blockQuote', 'undo', 'redo'
+      'blockQuote', 'undo', 'redo'
     ]
   }
 

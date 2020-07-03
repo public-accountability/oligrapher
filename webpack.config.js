@@ -152,9 +152,12 @@ module.exports = function(env) {
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
       alias: {
-        'react-dom': env.dev_server ? '@hot-loader/react-dom' : 'react-dom',
-        'material-ui': 'material-ui/es'
+        'react-dom': env.dev_server ? '@hot-loader/react-dom' : 'react-dom'
       }
-    }
+    },
+
+    externals: {
+      ClassicEditor: 'ClassicEditor'
+    },
   }
 }

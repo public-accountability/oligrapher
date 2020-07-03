@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { SketchPicker } from 'react-color'
+import SketchPicker from 'react-color/lib/Sketch'
 import uniq from 'lodash/uniq'
 
 const DEFAULT_COLOR = '#CCC'
