@@ -4,9 +4,6 @@ import FloatingEditor, { toggleEditor } from '../util/floatingEditor'
 import { swapSelection, clearSelection } from '../util/selection'
 import { isLittleSisId } from '../util/helpers'
 import { DisplayState } from '../util/defaultState'
-import { 
-  createAnnotation, moveAnnotation, showAnnotation, updateAnnotation, removeAnnotation
-} from '../util/annotations'
 
 const ZOOM_INTERVAL = 1.2
 

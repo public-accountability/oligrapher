@@ -49,7 +49,7 @@ export default function Header() {
   return (
     <div id="oligrapher-header" className={className} ref={divRef}>
       { isCollapsed && 
-        <div id="oligrapher-header-bottom">
+        <div id="oligrapher-header-bottom" className={editMode ? "editing" : ""}>
           <Title text={title} editable={false} />
 
           <div id="oligrapher-header-right-wrapper">

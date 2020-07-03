@@ -73,7 +73,6 @@ export const calculateStatus = (id: string, highlightedIds: string[], annotation
   return "faded"
 }
 
-
 export function useSaveMap() {
   const dispatch = useDispatch()
   const [confirmOpen, setConfirmOpen] = useState(false)
