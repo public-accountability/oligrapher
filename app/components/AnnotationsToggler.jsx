@@ -1,21 +1,21 @@
 import React, { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Button } from '@material-ui/core'
 
 export default function AnnotationsToggler() {
   const dispatch = useDispatch()
   const toggle = useCallback(() => dispatch({ type: 'TOGGLE_ANNOTATIONS' }), [dispatch])
+  const storyMode = useSelector(state => state.display.modes.story)
 
   return (
     <Button
       id="oligrapher-annotations-toggler"
-      variant="contained"
-      color="primary"
+      variant={storyMode ? "outlined" : "contained"}
+      color={storyMode ? undefined : "primary"}
       size="small"
       onClick={toggle}
     >
-      Annotations
-      {/* Show {list.length} annotation{list.length > 1 ? "s" : ""} */}
+      {storyMode ? "Hide" : "Show"} Annotations
     </Button>
   )
 }

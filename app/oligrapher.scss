@@ -1035,6 +1035,12 @@ div.lock {
   }
 }
 
+#oligrapher-container #oligrapher-embedded-annotations-toggler {
+  position: fixed;
+  bottom: 1em;
+  right: 1em;
+}
+
 #oligrapher-container #oligrapher-annotations-tracker {
   display: inline-block;
   margin-left: 5px;
@@ -1057,14 +1063,8 @@ div.lock {
   }
 }
 
-#oligrapher-container #oligrapher-annotations {
-  border-left: 1px solid #eee;
-  padding: 1em;
-  padding-right: 0;
-  margin-right: 15px;
-  height: 100%;
-
-  .oligrapher-annotations-close {
+#oligrapher-container #oligrapher-annotations, #oligrapher-container #oligrapher-annotations-condensed {
+  .oligrapher-annotations-hide {
     float: right;
     position: relative;
     top: 5px;
@@ -1075,6 +1075,14 @@ div.lock {
       width: 20px;
     }
   }
+}
+
+#oligrapher-container #oligrapher-annotations {
+  border-left: 1px solid #eee;
+  padding: 1em;
+  padding-right: 0;
+  margin-right: 15px;
+  height: 100%;
 
   .oligrapher-annotations-header {
     font-size: 28px;

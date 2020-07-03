@@ -7,6 +7,7 @@ import CondensedHeader from './CondensedHeader'
 import Graph from './Graph'
 import ZoomControl from './ZoomControl'
 import CondensedAnnotations from './CondensedAnnotations'
+import AnnotationsToggler from './AnnotationsToggler'
 import { muiTheme } from '../util/helpers'
 import { showAnnotationsSelector } from '../util/selectors'
 
@@ -25,6 +26,11 @@ export function EmbeddedRoot() {
         </div>
         { showAnnotations &&
           <CondensedAnnotations />
+        }
+        { !showAnnotations &&
+          <div id="oligrapher-embedded-annotations-toggler">
+            <AnnotationsToggler />
+          </div>
         }
       </ThemeProvider>
     </div>

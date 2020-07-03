@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Annotation from './Annotation'
 import AnnotationsNav from './AnnotationsNav'
 import AnnotationsTracker from './AnnotationsTracker'
+import HideAnnotationsButton from './HideAnnotationsButton'
 import { annotationsListSelector } from '../util/selectors'
 import { useClientRect } from '../util/helpers'
 
@@ -13,6 +14,7 @@ export default function CondensedAnnotations() {
   const { currentIndex } = useSelector(state => state.annotations)
   const list = useSelector(annotationsListSelector)
   const annotation = list[currentIndex]
+  const { storyModeOnly } = useSelector(state => state.attributes.settings)
 
   const prev = useCallback(
     () => dispatch({ type: 'SHOW_ANNOTATION', index: currentIndex - 1 }), 
@@ -39,23 +41,29 @@ export default function CondensedAnnotations() {
 
   return (
     <div id="oligrapher-annotations-condensed" ref={ref}>
-      { list.length > 1 &&
-        <div id="oligrapher-annotations-condensed-nav">
-          <AnnotationsNav
-            count={list.length}
-            currentIndex={currentIndex}
-            prev={prev}
-            next={next}
-            size="small"
-            />
+      <div id="oligrapher-annotations-condensed-nav">
+        { list.length > 1 &&
+          <>
+            <AnnotationsNav
+              count={list.length}
+              currentIndex={currentIndex}
+              prev={prev}
+              next={next}
+              size="small"
+              />
 
-          <AnnotationsTracker
-            count={list.length}
-            currentIndex={currentIndex}
-            show={show}
-            />
-        </div>
-      }
+            <AnnotationsTracker
+              count={list.length}
+              currentIndex={currentIndex}
+              show={show}
+              />
+          </>
+        }
+
+        { !storyModeOnly &&
+          <HideAnnotationsButton />
+        }
+      </div>
 
       <Annotation annotation={annotation} />
     </div>

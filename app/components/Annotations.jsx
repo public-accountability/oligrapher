@@ -8,7 +8,7 @@ import RemoveAnnotationButton from './RemoveAnnotationButton'
 import AnnotationForm from './AnnotationForm'
 import AnnotationsNav from './AnnotationsNav'
 import AnnotationsTracker from './AnnotationsTracker'
-import { MdClose } from 'react-icons/md'
+import HideAnnotationsButton from './HideAnnotationsButton'
 import { annotationsListSelector } from '../util/selectors'
 
 export default function Annotations() {
@@ -36,8 +36,6 @@ export default function Annotations() {
     [dispatch]
   )
 
-  const close = useCallback(() => dispatch({ type: 'TOGGLE_ANNOTATIONS' }), [dispatch])
-
   return (
     <div id="oligrapher-annotations">
       <div id="oligrapher-annotations-nav">
@@ -61,9 +59,7 @@ export default function Annotations() {
         }
 
         { !storyModeOnly &&
-          <div className="oligrapher-annotations-close" onClick={close} title="Hide annotations">
-            <MdClose />
-          </div>
+          <HideAnnotationsButton />
         }
       </div>
 

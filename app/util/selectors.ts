@@ -14,7 +14,7 @@ export const userIsEditorSelector: Selector = state => {
 }
 
 export const userCanEditSelector: Selector = state => {
-  return userIsOwnerSelector(state) || userIsEditorSelector(state)
+  return !state.settings.embed && (userIsOwnerSelector(state) || userIsEditorSelector(state))
 }
 
 export const annotationsListSelector: Selector = state => {
@@ -52,6 +52,10 @@ export const currentAnnotationSelector: Selector = state => {
 }
 
 export const annotationHasHighlightsSelector: Selector = state => {
+  if (!state.display.modes.story) {
+    return false
+  }
+
   const annotation = currentAnnotationSelector(state)
 
   if (!annotation) {

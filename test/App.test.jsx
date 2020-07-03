@@ -3,8 +3,10 @@ import { render, fireEvent, waitFor, getByText } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import sinon from 'sinon'
 import mediaQuery from 'css-mediaquery'
+import merge from 'lodash/merge'
 
 import { Root } from '../app/components/Root'
+import { EmbeddedRoot } from '../app/components/EmbeddedRoot'
 import { bigGraph } from './testData'
 import { createOligrapherStore } from '../app/util/store'
 import stateInitializer from '../app/util/stateInitalizer'
@@ -33,7 +35,8 @@ describe('Oligrapher', function() {
     sandbox.stub(littlesis3, 'lock').resolves({
       user_has_lock: true
     })
-    state = stateInitializer({ 
+
+    state = { 
       graph: Object.assign({}, bigGraph),
       annotations: {
         list: [],
@@ -57,9 +60,9 @@ describe('Oligrapher', function() {
       display: {
         modes: { editor: true }
       }
-    })
+    }
 
-    store = createOligrapherStore(state)
+    store = createOligrapherStore(stateInitializer(state))
 
     container = render(
       <Provider store={store}>
@@ -68,6 +71,7 @@ describe('Oligrapher', function() {
     ).container
 
     find = (selector, root) => (root || container).querySelector(selector)
+
     findAll = (selector, root) => (root || container).querySelectorAll(selector)
 
     clickHeaderAction = key => {
@@ -696,7 +700,7 @@ describe('Oligrapher', function() {
     expect(find('.oligrapher-annotation-header').textContent).to.equal('Sources')
     expect(find('.oligrapher-annotation-text').textContent).to.contain('example')
     // click on Annotations button
-    button = getByText(container, 'Annotations')
+    button = getByText(container, 'Hide Annotations')
     fireEvent.click(button)
     // should hide annotations
     expectCount('#oligrapher-annotations', 0)
@@ -744,5 +748,25 @@ describe('Oligrapher', function() {
     expect(textarea.textContent).to.contain('height="1000"')
     fireEvent.click(button)
     await waitFor(() => expectCount('#oligrapher-embed-form', 0))
+  })
+
+  it('shows embedded graph', function() {
+    let embeddedStore = createOligrapherStore(stateInitializer(
+      merge(state, {
+        settings: { embed: true },
+        // enable list sources so that an annotation is shown
+        attributes: { settings: { list_sources: true } } 
+      })
+    ))
+    container = render(
+      <Provider store={embeddedStore}>
+        <EmbeddedRoot />
+      </Provider>
+    ).container
+    expectCount('#oligrapher-editor', 0)
+    expectCount('#oligrapher-header-condensed', 1)
+    expectCount('#oligrapher-annotations-condensed', 1)
+    fireEvent.click(find('.oligrapher-annotations-hide'))
+    expectCount('#oligrapher-annotations-condensed', 0)
   })
 })
