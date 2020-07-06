@@ -1001,7 +1001,7 @@ div.lock {
   position: fixed;
   bottom: 0;
   left: 0;
-  height: 28%;
+  height: 30%;
   width: 100%;
   box-sizing: border-box;
   padding-bottom: 0;
@@ -1026,6 +1026,10 @@ div.lock {
     p {
       margin-top: 0.5em;
       margin-bottom: 0.5em;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
     }
   }
 

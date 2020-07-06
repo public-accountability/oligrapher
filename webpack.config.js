@@ -49,11 +49,12 @@ function getDevServerConfig(env) {
   if (env.dev_server) {
     return {
       contentBase: path.resolve(__dirname, 'html'),
-      publicPath: '/',
+      publicPath: 'http://localhost:8090/',
       port: 8090,
       serveIndex: true,
       historyApiFallback: true,
       hot: true,
+      headers: { 'Access-Control-Allow-Origin': '*' },
       watchOptions: {
         ignored: [/node_modules/]
       }
@@ -76,6 +77,7 @@ module.exports = function(env) {
     entry: path.resolve(__dirname, 'app/Oligrapher.jsx'),
     output: {
       path: getOutputPath(env),
+      publicPath: 'http://localhost:8090/',
       library: 'Oligrapher',
       libraryTarget: 'umd',
       libraryExport: "default",
