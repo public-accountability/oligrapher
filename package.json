@@ -9,7 +9,7 @@
     "dev-server": "webpack-dev-server --color --progress --env.dev_server --env.api_url=http://localhost:8081",
     "build": "yarn run build-dev && yarn run build-prod",
     "serve": "http-server ./dist -p 8091",
-    "test": "NODE_ENV=test mocha --require jsdom-global/register --require ts-node/register --extension ts,tsx",
+    "test": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' NODE_ENV=test mocha --extension ts,tsx",
     "test:watch": "mocha --watch",
     "test:debug": "mocha inspect",
     "profile": "webpack --profile --display-modules --env.production",
@@ -113,7 +113,8 @@
     "require": [
       "@babel/register",
       "chai/register-expect",
-      "jsdom-global/register"
+      "jsdom-global/register",
+      "ts-node/register"
     ],
     "file": [
       "test/setup.js"

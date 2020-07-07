@@ -134,11 +134,6 @@ module.exports = function(env) {
               }
             }
           ]
-        },
-        {
-          enforce: "pre",
-          test: /\.js$/,
-          loader: "source-map-loader"
         }
       ]
     },
@@ -156,10 +151,6 @@ module.exports = function(env) {
       alias: {
         'react-dom': env.dev_server ? '@hot-loader/react-dom' : 'react-dom'
       }
-    },
-
-    externals: {
-      ClassicEditor: 'ClassicEditor'
-    },
+    }
   }
 }

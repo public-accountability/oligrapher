@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { useHotkeys } from 'react-hotkeys-hook'
 
 import NodeSelection from './NodeSelection'
 import Node from './Node'
@@ -12,7 +13,8 @@ import { annotationHasHighlightsSelector } from '../util/selectors'
 export function Nodes(props) {
   const { 
     nodes, editedNodeId, draggedNodeId, selectedNodeIds, 
-    highlightedNodeIds, annotationHasHighlights, editMode 
+    highlightedNodeIds, annotationHasHighlights, editMode,
+    floatingEditorIsOpen, removeNodes
   } = props
 
   let unselectedNodeIds = Object.keys(nodes).filter(id => !selectedNodeIds.includes(id))
@@ -22,7 +24,16 @@ export function Nodes(props) {
     let nonDraggedNodeIds = unselectedNodeIds.filter(id => id !== draggedNodeId)
     unselectedNodeIds = nonDraggedNodeIds.concat([draggedNodeId])
   }
-  
+
+  const removeSelectedNodes = () => {
+    if (editMode && !floatingEditorIsOpen && selectedNodeIds.length > 0) {
+      removeNodes(selectedNodeIds)
+    }
+  }
+
+  useHotkeys('backspace', removeSelectedNodes, [editMode, floatingEditorIsOpen, selectedNodeIds])
+  useHotkeys('del', removeSelectedNodes, [editMode, floatingEditorIsOpen, selectedNodeIds])
+
   return (
     <g className="nodes">
       { unselectedNodeIds.map(id => (
@@ -57,7 +68,9 @@ Nodes.propTypes = {
   selectedNodeIds: PropTypes.array.isRequired,
   highlightedNodeIds: PropTypes.array.isRequired,
   annotationHasHighlights: PropTypes.bool.isRequired,
-  editMode: PropTypes.bool.isRequired
+  editMode: PropTypes.bool.isRequired,
+  floatingEditorIsOpen: PropTypes.bool.isRequired,
+  removeNodes: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => {
@@ -71,8 +84,15 @@ const mapStateToProps = state => {
     selectedNodeIds: getSelection(state.display, 'node'),
     highlightedNodeIds: storyMode ? (list[currentIndex]?.nodeIds || []) : [],
     annotationHasHighlights: annotationHasHighlightsSelector(state),
-    editMode: state.display.modes.editor
+    editMode: state.display.modes.editor,
+    floatingEditorIsOpen: state.display.floatingEditor.type !== null
   }
 }
 
-export default connect(mapStateToProps)(Nodes)
+const mapDispatchToProps = dispatch => {
+  return {
+    removeNodes: ids => dispatch({ type: 'REMOVE_NODES', ids })
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Nodes)

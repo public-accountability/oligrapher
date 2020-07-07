@@ -4,7 +4,7 @@ import undoable, { includeAction } from 'redux-undo'
 import { generate } from 'shortid'
 
 import {
-  Graph, addNode, addNodes, updateNode, removeNode, dragNodeEdges, moveNode,
+  Graph, addNode, addNodes, updateNode, removeNode, removeNodes, dragNodeEdges, moveNode,
   addEdge, addEdgeIfNodes, addEdgesIfNodes, updateEdge, removeEdge,
   addCaption, addInterlocks
 } from '../graph/graph'
@@ -31,6 +31,9 @@ export const reducer = produce((graph: Graph, action: any): void => {
     return
   case 'REMOVE_NODE':
     removeNode(graph, action.id)
+    return
+  case 'REMOVE_NODES':
+    removeNodes(graph, action.ids)
     return
   case 'DRAG_NODE':
     dragNodeEdges(graph, action.id, action.deltas)
@@ -114,7 +117,8 @@ export const UNDO_ACTIONS = [
   'UPDATE_CAPTION',
   'MOVE_CAPTION',
   'REMOVE_CAPTION',
-  'APPLY_FORCE_LAYOUT'
+  'APPLY_FORCE_LAYOUT',
+  'REMOVE_NODES'
 ]
 
 // @ts-ignore

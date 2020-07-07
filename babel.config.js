@@ -7,7 +7,7 @@ require("@babel/register")({
 module.exports = function(api) {
   // These are run in reserve order. @babel/preset-react is run first.
   const presets = [
-    [ "@babel/preset-env", { useBuiltIns: "usage", corejs: 3, "modules": false } ],
+    [ "@babel/preset-env", { useBuiltIns: "usage", corejs: 3 } ],
     [ "@babel/preset-react", {} ]
   ]
 

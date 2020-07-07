@@ -271,6 +271,11 @@ export function removeNode(graph: Graph, nodeId: string): Graph {
   return graph
 }
 
+export function removeNodes(graph: Graph, nodeIds: string[]): Graph {
+  nodeIds.forEach(nodeId => removeNode(graph, nodeId))
+  return graph
+}
+
 export function updateNode(graph: Graph, nodeId: string, attributes: NodeAttributes): Graph {
   // assign instead of merge so that edgeIds can be updated with fewer ids
   Object.assign(graph.nodes[nodeId], attributes)

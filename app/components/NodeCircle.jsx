@@ -30,4 +30,8 @@ NodeCircle.propTypes = {
   status: PropTypes.string.isRequired
 }
 
+NodeCircle.defaultProps = {
+  status: 'normal'
+}
+
 export default React.memo(NodeCircle)

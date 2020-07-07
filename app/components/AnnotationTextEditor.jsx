@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import CKEditor from '@ckeditor/ckeditor5-react'
-import ClassicEditor from 'ClassicEditor'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 
 export default function AnnotationTextEditor({ text, onChange }) {  
   const cleanup = useCallback(string => (string === '' ? null : string), [])

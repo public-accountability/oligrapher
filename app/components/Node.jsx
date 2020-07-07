@@ -12,7 +12,8 @@ import NodeLabel from './NodeLabel'
 export function Node({ id, currentlyEdited, selected, status }) {
   const dispatch = useDispatch()
   const node = useSelector(state => state.graph.nodes[id])
-  const { name } = node
+  const name = node?.name // avoids error in case node isn't present due to zombie child problem,
+                          // see comment below
   const editMode = useSelector(state => state.display.modes.editor)
   const { isSelecting } = useSelector(state => state.display.selection)
   const { isHighlighting } = useSelector(state => state.annotations)
@@ -53,6 +54,12 @@ export function Node({ id, currentlyEdited, selected, status }) {
   }, [dispatch, isSelecting, isHighlighting, id])
   const onMouseEnter = useCallback(() => dispatch({ type: 'MOUSE_ENTERED_NODE', name }), [dispatch, name])
   const onMouseLeave = useCallback(() => dispatch({ type: 'MOUSE_LEFT_NODE' }), [dispatch])
+
+  // ordinarily the node should always be present, but when removing selected nodes we encounter the 
+  // zombie child problem: https://react-redux.js.org/api/hooks#stale-props-and-zombie-children
+  if (!node) {
+    return null
+  }
 
   return (
     <DraggableComponent

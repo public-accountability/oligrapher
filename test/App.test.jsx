@@ -31,10 +31,12 @@ describe('Oligrapher', function() {
     clickHandle, expectCount
 
   beforeEach(function() {
+    // necessary for Material-UI layout breakpoints to work
     window.matchMedia = createMatchMedia(window.innerWidth)
-    sandbox.stub(littlesis3, 'lock').resolves({
-      user_has_lock: true
-    })
+    // ensure that user has lock to allow editing
+    sandbox.stub(littlesis3, 'lock').resolves({ user_has_lock: true })
+    // stub AnnotationTextEditor because CKEditor hangs the test, and is now an external module anyway
+    sandbox.stub(AnnotationTextEditor, 'default').returns(<div>text editor</div>)
 
     state = { 
       graph: Object.assign({}, bigGraph),
@@ -590,8 +592,6 @@ describe('Oligrapher', function() {
   })
 
   it('creates, shows, and updates, and removes annotations', function() {
-    // stub AnnotationTextEditor because CKEditor hangs the test
-    sandbox.stub(AnnotationTextEditor, 'default').returns(<div>text editor</div>)
     // click on annotations icon
     const icon = find('.editor-annotations-item')
     fireEvent.click(icon)
@@ -624,8 +624,6 @@ describe('Oligrapher', function() {
   })
 
   it('highlights and clears nodes, edges, captions', function() {
-    // stub AnnotationTextEditor because CKEditor hangs the test
-    sandbox.stub(AnnotationTextEditor, 'default').returns(<div>text editor</div>)
     // click on annotations icon
     const icon = find('.editor-annotations-item')
     fireEvent.click(icon)
@@ -668,8 +666,6 @@ describe('Oligrapher', function() {
   })
 
   it('shows annotations in presentation mode', function() {
-    // stub AnnotationTextEditor because CKEditor hangs the test
-    sandbox.stub(AnnotationTextEditor, 'default').returns(<div>text editor</div>)
     clickIcon('settings')
     // click on list sources checkbox
     const checkbox = find('input[name=list_sources]')
@@ -707,8 +703,6 @@ describe('Oligrapher', function() {
   })
 
   it('changes annotation settings', function() {
-    // stub AnnotationTextEditor because CKEditor hangs the test
-    sandbox.stub(AnnotationTextEditor, 'default').returns(<div>text editor</div>)
     clickIcon('settings')
     // click on explore mode only
     let checkbox = find('input[name=exploreModeOnly]')
