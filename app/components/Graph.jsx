@@ -38,9 +38,11 @@ export function Graph(props) {
           <Pannable>
             <Selectable>
               <Highlightable>
-                <Edges />
-                <Nodes />
-                <Captions />
+                <g id="oligrapher-svg-export">
+                  <Edges />
+                  <Nodes />
+                  <Captions />
+                </g>
               </Highlightable>
             </Selectable>
           </Pannable>

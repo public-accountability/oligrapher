@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import ConditionalLink from './ConditionalLink'
 import textLines from '../util/textLines'
 import { NODE_RADIUS } from '../graph/node'
 
@@ -51,6 +52,7 @@ export default function NodeLabel({ node, perLineMax, status }) {
       y={radius + y + lineHeight}
       dy={i * lineHeight}
       textAnchor="middle"
+      fontFamily="Helvetica Neue Medium, Helvetica, Arial, sans-serif"
       fontSize={fontSize + 'px'}
       fill={color}
     >
@@ -62,20 +64,17 @@ export default function NodeLabel({ node, perLineMax, status }) {
     <g>
       { rects }
 
-      { node.url ? (
-        <a className="node-label" href={node.url} target="_blank" rel="noopener noreferrer">
-          { lines }
-        </a> 
-      ) : (
-        <g className="node-label">
+      <g className="node-label">
+        <ConditionalLink condition={node.url} href={node.url} target="_blank" rel="noopener noreferrer">
           {lines}
-        </g>
-      ) }
+        </ConditionalLink>
+      </g>
     </g>
   )
 }
 
 NodeLabel.propTypes = {
   node: PropTypes.object.isRequired,
-  perLineMax: PropTypes.number
+  perLineMax: PropTypes.number,
+  status: PropTypes.string.isRequired
 }

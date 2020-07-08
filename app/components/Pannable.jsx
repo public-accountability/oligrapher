@@ -28,10 +28,10 @@ export function Pannable({ children, offset, zoom, isTextTool, addCaption, setOf
       <g className={className}>
         <rect 
           className="pannable-handle"
-          x="-5000"
-          y="-5000"
-          width="10000"
-          height="10000"
+          x="-1000"
+          y="-1000"
+          width="2000"
+          height="2000"
           fill="#fff" />
         {children}
       </g>

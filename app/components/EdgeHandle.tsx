@@ -12,7 +12,11 @@ export default function EdgeHandle({ bezier, width, onMouseEnter, onMouseLeave }
       d={bezier}
       width={width + EXTRA_WIDTH}
       onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}>
+      onMouseLeave={onMouseLeave}
+      stroke="#fff"
+      strokeWidth="25"
+      strokeOpacity="0"
+      fill="none">
     </path>
   )
 }

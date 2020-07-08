@@ -887,13 +887,26 @@ div.lock {
 #oligrapher-container #oligrapher-graph-container .oligrapher-node {
   pointer-events: auto;
 
+  // we have to disable pointer-events for the dragged node in order for 
+  // a dragged-over node to detect a hover event, which we use for 
+  // drag-and-drop edge creation. but as a consequence the "grabbing"
+  // cursor will not work because it depends on pointer events
   &.react-draggable-dragging {
+    cursor: grabbing;
     pointer-events: none;
   }
 
   .node-label text {
     font-family: 'Helvetica Neue Medium';
-    // fill: #222;
+    cursor: default;
+  }
+
+  .node-label a text {
+    cursor: pointer;
+  }
+
+  .node-label a:focus {
+    outline: none;
   }
 
   a:hover {
@@ -901,8 +914,6 @@ div.lock {
   }
 
   .node-halo {
-    fill: none;
-
     &.node-halo-selected {
       fill: $oligrapher_blue;
     }
@@ -921,16 +932,12 @@ div.lock {
 /* EDGES */
 
 #oligrapher-container #oligrapher-graph-container .oligrapher-edge {
+  a:hover {
+    text-decoration: none;
+  }
 
-  .edge-handle {
-    stroke: #fff;
-    stroke-width: 25;
-    stroke-opacity: 0;
-    fill: none;
-
-    &:hover {
-      cursor: pointer
-    }
+  a:focus {
+    outline: none;
   }
 }
 
@@ -1201,10 +1208,4 @@ div.lock {
     background-color: white;
     border: 1px solid #ccc;
   }
-}
-
-/* etc */
-
-#oligrapher-container #oligrapher-graph-container .react-draggable-dragging {
-  cursor: grabbing;
 }

@@ -1,5 +1,6 @@
 import { put, select as sagaSelect, call, takeEvery, all } from 'redux-saga/effects'
 import cloneDeep from 'lodash/cloneDeep'
+import slugify from 'slugify'
 
 import { isLittleSisId, convertSelectorForUndo } from './util/helpers'
 import { oligrapher, editors, getEdges, getInterlocks } from './datasources/littlesis3'
@@ -26,7 +27,8 @@ export default function* rootSaga() {
     watchForceLayout(),
     watchAddEditor(),
     watchRemoveEditor(),
-    watchInterlocks()
+    watchInterlocks(),
+    watchExportImage()
   ])
 }
 
@@ -68,6 +70,10 @@ export function* watchRemoveEditor() {
 
 export function* watchInterlocks() {
   yield takeEvery(['INTERLOCKS_REQUESTED'], interlocks)  
+}
+
+export function* watchExportImage() {
+  yield takeEvery(['EXPORT_IMAGE_REQUESTED'], exportImage)
 }
 
 export function* setSvgHeight(action: any) {
@@ -215,4 +221,65 @@ export function* interlocks(action: any): any {
 
   yield call(delay, RESET_DELAY)
   yield put({ type: 'INTERLOCKS_RESET' })
+}
+
+export function* exportImage(action: any) {
+  const title = yield select(state => state.attributes.title)
+  const viewBox = yield select (state => state.display.viewBox)
+
+  try {
+    const svg = document.getElementById('oligrapher-svg') as any
+    const g = document.getElementById('oligrapher-svg-export') as any
+    // const style = Array.from(document.querySelectorAll('style')).find(node => node.innerHTML.includes("oligrapher-container")) as any
+    const clonedSvg = svg.cloneNode(false)
+    const clonedG = g.cloneNode(true)
+    // const clonedStyle = style.cloneNode(true)
+    const style = document.createElement("style")
+
+    // style.appendChild(document.createTextNode("))
+    clonedSvg.setAttribute('width', viewBox.w)
+    clonedSvg.setAttribute('height', viewBox.h)
+    clonedSvg.setAttribute('style', 'background-color: white')
+    // clonedSvg.appendChild(clonedStyle)
+    clonedSvg.appendChild(clonedG)
+    const outerHTML = clonedSvg.outerHTML
+    console.log(outerHTML)
+    const blob = new Blob([outerHTML], { type: 'image/svg+xml' })
+    const blobURL = URL.createObjectURL(blob)
+    const image = new Image()
+
+    const download = function(href: string, name: string) {
+      const link = document.createElement('a')
+      link.download = name
+      link.style.opacity = "0"
+      document.body.append(link)
+      link.href = href
+      link.click()
+      link.remove()
+    }
+
+    image.onload = () => {
+      console.log("started image load")
+      const canvas = document.createElement('canvas')
+      canvas.width = viewBox.w
+      canvas.height = viewBox.h
+      const context = canvas.getContext('2d') as any
+      context.drawImage(image, 0, 0, viewBox.w, viewBox.h)
+      console.log("drew image to canvas")
+      // const jpeg = canvas.toDataURL('image/jpg')
+      const png = canvas.toDataURL()
+      // const webp = canvas.toDataURL('image/webp')
+      canvas.remove()
+      download(png, slugify(title) + '.png')
+    }
+
+    image.src = blobURL
+    yield put({ type: 'EXPORT_IMAGE_SUCCESS' })
+  } catch (error) {
+    console.log(error.stack)
+    yield put({ type: 'EXPORT_IMAGE_FAILED', error })
+  }
+
+  yield call(delay, RESET_DELAY)
+  yield put({ type: 'EXPORT_IMAGE_RESET' })
 }

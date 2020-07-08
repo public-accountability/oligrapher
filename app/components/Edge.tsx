@@ -10,17 +10,19 @@ import EdgeLine from './EdgeLine'
 import EdgeHandle from './EdgeHandle'
 import EdgeLabel from './EdgeLabel'
 import EdgeHighlight from './EdgeHighlight'
+import ConditionalLink from './ConditionalLink'
 
 export function Edge({ id, currentlyEdited, status }: EdgeProps) {
   const dispatch = useDispatch()
   const edge = useSelector(state => state.graph.edges[id])
   const actualZoom = useSelector(state => state.display.actualZoom)
   const { isHighlighting } = useSelector(state => state.annotations)
+  const editMode = useSelector(state => state.display.modes.editor)
 
   const [isHovering, setHovering] = useState(false)
   const [isDragging, setDragging] = useState(false)
   const [startDrag, setStartDrag] = useState<Point>({ x: 0, y: 0 })
-  const { cx, cy, x1, x2, y1, y2, s1, s2, scale, label, dash, arrow } = edge
+  const { cx, cy, x1, x2, y1, y2, s1, s2, scale, label, dash, arrow, url } = edge
   const [curve, setCurve] = useState(edgeToCurve({ cx, cy, x1, x2, y1, y2, s1, s2 }))
   const [startPosition, setStartPosition] = useState<Point>({ x: 0, y: 0 })
   const bezier = useMemo(() => curveToBezier(curve), [curve])
@@ -91,10 +93,12 @@ export function Edge({ id, currentlyEdited, status }: EdgeProps) {
       onDrag={onDrag}
       onStop={onStop}>
       <g className="oligrapher-edge" id={`edge-${id}`}>
-        { ["highlighted", "selected"].includes(status) && <EdgeHighlight {...edgeHighlightProps} /> }
-        <EdgeLine {...edgeLineProps} />
-        { showLabel && <EdgeLabel {...edgeLabelProps} /> }
-        <EdgeHandle {...edgeHandleProps} />
+        <ConditionalLink condition={!editMode && url} href={url} target="_blank" rel="noopener noreferrer">
+          { status === 'highlighted' && <EdgeHighlight {...edgeHighlightProps} /> }
+          <EdgeLine {...edgeLineProps} />
+          { showLabel && <EdgeLabel {...edgeLabelProps} /> }
+          <EdgeHandle {...edgeHandleProps} />
+        </ConditionalLink>
       </g>
     </DraggableCore>
   )

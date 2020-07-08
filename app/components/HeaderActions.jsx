@@ -11,7 +11,6 @@ import ShareModal from './ShareModal'
 import EmbedForm from './EmbedForm'
 import { userIsOwnerSelector, userCanEditSelector } from '../util/selectors'
 
-
 export default function HeaderActions() {
   const dispatch = useDispatch()
   const userIsOwner = useSelector(userIsOwnerSelector)
@@ -56,6 +55,11 @@ export default function HeaderActions() {
   }, [closeMenu])
   const closeDisclaimer = useCallback(() => setShowDisclaimer(false), [])
 
+  const exportImage = useCallback(() => {
+    dispatch({ type: 'EXPORT_IMAGE_REQUESTED' })
+    closeMenu()
+  }, [dispatch, closeMenu])
+
   const embedRef = useRef()
   const toggleEmbed = useCallback(() => setShowEmbed(!showEmbed), [showEmbed])
   const closeEmbed = useCallback(() => setShowEmbed(false), [])
@@ -94,6 +98,8 @@ export default function HeaderActions() {
           { canClone &&
             <MenuItem dense={true} onClick={clone}>Clone</MenuItem>
           }
+
+          <MenuItem dense={true} onClick={exportImage}>Export</MenuItem>
 
           <MenuItem dense={true} onClick={openDisclaimer}>Disclaimer</MenuItem>
         </Menu>

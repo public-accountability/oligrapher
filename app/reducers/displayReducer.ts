@@ -63,7 +63,7 @@ export default produce((display: DisplayState, action: any): void => {
     return
   case 'MOUSE_ENTERED_NODE':
     if (display.draggedNode && display.draggedNode.name !== action.name) {
-      display.userMessage = `Create new edge between ${display.draggedNode.name} and ${action.name}`
+      display.userMessage = `Drop node to create new edge between ${display.draggedNode.name} and ${action.name}`
     }
     return
   case 'MOUSE_LEFT_NODE':
@@ -220,6 +220,18 @@ export default produce((display: DisplayState, action: any): void => {
     display.userMessage = 'Failed to fetch interlocks :('
     return
   case 'INTERLOCKS_RESET':
+    display.userMessage = null
+    return
+  case 'EXPORT_IMAGE_REQUESTED':
+    display.userMessage = 'Exporting...'
+    return
+  case 'EXPORT_IMAGE_SUCCESS':
+    display.userMessage = 'Exported map to JPG :)'
+    return
+  case 'EXPORT_IMAGE_FAILURE':
+    display.userMessage = 'Failed to export :('
+    return
+  case 'EXPORT_IMAGE_RESET':
     display.userMessage = null
     return
   case 'SET_SELECTING':

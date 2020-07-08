@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 
 import { useSelector, calculateStatus } from '../util/helpers'
 import Caption from './Caption'
@@ -8,14 +8,14 @@ import { annotationHasHighlightsSelector } from '../util/selectors'
 export default function Captions() {
   const captions = useSelector(state => state.graph.captions)
   const editedCaptionId = useSelector(state => FloatingEditor.getId(state.display, 'caption'))
-  const highlightedCaptionIds = useSelector(state => {
-    const storyMode = state.display.modes.story
-    const { list, currentIndex } = state.annotations
-    return storyMode ? (list[currentIndex]?.captionIds || []) : []
-  })
+  const storyMode = useSelector(state => state.display.modes.story)
+  const { list, currentIndex } = useSelector(state => state.annotations)
+  const highlightedCaptionIds = useMemo(
+    () => storyMode ? (list[currentIndex]?.captionIds || []) : [],
+    [storyMode, list, currentIndex]
+  )
   const annotationHasHighlights = useSelector(annotationHasHighlightsSelector)
   const editMode = useSelector(state => state.display.modes.editor)
-
 
   return (
     <g className="captions">

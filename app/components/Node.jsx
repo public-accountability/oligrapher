@@ -37,9 +37,9 @@ export function Node({ id, currentlyEdited, selected, status }) {
     if (isMultipleSelection) {
       return false
     } else {
-      dispatch({ type: 'DRAG_NODE', id, deltas })
+      dispatch({ type: 'DRAG_NODE', id, node, deltas })
     }
-  }, [dispatch, id, isMultipleSelection])
+  }, [dispatch, id, node, isMultipleSelection])
 
   const startDrag = useCallback(() => setDragging(true), [])
   const clickNode = useCallback(() => {

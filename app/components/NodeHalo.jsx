@@ -18,6 +18,7 @@ export function NodeHalo({ node, selected, highlighted }) {
       cx={x}
       cy={y}
       r={radius + HALO_WIDTH}
+      fill="none"
       />
   )
 }

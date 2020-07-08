@@ -1,8 +1,11 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 
+import { StateWithHistory } from '../util/defaultState'
 import { EdgeStatusType } from '../graph/edge'
 
 export default function EdgeLabel({ id, width, bezier, status, label, scale }: EdgeLabelProps) {
+  const editMode = useSelector<StateWithHistory>(state => state.display.modes.editor)
   const curveId = `edge-curve-${id}`
 
   const color = {
@@ -22,7 +25,8 @@ export default function EdgeLabel({ id, width, bezier, status, label, scale }: E
     className: "edge-label-textpath",
     startOffset: "50%",
     href: `#${curveId}`,
-    fontSize: 10 * Math.sqrt(scale)
+    fontSize: 10 * Math.sqrt(scale),
+    fontFamily: "Helvetica, Arial, sans-serif"
   }
 
   return (

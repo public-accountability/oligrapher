@@ -53,6 +53,7 @@
     "redux-saga": "^1.1.3",
     "redux-undo": "^1.0.1",
     "shortid": "^2.2.15",
+    "slugify": "^1.4.4",
     "springy": "^2.8.0",
     "wretch": "^1.7.1"
   },
