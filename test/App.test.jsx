@@ -487,7 +487,8 @@ describe('Oligrapher', function() {
     expectCount('#oligrapher-share', 1)
   })
 
-  it('selects multiple nodes and styles them', function() {
+  it('selects multiple nodes, styles them, and removes them', function() {
+    const nodeCount = findAll('.oligrapher-node').length
     // shouldn't be any selected nodes
     expectCount('.selected-nodes .oligrapher-node', 0)
     // find first five nodes
@@ -518,6 +519,11 @@ describe('Oligrapher', function() {
     // selected nodes should be 3x normal size
     const nodeSizes = Array.from(findAll('.selected-nodes .node-circle')).map(circle => circle.getAttribute('r'))
     expect(nodeSizes).to.eql(new Array(5).fill(String(NODE_RADIUS * 3)))
+    // press backspace key
+    fireEvent.keyDown(document.body, { key: 'Backspace', code: 'Backspace', keyCode: 8 })
+    fireEvent.keyUp(document.body, { key: 'Backspace', code: 'Backspace', keyCode: 8 })
+    // selected nodes should be removed
+    expectCount('.oligrapher-node', nodeCount - 5)
   })
 
   it('adds connections', async function() {
