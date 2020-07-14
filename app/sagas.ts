@@ -230,20 +230,20 @@ export function* exportImage(action: any) {
   try {
     const svg = document.getElementById('oligrapher-svg') as any
     const g = document.getElementById('oligrapher-svg-export') as any
-    // const style = Array.from(document.querySelectorAll('style')).find(node => node.innerHTML.includes("oligrapher-container")) as any
+    const markers = document.getElementById('oligrapher-svg-markers') as any
+    const filters = document.getElementById('oligrapher-svg-filters') as any
     const clonedSvg = svg.cloneNode(false)
     const clonedG = g.cloneNode(true)
-    // const clonedStyle = style.cloneNode(true)
+    const clonedMarkers = markers.cloneNode(true)
+    const clonedFilters = filters.cloneNode(true)
     const style = document.createElement("style")
-
-    // style.appendChild(document.createTextNode("))
     clonedSvg.setAttribute('width', viewBox.w)
     clonedSvg.setAttribute('height', viewBox.h)
     clonedSvg.setAttribute('style', 'background-color: white')
-    // clonedSvg.appendChild(clonedStyle)
+    clonedSvg.appendChild(clonedMarkers)
+    clonedSvg.appendChild(clonedFilters)
     clonedSvg.appendChild(clonedG)
     const outerHTML = clonedSvg.outerHTML
-    console.log(outerHTML)
     const blob = new Blob([outerHTML], { type: 'image/svg+xml' })
     const blobURL = URL.createObjectURL(blob)
     const image = new Image()
@@ -259,24 +259,19 @@ export function* exportImage(action: any) {
     }
 
     image.onload = () => {
-      console.log("started image load")
       const canvas = document.createElement('canvas')
       canvas.width = viewBox.w
       canvas.height = viewBox.h
       const context = canvas.getContext('2d') as any
       context.drawImage(image, 0, 0, viewBox.w, viewBox.h)
-      console.log("drew image to canvas")
-      // const jpeg = canvas.toDataURL('image/jpg')
-      const png = canvas.toDataURL()
-      // const webp = canvas.toDataURL('image/webp')
+      const jpeg = canvas.toDataURL('image/jpeg')
       canvas.remove()
-      download(png, slugify(title) + '.png')
+      download(jpeg, slugify(title) + '.jpg')
     }
 
     image.src = blobURL
     yield put({ type: 'EXPORT_IMAGE_SUCCESS' })
   } catch (error) {
-    console.log(error.stack)
     yield put({ type: 'EXPORT_IMAGE_FAILED', error })
   }
 

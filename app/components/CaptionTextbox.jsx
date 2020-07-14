@@ -16,7 +16,8 @@ export default function CaptionTextbox({ caption, status }) {
   const className = `caption-text caption-text-${status}`
 
   return (
-    <div 
+    <div
+      xmlns="http://www.w3.org/1999/xhtml"
       className={className}
       style={style}>
       { caption.text }
