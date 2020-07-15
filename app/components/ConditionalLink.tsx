@@ -4,7 +4,7 @@ export default function ConditionalLink({ children, condition, ...linkProps }: C
   return (
     <>
       { condition && <a {...linkProps}>{children}</a> }
-      { condition || children }
+      { !condition && children }
     </>
   )
 }
