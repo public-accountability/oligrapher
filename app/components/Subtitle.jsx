@@ -16,14 +16,7 @@ export default function Subtitle({ text, editable, onChange }) {
 
   return (
     <div id="oligrapher-header-subtitle-wrapper">
-      <Hidden smDown>
-        <h2>
-          { content }
-        </h2>
-      </Hidden>
-      <Hidden mdUp>
-        { content }
-      </Hidden>
+      { content }
     </div>
   )
 }

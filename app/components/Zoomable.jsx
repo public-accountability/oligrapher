@@ -1,28 +1,25 @@
-import React, { useCallback } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import noop from 'lodash/noop'
+import clamp from 'lodash/clamp'
 
 export default function Zoomable({ zoom, children }) {
   const dispatch = useDispatch()
   const { scrollToZoom } = useSelector(state => state.attributes.settings)
   const editMode = useSelector(state => state.display.modes.editor)
+  const [scroll, setScroll] = useState(0)
+  const scrolledZoom = zoom * (1 - scroll / 1000)
 
-  const onWheel = useCallback(event => {
-    event.preventDefault()
-
-    if (event.deltaY > 0) {
-      dispatch({ type: 'ZOOM_IN', interval: 1.1 })
-    } else if (event.deltaY < 0) {
-      dispatch({ type: 'ZOOM_OUT', interval: 1.1 })
-    }
-  }, [dispatch])
+  const onWheel = deltaY => {
+    setScroll(clamp(scroll + deltaY, -2000, 800))
+  }
 
   return (
     <g 
-      transform={`scale(${zoom})`} 
+      transform={`scale(${scrolledZoom})`}
       className="graph-zoom-container zoomable" 
-      onWheel={editMode && scrollToZoom ? onWheel : noop}>
+      onWheel={editMode && scrollToZoom ? ({ deltaY }) => onWheel(deltaY) : noop}>
       {children}
     </g>
   )

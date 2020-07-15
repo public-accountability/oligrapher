@@ -78,3 +78,7 @@ NodeLabel.propTypes = {
   perLineMax: PropTypes.number,
   status: PropTypes.string.isRequired
 }
+
+NodeLabel.defaultProps = {
+  status: 'normal'
+}

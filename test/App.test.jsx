@@ -57,7 +57,8 @@ describe('Oligrapher', function() {
         title: 'test graph',
         user: { id: '1', name: 'bozo', url: 'http://example.com' },
         owner: { id: '1', name: 'bozo', url: 'http://example.com' },
-        shareUrl: "http://ecxample.com/share"
+        shareUrl: "http://ecxample.com/share",
+        settings: { scrollToZoom: true }
       },
       display: {
         modes: { editor: true }
@@ -768,5 +769,12 @@ describe('Oligrapher', function() {
     expectCount('#oligrapher-annotations-condensed', 1)
     fireEvent.click(find('.oligrapher-annotations-hide'))
     expectCount('#oligrapher-annotations-condensed', 0)
+  })
+
+  it('zooms when scrolled', function() {
+    const zoomable = find('.zoomable')
+    const transform = zoomable.getAttribute('transform')
+    fireEvent.wheel(zoomable, { deltaY: 100 })
+    expect(zoomable.getAttribute('transform')).to.not.equal(transform)
   })
 })

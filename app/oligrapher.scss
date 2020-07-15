@@ -71,10 +71,11 @@ body {
   margin: 0 auto;
   border-bottom: 1px solid #ccc;
   box-sizing: border-box;
+  position: relative;
 
   &.oligrapher-header-expanded {
-    min-height: 148px;
-    height: 148px;
+    min-height: 142px;
+    height: 142px;
   }
 
   &.oligrapher-header-collapsed {
@@ -105,6 +106,7 @@ body {
       font-family: Helvetica, Arial, sans-serif;
       font-size: 42px;
       height: 48px; 
+      margin-left: -4px;
     }
 
     a {
@@ -118,27 +120,27 @@ body {
     margin-top: 0;
     margin-bottom: 0;
     height: 34px;
-    font-size: 15px;
-    line-height: 1em;
-
-    h2 {
-      font-weight: normal;
-      font-size: 18px;
-      line-height: 1em;  
-    }
+    font-size: 18px;
+    line-height: 24px;
+    padding-top: 0px;
+    padding-bottom: 10px;
 
     input {
-      width: 500px;
-      height: 34px;
+      width: 600px;
+      height: 24px;
       box-sizing: border-box;
       font-family: Helvetica, Arial, sans-serif;
-      font-size: 15px;
-      line-height: 1em;
+      font-size: 18px;
+      line-height: 24px;
+      margin-left: -4px;
     }
   }
 
   #oligrapher-header-toggler {
-    margin: 0 auto;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    margin-left: -10px;
     text-align: center;
     width: 20px;
     height: 14px;
