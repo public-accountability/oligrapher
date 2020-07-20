@@ -4,8 +4,8 @@ import { Graph } from '../graph/graph'
 import { edgeToCurve } from '../graph/curve'
 
 export const X_OFFSET = {
-  node: 70,
-  connections: 70,
+  node: 40,
+  connections: 40,
   edge: 30,
   caption: -250
 }
