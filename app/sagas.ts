@@ -223,6 +223,28 @@ export function* interlocks(action: any): any {
   yield put({ type: 'INTERLOCKS_RESET' })
 }
 
+function convertImage(image: any) {
+  // we have to load the url into a new image object
+  // in order to get the original width and height
+  const url = image.getAttribute('href')
+  const img = new Image()
+  img.src = url
+
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d') as any
+  canvas.width = img.width
+  canvas.height = img.height
+  ctx.drawImage(image, 0, 0)
+
+  // catch CORS-related errors if url is external to littlesis
+  try {
+    const dataUrl = canvas.toDataURL('image/jpeg')
+    image.setAttribute('href', dataUrl)
+  } catch (error) {
+    console.log(`Couldn't convert image to data uri: ${url}`)
+  }
+}
+
 export function* exportImage(action: any) {
   const title = yield select(state => state.attributes.title)
   const viewBox = yield select (state => state.display.viewBox)
@@ -236,7 +258,8 @@ export function* exportImage(action: any) {
     const clonedG = g.cloneNode(true)
     const clonedMarkers = markers.cloneNode(true)
     const clonedFilters = filters.cloneNode(true)
-    const style = document.createElement("style")
+    const style = document.createElement('style')
+    Array.from(clonedG.getElementsByTagName('image')).forEach(convertImage)
     clonedSvg.setAttribute('width', viewBox.w)
     clonedSvg.setAttribute('height', viewBox.h)
     clonedSvg.setAttribute('style', 'background-color: white')

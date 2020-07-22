@@ -6,9 +6,9 @@ import Arrow from '../graph/arrow'
 
 export default function EditEdgeStyle({ edge, nodes, updateEdge }) {
   const { node1, node2 } = Arrow.parse(edge.arrow)
-  const leftArrow = node1 ? "←" : "─"
-  const rightArrow = node2 ? "→" : "─"
-  const dash = edge.dash ? "┄┄" : "──"
+  const leftArrow = node1 ? "←" : "―"
+  const rightArrow = node2 ? "→" : "―"
+  const dash = edge.dash ? "---" : "―"
 
   const toggleLeftArrow = useCallback(() => {
     const arrow = Arrow.change(edge.arrow, !node1, '1')
