@@ -95,7 +95,7 @@ export default function stateInitalizer(legacyState: any): StateWithHistory {
 
   state.graph = convertGraph(state.graph)
 
-  state.display.modes.editor = userCanEditSelector(state)
+  state.display.modes.editor = !state.settings.embed && userCanEditSelector(state)
   state.display.viewBox = calculateViewBoxFromGraph(state.graph)
   state.display.svgOffset = computeSvgOffset(state.display.viewBox)
 

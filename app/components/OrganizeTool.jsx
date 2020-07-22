@@ -11,7 +11,19 @@ export default function OrganizeTool() {
   return (
     <Toolbox title="Organize Map">
       <div className="organize-map">
-        <a title="Force-directed" onClick={forceDirectedLayout}><FaBezierCurve /></a>
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <a title="Force-directed" onClick={forceDirectedLayout}><FaBezierCurve /></a>
+              </td>
+              <td>
+                <strong>Force-directed:</strong> use physics simulation to automatically
+                arrange nodes
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </Toolbox>
   )

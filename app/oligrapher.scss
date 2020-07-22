@@ -794,6 +794,17 @@ body {
 #oligrapher-container .oligrapher-graph-editor .organize-map {
   margin-top: 10px;
 
+  table {
+    border-collapse: separate;
+    border-spacing: 10px;
+
+    td {
+      vertical-align: top;
+      font-size: 0.9em;
+      line-height: 1.1em;
+    }
+  }
+
   a {
     display: inline-block;
     border: 1px solid #ddd;

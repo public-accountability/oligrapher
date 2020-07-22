@@ -1,5 +1,6 @@
 import isNumber from 'lodash/isNumber'
 import merge from 'lodash/merge'
+import assign from 'lodash/assign'
 import uniq from 'lodash/uniq'
 import values from 'lodash/values'
 // @ts-ignore
@@ -444,7 +445,7 @@ export function removeEdge(graph: Graph, edgeId: string): Graph {
 }
 
 export function updateEdge(graph: Graph, edgeId: string, attributes: EdgeAttributes): Graph {
-  merge(graph.edges[edgeId], attributes)
+  assign(graph.edges[edgeId], attributes)
   return graph
 }
 
@@ -505,7 +506,7 @@ export function forceLayout(graph: Graph, steps:number = 1000): Graph {
     const { id, node1_id, node2_id } = edge
     const node1 = getNode(graph, node1_id)
     const node2 = getNode(graph, node2_id)
-    updateEdge(graph, id, merge(
+    updateEdge(graph, id, assign(
       edgeCoordinates(1, node1),
       edgeCoordinates(2, node2),
       { cx: undefined, cy: undefined }
