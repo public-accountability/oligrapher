@@ -37,7 +37,7 @@ export default function Header() {
   const className = editMode ? (isCollapsed ? "oligrapher-header-collapsed" : "oligrapher-header-expanded") : ""
   const users = [owner].concat(editors.filter(e => !e.pending))
 
-  const screenIsSmall = useMediaQuery(theme => theme.breakpoints.down('sm'))
+  const screenIsSmall = useMediaQuery(theme => theme.breakpoints.down('xs'))
   const hideAttribution = !editMode && screenIsSmall
 
   const divRef = useRef()
@@ -62,11 +62,11 @@ export default function Header() {
         <>
           <div id="oligrapher-header-top">
             <Title text={title} editable={editMode} onChange={updateTitle} />
+            <Subtitle text={subtitle} editable={editMode} onChange={updateSubtitle} />
           </div>
 
           <div id="oligrapher-header-bottom" className={editMode ? "editing" : ""}>
             <div id="oligrapher-header-left-wrapper">
-              <Subtitle text={subtitle} editable={editMode} onChange={updateSubtitle} />
               { !hideAttribution && owner && <Attribution users={users} date={date} /> }
             </div>
 

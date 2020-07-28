@@ -13,13 +13,15 @@ import ZoomControl from './ZoomControl'
 import UserMessage from './UserMessage'
 import Annotations from './Annotations'
 import CondensedAnnotations from './CondensedAnnotations'
+import AnnotationsToggler from './AnnotationsToggler'
 import { muiTheme } from '../util/helpers'
-import { showAnnotationsSelector } from '../util/selectors'
+import { showAnnotationsSelector, annotationsListSelector } from '../util/selectors'
 
 export const ROOT_CONTAINER_ID = "oligrapher-container"
 
 export function Root() {
   const showAnnotations = useSelector(showAnnotationsSelector)
+  const hasAnnotations = useSelector(annotationsListSelector).length > 0
 
   return (
     <div id={ROOT_CONTAINER_ID}>
@@ -53,6 +55,14 @@ export function Root() {
         { showAnnotations &&
           <Hidden mdUp>
             <CondensedAnnotations />
+          </Hidden>
+        }
+
+        { !showAnnotations && hasAnnotations && 
+          <Hidden smUp>
+            <div id="oligrapher-condensed-annotations-toggler">
+              <AnnotationsToggler />
+            </div>
           </Hidden>
         }
       </ThemeProvider>

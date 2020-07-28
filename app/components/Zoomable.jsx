@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import noop from 'lodash/noop'
@@ -23,6 +23,10 @@ export default function Zoomable({ zoom, children }) {
       setScroll(0)
     }, 1000)
   }
+
+  useEffect(() => {
+    return () => clearTimeout(timeout)
+  })
 
   return (
     <g

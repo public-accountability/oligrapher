@@ -33,6 +33,9 @@ export default produce((display: DisplayState, action: any): void => {
   case 'SET_SVG_OFFSET':
     display.svgOffset = action.svgOffset
     return
+  case 'SET_VIEWBOX':
+    display.viewBox = action.viewBox
+    return
   case 'COLLAPSE_HEADER':
     display.headerIsCollapsed = true
     return

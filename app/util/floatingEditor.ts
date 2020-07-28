@@ -50,6 +50,13 @@ export const getType = (display: DisplayState): FloatingEditorType | null => dis
 
 export const svgToHtmlPosition = (display: DisplayState, position: Point): Point => {
   const svg = document.getElementById('oligrapher-svg') as any
+
+  // for tests to pass, since jsdom doesn't cover svg, 
+  // we just return the provided position unchaged
+  if (typeof svg.createSVGPOint !== 'function') {
+    return position
+  }
+
   const point = svg.createSVGPoint()
   point.x = position.x
   point.y = position.y

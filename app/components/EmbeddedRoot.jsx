@@ -29,7 +29,7 @@ export function EmbeddedRoot() {
           <CondensedAnnotations />
         }
         { !showAnnotations && hasAnnotations &&
-          <div id="oligrapher-embedded-annotations-toggler">
+          <div id="oligrapher-condensed-annotations-toggler">
             <AnnotationsToggler />
           </div>
         }

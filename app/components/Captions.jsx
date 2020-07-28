@@ -23,7 +23,7 @@ export default function Captions() {
         <Caption 
           key={id} 
           caption={caption} 
-          currentlyEdited={id === editedCaptionId} 
+          currentlyEdited={editMode && id === editedCaptionId} 
           status={calculateStatus(id, highlightedCaptionIds, annotationHasHighlights, editMode)} />
       )) }
     </g>

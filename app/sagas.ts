@@ -6,7 +6,7 @@ import { isLittleSisId, convertSelectorForUndo } from './util/helpers'
 import { oligrapher, editors, getEdges, getInterlocks } from './datasources/littlesis3'
 import { applyZoomToViewBox, computeSvgZoom, computeSvgOffset } from './util/dimensions'
 import { paramsForSaveSelector } from './util/selectors'
-import { forceLayout } from './graph/graph'
+import { forceLayout, calculateViewBoxFromGraph } from './graph/graph'
 import { Selector } from './util/selectors'
 
 // redux-undo places present state at state.present, so we use our own
@@ -28,7 +28,8 @@ export default function* rootSaga() {
     watchAddEditor(),
     watchRemoveEditor(),
     watchInterlocks(),
-    watchExportImage()
+    watchExportImage(),
+    watchEditMode()
   ])
 }
 
@@ -70,6 +71,10 @@ export function* watchRemoveEditor() {
 
 export function* watchInterlocks() {
   yield takeEvery(['INTERLOCKS_REQUESTED'], interlocks)  
+}
+
+export function* watchEditMode() {
+  yield takeEvery(['SET_EDITOR_MODE'], calculateViewBox)
 }
 
 export function* watchExportImage() {
@@ -223,6 +228,15 @@ export function* interlocks(action: any): any {
   yield put({ type: 'INTERLOCKS_RESET' })
 }
 
+export function* calculateViewBox(action: any) {
+  // recalculate only if switching out of editor mode
+  if (action.enabled === false) {
+    const graph = yield select(state => state.graph)
+    const viewBox = calculateViewBoxFromGraph(graph)
+    yield put({ type: 'SET_VIEWBOX', viewBox })
+  }
+}
+
 function convertImage(image: any) {
   // we have to load the url into a new image object
   // in order to get the original width and height
@@ -247,7 +261,7 @@ function convertImage(image: any) {
 
 export function* exportImage(action: any) {
   const title = yield select(state => state.attributes.title)
-  const viewBox = yield select (state => state.display.viewBox)
+  const viewBox = yield select(state => state.display.viewBox)
 
   try {
     const svg = document.getElementById('oligrapher-svg') as any
@@ -258,7 +272,6 @@ export function* exportImage(action: any) {
     const clonedG = g.cloneNode(true)
     const clonedMarkers = markers.cloneNode(true)
     const clonedFilters = filters.cloneNode(true)
-    const style = document.createElement('style')
     Array.from(clonedG.getElementsByTagName('image')).forEach(convertImage)
     clonedSvg.setAttribute('width', viewBox.w)
     clonedSvg.setAttribute('height', viewBox.h)
@@ -283,10 +296,10 @@ export function* exportImage(action: any) {
 
     image.onload = () => {
       const canvas = document.createElement('canvas')
-      canvas.width = viewBox.w
-      canvas.height = viewBox.h
+      canvas.width = viewBox.w * 2
+      canvas.height = viewBox.h * 2
       const context = canvas.getContext('2d') as any
-      context.drawImage(image, 0, 0, viewBox.w, viewBox.h)
+      context.drawImage(image, 0, 0, viewBox.w * 2, viewBox.h * 2)
       const jpeg = canvas.toDataURL('image/jpeg')
       canvas.remove()
       download(jpeg, slugify(title) + '.jpg')

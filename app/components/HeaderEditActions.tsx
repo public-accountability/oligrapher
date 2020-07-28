@@ -34,10 +34,10 @@ export default function HeaderEditActions() {
   }, [closeMenu])
   const closeShare = useCallback(() => setShowShare(false), [])
 
-  const presentMap = useCallback(
-    () => dispatch({ type: 'SET_EDITOR_MODE', enabled: false }),
-    [dispatch]
-  )
+  const presentMap = useCallback(() => { 
+    dispatch({ type: 'SET_EDITOR_MODE', enabled: false })
+    dispatch({ type: 'EXPAND_HEADER' })
+  }, [dispatch])
 
   const cloneMap = useCallback(() => {
     dispatch({ type: 'CLONE_REQUESTED' })

@@ -27,7 +27,9 @@ describe('<Node>', function() {
       display: { modes: { editor: true } } 
     }
     store = createMockStore(state)
-    wrapper = mountWithStore(store, <svg><Node id={node.id} currentlyEdited={false} selected={false} highlighted={false} /></svg>)
+    wrapper = mountWithStore(store, 
+      <svg><Node id={node.id} currentlyEdited={false} selected={false} highlighted={false} status="normal" /></svg>
+    )
   })
 
   it('renders Draggable', function() {

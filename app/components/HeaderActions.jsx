@@ -70,7 +70,7 @@ export default function HeaderActions() {
         <AnnotationsToggler />
       }
 
-      <Hidden smDown>
+      <Hidden xsDown>
         <Button size="small" variant="outlined" onClick={toggleEmbed} ref={embedRef}>Embed</Button>
       </Hidden>
 

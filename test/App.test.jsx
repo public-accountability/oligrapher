@@ -190,7 +190,6 @@ describe('Oligrapher', function() {
       expectCount('.oligrapher-edge', initEdgeCount + 1)
       expect(find('#edge-1 .edge-label').textContent).to.equal("family")
     })
-    // unstub api
   })
 
   it('node editor opens and edits node and switches', async function() {
