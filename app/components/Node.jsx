@@ -42,7 +42,7 @@ export function Node({ id, currentlyEdited, selected, status }) {
   }, [dispatch, id, node, isMultipleSelection])
 
   const startDrag = useCallback(() => setDragging(true), [])
-  const clickNode = useCallback(() => {
+  const clickNode = useCallback(event => {
     setDragging(false)
     if (isSelecting) {
       dispatch({ type: 'SWAP_NODE_SELECTION', id })

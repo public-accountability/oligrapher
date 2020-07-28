@@ -41,7 +41,7 @@ export default function AnnotationForm({ annotation }) {
       </div>
 
       <div className="oligrapher-annotation-highlighting-tip">
-        Press control and click on nodes, edges, or texts to add or remove highlights from this annotation.
+        Press the Control or ⌘ key while clicking on nodes, edges, or texts to add or remove highlights from this annotation.
         <br />
         <Button
           variant="outlined"

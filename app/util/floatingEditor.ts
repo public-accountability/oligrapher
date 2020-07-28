@@ -48,15 +48,17 @@ export const getId = (display: DisplayState, type?: FloatingEditorType): string 
 
 export const getType = (display: DisplayState): FloatingEditorType | null => display.floatingEditor.type
 
-// converts position of svg element to equivalent html position
 export const svgToHtmlPosition = (display: DisplayState, position: Point): Point => {
-  const { zoom, svgZoom, offset, svgOffset } = display
+  const svg = document.getElementById('oligrapher-svg') as any
+  const point = svg.createSVGPoint()
+  point.x = position.x
+  point.y = position.y
 
-  // to be honest i don't fully understand why svgOffset has to be divided by zoom
-  return {
-    x: Math.trunc((position.x + offset.x + svgOffset.x / zoom) * svgZoom),
-    y: Math.trunc((position.y + offset.y + svgOffset.y / zoom) * svgZoom)
-  }
+  // using pannable because it's the innermost svg transformation
+  // and getScreenCTM() incorporates all ancestor transformations
+  const pannable = document.getElementById('oligrapher-pannable') as any
+
+  return point.matrixTransform(pannable.getScreenCTM())
 }
 
 export const floatingEditorPositionSelector = (state: State): Point | null => {
@@ -75,15 +77,17 @@ export const floatingEditorPositionSelector = (state: State): Point | null => {
 
 export const keepWithinScreen = (display: DisplayState, position: Point, type: FloatingEditorType): Point => {
   let { x, y } = position
+
+  const top = y
+  const left = x
   const width = X_SIZE[type]
   const height = Y_SIZE[type]
+  const bottom = top + height
+  const right = left + width
+
   const { width: svgWidth, height: svgHeight } = display.svgSize
   const headerHeight = window.innerHeight - svgHeight
-  const top = headerHeight + svgHeight / 2 + y
-  const bottom = top + height
   const horizontalPadding = (window.innerWidth - svgWidth) / 2
-  const left = window.innerWidth / 2 + x
-  const right = left + width
   const BUFFER = 20
 
   if (top < headerHeight + BUFFER) {

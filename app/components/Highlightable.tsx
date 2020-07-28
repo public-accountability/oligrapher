@@ -14,14 +14,19 @@ export default function Highlightable({ children }: HighlightableProps) {
     dispatch({ type: 'SET_HIGHLIGHTING', isHighlighting })
   }, [dispatch])
 
+  // Meta is the mac "command" key
+  const isHighlightKey = (key: string) => ['Control', 'Meta'].includes(key)
+
   useHotkeys('*', evt => {
-    if (isEditingAnnotations && evt.key === 'Control') {
+    if (isEditingAnnotations && isHighlightKey(evt.key)) {
+      evt.preventDefault()
       setHighlighting(true)
     }
   }, { keydown: true, keyup: false }, [isEditingAnnotations])
 
   useHotkeys('*', evt => {
-    if (isEditingAnnotations && evt.key === 'Control') {
+    if (isEditingAnnotations && isHighlightKey(evt.key)) {
+      evt.preventDefault()
       setHighlighting(false)
     }
   }, { keyup: true, keydown: false }, [isEditingAnnotations])

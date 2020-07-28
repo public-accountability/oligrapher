@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import noop from 'lodash/noop'
 import clamp from 'lodash/clamp'
 
+let timeout
+
 export default function Zoomable({ zoom, children }) {
   const dispatch = useDispatch()
   const { scrollToZoom } = useSelector(state => state.attributes.settings)
@@ -13,10 +15,18 @@ export default function Zoomable({ zoom, children }) {
 
   const onWheel = deltaY => {
     setScroll(clamp(scroll + deltaY, -2000, 800))
+
+    // after scrolling stops, update zoom and reset scroll
+    clearTimeout(timeout)
+    timeout = setTimeout(() => {
+      dispatch({ type: 'SET_ZOOM', zoom: scrolledZoom })
+      setScroll(0)
+    }, 1000)
   }
 
   return (
-    <g 
+    <g
+      id="oligrapher-zoom-container"
       transform={`scale(${scrolledZoom})`}
       className="graph-zoom-container zoomable" 
       onWheel={editMode && scrollToZoom ? ({ deltaY }) => onWheel(deltaY) : noop}>

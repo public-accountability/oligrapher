@@ -25,7 +25,10 @@ export function Nodes(props) {
     unselectedNodeIds = nonDraggedNodeIds.concat([draggedNodeId])
   }
 
-  const removeSelectedNodes = () => {
+  const removeSelectedNodes = event => {
+    // some browsers use backspace to navigate back a page
+    event.preventDefault()
+
     if (editMode && !floatingEditorIsOpen && selectedNodeIds.length > 0) {
       removeNodes(selectedNodeIds)
     }

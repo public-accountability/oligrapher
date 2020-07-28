@@ -5,7 +5,7 @@ export function EdgeHighlight({ bezier, width }: EdgeHighlightProps) {
     <path
       className="edge-highlight"
       d={bezier}
-      strokeWidth={width * 3}
+      strokeWidth={width * 4}
       stroke="#ffff00"
       fill="none">
     </path>

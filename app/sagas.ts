@@ -37,7 +37,7 @@ export function* watchSvgHeight() {
 }
 
 export function* watchZoom() {
-  yield takeEvery(['ZOOM_IN', 'ZOOM_OUT', 'SET_SVG_HEIGHT', 'SET_SVG_WIDTH'], setActualZoom)
+  yield takeEvery(['ZOOM_IN', 'ZOOM_OUT', 'SET_ZOOM', 'SET_SVG_HEIGHT', 'SET_SVG_WIDTH'], setActualZoom)
 }
 
 export function* watchAddNode() {

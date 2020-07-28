@@ -101,6 +101,9 @@ export default produce((display: DisplayState, action: any): void => {
   case 'ZOOM_OUT':
     display.zoom = display.zoom / (action.interval || ZOOM_INTERVAL)
     return
+  case 'SET_ZOOM':
+    display.zoom = action.zoom
+    return
   case 'SET_EDITOR_MODE':
     clearSelection(display)
     display.tool = null
@@ -214,9 +217,9 @@ export default produce((display: DisplayState, action: any): void => {
     display.userMessage = 'Fetching interlocks...'
     return
   case 'INTERLOCKS_SUCCESS':
-    display.userMessage = 'Fetched interlocks :)'
+    display.userMessage = action.nodes.length > 0 ? 'Fetched interlocks :)' : 'No interlocks found'
     return
-  case 'INTERLOCKS_FAILURE':
+  case 'INTERLOCKS_FAILED':
     display.userMessage = 'Failed to fetch interlocks :('
     return
   case 'INTERLOCKS_RESET':

@@ -563,9 +563,9 @@ body {
 
 #oligrapher-container .oligrapher-floating-editor {
   z-index: 20;
-  position: absolute;
-  top: 50%;
-  left: 50%;
+  position: fixed;
+  top: 0;
+  left: 0;
   background-color: white;
   border: 3px solid $oligrapher_blue;
   line-height: 1em;
