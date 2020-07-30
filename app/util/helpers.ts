@@ -136,6 +136,15 @@ function useConvertedSelector(selector: Selector) {
 export { useConvertedSelector as useSelector }
 
 export const muiTheme = createMuiTheme({
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 860, // default is 960 but we'd like annotation editor to appear as low as 860
+      lg: 1280,
+      xl: 1920,
+    },
+  },
   props: {
     MuiButtonBase: {
       disableRipple: true

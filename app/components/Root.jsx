@@ -32,6 +32,7 @@ export function Root() {
         <Hidden smUp>
           <CondensedHeader />
         </Hidden>
+
         <Grid container spacing={0}>
           <Grid item xs={12} md={showAnnotations ? 8 : 12}>
             <div id="oligrapher-graph-container">
@@ -44,6 +45,7 @@ export function Root() {
               <UserMessage />
             </div>
           </Grid>
+
           { showAnnotations &&
             <Hidden smDown>
               <Grid item xs={4}>
@@ -52,6 +54,7 @@ export function Root() {
             </Hidden>
           }
         </Grid>
+
         { showAnnotations &&
           <Hidden mdUp>
             <CondensedAnnotations />

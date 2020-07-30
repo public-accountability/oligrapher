@@ -246,6 +246,11 @@ export function newGraph(attributes: GraphAttributes = {}): Graph {
 export function addNode(graph: Graph, attributes: NodeAttributes, position: boolean | Point = false): Graph {
   let node = newNode(attributes)
 
+  // skip if already contains node with same id
+  if (Object.keys(graph.nodes).includes(node.id)) {
+    return graph
+  }
+
   // Place the node at random spaced position near a provided point 
   // or the graph center, unless coordinates are provided
   if (position || !isNumber(node.x) || !isNumber(node.y)) {

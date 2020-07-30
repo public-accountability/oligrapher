@@ -743,6 +743,12 @@ body {
 
   label {
     @extend %editor_label;
+    display: block;
+  }
+
+  input[type="url"] {
+    width: 100%;
+    @extend %editor_input;
   }
 
   main {
@@ -869,7 +875,7 @@ body {
   height: 500px;
   padding: 2em;
   position: absolute;
-  right: 1em;
+  right: 2em;
   top: 1em;
   pointer-events: auto;
 
@@ -913,6 +919,7 @@ div.lock {
   .node-label text {
     font-family: 'Helvetica Neue Medium';
     cursor: default;
+    color: black;
   }
 
   .node-label a text {
@@ -1108,9 +1115,10 @@ div.lock {
   padding-right: 0;
   margin-right: 15px;
   height: 100%;
+  overflow-x: hidden;
 
   .oligrapher-annotations-header {
-    font-size: 28px;
+    font-size: 26px;
     font-weight: bold;
     margin-right: 1em;
   }
@@ -1166,6 +1174,8 @@ div.lock {
 
     .MuiInput-root {
       border-color: #ccc;
+      font-size: 10px;
+      width: 100%;
     }
   }
 
@@ -1174,7 +1184,7 @@ div.lock {
   }
 
   .ck-content {
-    height: 200px;
+    height: 150px;
   }
 
   input {

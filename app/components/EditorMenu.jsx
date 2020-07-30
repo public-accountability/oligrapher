@@ -1,5 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 
 import EditorMenuItem from './EditorMenuItem'
 import UndoRedo from './UndoRedo'
@@ -10,8 +11,8 @@ const MENU_ITEMS = [
   'text',
   'style',
   'interlocks',
-  'organize',
   'annotations',
+  'organize',
   'settings',
   'editors',
   'help'
@@ -20,6 +21,7 @@ const MENU_ITEMS = [
 export default function EditorMenu() {
   const isSaved = useSelector(state => state.attributes.id)
   const isOwner = useSelector(userIsOwnerSelector)
+  const screenIsSmall = useMediaQuery(theme => theme.breakpoints.down('sm'))
   let items = isOwner ? MENU_ITEMS : MENU_ITEMS.filter(item => !['editors', 'settings'].includes(item))
   items = isSaved ? items : items.filter(item => item !== 'editors')
 
@@ -28,7 +30,8 @@ export default function EditorMenu() {
       { items.map(item => (
         <EditorMenuItem
           key={item}
-          item={item} />
+          item={item}
+          disabled={screenIsSmall && item === 'annotations'} />
       )) }
       <UndoRedo />
     </div>

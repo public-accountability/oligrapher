@@ -53,7 +53,7 @@ export const svgToHtmlPosition = (display: DisplayState, position: Point): Point
 
   // for tests to pass, since jsdom doesn't cover svg, 
   // we just return the provided position unchaged
-  if (typeof svg.createSVGPOint !== 'function') {
+  if (typeof svg.createSVGPoint !== 'function') {
     return position
   }
 
