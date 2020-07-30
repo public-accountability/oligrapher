@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { hot } from 'react-hot-loader/root'
 import { ThemeProvider } from '@material-ui/core/styles'
@@ -22,6 +22,19 @@ export const ROOT_CONTAINER_ID = "oligrapher-container"
 export function Root() {
   const showAnnotations = useSelector(showAnnotationsSelector)
   const hasAnnotations = useSelector(annotationsListSelector).length > 0
+
+  // to pevent backspace form navigating away from page 
+  // in firefox and possibly other browsers
+  useEffect(() => {
+    window.addEventListener('keydown', event => {
+      const isBackspace = event.key === 'Backspace'
+      const isInput = ['INPUT', 'TEXTAREA', 'SELECT'].includes(event.target.tagName)
+  
+      if (isBackspace && !isInput) {
+        event.preventDefault()
+      }
+    })
+  })
 
   return (
     <div id={ROOT_CONTAINER_ID}>

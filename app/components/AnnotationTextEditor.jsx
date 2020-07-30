@@ -20,7 +20,7 @@ export default function AnnotationTextEditor({ text, onChange }) {
   return (
     <CKEditor
       editor={ClassicEditor}
-      data={text}
+      data={text || '<p></p>'}
       onChange={handleChange}
       config={config}
       />
@@ -28,6 +28,6 @@ export default function AnnotationTextEditor({ text, onChange }) {
 }
 
 AnnotationTextEditor.propTypes = {
-  text: PropTypes.string.isRequired,
+  text: PropTypes.string,
   onChange: PropTypes.func.isRequired
 }

@@ -8,7 +8,7 @@ import Confirm from './Confirm'
 export default function RemoveAnnotationButton({ annotation }) {
   const dispatch = useDispatch()
   const { id, text } = annotation
-  const mustConfirm = text.length > 30
+  const mustConfirm = text && text.length > 30
   const [showConfirm, setShowConfirm] = useState(false)
   const openConfirm = useCallback(() => setShowConfirm(true), [])
   const closeConfirm = useCallback(() => setShowConfirm(false), [])

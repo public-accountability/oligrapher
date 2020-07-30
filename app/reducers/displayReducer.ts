@@ -51,6 +51,9 @@ export default produce((display: DisplayState, action: any): void => {
     FloatingEditor.clear(display)
     swapSelection(display, 'node', action.id)
     return
+  case 'REMOVE_NODES':
+    clearSelection(display)
+    return
   case 'CLICK_NODE':
     clearSelection(display)
     toggleEditor(display, 'node', action.id)

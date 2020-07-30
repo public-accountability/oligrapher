@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { useSelector } from 'react-redux'
 import { FiExternalLink } from 'react-icons/fi'
 
 export function SearchResult({ entity, onClick }) {
@@ -23,9 +24,12 @@ SearchResult.propTypes = {
 }
 
 export default function EntitySearchResults({ results, onClick }) {
+  const existingNodeIds = useSelector(state => Object.keys(state.graph.nodes))
+  const visibleResults = results.filter(entity => !existingNodeIds.includes(entity.id))
+
   return (
     <div className="entity-search-results">
-      { results.map(entity => (
+      { visibleResults.map(entity => (
           <SearchResult 
             onClick={onClick}
             entity={entity}
