@@ -27,6 +27,15 @@ export function MainPage({ node, setPage, updateNode, openAddConnections }) {
         </div>
 
         <div>
+          <label>Hover-Over Description</label>
+          <input
+            type="text"
+            placeholder="Description"
+            value={node.description || ''}
+            onChange={callWithTargetValue(description => updateNode({ description }))} />
+        </div>
+
+        <div>
           <label>Image Link</label>
           <input
             type="text"
@@ -58,6 +67,7 @@ MainPage.propTypes = {
   node: PropTypes.shape({ 
     id: PropTypes.any,
     name: PropTypes.string,
+    description: PropTypes.string,
     image: PropTypes.string,
     url: PropTypes.string 
   }).isRequired,

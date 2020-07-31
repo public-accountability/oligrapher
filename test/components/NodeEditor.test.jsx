@@ -67,8 +67,16 @@ describe('<NodeEditor>', function() {
     expect(mockDispatch.getCall(0).args[0]).to.eql({ type: 'UPDATE_NODE', id: node.id, attributes: { name: 'Corp' }})
   })
 
-  it("updates node image", function() {
+  it("updates node description", function() {
     let input = nodeEditor.find('input').at(1)
+    let description = 'just another corp'
+    input.simulate("change", { target: { value: description }})
+    expect(mockDispatch.callCount).to.equal(1)
+    expect(mockDispatch.getCall(0).args[0]).to.eql({ type: 'UPDATE_NODE', id: node.id, attributes: { description }})
+  })
+
+  it("updates node image", function() {
+    let input = nodeEditor.find('input').at(2)
     let image = 'https://example.com/image.png'
     input.simulate("change", { target: { value: image }})
     expect(mockDispatch.callCount).to.equal(1)
@@ -76,7 +84,7 @@ describe('<NodeEditor>', function() {
   })
 
   it("updates node url", function() {
-    let input = nodeEditor.find('input').at(2)
+    let input = nodeEditor.find('input').at(3)
     let url = 'https://example.co'
     input.simulate("change", { target: { value: url }})
     expect(mockDispatch.callCount).to.equal(1)

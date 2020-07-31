@@ -76,6 +76,7 @@ export function Node({ id, currentlyEdited, selected, status }) {
         onDragOver={onMouseEnter}
         onDragLeave={onMouseLeave}
       >
+        { node.description && <title>{node.description}</title> }
         <NodeLabel node={node} status={status} />
         <NodeHalo node={node} selected={showSelection} highlighted={status === "highlighted"} />
         <NodeCircle node={node} status={status} />

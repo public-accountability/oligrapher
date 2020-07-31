@@ -10,6 +10,7 @@ export const NODE_RADIUS = 25
 export interface NodeAttributes {
   id?: string,
   name?: string,
+  description?: string,
   x?: number,
   y?: number,
   scale?: number,
@@ -22,6 +23,7 @@ export interface NodeAttributes {
 export interface Node extends NodeAttributes {
   id: string,
   name: string,
+  description?: string,
   x: number,
   y: number,
   scale: number,
@@ -48,6 +50,7 @@ const nodeDefaults: NodeDefaults = {
 export const nodeShape = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string,
+  description: PropTypes.string,
   x: PropTypes.number,
   y: PropTypes.number,
   scale: PropTypes.number,

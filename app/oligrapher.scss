@@ -452,14 +452,15 @@ body {
   }
   
   .editor-page-buttons {
-    padding-bottom: 10px;
+    padding-bottom: 0;
 
     label {
       @extend %editor_label;
+      margin-bottom: 0;
     }
 
     div {
-      margin-top: 0.25em;
+      margin-top: 0;
       display: flex;
       flex-direction: row;
       justify-content: space-evenly;
@@ -605,13 +606,13 @@ body {
     label {
       @extend %editor_label;
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 3px;
       margin-top: 5px;
     }
 
     input {
       width: 100%;
-      margin-bottom: 0.8em;
+      margin-bottom: 0.5em;
       @extend %editor_input;
     }
   }
@@ -626,7 +627,7 @@ body {
 
 #oligrapher-container div.oligrapher-node-editor {
   width: 235px;
-  height: 390px;
+  height: 415px;
   padding: 10px;
   box-sizing: border-box;
 
@@ -647,7 +648,7 @@ body {
 /* add connections tool */
 #oligrapher-container div.oligrapher-add-connections {
   width: 235px;
-  height: 355px;
+  height: 415px;
   padding: 10px;
   box-sizing: border-box;
 
@@ -666,7 +667,7 @@ body {
 
 #oligrapher-container div.oligrapher-edge-editor {
   width: 325px;
-  height: 430px;
+  height: 420px;
   padding: 10px;
   box-sizing: border-box;
 
