@@ -20,7 +20,7 @@ export function Node({ id, currentlyEdited, selected, status }) {
   const selectedNodeIds = useSelector(state => state.display.selection.node)
   const isMultipleSelection = selected && selectedNodeIds.length > 1
   const [isDragging, setDragging] = useState(false)
-  const showSelection = editMode && !isHighlighting && (selected || currentlyEdited || isDragging)
+  const showSelection = editMode && (selected || currentlyEdited || isDragging)
 
   const moveNode = useCallback(deltas => {
     setDragging(false)

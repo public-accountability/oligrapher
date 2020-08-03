@@ -31,6 +31,7 @@
   },
   "homepage": "https://littlesis.org/oligrapher",
   "dependencies": {
+    "@ant-design/icons": "^4.2.1",
     "@ckeditor/ckeditor5-build-classic": "^19.0.2",
     "@ckeditor/ckeditor5-react": "^2.1.0",
     "@hot-loader/react-dom": "^16.13.0",

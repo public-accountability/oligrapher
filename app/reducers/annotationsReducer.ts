@@ -44,6 +44,9 @@ export default produce((annotations: AnnotationsState, action: any): void => {
   case 'SET_EDITOR_MODE':
     annotations.currentIndex = 0
     return
+  case 'TOGGLE_ANNOTATIONS':
+    annotations.isHighlighting = false
+    return
   default:
     return
   }

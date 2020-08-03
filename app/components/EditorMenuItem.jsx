@@ -5,7 +5,7 @@ import { FaRegCircle, FaBezierCurve, FaRegEdit } from "react-icons/fa"
 import { FiHelpCircle, FiUsers } from 'react-icons/fi'
 import { GoTextSize, GoGear } from 'react-icons/go'
 import { GiLinkedRings } from 'react-icons/gi'
-import { AiOutlineFundProjectionScreen } from 'react-icons/ai'
+import FundProjectionScreenOutlined from '@ant-design/icons/FundProjectionScreenOutlined'
 import noop from 'lodash/noop'
 
 const MENU = {
@@ -30,7 +30,7 @@ const MENU = {
     title: 'Organize Map'
   },
   "annotations": {
-    icon: <AiOutlineFundProjectionScreen />,
+    icon: <FundProjectionScreenOutlined />,
     title: 'Annotations'
   },
   "settings": {

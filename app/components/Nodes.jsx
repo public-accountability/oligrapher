@@ -2,15 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { useHotkeys } from 'react-hotkeys-hook'
-import hotkeys from 'hotkeys-js'
 
 import NodeSelection from './NodeSelection'
 import Node from './Node'
 import FloatingEditor from '../util/floatingEditor'
 import { getSelection } from '../util/selection'
-import { calculateStatus } from '../util/helpers'
+import { calculateStatus, eventTargetIsFormElement } from '../util/helpers'
 import { annotationHasHighlightsSelector } from '../util/selectors'
-import { useEffect } from 'react'
 
 export function Nodes(props) {
   const { 
@@ -27,18 +25,11 @@ export function Nodes(props) {
     unselectedNodeIds = nonDraggedNodeIds.concat([draggedNodeId])
   }
 
-  const removeSelectedNodes = event => { 
-    // some browsers use backspace to navigate back a page
-    if (!['INPUT', 'TEXTAREA', 'SELECT'].includes(event.target.tagName)) {
-      event.preventDefault()
-    }
-
-    if (editMode && !floatingEditorIsOpen && selectedNodeIds.length > 0) {
+  useHotkeys('backspace, del', event => {
+    if (!eventTargetIsFormElement(event) && editMode && !floatingEditorIsOpen && selectedNodeIds.length > 0) {
       removeNodes(selectedNodeIds)
     }
-  }
-
-  useHotkeys('backspace, del', removeSelectedNodes, [editMode, floatingEditorIsOpen, selectedNodeIds])
+  }, null, [editMode, floatingEditorIsOpen, selectedNodeIds])
 
   return (
     <g className="nodes">

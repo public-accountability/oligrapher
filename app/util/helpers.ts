@@ -73,6 +73,10 @@ export const calculateStatus = (id: string, highlightedIds: string[], annotation
   return "faded"
 }
 
+export const eventTargetIsFormElement = (event: Event): boolean => {
+  return ['INPUT', 'TEXTAREA', 'SELECT'].includes((event.target as HTMLElement)?.tagName)
+}
+
 export function useSaveMap() {
   const dispatch = useDispatch()
   const [confirmOpen, setConfirmOpen] = useState(false)
