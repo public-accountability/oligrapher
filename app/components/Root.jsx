@@ -3,19 +3,23 @@ import { useSelector } from 'react-redux'
 import { hot } from 'react-hot-loader/root'
 import { ThemeProvider } from '@material-ui/core/styles'
 import { Grid, Hidden } from '@material-ui/core'
+import loadable from '@loadable/component'
 
 import Header from './Header'
 import CondensedHeader from './CondensedHeader'
 import Graph from './Graph'
-import Editor from './Editor'
 import FloatingEditors from './FloatingEditors'
 import ZoomControl from './ZoomControl'
 import UserMessage from './UserMessage'
-import Annotations from './Annotations'
 import CondensedAnnotations from './CondensedAnnotations'
 import AnnotationsToggler from './AnnotationsToggler'
 import { muiTheme } from '../util/helpers'
 import { showAnnotationsSelector, annotationsListSelector } from '../util/selectors'
+
+const Annotations = loadable(() => import(/* webpackChunkName: "Annotations" */ './Annotations'))
+Annotations.preload()
+const Editor = loadable(() => import(/* webpackChunkName: "Editor" */ './Editor'))
+Editor.preload()
 
 export const ROOT_CONTAINER_ID = "oligrapher-container"
 

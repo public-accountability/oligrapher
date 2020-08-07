@@ -71,6 +71,7 @@ module.exports = function(env) {
 
   const production = Boolean(env.production)
   const development = env.development || env.dev_server
+  const sourcemap = Boolean(env.sourcemap)
 
   return {
     mode: production ? 'production' : 'development',
@@ -81,7 +82,7 @@ module.exports = function(env) {
       library: 'Oligrapher',
       libraryTarget: 'umd',
       libraryExport: "default",
-      filename: getFilename(env)
+      filename: getFilename(env),
     },
 
     optimization: {
@@ -90,7 +91,7 @@ module.exports = function(env) {
 
     devServer: getDevServerConfig(env),
 
-    devtool: development ? 'eval-source-map' : 'false',
+    devtool: development ? 'eval-source-map' : (sourcemap ? 'inline-source-map' : 'false'),
 
     module: {
       rules: [

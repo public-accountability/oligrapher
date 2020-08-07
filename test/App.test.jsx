@@ -28,9 +28,9 @@ const sandbox = sinon.createSandbox()
 describe('Oligrapher', function() {
   let state, store, container, find, findAll, 
     clickHeaderAction, clickPresent, clickEdit, clickIcon,
-    clickHandle, expectCount
+    clickHandle, expectCount, wait, waitForAnnotations
 
-  beforeEach(function() {
+  beforeEach(async function() {
     // necessary for Material-UI layout breakpoints to work
     window.matchMedia = createMatchMedia(window.innerWidth)
     // ensure that user has lock to allow editing
@@ -104,6 +104,11 @@ describe('Oligrapher', function() {
     expectCount = (selector, count) => {
       expect(findAll(selector, document.body).length).to.equal(count)
     }
+
+    wait = async (selector) => await waitFor(() => find(selector))
+    waitForAnnotations = async () => await wait('#oligrapher-annotations')
+
+    await wait('.oligrapher-graph-editor')
   })
 
   afterEach(function() {
@@ -121,7 +126,7 @@ describe('Oligrapher', function() {
     expect(userLink.href).to.contain('http://example.com')
   })
 
-  it('shows nodes', function() {
+  it('shows nodes', async function() {
     const nodes = findAll('.oligrapher-node')
     expect(nodes.length).to.equal(Object.keys(state.graph.nodes).length)
   })
@@ -597,10 +602,11 @@ describe('Oligrapher', function() {
     await waitFor(() => expectCount('.oligrapher-edge', initEdgeCount + 2))
   })
 
-  it('creates, shows, and updates, and removes annotations', function() {
+  it('creates, shows, and updates, and removes annotations', async function() {
     // click on annotations icon
     const icon = find('.editor-annotations-item')
     fireEvent.click(icon)
+    await waitForAnnotations()
     // should show annotations editor
     expectCount('#oligrapher-annotations', 1)
     // should be no annotations in list
@@ -629,10 +635,11 @@ describe('Oligrapher', function() {
     expectCount('.annotation-list-item', 1)
   })
 
-  it('highlights and clears nodes, edges, captions', function() {
+  it('highlights and clears nodes, edges, captions', async function() {
     // click on annotations icon
     const icon = find('.editor-annotations-item')
     fireEvent.click(icon)
+    await waitForAnnotations()
     // add annotation
     const button = getByText(container, 'Add Annotation')
     fireEvent.click(button)
@@ -671,12 +678,13 @@ describe('Oligrapher', function() {
     expectCount('.caption-text-highlighted', 0)
   })
 
-  it('shows annotations in presentation mode', function() {
+  it('shows annotations in presentation mode', async function() {
     clickIcon('settings')
     // click on list sources checkbox
     const checkbox = find('input[name=list_sources]')
     fireEvent.click(checkbox)
     clickIcon('annotations')
+    await waitForAnnotations()
     // add two annotations
     let button = getByText(container, 'Add Annotation')
     fireEvent.click(button)
@@ -708,12 +716,13 @@ describe('Oligrapher', function() {
     expectCount('#oligrapher-annotations', 0)
   })
 
-  it('changes annotation settings', function() {
+  it('changes annotation settings', async function() {
     clickIcon('settings')
     // click on explore mode only
     let checkbox = find('input[name=exploreModeOnly]')
     fireEvent.click(checkbox)
     clickIcon('annotations')
+    await waitForAnnotations()
     // add two annotations
     let button = getByText(container, 'Add Annotation')
     fireEvent.click(button)
