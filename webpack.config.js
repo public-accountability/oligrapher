@@ -45,6 +45,10 @@ function getFilename(env) {
   }
 }
 
+function getChunkFilename(env) {
+  return getFilename(env).slice(0, -3) + '-[name].js'
+}
+
 function getDevServerConfig(env) {
   if (env.dev_server) {
     return {
@@ -83,6 +87,7 @@ module.exports = function(env) {
       libraryTarget: 'umd',
       libraryExport: "default",
       filename: getFilename(env),
+      chunkFilename: getChunkFilename(env)
     },
 
     optimization: {
