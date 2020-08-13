@@ -2,6 +2,7 @@
   Oligrapher's webpack build can be configured via the command line via changes these variables:
 
   env.output_path         |  asset output directory. defaults to ./dist
+  env.public_path         |  code chunks will be fetched from this path. defaults to "http://localhost:8090"
   env.filename            |  defaults to "oligrapher.js" or "oligrapher-dev.js"
   env.production          |  enables production mode
   env.development         |  enables development mode
@@ -68,6 +69,10 @@ function getDevServerConfig(env) {
   }
 }
 
+function getPublicPath(env) {
+  return env.public_path ? env.public_path : 'http://localhost:8090/'
+}
+
 module.exports = function(env) {
   if (!env) {
     throw new Error("Webpack env configuration is missing")
@@ -82,7 +87,7 @@ module.exports = function(env) {
     entry: path.resolve(__dirname, 'app/Oligrapher.jsx'),
     output: {
       path: getOutputPath(env),
-      publicPath: 'http://localhost:8090/',
+      publicPath: getPublicPath(env),
       library: 'Oligrapher',
       libraryTarget: 'umd',
       libraryExport: "default",
