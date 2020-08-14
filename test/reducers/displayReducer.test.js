@@ -29,13 +29,21 @@ describe('displayReducer', function() {
 
   describe('TOGGLE_TOOL', function() {
     it('changes tool', function() {
-      const state = { tool: 'node' }
+      const state = { 
+        tool: 'node', 
+        floatingEditor: { type: 'node', id: 'abc' }, 
+        selection: { node: [] } 
+      }
       const action = { type: 'TOGGLE_TOOL', tool: 'text'}
       expect(reducer(state, action).tool).to.equal('text')
     })
 
     it('closes tool', function() {
-      const state = { tool: 'node' }
+      const state = { 
+        tool: 'node', 
+        floatingEditor: { type: 'node', id: 'abc' }, 
+        selection: { node: [] } 
+      }
       const action = { type: 'TOGGLE_TOOL', tool: 'node'}
       expect(reducer(state, action).tool).to.be.null
     })

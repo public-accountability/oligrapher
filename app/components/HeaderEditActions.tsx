@@ -34,6 +34,11 @@ export default function HeaderEditActions() {
   }, [closeMenu])
   const closeShare = useCallback(() => setShowShare(false), [])
 
+  const exportImage = useCallback(() => {
+    dispatch({ type: 'EXPORT_IMAGE_REQUESTED' })
+    closeMenu()
+  }, [dispatch, closeMenu])
+
   const presentMap = useCallback(() => { 
     dispatch({ type: 'SET_EDITOR_MODE', enabled: false })
     dispatch({ type: 'EXPAND_HEADER' })
@@ -74,6 +79,7 @@ export default function HeaderEditActions() {
           <MenuItem dense={true} onClick={presentMap}>Present</MenuItem>
           {/* ActionMenu is visible to editors but only owners can share or clone or delete */}
           { canShare && <MenuItem dense={true} onClick={openShare}>Share</MenuItem> }
+          <MenuItem dense={true} onClick={exportImage}>Export</MenuItem>
           { canClone && <MenuItem dense={true} onClick={cloneMap}>Clone</MenuItem> }
           { canDelete && <MenuItem dense={true} onClick={openConfirm}>Delete</MenuItem> }
         </Menu>

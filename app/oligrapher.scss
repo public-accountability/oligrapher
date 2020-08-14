@@ -981,14 +981,16 @@ div.lock {
 
   .caption-text {
     border: 1px solid rgba(0, 0, 0, 0);
+
+    &.editing:hover {
+      border: 1px solid $oligrapher_blue;
+    }
   }
 
   .edit-caption-textarea {
     resize: both;
     border: 1px solid $oligrapher_blue;
-    overflow-y: scroll;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    overflow: hidden;
   }
 
   .edit-caption-textarea::-webkit-scrollbar { /* WebKit */

@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { useSelector } from 'react-redux'
 
 export const styleForCaption = (caption) => {
   return {
@@ -13,7 +14,9 @@ export const styleForCaption = (caption) => {
 
 export default function CaptionTextbox({ caption, status }) {
   const style = styleForCaption(caption)
-  const className = `caption-text caption-text-${status}`
+  const editMode = useSelector(state => state.display.modes.editor)
+  const className = `caption-text caption-text-${status}` 
+    + (editMode ? ' editing' : '')
 
   return (
     <div

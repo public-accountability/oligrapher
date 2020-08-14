@@ -250,7 +250,7 @@ export default produce((display: DisplayState, action: any): void => {
   case 'EXPORT_IMAGE_SUCCESS':
     display.userMessage = 'Exported map to JPG :)'
     return
-  case 'EXPORT_IMAGE_FAILURE':
+  case 'EXPORT_IMAGE_FAILED':
     display.userMessage = 'Failed to export :('
     return
   case 'EXPORT_IMAGE_RESET':
