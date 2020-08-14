@@ -47,14 +47,15 @@ const MENU = {
   }
 }
 
-export default function EditorMenuItem({ item, disabled }) {
+export default function EditorMenuItem({ item, disabled, inUse }) {
   const { title, icon } = MENU[item]
   const dispatch = useDispatch()
   const toggleTool = useCallback(() => dispatch({ type: 'TOGGLE_TOOL', tool: item }), [dispatch, item])
   const toggleAnnotations = useCallback(() => dispatch({ type: 'TOGGLE_ANNOTATIONS' }), [dispatch])
   const onClick = item === 'annotations' ? toggleAnnotations : toggleTool
   const className = `editor-menu-item editor-${item}-item`
-    + (disabled ? ' disabled' : '')
+    + (disabled ? ' editor-menu-item-disabled' : '')
+    + (inUse ? ' editor-menu-item-in-use' : '')
 
   return (
     <div className={className} onClick={disabled ? noop : onClick}>
@@ -65,7 +66,8 @@ export default function EditorMenuItem({ item, disabled }) {
 
 EditorMenuItem.propTypes = {
   item: PropTypes.oneOf(Object.keys(MENU)).isRequired,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  inUse: PropTypes.bool.isRequired
 }
 
 EditorMenuItem.defaultProps = {

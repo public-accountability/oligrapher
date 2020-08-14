@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { hot } from 'react-hot-loader/root'
 import { Button } from '@material-ui/core'
 
 import Annotation from './Annotation'
@@ -11,7 +12,7 @@ import AnnotationsTracker from './AnnotationsTracker'
 import HideAnnotationsButton from './HideAnnotationsButton'
 import { annotationsListSelector } from '../util/selectors'
 
-export default function Annotations() {
+export function Annotations() {
   const dispatch = useDispatch()
   const create = useCallback(() => dispatch({ type: 'CREATE_ANNOTATION' }), [dispatch])
 
@@ -92,3 +93,5 @@ export default function Annotations() {
     </div>
   )
 }
+
+export default hot(Annotations)

@@ -1,4 +1,5 @@
 import React from 'react'
+import { hot } from 'react-hot-loader/root'
 
 import { useSelector } from '../util/helpers'
 import EditorMenu from './EditorMenu'
@@ -16,7 +17,7 @@ import LockPoll from './LockPoll'
 /*
   Container for the editing interfaces
 */
-export default function Editor() {
+export function Editor() {
   const tool = useSelector(state => state.display.tool)
   const disabled = useSelector(state => !state.display.modes.editor)
   const className = 'oligrapher-graph-editor' + (tool === 'text' ? ' text-tool' : '')
@@ -41,3 +42,5 @@ export default function Editor() {
     </div>
   )
 }
+
+export default hot(Editor)

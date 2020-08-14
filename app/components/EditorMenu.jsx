@@ -19,6 +19,7 @@ const MENU_ITEMS = [
 ]
 
 export default function EditorMenu() {
+  const currentTool = useSelector(state => state.display.tool)
   const isSaved = useSelector(state => state.attributes.id)
   const isOwner = useSelector(userIsOwnerSelector)
   const screenIsSmall = useMediaQuery(theme => theme.breakpoints.down('sm'))
@@ -31,6 +32,7 @@ export default function EditorMenu() {
         <EditorMenuItem
           key={item}
           item={item}
+          inUse={item === currentTool}
           disabled={screenIsSmall && item === 'annotations'} />
       )) }
       <UndoRedo />

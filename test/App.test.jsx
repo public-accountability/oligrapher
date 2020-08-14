@@ -142,6 +142,10 @@ describe('Oligrapher', function() {
   })
 
   it('node tool opens and closes', function() {
+    // click node
+    clickHandle(find('.draggable-node-handle'))
+    // node editor should have opened
+    expectCount('.oligrapher-node-editor', 1)
     // node tool shouldn't be open
     let nodeTool = findAll('.node-tool')
     expect(nodeTool.length).to.equal(0)
@@ -150,6 +154,10 @@ describe('Oligrapher', function() {
     // node tool should have opened
     nodeTool = findAll('.node-tool')
     expect(nodeTool.length).to.equal(1)
+    // node editor should have closed
+    expectCount('.oligrapher-node-editor', 0)
+    // node shouldn't be selected
+    expectCount('.selected-nodes .oligrapher-node', 0)
     // close node tool
     fireEvent.click(find('.editor-menu-item'))
     nodeTool = findAll('.node-tool')
@@ -736,6 +744,7 @@ describe('Oligrapher', function() {
     checkbox = find('input[name=storyModeOnly]')
     fireEvent.click(checkbox)
     clickPresent()
+    await waitForAnnotations()
     expectCount('#oligrapher-annotations', 1)
     expectCount('#oligrapher-annotations-toggler', 0)
   })

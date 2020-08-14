@@ -8,7 +8,7 @@ import { makeCancelable } from '../util/helpers'
 
 import EntitySearchResults from './EntitySearchResults'
 
-export default function EntitySearch({ query }) {
+export default function EntitySearch({ query, maxHeight }) {
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(true)
   const [results, setResults] = useState(null)
@@ -37,17 +37,26 @@ export default function EntitySearch({ query }) {
     return httpRequest.cancel
   }, [query])
 
+  let content
+
   if (loading) {
-    return <em>...loading...</em>
+    content = <em>...loading...</em>
   } else if (isArray(results)) {
-    return results.length === 0
+    content = results.length === 0
       ? <em>No results.</em>
       : <EntitySearchResults results={results} onClick={addNode} />
   } else {
-    return <em>Your search resulted in an error.</em>
+    content = <em>Your search resulted in an error.</em>
   }
+
+  return (
+    <div className="entity-search" style={{ maxHeight, overflowY: 'scroll' }}>
+      { content }
+    </div>
+  )
 }
 
 EntitySearch.propTypes = {
-  query: PropTypes.string.isRequired
+  query: PropTypes.string.isRequired,
+  maxHeight: PropTypes.number
 }

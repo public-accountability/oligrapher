@@ -101,7 +101,7 @@ export function findNodes(query: string): Promise<LsNode[]> {
   }
 
   return wretch(urls.findNodes())
-    .query({ num: 12, q: query })
+    .query({ num: 20, q: query })
     .get()
     .json()
 }

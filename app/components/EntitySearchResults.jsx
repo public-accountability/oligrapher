@@ -12,8 +12,7 @@ export function SearchResult({ entity, onClick }) {
           <FiExternalLink />
         </a> 
       }
-      { entity.description && <br /> }
-      { entity.description && <span className="entity-search-description">{entity.description}</span> }
+      { entity.description && <div className="entity-search-description">{entity.description}</div> }
     </div>
   )
 }

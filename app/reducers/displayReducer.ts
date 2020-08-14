@@ -1,7 +1,7 @@
 import produce from 'immer'
 
 import FloatingEditor, { toggleEditor } from '../util/floatingEditor'
-import { swapSelection, clearSelection } from '../util/selection'
+import { swapSelection, clearSelection, selectionCount } from '../util/selection'
 import { isLittleSisId } from '../util/helpers'
 import { DisplayState } from '../util/defaultState'
 
@@ -120,7 +120,20 @@ export default produce((display: DisplayState, action: any): void => {
     display.modes.story = !display.modes.story
     return
   case 'TOGGLE_TOOL':
+    const prevTool = display.tool
     display.tool = (display.tool === action.tool) ? null : action.tool
+
+    // if new tool has been opened
+    if (display.tool && display.tool !== prevTool) {
+      // close floating editor
+      FloatingEditor.clear(display)
+
+      // clear single selection
+      if (selectionCount(display) === 1) {
+        clearSelection(display)
+      }
+    }
+
     return
   case 'CLOSE_TOOL':
     display.tool = null

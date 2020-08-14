@@ -108,6 +108,7 @@ body {
       height: 48px; 
       margin-left: -4px;
       width: 600px;
+      border: 1px solid #ccc;
     }
 
     a {
@@ -134,6 +135,7 @@ body {
       font-size: 18px;
       line-height: 24px;
       margin-left: -4px;
+      border: 1px solid #ccc;
     }
   }
 
@@ -324,12 +326,16 @@ body {
       vertical-align: baseline;
     }
 
-    &.disabled {
+    &.editor-menu-item-disabled {
       color: #ccc;
       
       &:hover { 
         cursor: not-allowed;
       }
+    }
+
+    &.editor-menu-item-in-use {
+      color: $oligrapher_blue;
     }
 
     &:hover {
@@ -412,6 +418,7 @@ body {
       border: 0; 
       height: 1px;
       background: $oligrapher_font_gray;
+      margin: 5px;
     }
   }
 }
@@ -430,7 +437,7 @@ body {
   .entity-search-description {
     font-size: 0.8em;
     color: $oligrapher_dark_gray;
-    line-height: 6px;
+    line-height: 1.2em;
   }
 
   a.entity-external-link {

@@ -25,3 +25,7 @@ export function clearSelection(display: DisplayState): void {
     isSelecting: false
   }
 }
+
+export function selectionCount(display: DisplayState, type: SelectionType = 'node'): number {
+  return display.selection[type].length
+}
