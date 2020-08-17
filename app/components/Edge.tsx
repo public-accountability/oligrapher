@@ -22,9 +22,9 @@ export function Edge({ id, currentlyEdited, status }: EdgeProps) {
   const [isHovering, setHovering] = useState(false)
   const [isDragging, setDragging] = useState(false)
   const [startDrag, setStartDrag] = useState<Point>({ x: 0, y: 0 })
+  const [startPosition, setStartPosition] = useState<Point>({ x: 0, y: 0 })
   const { cx, cy, x1, x2, y1, y2, s1, s2, scale, label, dash, arrow, url } = edge
   const [curve, setCurve] = useState(edgeToCurve({ cx, cy, x1, x2, y1, y2, s1, s2 }))
-  const [startPosition, setStartPosition] = useState<Point>({ x: 0, y: 0 })
   const bezier = useMemo(() => curveToBezier(curve), [curve])
   const highlighted = status === 'highlighted'
   const selected = !isDragging && (currentlyEdited || isHovering)
@@ -83,10 +83,6 @@ export function Edge({ id, currentlyEdited, status }: EdgeProps) {
     onMouseLeave: useCallback(() => setHovering(false), [])
   }
 
-  // Display helpers
-  const showLabel = Boolean(label)
-  edgeLineProps.status = selected ? "selected" : edgeLineProps.status
-
   return (  
     <DraggableCore
       handle=".edge-handle"
@@ -97,7 +93,11 @@ export function Edge({ id, currentlyEdited, status }: EdgeProps) {
         <ConditionalLink condition={!editMode && url} href={url} target="_blank" rel="noopener noreferrer">
           { highlighted && <EdgeHighlight {...edgeHighlightProps} /> }
           <EdgeLine {...edgeLineProps} />
-          { showLabel && <EdgeLabel {...edgeLabelProps} /> }
+          { label &&
+            <ConditionalLink condition={editMode && url} href={url} target="_blank" rel="noopener noreferrer">
+              <EdgeLabel {...edgeLabelProps} />
+            </ConditionalLink>
+          }
           <EdgeHandle {...edgeHandleProps} />
         </ConditionalLink>
       </g>

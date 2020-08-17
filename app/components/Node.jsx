@@ -8,6 +8,7 @@ import NodeHalo from './NodeHalo'
 import NodeCircle from './NodeCircle'
 import NodeImage from './NodeImage'
 import NodeLabel from './NodeLabel'
+import ConditionalLink from './ConditionalLink'
 
 export function Node({ id, currentlyEdited, selected, status }) {
   const dispatch = useDispatch()
@@ -23,7 +24,6 @@ export function Node({ id, currentlyEdited, selected, status }) {
   const showSelection = editMode && (selected || currentlyEdited)
 
   const moveNode = useCallback(deltas => {
-    setDragging(false)
     if (isMultipleSelection) {
       return false
     } else {
@@ -41,17 +41,20 @@ export function Node({ id, currentlyEdited, selected, status }) {
     }
   }, [dispatch, id, node, isMultipleSelection])
 
-  const startDrag = useCallback(() => setDragging(true), [])
   const clickNode = useCallback(event => {
-    setDragging(false)
-    if (isSelecting) {
+    if (!editMode && node.url) {
+      // Draggable prevents ordinary click events coming from its drag handle elements,
+      // so we have to open the link programmatically
+      window.open(node.url, "_blank")
+    } else if (isSelecting) {
       dispatch({ type: 'SWAP_NODE_SELECTION', id })
     } else if (isHighlighting) {
       dispatch({ type: 'SWAP_NODE_HIGHLIGHT', id })
     } else {
       dispatch({ type: 'CLICK_NODE', id })
     }
-  }, [dispatch, isSelecting, isHighlighting, id])
+  }, [dispatch, isSelecting, isHighlighting, id, editMode, node])
+
   const onMouseEnter = useCallback(() => dispatch({ type: 'MOUSE_ENTERED_NODE', name }), [dispatch, name])
   const onMouseLeave = useCallback(() => dispatch({ type: 'MOUSE_LEFT_NODE' }), [dispatch])
 
@@ -64,7 +67,6 @@ export function Node({ id, currentlyEdited, selected, status }) {
   return (
     <DraggableComponent
       handle=".draggable-node-handle"
-      onStart={startDrag}
       onStop={moveNode}
       onClick={clickNode}
       onDrag={dragNode}>
@@ -76,11 +78,15 @@ export function Node({ id, currentlyEdited, selected, status }) {
         onDragOver={onMouseEnter}
         onDragLeave={onMouseLeave}
       >
-        { node.description && <title>{node.description}</title> }
-        <NodeLabel node={node} status={status} />
-        <NodeHalo node={node} selected={showSelection} highlighted={status === "highlighted"} />
-        <NodeCircle node={node} status={status} />
-        <NodeImage node={node} status={status} />
+        <ConditionalLink condition={!editMode && node.url} href={node.url} target="_blank" rel="noopener noreferrer">
+          { node.description && <title>{node.description}</title> }
+          <ConditionalLink condition={editMode && node.url} href={node.url} target="_blank" rel="noopener noreferrer">
+            <NodeLabel node={node} status={status} />
+          </ConditionalLink>
+          <NodeHalo node={node} selected={showSelection} highlighted={status === "highlighted"} />
+          <NodeCircle node={node} status={status} />
+          <NodeImage node={node} status={status} />
+        </ConditionalLink>
       </g>
     </DraggableComponent>
   )

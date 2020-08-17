@@ -474,7 +474,7 @@ export function dragNodeEdge(graph: Graph, edge: Edge, nodeId: string, coordinat
   return graph
 }
 
-// dragNode() updates the connected edges (if any)
+// dragNodeEdges() updates the connected edges (if any)
 // It does not change the coordinates of the node that is dragging.
 export function dragNodeEdges(graph: Graph, nodeId: string, deltas: Point): Graph {
   const node = getNode(graph, nodeId)

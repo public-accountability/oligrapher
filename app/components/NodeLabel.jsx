@@ -65,9 +65,7 @@ export default function NodeLabel({ node, perLineMax, status }) {
       { rects }
 
       <g className="node-label">
-        <ConditionalLink condition={node.url} href={node.url} target="_blank" rel="noopener noreferrer">
-          {lines}
-        </ConditionalLink>
+        {lines}
       </g>
     </g>
   )

@@ -924,14 +924,13 @@ div.lock {
     pointer-events: none;
   }
 
-  .node-label text {
-    font-family: 'Helvetica Neue Medium';
-    cursor: default;
-    color: black;
+  a:focus {
+    outline: none;
   }
 
-  .node-label a text {
-    cursor: pointer;
+  .node-label text {
+    font-family: 'Helvetica Neue Medium';
+    color: black;
   }
 
   .node-label a:focus {
