@@ -3,7 +3,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import slugify from 'slugify'
 
 import { isLittleSisId, convertSelectorForUndo } from './util/helpers'
-import { oligrapher, editors, getEdges, getInterlocks } from './datasources/littlesis3'
+import { oligrapher, addEditor, removeEditor, getEdges, getInterlocks, takeoverLock, releaseLock } from './datasources/littlesis3'
 import { applyZoomToViewBox, computeSvgZoom, computeSvgOffset } from './util/dimensions'
 import { paramsForSaveSelector } from './util/selectors'
 import { forceLayout, calculateViewBoxFromGraph, Viewbox } from './graph/graph'
@@ -11,7 +11,7 @@ import { Selector } from './util/selectors'
 
 // redux-undo places present state at state.present, so we use our own
 // select() to "transparently" make this change to all our saga selectors
-const select = (selector: Selector) => sagaSelect(convertSelectorForUndo(selector))
+const select = (selector: Selector<any>) => sagaSelect(convertSelectorForUndo(selector))
 
 const delay = (time: number) => new Promise(resolve => setTimeout(resolve, time))
 const RESET_DELAY = process.env.NODE_ENV === 'test' ? 10 : 5000
@@ -29,7 +29,9 @@ export default function* rootSaga() {
     watchRemoveEditor(),
     watchInterlocks(),
     watchExportImage(),
-    watchEditMode()
+    watchEditMode(),
+    watchLockTakeover(),
+    watchLockRelease()
   ])
 }
 
@@ -62,11 +64,11 @@ export function* watchForceLayout() {
 }
 
 export function* watchAddEditor() {
-  yield takeEvery(['ADD_EDITOR_REQUESTED'], addEditor)  
+  yield takeEvery(['ADD_EDITOR_REQUESTED'], doAddEditor)
 }
 
 export function* watchRemoveEditor() {
-  yield takeEvery(['REMOVE_EDITOR_REQUESTED'], removeEditor)  
+  yield takeEvery(['REMOVE_EDITOR_REQUESTED'], doRemoveEditor)
 }
 
 export function* watchInterlocks() {
@@ -75,6 +77,14 @@ export function* watchInterlocks() {
 
 export function* watchEditMode() {
   yield takeEvery(['SET_EDITOR_MODE'], calculateViewBox)
+}
+
+export function* watchLockTakeover() {
+  yield takeEvery(['LOCK_TAKEOVER_REQUESTED'], doTakeoverLock)
+}
+
+export function* watchLockRelease() {
+  yield takeEvery(['LOCK_RELEASE_REQUESTED'], doReleaseLock)
 }
 
 export function* watchExportImage() {
@@ -183,12 +193,12 @@ export function* generateForceLayout() {
   yield put({ type: 'APPLY_FORCE_LAYOUT', graph: newGraph })
 }
 
-export function* addEditor(action: any) {
+export function* doAddEditor(action: any) {
   const { username } = action
   const id = yield select(state => state.attributes.id)
   
   try {
-    const results = yield call(editors.add, id, username)
+    const results = yield call(addEditor, id, username)
     yield put({ type: 'ADD_EDITOR_SUCCESS', editors: results.editors })
   } catch(error) {
     yield put({ type: 'ADD_EDITOR_FAILED' })    
@@ -198,12 +208,12 @@ export function* addEditor(action: any) {
   yield put({ type: 'ADD_EDITOR_RESET' })
 }
 
-export function* removeEditor(action: any) {
+export function* doRemoveEditor(action: any) {
   const { username } = action
   const id = yield select(state => state.attributes.id)
   
   try {
-    const results = yield call(editors.remove, id, username)
+    const results = yield call(removeEditor, id, username)
     yield put({ type: 'REMOVE_EDITOR_SUCCESS', editors: results.editors })
   } catch(error) {
     yield put({ type: 'REMOVE_EDITOR_FAILED' })    
@@ -235,6 +245,47 @@ export function* calculateViewBox(action: any) {
     const viewBox = calculateViewBoxFromGraph(graph)
     yield put({ type: 'SET_VIEWBOX', viewBox })
   }
+}
+
+export function* doTakeoverLock(action: any) {
+  const id = yield select(state => state.attributes.id)
+
+  try {
+    const lock = yield call(takeoverLock, id)
+
+    if (!lock.user_has_lock) {
+      throw 'Unexpected lock takeover response'
+    }
+
+    // if we fire this action, the RefreshModal will appear superfluously
+    // yield put({ type: 'LOCK_TAKEOVER_SUCCESS', lock })
+    window.location.reload()
+  } catch(error) {
+    yield put({ type: 'LOCK_TAKEOVER_FAILED' })
+  }
+
+  yield call(delay, RESET_DELAY)
+  yield put({ type: 'LOCK_TAKEOVER_RESET' })
+}
+
+export function* doReleaseLock(action: any) {
+  const id = yield select(state => state.attributes.id)
+
+  try {
+    const lock = yield call(releaseLock, id)
+
+    if (!lock.lock_released) {
+      throw 'Unexpected lock release response'
+    }
+
+    yield put({ type: 'LOCK_RELEASE_SUCCESS'})
+    yield put({ type: 'SET_EDITOR_MODE', enabled: false })
+  } catch(error) {
+    yield put({ type: 'LOCK_RELEASE_FAILED' })
+  }
+
+  yield call(delay, RESET_DELAY)
+  yield put({ type: 'LOCK_RELEASE_RESET' })
 }
 
 // converts an image's href from plain URL to data URL

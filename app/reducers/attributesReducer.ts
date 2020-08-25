@@ -1,6 +1,7 @@
 import produce from 'immer'
 
 import { AttributesState, UserSettings } from '../util/defaultState'
+import { updateLock } from '../util/lock'
 
 export function updateSetting(attributes: AttributesState, key: keyof UserSettings, value: boolean): void {
   attributes.settings[key] = value
@@ -47,12 +48,14 @@ export default produce((attributes: AttributesState, action: any): void => {
   case 'REMOVE_EDITOR_SUCCESS':
     attributes.editors = action.editors
     return  
+  case 'LOCK_TAKEOVER_SUCCESS':
   case 'SET_LOCK':
-    attributes.lock = {
-      locked: action.lock.locked,
-      userHasLock: action.lock.user_has_lock,
-      name: action.lock.name
+    attributes.lock = updateLock(attributes.lock, action.lock)
+
+    if (action.lock.editors) {
+      attributes.editors = action.lock.editors
     }
+
     return
   case 'SAVE_SUCCESS':
     if (!attributes.id) {

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react'
+import React from 'react'
 import { IoMdCloseCircle } from 'react-icons/io'
 
 import { Editor } from '../util/defaultState'
@@ -16,7 +16,12 @@ export default function EditorsList({ editors, removeEditor }: EditorsListProps)
           &nbsp;
           <span>{editor.pending ? "(pending)" : ""}</span>
           &nbsp;
-          <a onClick={() => removeEditor(editor.name)}><IoMdCloseCircle /></a>
+          <a
+            className="oligrapher-remove-editor"
+            onClick={() => removeEditor(editor.name)}
+          >
+            <IoMdCloseCircle />
+          </a>
         </div>
       )) }
     </div>

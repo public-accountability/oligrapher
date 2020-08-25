@@ -244,6 +244,30 @@ export default produce((display: DisplayState, action: any): void => {
   case 'INTERLOCKS_RESET':
     display.userMessage = null
     return
+  case 'LOCK_TAKEOVER_REQUESTED':
+    display.userMessage = 'Taking over map lock...'
+    return
+  case 'LOCK_TAKEOVER_SUCCESS':
+    display.userMessage = 'Took over map lock :)'
+    return
+  case 'LOCK_TAKEOVER_FAILED':
+    display.userMessage = 'Failed to take over map lock :('
+    return
+  case 'LOCK_TAKEOVER_RESET':
+    display.userMessage = null
+    return
+  case 'LOCK_RELEASE_REQUESTED':
+    display.userMessage = 'Releasing map lock...'
+    return
+  case 'LOCK_RELEASE_SUCCESS':
+    display.userMessage = 'Released map lock :)'
+    return
+  case 'LOCK_RELEASE_FAILED':
+    display.userMessage = 'Failed to release map lock :('
+    return
+  case 'LOCK_RELEASE_RESET':
+    display.userMessage = null
+    return
   case 'EXPORT_IMAGE_REQUESTED':
     display.userMessage = 'Exporting...'
     return

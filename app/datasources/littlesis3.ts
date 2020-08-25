@@ -1,19 +1,18 @@
 import wretch from 'wretch'
-import curry from 'lodash/curry'
 
-import { Editor, LockState } from '../util/defaultState'
+import { Editor } from '../util/defaultState'
 import { Graph } from '../graph/graph'
 import { ArrowType } from '../graph/arrow'
 import { Node } from '../graph/node'
 import { Edge } from '../graph/edge'
-import { Annotation } from '../util/annotations'
+import { LockState } from '../util/lock'
 
 declare var API_URL: string
 declare var PRODUCTION: string
 
 // API_URL is defined by webpack.DefinePlugin
 // see webpack.config.js
-const urls = {
+export const urls = {
   findNodes: () => `${API_URL}/oligrapher/find_nodes`,
   findConnections: () => `${API_URL}/oligrapher/find_connections`,
   getEdges: () => `${API_URL}/oligrapher/get_edges`,
@@ -24,7 +23,8 @@ const urls = {
   cloneOligrapher: (id: number) => `${API_URL}/oligrapher/${id}/clone`,
   deleteOligrapher: (id: number) => `${API_URL}/oligrapher/${id}`,
   editors: (id: number) => `${API_URL}/oligrapher/${id}/editors`,
-  lock: (id: number) => `${API_URL}/oligrapher/${id}/lock`
+  lock: (id: number) => `${API_URL}/oligrapher/${id}/lock`,
+  releaseLock: (id: number) => `${API_URL}/oligrapher/${id}/release_lock`
 }
 
 const isInteger = (x: any): boolean => RegExp('^[0-9]+$').test(x.toString())
@@ -200,9 +200,14 @@ export function lock(id: number): Promise<LockState> {
   return wretch(urls.lock(id)).headers(headers()).get().json()
 }
 
-function lockTakeover(id: number) {
+export function takeoverLock(id: number): Promise<LockState> {
   validateId(id)
   return wretch(urls.lock(id)).headers(headers()).post().json()
+}
+
+export function releaseLock(id: number): Promise<any> {
+  validateId(id)
+  return wretch(urls.releaseLock(id)).headers(headers()).post().json()
 }
 
 export default {
@@ -216,5 +221,5 @@ export default {
   addEditor,
   removeEditor,
   lock,
-  lockTakeover
+  takeoverLock
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useSelector, makeCancelable } from '../util/helpers'
@@ -10,39 +10,36 @@ const FAILURE_LIMIT = 10
 export default function LockPoll() {
   const dispatch = useDispatch()
   const mapId = useSelector(state => state.attributes.id)
-  const [status, setStatus] = useState('READY')
-  const [failCount, setFailCount] = useState(0)
 
-  useEffect(() => {
-    if (mapId && status === 'READY') {
-      setStatus('POLLING')
-      // console.log('Polling for lock...')
+  let failCount = 0
+  let httpRequest
+  let timeout
 
-      const httpRequest = makeCancelable(lock(mapId))
+  const requestLock = () => {
+    httpRequest = makeCancelable(lock(mapId))
 
-      httpRequest
-        .promise
-        .then(json => {
-          setStatus('WAITING')
-          dispatch({ type: 'SET_LOCK', lock: json })
-          setTimeout(() => setStatus('READY'), POLL_INTERVAL)
-        })
-        .catch((err) => {
-          if (!err.isCanceled) {
-            setFailCount(failCount + 1)
-            setStatus('WAITING')
-            if (failCount > FAILURE_LIMIT) {
-              console.error(`Poll HTTP request failed too many times`)
-              setStatus('FAILED')
-            } else {
-              setTimeout(() => setStatus('READY'), POLL_INTERVAL)
-            }
-          }
-        })
+    httpRequest.promise
+      .then(json => {
+        dispatch({ type: 'SET_LOCK', lock: json })
+        timeout = setTimeout(() => requestLock(), POLL_INTERVAL)
+      })
+      .catch((err) => {
+        failCount++
 
-      return httpRequest.cancel
+        if (failCount > FAILURE_LIMIT) {
+          console.error(`Poll HTTP request failed too many times`)
+        } else {
+          timeout = setTimeout(() => requestLock(), POLL_INTERVAL)
+        }
+      })
+
+    return () => { 
+      httpRequest.cancel()
+      clearTimeout(timeout)
     }
-  }, [mapId, status, dispatch, failCount])
+  }
+  
+  useEffect(requestLock, [mapId, dispatch])
 
   return null
 }

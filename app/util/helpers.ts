@@ -5,7 +5,7 @@ import toNumber from 'lodash/toNumber'
 import { createMuiTheme } from '@material-ui/core/styles'
 
 import { Selector } from './selectors'
-import { StateWithHistory } from './defaultState'
+import { State, StateWithHistory } from './defaultState'
 import ConfirmSave from '../components/ConfirmSave'
 import EmptySave from '../components/EmptySave'
 import { hasContents } from '../graph/graph'
@@ -131,9 +131,9 @@ export function useClientRect(callback: RectCallback) {
 //   settings: state.settings
 // }))
 
-export const convertSelectorForUndo = (selector: Selector): Selector => selector
+export const convertSelectorForUndo = (selector: Selector<any>): Selector<any> => selector
 
-function useConvertedSelector(selector: Selector) {
+function useConvertedSelector(selector: Selector<any>) {
   return useSelector(convertSelectorForUndo(selector))
 }
 

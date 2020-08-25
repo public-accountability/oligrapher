@@ -12,6 +12,7 @@ import { Node, newNode } from '../graph/node'
 import { Caption, captionDefaults } from '../graph/caption'
 import { computeSvgOffset } from './dimensions'
 import { userCanEditSelector } from './selectors'
+import { transformLockData } from './lock'
 
 /*
   Edges, Nodes, and Captions used to contain a `display` element.
@@ -100,6 +101,10 @@ export default function stateInitalizer(legacyState: any): StateWithHistory {
   state.display.svgOffset = computeSvgOffset(state.display.viewBox)
 
   state.display.modes.story = calculateStoryMode(state)
+
+  if (legacyState.attributes?.lock) {
+    state.attributes.lock = transformLockData(legacyState.attributes.lock)
+  }
 
   // for redux-undo
   state.graph = {

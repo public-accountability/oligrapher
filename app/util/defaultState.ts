@@ -1,7 +1,8 @@
 import { Point } from './geometry'
 import { Graph, Viewbox } from '../graph/graph'
 import { Node } from '../graph/node'
-import { Annotation } from '../util/annotations'
+import { Annotation } from './annotations'
+import { LockState, defaultLockState } from './lock'
 
 export interface GraphState extends Graph {
   present: Graph
@@ -31,12 +32,6 @@ export interface UserSettings {
   exploreModeOnly: boolean,
   automaticallyAddEdges: boolean,
   scrollToZoom: boolean
-}
-
-export interface LockState {
-  locked: boolean,
-  userHasLock: boolean,
-  name: string | null
 }
 
 export interface AttributesState {
@@ -157,11 +152,7 @@ const defaultState: State = {
       scrollToZoom: false
     },
     editors: [],
-    lock: { 
-      locked: false, 
-      userHasLock: true,
-      name: null
-    },
+    lock: defaultLockState,
     shareUrl: null
   },
 

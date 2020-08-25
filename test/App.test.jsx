@@ -14,6 +14,7 @@ import * as littlesis3 from '../app/datasources/littlesis3'
 import { removeSpaces } from './testHelpers'
 import { NODE_RADIUS } from '../app/graph/node'
 import * as AnnotationTextEditor from '../app/components/AnnotationTextEditor'
+import { expect } from 'chai'
 
 function createMatchMedia(width) {
   return query => ({
@@ -28,13 +29,14 @@ const sandbox = sinon.createSandbox()
 describe('Oligrapher', function() {
   let state, store, container, find, findAll, 
     clickHeaderAction, clickPresent, clickEdit, clickIcon,
-    clickHandle, expectCount, wait, waitForAnnotations
+    clickHandle, expectCount, wait, waitForAnnotations,
+    addEditor
 
   beforeEach(async function() {
     // necessary for Material-UI layout breakpoints to work
     window.matchMedia = createMatchMedia(window.innerWidth)
     // ensure that user has lock to allow editing
-    sandbox.stub(littlesis3, 'lock').resolves({ user_has_lock: true })
+    sandbox.stub(littlesis3, 'lock').resolves({ locked: true, user_has_lock: true })
     // stub AnnotationTextEditor because CKEditor hangs the test, and is now an external module anyway
     sandbox.stub(AnnotationTextEditor, 'default').returns(<div>text editor</div>)
 
@@ -74,7 +76,6 @@ describe('Oligrapher', function() {
     ).container
 
     find = (selector, root) => (root || container).querySelector(selector)
-
     findAll = (selector, root) => (root || container).querySelectorAll(selector)
 
     clickHeaderAction = key => {
@@ -108,6 +109,22 @@ describe('Oligrapher', function() {
     wait = async (selector) => await waitFor(() => find(selector))
     waitForAnnotations = async () => await wait('#oligrapher-annotations')
 
+    addEditor = (name = 'friendo') => {
+      sandbox.stub(littlesis3, 'addEditor').resolves({
+        editors: [ {
+          name,
+          pending: false,
+          url: 'http://example.com'
+        } ]
+      })
+      // open editors tool
+      clickIcon('editors')
+      expectCount('.oligrapher-editors', 1)
+      // add editor
+      fireEvent.change(find('.oligrapher-editors-input input'), { target: { value: name } })
+      fireEvent.click((find('.oligrapher-editors-input button')))
+    }
+    
     await wait('.oligrapher-graph-editor')
   })
 
@@ -793,5 +810,54 @@ describe('Oligrapher', function() {
     const transform = zoomable.getAttribute('transform')
     fireEvent.wheel(zoomable, { deltaY: 100 })
     expect(zoomable.getAttribute('transform')).to.not.equal(transform)
+  })
+
+  it('begins lock polling when editor is added', async function() {
+    // lock shouledn't haved polled yet
+    expect(littlesis3.lock.callCount).to.equal(0)
+    // add editor    
+    addEditor()
+    // lock polling should begin
+    await waitFor(() => expect(littlesis3.lock.callCount).to.be.above(0))
+  })
+
+  it('shows locked out screen and allows owner to takeover', async function() {
+    // hack to stub window.location.reload
+    // see https://github.com/jsdom/jsdom/issues/2112
+    const location = window.location
+    delete window.location
+    window.location = { reload: sinon.stub() }
+    // simulate lockout
+    littlesis3.lock.restore()
+    sandbox.stub(littlesis3, 'lock').resolves({ locked: true, user_has_lock: false })
+    // add editor to enable locking
+    addEditor()
+    // modal should appear
+    await waitFor(() => expectCount('#oligrapher-lock-modal', 1))
+    // takeover lock
+    sandbox.stub(littlesis3, 'takeoverLock').resolves({ locked: true, user_has_lock: true })
+    let button = getByText(document.body, 'Resume editing')
+    fireEvent.click(button)
+    // page should reload
+    await waitFor(() => expect(window.location.reload.callCount).to.be.above(0))
+    // restore from stub
+    window.location = location
+  })
+
+  it('allows editor to release lock', async function() {
+    // add editor and wait for locking
+    addEditor()
+    await waitFor(() => expectCount('#oligrapher-lock-manager', 1))
+    // mock lock release success
+    sandbox.stub(littlesis3, 'releaseLock').resolves({ lock_released: true })
+    // then presses ctrl+r+l
+    const lockManager = find('#oligrapher-lock-manager')
+    fireEvent.keyDown(document.body, { key: 'Control', code: 'ControlLeft', keyCode: 17, ctrlKey: true })
+    fireEvent.keyDown(document.body, { key: 'r', code: 'KeyR', keyCode: 82, ctrlKey: true })
+    fireEvent.keyDown(document.body, { key: 'l', code: 'KeyL', keyCode: 76, ctrlKey: true })
+    // lock release request should fire
+    await waitFor(() => expect(littlesis3.releaseLock.callCount).to.be.above(0))
+    // editor should close
+    await waitFor(() => expectCount('.oligrapher-graph-editor', 0))
   })
 })
