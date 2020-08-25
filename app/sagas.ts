@@ -1,13 +1,13 @@
 import { put, select as sagaSelect, call, takeEvery, all } from 'redux-saga/effects'
 import cloneDeep from 'lodash/cloneDeep'
-import slugify from 'slugify'
 
 import { isLittleSisId, convertSelectorForUndo } from './util/helpers'
 import { oligrapher, addEditor, removeEditor, getEdges, getInterlocks, takeoverLock, releaseLock } from './datasources/littlesis3'
 import { applyZoomToViewBox, computeSvgZoom, computeSvgOffset } from './util/dimensions'
 import { paramsForSaveSelector } from './util/selectors'
-import { forceLayout, calculateViewBoxFromGraph, Viewbox } from './graph/graph'
+import { forceLayout, calculateViewBoxFromGraph } from './graph/graph'
 import { Selector } from './util/selectors'
+import { getGraphMarkup, downloadRasteredSvg, padViewbox } from './util/imageExport'
 
 // redux-undo places present state at state.present, so we use our own
 // select() to "transparently" make this change to all our saga selectors
@@ -288,112 +288,19 @@ export function* doReleaseLock(action: any) {
   yield put({ type: 'LOCK_RELEASE_RESET' })
 }
 
-// converts an image's href from plain URL to data URL
-function convertImage(image: any) {
-  // we have to load the url into a new image object
-  // in order to get the original width and height
-  const url = image.getAttribute('href')
-  const img = new Image()
-  img.src = url
-
-  const canvas = document.createElement('canvas')
-  const ctx = canvas.getContext('2d') as any
-  canvas.width = img.width
-  canvas.height = img.height
-  ctx.drawImage(image, 0, 0)
-
-  // catch CORS-related errors if url is external to littlesis
-  try {
-    const dataUrl = canvas.toDataURL('image/jpeg')
-    image.setAttribute('href', dataUrl)
-  } catch (error) {
-    console.log(`Couldn't convert image to data uri: ${url}`)
-  }
-}
-
-// we use FileReader istead of the simpler URL.createObjectURL() in order to 
-// circumvent a longstanding chrome bug that causes svg to taint a canvas
-// see: https://bugs.chromium.org/p/chromium/issues/detail?id=294129
-async function blobToDataUrl(blob: any): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-
-    try {
-      reader.onload = (e: any) => {
-        resolve(e.target.result)
-      }
-
-      reader.readAsDataURL(blob)
-    } catch (error) {
-      reject(error)
-    }
-  })
-}
-
-function padViewbox(viewbox: Viewbox, padding: number = 100): Viewbox {
-  return {
-    minX: viewbox.minX - padding,
-    minY: viewbox.minY - padding,
-    w: viewbox.w + padding * 2,
-    h: viewbox.h + padding * 2
-  }
-}
-
-function serializeViewbox(viewbox: Viewbox): string {
-  return [
-    viewbox.minX, viewbox.minY, viewbox.w, viewbox.h
-  ].join(' ')
-}
-
 export function* exportImage(action: any) {
   const title = yield select(state => state.attributes.title)
   const viewbox = yield select(state => state.display.viewBox)
   const paddedViewbox = padViewbox(viewbox)
 
   try {
-    const svg = document.getElementById('oligrapher-svg') as any
-    const g = document.getElementById('oligrapher-svg-export') as any
-    const markers = document.getElementById('oligrapher-svg-markers') as any
-    const filters = document.getElementById('oligrapher-svg-filters') as any
-    const clonedSvg = svg.cloneNode(false)
-    const clonedG = g.cloneNode(true)
-    const clonedMarkers = markers.cloneNode(true)
-    const clonedFilters = filters.cloneNode(true)
-    Array.from(clonedG.getElementsByTagName('image')).forEach(convertImage)
-    clonedSvg.setAttribute('width', paddedViewbox.w)
-    clonedSvg.setAttribute('height', paddedViewbox.h)
-    clonedSvg.setAttribute('viewBox', serializeViewbox(paddedViewbox))
-    clonedSvg.setAttribute('style', 'background-color: white')
-    clonedSvg.appendChild(clonedMarkers)
-    clonedSvg.appendChild(clonedFilters)
-    clonedSvg.appendChild(clonedG)
-    const outerHTML = clonedSvg.outerHTML
-    const blob = new Blob([outerHTML], { type: 'image/svg+xml' })
-    const source = yield blobToDataUrl(blob)
-    const image = new Image()
+    yield downloadRasteredSvg(
+      getGraphMarkup(paddedViewbox),
+      title,
+      paddedViewbox.w * 2,
+      paddedViewbox.h * 2
+    )
 
-    const download = function(href: string, name: string) {
-      const link = document.createElement('a')
-      link.download = name
-      link.style.opacity = "0"
-      document.body.append(link)
-      link.href = href
-      link.click()
-      link.remove()
-    }
-
-    image.onload = () => {
-      const canvas = document.createElement('canvas')
-      canvas.width = paddedViewbox.w * 2
-      canvas.height = paddedViewbox.h * 2
-      const context = canvas.getContext('2d') as any
-      context.drawImage(image, 0, 0, paddedViewbox.w * 2, paddedViewbox.h * 2)
-      const jpeg = canvas.toDataURL('image/jpeg')
-      canvas.remove()
-      download(jpeg, slugify(title) + '.jpg')
-    }
-
-    image.src = source
     yield put({ type: 'EXPORT_IMAGE_SUCCESS' })
   } catch (error) {
     yield put({ type: 'EXPORT_IMAGE_FAILED', error })

@@ -4,7 +4,7 @@ const MARKER_SIZE = 3.5
 
 export default React.memo(function Markers() {
   return (
-    <defs id="oligrapher-svg-markers">
+    <>
       <marker id="marker1" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth={MARKER_SIZE} markerHeight={MARKER_SIZE} orient="auto">
         <path d="M0,-5L10,0L0,5" fill="#999">
         </path>
@@ -37,6 +37,6 @@ export default React.memo(function Markers() {
         <path d="M0,-5L-10,0L0,5" fill="#444">
         </path>
       </marker>
-    </defs>
+    </>
   )
 })

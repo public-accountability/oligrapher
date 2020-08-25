@@ -15,6 +15,9 @@ import Highlightable from './Highlightable'
 import { calculateViewBox } from '../graph/graph'
 import { currentAnnotationSelector } from '../util/selectors'
 
+export const GRAPH_CONTAINER_ID = 'oligrapher-graph-svg'
+export const GRAPH_CONTENT_ID = 'oligrapher-svg-export'
+
 /*
   The core component that displays the graph
 */
@@ -30,15 +33,17 @@ export function Graph(props) {
   }, [setSvgWidth, storyMode])
   
   return (
-    <div id="oligrapher-graph-svg" style={{ height: height + "px" }}>
+    <div id={GRAPH_CONTAINER_ID} style={{ height: height + "px" }}>
       <Svg outermost={true} viewBox={viewBox} height={height + "px"} ref={svgRef}>
-        <Filters />
-        <Markers />
+        <defs>
+          <Filters />
+          <Markers />
+        </defs>
         <Zoomable zoom={zoom}>
           <Pannable>
             <Selectable>
               <Highlightable>
-                <g id="oligrapher-svg-export">
+                <g id={GRAPH_CONTENT_ID}>
                   <Edges />
                   <Nodes />
                   <Captions />
