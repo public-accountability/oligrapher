@@ -69,10 +69,6 @@ function getDevServerConfig(env) {
   }
 }
 
-function getPublicPath(env) {
-  return env.public_path ? env.public_path : 'http://localhost:8090/'
-}
-
 module.exports = function(env) {
   if (!env) {
     throw new Error("Webpack env configuration is missing")
@@ -87,7 +83,7 @@ module.exports = function(env) {
     entry: path.resolve(__dirname, 'app/Oligrapher.jsx'),
     output: {
       path: getOutputPath(env),
-      publicPath: getPublicPath(env),
+      publicPath: env.public_path,
       library: 'Oligrapher',
       libraryTarget: 'umd',
       libraryExport: "default",
