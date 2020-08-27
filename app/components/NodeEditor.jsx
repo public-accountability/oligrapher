@@ -10,9 +10,10 @@ import NodeStyleForm from './NodeStyleForm'
 import EditorSubmitButtons from './EditorSubmitButtons'
 import EditorHotKeys from './EditorHotKeys'
 import { callWithTargetValue, isLittleSisId } from '../util/helpers'
+import { IoIosLink } from 'react-icons/io'
 
 export function MainPage({ node, setPage, updateNode, openAddConnections }) {
-  const showAddConnections = isLittleSisId(node.id)
+  const isLsNode = isLittleSisId(node.id)
 
   return (
     <>
@@ -56,7 +57,7 @@ export function MainPage({ node, setPage, updateNode, openAddConnections }) {
       <hr/>
       <NodeStyleForm setPage={setPage} />
       <hr/>
-      { showAddConnections &&
+      { isLsNode &&
         <a className="add-connections-link" onClick={openAddConnections}>Add Connections +</a>
       }
     </>
@@ -88,6 +89,7 @@ export default function NodeEditor({ id }) {
   const handleColorChange = useCallback(color => updateNode({ color }), [updateNode])
   const handleScaleChange = useCallback(scale => updateNode({ scale }), [updateNode])
   const openAddConnections = () => dispatch({ type: 'OPEN_ADD_CONNECTIONS', id })
+  const isLsNode = isLittleSisId(id)
 
   return (
     <EditorHotKeys remove={removeNode}>
@@ -100,6 +102,7 @@ export default function NodeEditor({ id }) {
         </main>
 
         <footer>
+          { isLsNode && <div title={`LittleSis Entity: ${id}`} className="node-littlesis-link"><IoIosLink /></div> }
           <EditorSubmitButtons
             hideSubmitButton={true}
             handleDelete={removeNode}

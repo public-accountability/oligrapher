@@ -243,16 +243,22 @@ body {
   }
 
   #oligrapher-zoomcontrol {
-    z-index: 1;
-    position: absolute;
-    top: 1em;
-    right: 15px;
-    border: 1px solid #ccc;
-    @extend %box_shadow;
-
     div {
-      display: flex;
+      z-index: 1;
+      position: absolute;
+        display: flex;
       flex-direction: column;
+      border: 1px solid #ccc;
+      @extend %box_shadow;
+      right: 15px;
+    }
+
+    #oligrapher-zoom-buttons {
+      top: 1em;
+    }
+
+    #oligrapher-zoom-reset-button {
+      top: 5.5em;
     }
 
     button {
@@ -544,7 +550,7 @@ body {
   div.editor-buttons {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-end;
 
     button {
       border: 0;
@@ -648,6 +654,15 @@ body {
 
     &:hover {
       text-decoration: none;
+    }
+  }
+
+  .node-littlesis-link {
+    float: left;
+
+    svg {
+      height: 20px;
+      width: 20px;
     }
   }
 }
@@ -781,6 +796,11 @@ body {
     display: inline-block;
     margin-left: 1em;
   }
+}
+
+#oligrapher-container .oligrapher-graph-editor .oligrapher-interlocks {
+  font-size: 14px;
+  line-height: 1.2em;
 }
 
 #oligrapher-container .oligrapher-graph-editor .oligrapher-settings {

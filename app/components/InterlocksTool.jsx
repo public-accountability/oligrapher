@@ -1,22 +1,29 @@
 import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button } from '@material-ui/core'
+import { IoIosLink } from 'react-icons/io'
 
 import Toolbox from './Toolbox'
+import { isLittleSisId } from '../util/helpers'
 
 export default function InterlocksTool() {
   const dispatch = useDispatch()
   const getInterlocks = useCallback(() => dispatch({ type: 'INTERLOCKS_REQUESTED' }), [dispatch])
-  const selectedCount = useSelector(state => state.display.selection.node.length)
+  const selectedNodes = useSelector(state => state.display.selection.node)
+  const lsNodes = selectedNodes.filter(isLittleSisId)
+  const twoLsNodes = selectedNodes.length === 2 && lsNodes.length === 2
 
   return (
     <Toolbox title="Interlocks">
       <div className="oligrapher-interlocks">
-        Select two nodes to find interlocks between them.
-        <br />
-        <br />
+        <p>
+          Select two nodes that were imported from LittleSis to fetch their interlocks.
+        </p>
+        <p>
+          If a node was imported from LittleSis, you'll see a <IoIosLink /> icon at the bottom of the form when editing it.
+        </p>
         <Button 
-          disabled={selectedCount !== 2} 
+          disabled={!twoLsNodes} 
           onClick={getInterlocks} 
           variant="contained" 
           color="primary"

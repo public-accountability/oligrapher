@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import { useSelector } from '../util/helpers'
+import { useSelector, isLittleSisId } from '../util/helpers'
 import DraggableComponent from './DraggableComponent'
 import NodeHalo from './NodeHalo'
 import NodeCircle from './NodeCircle'
@@ -20,7 +20,6 @@ export function Node({ id, currentlyEdited, selected, status }) {
   const { isHighlighting } = useSelector(state => state.annotations)
   const selectedNodeIds = useSelector(state => state.display.selection.node)
   const isMultipleSelection = selected && selectedNodeIds.length > 1
-  const [isDragging, setDragging] = useState(false)
   const showSelection = editMode && (selected || currentlyEdited)
 
   const moveNode = useCallback(deltas => {

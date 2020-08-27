@@ -36,6 +36,10 @@ export default produce((display: DisplayState, action: any): void => {
   case 'SET_VIEWBOX':
     display.viewBox = action.viewBox
     return
+  case 'RESET_VIEW':
+    display.offset = { x: 0, y: 0}
+    display.zoom = 1
+    return
   case 'COLLAPSE_HEADER':
     display.headerIsCollapsed = true
     return

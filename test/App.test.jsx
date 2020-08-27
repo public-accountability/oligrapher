@@ -812,6 +812,17 @@ describe('Oligrapher', function() {
     expect(zoomable.getAttribute('transform')).to.not.equal(transform)
   })
 
+  it('resets zoom', function() {
+    const zoomable = find('.zoomable')
+    const zoomTransform = zoomable.getAttribute('transform')
+    const zoomIn = find('#oligrapher-zoom-buttons button')
+    fireEvent.click(zoomIn)
+    expect(zoomable.getAttribute('transform')).to.not.equal(zoomTransform)
+    const reset = find('#oligrapher-zoom-reset-button button')
+    fireEvent.click(reset)
+    expect(zoomable.getAttribute('transform')).to.equal(zoomTransform)
+  })
+
   it('begins lock polling when editor is added', async function() {
     // lock shouledn't haved polled yet
     expect(littlesis3.lock.callCount).to.equal(0)
