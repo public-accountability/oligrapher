@@ -15,12 +15,12 @@ export function NodeCircle({ node, status }) {
 
   return (
     <circle className="node-circle draggable-node-handle"
-      onDragEnter={() => console.log("dragenter")}
       cx={x}
       cy={y}
       r={radius}
       fill={color}
       opacity={opacity}
+      onDragStart={(e) => e.preventDefault()} // to prevent HTML5 drag-n-drop (draggable="false" used to work)
       />
   )
 }

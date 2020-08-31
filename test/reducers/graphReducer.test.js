@@ -73,11 +73,7 @@ describe('graphReducer', function() {
     beforeEach(function() {
       graph = Graph.new()
       n1 = Node.new({ x: 0, y: 0 })
-      n2 = Node.new({ x: 100, y: 0 })
-      n3 = Node.new({ x: 0, y: 100 })
-      e1 = Edge.newEdgeFromNodes(n1, n2)
-      Graph.addNodes(graph, [n1, n2, n3])
-      Graph.addEdge(graph, e1)
+      Graph.addNodes(graph, [n1])
       state = graph
     })
 
@@ -86,18 +82,6 @@ describe('graphReducer', function() {
       nextState = reducer(state, action)
       expect(nextState.nodes[n1.id].x).to.equal(n1.x + 50)
       expect(nextState.nodes[n1.id].y).to.equal(n1.y + 50)
-      expect(nextState.edges[e1.id].x1).to.equal(e1.x1 + 50)
-      expect(nextState.edges[e1.id].y1).to.equal(e1.y1 + 50)
-    })
-
-    it('creates edge but doesnt move node when intersection detected', function() {
-      action = { type: 'MOVE_NODE', id: n1.id, deltas: { x: 0, y: 100 } }
-      nextState = reducer(state, action)
-      expect(Object.keys(nextState.edges)).to.have.lengthOf(2)
-      expect(nextState.nodes[n1.id].x).to.equal(n1.x)
-      expect(nextState.nodes[n1.id].y).to.equal(n1.y)
-      expect(nextState.edges[e1.id].x1).to.equal(e1.x1)
-      expect(nextState.edges[e1.id].y1).to.equal(e1.y1)
     })
   })
 

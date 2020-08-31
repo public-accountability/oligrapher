@@ -79,7 +79,7 @@ export default produce((display: DisplayState, action: any): void => {
   case 'MOUSE_LEFT_NODE':
     display.userMessage = null
     return
-  case 'MOVE_NODE':
+  case 'RELEASE_NODE':
     display.userMessage = null
     display.draggedNode = null
     return
@@ -150,7 +150,7 @@ export default produce((display: DisplayState, action: any): void => {
     }
     return
   case 'CLOSE_EDITOR':
-    FloatingEditor.set(display)
+    FloatingEditor.clear(display)
     return
   case 'OPEN_EDTIOR':
     FloatingEditor.set(display, action.editorType, action.id)

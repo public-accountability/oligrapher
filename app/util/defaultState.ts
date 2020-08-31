@@ -3,6 +3,7 @@ import { Graph, Viewbox } from '../graph/graph'
 import { Node } from '../graph/node'
 import { Annotation } from './annotations'
 import { LockState, defaultLockState } from './lock'
+import { LsMap } from '../datasources/littlesis3'
 
 export interface GraphState extends Graph {
   present: Graph
@@ -105,7 +106,8 @@ export interface State {
   annotations: AnnotationsState,
   attributes: AttributesState,
   display: DisplayState,
-  settings: SettingsState
+  settings: SettingsState,
+  lastSavedData: LsMap | null
 }
 
 export interface StateWithHistory extends State {
@@ -199,7 +201,9 @@ const defaultState: State = {
     debug: false,
     domId: 'oligrapher',
     embed: false
-  }
+  },
+
+  lastSavedData: null
 }
 
 export default Object.freeze(defaultState)

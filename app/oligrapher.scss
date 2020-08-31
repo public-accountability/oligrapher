@@ -90,6 +90,7 @@ body {
       margin-top: 7px;
       margin-bottom: 0;
       font-size: 30px;
+      line-height: 40px;
       height: 30px;
     }
   }
@@ -99,7 +100,6 @@ body {
     font-size: 42px;
     margin-top: 10px;
     margin-bottom: 5px;
-    height: 50px;
     box-sizing: border-box;
 
     input {
@@ -107,7 +107,8 @@ body {
       font-size: 42px;
       height: 48px; 
       margin-left: -4px;
-      width: 600px;
+      max-width: 800px;
+      width: 100%;
       border: 1px solid #ccc;
     }
 
@@ -121,7 +122,6 @@ body {
   #oligrapher-header-subtitle-wrapper {
     margin-top: 0;
     margin-bottom: 0;
-    height: 34px;
     font-size: 18px;
     line-height: 24px;
     padding-top: 0px;
@@ -194,6 +194,11 @@ body {
       }
 
       .oligrapher-header-actions, .oligrapher-header-edit-actions  {
+        .oligrapher-header-edit-actions-lock {
+          margin-right: 0.5em;
+          color: $oligrapher_dark_gray;
+        }
+
         .header-action-menu-wrapper {
           display: inline-block;
         }
@@ -932,13 +937,17 @@ div.lock {
   src: url(./fonts/HelveticaNeueLTStdMd.otf) format('opentype');
 }
 
+#oligrapher-container .oligrapher-graph-dragging-node {
+  cursor: grabbing;
+}
+
 #oligrapher-container #oligrapher-graph-container .oligrapher-node {
   pointer-events: auto;
 
   // we have to disable pointer-events for the dragged node in order for 
-  // a dragged-over node to detect a hover event, which we use for 
-  // drag-and-drop edge creation. but as a consequence the "grabbing"
-  // cursor will not work because it depends on pointer events
+  // a dragged-over node to detect a hover event, which we use to notify
+  // the user of possible edge creation. but as a consequence the "grabbing"
+  // cursor will not work because it depends on pointer events.
   &.react-draggable-dragging {
     cursor: grabbing;
     pointer-events: none;

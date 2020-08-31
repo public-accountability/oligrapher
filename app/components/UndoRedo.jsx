@@ -8,8 +8,17 @@ export default function UndoRedo() {
   const past = useSelector(state => state.graph.past)
   const future = useSelector(state => state.graph.future)
 
-  const undo = useCallback(() => dispatch(ActionCreators.undo()), [dispatch])
-  const redo = useCallback(() => dispatch(ActionCreators.redo()), [dispatch])
+  // we close any floating editor in case our undo or redo
+  // removes a graph item that's currently being edited
+  const undo = useCallback(() =>  {
+    dispatch({ type: 'CLOSE_EDITOR' })
+    dispatch(ActionCreators.undo())
+  }, [dispatch])
+
+  const redo = useCallback(() => { 
+    dispatch({ type: 'CLOSE_EDITOR' })
+    dispatch(ActionCreators.redo())
+  }, [dispatch])
 
   if (!past || !future) {
     return null

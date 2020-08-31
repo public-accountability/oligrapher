@@ -63,14 +63,14 @@ interface LsNode {
   url: string
 }
 
-interface LsEdge {
+export interface LsEdge {
   id: string,
   node1_id: string,
   node2_id: string,
   label: string,
   arrow: ArrowType | null,
   dash: boolean,
-  url: string
+  url?: string
 }
 
 interface LsNodeWithEdge extends LsNode {
@@ -81,8 +81,8 @@ export interface LsMap {
   id: number,
   graph_data: Graph,
   attributes: {
-    title: string,
-    description: string,
+    title: string | null,
+    description: string | null,
     is_private: boolean,
     is_cloneable: boolean,
     list_sources: boolean,

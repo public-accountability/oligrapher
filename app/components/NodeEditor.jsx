@@ -102,7 +102,10 @@ export default function NodeEditor({ id }) {
         </main>
 
         <footer>
-          { isLsNode && <div title={`LittleSis Entity: ${id}`} className="node-littlesis-link"><IoIosLink /></div> }
+          { isLsNode && 
+            <div title={`LittleSis Entity ID: ${id}`} className="node-littlesis-link"><IoIosLink /></div> 
+          }
+
           <EditorSubmitButtons
             hideSubmitButton={true}
             handleDelete={removeNode}

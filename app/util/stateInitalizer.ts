@@ -11,7 +11,7 @@ import { Edge, newEdge } from '../graph/edge'
 import { Node, newNode } from '../graph/node'
 import { Caption, captionDefaults } from '../graph/caption'
 import { computeSvgOffset } from './dimensions'
-import { userCanEditSelector } from './selectors'
+import { userCanEditSelector, paramsForSaveSelector } from './selectors'
 import { transformLockData } from './lock'
 
 /*
@@ -112,6 +112,12 @@ export default function stateInitalizer(legacyState: any): StateWithHistory {
     past: [],
     present: newGraph(state.graph),
     future: []
+  }
+
+  // if map has id, it's been saved before, let's keep the data
+  // for comparison against current data when user leaves app
+  if (legacyState.attributes?.id) {
+    state.lastSavedData = paramsForSaveSelector(state)
   }
 
   return state

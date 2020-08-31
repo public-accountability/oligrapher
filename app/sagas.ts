@@ -6,6 +6,8 @@ import { oligrapher, addEditor, removeEditor, getEdges, getInterlocks, takeoverL
 import { applyZoomToViewBox, computeSvgZoom, computeSvgOffset } from './util/dimensions'
 import { paramsForSaveSelector } from './util/selectors'
 import { forceLayout, calculateViewBoxFromGraph } from './graph/graph'
+import { findIntersectingNodeFromDrag } from './graph/node'
+import { newEdgeFromNodes } from './graph/edge'
 import { Selector } from './util/selectors'
 import { getGraphMarkup, downloadRasteredSvg, padViewbox } from './util/imageExport'
 
@@ -31,7 +33,8 @@ export default function* rootSaga() {
     watchExportImage(),
     watchEditMode(),
     watchLockTakeover(),
-    watchLockRelease()
+    watchLockRelease(),
+    watchReleaseNode()
   ])
 }
 
@@ -91,6 +94,10 @@ export function* watchExportImage() {
   yield takeEvery(['EXPORT_IMAGE_REQUESTED'], exportImage)
 }
 
+export function* watchReleaseNode() {
+  yield takeEvery(['RELEASE_NODE'], moveNodeOrCreateEdge)
+}
+
 export function* setSvgHeight(action: any) {
   const { svgTop, svgBottom, svgWidth } = yield select(state => state.display)
   const height = (svgBottom || window.innerHeight) - svgTop
@@ -145,6 +152,8 @@ export function* save() {
     if (!id) {
       yield call(delay, 500)
       window.location.replace(results.redirect_url)
+    } else {
+      yield put({ type: 'SET_SAVED_DATA', data: params })
     }
   } catch(error) {
     yield put({ type: 'SAVE_FAILED' })
@@ -308,4 +317,24 @@ export function* exportImage(action: any) {
 
   yield call(delay, RESET_DELAY)
   yield put({ type: 'EXPORT_IMAGE_RESET' })
+}
+
+// this logic is in a saga and not part of graphReducer because
+// we need edge creation to be triggered by a new action in order
+// for displayReducer to open the edge editor
+export function* moveNodeOrCreateEdge(action: any) {
+  const nodes = yield select(state => state.graph.nodes)
+  const draggedNode = nodes[action.id]
+  const draggedOverNode = findIntersectingNodeFromDrag(
+    Object.values(nodes),
+    draggedNode,
+    action.deltas
+  )
+
+  if (draggedOverNode) {
+    const edge = newEdgeFromNodes(draggedNode, draggedOverNode)
+    yield put({ type: 'ADD_EDGE', edge, id: action.id })
+  } else {
+    yield put({ type: 'MOVE_NODE', id: action.id, deltas: action.deltas })
+  }
 }

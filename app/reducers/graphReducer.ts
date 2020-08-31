@@ -4,7 +4,7 @@ import undoable, { includeAction } from 'redux-undo'
 import { generate } from 'shortid'
 
 import {
-  Graph, addNode, addNodes, updateNode, removeNode, removeNodes, dragNodeEdges, moveNode,
+  Graph, addNode, updateNode, removeNode, removeNodes, dragNodeEdges, moveNode,
   addEdge, addEdgeIfNodes, addEdgesIfNodes, updateEdge, removeEdge,
   addCaption, addInterlocks
 } from '../graph/graph'
@@ -42,28 +42,14 @@ export const reducer = produce((graph: Graph, action: any): void => {
     action.nodeIds.forEach((id: string) => dragNodeEdges(graph, id, action.deltas))
     return
   case 'MOVE_NODE':
-    draggedNode = graph.nodes[action.id]
-    draggedOverNode = findIntersectingNodeFromDrag(
-      Object.values(graph.nodes), 
-      draggedNode, 
-      action.deltas
-    )
-
-    if (draggedOverNode) {
-      newEdge = Edge.newEdgeFromNodes(draggedNode, draggedOverNode)
-      addEdge(graph, newEdge)
-    } else {
-      moveNode(graph, action.id, action.deltas)
-    }
-
-    dragNodeEdges(graph, action.id, { x: 0, y: 0 })
-
+    moveNode(graph, action.id, action.deltas)
     return
   case 'MOVE_NODES':
     action.nodeIds.forEach((id: string) => moveNode(graph, id, action.deltas))
     return
   case 'ADD_EDGE':
     addEdgeIfNodes(graph, action.edge)
+    dragNodeEdges(graph, action.id, { x: 0, y: 0 })
     return
   case 'ADD_EDGES':
     addEdgesIfNodes(graph, action.edges)
@@ -134,6 +120,10 @@ const undoableReducer = undoable(reducer, {
 
     // consider all consecutive drags and moves for the same node(s) as one action
     if (type === 'DRAG_NODE') {
+      type = 'MOVE_NODE'
+    }
+
+    if (type === 'ADD_EDGE') {
       type = 'MOVE_NODE'
     }
 

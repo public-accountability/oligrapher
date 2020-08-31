@@ -23,7 +23,7 @@ export const GRAPH_CONTENT_ID = 'oligrapher-svg-export'
 */
 export function Graph(props) {
   const {
-    viewBox, zoom, svgSize: { height }, setSvgWidth, storyMode
+    viewBox, zoom, svgSize: { height }, setSvgWidth, storyMode, draggedNode
   } = props
 
   const svgRef = useRef(null)
@@ -32,8 +32,10 @@ export function Graph(props) {
     setSvgWidth(svgRef.current.getBoundingClientRect().width)
   }, [setSvgWidth, storyMode])
   
+  const className = draggedNode ? "oligrapher-graph-dragging-node" : ""
+
   return (
-    <div id={GRAPH_CONTAINER_ID} style={{ height: height + "px" }}>
+    <div id={GRAPH_CONTAINER_ID} className={className} style={{ height: height + "px" }}>
       <Svg outermost={true} viewBox={viewBox} height={height + "px"} ref={svgRef}>
         <defs>
           <Filters />
@@ -62,8 +64,8 @@ Graph.propTypes = {
   zoom: PropTypes.number.isRequired,
   svgSize: PropTypes.object,
   setSvgWidth: PropTypes.func.isRequired,
-  rootContainerId: PropTypes.string.isRequired,
-  storyMode: PropTypes.bool.isRequired
+  storyMode: PropTypes.bool.isRequired,
+  draggedNode: PropTypes.object
 }
 
 const calculateAnnotationViewBox = state => {
@@ -104,9 +106,10 @@ const mapStateToProps = state => {
   const viewBox = calculateAnnotationViewBox(state)
   const { zoom, svgSize} = state.display
   const storyMode = state.display.modes.story
+  const draggedNode = state.display.draggedNode
 
   return {
-    viewBox, zoom, svgSize, storyMode
+    viewBox, zoom, svgSize, storyMode, draggedNode
   }
 }
 

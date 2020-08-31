@@ -26,7 +26,7 @@ export function Node({ id, currentlyEdited, selected, status }) {
     if (isMultipleSelection) {
       return false
     } else {
-      dispatch({ type: 'MOVE_NODE', id, deltas })
+      dispatch({ type: 'RELEASE_NODE', id, deltas })
     }
   }, [dispatch, id, isMultipleSelection])
 
@@ -54,8 +54,13 @@ export function Node({ id, currentlyEdited, selected, status }) {
     }
   }, [dispatch, isSelecting, isHighlighting, id, editMode, node])
 
-  const onMouseEnter = useCallback(() => dispatch({ type: 'MOUSE_ENTERED_NODE', name }), [dispatch, name])
-  const onMouseLeave = useCallback(() => dispatch({ type: 'MOUSE_LEFT_NODE' }), [dispatch])
+  const onMouseEnter = useCallback(() => { 
+    dispatch({ type: 'MOUSE_ENTERED_NODE', name })
+  }, [dispatch, name])
+
+  const onMouseLeave = useCallback(() => { 
+    dispatch({ type: 'MOUSE_LEFT_NODE' })
+  }, [dispatch])
 
   // ordinarily the node should always be present, but when removing selected nodes we encounter the 
   // zombie child problem: https://react-redux.js.org/api/hooks#stale-props-and-zombie-children
@@ -71,13 +76,18 @@ export function Node({ id, currentlyEdited, selected, status }) {
       onDrag={dragNode}>
       <g 
         id={"node-" + id} 
-        className="oligrapher-node" 
+        className="oligrapher-node"
         onMouseEnter={onMouseEnter} 
         onMouseLeave={onMouseLeave}
         onDragOver={onMouseEnter}
         onDragLeave={onMouseLeave}
       >
-        <ConditionalLink condition={!editMode && node.url} href={node.url} target="_blank" rel="noopener noreferrer">
+        <ConditionalLink 
+          condition={!editMode && node.url} 
+          href={node.url} 
+          target="_blank" rel="noopener noreferrer"
+          onDragStart={e => e.preventDefault()} // to prevent HTML5 drag-n-drop (draggable="false" used to work)
+        >
           { node.description && <title>{node.description}</title> }
           <ConditionalLink condition={editMode && node.url} href={node.url} target="_blank" rel="noopener noreferrer">
             <NodeLabel node={node} status={status} />

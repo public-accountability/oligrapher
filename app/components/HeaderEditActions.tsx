@@ -1,6 +1,7 @@
 import React, { useCallback, useState, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { IoIosMore } from 'react-icons/io'
+import { FaLock } from 'react-icons/fa'
 import { IconButton, Menu, MenuItem } from '@material-ui/core'
 
 import SaveButton from './SaveButton'
@@ -62,6 +63,10 @@ export default function HeaderEditActions() {
 
   return (
     <div className="oligrapher-header-edit-actions">
+      { isPrivate && 
+        <span className="oligrapher-header-edit-actions-lock" title="This map is private"><FaLock /></span>
+      }
+
       <SaveButton />
 
       <div className="header-action-menu-wrapper">

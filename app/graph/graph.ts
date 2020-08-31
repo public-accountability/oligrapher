@@ -10,7 +10,8 @@ import { Point, translatePoint, rotatePoint } from '../util/geometry'
 import { Node, NodeAttributes, newNode, findIntersectingNode } from './node'
 import { Edge, EdgeAttributes, edgeCoordinates, newEdgeFromNodes, determineNodeNumber } from './edge'
 import { Caption } from './caption'
-import { edgeToCurve, defaultCurveStrength } from './curve'
+import { curveSimilarEdges } from './curve'
+import { LsEdge } from '../datasources/littlesis3'
 
 export interface NodeMap {
   [key: string]: Node
@@ -37,7 +38,7 @@ export interface GraphAttributes {
 }
 
 export interface EdgeIndex {
-  [key: string]: { [key: string]: Array<Edge> }
+  [key: string]: { [key: string]: LsEdge[] }
 }
 
 export interface Viewbox {
@@ -355,62 +356,49 @@ export function addEdge(graph: Graph, edge: Edge): Graph {
   return graph
 }
 
-export function createEdgeIndex(edges: Array<Edge>): EdgeIndex {
-  function addToEdgeIndex(index: EdgeIndex, edge: Edge): EdgeIndex {
-    let [id1, id2] = [edge.node1_id, edge.node2_id].sort()
-  
-    // no circular edges
-    if (id1 === id2) {
-      return index
-    }
-  
-    if (index[id1]) {
-      index[id1][id2] = (index[id1][id2] || []).concat([edge])
-    } else {
-      index[id1] = { [id2]: [edge] }
-    }
-  
+function addToEdgeIndex(index: EdgeIndex, lsEdge: LsEdge): EdgeIndex {
+  let [id1, id2] = [lsEdge.node1_id, lsEdge.node2_id].sort()
+
+  // no circular edges
+  if (id1 === id2) {
     return index
   }
 
-  return edges.reduce((index, edge) => {
-    return addToEdgeIndex(index, edge)
+  if (index[id1]) {
+    index[id1][id2] = (index[id1][id2] || []).concat([lsEdge])
+  } else {
+    index[id1] = { [id2]: [lsEdge] }
+  }
+
+  return index
+}
+
+export function createEdgeIndex(lsEdges: LsEdge[]): EdgeIndex {
+  return lsEdges.reduce((index, lsEdge) => {
+    return addToEdgeIndex(index, lsEdge)
   }, {})
 }
 
 // creates multiple edges between the same nodes
 // so that the edges are nicely spaced out
-export function addSimilarEdges(graph: Graph, edges: Array<Edge>): Graph {
-  const count = edges.length
+export function addSimilarEdges(graph: Graph, lsEdges: LsEdge[]): Graph {  
+  let edges = lsEdges.map(lsEdge => {
+    let node1 = getNode(graph, lsEdge.node1_id)
+    let node2 = getNode(graph, lsEdge.node2_id)
+    return newEdgeFromNodes(node1, node2, lsEdge)  
+  })
 
-  // single edge is added normally
-  if (count === 1) {
-    addEdgeIfNodes(graph, edges[0])
-    return graph
-  }
-
-  // curve strength is default if there are only 2 edges
-  // curve strength approaches twice default as number of edges increases 
-  const maxCurveStrength = defaultCurveStrength * (3 - 2/count)
-  const range = maxCurveStrength * 2
-  const step = range / (count - 1)
-  let strength = -maxCurveStrength
+  edges = curveSimilarEdges(edges)
   
   edges.forEach(edge => {
-    let node1 = getNode(graph, edge.node1_id)
-    let node2 = getNode(graph, edge.node2_id)
-    edge = newEdgeFromNodes(node1, node2, edge)
-    let { cx, cy } = edgeToCurve(edge, strength)
-    edge = merge(edge, { cx, cy })
-    addEdge(graph, edge)
-    strength += step
+    addEdgeIfNodes(graph, edge)
   })
 
   return graph
 }
 
-export function addEdgesIfNodes(graph: Graph, edges: Array<Edge>): Graph {
-  const edgeIndex = createEdgeIndex(edges)
+export function addEdgesIfNodes(graph: Graph, lsEdges: LsEdge[]): Graph {
+  const edgeIndex = createEdgeIndex(lsEdges)
 
   Object.keys(edgeIndex).forEach(id1 => {    
     Object.keys(edgeIndex[id1]).forEach(id2 => {
@@ -506,17 +494,25 @@ export function forceLayout(graph: Graph, steps:number = 1000): Graph {
     })
   })
 
-  // remove curve control points so that they're recalculated
-  Object.values(graph.edges).forEach(edge => {
-    const { id, node1_id, node2_id } = edge
+  // re-add edges so that curves are recalculated by group
+  let edges = Object.values(graph.edges)
+  graph.edges = {}
+
+  // update node coordinates and remove curve control points 
+  // so that they're recalculated
+  edges = edges.map(edge => {
+    const { node1_id, node2_id } = edge
     const node1 = getNode(graph, node1_id)
     const node2 = getNode(graph, node2_id)
-    updateEdge(graph, id, assign(
+    return assign(
+      edge,
       edgeCoordinates(1, node1),
       edgeCoordinates(2, node2),
       { cx: undefined, cy: undefined }
-    ))
+    )
   })
+
+  addEdgesIfNodes(graph, edges)
 
   return graph
 }

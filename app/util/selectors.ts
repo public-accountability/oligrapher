@@ -1,3 +1,5 @@
+import isEqual from 'lodash/isEqual'
+
 import { StateWithHistory } from './defaultState'
 import { Annotation } from './annotations'
 import { LsMap } from '../datasources/littlesis3'
@@ -79,8 +81,8 @@ export const paramsForSaveSelector = (state: StateWithHistory): LsMap => {
     id: Number(state.attributes.id),
     graph_data: state.graph.present,
     attributes: {
-      title: state.attributes.title as string,
-      description: state.attributes.subtitle as string,
+      title: state.attributes.title,
+      description: state.attributes.subtitle,
       is_private: state.attributes.settings.private,
       is_cloneable: state.attributes.settings.clone,
       list_sources: state.attributes.settings.list_sources,
@@ -88,4 +90,11 @@ export const paramsForSaveSelector = (state: StateWithHistory): LsMap => {
       annotations_data: JSON.stringify(state.annotations.list)
     }
   }
+}
+
+export const hasUnsavedChangesSelector = (state: StateWithHistory): boolean => {
+  const { lastSavedData } = state
+  const latestData = paramsForSaveSelector(state)
+
+  return !isEqual(lastSavedData, latestData)
 }

@@ -1,8 +1,9 @@
 import toNumber from 'lodash/toNumber'
 import chunk from  'lodash/chunk'
+import merge from 'lodash/merge'
 
 import { Point } from '../util/geometry'
-import { EdgeGeometry } from './edge'
+import { Edge, EdgeGeometry } from './edge'
 
 /*
 data store
@@ -118,4 +119,29 @@ export function curveToBezier({ x, y, xa, ya, xb, yb, cx, cy }: Curve): string {
   const control = [(x + cx), (y + cy)]
   const end = [xb, yb]
   return "M " + start.join(' ') + " Q " + control.concat(end).join(' ')
+}
+
+// modifies control points of a group of edges between the same nodes
+// sothat the edges are nicely spaced out
+export function curveSimilarEdges(edges: Edge[]): Edge[] {
+  const count = edges.length
+
+  // a single edge is not altered
+  if (count === 1) {
+    return edges
+  }
+
+  // curve strength is default if there are only 2 edges
+  // curve strength approaches twice default as number of edges increases 
+  const maxCurveStrength = defaultCurveStrength * (3 - 2/count)
+  const range = maxCurveStrength * 2
+  const step = range / (count - 1)
+  let startStrength = -maxCurveStrength
+  
+  return edges.map((edge, i) => {
+    let strength = startStrength + (i * step)
+    let { cx, cy } = edgeToCurve(edge, strength)
+    edge = merge(edge, { cx, cy })
+    return edge
+  })
 }
