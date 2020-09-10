@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Oligrapher 3 Demo</title>
+    <script src="oligrapher.js"></script>
+  </head>
+
+  <body>
+    <div id="oligrapher"></div>
+
+    <script>
+      var oli = new Oligrapher(
+        {
+          "graph": {
+            "nodes": {
+              "1": {
+                "id": 1,
+                "display": {
+                  "x": 677.456942003515,
+                  "y": -146.3620386643234,
+                  "scale": 1,
+                  "name": "Walmart",
+                  "image": "https://littlesis.org/images/profile/1b/1b94e832d0699854a3f9b1cf5732682cf75f395f_1395144942.png",
+                  "url": "https://littlesis.org/org/1-Walmart",
+                  "color": "#ccc"
+                }
+              },
+              "3": {
+                "id": 3,
+                "display": {
+                  "x": 843.1089630931459,
+                  "y": 450.3462214411247,
+                  "scale": 1,
+                  "name": "Chevron",
+                  "image": "https://littlesis.org/images/profile/73/730ca0044a95ad5b4da07ccfe7c9b2dc.jpeg",
+                  "url": "https://littlesis.org/org/3-Chevron",
+                  "color": "#ccc"
+                }
+              },
+              "9": {
+                "id": 9,
+                "display": {
+                  "x": -163.2653778558875,
+                  "y": -189.12829525483303,
+                  "scale": 1,
+                  "name": "Bank of America Corporation",
+                  "image": "https://littlesis.org/images/profile/e3/e30c78ac25c2b6d74a8c018844fea68f7999be51_1247836363.png",
+                  "url": "https://littlesis.org/org/9-Bank_of_America_Corporation",
+                  "color": "#ccc"
+                }
+              },
+              "17": {
+                "id": 17,
+                "display": {
+                  "x": 389.5470847593501,
+                  "y": 585.0819473992539,
+                  "scale": 1,
+                  "name": "Verizon Communications Inc.",
+                  "image": "https://littlesis.org/images/profile/69/695753c0f5dbd7b8259f39f90bd37f2d293d8c03_1398359695.png",
+                  "url": "https://littlesis.org/org/17-Verizon_Communications_Inc.",
+                  "color": "#ccc"
+                }
+              },
+              "20": {
+                "id": 20,
+                "display": {
+                  "x": 75.07918364897131,
+                  "y": -314.6709481143311,
+                  "scale": 1,
+                  "name": "Goldman Sachs",
+                  "image": "https://littlesis.org/images/profile/7f/7fdcb601826dd98dc3fdce69971efb86.jpg",
+                  "url": "https://littlesis.org/org/20-Goldman_Sachs",
+                  "color": "#ccc"
+                }
+              },
+              "31": {
+                "id": 31,
+                "display": {
+                  "x": 484.92970123022843,
+                  "y": -279.1335676625659,
+                  "scale": 1,
+                  "name": "Target Corporation",
+                  "image": "https://littlesis.org/images/profile/c0/c0dbc2b53067e3fd33bda088c30100ca.jpg",
+                  "url": "https://littlesis.org/org/31-Target_Corporation"
+                }
+              },
+              "41": {
+                "id": 41,
+                "display": {
+                  "x": -33.38664323374341,
+                  "y": -271.0826010544816,
+                  "scale": 1,
+                  "name": "Wells Fargo & Company",
+                  "image": "https://littlesis.org/images/profile/25/25b92b22d930667196258fd312c0adc9.jpeg",
+                  "url": "https://littlesis.org/org/41-Wells_Fargo_&_Company"
+                }
+              },
+              "44": {
+                "id": 44,
+                "display": {
+                  "x": -345.5992970123022,
+                  "y": 361.6942003514938,
+                  "scale": 1,
+                  "name": "Microsoft Corporation",
+                  "url": "https://littlesis.org/org/44-Microsoft_Corporation",
+                  "color": "#ccc",
+                  "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAeFBMVEX///8Ao+5+uQL/uAbxUCHy+/7/9uG11oJ5twB2tQCr0HXg7cn/uwz/tAD+9/M6sfH/0HUiqe//vSPzbUrv9uHwQAAAn+7wTBvwSA/2n4v71s4Lpu/3q5n2mob1+ezO46zyZ0LwPACpz3DyYjpssAD71MtItvL/032gV2CVAAABEUlEQVR4nO3aSVICQRCG0cIWobERUFplcGDS+99QbC6QFWFEEe17+3/xRW4zJQAAAAAAAAAAAAAAAACAP7ZdZXh7OC/eJ6MMH6UD02f7Grf7LVzW47h6XzowPb3cxrWXwpu48aR0oEKFChUqVKhQoUKFChUqVKhQoUKFChUqVKhQoUKFChUqVKhQoUKFChX2qvCwa+Muf23HOu5Y/q9tnePUTe5zLAv3AddgtskwGJ4Xd1UTV81LB6bZIMNzVzit4qa9L+z/DRUqVKhQoUKFChUqVKhQoUKFChUqVKhQoUKFChUqVKhQoUKFChUqVPifCq/g6+trkWHTFTaPcc136UAAAAAAAAAAAAAAAAAAoH9+AB6ekeC0Mp2KAAAAAElFTkSuQmCC"
+                }
+              },
+              "84": {
+                "id": 84,
+                "display": {
+                  "x": 596.92618629174,
+                  "y": -228.7469244288225,
+                  "scale": 1,
+                  "name": "The Coca-Cola Company",
+                  "image": "https://littlesis.org/images/profile/ee/ee4d6efa6dddbcba7f53737d068b74d2.png",
+                  "url": "https://littlesis.org/org/84-The_Coca-Cola_Company"
+                }
+              },
+              "151": {
+                "id": 151,
+                "display": {
+                  "x": -283.6994727592267,
+                  "y": 468.5184534270649,
+                  "scale": 1,
+                  "name": "Google Inc.",
+                  "image": "https://littlesis.org/images/profile/73/734d9303622290084d04eb805219007a.png",
+                  "url": "https://littlesis.org/org/151-Google_Inc."
+                }
+              },
+              "168": {
+                "id": 168,
+                "display": {
+                  "x": 801.5043936731107,
+                  "y": 540.4639718804921,
+                  "scale": 1,
+                  "name": "Halliburton Company",
+                  "image": "https://pbs.twimg.com/profile_images/935635511980515329/q_-snprb_400x400.jpg",
+                  "url": "https://littlesis.org/org/168-Halliburton_Company",
+                  "color": "#ccc"
+                }
+              },
+              "172": {
+                "id": 172,
+                "display": {
+                  "x": -389.44463971880486,
+                  "y": 257.02811950790857,
+                  "scale": 1,
+                  "name": "Amazon.com, Inc.",
+                  "image": "https://littlesis.org/images/profile/e4/e4a78371c324fd6121f4db28b84132cb.png",
+                  "url": "https://littlesis.org/org/172-Amazon.com,_Inc."
+                }
+              },
+              "194": {
+                "id": 194,
+                "display": {
+                  "x": -267.6485061511424,
+                  "y": -112.27065026362038,
+                  "scale": 1,
+                  "name": "SunTrust Bank",
+                  "url": "https://littlesis.org/org/194-SunTrust_Bank",
+                  "color": "#ccc",
+                  "image": "https://media-exp1.licdn.com/dms/image/C4D0BAQFxzD_Yu-UvqA/company-logo_200_200/0?e=2159024400&v=beta&t=aWW-1WXekxiLmA6pO8KqjoqzwarTiZH-A-fERyjXCuo"
+                }
+              },
+              "274": {
+                "id": 274,
+                "display": {
+                  "x": 887.1722319859402,
+                  "y": 131.66959578207377,
+                  "scale": 1,
+                  "name": "DTE Energy",
+                  "url": "https://littlesis.org/org/274-DTE_Energy",
+                  "color": "#ccc",
+                  "image": "https://www.gannett-cdn.com/-mm-/1fba1fecdf32e337dacea69e025941a616baacc9/c=0-0-908-681/local/-/media/2018/01/23/DetroitNews/B99622233Z.1_20180123181335_000_GIG1R50ET.1-0.jpg?quality=50&width=640"
+                }
+              },
+              "278": {
+                "id": 278,
+                "display": {
+                  "x": 384.6713532513181,
+                  "y": -331.4042179261863,
+                  "scale": 1,
+                  "name": "Starbucks Corporation",
+                  "image": "https://littlesis.org/images/profile/ae/aeec04efe1a874f91c0fc0da4412741c.jpeg",
+                  "url": "https://littlesis.org/org/278-Starbucks_Corporation",
+                  "color": "#ccc"
+                }
+              },
+              "33692": {
+                "id": 33692,
+                "display": {
+                  "x": -405.9648506151142,
+                  "y": 153.6362038664323,
+                  "scale": 1,
+                  "name": "Facebook",
+                  "image": "https://littlesis.org/images/profile/3d/3dc8709089571b3bb5a0c0a95821b1b2.png",
+                  "url": "https://littlesis.org/org/33692-Facebook"
+                }
+              },
+              "45328": {
+                "id": 45328,
+                "display": {
+                  "x": 871.5413005272407,
+                  "y": 341.43409490333914,
+                  "scale": 1,
+                  "name": "The Southern Company",
+                  "url": "https://littlesis.org/org/45328-The_Southern_Company",
+                  "color": "#ccc",
+                  "image": "https://media-exp1.licdn.com/dms/image/C4D0BAQEgnEjF5Fdghw/company-logo_200_200/0?e=2159024400&v=beta&t=Xup5zKVCY4kM3RgxwE7167QQmkJ3WdB4AuoHZzU-GXw"
+                }
+              },
+              "85798": {
+                "id": 85798,
+                "display": {
+                  "x": 458.18085052508394,
+                  "y": 71.25274170829007,
+                  "scale": 1.5,
+                  "name": "New York City Police Foundation",
+                  "image": "https://fmaonline.net/wp-content/uploads/2017/04/nycpolicefoundation-log.jpg",
+                  "url": "https://littlesis.org/org/85798-New_York_City_Police_Foundation",
+                  "color": "#ccc"
+                }
+              },
+              "87433": {
+                "id": 87433,
+                "display": {
+                  "x": 883.7943760984183,
+                  "y": 228.768014059754,
+                  "scale": 1,
+                  "name": "Marathon Petroleum Corporation",
+                  "url": "https://littlesis.org/org/87433-Marathon_Petroleum_Corporation",
+                  "color": "#ccc",
+                  "image": "https://www.marathonpetroleum.com/content/inline-images/marathonpetroleum/News/Corporate_Logos/Mlogo_600_px_width.jpg"
+                }
+              },
+              "88278": {
+                "id": 88278,
+                "display": {
+                  "x": 221.70570595235145,
+                  "y": 589.601692315635,
+                  "scale": 1,
+                  "name": "Motorola Solutions, Inc.",
+                  "image": "https://littlesis.org/images/profile/9a/9a34c93d7dfdfac7c576ac3b0e7466d1.png",
+                  "url": "https://littlesis.org/org/88278-Motorola_Solutions,_Inc.",
+                  "color": "#ccc"
+                }
+              },
+              "173647": {
+                "id": 173647,
+                "display": {
+                  "x": 301.8312829525483,
+                  "y": 68.88224956063267,
+                  "scale": 1.5,
+                  "name": "Los Angeles Police Foundation",
+                  "image": "https://littlesis.org/images/profile/33/3347619c61758feace846b3a7e821ac3.jpg",
+                  "url": "https://littlesis.org/org/173647-Los_Angeles_Police_Foundation",
+                  "color": "#ccc"
+                }
+              },
+              "173652": {
+                "id": 173652,
+                "display": {
+                  "x": 138.80492091388405,
+                  "y": 271.0861159929702,
+                  "scale": 1.5,
+                  "name": "Washington DC Police Foundation",
+                  "image": "https://littlesis.org/images/profile/aa/aaf2c4b6f3dd1e69862415462cdb35f7.jpg",
+                  "url": "https://littlesis.org/org/173652-Washington_DC_Police_Foundation",
+                  "color": "#ccc"
+                }
+              },
+              "173655": {
+                "id": 173655,
+                "display": {
+                  "x": 129.39168681410402,
+                  "y": 66.38252246540861,
+                  "scale": 1.5,
+                  "name": "Atlanta Police Foundation",
+                  "image": "data:image/png;base64,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",
+                  "url": "https://littlesis.org/org/173655-Atlanta_Police_Foundation",
+                  "color": "#ccc"
+                }
+              },
+              "173666": {
+                "id": 173666,
+                "display": {
+                  "x": 448.98066783831285,
+                  "y": 273.6942003514938,
+                  "scale": 1.5,
+                  "name": "Houston Police Foundation",
+                  "url": "https://littlesis.org/org/173666-Houston_Police_Foundation",
+                  "color": "#ccc",
+                  "image": "https://www.houstonpolicefoundation.org/assets/img/logo.badge.min.png"
+                }
+              },
+              "173668": {
+                "id": 173668,
+                "display": {
+                  "x": 18.140646306032252,
+                  "y": 180.464744641782,
+                  "scale": 1.5,
+                  "name": "Seattle Police Foundation",
+                  "image": "https://littlesis.org/images/profile/1a/1a93cca60afc65afa8dd95400a4f7904.jpeg",
+                  "url": "https://littlesis.org/org/173668-Seattle_Police_Foundation",
+                  "color": "#ccc"
+                }
+              },
+              "217207": {
+                "id": 217207,
+                "display": {
+                  "x": 303.0087873462214,
+                  "y": 272.71177504393665,
+                  "scale": 1.5,
+                  "name": "Chicago Police Foundation",
+                  "image": "https://media-exp1.licdn.com/dms/image/C560BAQHV2x0_uFsqtQ/company-logo_200_200/0?e=2159024400&v=beta&t=omTp-FYhBLkJY4rhdKO1bdCVuzhXH_GTkPk_yoqnY3c",
+                  "url": "https://littlesis.org/org/217207-Chicago_Police_Foundation",
+                  "color": "#ccc"
+                }
+              },
+              "283577": {
+                "id": 283577,
+                "display": {
+                  "x": 736.8611599297012,
+                  "y": -83.32688927943761,
+                  "scale": 1,
+                  "name": "Meijer Inc",
+                  "image": "https://littlesis.org/images/profile/1d/1db477240b346a0b8b454c3cee4d4d60.png",
+                  "url": "https://littlesis.org/org/283577-Meijer_Inc",
+                  "color": "#ccc"
+                }
+              },
+              "377801": {
+                "id": 377801,
+                "display": {
+                  "x": 576.4130052724076,
+                  "y": 166.98242530755712,
+                  "scale": 1.5,
+                  "name": "Detroit Public Safety Foundation",
+                  "image": "https://static.wixstatic.com/media/847668_aadddf68820c41d6816bce556c08077f~mv2.png/v1/fill/w_220,h_220,al_c,q_85,usm_0.66_1.00_0.01/DPSF%20GOLD%20without%20border.webp",
+                  "url": "https://littlesis.org/org/377801-Detroit_Public_Safety_Foundation",
+                  "color": "#ccc"
+                }
+              }
+            },
+            "edges": {
+              "372330": {
+                "id": 372330,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Donation · 100,000 USD",
+                  "dash": true,
+                  "url": "https://littlesis.org/relationships/372330",
+                  "x1": 75.07918364897131,
+                  "y1": -314.6709481143311,
+                  "x2": 458.18085052508394,
+                  "y2": 71.25274170829007,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": 29.431593929923597,
+                  "cy": -37.50228905700957
+                },
+                "node1_id": 20,
+                "node2_id": 85798,
+                "cx": 28.883258326313797,
+                "cy": -37.926215131843044
+              },
+              "372338": {
+                "id": 372338,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Donation · 100,000 USD",
+                  "dash": true,
+                  "url": "https://littlesis.org/relationships/372338",
+                  "x1": 484.92970123022843,
+                  "y1": -279.1335676625659,
+                  "x2": 458.18085052508394,
+                  "y2": 71.25274170829007,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": 105.2081203940562,
+                  "cy": 8.03169595993226
+                },
+                "node1_id": 31,
+                "node2_id": 85798,
+                "cx": 105.2081203940562,
+                "cy": 8.03169595993226
+              },
+              "869596": {
+                "id": 869596,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Donation",
+                  "dash": true,
+                  "url": "https://littlesis.org/relationships/869596",
+                  "x1": -163.2653778558875,
+                  "y1": -189.12829525483303,
+                  "x2": 129.39168681410402,
+                  "y2": 66.38252246540861,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": 29.241502238505042,
+                  "cy": -33.49264147802823
+                },
+                "node1_id": 9,
+                "node2_id": 173655,
+                "cx": 27.52709033320628,
+                "cy": -34.91535169703627
+              },
+              "869602": {
+                "id": 869602,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Donation",
+                  "dash": true,
+                  "url": "https://littlesis.org/relationships/869602",
+                  "x1": -267.6485061511424,
+                  "y1": -112.27065026362038,
+                  "x2": 129.39168681410402,
+                  "y2": 66.38252246540861,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": 20.164370111052857,
+                  "cy": -44.813452107330995
+                },
+                "node1_id": 194,
+                "node2_id": 173655,
+                "cx": 18.053908549637864,
+                "cy": -45.704526010373236
+              },
+              "869603": {
+                "id": 869603,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Donation",
+                  "dash": true,
+                  "url": "https://littlesis.org/relationships/869603",
+                  "x1": 596.92618629174,
+                  "y1": -228.7469244288225,
+                  "x2": 129.39168681410402,
+                  "y2": 66.38252246540861,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": 32.192793557432594,
+                  "cy": 46.57411214067683
+                },
+                "node1_id": 84,
+                "node2_id": 173655,
+                "cx": 17.59040046297551,
+                "cy": 11.488316659204267
+              },
+              "869608": {
+                "id": 869608,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Donation",
+                  "dash": true,
+                  "url": "https://littlesis.org/relationships/869608",
+                  "x1": 484.92970123022843,
+                  "y1": -279.1335676625659,
+                  "x2": 129.39168681410402,
+                  "y2": 66.38252246540861,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": 28.274540091578128,
+                  "cy": 73.29383439999113
+                },
+                "node1_id": 31,
+                "node2_id": 173655,
+                "cx": 39.30441706873103,
+                "cy": 84.32371137714402
+              },
+              "869609": {
+                "id": 869609,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Donation",
+                  "dash": true,
+                  "url": "https://littlesis.org/relationships/869609",
+                  "x1": -33.38664323374341,
+                  "y1": -271.0826010544816,
+                  "x2": 129.39168681410402,
+                  "y2": 66.38252246540861,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": 42.727416158943505,
+                  "cy": -20.609825919395483
+                },
+                "node1_id": 41,
+                "node2_id": 173655,
+                "cx": 41.8365770972019,
+                "cy": -22.362867276742776
+              },
+              "955524": {
+                "id": 955524,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Donation · 200,000 USD",
+                  "dash": true,
+                  "url": "https://littlesis.org/relationships/955524",
+                  "x1": 484.92970123022843,
+                  "y1": -279.1335676625659,
+                  "x2": 301.8312829525483,
+                  "y2": 68.88224956063267,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": 64.11599448788199,
+                  "cy": 38.263933331495934
+                },
+                "node1_id": 31,
+                "node2_id": 173647,
+                "cx": 64.11599448788199,
+                "cy": 38.263933331495934
+              },
+              "955891": {
+                "id": 955891,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Grant",
+                  "dash": true,
+                  "url": "https://littlesis.org/relationships/955891",
+                  "x1": 484.92970123022843,
+                  "y1": -279.1335676625659,
+                  "x2": 138.80492091388405,
+                  "y2": 271.0861159929702,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": -145.0022336919198,
+                  "cy": -13.008563960214017
+                },
+                "node1_id": 31,
+                "node2_id": 173652,
+                "cx": -145.0022336919198,
+                "cy": -13.008563960214017
+              },
+              "1167991": {
+                "id": 1167991,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Donation",
+                  "dash": true,
+                  "url": "https://littlesis.org/relationships/1167991",
+                  "x1": -33.38664323374341,
+                  "y1": -271.0826010544816,
+                  "x2": 18.140646306032252,
+                  "y2": 180.464744641782,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": -11.373224859447097,
+                  "cy": -6.906264114851503
+                },
+                "node1_id": 41,
+                "node2_id": 173668,
+                "cx": -11.459478617192067,
+                "cy": -6.762179940651452
+              },
+              "1167993": {
+                "id": 1167993,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Donation",
+                  "dash": false,
+                  "url": "https://littlesis.org/relationships/1167993",
+                  "x1": -33.38664323374341,
+                  "y1": -271.0826010544816,
+                  "x2": 138.80492091388405,
+                  "y2": 271.0861159929702,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": -35.799452402968555,
+                  "cy": -1.1714501421074806
+                },
+                "node1_id": 41,
+                "node2_id": 173652,
+                "cx": 46.91171685879849,
+                "cy": -7.048960023099456
+              },
+              "1168022": {
+                "id": 1168022,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Donation",
+                  "dash": true,
+                  "url": "https://littlesis.org/relationships/1168022",
+                  "x1": -33.38664323374341,
+                  "y1": -271.0826010544816,
+                  "x2": 458.18085052508394,
+                  "y2": 71.25274170829007,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": 27.110384289194343,
+                  "cy": -38.92844820615812
+                },
+                "node1_id": 41,
+                "node2_id": 85798,
+                "cx": 26.695462644960507,
+                "cy": -39.214146557318436
+              },
+              "1168074": {
+                "id": 1168074,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Donation",
+                  "dash": true,
+                  "url": "https://littlesis.org/relationships/1168074",
+                  "x1": 301.8312829525483,
+                  "y1": 68.88224956063267,
+                  "x2": -33.38664323374341,
+                  "y2": -271.0826010544816,
+                  "s1": 1.5,
+                  "s2": 1,
+                  "cx": -5.520940738184104,
+                  "cy": -51.640452050173856
+                },
+                "node1_id": 173647,
+                "node2_id": 41,
+                "cx": -5.808194280944715,
+                "cy": -51.608932887395056
+              },
+              "1682440": {
+                "id": 1682440,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Donor",
+                  "dash": false,
+                  "url": "https://littlesis.org/relationships/1682440",
+                  "x1": 389.5470847593501,
+                  "y1": 585.0819473992539,
+                  "x2": 138.80492091388405,
+                  "y2": 271.0861159929702,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": -53.07575317198858,
+                  "cy": 42.38377668413195
+                },
+                "node1_id": 17,
+                "node2_id": 173652,
+                "cx": -49.298734028545155,
+                "cy": 46.72317330797414
+              },
+              "1682441": {
+                "id": 1682441,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Donor",
+                  "dash": true,
+                  "url": "https://littlesis.org/relationships/1682441",
+                  "x1": 221.70570595235145,
+                  "y1": 589.601692315635,
+                  "x2": 138.80492091388405,
+                  "y2": 271.0861159929702,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": -65.7322358158763,
+                  "cy": 17.108280902248772
+                },
+                "node1_id": 88278,
+                "node2_id": 173652,
+                "cx": -67.44285898217278,
+                "cy": 8.054866423161672
+              },
+              "1682442": {
+                "id": 1682442,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Donor",
+                  "dash": true,
+                  "url": "https://littlesis.org/relationships/1682442",
+                  "x1": -267.6485061511424,
+                  "y1": -112.27065026362038,
+                  "x2": 138.80492091388405,
+                  "y2": 271.0861159929702,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": -132.01342402374917,
+                  "cy": 245.67245337558268
+                },
+                "node1_id": 194,
+                "node2_id": 173652,
+                "cx": -127.2982865329256,
+                "cy": 117.9707098379858
+              },
+              "1682443": {
+                "id": 1682443,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Donor",
+                  "dash": true,
+                  "url": "https://littlesis.org/relationships/1682443",
+                  "x1": 677.456942003515,
+                  "y1": -146.3620386643234,
+                  "x2": 138.80492091388405,
+                  "y2": 271.0861159929702,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": -59.59630756824797,
+                  "cy": 6.225903726415134
+                },
+                "node1_id": 1,
+                "node2_id": 173652,
+                "cx": -59.584401682799815,
+                "cy": 6.338834994110762
+              },
+              "1683094": {
+                "id": 1683094,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "True Blue 2020 title sponsor",
+                  "dash": true,
+                  "url": "https://littlesis.org/relationships/1683094",
+                  "x1": 221.70570595235145,
+                  "y1": 589.601692315635,
+                  "x2": 303.0087873462214,
+                  "y2": 272.71177504393665,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": 21.37660177162212,
+                  "cy": 12.144957892395063
+                },
+                "node1_id": 88278,
+                "node2_id": 217207,
+                "cx": 19.78969618916371,
+                "cy": 14.58859246984323
+              },
+              "1683095": {
+                "id": 1683095,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "True Blue 2020 title sponsor",
+                  "dash": true,
+                  "url": "https://littlesis.org/relationships/1683095",
+                  "x1": 389.5470847593501,
+                  "y1": 585.0819473992539,
+                  "x2": 303.0087873462214,
+                  "y2": 272.71177504393665,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": -60.49050180164456,
+                  "cy": -7.493688563414292
+                },
+                "node1_id": 17,
+                "node2_id": 217207,
+                "cx": -60.93389552439025,
+                "cy": 1.522022576345047
+              },
+              "1685323": {
+                "id": 1685323,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Partner/donor",
+                  "dash": true,
+                  "url": "https://littlesis.org/relationships/1685323",
+                  "x1": -345.5992970123022,
+                  "y1": 361.6942003514938,
+                  "x2": 18.140646306032252,
+                  "y2": 180.464744641782,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": -12.561984333556286,
+                  "cy": -25.212763849892777
+                },
+                "node1_id": 44,
+                "node2_id": 173668,
+                "cx": -12.106880028295938,
+                "cy": -25.434432710941728
+              },
+              "1685324": {
+                "id": 1685324,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Partner/donor",
+                  "dash": true,
+                  "url": "https://littlesis.org/relationships/1685324",
+                  "x1": 221.70570595235145,
+                  "y1": 589.601692315635,
+                  "x2": 18.140646306032252,
+                  "y2": 180.464744641782,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": -117.93199030276094,
+                  "cy": 63.88325135344218
+                },
+                "node1_id": 88278,
+                "node2_id": 173668,
+                "cx": -123.47912758476879,
+                "cy": 52.363433722035126
+              },
+              "1685326": {
+                "id": 1685326,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Partner/donor",
+                  "dash": true,
+                  "url": "https://littlesis.org/relationships/1685326",
+                  "x1": -389.44463971880486,
+                  "y1": 257.02811950790857,
+                  "x2": 18.140646306032252,
+                  "y2": 180.464744641782,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": -5.200465721406517,
+                  "cy": -27.684690130601968
+                },
+                "node1_id": 172,
+                "node2_id": 173668,
+                "cx": -5.358568953283883,
+                "cy": -27.65452314034499
+              },
+              "1685327": {
+                "id": 1685327,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Partner/donor",
+                  "dash": true,
+                  "url": "https://littlesis.org/relationships/1685327",
+                  "x1": 384.6713532513181,
+                  "y1": -331.4042179261863,
+                  "x2": 18.140646306032252,
+                  "y2": 180.464744641782,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": -103.14821893238043,
+                  "cy": -75.82129762098955
+                },
+                "node1_id": 278,
+                "node2_id": 173668,
+                "cx": -104.24710305989908,
+                "cy": -74.30320144833425
+              },
+              "1685329": {
+                "id": 1685329,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Partner/donor",
+                  "dash": true,
+                  "url": "https://littlesis.org/relationships/1685329",
+                  "x1": -283.6994727592267,
+                  "y1": 468.5184534270649,
+                  "x2": 18.140646306032252,
+                  "y2": 180.464744641782,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": -19.44759611030063,
+                  "cy": -20.378368847324207
+                },
+                "node1_id": 151,
+                "node2_id": 173668,
+                "cx": -18.599416249330734,
+                "cy": -21.15534510545989
+              },
+              "1685330": {
+                "id": 1685330,
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Partner/donor",
+                  "dash": true,
+                  "url": "https://littlesis.org/relationships/1685330",
+                  "x1": -405.9648506151142,
+                  "y1": 153.6362038664323,
+                  "x2": 18.140646306032252,
+                  "y2": 180.464744641782,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": 1.7783850807584807,
+                  "cy": -28.11270634164397
+                },
+                "node1_id": 33692,
+                "node2_id": 173668,
+                "cx": 1.479102157927982,
+                "cy": -28.130040315530767
+              },
+              "rggq4edqO": {
+                "id": "rggq4edqO",
+                "display": {
+                  "scale": 1,
+                  "arrow": false,
+                  "label": "donor and board member",
+                  "x1": 736.8611599297012,
+                  "y1": -83.32688927943761,
+                  "x2": 576.4130052724076,
+                  "y2": 166.98242530755712,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": -32.616569283701956,
+                  "cy": -27.93588626739063,
+                  "dash": true
+                },
+                "node1_id": "283577",
+                "node2_id": "377801",
+                "cx": -33.20001987002628,
+                "cy": -27.239915822428205
+              },
+              "9VtABKNim": {
+                "id": "9VtABKNim",
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "donor and board seat",
+                  "x1": 887.1722319859402,
+                  "y1": 131.66959578207377,
+                  "x2": 576.4130052724076,
+                  "y2": 166.98242530755712,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "dash": true,
+                  "cx": 14.993757581965795,
+                  "cy": 41.89900185981745
+                },
+                "node1_id": "274",
+                "node2_id": "377801",
+                "cx": 18.207758798170257,
+                "cy": 40.605623290665015
+              },
+              "-uo2geZL3": {
+                "id": "-uo2geZL3",
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "donor and board seat",
+                  "x1": 883.7943760984183,
+                  "y1": 228.768014059754,
+                  "x2": 576.4130052724076,
+                  "y2": 166.98242530755712,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "dash": true,
+                  "cx": -22.49456154247067,
+                  "cy": 21.632270628676913
+                },
+                "node1_id": "87433",
+                "node2_id": "377801",
+                "cx": -20.52519036220275,
+                "cy": 23.509083183647498
+              },
+              "fB1S55k-W": {
+                "id": "fB1S55k-W",
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "donor and board seat",
+                  "x1": 871.5413005272407,
+                  "y1": 341.43409490333914,
+                  "x2": 129.39168681410402,
+                  "y2": 66.38252246540861,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "dash": true,
+                  "cx": -47.47162656616839,
+                  "cy": 58.35465634144125
+                },
+                "node1_id": "45328",
+                "node2_id": "173655",
+                "cx": -47.75739927420693,
+                "cy": 58.121012208403876
+              },
+              "sV0awKqxp": {
+                "id": "sV0awKqxp",
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "$250,000 donation",
+                  "x1": 75.07918364897131,
+                  "y1": -314.6709481143311,
+                  "x2": 301.8312829525483,
+                  "y2": 68.88224956063267,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": 58.62601208605025,
+                  "cy": -50.916647472972954,
+                  "dash": true
+                },
+                "node1_id": "20",
+                "node2_id": "173647",
+                "cx": 58.48051161139318,
+                "cy": -51.083696466391515
+              },
+              "4sAMBzcGP": {
+                "id": "4sAMBzcGP",
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "$200,000 donation",
+                  "x1": -163.2653778558875,
+                  "y1": -189.12829525483303,
+                  "x2": 458.18085052508394,
+                  "y2": 71.25274170829007,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": 67.20906437735091,
+                  "cy": -71.82177212622831,
+                  "dash": true
+                },
+                "node1_id": "9",
+                "node2_id": "85798",
+                "cx": 66.74916018626978,
+                "cy": -72.24939377087163
+              },
+              "ruIog3IYX": {
+                "id": "ruIog3IYX",
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Donor",
+                  "x1": -163.2653778558875,
+                  "y1": -189.12829525483303,
+                  "x2": 301.8312829525483,
+                  "y2": 68.88224956063267,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": 79.2094957630739,
+                  "cy": -63.11912110123624,
+                  "dash": true
+                },
+                "node1_id": "9",
+                "node2_id": "173647",
+                "cx": 78.72514033246945,
+                "cy": -63.72220921520173
+              },
+              "_wlXy-_n5": {
+                "id": "_wlXy-_n5",
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "board seat",
+                  "x1": -163.2653778558875,
+                  "y1": -189.12829525483303,
+                  "x2": 303.0087873462214,
+                  "y2": 272.71177504393665,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": 141.82171350050427,
+                  "cy": -85.96067000087035,
+                  "dash": true,
+                  "url": "http://chicagopolicefoundation.org/board/"
+                },
+                "node1_id": "9",
+                "node2_id": "217207",
+                "cx": 141.81843375972835,
+                "cy": -85.96608082933167
+              },
+              "jmnJnWuB3": {
+                "id": "jmnJnWuB3",
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "partner and board seat",
+                  "x1": 843.1089630931459,
+                  "y1": 450.3462214411247,
+                  "x2": 448.98066783831285,
+                  "y2": 273.6942003514938,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": -32.79393225096133,
+                  "cy": 33.16813558186642,
+                  "dash": true
+                },
+                "node1_id": "3",
+                "node2_id": "173666",
+                "cx": -33.070850303443684,
+                "cy": 32.89203658433048
+              },
+              "XJ_diANzd": {
+                "id": "XJ_diANzd",
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "CEO is an advisor",
+                  "x1": 801.5043936731107,
+                  "y1": 540.4639718804921,
+                  "x2": 448.98066783831285,
+                  "y2": 273.6942003514938,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": -64.05259909824863,
+                  "cy": 7.665080661294047,
+                  "dash": true,
+                  "url": "https://www.houstonpolicefoundation.org/about/leadership"
+                },
+                "node1_id": "168",
+                "node2_id": "173666",
+                "cx": -64.07644832218688,
+                "cy": 7.463088047130352
+              },
+              "DyNRlMzZ5": {
+                "id": "DyNRlMzZ5",
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "board seat",
+                  "x1": 221.70570595235145,
+                  "y1": 589.601692315635,
+                  "x2": 576.4130052724076,
+                  "y2": 166.98242530755712,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": 102.55021582157893,
+                  "cy": 38.38008090172124,
+                  "dash": true,
+                  "url": "https://www.detroitpublicsafety.org/board-of-trustees"
+                },
+                "node1_id": "88278",
+                "node2_id": "377801",
+                "cx": 100.4871756171814,
+                "cy": 43.4960332853104
+              },
+              "cB1v5azo6": {
+                "id": "cB1v5azo6",
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Board seat",
+                  "x1": 389.5470847593501,
+                  "y1": 585.0819473992539,
+                  "x2": 576.4130052724076,
+                  "y2": 166.98242530755712,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": 120.82178338988668,
+                  "cy": 34.56721214139054,
+                  "dash": true,
+                  "url": "https://www.detroitpublicsafety.org/board-of-trustees"
+                },
+                "node1_id": "17",
+                "node2_id": "377801",
+                "cx": 124.22804300285632,
+                "cy": 18.97864137447863
+              },
+              "9r7_NP-xh": {
+                "id": "9r7_NP-xh",
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "donor",
+                  "x1": 384.6713532513181,
+                  "y1": -331.4042179261863,
+                  "x2": 458.18085052508394,
+                  "y2": 71.25274170829007,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": -101.55017133918406,
+                  "cy": -9.185810170814053,
+                  "dash": true,
+                  "url": "https://stories.starbucks.com/press/2020/the-starbucks-foundation-donates-more-than-3m-to-global-covid-19-relief-efforts/"
+                },
+                "node1_id": "278",
+                "node2_id": "85798"
+              },
+              "YyV0Xymlk": {
+                "id": "YyV0Xymlk",
+                "display": {
+                  "scale": 1,
+                  "arrow": "1->2",
+                  "label": "Sponsors programming",
+                  "x1": 677.456942003515,
+                  "y1": -146.3620386643234,
+                  "x2": 448.98066783831285,
+                  "y2": 273.6942003514938,
+                  "s1": 1,
+                  "s2": 1.5,
+                  "cx": -18.45712759567177,
+                  "cy": -53.20051915706376,
+                  "dash": true
+                },
+                "node1_id": "1",
+                "node2_id": "173666",
+                "cx": -19.07293497363797,
+                "cy": -52.982864674868175
+              }
+            },
+            "captions": {
+              "6vTs5gHcL": {
+                "id": "6vTs5gHcL",
+                "display": {
+                  "text": "Wall Street & Finance",
+                  "x": -318.7293497363797,
+                  "y": -280.3286467486819,
+                  "scale": 1.5
+                }
+              },
+              "G6bBBT2Ma": {
+                "id": "G6bBBT2Ma",
+                "display": {
+                  "text": "Retail & Grocery",
+                  "x": 571.8242530755712,
+                  "y": -298.04217926186294,
+                  "scale": 1.5
+                }
+              },
+              "42fxNejFU": {
+                "id": "42fxNejFU",
+                "display": {
+                  "text": "Big Tech",
+                  "x": -482.23725834797887,
+                  "y": 102.46748681898066,
+                  "scale": 1.5
+                }
+              },
+              "U-DnB-y8G": {
+                "id": "U-DnB-y8G",
+                "display": {
+                  "text": "Communications",
+                  "x": 220.75571177504395,
+                  "y": 724.6818980667838,
+                  "scale": 1.5
+                }
+              },
+              "S_8v3xiDG": {
+                "id": "S_8v3xiDG",
+                "display": {
+                  "text": "Fossil Fuels",
+                  "x": 800.6660808435853,
+                  "y": 74.48330404217927,
+                  "scale": 1.5
+                }
+              }
+            }
+          },
+          "annotations": {
+            "currentIndex": 0,
+            "list": [
+              {
+                "id": "dcWPczEQA",
+                "header": "Corporations fund police foundations",
+                "text": "<p>Police foundations across the country are partnering with corporate interests to raise money to supplement police budgets by funding programs and purchasing tech and weaponry for law enforcement with little public oversight.</p><p>The corporate interests backing these police foundations across the country cover a wide range of industries.<br></p>",
+                "nodeIds": [
+                  "173668",
+                  "173655",
+                  "173647",
+                  "85798",
+                  "377801",
+                  "217207",
+                  "173652",
+                  "173666"
+                ],
+                "edgeIds": [],
+                "captionIds": []
+              },
+              {
+                "id": "wHKZg8IL5",
+                "header": "Wall Street & Finance",
+                "text": "<p>Some of the biggest backers of police foundations are financial institutions, including public-facing banks that millions of people do business with.</p>",
+                "nodeIds": [
+                  "119203",
+                  "9",
+                  "41",
+                  "20",
+                  "85798",
+                  "173647",
+                  "173655",
+                  "173668",
+                  "173652",
+                  "217207",
+                  "194"
+                ],
+                "edgeIds": [
+                  "1682442",
+                  "869602",
+                  "869596",
+                  "1168022",
+                  "1168074",
+                  "869609",
+                  "1167993",
+                  "1167991",
+                  "372330",
+                  "sV0awKqxp",
+                  "ruIog3IYX",
+                  "4sAMBzcGP",
+                  "_wlXy-_n5"
+                ],
+                "captionIds": [
+                  "6vTs5gHcL"
+                ]
+              },
+              {
+                "id": "zmYwEEtQC",
+                "header": "Retail & Grocery",
+                "text": "<p>Retail and food and beverage companies are ubiquitous on police foundation boards across the country and include well known national chains as well as popular regional brands. Notably several of these companies have especially close relationships with the police foundations in the cities where they are headquartered.</p>",
+                "nodeIds": [
+                  "278",
+                  "31",
+                  "84",
+                  "1",
+                  "283577",
+                  "85798",
+                  "173647",
+                  "173655",
+                  "173668",
+                  "173652",
+                  "377801",
+                  "173666"
+                ],
+                "edgeIds": [
+                  "1685327",
+                  "955891",
+                  "869608",
+                  "955524",
+                  "372338",
+                  "869603",
+                  "1682443",
+                  "rggq4edqO",
+                  "9r7_NP-xh",
+                  "YyV0Xymlk"
+                ],
+                "captionIds": [
+                  "G6bBBT2Ma"
+                ]
+              },
+              {
+                "id": "HzXtY3pjB",
+                "header": "Big Tech",
+                "text": "<p>Silicon Valley powerhouses populate the boards of police foundations and are some of these foundation’s top bankrollers.</p>",
+                "nodeIds": [
+                  "33692",
+                  "172",
+                  "173668",
+                  "44",
+                  "151"
+                ],
+                "edgeIds": [
+                  "1685326",
+                  "1685330",
+                  "1685323",
+                  "1685329"
+                ],
+                "captionIds": [
+                  "42fxNejFU"
+                ]
+              },
+              {
+                "id": "TdEg363HI",
+                "header": "Communications",
+                "text": "<p>The top communications companies are major donors to these foundations and often hold board seats. These firms also have lucrative contracts with law enforcement agencies across the country</p>",
+                "nodeIds": [
+                  "17",
+                  "88278",
+                  "10",
+                  "85798",
+                  "217207",
+                  "173652",
+                  "173668",
+                  "377801"
+                ],
+                "edgeIds": [
+                  "1685324",
+                  "1682441",
+                  "1683094",
+                  "1682440",
+                  "1683095",
+                  "KhpvIGmDN",
+                  "DyNRlMzZ5",
+                  "cB1v5azo6"
+                ],
+                "captionIds": [
+                  "U-DnB-y8G"
+                ]
+              },
+              {
+                "id": "q6pSySgiI",
+                "header": "Fossil Fuels",
+                "text": "<p>Many of the same companies that are driving our climate crisis are also donors, partners, and board members for police foundations.&nbsp;</p>",
+                "nodeIds": [
+                  "377801",
+                  "274",
+                  "87433",
+                  "45328",
+                  "173655",
+                  "173666",
+                  "168",
+                  "3"
+                ],
+                "edgeIds": [
+                  "9VtABKNim",
+                  "-uo2geZL3",
+                  "fB1S55k-W",
+                  "jmnJnWuB3",
+                  "XJ_diANzd"
+                ],
+                "captionIds": [
+                  "S_8v3xiDG"
+                ]
+              },
+              {
+                "id": "TjhRQlopH",
+                "header": "Police foundations are a key space for orchestrating, normalizing, and celebrating the collaboration between corporate power and the police. ",
+                "text": "",
+                "nodeIds": [
+                  "194",
+                  "9",
+                  "41",
+                  "20",
+                  "278",
+                  "31",
+                  "84",
+                  "1",
+                  "283577",
+                  "377801",
+                  "85798",
+                  "173647",
+                  "173655",
+                  "173668",
+                  "173652",
+                  "217207",
+                  "173666",
+                  "88278",
+                  "10",
+                  "17",
+                  "274",
+                  "87433",
+                  "45328",
+                  "3",
+                  "168",
+                  "33692",
+                  "172",
+                  "44",
+                  "151"
+                ],
+                "edgeIds": [
+                  "1685329",
+                  "1685323",
+                  "1685326",
+                  "1685330",
+                  "1682442",
+                  "869602",
+                  "869596",
+                  "_wlXy-_n5",
+                  "ruIog3IYX",
+                  "4sAMBzcGP",
+                  "1167991",
+                  "1167993",
+                  "869609",
+                  "1168074",
+                  "1168022",
+                  "sV0awKqxp",
+                  "372330",
+                  "1685327",
+                  "9r7_NP-xh",
+                  "955891",
+                  "869608",
+                  "955524",
+                  "372338",
+                  "869603",
+                  "1682443",
+                  "YyV0Xymlk",
+                  "rggq4edqO",
+                  "9VtABKNim",
+                  "-uo2geZL3",
+                  "fB1S55k-W",
+                  "jmnJnWuB3",
+                  "XJ_diANzd",
+                  "1685324",
+                  "1682441",
+                  "1683094",
+                  "DyNRlMzZ5",
+                  "1682440",
+                  "KhpvIGmDN",
+                  "1683095",
+                  "cB1v5azo6"
+                ],
+                "captionIds": [
+                  "6vTs5gHcL",
+                  "42fxNejFU",
+                  "U-DnB-y8G",
+                  "S_8v3xiDG",
+                  "G6bBBT2Ma"
+                ]
+              }
+            ],
+            "sources": {
+              "id": "sources",
+              "nodeIds": [],
+              "edgeIds": [],
+              "captionIds": [],
+              "header": "Sources",
+              "text": "<div><a href=\"https://www.seattlepolicefoundation.org/lp1/our-partners\">Our Partners 2019</a></div>\n<div><a href=\"http://chicagopolicefoundation.org/events/\">Events – Chicago Police Foundation</a></div>\n<div><a href=\"http://www.dcpolicefoundation.org/impact.html\">Impact</a></div>\n<div><a href=\"http://www.lapolicefoundation.org/2009%20LAPF%20Annual%20Report.pdf\">LAPF 2009 annual report</a></div>\n<div><a href=\"http://journal.nycpolicefoundation.org/\">2016 NYPD Foundation Journal, pg 63</a></div>\n<div><a href=\"http://www.nycpolicefoundation.org/NetCommunity/Page.aspx?pid=347\">New York City Police Foundation - Donors</a></div>\n<div><a href=\"http://www.atlantapolicefoundation.org/download/atlantapolicefoundationorg/531-Anual_Report_Booklet.pdf\">Atlanta Police Foundation 2010 report</a></div>\n<div><a href=\"http://www.minnpost.com/propublica/2014/10/private-donors-including-target-and-ibm-supply-spy-gear-cops\">Private donors, including Target and IBM, supply spy gear to cops | MinnPost</a></div>\n<div><a href=\"http://www.dcpolicefoundation.org/thank-you.html\">Thank You - Washington DC Police Foundation</a></div>\n<div><a href=\"http://www.seattlepolicefoundation.org/events/awards-banquet\">2016 Awards Banquet | Seattle Police Foundation | Partnership for a Safe Seattle | Seattle, WA</a></div>"
+            }
+          },
+          "settings": {
+            "debug": false,
+            "embed": false,
+            "logoUrl": "https://littlesis.org/assets/lilsis-logo-trans-200-74169fd94db9637c31388ad2060b48720f94450b40c45c23a3889cf480f02c52.png",
+            "url": "https://littlesis.org/maps/5200-corporations-funding-police-foundations"
+          },
+          "attributes": {
+            "id": 5200,
+            "title": "Corporations funding police foundations",
+            "subtitle": null,
+            "date": "June 16, 2020",
+            "owner": {
+              "id": 2088,
+              "name": "Armstrong",
+              "url": "https://littlesis.org/users/Armstrong"
+            },
+            "user": {
+              "id": 2088,
+              "name": "Armstrong"
+            },
+            "settings": {
+              "private": false,
+              "clone": false,
+              "list_sources": true
+            },
+            "editors": [],
+            "version": 2,
+            "shareUrl": null,
+            "lock": null
+          },
+          "display": {
+            "modes": {
+              "editor": false
+            }
+          }
+        }
+      )
+    </script>
+  </body>
+</html>
