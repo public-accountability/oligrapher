@@ -46,7 +46,8 @@ export interface AttributesState {
   settings: UserSettings
   editors: Editor[],
   lock: LockState,
-  shareUrl: string | null
+  shareUrl: string | null,
+  bugReportUrl: string | null
 }
 
 export type FloatingEditorType = "node" | "connections" | "edge" | "caption"
@@ -155,7 +156,8 @@ const defaultState: State = {
     },
     editors: [],
     lock: defaultLockState,
-    shareUrl: null
+    shareUrl: null,
+    bugReportUrl: 'https://littlesis.org/bug_report'
   },
 
   // This section of the state is not sync'd with the server;

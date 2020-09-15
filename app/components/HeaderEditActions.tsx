@@ -12,7 +12,7 @@ import { userIsOwnerSelector } from '../util/selectors'
 
 export default function HeaderEditActions() {
   const dispatch = useDispatch()
-  const { id, shareUrl } = useSelector(state => state.attributes)
+  const { id, shareUrl, bugReportUrl } = useSelector(state => state.attributes)
   const userIsOwner = useSelector(userIsOwnerSelector)
   const { clone: isCloneable, private: isPrivate } = useSelector(state => state.attributes.settings)
 
@@ -40,7 +40,7 @@ export default function HeaderEditActions() {
     closeMenu()
   }, [dispatch, closeMenu])
 
-  const presentMap = useCallback(() => { 
+  const presentMap = useCallback(() => {
     dispatch({ type: 'SET_EDITOR_MODE', enabled: false })
     dispatch({ type: 'EXPAND_HEADER' })
   }, [dispatch])
@@ -57,13 +57,19 @@ export default function HeaderEditActions() {
     setShowConfirm(false)
   }, [dispatch])
 
+  const openBugReportUrl = useCallback( () => {
+    window.open(bugReportUrl, "_blank")
+    closeMenu()
+  }, [closeMenu, bugReportUrl])
+
   const canShare = userIsOwner && isPrivate && shareUrl
   const canClone = userIsOwner || isCloneable
   const canDelete = userIsOwner && id
+  const canBug = Boolean(bugReportUrl)
 
   return (
     <div className="oligrapher-header-edit-actions">
-      { isPrivate && 
+      { isPrivate &&
         <span className="oligrapher-header-edit-actions-lock" title="This map is private"><FaLock /></span>
       }
 
@@ -87,6 +93,7 @@ export default function HeaderEditActions() {
           <MenuItem dense={true} onClick={exportImage}>Export</MenuItem>
           { canClone && <MenuItem dense={true} onClick={cloneMap}>Clone</MenuItem> }
           { canDelete && <MenuItem dense={true} onClick={openConfirm}>Delete</MenuItem> }
+          { canBug && <MenuItem dense={true} onClick={openBugReportUrl}>Report a bug</MenuItem> }
         </Menu>
 
         <Confirm

@@ -24,7 +24,7 @@ export const annotationsListSelector: Selector<Annotation[]> = state => {
   const { list_sources } = state.attributes.settings
   const { list, sources } = state.annotations
   const editing = state.display.modes.editor
-  
+
   return (!editing && list_sources && sources) ? list.concat([sources]) : list
 }
 
@@ -93,6 +93,10 @@ export const paramsForSaveSelector = (state: StateWithHistory): LsMap => {
 }
 
 export const hasUnsavedChangesSelector = (state: StateWithHistory): boolean => {
+  if (!state.display.modes.editor) {
+    return false
+  }
+
   const { lastSavedData } = state
   const latestData = paramsForSaveSelector(state)
 
