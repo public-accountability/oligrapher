@@ -57,7 +57,7 @@ export function MainPage({ nodes, edge, updateEdge }) {
             type="url"
             placeholder="Clickthrough link"
             value={edge.url || ''}
-            onChange={(url) => updateEdge({ url })} />
+            onChange={callWithTargetValue(url => updateEdge({ url }))} />
         </div>
       </form>
     </div>
@@ -77,7 +77,7 @@ export default function EdgeEditor({ id }) {
   const nodes = useSelector(state => Graph.nodesOf(state.graph, id))
 
   const removeEdge = useCallback(
-    () => dispatch({ type: "REMOVE_EDGE", id }), 
+    () => dispatch({ type: "REMOVE_EDGE", id }),
     [dispatch, id]
   )
 
@@ -100,7 +100,7 @@ export default function EdgeEditor({ id }) {
           }
         </main>
         <footer>
-          <EditorSubmitButtons 
+          <EditorSubmitButtons
             hideSubmitButton={true}
             handleDelete={removeEdge}
             page={page}
