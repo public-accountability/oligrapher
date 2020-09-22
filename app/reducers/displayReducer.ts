@@ -123,6 +123,9 @@ export default produce((display: DisplayState, action: any): void => {
   case 'TOGGLE_ANNOTATIONS':
     display.modes.story = !display.modes.story
     return
+  case 'HIDE_ANNOTATIONS':
+    display.modes.story = false
+    return
   case 'TOGGLE_TOOL':
     const prevTool = display.tool
     display.tool = (display.tool === action.tool) ? null : action.tool
