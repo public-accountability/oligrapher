@@ -63,7 +63,7 @@ export function* watchDelete() {
 }
 
 export function* watchForceLayout() {
-  yield takeEvery(['FORCE_LAYOUT_REQUESTED'], generateForceLayout)  
+  yield takeEvery(['FORCE_LAYOUT_REQUESTED'], generateForceLayout)
 }
 
 export function* watchAddEditor() {
@@ -75,7 +75,7 @@ export function* watchRemoveEditor() {
 }
 
 export function* watchInterlocks() {
-  yield takeEvery(['INTERLOCKS_REQUESTED'], interlocks)  
+  yield takeEvery(['INTERLOCKS_REQUESTED'], interlocks)
 }
 
 export function* watchEditMode() {
@@ -149,7 +149,7 @@ export function* save() {
     const results = yield call(oligrapher[requestType], params)
     yield put({ type: 'SAVE_SUCCESS' })
 
-    if (!id) {
+    if (requestType === 'create') {
       yield call(delay, 500)
       window.location.replace(results.redirect_url)
     } else {
@@ -205,12 +205,12 @@ export function* generateForceLayout() {
 export function* doAddEditor(action: any) {
   const { username } = action
   const id = yield select(state => state.attributes.id)
-  
+
   try {
     const results = yield call(addEditor, id, username)
     yield put({ type: 'ADD_EDITOR_SUCCESS', editors: results.editors })
   } catch(error) {
-    yield put({ type: 'ADD_EDITOR_FAILED' })    
+    yield put({ type: 'ADD_EDITOR_FAILED' })
   }
 
   yield call(delay, RESET_DELAY)
@@ -220,12 +220,12 @@ export function* doAddEditor(action: any) {
 export function* doRemoveEditor(action: any) {
   const { username } = action
   const id = yield select(state => state.attributes.id)
-  
+
   try {
     const results = yield call(removeEditor, id, username)
     yield put({ type: 'REMOVE_EDITOR_SUCCESS', editors: results.editors })
   } catch(error) {
-    yield put({ type: 'REMOVE_EDITOR_FAILED' })    
+    yield put({ type: 'REMOVE_EDITOR_FAILED' })
   }
 
   yield call(delay, RESET_DELAY)

@@ -1,4 +1,5 @@
 import isEqual from 'lodash/isEqual'
+import isNil from 'lodash/isNil'
 
 import { StateWithHistory } from './defaultState'
 import { Annotation } from './annotations'
@@ -92,8 +93,11 @@ export const paramsForSaveSelector = (state: StateWithHistory): LsMap => {
   }
 }
 
+// This function is used by <Root> to determine if the browser should display
+// a popup warning the user that there are unsaved changes to their map
 export const hasUnsavedChangesSelector = (state: StateWithHistory): boolean => {
-  if (!state.display.modes.editor) {
+  // when map is not in editor mode or when there is no previous data (i.e. unsaved maps)
+  if (!state.display.modes.editor || isNil(state.lastSavedData)) {
     return false
   }
 
