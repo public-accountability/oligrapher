@@ -9,9 +9,7 @@
     "dev-server": "webpack-dev-server --color --progress --env.dev_server --env.api_url=http://localhost:8081",
     "build": "yarn run build-dev && yarn run build-prod",
     "serve": "http-server ./dist -p 8091",
-    "test": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' NODE_ENV=test mocha --extension ts,tsx",
-    "test:watch": "mocha --watch",
-    "test:debug": "mocha inspect",
+    "test": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' NODE_ENV=test mocha",
     "profile": "webpack --profile --display-modules --env.production",
     "lint": "yarn run lint:js && yarn run lint:scss",
     "lint:js-fix": "eslint app --ext .js --ext .jsx --fix",
@@ -125,7 +123,7 @@
     "file": [
       "test/setup.js"
     ],
-    "spec": "./test/**/*.test.js?(x)"
+    "spec": "./test/**/*.test.[jt]s?(x)"
   },
   "browserslist": [
     "last 2 chrome versions",
