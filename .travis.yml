@@ -1,5 +1,16 @@
 language: node_js
 
-node_js:
-  - node
-  - lts/*
+jobs:
+  include:
+    - name: Test with Latest NodeJS
+      node_js: node
+      script: yarn test
+    - name: Compile with Latest NodeJS
+      node_js: node
+      script: yarn build-prod
+    - name: Test with LTS NodeJS
+      node_js: lts/*
+      script: yarn test
+    - name: Compile with LTS NodeJS
+      node_js: lts/*
+      script: yarn build-prod
