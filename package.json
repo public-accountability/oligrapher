@@ -15,7 +15,6 @@
     "lint:js-fix": "eslint app --ext .js --ext .jsx --fix",
     "lint:js": "eslint app --ext .js --ext .jsx",
     "lint:scss": "stylelint app",
-    "repl": "babel-node",
     "upgrade": "yarn upgrade-interactive --latest && yarn upgrade",
     "explore-source-map": "webpack --color --progress --env.production --env.sourcemap && source-map-explorer dist/oligrapher.js"
   },
@@ -60,7 +59,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
-    "@babel/node": "^7.8.4",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-proposal-optional-chaining": "^7.8.3",
     "@babel/preset-env": "^7.9.5",
