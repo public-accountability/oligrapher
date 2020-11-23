@@ -1,6 +1,6 @@
 import React, { useCallback} from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { FaRegCircle, FaBezierCurve, FaRegEdit } from "react-icons/fa"
 import { FiHelpCircle, FiUsers } from 'react-icons/fi'
 import { GoTextSize, GoGear } from 'react-icons/go'
@@ -52,7 +52,16 @@ export default function EditorMenuItem({ item, disabled, inUse }) {
   const dispatch = useDispatch()
   const toggleTool = useCallback(() => dispatch({ type: 'TOGGLE_TOOL', tool: item }), [dispatch, item])
   const toggleAnnotations = useCallback(() => dispatch({ type: 'TOGGLE_ANNOTATIONS' }), [dispatch])
-  const onClick = item === 'annotations' ? toggleAnnotations : toggleTool
+  const helpUrl = useSelector(state => state.attributes.helpUrl)
+
+  let onClick = toggleTool
+
+  if (item === 'annotations') {
+    onClick = toggleAnnotations
+  } else if (item == 'help') {
+    onClick = () =>  window.open(helpUrl, '_blank')
+  }
+
   const className = `editor-menu-item editor-${item}-item`
     + (disabled ? ' editor-menu-item-disabled' : '')
     + (inUse ? ' editor-menu-item-in-use' : '')

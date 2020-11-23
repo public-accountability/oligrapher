@@ -27,7 +27,7 @@ function createMatchMedia(width) {
 const sandbox = sinon.createSandbox()
 
 describe('Oligrapher', function() {
-  let state, store, container, find, findAll, 
+  let state, store, container, find, findAll,
     clickHeaderAction, clickPresent, clickEdit, clickIcon,
     clickHandle, expectCount, wait, waitForAnnotations,
     addEditor
@@ -40,7 +40,7 @@ describe('Oligrapher', function() {
     // stub AnnotationTextEditor because CKEditor hangs the test, and is now an external module anyway
     sandbox.stub(AnnotationTextEditor, 'default').returns(<div>text editor</div>)
 
-    state = { 
+    state = {
       graph: Object.assign({}, bigGraph),
       annotations: {
         list: [],
@@ -87,7 +87,7 @@ describe('Oligrapher', function() {
 
     clickPresent = () => clickHeaderAction('Present')
     clickEdit = () => clickHeaderAction('Edit')
-    
+
     clickIcon = key => {
       fireEvent.click(find(`.editor-${key}-item`))
     }
@@ -95,10 +95,10 @@ describe('Oligrapher', function() {
     clickHandle = handle => {
       // react-draggable listens to mousedown and mouseup instead of click
       fireEvent.mouseDown(handle)
-      fireEvent.mouseUp(handle, { bubbles: false }) 
-      // unclear why bubbles: false is necessary above, 
+      fireEvent.mouseUp(handle, { bubbles: false })
+      // unclear why bubbles: false is necessary above,
       // but without it draggable's onmouseup gets called twice,
-      // (unlike in real browser interaction), and the node editor 
+      // (unlike in real browser interaction), and the node editor
       // gets toggled twice and thus disappears
     }
 
@@ -124,7 +124,7 @@ describe('Oligrapher', function() {
       fireEvent.change(find('.oligrapher-editors-input input'), { target: { value: name } })
       fireEvent.click((find('.oligrapher-editors-input button')))
     }
-    
+
     await wait('.oligrapher-graph-editor')
   })
 
@@ -244,7 +244,7 @@ describe('Oligrapher', function() {
     const input2 = find('.oligrapher-node-editor input')
     expect(removeSpaces(input2.value)).to.equal(removeSpaces(node2.textContent))
   })
-  
+
   it('edge editor opens and edits edge and switches', function() {
     const handle = find('.edge-handle')
     clickHandle(handle)
@@ -483,16 +483,16 @@ describe('Oligrapher', function() {
     await waitFor(() => expectCount('#oligrapher-disclaimer', 0))
   })
 
-  it('opens and closes help', function() {
-    // click on help button
-    fireEvent.click(find('.editor-help-item'))
-    // help box should appear
-    expectCount('#oligrapher-help', 1)
-    // click on close button
-    fireEvent.click(find('#oligrapher-help button'))
-    // help box should disappear
-    expectCount('#oligrapher-help', 0)
-  })
+  // it('opens and closes help', function() {
+  //   // click on help button
+  //   fireEvent.click(find('.editor-help-item'))
+  //   // help box should appear
+  //   expectCount('#oligrapher-help', 1)
+  //   // click on close button
+  //   fireEvent.click(find('#oligrapher-help button'))
+  //   // help box should disappear
+  //   expectCount('#oligrapher-help', 0)
+  // })
 
   it('opens and closes share modal', async function() {
     // click on settings icon
@@ -790,7 +790,7 @@ describe('Oligrapher', function() {
       merge(state, {
         settings: { embed: true },
         // enable list sources so that an annotation is shown
-        attributes: { settings: { list_sources: true } } 
+        attributes: { settings: { list_sources: true } }
       })
     ))
     container = render(
@@ -826,7 +826,7 @@ describe('Oligrapher', function() {
   it('begins lock polling when editor is added', async function() {
     // lock shouledn't haved polled yet
     expect(littlesis3.lock.callCount).to.equal(0)
-    // add editor    
+    // add editor
     addEditor()
     // lock polling should begin
     await waitFor(() => expect(littlesis3.lock.callCount).to.be.above(0))
