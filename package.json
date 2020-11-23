@@ -35,7 +35,7 @@
     "@loadable/component": "^5.13.1",
     "@material-ui/core": "^4.9.14",
     "@public-accountability/littlesis-api": "^0.0.7",
-    "immer": "^5.3.6",
+    "immer": "^8.0.0",
     "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
     "react": "^16.13.0",
