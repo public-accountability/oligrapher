@@ -61,7 +61,7 @@ function getDevServerConfig(env) {
       hot: true,
       headers: { 'Access-Control-Allow-Origin': '*' },
       watchOptions: {
-        ignored: [/node_modules/]
+        ignored: /node_modules/
       }
     }
   } else {
@@ -101,7 +101,7 @@ module.exports = function(env) {
 
     devServer: getDevServerConfig(env),
 
-    devtool: development ? 'eval-source-map' : (sourcemap ? 'inline-source-map' : 'false'),
+    devtool: development ? 'eval-source-map' : (sourcemap ? 'inline-source-map' : false),
 
     module: {
       rules: [
