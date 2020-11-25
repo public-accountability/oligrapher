@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: Ubuntu-20.04
 
     strategy:
       matrix:
@@ -17,4 +17,5 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Install requirements
       run: sudo apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+    - run: yarn install
     - run: yarn build-prod
