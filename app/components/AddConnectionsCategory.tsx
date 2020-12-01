@@ -19,17 +19,19 @@ export const CATEGORIES = [
 
 interface AddConnectionsCategoryProps {
   categoryId: string | number,
-  onChange: (arg0: any) => void
+  onChange: (arg0: any) => void,
+  variant: 'filled' | 'outlined' | 'standard'
 }
 
-export default function AddConnectionsCategory({ categoryId, onChange }: AddConnectionsCategoryProps) {
+export default function AddConnectionsCategory({ categoryId, onChange, variant }: AddConnectionsCategoryProps) {
   return (
     <Select
       className="add-connections-category"
       MenuProps={{ transitionDuration: 0 }}
       onChange={onChange}
       value={categoryId.toString()}
-      variant="outlined"
+      fullWidth={true}
+      variant={variant}
     >
       { CATEGORIES.map((name, id) =>
         <MenuItem value={id} key={id} dense={true}>{name}</MenuItem>)

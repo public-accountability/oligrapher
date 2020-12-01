@@ -278,6 +278,16 @@ describe('Graph', function() {
     })
   })
 
+  describe('littleSisNodes', function() {
+    it('returns only the LittleSis connected nodes', function() {
+      let graph = Graph.new()
+      Graph.addNodes(graph, [Node.new({id: '100'}),
+                             Node.new({id: '200'}),
+                             Node.new({id: 'abc'})])
+      expect(Graph.littleSisNodes(graph).length).to.eql(2)
+    })
+  })
+
   describe('calculateViewBox', function() {
     let n1, n2, n3, c, nodes, edges, captions
 
@@ -289,8 +299,8 @@ describe('Graph', function() {
       nodes = [n1, n2, n3]
       edges = []
       captions = [c]
-      expect(Graph.calculateViewBox(nodes, edges, captions)).to.eql({ 
-        minX: -100 - GRAPH_PADDING_X, 
+      expect(Graph.calculateViewBox(nodes, edges, captions)).to.eql({
+        minX: -100 - GRAPH_PADDING_X,
         minY: -100 - GRAPH_PADDING_Y,
         w: 250 + 2 * GRAPH_PADDING_X,
         h: 250 + 2 * GRAPH_PADDING_Y
