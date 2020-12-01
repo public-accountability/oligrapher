@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Select, MenuItem } from '@material-ui/core'
 
 export const CATEGORIES = [
@@ -18,23 +17,23 @@ export const CATEGORIES = [
   'Generic'
 ]
 
-export default function AddConnectionsCategory({ categoryId, onChange }) {
+interface AddConnectionsCategoryProps {
+  categoryId: string | number,
+  onChange: (arg0: any) => void
+}
+
+export default function AddConnectionsCategory({ categoryId, onChange }: AddConnectionsCategoryProps) {
   return (
-    <Select 
+    <Select
       className="add-connections-category"
       MenuProps={{ transitionDuration: 0 }}
       onChange={onChange}
-      value={categoryId}
+      value={categoryId.toString()}
       variant="outlined"
     >
-      { CATEGORIES.map((name, id) => 
-        <MenuItem value={id} key={id} dense={true}>{name}</MenuItem>) 
+      { CATEGORIES.map((name, id) =>
+        <MenuItem value={id} key={id} dense={true}>{name}</MenuItem>)
       }
     </Select>
   )
-}
-
-AddConnectionsCategory.propTypes = {
-  categoryId: PropTypes.number.isRequired,
-  onChange: PropTypes.func.isRequired
 }

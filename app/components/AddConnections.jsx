@@ -28,7 +28,7 @@ export default function AddConnections({ id }) {
   const [results, setResults] = useState(null)
   const [loading, setLoading] = useState(true)
   const excludeIds = addedNodeIds.concat(connectedNodeIds)
-  const visibleResults = isArray(results) 
+  const visibleResults = isArray(results)
     ? results.filter(entity => !excludeIds.includes(entity['id']))
     : null
 
@@ -43,7 +43,7 @@ export default function AddConnections({ id }) {
   const changeCategory = useCallback(callWithTargetValue(value => {
     setCategoryId(parseInt(value))
     setResults(null)
-  }))
+  }), [setCategoryId, setResults])
 
   useEffect(() => {
     setLoading(true)

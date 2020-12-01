@@ -95,6 +95,12 @@ interface LsRedirect {
   url: string
 }
 
+interface FindConnectionsParams {
+  entity_id: string,
+  num: number,
+  category_id?: string
+}
+
 export function findNodes(query: string): Promise<LsNode[]> {
   if (!query) {
     return Promise.resolve([])
@@ -106,11 +112,11 @@ export function findNodes(query: string): Promise<LsNode[]> {
     .json()
 }
 
-export function findConnections(entityId: string, categoryId?: string): Promise<LsNodeWithEdge[]> {
-  let params = { entity_id: entityId, num: 30 } as any
+export function findConnections(entityId: string, categoryId?: string | number): Promise<LsNodeWithEdge[]> {
+  let params: FindConnectionsParams = { entity_id: entityId, num: 30 }
 
   if (categoryId) {
-    params.category_id = categoryId
+    params.category_id = categoryId.toString()
   }
 
   return wretch(urls.findConnections())
