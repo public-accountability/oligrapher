@@ -19,7 +19,7 @@ const OPTIONS = {
   'Editing': {
     "automaticallyAddEdges": "Automatically add edges",
     "scrollToZoom": "Scroll to zoom",
-    "useClassicAddConnections": "classic add connections tool"
+    "useClassicAddConnections": "Classic add connections tool"
   }
 }
 
