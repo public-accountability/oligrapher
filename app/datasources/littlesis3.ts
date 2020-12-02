@@ -73,8 +73,8 @@ export interface LsEdge {
   url?: string
 }
 
-interface LsNodeWithEdge extends LsNode {
-  edge: LsEdge
+export interface LsNodeWithEdges extends LsNode {
+  edges: Array<LsEdge>
 }
 
 export interface LsMap {
@@ -113,7 +113,7 @@ export function findNodes(query: string): Promise<LsNode[]> {
     .json()
 }
 
-export function findConnections(params: FindConnectionsParams): Promise<LsNodeWithEdge[]> {
+export function findConnections(params: FindConnectionsParams): Promise<LsNodeWithEdges[]> {
   if (!params.num) {
     params.num = 30
   }

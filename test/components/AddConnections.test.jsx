@@ -66,7 +66,7 @@ describe('<AddConnections>', function() {
     await act(async () => {
       wrapper = mountWithStore(store, <AddConnections id={node1.id} />)
     })
-    
+
     wrapper.update()
 
     let results = wrapper.find(EntitySearchResults)
@@ -81,7 +81,7 @@ describe('<AddConnections>', function() {
     await act(async () => {
       wrapper = mountWithStore(store, <AddConnections id={node1.id} />)
     })
-    
+
     expect(wrapper.html().toLowerCase()).to.contain("no results")
   })
 
