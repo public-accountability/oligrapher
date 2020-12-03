@@ -3,6 +3,8 @@ import merge from 'lodash/merge'
 import assign from 'lodash/assign'
 import uniq from 'lodash/uniq'
 import values from 'lodash/values'
+import { isLittleSisId } from '../util/helpers'
+
 // @ts-ignore
 import Springy from 'springy'
 
@@ -165,7 +167,7 @@ export function calculateViewBox(
     return DEFAULT_VIEWBOX
   }
 
-  const { 
+  const {
     minNodeX, minNodeY, maxNodeX, maxNodeY,
     minEdgeX, minEdgeY, maxEdgeX, maxEdgeY,
     minCaptionX, minCaptionY, maxCaptionX, maxCaptionY
@@ -252,7 +254,7 @@ export function addNode(graph: Graph, attributes: NodeAttributes, position: bool
     return graph
   }
 
-  // Place the node at random spaced position near a provided point 
+  // Place the node at random spaced position near a provided point
   // or the graph center, unless coordinates are provided
   if (position || !isNumber(node.x) || !isNumber(node.y)) {
     if (typeof position !== 'object') {
@@ -263,7 +265,7 @@ export function addNode(graph: Graph, attributes: NodeAttributes, position: bool
   }
 
   graph.nodes[node.id] = node
-    
+
   return graph
 }
 
@@ -381,15 +383,15 @@ export function createEdgeIndex(lsEdges: LsEdge[]): EdgeIndex {
 
 // creates multiple edges between the same nodes
 // so that the edges are nicely spaced out
-export function addSimilarEdges(graph: Graph, lsEdges: LsEdge[]): Graph {  
+export function addSimilarEdges(graph: Graph, lsEdges: LsEdge[]): Graph {
   let edges = lsEdges.map(lsEdge => {
     let node1 = getNode(graph, lsEdge.node1_id)
     let node2 = getNode(graph, lsEdge.node2_id)
-    return newEdgeFromNodes(node1, node2, lsEdge)  
+    return newEdgeFromNodes(node1, node2, lsEdge)
   })
 
   edges = curveSimilarEdges(edges)
-  
+
   edges.forEach(edge => {
     addEdgeIfNodes(graph, edge)
   })
@@ -400,15 +402,15 @@ export function addSimilarEdges(graph: Graph, lsEdges: LsEdge[]): Graph {
 export function addEdgesIfNodes(graph: Graph, lsEdges: LsEdge[]): Graph {
   const edgeIndex = createEdgeIndex(lsEdges)
 
-  Object.keys(edgeIndex).forEach(id1 => {    
+  Object.keys(edgeIndex).forEach(id1 => {
     Object.keys(edgeIndex[id1]).forEach(id2 => {
       const node1 = getNode(graph, id1)
       const node2 = getNode(graph, id2)
-    
+
       if (!node1 || !node2) {
         return
       }
-    
+
       addSimilarEdges(graph, edgeIndex[id1][id2])
     })
   })
@@ -488,9 +490,9 @@ export function forceLayout(graph: Graph, steps:number = 1000): Graph {
   }
 
   layout.eachNode((node: { id: string }, point: { p: Point }) => {
-    updateNode(graph, node.id, { 
+    updateNode(graph, node.id, {
       x: point.p.x * 50,
-      y: point.p.y * 50 
+      y: point.p.y * 50
     })
   })
 
@@ -498,7 +500,7 @@ export function forceLayout(graph: Graph, steps:number = 1000): Graph {
   let edges = Object.values(graph.edges)
   graph.edges = {}
 
-  // update node coordinates and remove curve control points 
+  // update node coordinates and remove curve control points
   // so that they're recalculated
   edges = edges.map(edge => {
     const { node1_id, node2_id } = edge
@@ -565,6 +567,11 @@ export function hasContents(graph: Graph): boolean {
   return nodeCount + edgeCount + captionCount > 0
 }
 
+
+export function littleSisNodes(graph: Graph): Node[] {
+  return Object.values(graph.nodes).filter(node => isLittleSisId(node.id))
+}
+
 export default {
   "new": newGraph,
   "stats": stats,
@@ -588,5 +595,6 @@ export default {
   "dragNodeEdges": dragNodeEdges,
   "connectedNodeIds": connectedNodeIds,
   "forceLayout": forceLayout,
-  "registerEdgeWithNodes": registerEdgeWithNodes
+  "registerEdgeWithNodes": registerEdgeWithNodes,
+  "littleSisNodes": littleSisNodes
 }

@@ -14,7 +14,7 @@ export function classNames(...classes: Array<string | undefined>): string {
   return classes.filter(Boolean).join(' ')
 }
 
-export function callWithTargetValue(func: (arg: any) => any): (event: Event) => any {
+export function callWithTargetValue(func: (arg: any) => any): (event: Event | React.ChangeEvent) => any {
   return function(event: Event) {
     const value = (event.target as HTMLInputElement).value
     return func(value)
@@ -103,8 +103,8 @@ export function useSaveMap() {
   const closeConfirm = useCallback(() => setConfirmOpen(false), [])
   const closeEmpty = useCallback(() => setEmptyOpen(false), [])
 
-  return { 
-    isSaving, saveMap, 
+  return {
+    isSaving, saveMap,
     confirmSave: ConfirmSave({ open: confirmOpen, close: closeConfirm, save }),
     emptySave: EmptySave({ open: emptyOpen, close: closeEmpty })
   }

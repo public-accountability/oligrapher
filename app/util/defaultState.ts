@@ -32,7 +32,8 @@ export interface UserSettings {
   storyModeOnly: boolean,
   exploreModeOnly: boolean,
   automaticallyAddEdges: boolean,
-  scrollToZoom: boolean
+  scrollToZoom: boolean,
+  useClassicAddConnections: boolean
 }
 
 export interface AttributesState {
@@ -153,7 +154,8 @@ const defaultState: State = {
       storyModeOnly: false,
       exploreModeOnly: false,
       automaticallyAddEdges: true,
-      scrollToZoom: false
+      scrollToZoom: false,
+      useClassicAddConnections: false
     },
     editors: [],
     lock: defaultLockState,

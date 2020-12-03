@@ -3,11 +3,12 @@ import PropTypes from 'prop-types'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 
+const nullifyIfEmpty = string => string === '' ? null : string
+
 export default function AnnotationTextEditor({ text, onChange }) {
-  const cleanup = useCallback(string => (string === '' ? null : string), [])
   const handleChange = useCallback((event, editor) => {
-    onChange(cleanup(editor.getData()))
-  }, [onChange, cleanup])
+    onChange(nullifyIfEmpty(editor.getData()))
+  }, [onChange])
 
   const config = {
     placeholder: 'Annotation text',

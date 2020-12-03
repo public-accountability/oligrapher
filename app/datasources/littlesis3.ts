@@ -73,8 +73,8 @@ export interface LsEdge {
   url?: string
 }
 
-interface LsNodeWithEdge extends LsNode {
-  edge: LsEdge
+export interface LsNodeWithEdges extends LsNode {
+  edges: Array<LsEdge>
 }
 
 export interface LsMap {
@@ -95,6 +95,17 @@ interface LsRedirect {
   url: string
 }
 
+
+export type AddConnectionsOrder = 'link_count' | 'current' | 'amount' | 'updated'
+
+interface FindConnectionsParams {
+  entity_id: string,
+  num?: number,
+  category_id?: string | number,
+  order?: AddConnectionsOrder,
+  "excluded_ids[]"?: string[],
+}
+
 export function findNodes(query: string): Promise<LsNode[]> {
   if (!query) {
     return Promise.resolve([])
@@ -106,11 +117,9 @@ export function findNodes(query: string): Promise<LsNode[]> {
     .json()
 }
 
-export function findConnections(entityId: string, categoryId?: string): Promise<LsNodeWithEdge[]> {
-  let params = { entity_id: entityId, num: 30 } as any
-
-  if (categoryId) {
-    params.category_id = categoryId
+export function findConnections(params: FindConnectionsParams): Promise<LsNodeWithEdges[]> {
+  if (!params.num) {
+    params.num = 30
   }
 
   return wretch(urls.findConnections())

@@ -28,7 +28,7 @@ export default function AddConnections({ id }) {
   const [results, setResults] = useState(null)
   const [loading, setLoading] = useState(true)
   const excludeIds = addedNodeIds.concat(connectedNodeIds)
-  const visibleResults = isArray(results) 
+  const visibleResults = isArray(results)
     ? results.filter(entity => !excludeIds.includes(entity['id']))
     : null
 
@@ -43,11 +43,14 @@ export default function AddConnections({ id }) {
   const changeCategory = useCallback(callWithTargetValue(value => {
     setCategoryId(parseInt(value))
     setResults(null)
-  }))
+  }), [setCategoryId, setResults])
 
   useEffect(() => {
     setLoading(true)
-    const httpRequest = makeCancelable(findConnections(id, categoryId))
+
+    const httpRequest = makeCancelable(
+      findConnections({entity_id: id, category_id: categoryId})
+    )
 
     httpRequest
       .promise
@@ -84,7 +87,7 @@ export default function AddConnections({ id }) {
   return (
     <div className="oligrapher-add-connections">
       <EditorHeader title="AddConnections" />
-      <AddConnectionsCategory categoryId={categoryId} onChange={changeCategory} />
+      <AddConnectionsCategory categoryId={categoryId} onChange={changeCategory} variant="outlined" />
       <br />
       { status }
     </div>
