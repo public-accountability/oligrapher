@@ -32,6 +32,7 @@ export default function AddConnectionsCategory({ categoryId, onChange, variant }
       value={categoryId.toString()}
       fullWidth={true}
       variant={variant}
+      title="Select a relationship category"
     >
       { CATEGORIES.map((name, id) =>
         <MenuItem value={id} key={id} dense={true}>{name}</MenuItem>)

@@ -95,11 +95,15 @@ interface LsRedirect {
   url: string
 }
 
+
+export type AddConnectionsOrder = 'link_count' | 'current' | 'amount' | 'updated'
+
 interface FindConnectionsParams {
   entity_id: string,
   num?: number,
   category_id?: string | number,
-  excluded_ids?: string[]
+  order?: AddConnectionsOrder,
+  "excluded_ids[]"?: string[],
 }
 
 export function findNodes(query: string): Promise<LsNode[]> {
@@ -117,13 +121,6 @@ export function findConnections(params: FindConnectionsParams): Promise<LsNodeWi
   if (!params.num) {
     params.num = 30
   }
-
-  // rename for rails
-  if (params.excluded_ids) {
-    params['excluded_ids[]'] = params.excluded_ids
-  }
-
-  delete params['excluded_ids']
 
   return wretch(urls.findConnections())
     .query(params)
