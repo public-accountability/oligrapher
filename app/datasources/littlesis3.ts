@@ -118,6 +118,13 @@ export function findConnections(params: FindConnectionsParams): Promise<LsNodeWi
     params.num = 30
   }
 
+  // rename for rails
+  if (params.excluded_ids) {
+    params['excluded_ids[]'] = params.excluded_ids
+  }
+
+  delete params['excluded_ids']
+
   return wretch(urls.findConnections())
     .query(params)
     .get()
