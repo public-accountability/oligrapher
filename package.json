@@ -95,7 +95,7 @@
     "react-hot-loader": "^4.12.20",
     "redux-saga-test-plan": "^4.0.1",
     "sass": "^1.39.2",
-    "sass-loader": "^12.1.0",
+    "sass-loader": "^10.2.0",
     "sinon": "^11.1.2",
     "source-map-explorer": "^2.5.1",
     "source-map-loader": "^2.0.0",
@@ -124,9 +124,9 @@
     "spec": "./test/**/*.test.[jt]s?(x)"
   },
   "browserslist": [
-    "last 3 chrome versions",
-    "last 3 firefox versions",
-    "last 2 edge versions",
-    "last 2 safari versions"
+    "last 2 chrome versions",
+    "last 2 firefox versions",
+    "last 1 edge versions",
+    "last 1 safari versions"
   ]
 }
