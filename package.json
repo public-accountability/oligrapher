@@ -80,7 +80,7 @@
     "babel-loader": "^8.2.2",
     "canvas": "^2.6.1",
     "chai": "^4.2.0",
-    "core-js": "3.8.2",
+    "core-js": "3",
     "css-loader": "^5.0.1",
     "css-mediaquery": "^0.1.2",
     "enzyme": "^3.11.0",
