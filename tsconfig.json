@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "./dist/",
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "module": "es2020",
     "target": "es5",
     "moduleResolution": "node",
@@ -10,5 +10,10 @@
     "noImplicitThis": true,
     "strictNullChecks": true,
     "esModuleInterop": true
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
   }
 }
