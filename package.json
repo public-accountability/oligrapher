@@ -124,10 +124,9 @@
     "spec": "./test/**/*.test.[jt]s?(x)"
   },
   "browserslist": [
-    "last 2 chrome versions",
-    "last 2 firefox versions",
-    "> 2%",
-    "Firefox ESR",
-    "not dead"
+    "last 3 chrome versions",
+    "last 3 firefox versions",
+    "last 2 edge versions",
+    "last 2 safari versions"
   ]
 }
