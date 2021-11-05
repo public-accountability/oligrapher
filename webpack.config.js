@@ -53,15 +53,13 @@ function getChunkFilename(env) {
 function getDevServerConfig(env) {
   if (env.dev_server) {
     return {
-      contentBase: path.resolve(__dirname, 'html'),
-      publicPath: 'http://localhost:8090/',
       port: 8090,
-      serveIndex: true,
       historyApiFallback: true,
       hot: true,
       headers: { 'Access-Control-Allow-Origin': '*' },
-      watchOptions: {
-        ignored: /node_modules/
+      static: {
+        directory: path.join(__dirname, 'html'),
+        serveIndex: true
       }
     }
   } else {
@@ -88,11 +86,13 @@ module.exports = function(env) {
     output: {
       path: getOutputPath(env),
       publicPath: getPublicPath(env),
-      library: 'Oligrapher',
-      libraryTarget: 'umd',
-      libraryExport: "default",
-      filename: getFilename(env),
-      chunkFilename: getChunkFilename(env)
+      library: {
+        name: 'Oligrapher',
+        type: 'umd',
+        export: 'default'
+      },
+      filename: getFilename(env)
+      // chunkFilename: getChunkFilename(env)
     },
 
     optimization: {
@@ -150,6 +150,9 @@ module.exports = function(env) {
     },
 
     plugins: [
+      new webpack.optimize.LimitChunkCountPlugin({
+        maxChunks: 1,
+      }),
       new webpack.DefinePlugin({
         'API_URL': JSON.stringify(env.api_url ? env.api_url : 'https://littlesis.org'),
         'PRODUCTION': JSON.stringify(env.production)
