@@ -105,17 +105,9 @@ module.exports = function(env) {
 
     module: {
       rules: [
+
         {
-          test: /\.ts(x?)$/,
-          exclude: /node_modules/,
-          use: [
-            {
-              loader: "ts-loader"
-            }
-          ]
-        },
-        {
-          test: /\.jsx?$/,
+          test: /\.(j|t)sx?$/,
           exclude: /node_modules\/(?!(@public-accountability.*?\\.js$))/,
           use: [
             { loader: 'babel-loader' }

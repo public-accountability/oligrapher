@@ -1,14 +1,13 @@
 require("@babel/register")({
-  ignore: [
-    /node_modules\/(?!@public-accountability\/littlesis-api)/
-  ]
+  extensions: ['.js', '.jsx', '.mjs', '.ts', '.tsx']
 })
 
 module.exports = function(api) {
   // These are run in reverse order. @babel/preset-react is run first.
   const presets = [
     [ "@babel/preset-env", { useBuiltIns: "usage", corejs: 3 } ],
-    [ "@babel/preset-react", {} ]
+    [ "@babel/preset-react", {} ],
+    [ "@babel/preset-typescript"]
   ]
 
   const plugins = [
