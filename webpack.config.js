@@ -3,11 +3,10 @@
 
   env.output_path         |  asset output directory. defaults to ./dist
   env.public_path         |  code chunks will be fetched from this path. defaults to "http://localhost:8090"
-  env.filename            |  defaults to "oligrapher.js" or "oligrapher-dev.js"
   env.production          |  enables production mode
-  env.development         |  enables development mode
   env.dev_server          |  enables dev server mode
   env.api_url             |  littlesis datasource url. defaults to "https://littlesis.org"
+  env.onefile             |  outputs a single compiled file
 
   Also see the yarn scripts in package.json
 */
@@ -30,26 +29,6 @@ function getOutputPath(env) {
   }
 }
 
-function getFilename(env) {
-  if (env.filename) {
-    if (env.filename.slice(-3) === '.js') {
-      return env.filename
-    } else {
-      throw new Error(`Invalid filename: ${env.filename}`)
-    }
-  }
-
-  if (env.production) {
-    return "oligrapher.js"
-  } else {
-    return "oligrapher-dev.js"
-  }
-}
-
-function getChunkFilename(env) {
-  return getFilename(env).slice(0, -3) + '-[name].js'
-}
-
 function getDevServerConfig(env) {
   if (env.dev_server) {
     return {
@@ -67,45 +46,44 @@ function getDevServerConfig(env) {
   }
 }
 
-function getPublicPath(env) {
-  return env.public_path ? env.public_path : 'http://localhost:8090/'
-}
-
 module.exports = function(env) {
   if (!env) {
     throw new Error("Webpack env configuration is missing")
   }
 
   const production = Boolean(env.production)
-  const development = env.development || env.dev_server
-  const sourcemap = Boolean(env.sourcemap)
+  const development = !production
+  const onefile = Boolean(env.onefile)
+  const maxChunks = onefile ? 1 : 4
+  const publicPath = env.public_path ? env.public_path : 'http://localhost:8090/'
+  const fileBaseName = env.production ? 'oligrapher' : 'oligrapher-dev'
 
   return {
     mode: production ? 'production' : 'development',
     entry: path.resolve(__dirname, 'app/Oligrapher.jsx'),
     output: {
       path: getOutputPath(env),
-      publicPath: getPublicPath(env),
+      publicPath: publicPath,
       library: {
         name: 'Oligrapher',
         type: 'umd',
         export: 'default'
       },
-      filename: getFilename(env)
-      // chunkFilename: getChunkFilename(env)
+      filename: fileBaseName + (onefile ? ".js" : "-[contenthash].js"),
+      chunkFilename: fileBaseName + "-[name]-[contenthash].js"
     },
 
     optimization: {
-      minimize: production
+      minimize: production,
+      chunkIds: 'deterministic' // 'named'
     },
 
     devServer: getDevServerConfig(env),
 
-    devtool: development ? 'eval-source-map' : (sourcemap ? 'inline-source-map' : false),
+    devtool: development ? 'eval-source-map' : false,
 
     module: {
       rules: [
-
         {
           test: /\.(j|t)sx?$/,
           exclude: /node_modules\/(?!(@public-accountability.*?\\.js$))/,
@@ -142,9 +120,7 @@ module.exports = function(env) {
     },
 
     plugins: [
-      new webpack.optimize.LimitChunkCountPlugin({
-        maxChunks: 1,
-      }),
+      new webpack.optimize.LimitChunkCountPlugin({ maxChunks: maxChunks }),
       new webpack.DefinePlugin({
         'API_URL': JSON.stringify(env.api_url ? env.api_url : 'https://littlesis.org'),
         'PRODUCTION': JSON.stringify(env.production)

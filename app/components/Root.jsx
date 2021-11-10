@@ -14,14 +14,14 @@ import UserMessage from './UserMessage'
 import CondensedAnnotations from './CondensedAnnotations'
 import AnnotationsToggler from './AnnotationsToggler'
 import { muiTheme } from '../util/helpers'
-import { 
-  showAnnotationsSelector, annotationsListSelector, hasUnsavedChangesSelector 
+import {
+  showAnnotationsSelector, annotationsListSelector, hasUnsavedChangesSelector
 } from '../util/selectors'
 
 const Annotations = loadable(() => import(/* webpackChunkName: "Annotations" */ './Annotations'))
-Annotations.preload()
+//Annotations.preload()
 const Editor = loadable(() => import(/* webpackChunkName: "Editor" */ './Editor'))
-Editor.preload()
+//Editor.preload()
 
 export const ROOT_CONTAINER_ID = "oligrapher-container"
 
@@ -30,13 +30,13 @@ export function Root() {
   const hasAnnotations = useSelector(annotationsListSelector).length > 0
   const hasUnsavedChanges = useSelector(hasUnsavedChangesSelector)
 
-  // to pevent backspace form navigating away from page 
+  // to pevent backspace form navigating away from page
   // in firefox and possibly other browsers
   useEffect(() => {
     window.addEventListener('keydown', event => {
       const isBackspace = event.key === 'Backspace'
       const isInput = ['INPUT', 'TEXTAREA', 'SELECT'].includes(event.target.tagName)
-  
+
       if (isBackspace && !isInput) {
         event.preventDefault()
       }
@@ -96,7 +96,7 @@ export function Root() {
           </Hidden>
         }
 
-        { !showAnnotations && hasAnnotations && 
+        { !showAnnotations && hasAnnotations &&
           <Hidden smUp>
             <div id="oligrapher-condensed-annotations-toggler">
               <AnnotationsToggler />

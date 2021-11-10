@@ -1,13 +1,15 @@
 {
   "name": "@public-accountability/oligrapher",
-  "version": "3.0.0-beta",
+  "version": "3.0.1",
   "description": "Network graph visualizer built for LittleSis",
   "main": "app/Oligrapher.jsx",
   "scripts": {
-    "build-dev": "webpack --color --progress --env development",
+    "build-dev": "webpack --color --progress",
+    "build-dev-one": "webpack --color --progress --env onefile --env api_url=http://localhost:8081",
     "build-prod": "webpack --color --progress --env production",
+    "build-prod-one": "webpack --color --progress --env production --env onefile",
     "dev-server": "webpack serve --color --progress --env dev_server --env api_url=http://localhost:8081",
-    "build": "yarn run build-dev && yarn run build-prod",
+    "build": "yarn run build-prod && yarn run build-prod-one && yarn run build-dev-one",
     "test": "mocha",
     "profile": "webpack --profile --display-modules --env production",
     "lint": "yarn run lint:js && yarn run lint:scss",
