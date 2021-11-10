@@ -13,6 +13,7 @@
 const fs = require('fs')
 const path = require('path')
 const webpack = require('webpack')
+const { GitRevisionPlugin } = require('git-revision-webpack-plugin')
 
 function getOutputPath(env) {
   if (env.output_path) {
@@ -56,9 +57,9 @@ module.exports = function(env) {
   const onefile = Boolean(env.onefile)
   const maxChunks = onefile ? 1 : 4
   const fileBaseName = env.production ? 'oligrapher' : 'oligrapher-dev'
-  const fileName = [fileBaseName, (!onefile && !devServer) && "-[contenthash]", ".js" ].filter(Boolean).join('')
+  const fileName = fileBaseName + (devServer ? ".js" : "-[git-revision-hash].js")
   const chunkFileName = fileBaseName + "-[name]-[contenthash].js"
-  const publicPath = "/oligrapher/js/"
+  const publicPath = "/oligrapher/assets/"
   const apiUrl = env.api_url ? env.api_url : (production ? 'https://littlesis.org' : 'http://localhost:8081')
   const outputPath = getOutputPath(env)
   const devTool = devServer ? 'eval-source-map' : 'source-map'
@@ -123,6 +124,7 @@ module.exports = function(env) {
     },
 
     plugins: [
+      new GitRevisionPlugin(),
       new webpack.optimize.LimitChunkCountPlugin({ maxChunks: maxChunks }),
       new webpack.DefinePlugin({
         'API_URL': JSON.stringify(apiUrl),

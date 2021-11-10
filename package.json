@@ -89,6 +89,7 @@
     "eslint-plugin-mocha": "^9.0.0",
     "eslint-plugin-react": "^7.27.0",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "git-revision-webpack-plugin": "^5.0.0",
     "jsdom": "^18.0.1",
     "jsdom-global": "^3.0.2",
     "mocha": "^9.1.3",
