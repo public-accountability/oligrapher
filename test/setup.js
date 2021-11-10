@@ -2,6 +2,7 @@ import Enzyme from 'enzyme'
 // import Adapter from 'enzyme-adapter-react-16'
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { JSDOM } from 'jsdom'
+import raf from 'raf'
 
 Enzyme.configure({ adapter: new Adapter() })
 
@@ -15,25 +16,21 @@ require.extensions['.scss'] = () => null
 const jsdom = new JSDOM('<!doctype html><html><body></body></html>')
 const { window } = jsdom
 
-global.window = window
-global.document = window.document
-global.navigator = { userAgent: 'node.js' }
-
+raf.polyfill(window)
 
 const MockResizeObserver = function(callback) {}
 MockResizeObserver.prototype.observe = function() {}
 MockResizeObserver.prototype.unobserve = function() {}
 MockResizeObserver.prototype.disconnect = function() {}
 
-global.window.ResizeObserver = MockResizeObserver
-
-global.requestAnimationFrame = function(callback) {
-  return setTimeout(callback, 0)
+if (!window.ResizeObserver) {
+  window.ResizeObserver = MockResizeObserver
 }
 
-global.cancelAnimationFrame = function(id) {
-  clearTimeout(id)
-}
+global.window = window
+global.document = window.document
+global.navigator = { userAgent: 'node.js' }
+
 
 // Copy window props to global
 Object.defineProperties(global, {
