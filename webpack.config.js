@@ -53,10 +53,19 @@ module.exports = function(env) {
 
   const production = Boolean(env.production)
   const development = !production
+  const devServer = env.dev_server
   const onefile = Boolean(env.onefile)
   const maxChunks = onefile ? 1 : 4
   const publicPath = env.public_path ? env.public_path : 'http://localhost:8090/'
   const fileBaseName = env.production ? 'oligrapher' : 'oligrapher-dev'
+
+  const fileName = [
+    fileBaseName,
+    (!onefile && !devServer) && "-[contenthash]",
+    ".js"
+  ].filter(Boolean).join('')
+
+
 
   return {
     mode: production ? 'production' : 'development',
@@ -69,7 +78,7 @@ module.exports = function(env) {
         type: 'umd',
         export: 'default'
       },
-      filename: fileBaseName + (onefile ? ".js" : "-[contenthash].js"),
+      filename: fileName,
       chunkFilename: fileBaseName + "-[name]-[contenthash].js"
     },
 
