@@ -1,7 +1,7 @@
 import produce from 'immer'
 import merge from 'lodash/merge'
 import undoable, { includeAction } from 'redux-undo'
-import { generate } from 'shortid'
+import { nanoid } from 'nanoid/non-secure'
 
 import {
   Graph, addNode, updateNode, removeNode, removeNodes, dragNodeEdges, moveNode,
@@ -75,7 +75,7 @@ export const reducer = produce((graph: Graph, action: any): void => {
     return
   case 'REMOVE_CAPTION':
     delete graph.captions[action.id]
-    return    
+    return
   case 'APPLY_FORCE_LAYOUT':
     return action.graph
   case 'INTERLOCKS_SUCCESS':
@@ -108,14 +108,14 @@ export const UNDO_ACTIONS = [
 ]
 
 // @ts-ignore
-const undoableReducer = undoable(reducer, { 
+const undoableReducer = undoable(reducer, {
   filter: includeAction(UNDO_ACTIONS),
   groupBy: (action) => {
     let { type } = action
 
     // force layouts shouldn't be grouped
     if (type === 'APPLY_FORCE_LAYOUT') {
-      type = generate()
+      type = nanoid()
     }
 
     // consider all consecutive drags and moves for the same node(s) as one action
@@ -143,7 +143,7 @@ const undoableReducer = undoable(reducer, {
 const flattenStateReducer = (graph: GraphState, action: any) => {
   // include SET_SVG_ZOOM so that state is flattened at the start
   if (!graph.nodes || UNDO_ACTIONS.concat(['SET_SVG_ZOOM']).includes(action.type)) {
-    return { 
+    return {
       ...graph.present,
       ...graph
     }

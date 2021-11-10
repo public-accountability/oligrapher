@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import merge from 'lodash/merge'
-import { generate } from 'shortid'
+import { nanoid } from 'nanoid/non-secure'
 
 import { svgCoordinatesFromMouseEvent } from '../util/dimensions'
 
@@ -53,7 +53,7 @@ export const captionShape = {
 }
 
 export function newCaption(attributes: CaptionAttributes = {}): Caption {
-  let caption = merge({ id: generate(), text: "New Caption" }, captionDefaults, attributes)
+  let caption = merge({ id: nanoid(10), text: "New Caption" }, captionDefaults, attributes)
 
   return caption as Caption
 }

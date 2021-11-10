@@ -1,4 +1,4 @@
-import { generate } from 'shortid'
+import { nanoid } from 'nanoid/non-secure'
 import merge from 'lodash/merge'
 
 import { AnnotationsState } from './defaultState'
@@ -22,7 +22,7 @@ export interface Annotation {
 }
 
 const defaults = (): Annotation => ({
-  id: generate(),
+  id: nanoid(10),
   header: 'New Annotation',
   text: '',
   nodeIds: [],
