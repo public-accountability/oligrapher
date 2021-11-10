@@ -9,7 +9,7 @@
     "build-prod": "webpack --color --progress --env production",
     "build-prod-one": "webpack --color --progress --env production --env onefile",
     "dev-server": "webpack serve --color --progress --env dev_server",
-    "build": "yarn run build-prod && yarn run build-prod-one && yarn run build-dev-one",
+    "build": "yarn run build-prod && yarn run build-prod-one",
     "test": "mocha --exit",
     "lint": "yarn run eslint ./app --ext .js,.jsx,.ts,.tsx",
     "stats": "webpack --env production --env onefile --profile --json > stats.json",

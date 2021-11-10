@@ -57,12 +57,12 @@ module.exports = function(env) {
   const onefile = Boolean(env.onefile)
   const maxChunks = onefile ? 1 : 4
   const fileBaseName = env.production ? 'oligrapher' : 'oligrapher-dev'
-  const fileName = fileBaseName + (devServer ? ".js" : "-[git-revision-hash].js")
+  const fileName = fileBaseName + (onefile ? "-[git-revision-hash]" : "") + ".js"
   const chunkFileName = fileBaseName + "-[name]-[contenthash].js"
   const publicPath = "/oligrapher/assets/"
   const apiUrl = env.api_url ? env.api_url : (production ? 'https://littlesis.org' : 'http://localhost:8081')
   const outputPath = getOutputPath(env)
-  const devTool = devServer ? 'eval-source-map' : 'source-map'
+  const devTool = devServer ? 'eval-source-map' : (onefile ? 'source-map' : false)
 
   return {
     mode: production ? 'production' : 'development',
