@@ -61,7 +61,7 @@ module.exports = function(env) {
   const publicPath = "/oligrapher/js/"
   const apiUrl = env.api_url ? env.api_url : (production ? 'https://littlesis.org' : 'http://localhost:8081')
   const outputPath = getOutputPath(env)
-  const devTool = development ? 'eval-source-map' : false
+  const devTool = devServer ? 'eval-source-map' : 'source-map'
 
   return {
     mode: production ? 'production' : 'development',
