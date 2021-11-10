@@ -1,9 +1,9 @@
 name: Yarn Compile
 
-on: [push, pull_request]
+on: push
 
 jobs:
-  build:
+  compile:
     runs-on: Ubuntu-20.04
 
     strategy:

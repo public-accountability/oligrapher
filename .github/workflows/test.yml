@@ -1,9 +1,9 @@
 name: Yarn Test
 
-on: [push, pull_request]
+on: push
 
 jobs:
-  build:
+  test:
     runs-on: Ubuntu-20.04
 
     strategy:
