@@ -10,10 +10,5 @@
     "noImplicitThis": true,
     "strictNullChecks": true,
     "esModuleInterop": true
-  },
-  "ts-node": {
-    "compilerOptions": {
-      "module": "commonjs"
-    }
   }
 }
