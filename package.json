@@ -10,7 +10,7 @@
     "build-prod-one": "webpack --color --progress --env production --env onefile",
     "dev-server": "webpack serve --color --progress --env dev_server",
     "build": "yarn run build-prod && yarn run build-prod-one && yarn run build-dev-one",
-    "test": "mocha",
+    "test": "mocha --exit",
     "profile": "webpack --profile --display-modules --env production",
     "lint": "yarn run eslint ./app --ext .js,.jsx,.ts,.tsx",
     "upgrade": "yarn upgrade-interactive --latest && yarn upgrade",
@@ -105,8 +105,7 @@
     "url-loader": "^4.1.1",
     "webpack": "^5.63.0",
     "webpack-bundle-analyzer": "^4.5.0",
-    "webpack-cli": "^4.9.1",
-    "why-is-node-running": "^2.2.0"
+    "webpack-cli": "^4.9.1"
   },
   "mocha": {
     "require": [
