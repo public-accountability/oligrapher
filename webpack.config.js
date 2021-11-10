@@ -2,7 +2,7 @@
   Oligrapher's webpack build can be configured via the command line via changes these variables:
 
   env.output_path         |  asset output directory. defaults to ./dist
-  env.public_path         |  code chunks will be fetched from this path. defaults to "http://localhost:8090"
+  env.public_path         |  code chunks will be fetched from this path. defaults to "http://localhost:8091"
   env.production          |  enables production mode
   env.dev_server          |  enables dev server mode
   env.api_url             |  littlesis datasource url. defaults to "https://littlesis.org"
@@ -10,7 +10,6 @@
 
   Also see the yarn scripts in package.json
 */
-
 const fs = require('fs')
 const path = require('path')
 const webpack = require('webpack')
@@ -56,22 +55,19 @@ module.exports = function(env) {
   const devServer = env.dev_server
   const onefile = Boolean(env.onefile)
   const maxChunks = onefile ? 1 : 4
-  const publicPath = env.public_path ? env.public_path : 'http://localhost:8090/'
   const fileBaseName = env.production ? 'oligrapher' : 'oligrapher-dev'
-
-  const fileName = [
-    fileBaseName,
-    (!onefile && !devServer) && "-[contenthash]",
-    ".js"
-  ].filter(Boolean).join('')
-
-
+  const fileName = [fileBaseName, (!onefile && !devServer) && "-[contenthash]", ".js" ].filter(Boolean).join('')
+  const chunkFileName = fileBaseName + "-[name]-[contenthash].js"
+  const publicPath = "/oligrapher/js/"
+  const apiUrl = env.api_url ? env.api_url : (production ? 'https://littlesis.org' : 'http://localhost:8081')
+  const outputPath = getOutputPath(env)
+  const devTool = development ? 'eval-source-map' : false
 
   return {
     mode: production ? 'production' : 'development',
     entry: path.resolve(__dirname, 'app/Oligrapher.jsx'),
     output: {
-      path: getOutputPath(env),
+      path: outputPath,
       publicPath: publicPath,
       library: {
         name: 'Oligrapher',
@@ -79,17 +75,15 @@ module.exports = function(env) {
         export: 'default'
       },
       filename: fileName,
-      chunkFilename: fileBaseName + "-[name]-[contenthash].js"
+      chunkFilename: chunkFileName
     },
-
     optimization: {
       minimize: production,
       chunkIds: 'deterministic' // 'named'
     },
 
     devServer: getDevServerConfig(env),
-
-    devtool: development ? 'eval-source-map' : false,
+    devtool: devTool,
 
     module: {
       rules: [
@@ -131,16 +125,16 @@ module.exports = function(env) {
     plugins: [
       new webpack.optimize.LimitChunkCountPlugin({ maxChunks: maxChunks }),
       new webpack.DefinePlugin({
-        'API_URL': JSON.stringify(env.api_url ? env.api_url : 'https://littlesis.org'),
-        'PRODUCTION': JSON.stringify(env.production)
+        'API_URL': JSON.stringify(apiUrl),
+        'PRODUCTION': JSON.stringify(production)
       }),
-      env.dev_server ? new webpack.HotModuleReplacementPlugin() : false
+      devServer ? new webpack.HotModuleReplacementPlugin() : false
     ].filter(Boolean),
 
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
       alias: {
-        'react-dom': env.dev_server ? '@hot-loader/react-dom' : 'react-dom'
+        'react-dom': devServer ? '@hot-loader/react-dom' : 'react-dom'
       }
     }
   }
