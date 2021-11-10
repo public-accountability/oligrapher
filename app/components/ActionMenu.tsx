@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useRef } from 'react'
 import { useDispatch } from 'react-redux'
-import { IoIosMore } from 'react-icons/io'
+import { IoIosMore } from '@react-icons/all-files/io/IoIosMore'
 import { IconButton, Menu, MenuItem } from '@material-ui/core'
 
 import Confirm from './Confirm'
@@ -42,9 +42,9 @@ export default function ActionMenu() {
     dispatch({ type: 'CLONE_REQUESTED' })
     closeMenu()
   }, [dispatch, closeMenu])
- 
+
   const cancelDelete = useCallback(() => setShowConfirm(false), [])
- 
+
   const confirmDelete = useCallback(() => {
     dispatch({ type: 'DELETE_REQUESTED' })
     setShowConfirm(false)
@@ -78,7 +78,7 @@ export default function ActionMenu() {
         open={showConfirm}
         message={'Are you sure you want to delete this map?'}
         cancel={{ label: 'Cancel', onClick: cancelDelete }}
-        confirm={{ label: 'Delete', onClick: confirmDelete }} 
+        confirm={{ label: 'Delete', onClick: confirmDelete }}
         />
       <ShareModal open={showShare} close={closeShare} url={shareUrl} />
     </div>

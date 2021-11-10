@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { useHotkeys } from 'react-hotkeys-hook'
-import { MdClose } from 'react-icons/md'
+import { MdClose } from '@react-icons/all-files/md/MdClose'
 
 //  This isn't a box of tools. It's a box with one tool
 export default function Toolbox({ title, children }: ToolboxProps) {

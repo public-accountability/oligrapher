@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { Paper } from '@material-ui/core'
-import { MdClose } from 'react-icons/md'
+import { MdClose } from '@react-icons/all-files/md/MdClose'
 
 export default function HelpTool() {
   const dispatch = useDispatch()

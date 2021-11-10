@@ -1,5 +1,5 @@
 import React from 'react'
-import { IoMdCloseCircle } from 'react-icons/io'
+import { IoMdCloseCircle } from '@react-icons/all-files/io/IoMdCloseCircle'
 
 import { Editor } from '../util/defaultState'
 

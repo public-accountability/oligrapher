@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button } from '@material-ui/core'
-import { IoIosLink } from 'react-icons/io'
+import { IoIosLink } from '@react-icons/all-files/io/IoIosLink'
 
 import Toolbox from './Toolbox'
 import { isLittleSisId } from '../util/helpers'
@@ -22,10 +22,10 @@ export default function InterlocksTool() {
         <p>
           If a node was imported from LittleSis, you'll see a <IoIosLink /> icon at the bottom of the form when editing it.
         </p>
-        <Button 
-          disabled={!twoLsNodes} 
-          onClick={getInterlocks} 
-          variant="contained" 
+        <Button
+          disabled={!twoLsNodes}
+          onClick={getInterlocks}
+          variant="contained"
           color="primary"
           disableElevation={true}
         >

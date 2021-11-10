@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, IconButton, Menu, MenuItem, Hidden } from '@material-ui/core'
-import { IoIosMore } from 'react-icons/io'
+import { IoIosMore } from '@react-icons/all-files/io/IoIosMore'
 
 import { useSelector } from '../util/helpers'
 import { annotationsListSelector } from '../util/selectors'
@@ -42,7 +42,7 @@ export default function HeaderActions() {
     dispatch({ type: 'CLONE_REQUESTED' })
     closeMenu()
   }, [dispatch, closeMenu])
-  
+
   const openShare = useCallback(() => {
     setShowShare(true)
     closeMenu()

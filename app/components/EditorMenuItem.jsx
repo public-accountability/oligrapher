@@ -1,10 +1,14 @@
 import React, { useCallback} from 'react'
 import PropTypes from 'prop-types'
 import { useSelector, useDispatch } from 'react-redux'
-import { FaRegCircle, FaBezierCurve, FaRegEdit } from "react-icons/fa"
-import { FiHelpCircle, FiUsers } from 'react-icons/fi'
-import { GoTextSize, GoGear } from 'react-icons/go'
-import { GiLinkedRings } from 'react-icons/gi'
+import { FaRegCircle } from "@react-icons/all-files/fa/FaRegCircle"
+import { FaRegEdit } from "@react-icons/all-files/fa/FaRegEdit"
+import { FaBezierCurve } from "@react-icons/all-files/fa/FaBezierCurve"
+import { FiHelpCircle } from '@react-icons/all-files/fi/FiHelpCircle'
+import { FiUsers } from '@react-icons/all-files/fi/FiUsers'
+import { GoTextSize } from '@react-icons/all-files/go/GoTextSize'
+import { GoGear } from '@react-icons/all-files/go/GoGear'
+import { GiLinkedRings } from '@react-icons/all-files/gi/GiLinkedRings'
 import FundProjectionScreenOutlined from '@ant-design/icons/FundProjectionScreenOutlined'
 import noop from 'lodash/noop'
 

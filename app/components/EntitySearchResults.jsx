@@ -1,16 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
-import { FiExternalLink } from 'react-icons/fi'
+import { FiExternalLink } from '@react-icons/all-files/fi/FiExternalLink'
 
 export function SearchResult({ entity, onClick }) {
   return (
     <div className="entity-search-result">
       <a onClick={() => onClick(entity)}><b>{entity.name}</b></a>
-      { entity.url && 
+      { entity.url &&
         <a className="entity-external-link" href={entity.url} target="_blank" rel="noopener noreferrer">
           <FiExternalLink />
-        </a> 
+        </a>
       }
       { entity.description && <div className="entity-search-description">{entity.description}</div> }
     </div>
@@ -29,11 +29,11 @@ export default function EntitySearchResults({ results, onClick }) {
   return (
     <div className="entity-search-results">
       { visibleResults.map(entity => (
-          <SearchResult 
+          <SearchResult
             onClick={onClick}
             entity={entity}
             key={entity.id} />
-        )) 
+        ))
       }
     </div>
   )

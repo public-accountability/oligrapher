@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { FaBezierCurve } from 'react-icons/fa'
+import { FaBezierCurve } from '@react-icons/all-files/fa/FaBezierCurve'
 
 import Toolbox from './Toolbox'
 

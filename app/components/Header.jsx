@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
-import { MdExpandMore, MdExpandLess } from 'react-icons/md'
+import { MdExpandMore } from '@react-icons/all-files/md/MdExpandMore'
+import { MdExpandLess } from '@react-icons/all-files/md/MdExpandLess'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 
 import { useSelector } from '../util/helpers'
@@ -48,7 +49,7 @@ export default function Header() {
 
   return (
     <div id="oligrapher-header" className={className} ref={divRef}>
-      { isCollapsed && 
+      { isCollapsed &&
         <div id="oligrapher-header-bottom" className={editMode ? "editing" : ""}>
           <Title text={title} editable={false} />
 
@@ -88,4 +89,3 @@ export default function Header() {
     </div>
   )
 }
-

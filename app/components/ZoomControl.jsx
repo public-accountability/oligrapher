@@ -1,7 +1,8 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { FiMinus, FiPlus } from 'react-icons/fi'
-import { IoMdLocate } from 'react-icons/io'
+import { FiMinus } from '@react-icons/all-files/fi/FiMinus'
+import { FiPlus } from '@react-icons/all-files/fi/FiPlus'
+import { IoMdLocate } from '@react-icons/all-files/io/IoMdLocate'
 
 export default function ZoomControl() {
   const dispatch = useDispatch()

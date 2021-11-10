@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ActionCreators } from 'redux-undo'
-import { IoIosUndo, IoIosRedo } from 'react-icons/io'
+import { IoIosUndo } from '@react-icons/all-files/io/IoIosUndo'
+import { IoIosRedo } from '@react-icons/all-files/io/IoIosRedo'
 
 export default function UndoRedo() {
   const dispatch = useDispatch()
@@ -15,7 +16,7 @@ export default function UndoRedo() {
     dispatch(ActionCreators.undo())
   }, [dispatch])
 
-  const redo = useCallback(() => { 
+  const redo = useCallback(() => {
     dispatch({ type: 'CLOSE_EDITOR' })
     dispatch(ActionCreators.redo())
   }, [dispatch])
@@ -26,14 +27,14 @@ export default function UndoRedo() {
 
   return (
     <div id="oligrapher-undo-redo">
-      <button 
-        title="Undo" 
+      <button
+        title="Undo"
         disabled={past.length === 0}
         onClick={undo}>
         <IoIosUndo />
       </button>
-      <button 
-        title="Redo" 
+      <button
+        title="Redo"
         disabled={future.length === 0}
         onClick={redo}>
         <IoIosRedo />
