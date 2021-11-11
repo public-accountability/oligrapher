@@ -1,6 +1,8 @@
 logs
 *.log
 node_modules
-/dist/*.js
+/dist/*
+!/dist/.keep
 NOTES.md
 .vscode
+/stats.json

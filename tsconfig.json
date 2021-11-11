@@ -1,19 +1,11 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/",
-    "noImplicitAny": false,
-    "module": "es2020",
-    "target": "es5",
-    "moduleResolution": "node",
-    "jsx": "react",
-    "lib": ["es2020", "dom"],
-    "noImplicitThis": true,
-    "strictNullChecks": true,
-    "esModuleInterop": true
+    "lib": ["es2020"],
+    "module": "commonjs"
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   },
-  "ts-node": {
-    "compilerOptions": {
-      "module": "commonjs"
-    }
-  }
+  "include": ["app/**/*"]
 }

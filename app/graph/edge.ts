@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import merge from 'lodash/merge'
-import { generate } from 'shortid'
+import { nanoid } from 'nanoid/non-secure'
 
 import { Node } from './node'
 import { ArrowType } from './arrow'
@@ -68,7 +68,7 @@ const edgeDefaults: EdgeDefaults = {
 }
 
 export function newEdge(attributes: EdgeAttributes = {}) {
-  return merge({ id: generate(), label: "New Edge" }, edgeDefaults, attributes)
+  return merge({ id: nanoid(10), label: "New Edge" }, edgeDefaults, attributes)
 }
 
 export function newEdgeFromNodes(n1: Node, n2: Node, attributes: EdgeAttributes = {}): Edge {

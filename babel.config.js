@@ -1,14 +1,9 @@
-require("@babel/register")({
-  ignore: [
-    /node_modules\/(?!@public-accountability\/littlesis-api)/
-  ]
-})
-
 module.exports = function(api) {
   // These are run in reverse order. @babel/preset-react is run first.
   const presets = [
     [ "@babel/preset-env", { useBuiltIns: "usage", corejs: 3 } ],
-    [ "@babel/preset-react", {} ]
+    [ "@babel/preset-react", {} ],
+    [ "@babel/preset-typescript"]
   ]
 
   const plugins = [
@@ -17,7 +12,8 @@ module.exports = function(api) {
     "@loadable/babel-plugin"
   ]
 
-  api.cache.never()
+  api.cache(true)
+  // api.cache.never()
 
   return {
     presets,

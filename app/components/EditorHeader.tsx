@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { MdClose } from 'react-icons/md'
+import { MdClose } from '@react-icons/all-files/md/MdClose'
 
 interface EditorHeaderProps {
   title: string

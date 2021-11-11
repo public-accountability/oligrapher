@@ -10,7 +10,7 @@ import NodeStyleForm from './NodeStyleForm'
 import EditorSubmitButtons from './EditorSubmitButtons'
 import EditorHotKeys from './EditorHotKeys'
 import { callWithTargetValue, isLittleSisId } from '../util/helpers'
-import { IoIosLink } from 'react-icons/io'
+import { IoIosLink } from '@react-icons/all-files/io/IoIosLink'
 
 export function MainPage({ node, setPage, updateNode, openAddConnections }) {
   const isLsNode = isLittleSisId(node.id)
@@ -65,12 +65,12 @@ export function MainPage({ node, setPage, updateNode, openAddConnections }) {
 }
 
 MainPage.propTypes = {
-  node: PropTypes.shape({ 
+  node: PropTypes.shape({
     id: PropTypes.any,
     name: PropTypes.string,
     description: PropTypes.string,
     image: PropTypes.string,
-    url: PropTypes.string 
+    url: PropTypes.string
   }).isRequired,
   setPage: PropTypes.func.isRequired,
   updateNode: PropTypes.func.isRequired,
@@ -102,8 +102,8 @@ export default function NodeEditor({ id }) {
         </main>
 
         <footer>
-          { isLsNode && 
-            <div title={`LittleSis Entity ID: ${id}`} className="node-littlesis-link"><IoIosLink /></div> 
+          { isLsNode &&
+            <div title={`LittleSis Entity ID: ${id}`} className="node-littlesis-link"><IoIosLink /></div>
           }
 
           <EditorSubmitButtons

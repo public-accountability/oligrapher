@@ -1,14 +1,14 @@
 name: Yarn Test
 
-on: [push, pull_request]
+on: push
 
 jobs:
-  build:
+  test:
     runs-on: Ubuntu-20.04
 
     strategy:
       matrix:
-        node-version: [12.x, 14.x]
+        node-version: [14.x, 16.x]
 
     steps:
     - uses: actions/checkout@v2

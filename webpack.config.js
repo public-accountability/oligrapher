@@ -2,19 +2,18 @@
   Oligrapher's webpack build can be configured via the command line via changes these variables:
 
   env.output_path         |  asset output directory. defaults to ./dist
-  env.public_path         |  code chunks will be fetched from this path. defaults to "http://localhost:8090"
-  env.filename            |  defaults to "oligrapher.js" or "oligrapher-dev.js"
+  env.public_path         |  code chunks will be fetched from this path. defaults to "http://localhost:8091"
   env.production          |  enables production mode
-  env.development         |  enables development mode
   env.dev_server          |  enables dev server mode
   env.api_url             |  littlesis datasource url. defaults to "https://littlesis.org"
+  env.onefile             |  outputs a single compiled file
 
   Also see the yarn scripts in package.json
 */
-
 const fs = require('fs')
 const path = require('path')
 const webpack = require('webpack')
+const { GitRevisionPlugin } = require('git-revision-webpack-plugin')
 
 function getOutputPath(env) {
   if (env.output_path) {
@@ -30,47 +29,21 @@ function getOutputPath(env) {
   }
 }
 
-function getFilename(env) {
-  if (env.filename) {
-    if (env.filename.slice(-3) === '.js') {
-      return env.filename
-    } else {
-      throw new Error(`Invalid filename: ${env.filename}`)
-    }
-  }
-
-  if (env.production) {
-    return "oligrapher.js"
-  } else {
-    return "oligrapher-dev.js"
-  }
-}
-
-function getChunkFilename(env) {
-  return getFilename(env).slice(0, -3) + '-[name].js'
-}
-
 function getDevServerConfig(env) {
   if (env.dev_server) {
     return {
-      contentBase: path.resolve(__dirname, 'html'),
-      publicPath: 'http://localhost:8090/',
       port: 8090,
-      serveIndex: true,
       historyApiFallback: true,
       hot: true,
       headers: { 'Access-Control-Allow-Origin': '*' },
-      watchOptions: {
-        ignored: /node_modules/
+      static: {
+        directory: path.join(__dirname, 'html'),
+        serveIndex: true
       }
     }
   } else {
     return undefined
   }
-}
-
-function getPublicPath(env) {
-  return env.public_path ? env.public_path : 'http://localhost:8090/'
 }
 
 module.exports = function(env) {
@@ -79,43 +52,44 @@ module.exports = function(env) {
   }
 
   const production = Boolean(env.production)
-  const development = env.development || env.dev_server
-  const sourcemap = Boolean(env.sourcemap)
+  const development = !production
+  const devServer = env.dev_server
+  const onefile = Boolean(env.onefile)
+  const maxChunks = onefile ? 1 : 10
+  const fileBaseName = env.production ? 'oligrapher' : 'oligrapher-dev'
+  const fileName = fileBaseName + "-[git-revision-hash]" + (!onefile ? ".bundle" : "") + ".js"
+  const chunkFileName = fileBaseName + "-[git-revision-hash]-[id].bundle.js"
+  const publicPath = "/oligrapher/assets/"
+  const apiUrl = env.api_url ? env.api_url : (production ? 'https://littlesis.org' : 'http://localhost:8081')
+  const outputPath = getOutputPath(env)
+  const devTool = devServer ? 'eval-source-map' : (onefile ? 'source-map' : false)
 
   return {
     mode: production ? 'production' : 'development',
     entry: path.resolve(__dirname, 'app/Oligrapher.jsx'),
     output: {
-      path: getOutputPath(env),
-      publicPath: getPublicPath(env),
-      library: 'Oligrapher',
-      libraryTarget: 'umd',
-      libraryExport: "default",
-      filename: getFilename(env),
-      chunkFilename: getChunkFilename(env)
+      path: outputPath,
+      publicPath: publicPath,
+      library: {
+        name: 'Oligrapher',
+        type: 'umd',
+        export: 'default'
+      },
+      filename: fileName,
+      chunkFilename: chunkFileName
     },
-
     optimization: {
-      minimize: production
+      minimize: production,
+      chunkIds: 'deterministic'
     },
 
     devServer: getDevServerConfig(env),
-
-    devtool: development ? 'eval-source-map' : (sourcemap ? 'inline-source-map' : false),
+    devtool: devTool,
 
     module: {
       rules: [
         {
-          test: /\.ts(x?)$/,
-          exclude: /node_modules/,
-          use: [
-            {
-              loader: "ts-loader"
-            }
-          ]
-        },
-        {
-          test: /\.jsx?$/,
+          test: /\.(j|t)sx?$/,
           exclude: /node_modules\/(?!(@public-accountability.*?\\.js$))/,
           use: [
             { loader: 'babel-loader' }
@@ -150,17 +124,19 @@ module.exports = function(env) {
     },
 
     plugins: [
+      new GitRevisionPlugin(),
+      new webpack.optimize.LimitChunkCountPlugin({ maxChunks: maxChunks }),
       new webpack.DefinePlugin({
-        'API_URL': JSON.stringify(env.api_url ? env.api_url : 'https://littlesis.org'),
-        'PRODUCTION': JSON.stringify(env.production)
+        'API_URL': JSON.stringify(apiUrl),
+        'PRODUCTION': JSON.stringify(production)
       }),
-      env.dev_server ? new webpack.HotModuleReplacementPlugin() : false
+      devServer ? new webpack.HotModuleReplacementPlugin() : false
     ].filter(Boolean),
 
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
       alias: {
-        'react-dom': env.dev_server ? '@hot-loader/react-dom' : 'react-dom'
+        'react-dom': devServer ? '@hot-loader/react-dom' : 'react-dom'
       }
     }
   }

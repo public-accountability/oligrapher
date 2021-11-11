@@ -3,7 +3,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import pick from 'lodash/pick'
 import uniq from 'lodash/uniq'
 import { Button } from '@material-ui/core'
-import { MdPhotoSizeSelectSmall, MdFormatColorFill, MdImage } from "react-icons/md"
+import { MdPhotoSizeSelectSmall } from "@react-icons/all-files/md/MdPhotoSizeSelectSmall"
+import { MdFormatColorFill } from "@react-icons/all-files/md/MdFormatColorFill"
+import { MdImage } from "@react-icons/all-files/md/MdImage"
 
 import Toolbox from './Toolbox'
 import EditNodeColorPage from './EditNodeColorPage'
@@ -42,7 +44,7 @@ export default function StyleNodesMenu() {
             <EditNodeColorPage color={color} onChange={setColor} colors={colors} />
           }
 
-          { page === 'scale' && 
+          { page === 'scale' &&
             <SizePicker scale={scale} onChange={setScale} />
           }
 
@@ -75,16 +77,16 @@ export default function StyleNodesMenu() {
         <hr />
 
         <footer>
-          <Button 
-            onClick={handleSubmit} 
-            variant="contained" 
-            color="primary" 
-            size="small" 
-            disabled={nodeIds.length === 0} 
+          <Button
+            onClick={handleSubmit}
+            variant="contained"
+            color="primary"
+            size="small"
+            disabled={nodeIds.length === 0}
             disableElevation={true}
           >
             Apply
-          </Button> 
+          </Button>
           <div className="oligrapher-style-nodes-count">Nodes selected: {nodeIds.length}</div>
         </footer>
       </div>

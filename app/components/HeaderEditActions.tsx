@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useRef } from 'react'
 import { useDispatch } from 'react-redux'
-import { IoIosMore } from 'react-icons/io'
-import { FaLock } from 'react-icons/fa'
+import { IoIosMore } from '@react-icons/all-files/io/IoIosMore'
+import { FaLock } from '@react-icons/all-files/fa/FaLock'
 import { IconButton, Menu, MenuItem } from '@material-ui/core'
 
 import SaveButton from './SaveButton'

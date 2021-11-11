@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import generate from 'shortid'
+import { nanoid } from 'nanoid/non-secure'
 
 import DraggableComponent from './DraggableComponent'
 
@@ -25,7 +25,7 @@ export function Pannable(props) {
 
   return (
     <DraggableComponent
-      handle='.pannable-handle' 
+      handle='.pannable-handle'
       position={offset}
       onStop={setOffset}
       onClick={onClick}>
@@ -71,7 +71,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    addCaption: (event, zoom) => dispatch({ type: 'ADD_CAPTION', id: generate(), event, zoom }),
+    addCaption: (event, zoom) => dispatch({ type: 'ADD_CAPTION', id: nanoid(10), event, zoom }),
     setOffset: (offset) => dispatch({ type: 'SET_OFFSET', offset }),
     clearSelection: () => dispatch({ type: 'CLEAR_SELECTION' }),
     closeEditor: () => dispatch({ type: 'CLOSE_EDITOR' })

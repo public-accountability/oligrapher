@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { MdPhotoSizeSelectSmall, MdFormatColorFill } from "react-icons/md"
+import { MdPhotoSizeSelectSmall } from "@react-icons/all-files/md/MdPhotoSizeSelectSmall"
+import { MdFormatColorFill } from "@react-icons/all-files/md/MdFormatColorFill"
 
 export default function NodeStyleForm({ setPage }) {
   return (

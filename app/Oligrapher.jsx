@@ -1,10 +1,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
+import loadable from '@loadable/component'
 
 import Graph from './graph/graph'
-import Root from './components/Root'
-import EmbeddedRoot from './components/EmbeddedRoot'
+// import Root from './components/Root'
+// import EmbeddedRoot from './components/EmbeddedRoot'
+const Root = loadable(() => import('./components/Root'))
+const EmbeddedRoot = loadable(() => import('./components/EmbeddedRoot'))
+//Root.preload()
+//EmbeddedRoot.preload()
+
 import { toSvg, toJpeg } from './util/imageExport'
 import { createOligrapherStore } from './util/store'
 import stateInitalizer from './util/stateInitalizer'

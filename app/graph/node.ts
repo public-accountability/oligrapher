@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import merge from 'lodash/merge'
-import { generate } from 'shortid'
+import { nanoid } from 'nanoid/non-secure'
 
 import { Point } from '../util/geometry'
 import { translatePoint, distance } from '../util/geometry'
@@ -65,7 +65,7 @@ export const propTypes = {
 }
 
 export function newNode(attributes: NodeAttributes = {}): Node {
-  return merge({ id: generate(), name: "New Node" }, nodeDefaults, attributes)
+  return merge({ id: nanoid(10), name: "New Node" }, nodeDefaults, attributes)
 }
 
 export default {
