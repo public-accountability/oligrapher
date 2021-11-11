@@ -12,7 +12,7 @@
     "build": "yarn run build-prod && yarn run build-prod-one",
     "test": "mocha --exit",
     "lint": "yarn run eslint ./app --ext .js,.jsx,.ts,.tsx",
-    "stats": "webpack --env production --env onefile --profile --json > stats.json",
+    "stats": "webpack --env production --profile --json > stats.json",
     "analyze": "webpack-bundle-analyzer stats.json"
   },
   "repository": {
@@ -64,7 +64,7 @@
     "@babel/preset-react": "^7.16.0",
     "@babel/preset-typescript": "^7.16.0",
     "@babel/register": "^7.16.0",
-    "@loadable/babel-plugin": "^5.13.0",
+    "@loadable/babel-plugin": "^5.13.2",
     "@testing-library/react": "^12.1.2",
     "@types/chai": "^4.2.22",
     "@types/loadable__component": "^5.13.0",

@@ -55,10 +55,10 @@ module.exports = function(env) {
   const development = !production
   const devServer = env.dev_server
   const onefile = Boolean(env.onefile)
-  const maxChunks = onefile ? 1 : 4
+  const maxChunks = onefile ? 1 : 10
   const fileBaseName = env.production ? 'oligrapher' : 'oligrapher-dev'
   const fileName = fileBaseName + (onefile ? "-[git-revision-hash]" : "") + ".js"
-  const chunkFileName = fileBaseName + "-[name]-[contenthash].js"
+  const chunkFileName = fileBaseName + "-[id]-[contenthash].js"
   const publicPath = "/oligrapher/assets/"
   const apiUrl = env.api_url ? env.api_url : (production ? 'https://littlesis.org' : 'http://localhost:8081')
   const outputPath = getOutputPath(env)
@@ -80,7 +80,7 @@ module.exports = function(env) {
     },
     optimization: {
       minimize: production,
-      chunkIds: 'deterministic' // 'named'
+      chunkIds: 'deterministic'
     },
 
     devServer: getDevServerConfig(env),

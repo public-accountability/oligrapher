@@ -1,12 +1,13 @@
 import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { hot } from 'react-hot-loader/root'
 import { Button } from '@material-ui/core'
+import loadable from '@loadable/component'
 
 import Annotation from './Annotation'
 import AnnotationList from './AnnotationList'
 import RemoveAnnotationButton from './RemoveAnnotationButton'
-import AnnotationForm from './AnnotationForm'
+//import AnnotationForm from './AnnotationForm'
+const AnnotationForm = loadable(() => import('./AnnotationForm'))
 import AnnotationsNav from './AnnotationsNav'
 import AnnotationsTracker from './AnnotationsTracker'
 import HideAnnotationsButton from './HideAnnotationsButton'
@@ -23,12 +24,12 @@ export function Annotations() {
   const { storyModeOnly } = useSelector(state => state.attributes.settings)
 
   const prev = useCallback(
-    () => dispatch({ type: 'SHOW_ANNOTATION', index: currentIndex - 1 }), 
+    () => dispatch({ type: 'SHOW_ANNOTATION', index: currentIndex - 1 }),
     [dispatch, currentIndex]
   )
 
   const next = useCallback(
-    () => dispatch({ type: 'SHOW_ANNOTATION', index: currentIndex + 1 }), 
+    () => dispatch({ type: 'SHOW_ANNOTATION', index: currentIndex + 1 }),
     [dispatch, currentIndex]
   )
 
@@ -94,4 +95,4 @@ export function Annotations() {
   )
 }
 
-export default hot(Annotations)
+export default Annotations

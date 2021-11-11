@@ -2,8 +2,10 @@ import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { Input, Button } from '@material-ui/core'
+import loadable from '@loadable/component'
 
 import { callWithTargetValue } from '../util/helpers'
+
 import AnnotationTextEditor from './AnnotationTextEditor'
 
 export default function AnnotationForm({ annotation }) {

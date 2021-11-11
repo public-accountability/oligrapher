@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux'
 import { hot } from 'react-hot-loader/root'
 import { ThemeProvider } from '@material-ui/core/styles'
 import { Grid, Hidden } from '@material-ui/core'
-import loadable from '@loadable/component'
 
 import Header from './Header'
 import CondensedHeader from './CondensedHeader'
@@ -18,10 +17,8 @@ import {
   showAnnotationsSelector, annotationsListSelector, hasUnsavedChangesSelector
 } from '../util/selectors'
 
-const Annotations = loadable(() => import(/* webpackChunkName: "Annotations" */ './Annotations'))
-//Annotations.preload()
-const Editor = loadable(() => import(/* webpackChunkName: "Editor" */ './Editor'))
-//Editor.preload()
+import Annotations from './Annotations'
+import Editor from './Editor'
 
 export const ROOT_CONTAINER_ID = "oligrapher-container"
 
