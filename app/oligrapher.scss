@@ -34,6 +34,12 @@ $caption_backgound_focused: lightcoral;
 $node_highlight_color: $oligrapher_blue;
 $edge_highlight_color: $oligrapher_blue;
 
+@font-face {
+  font-family: 'Helvetica Neue Medium';
+  font-weight: normal;
+  src: url(./fonts/HelveticaNeueLTStdMd.otf) format('opentype');
+}
+
 html, body, div#oligrapher {
   height: 100%;
 }
@@ -105,7 +111,7 @@ body {
     input {
       font-family: Helvetica, Arial, sans-serif;
       font-size: 42px;
-      height: 48px; 
+      height: 48px;
       margin-left: -4px;
       max-width: 800px;
       width: 100%;
@@ -339,8 +345,8 @@ body {
 
     &.editor-menu-item-disabled {
       color: #ccc;
-      
-      &:hover { 
+
+      &:hover {
         cursor: not-allowed;
       }
     }
@@ -425,8 +431,8 @@ body {
       font-weight: bold;
     }
 
-    hr { 
-      border: 0; 
+    hr {
+      border: 0;
       height: 1px;
       background: $oligrapher_font_gray;
       margin: 5px;
@@ -465,10 +471,10 @@ body {
 /* COMMON NODE EDITING */
 
 #oligrapher-container .oligrapher-graph-editor, #oligrapher-container .oligrapher-floating-editor {
-  > div { 
+  > div {
     @extend %box_shadow;
   }
-  
+
   .editor-page-buttons {
     padding-bottom: 0;
 
@@ -598,7 +604,7 @@ body {
       display: inline-block;
       cursor: grab;
     }
-    
+
     button {
       float: right;
       margin-left: 10px;
@@ -683,7 +689,7 @@ body {
     margin-top: 5px;
     margin-bottom: 10px;
     font-size: 14px;
-  }  
+  }
 
   .entity-search-results {
     max-height: 325px;
@@ -914,7 +920,7 @@ body {
 
   header {
     @extend %toolbox_header;
-  }   
+  }
 }
 
 div.lock {
@@ -931,12 +937,6 @@ div.lock {
 
 /* NODES */
 
-@font-face {
-  font-family: 'Helvetica Neue Medium';
-  font-weight: normal;
-  src: url(./fonts/HelveticaNeueLTStdMd.otf) format('opentype');
-}
-
 #oligrapher-container .oligrapher-graph-dragging-node {
   cursor: grabbing;
 }
@@ -944,7 +944,7 @@ div.lock {
 #oligrapher-container #oligrapher-graph-container .oligrapher-node {
   pointer-events: auto;
 
-  // we have to disable pointer-events for the dragged node in order for 
+  // we have to disable pointer-events for the dragged node in order for
   // a dragged-over node to detect a hover event, which we use to notify
   // the user of possible edge creation. but as a consequence the "grabbing"
   // cursor will not work because it depends on pointer events.
@@ -958,7 +958,7 @@ div.lock {
   }
 
   .node-label text {
-    font-family: 'Helvetica Neue Medium';
+    font-family: 'Helvetica Neue Medium', Helvetica, sans-serif;
     color: black;
   }
 
