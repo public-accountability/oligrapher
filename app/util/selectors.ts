@@ -49,6 +49,10 @@ export const showAnnotationsSelector: Selector<boolean> = state => {
   return false
 }
 
+export const showHeaderSelector: Selector<boolean> = state => {
+  return state.display.showHeader
+}
+
 export const currentAnnotationSelector: Selector<Annotation> = state => {
   const list = annotationsListSelector(state)
   const { currentIndex } = state.annotations

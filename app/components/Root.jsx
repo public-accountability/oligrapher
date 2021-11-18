@@ -14,7 +14,7 @@ import CondensedAnnotations from './CondensedAnnotations'
 import AnnotationsToggler from './AnnotationsToggler'
 import { muiTheme } from '../util/helpers'
 import {
-  showAnnotationsSelector, annotationsListSelector, hasUnsavedChangesSelector
+  showAnnotationsSelector, annotationsListSelector, hasUnsavedChangesSelector, showHeaderSelector
 } from '../util/selectors'
 
 import Annotations from './Annotations'
@@ -26,7 +26,7 @@ export function Root() {
   const showAnnotations = useSelector(showAnnotationsSelector)
   const hasAnnotations = useSelector(annotationsListSelector).length > 0
   const hasUnsavedChanges = useSelector(hasUnsavedChangesSelector)
-
+  const showHeader = useSelector(showHeaderSelector)
   // to pevent backspace form navigating away from page
   // in firefox and possibly other browsers
   useEffect(() => {
@@ -58,9 +58,12 @@ export function Root() {
   return (
     <div id={ROOT_CONTAINER_ID}>
       <ThemeProvider theme={muiTheme}>
-        <Hidden xsDown>
-          <Header />
-        </Hidden>
+        {
+          showHeader &&
+            <Hidden xsDown>
+              <Header />
+            </Hidden>
+        }
         <Hidden smUp>
           <CondensedHeader />
         </Hidden>

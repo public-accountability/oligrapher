@@ -38,6 +38,9 @@ export default class Oligrapher {
     this.toSvg = () => toSvg(this.store.getState())
     this.toJpeg = () => toJpeg(this.store.getState())
     this.hideAnnotations = () => this.store.dispatch({type: 'HIDE_ANNOTATIONS'})
+    this.showAnnotations = () => this.store.dispatch({type: 'SHOW_ANNOTATIONS'})
+    this.hideHeader = () => this.store.dispatch({type: 'HIDE_HEADER'})
+    this.showHeader = () => this.store.dispatch({type: 'SHOW_HEADER'})
 
     const isEmbedded = this.store.getState().settings.embed
 

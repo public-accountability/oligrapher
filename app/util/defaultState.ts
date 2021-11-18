@@ -82,6 +82,7 @@ export interface DisplayState {
   svgSize: { width: number, height: number },
   svgOffset: Point,
   offset: Point,
+  showHeader: boolean,
   headerIsCollapsed: boolean,
   modes: { editor: boolean, story: boolean },
   floatingEditor: {
@@ -177,6 +178,7 @@ const defaultState: State = {
     svgSize: { width: 0, height: 0 },
     svgOffset: { x: 0, y: 0 },
     offset: { x: 0, y: 0 },
+    showHeader: true,
     headerIsCollapsed: false,
     modes: {
       editor: false,
