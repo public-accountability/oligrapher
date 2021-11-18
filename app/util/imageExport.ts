@@ -13,6 +13,7 @@ function convertImage(image: any) {
   const url = image.getAttribute('href')
   const img = new Image()
   img.src = url
+  img.crossOrigin = "anonymous"
 
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d') as any
@@ -25,10 +26,10 @@ function convertImage(image: any) {
     const dataUrl = canvas.toDataURL('image/jpeg')
     image.setAttribute('href', dataUrl)
   } catch (error) {
-    console.log(`Couldn't convert image to data uri: ${url}`)
+    console.error(`Couldn't convert image to data uri: ${url}`)
+    console.error(error)
   }
 }
-
 
 // Converts a SVG string to a jpeg  data url using <canvas>
 async function svgToJpeg(svg: string, width: number, height: number): Promise<string> {
