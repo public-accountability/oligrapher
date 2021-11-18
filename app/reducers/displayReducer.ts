@@ -135,6 +135,12 @@ export default produce((display: DisplayState, action: any): void => {
   case 'SHOW_HEADER':
     display.showHeader = true
     return
+  case 'HIDE_ZOOM_CONTROL':
+    display.showZoomControl = false
+    return
+  case 'SHOW_ZOOM_CONTROL':
+    display.showZoomControl = true
+    return
   case 'TOGGLE_TOOL':
     const prevTool = display.tool
     display.tool = (display.tool === action.tool) ? null : action.tool

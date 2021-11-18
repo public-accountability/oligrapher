@@ -41,6 +41,8 @@ export default class Oligrapher {
     this.showAnnotations = () => this.store.dispatch({type: 'SHOW_ANNOTATIONS'})
     this.hideHeader = () => this.store.dispatch({type: 'HIDE_HEADER'})
     this.showHeader = () => this.store.dispatch({type: 'SHOW_HEADER'})
+    this.hideZoomControl = () => this.store.dispatch({type: 'HIDE_ZOOM_CONTROL'})
+    this.showZoomControl = () => this.store.dispatch({type: 'SHOW_ZOOM_CONTROL'})
 
     const isEmbedded = this.store.getState().settings.embed
 

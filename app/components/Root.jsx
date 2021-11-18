@@ -14,7 +14,7 @@ import CondensedAnnotations from './CondensedAnnotations'
 import AnnotationsToggler from './AnnotationsToggler'
 import { muiTheme } from '../util/helpers'
 import {
-  showAnnotationsSelector, annotationsListSelector, hasUnsavedChangesSelector, showHeaderSelector
+  showAnnotationsSelector, annotationsListSelector, hasUnsavedChangesSelector, showHeaderSelector, showZoomControlSelector
 } from '../util/selectors'
 
 import Annotations from './Annotations'
@@ -27,6 +27,7 @@ export function Root() {
   const hasAnnotations = useSelector(annotationsListSelector).length > 0
   const hasUnsavedChanges = useSelector(hasUnsavedChangesSelector)
   const showHeader = useSelector(showHeaderSelector)
+  const showZoomControl = useSelector(showZoomControlSelector)
   // to pevent backspace form navigating away from page
   // in firefox and possibly other browsers
   useEffect(() => {
@@ -75,7 +76,7 @@ export function Root() {
               <Hidden xsDown>
                 <Editor />
               </Hidden>
-              <ZoomControl />
+              { showZoomControl && <ZoomControl /> }
               <FloatingEditors />
               <UserMessage />
             </div>

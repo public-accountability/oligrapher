@@ -53,6 +53,10 @@ export const showHeaderSelector: Selector<boolean> = state => {
   return state.display.showHeader
 }
 
+export const showZoomControlSelector: Selector<boolean> = state => {
+  return state.display.showZoomControl
+}
+
 export const currentAnnotationSelector: Selector<Annotation> = state => {
   const list = annotationsListSelector(state)
   const { currentIndex } = state.annotations
