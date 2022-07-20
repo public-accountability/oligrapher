@@ -1,5 +1,6 @@
 import React from 'react'
 import sinon from 'sinon'
+import { expect } from 'chai'
 import { mount } from 'enzyme'
 
 import EditorSubmitButtons from '../../app/components/EditorSubmitButtons'
@@ -20,14 +21,14 @@ describe('<EditorSubmitButtons>', function() {
       }
       submitButtons = mount(<EditorSubmitButtons {...props} />)
     })
-  
+
     it("renders a submit button which calls the submit handler", function() {
       let button = submitButtons.find("button").filterWhere(n => n.text() === 'Apply')
       expect(button).to.have.lengthOf(1)
       button.simulate("click")
       expect(submitter.calledOnce).to.be.true
     })
-  
+
     it("renders a delete button which calls the delete handler", function() {
       let button = submitButtons.find("button").filterWhere(n => n.text() === 'Delete')
       expect(button).to.have.lengthOf(1)
@@ -55,6 +56,6 @@ describe('<EditorSubmitButtons>', function() {
       expect(button).to.have.lengthOf(1)
       button.simulate("click")
       expect(pageSetter.calledOnce).to.be.true
-    })  
+    })
   })
 })

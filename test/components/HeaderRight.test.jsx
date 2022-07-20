@@ -1,4 +1,5 @@
 import React from 'react'
+import { expect } from 'chai'
 
 import HeaderRight from '../../app/components/HeaderRight'
 import HeaderActions from '../../app/components/HeaderActions'

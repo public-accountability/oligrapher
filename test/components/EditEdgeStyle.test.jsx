@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import sinon from 'sinon'
-
+import { expect } from 'chai'
 import EditEdgeStyle from '../../app/components/EditEdgeStyle'
 import Edge from '../../app/graph/edge'
 import Node from '../../app/graph/node'

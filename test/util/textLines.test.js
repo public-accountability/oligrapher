@@ -1,4 +1,5 @@
 import textLines from '../../app/util/textLines'
+import { expect } from 'chai'
 
 describe('textLines()', function() {
   it("splits short names", function() {

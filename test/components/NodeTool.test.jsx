@@ -1,4 +1,5 @@
 import React from 'react'
+import { expect } from 'chai'
 import { shallow } from 'enzyme'
 
 import NodeTool from '../../app/components/NodeTool'
@@ -6,7 +7,7 @@ import Toolbox from "../../app/components/Toolbox"
 import EntitySearch from "../../app/components/EntitySearch"
 import { stubDispatch } from "../../test/testHelpers"
 
-// Currently we have to mock react-redux's useDispatch hook 
+// Currently we have to mock react-redux's useDispatch hook
 // in order to use enzyme.
 
 describe('<NodeTool>', function() {

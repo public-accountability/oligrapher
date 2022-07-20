@@ -1,4 +1,5 @@
 import { applyZoomToViewBox } from '../../app/util/dimensions'
+import { expect } from 'chai'
 
 describe('applyZoomToViewBox', function() {
   it('applies zoom', function() {

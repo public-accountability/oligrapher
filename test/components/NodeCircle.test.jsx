@@ -3,6 +3,8 @@ import { shallow } from 'enzyme'
 
 import NodeCircle from '../../app/components/NodeCircle'
 
+import { expect } from 'chai'
+
 describe('<NodeCircle>', function() {
   let nodeCircle, node, radius
 

@@ -1,6 +1,7 @@
 // import Graph from '../../app/graph/graph'
 import Node from '../../app/graph/node'
 import Edge, { edgeCoordinates, determineNodeNumber } from '../../app/graph/edge'
+import { expect } from 'chai'
 
 describe('Edge', function() {
   describe("Edge.new", function() {

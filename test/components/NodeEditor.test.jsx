@@ -1,4 +1,5 @@
 import React from 'react'
+import { expect } from 'chai'
 
 import NodeEditor, { MainPage } from '../../app/components/NodeEditor'
 import Graph from '../../app/graph/graph'
@@ -17,7 +18,7 @@ describe('<NodeEditor>', function() {
     Graph.addNode(graph, node)
     store = createMockStore({ graph })
     nodeEditor = mountWithStore(
-      store, 
+      store,
       <NodeEditor id={node.id} />
     )
   })

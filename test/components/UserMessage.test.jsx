@@ -1,13 +1,14 @@
 import React from 'react'
+import { expect } from 'chai'
 
 import UserMessage from '../../app/components/UserMessage'
 import { createMockStore, mountWithStore } from '../testHelpers'
 
 describe('<UserMessage>', function() {
   let store, wrapper
-  
+
   it('renders nothing when no message', function() {
-    store = createMockStore({ 
+    store = createMockStore({
       display: { userMessage: null }
     })
     wrapper = mountWithStore(store, <UserMessage />)
@@ -15,7 +16,7 @@ describe('<UserMessage>', function() {
   })
 
   it('renders message containing node names', function() {
-    store = createMockStore({ 
+    store = createMockStore({
       display: { userMessage: "stay home and stay safe" }
     })
     wrapper = mountWithStore(store, <UserMessage />)

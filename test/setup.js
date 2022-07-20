@@ -31,7 +31,6 @@ global.window = window
 global.document = window.document
 global.navigator = { userAgent: 'node.js' }
 
-
 // Copy window props to global
 Object.defineProperties(global, {
   ...Object.getOwnPropertyDescriptors(window),

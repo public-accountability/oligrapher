@@ -1,4 +1,5 @@
 import React from 'react'
+import { expect } from 'chai'
 import { DraggableCore } from 'react-draggable'
 
 import { Edge } from '../../app/components/Edge'
@@ -33,15 +34,15 @@ describe('<Edge>', function() {
       s2: 1
     }
     state = {
-      graph: { 
+      graph: {
         nodes: { "1000": node1, "x3": node2 },
-        edges: { 'x4': edge } 
+        edges: { 'x4': edge }
       },
       display: { actualZoom: 1, modes: { editor: true } }
     }
     store = createMockStore(state)
     wrapper = mountWithStore(
-      store, 
+      store,
       <svg><Edge id={edge.id} currentlyEdited={false} /></svg>
     )
   })

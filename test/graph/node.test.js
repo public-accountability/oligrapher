@@ -1,4 +1,5 @@
 import Node from '../../app/graph/node'
+import { expect } from 'chai'
 
 describe('Node', function() {
   describe("Node.new", function() {

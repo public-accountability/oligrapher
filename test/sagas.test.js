@@ -3,6 +3,7 @@ import { testSaga } from 'redux-saga-test-plan'
 import { addNode, addEdges, setActualZoom } from '../app/sagas'
 import { getEdges } from '../app/datasources/littlesis3'
 import { applyZoomToViewBox, computeSvgZoom, computeSvgOffset } from '../app/util/dimensions'
+import { expect } from 'chai'
 
 describe('sagas', function() {
   describe ('addNode saga', function() {
@@ -14,7 +15,7 @@ describe('sagas', function() {
       expect(iterator.next({ automaticallyAddEdges }))
       expect(iterator.next(allNodeIds).done).to.be.true
     })
-  
+
     it('does nothing if new node is not from LittleSis', function() {
       const iterator = addNode({ type: 'ADD_NODE', node: { id: "abc", name: "bob" } })
       const automaticallyAddEdges = true
@@ -23,7 +24,7 @@ describe('sagas', function() {
       expect(iterator.next({ automaticallyAddEdges }))
       expect(iterator.next(allNodeIds).done).to.be.true
     })
-  
+
     it("does nothing if there aren't multiple nodes", function() {
       const iterator = addNode({ type: 'ADD_NODE', node: { id: "1", name: "bob" } })
       const automaticallyAddEdges = true
@@ -32,7 +33,7 @@ describe('sagas', function() {
       iterator.next({ automaticallyAddEdges })
       expect(iterator.next(allNodeIds).done).to.be.true
     })
-  
+
     it('calls addEdges saga with node id', function() {
       const iterator = addNode({ type: 'ADD_NODE', node: { id: "1", name: "bob" } })
       const automaticallyAddEdges = true
@@ -42,20 +43,20 @@ describe('sagas', function() {
       expect(iterator.next(allNodeIds).value).to.eql(call(addEdges, "1", allNodeIds))
     })
   })
-  
+
   describe('addEdges saga', function() {
     it('fetches edges from LittleSis', function() {
       const iterator = addEdges("1", ["1", "2"])
       expect(iterator.next().value).to.eql(call(getEdges, "1", ["1", "2"]))
     })
-  
+
     it('dispatches ADD_EDGES if edges are found', function() {
       const iterator = addEdges("1", ["1", "2"])
       const edges = [{ id: "101" }, { id: "102" }]
       iterator.next()
       expect(iterator.next(edges).value).to.eql(put({ type: 'ADD_EDGES', edges }))
     })
-  
+
     it("doesn't dispatch ADD_EDGES if no edges are found", function() {
       const iterator = addEdges("1", ["1", "2"])
       const edges = []
@@ -63,13 +64,13 @@ describe('sagas', function() {
       expect(iterator.next(edges).done).to.be.true
     })
   })
-  
+
   describe('setActualZoom saga', function() {
     it('computes actual zoom using viewBox, zoom, and svgSize from state', function() {
       const saga = testSaga(setActualZoom)
       const viewBox = { minX: -500, minY: -500, w: 1000, h: 1000 }
       const zoom = 1
-      const svgSize = { width: 2000, height: 2000 } 
+      const svgSize = { width: 2000, height: 2000 }
 
       // provide saga with selections from state and check that it applies zoom to viewbox
       saga.next().next({ viewBox, zoom, svgSize }).call(applyZoomToViewBox, viewBox, zoom)

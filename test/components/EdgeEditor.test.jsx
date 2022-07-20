@@ -1,5 +1,6 @@
 import React from 'react'
 import sinon from 'sinon'
+import { expect } from 'chai'
 import merge from 'lodash/merge'
 
 import { createMockStore, mountWithStore } from '../testHelpers'

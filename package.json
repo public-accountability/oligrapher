@@ -1,6 +1,6 @@
 {
   "name": "@public-accountability/oligrapher",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "description": "Network graph visualizer built for LittleSis",
   "main": "app/Oligrapher.jsx",
   "scripts": {
@@ -9,9 +9,9 @@
     "build-prod": "webpack --color --progress --env production",
     "build-prod-one": "webpack --color --progress --env production --env onefile",
     "dev-server": "webpack serve --color --progress --env dev_server",
-    "build": "yarn run build-prod && yarn run build-prod-one",
+    "build": "npm run build-prod && yarn run build-prod-one",
     "test": "mocha --exit",
-    "lint": "yarn run eslint ./app --ext .js,.jsx,.ts,.tsx",
+    "lint": "npm run eslint ./app --ext .js,.jsx,.ts,.tsx",
     "stats": "webpack --env production --profile --json > stats.json",
     "analyze": "webpack-bundle-analyzer stats.json"
   },
@@ -111,8 +111,7 @@
   "mocha": {
     "require": [
       "./babelRegister.js",
-      "jsdom-global/register",
-      "chai/register-expect"
+      "jsdom-global/register"
     ],
     "file": [
       "test/setup.js"

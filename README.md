@@ -52,19 +52,19 @@ To run this app in development mode:
 ```
 git clone https://github.com/public-accountability/oligrapher
 cd oligrapher
-yarn
-yarn run dev-server
+npm install
+npm run dev-server
 ```
 
 Then point your browser to [localhost:8090/dev.html](http://localhost:8090/dev.html) to view a demo graph. In development mode the React application is served by webpack with hot loading.
 
-Hot-loading Dev server : `yarn run dev-server`
+Hot-loading Dev server : `npm run dev-server`
 
-Development build: `yarn run build-dev`
+Development build: `npm run build-dev`
 
-Production build: `yarn run build-prod`
+Production build: `npm run build-prod`
 
-Run tests: `yarn test`
+Run tests: `npm test`
 
 
 Data Schema
