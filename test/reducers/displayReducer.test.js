@@ -1,11 +1,12 @@
 import reducer from '../../app/reducers/displayReducer'
 import Node from '../../app/graph/node'
 import defaultState from '../../app/util/defaultState'
+import { expect } from 'chai'
 
 describe('displayReducer', function() {
   describe('SET_EDITOR_MODE', function() {
     it('changes editor to true', function() {
-      const state = { 
+      const state = {
         modes: { editor: false },
         floatingEditor: { type: null, id: null }
       }
@@ -16,7 +17,7 @@ describe('displayReducer', function() {
     })
 
     it('clears floating editor', function() {
-      const state = { 
+      const state = {
         modes: { editor: false },
         floatingEditor: { type: 'node', id: 'abc' }
       }
@@ -29,20 +30,20 @@ describe('displayReducer', function() {
 
   describe('TOGGLE_TOOL', function() {
     it('changes tool', function() {
-      const state = { 
-        tool: 'node', 
-        floatingEditor: { type: 'node', id: 'abc' }, 
-        selection: { node: [] } 
+      const state = {
+        tool: 'node',
+        floatingEditor: { type: 'node', id: 'abc' },
+        selection: { node: [] }
       }
       const action = { type: 'TOGGLE_TOOL', tool: 'text'}
       expect(reducer(state, action).tool).to.equal('text')
     })
 
     it('closes tool', function() {
-      const state = { 
-        tool: 'node', 
-        floatingEditor: { type: 'node', id: 'abc' }, 
-        selection: { node: [] } 
+      const state = {
+        tool: 'node',
+        floatingEditor: { type: 'node', id: 'abc' },
+        selection: { node: [] }
       }
       const action = { type: 'TOGGLE_TOOL', tool: 'node'}
       expect(reducer(state, action).tool).to.be.null
@@ -78,7 +79,7 @@ describe('displayReducer', function() {
       const action = { type: 'CLOSE_EDITOR' }
       expect(reducer(state, action).floatingEditor)
         .to.eql({ type: null, id: null })
-    })   
+    })
   })
 
   describe('ADD_NODE', function() {
@@ -109,7 +110,7 @@ describe('displayReducer', function() {
     beforeEach(function() {
       state = { floatingEditor: { type: 'node', id: "r2d2" }, selection: { node: [] } }
       action = { type: 'REMOVE_NODE', id: "r2d2" }
-      nextState = reducer(state, action)  
+      nextState = reducer(state, action)
     })
 
     it('closes floating menu', function() {
@@ -139,7 +140,7 @@ describe('displayReducer', function() {
     beforeEach(function() {
       state = { floatingEditor: { type: 'edge', id: "x1" } }
       action = { type: 'REMOVE_EDGE', id: "x1" }
-      nextState = reducer(state, action)  
+      nextState = reducer(state, action)
     })
 
     it('closes floating menu', function() {

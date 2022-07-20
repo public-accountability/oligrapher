@@ -1,4 +1,5 @@
 import React from 'react'
+import { expect } from 'chai'
 
 import { createMockStore, mountWithStore } from '../testHelpers'
 import DraggableComponent from '../../app/components/DraggableComponent'
@@ -22,12 +23,12 @@ describe('<Node>', function() {
       scale: 2,
       image: 'http://example.com'
     }
-    state = { 
+    state = {
       graph: { nodes: { 'abc': node } },
-      display: { modes: { editor: true } } 
+      display: { modes: { editor: true } }
     }
     store = createMockStore(state)
-    wrapper = mountWithStore(store, 
+    wrapper = mountWithStore(store,
       <svg><Node id={node.id} currentlyEdited={false} selected={false} highlighted={false} status="normal" /></svg>
     )
   })

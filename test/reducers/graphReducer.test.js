@@ -6,6 +6,8 @@ import defaultState from '../../app/util/defaultState'
 
 import values from 'lodash/values'
 
+import { expect } from 'chai'
+
 describe('graphReducer', function() {
   describe('ADD_NODE', function() {
     let node, state, action, nextState
@@ -34,7 +36,7 @@ describe('graphReducer', function() {
       Graph.addEdge(graph, e2)
       action = { type: 'REMOVE_NODE', id: n1.id }
       state = graph
-      nextState = reducer(state, action)  
+      nextState = reducer(state, action)
     })
 
     it('removes node and edges from graph', function() {
@@ -125,7 +127,7 @@ describe('graphReducer', function() {
 
       state = graph
       action = { type: 'REMOVE_EDGE', id: e2.id }
-      nextState = reducer(state, action)  
+      nextState = reducer(state, action)
     })
 
     it('removes edge from graph', function() {

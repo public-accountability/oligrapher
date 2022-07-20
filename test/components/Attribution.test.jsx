@@ -3,6 +3,8 @@ import { shallow } from 'enzyme'
 
 import Attribution from '../../app/components/Attribution'
 
+import { expect } from 'chai'
+
 describe("<Attribution>", function(){
   it("renders user with link", function(){
     let users = [

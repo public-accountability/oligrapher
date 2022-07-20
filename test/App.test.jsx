@@ -14,7 +14,7 @@ import * as littlesis3 from '../app/datasources/littlesis3'
 import { removeSpaces } from './testHelpers'
 import { NODE_RADIUS } from '../app/graph/node'
 import * as AnnotationTextEditor from '../app/components/AnnotationTextEditor'
-import { expect } from 'chai'
+import { expect } from 'chai';
 
 function createMatchMedia(width) {
   return query => ({

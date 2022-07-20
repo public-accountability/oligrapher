@@ -1,7 +1,7 @@
 import Oligrapher from '../app/Oligrapher'
 import ReactDOM from 'react-dom'
 import sinon from 'sinon'
-
+import { expect } from 'chai'
 
 describe('Oligrapher', function() {
   describe('new Oligrapher.jsx()', function() {

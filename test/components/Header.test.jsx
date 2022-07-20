@@ -8,6 +8,8 @@ import HeaderRight from '../../app/components/HeaderRight'
 import { createMockStore, mountWithStore } from '../testHelpers'
 import { muiTheme } from '../../app/util/helpers'
 
+import { expect } from 'chai'
+
 describe('<Header>', function() {
   let header, store
 
@@ -22,7 +24,7 @@ describe('<Header>', function() {
       display: { modes: { editor: true } }
     })
 
-    header = mountWithStore(store, 
+    header = mountWithStore(store,
       <ThemeProvider theme={muiTheme}>
         <Header />
       </ThemeProvider>

@@ -16,13 +16,15 @@ import Node from '../../app/graph/node'
 import Edge from '../../app/graph/edge'
 import FloatingEditor from '../../app/util/floatingEditor'
 
+import { expect } from 'chai'
+
 describe('<FloatingEditors>', function() {
   let state, store, wrapper
 
   beforeEach(function() {
     state = merge({}, defaultState, { display: { modes: { editor: true } } })
   })
-  
+
   it("shows nothing when not in editor mode", function() {
     state.display.modes.editor = false
     store = createMockStore(state)

@@ -5,8 +5,8 @@ import EntitySearchResults from '../../app/components/EntitySearchResults'
 import * as littlesis3 from '../../app/datasources/littlesis3'
 import { stubDispatch, createMockStore, mountWithStore } from "../../test/testHelpers"
 import sinon from 'sinon'
-
-// Unfortunately, it's currently necessary to mock react-redux's useDispatch 
+import { expect } from 'chai'
+// Unfortunately, it's currently necessary to mock react-redux's useDispatch
 // in order for enzyme to work. We also can't use enzyme's shallow mounting,
 // which currently doesn't run the useEffect hook that we're mostly testing here.
 
@@ -40,7 +40,7 @@ describe('<EntitySearch>', function() {
     await act(async () => {
       wrapper = mountWithStore(store, <EntitySearch query="bob" />)
     })
-    
+
     expect(wrapper.html().toLowerCase()).to.contain("error")
   })
 
@@ -61,7 +61,7 @@ describe('<EntitySearch>', function() {
     await act(async () => {
       wrapper = mountWithStore(store, <EntitySearch query="bob" />)
     })
-    
+
     // for some reason update() is necessary this one test, perhaps because
     // there's a nested component EntitySearchResults that must render?
     wrapper.update()
@@ -76,7 +76,7 @@ describe('<EntitySearch>', function() {
     response = Promise.resolve(data)
 
     await act(async () => {
-      wrapper = mountWithStore(store, <EntitySearch query="bob" />) 
+      wrapper = mountWithStore(store, <EntitySearch query="bob" />)
     })
 
     wrapper.update()
@@ -84,7 +84,7 @@ describe('<EntitySearch>', function() {
     let link = wrapper.find('.entity-search-result a')
 
     await act(async () => {
-      link.simulate('click')    
+      link.simulate('click')
     })
 
     expect(mockDispatch.callCount).to.equal(1)

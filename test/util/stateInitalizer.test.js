@@ -3,6 +3,7 @@ import sinon from 'sinon'
 
 import Node from '../../app/graph/node'
 import stateInitalizer, { flatten } from '../../app/util/stateInitalizer'
+import { expect } from 'chai'
 
 describe('stateInitalizer', function() {
   const fakeElement = { height: 100, width: 100 }

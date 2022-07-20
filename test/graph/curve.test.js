@@ -1,6 +1,6 @@
 import { midpoint, parseCurveString, edgeToCurve } from '../../app/graph/curve'
 import Node from '../../app/graph/node'
-
+import { expect } from 'chai'
 import { xy } from '../../app/util/geometry'
 
 describe('Curve', function() {

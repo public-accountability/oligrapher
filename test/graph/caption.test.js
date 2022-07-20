@@ -1,4 +1,5 @@
 import Caption from '../../app/graph/caption'
+import { expect } from 'chai'
 
 describe('Caption', function() {
   specify('Caption.new', function(){

@@ -1,3 +1,5 @@
+import { expect } from 'chai'
+
 import curry from 'lodash/curry'
 import values from 'lodash/values'
 import Graph, {
