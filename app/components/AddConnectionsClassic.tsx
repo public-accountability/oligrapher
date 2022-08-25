@@ -8,7 +8,6 @@ import pick from 'lodash/pick'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress';
 import FormGroup from '@mui/material/FormGroup';
-import { makeStyles } from '@mui/styles'
 
 import Graph from '../graph/graph'
 import { findConnections, LsNodeWithEdges, AddConnectionsOrder } from '../datasources/littlesis3'
@@ -20,17 +19,6 @@ import AddConnectionsCategory from './AddConnectionsCategory'
 import AddConnectionsNumberPicker from './AddConnectionsNumberPicker'
 import AddConnectionsOrderPicker from './AddConnectionsOrderPicker'
 
-const useStyles = makeStyles({
-  button: {
-    marginLeft: '1em'
-  },
-  statusBox: {
-    marginTop: '2em'
-  },
-  p: {
-    marginTop: '2em'
-  }
-})
 
 function littleSisNodesSelector(state: StateWithHistory): Array<string> {
   return Graph.littleSisNodes(state.graph).map(n => toString(n.id))
@@ -59,7 +47,7 @@ function StatusBox(props: StatusBoxProps) {
 //  Instead of selecting connected entities one by one like AddConnections,
 //  this version allows them to be added at once (without being previewed)
 export default function AddConnectionsClassic(props: { id: string }) {
-  const classes = useStyles()
+  // const classes = useStyles()
   const dispatch = useDispatch()
   const { x, y } = useSelector(createPositionSelector(props.id))
   const littleSisIds = useSelector(littleSisNodesSelector)
@@ -125,10 +113,10 @@ export default function AddConnectionsClassic(props: { id: string }) {
 
 
       <AddConnectionsNumberPicker onChange={setNum} value={num} />
-      <Button className={classes.button} onClick={addConnections} variant='contained' disabled={!hasResults}>add</Button>
+      <Button className="add-connections-classic-button" onClick={addConnections} variant='contained' disabled={!hasResults}>add</Button>
 
-      <div className={classes.statusBox}>
-        <StatusBox className={classes.p} results={results} loading={loading} />
+      <div className="add-connections-classic-statusbox" >
+        <StatusBox className="add-connections-classic-p" results={results} loading={loading} />
       </div>
     </div>
   )

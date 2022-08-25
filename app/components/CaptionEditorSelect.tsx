@@ -1,39 +1,33 @@
 import React from 'react'
 import { Select, MenuItem } from '@mui/material'
-import { makeStyles } from '@mui/styles'
-import { classNames } from '../util/helpers'
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles({
-  select: (props: CaptionEditorSelectProps) => ({
-    marginTop: 5,
-    marginRight: 5,
-    fontSize: 12,
-    lineHeight: 1.2,
-    width: props.width
-  }),
-  option: {
-    fontSize: 12,
-    lineHeight: 1
-  }
-})
+const StyledSelect = styled(Select)`
+marginTop: 5;
+marginRight: 5;
+fontSize: 12;
+lineHeight: 1.2;
+width: ${props => props.width};
+`
+
+const StyledMenuItem = styled(MenuItem)`
+fontSize: 12;
+lineHeight: 1;
+`
 
 export default function CaptionEditorSelect(props: CaptionEditorSelectProps) {
-  const classes = useStyles(props)
-  const classNamez = classNames(classes.select, `select-caption-${props.name}`)
-
   return (
-    <Select
+    <StyledSelect
       id={`caption-editor-select-${props.name}`}
       MenuProps={{ id: 'caption-editor-select-menu', transitionDuration: 0 }}
-      className={classes.select}
       value={props.value}
       onChange={props.onChange(props.name)}
-      variant="outlined"
-    >
-      { props.options.map(({ value, label }) => (
-        <MenuItem className={classes.option} dense={true} value={value} key={value}>{label}</MenuItem>)
-       ) }
-    </Select>
+      variant="outlined">
+      {
+        props.options.map(({ value, label }) => (
+        <StyledMenuItem dense={true} value={value} key={value}>{label}</StyledMenuItem>
+      )) }
+    </StyledSelect>
   )
 }
 

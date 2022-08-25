@@ -4,7 +4,6 @@ import toNumber from 'lodash/toNumber'
 
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import { makeStyles } from '@mui/styles';
 
 interface AddConnectionNumberPickerProps {
   value: number
@@ -16,8 +15,6 @@ type CallWithNumberValueType = (f: (n: number) => any) => (event: any) => void
 const callWithNumberValue: CallWithNumberValueType = (f) => (event) => {
   f(toNumber(event.target.value))
 }
-
-const useStyles = makeStyles({})
 
 export default function AddConnectionsNumberPicker(props: AddConnectionNumberPickerProps) {
   return <Select
