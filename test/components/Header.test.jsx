@@ -1,5 +1,5 @@
 import React from 'react'
-import { ThemeProvider } from '@material-ui/core/styles'
+import { ThemeProvider } from '@mui/material/styles'
 
 import Header from '../../app/components/Header'
 import Attribution from '../../app/components/Attribution'

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { MdExpandMore } from '@react-icons/all-files/md/MdExpandMore'
 import { MdExpandLess } from '@react-icons/all-files/md/MdExpandLess'
-import useMediaQuery from '@material-ui/core/useMediaQuery'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 import { useSelector } from '../util/helpers'
 import HeaderRight from './HeaderRight'

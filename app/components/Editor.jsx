@@ -1,5 +1,5 @@
 import React from 'react'
-import { hot } from 'react-hot-loader/root'
+// import { hot } from 'react-hot-loader/root'
 
 import { useSelector } from '../util/helpers'
 import { enableLockSelector } from '../util/selectors'
@@ -45,4 +45,4 @@ export function Editor() {
   )
 }
 
-export default hot(Editor)
+export default Editor

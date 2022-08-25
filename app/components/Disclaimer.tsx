@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { 
+import {
   Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle
-} from '@material-ui/core'
+} from '@mui/material'
 
 export default function Disclaimer({ open, close }: DisclaimerProps) {
   return (
@@ -31,4 +31,4 @@ export default function Disclaimer({ open, close }: DisclaimerProps) {
 export interface DisclaimerProps {
   open: boolean,
   close: () => void
-} 
+}

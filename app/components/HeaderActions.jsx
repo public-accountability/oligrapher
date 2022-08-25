@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useRef } from 'react'
 import { useDispatch } from 'react-redux'
-import { Button, IconButton, Menu, MenuItem, Hidden } from '@material-ui/core'
+import { Button, IconButton, Menu, MenuItem, Hidden } from '@mui/material'
 import { IoIosMore } from '@react-icons/all-files/io/IoIosMore'
 
 import { useSelector } from '../util/helpers'

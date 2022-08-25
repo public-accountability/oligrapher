@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { 
-  Button, Dialog, DialogActions, DialogContent, DialogContentText 
-} from '@material-ui/core'
+import {
+  Button, Dialog, DialogActions, DialogContent, DialogContentText
+} from '@mui/material'
 
 import { useSelector } from '../util/helpers'
 import { userIsOwnerSelector } from '../util/selectors'
@@ -10,10 +10,10 @@ import { userIsOwnerSelector } from '../util/selectors'
 export default function LockModal() {
   const dispatch = useDispatch()
   const closeEditor = useCallback(
-    () => dispatch({ type: 'SET_EDITOR_MODE', enabled: false }), 
+    () => dispatch({ type: 'SET_EDITOR_MODE', enabled: false }),
     [dispatch]
   )
-  const takeoverLock = useCallback(    
+  const takeoverLock = useCallback(
     () => dispatch({ type: 'LOCK_TAKEOVER_REQUESTED' })
     [dispatch]
   )
@@ -31,21 +31,21 @@ export default function LockModal() {
       >
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            { userHasPermission && 
+            { userHasPermission &&
               <>
                 <strong>{name}</strong> is editing this map right now.
                 Get in touch with your team to get editing control.
 
-                { isOwner && 
+                { isOwner &&
                   <>
                     <br /><br />
-                    As the owner of this map, <strong>you can resume editing, but {name} will 
+                    As the owner of this map, <strong>you can resume editing, but {name} will
                     lose any unsaved changes!</strong> (It will also cause this page to reload.)
                   </>
-                } 
+                }
               </>
             }
-            { !userHasPermission && 
+            { !userHasPermission &&
               <>
                 You don't have permission to edit this map. Get in touch
                 with the map owner to be added as an editor.
@@ -57,10 +57,10 @@ export default function LockModal() {
           <Button onClick={closeEditor} variant="contained" color="default">
             Close editor
           </Button>
-          { isOwner && 
+          { isOwner &&
             <Button onClick={takeoverLock} variant="contained" color="primary">
               Resume editing
-            </Button>        
+            </Button>
           }
         </DialogActions>
       </Dialog>

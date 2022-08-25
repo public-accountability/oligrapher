@@ -9,7 +9,7 @@ import { FiUsers } from '@react-icons/all-files/fi/FiUsers'
 import { GoTextSize } from '@react-icons/all-files/go/GoTextSize'
 import { GoGear } from '@react-icons/all-files/go/GoGear'
 import { GiLinkedRings } from '@react-icons/all-files/gi/GiLinkedRings'
-import FundProjectionScreenOutlined from '@ant-design/icons/FundProjectionScreenOutlined'
+import { FaChartLine } from '@react-icons/all-files/fa/FaChartLine'
 import noop from 'lodash/noop'
 
 const MENU = {
@@ -34,7 +34,7 @@ const MENU = {
     title: 'Organize Map'
   },
   "annotations": {
-    icon: <FundProjectionScreenOutlined />,
+    icon: <FaChartLine />,
     title: 'Annotations'
   },
   "settings": {

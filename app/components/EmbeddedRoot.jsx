@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { hot } from 'react-hot-loader/root'
-import { ThemeProvider } from '@material-ui/core/styles'
+//import { hot } from 'react-hot-loader/root'
+import { ThemeProvider } from '@mui/material/styles'
 
 import CondensedHeader from './CondensedHeader'
 import Graph from './Graph'
@@ -38,4 +38,4 @@ export function EmbeddedRoot() {
   )
 }
 
-export default hot(EmbeddedRoot)
+export default EmbeddedRoot

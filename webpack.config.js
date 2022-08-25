@@ -134,10 +134,7 @@ module.exports = function(env) {
     ].filter(Boolean),
 
     resolve: {
-      extensions: ['.js', '.jsx', '.ts', '.tsx'],
-      alias: {
-        'react-dom': devServer ? '@hot-loader/react-dom' : 'react-dom'
-      }
+      extensions: ['.js', '.jsx', '.ts', '.tsx']
     }
   }
 }

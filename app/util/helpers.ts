@@ -2,7 +2,7 @@ import { SyntheticEvent, useState, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import isFunction from 'lodash/isFunction'
 import toNumber from 'lodash/toNumber'
-import { createTheme } from '@material-ui/core/styles'
+import { createTheme } from '@mui/material/styles'
 
 import { Selector } from './selectors'
 import { State, StateWithHistory } from './defaultState'

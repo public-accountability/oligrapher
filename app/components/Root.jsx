@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { hot } from 'react-hot-loader/root'
-import { ThemeProvider } from '@material-ui/core/styles'
-import { Grid, Hidden } from '@material-ui/core'
+//import { hot } from 'react-hot-loader/root'
+import { ThemeProvider } from '@mui/material/styles'
+import { Grid, Hidden } from '@mui/material'
 
 import Header from './Header'
 import CondensedHeader from './CondensedHeader'
@@ -109,4 +109,4 @@ export function Root() {
   )
 }
 
-export default hot(Root)
+export default Root

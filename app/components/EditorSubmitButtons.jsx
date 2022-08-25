@@ -1,21 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import noop from 'lodash/noop'
-import { Button } from '@material-ui/core'
+import { Button } from '@mui/material'
 
 export default function EditorSubmitButtons({ handleSubmit, handleDelete, hideDeleteButton, hideSubmitButton, page, setPage })  {
   return (
     <div className="editor-buttons">
-      { !hideDeleteButton && page === 'main' && 
-        <Button onClick={handleDelete} variant="contained" color="secondary" size="small" disableElevation={true}>Delete</Button> 
+      { !hideDeleteButton && page === 'main' &&
+        <Button onClick={handleDelete} variant="contained" color="secondary" size="small" disableElevation={true}>Delete</Button>
       }
 
-      { page !== 'main' && 
-        <Button onClick={() => setPage('main')} variant="contained" color="primary" size="small" disableElevation={true}>Back</Button> 
+      { page !== 'main' &&
+        <Button onClick={() => setPage('main')} variant="contained" color="primary" size="small" disableElevation={true}>Back</Button>
       }
 
-      { !hideSubmitButton && 
-        <Button onClick={handleSubmit} variant="contained" color="primary" size="small" disableElevation={true}>Apply</Button> 
+      { !hideSubmitButton &&
+        <Button onClick={handleSubmit} variant="contained" color="primary" size="small" disableElevation={true}>Apply</Button>
       }
     </div>
   )

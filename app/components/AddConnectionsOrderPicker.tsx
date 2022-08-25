@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react'
 
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import { makeStyles } from '@material-ui/core/styles';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import { makeStyles } from '@mui/material/styles';
 
 import { AddConnectionsOrder } from '../datasources/littlesis3'
 

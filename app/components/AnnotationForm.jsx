@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { Input, Button } from '@material-ui/core'
+import { Input, Button } from '@mui/material'
 import loadable from '@loadable/component'
 
 import { callWithTargetValue } from '../util/helpers'

@@ -1,7 +1,7 @@
 import React from 'react'
-import { 
-  Button, Dialog, DialogActions, DialogContent, DialogContentText 
-} from '@material-ui/core'
+import {
+  Button, Dialog, DialogActions, DialogContent, DialogContentText
+} from '@mui/material'
 
 export default function Confirm({ open, message, cancel, confirm }: ConfirmProps) {
   return (

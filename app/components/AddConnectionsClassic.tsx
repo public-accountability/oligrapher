@@ -5,10 +5,10 @@ import toString from 'lodash/toString'
 import omit from 'lodash/omit'
 import pick from 'lodash/pick'
 
-import Button from '@material-ui/core/Button'
-import CircularProgress from '@material-ui/core/CircularProgress';
-import FormGroup from '@material-ui/core/FormGroup';
-import { makeStyles } from '@material-ui/core/styles'
+import Button from '@mui/material/Button'
+import CircularProgress from '@mui/material/CircularProgress';
+import FormGroup from '@mui/material/FormGroup';
+import { makeStyles } from '@mui/material/styles'
 
 import Graph from '../graph/graph'
 import { findConnections, LsNodeWithEdges, AddConnectionsOrder } from '../datasources/littlesis3'

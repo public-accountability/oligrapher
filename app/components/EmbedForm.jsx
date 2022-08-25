@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
-import { Popover } from '@material-ui/core'
+import { Popover } from '@mui/material'
 
 import { callWithTargetValue } from '../util/helpers'
 
@@ -36,7 +36,7 @@ export default function EmbedForm({ open, anchor, close, }) {
           &nbsp;&nbsp;
           Height: <input type="text" value={height} onChange={onHeightChange} />
         </div>
-        
+
         <textarea ref={textareaRef} onClick={selectAll} value={code} readOnly={true}></textarea>
       </div>
     </Popover>
