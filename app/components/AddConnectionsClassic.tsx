@@ -8,7 +8,7 @@ import pick from 'lodash/pick'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress';
 import FormGroup from '@mui/material/FormGroup';
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 
 import Graph from '../graph/graph'
 import { findConnections, LsNodeWithEdges, AddConnectionsOrder } from '../datasources/littlesis3'

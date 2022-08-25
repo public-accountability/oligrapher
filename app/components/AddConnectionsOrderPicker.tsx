@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import { makeStyles } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 
 import { AddConnectionsOrder } from '../datasources/littlesis3'
 

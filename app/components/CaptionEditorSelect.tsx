@@ -1,7 +1,6 @@
 import React from 'react'
 import { Select, MenuItem } from '@mui/material'
-import { makeStyles } from '@mui/material/styles'
-
+import { makeStyles } from '@mui/styles'
 import { classNames } from '../util/helpers'
 
 const useStyles = makeStyles({

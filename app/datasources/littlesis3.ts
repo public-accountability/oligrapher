@@ -1,4 +1,6 @@
-import wretch from 'wretch'
+import baseWretch from "wretch"
+import QueryStringAddon from "wretch/addons/queryString"
+const wretch = baseWretch().addon(QueryStringAddon)
 
 import { Editor } from '../util/defaultState'
 import { Graph } from '../graph/graph'
@@ -111,7 +113,8 @@ export function findNodes(query: string): Promise<LsNode[]> {
     return Promise.resolve([])
   }
 
-  return wretch(urls.findNodes())
+  return wretch
+    .url(urls.findNodes())
     .query({ num: 20, q: query })
     .get()
     .json()
@@ -122,28 +125,32 @@ export function findConnections(params: FindConnectionsParams): Promise<LsNodeWi
     params.num = 30
   }
 
-  return wretch(urls.findConnections())
+  return wretch
+    .url(urls.findConnections())
     .query(params)
     .get()
     .json()
 }
 
 export function getEdges(entity1Id: string, entity2Ids: string[]): Promise<LsEdge[]> {
-  return wretch(urls.getEdges())
+  return wretch
+    .url(urls.getEdges())
     .query({ entity1_id: entity1Id, entity2_ids: entity2Ids.join(',') })
     .get()
     .json()
 }
 
 export function getInterlocks(entity1Id: string, entity2Id: string, entityIds: string[]): Promise<{ nodes: Node[], edges: Edge[] }> {
-  return wretch(urls.getInterlocks())
+  return wretch
+    .url(urls.getInterlocks())
     .query({ entity1_id: entity1Id, entity2_id: entity2Id, entity_ids: entityIds.join(','), num: 10 })
     .get()
     .json()
 }
 
 export function createOligrapher(data: LsMap): Promise<LsRedirect> {
-  return wretch(urls.createOligrapher())
+  return wretch
+    .url(urls.createOligrapher())
     .options({ credentials: "same-origin" })
     .headers(headers())
     .post(data)
@@ -153,7 +160,8 @@ export function createOligrapher(data: LsMap): Promise<LsRedirect> {
 export function updateOligrapher(data: LsMap): Promise<any> {
   validateId(data.id)
 
-  return wretch(urls.updateOligrapher(data.id))
+  return wretch
+    .url(urls.updateOligrapher(data.id))
     .options({ credentials: "same-origin" })
     .headers(headers())
     .patch(data)
@@ -163,7 +171,8 @@ export function updateOligrapher(data: LsMap): Promise<any> {
 export function cloneOligrapher(id: number): Promise<LsRedirect> {
   validateId(id)
 
-  return wretch(urls.cloneOligrapher(id))
+  return wretch
+    .url(urls.cloneOligrapher(id))
     .options({ credentials: "same-origin" })
     .headers(headers())
     .post()
@@ -173,7 +182,8 @@ export function cloneOligrapher(id: number): Promise<LsRedirect> {
 export function deleteOligrapher(id: number): Promise<LsRedirect> {
   validateId(id)
 
-  return wretch(urls.deleteOligrapher(id))
+  return wretch
+    .url(urls.deleteOligrapher(id))
     .options({ credentials: "same-origin" })
     .headers(headers())
     .delete()
@@ -190,7 +200,8 @@ export const oligrapher = {
 const editorAction = (action: string) => (id: number, username: string): Promise<{ editors: Editor[] }> => {
   validateId(id)
 
-  return wretch(urls.editors(id))
+  return wretch
+    .url(urls.editors(id))
     .headers(headers())
     .post({ editor: { action, username } })
     .json()
@@ -206,17 +217,17 @@ export const editors = {
 
 export function lock(id: number): Promise<LockState> {
   validateId(id)
-  return wretch(urls.lock(id)).headers(headers()).get().json()
+  return wretch.url(urls.lock(id)).headers(headers()).get().json()
 }
 
 export function takeoverLock(id: number): Promise<LockState> {
   validateId(id)
-  return wretch(urls.lock(id)).headers(headers()).post().json()
+  return wretch.url(urls.lock(id)).headers(headers()).post().json()
 }
 
 export function releaseLock(id: number): Promise<any> {
   validateId(id)
-  return wretch(urls.releaseLock(id)).headers(headers()).post().json()
+  return wretch.url(urls.releaseLock(id)).headers(headers()).post().json()
 }
 
 export default {

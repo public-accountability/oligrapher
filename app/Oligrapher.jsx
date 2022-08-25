@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux'
 import loadable from '@loadable/component'
 
@@ -46,11 +46,10 @@ export default class Oligrapher {
 
     const isEmbedded = this.store.getState().settings.embed
 
-    ReactDOM.render(
-      <Provider store={this.store}>
-        { isEmbedded ? <EmbeddedRoot /> : <Root /> }
-      </Provider>,
-      this.element
-    )
+    const root = createRoot(this.element)
+
+    root.render(<Provider store={this.store}>
+                  { isEmbedded ? <EmbeddedRoot /> : <Root /> }
+                </Provider>)
   }
 }

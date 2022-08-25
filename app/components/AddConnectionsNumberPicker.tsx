@@ -4,7 +4,7 @@ import toNumber from 'lodash/toNumber'
 
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import { makeStyles } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 
 interface AddConnectionNumberPickerProps {
   value: number
