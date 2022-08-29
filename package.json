@@ -87,10 +87,8 @@
     "testMatch": [
       "**/test/**/*.[jt]s?(x)"
     ],
-
     "transformIgnorePatterns": [
       "node_modules/(?!(nanoid|lodash-es)/)"
     ]
-
   }
 }
