@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware, Middleware } from 'redux'
+import { configureStore, Middleware } from '@reduxjs/toolkit'
 import { createLogger } from 'redux-logger'
 import createSagaMiddleware from 'redux-saga'
 
@@ -20,11 +20,11 @@ export const createOligrapherStore = (initialState: StateWithHistory) => {
     middleware.push(createLogger())
   }
 
-  const store = createStore(
-    reducers,
-    initialState,
-    applyMiddleware(...middleware)
-  )
+  const store = configureStore({
+    reducer: reducers,
+    preloadedState: initialState,
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(...middleware)
+  })
 
   sagaMiddleware.run(rootSaga)
 
