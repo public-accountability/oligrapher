@@ -1,12 +1,5 @@
 @use "sass:color";
 
-/*
-  Oligrapher uses IDs for components that have only one.
-  Otherwise classes are used.
-
-  SCSS nesting is used here, even when not necessary,
-  to help us navigate the DOM tree.
-*/
 $oligrapher_blue: #0c7fff;
 $font_color: black;
 $link_color: $oligrapher_blue;
@@ -50,7 +43,6 @@ body {
 
 /*
    This is our outermost div.
-
    It's a flex container with two children: #oligrapher-header and #oligrapher-graph
 */
 #oligrapher-container {

@@ -1,5 +1,5 @@
 /*
-  Oligrapher's webpack build can be configured via the command line via changes these variables:
+  Oligrapher's webpack build can be configured via the command line by changing these variables:
 
   env.output_path         |  asset output directory. defaults to ./dist
   env.public_path         |  code chunks will be fetched from this path. defaults to "http://localhost:8091"
@@ -8,7 +8,7 @@
   env.api_url             |  littlesis datasource url. defaults to "https://littlesis.org"
   env.onefile             |  outputs a single compiled file
 
-  Also see the yarn scripts in package.json
+  See the scripts in package.json
 */
 const fs = require('fs')
 const path = require('path')

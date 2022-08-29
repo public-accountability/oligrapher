@@ -16,7 +16,7 @@ describe('Edge', function() {
     })
   })
 
-  specify('newEdgeFromNodes', function() {
+  test('newEdgeFromNodes', function() {
     let n1 = Node.new({x: 1, y: 1})
     let n2 = Node.new({x: 2, y: 2})
     let edge = Edge.newEdgeFromNodes(n1, n2)
@@ -42,7 +42,7 @@ describe('Edge', function() {
     })
   })
 
-  specify('determineNodeNumber', function() {
+  test('determineNodeNumber', function() {
     let n1 = Node.new()
     let n2 = Node.new()
     let edge = Edge.newEdgeFromNodes(n1, n2)
