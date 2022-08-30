@@ -1,847 +1,2730 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Oligrapher</title>
-    <link rel="stylesheet" media="all" href="http://127.0.0.1:8080/assets/oligrapher.self-b9be264d39611bf605184a8a9ff5912b1a19a97162cd059b7f4b531612082f04.css?body=1" />
-    <meta name="csrf-param" content="authenticity_token" />
-    <meta name="csrf-token" content="ilVDtBMQkU2KS6iFmZRS3olt/h/PXpy3lWAuRCnwTUgzRKjMMiQ0S4gMNridFddjLoDwNGtv/Pxr94PFnj8LFA==" />
-    <script src="https://cdn.ckeditor.com/ckeditor5/10.0.1/classic/ckeditor.js"></script>
-    <script src="http://localhost:8090/webpack-dev-server.js"></script>
-    <script src="http://localhost:8090/oligrapher-dev.js"></script>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8" />
+    <title>Oligrapher Demo</title>
+    <script src="/oligrapher/assets/oligrapher-dev.bundle.js"></script>
+    <style>
+      body {
+        margin: 0;
+      }
+
+     #oligrapher {
+       width: 100%;
+     }
+    </style>
   </head>
 
   <body>
-    <div id="top">
-      
-
-  <nav class="navbar navbar-expand-md fixed-top navbar-light bg-light" id="main-navbar-container">
-  
-  <div id="navbar-content-wrapper" class="navbar-full-width">
-    
-    <div id="navbar-content">
-      <div id="brand mr-auto">
-	<a href="/home/dashboard"><img src="http://127.0.0.1:8080/assets/lilsis-logo-trans-200-74169fd94db9637c31388ad2060b48720f94450b40c45c23a3889cf480f02c52.png" /></a>
-      </div>
-
-      <div class="collapse navbar-collapse">
-	
-
-  <ul class="nav mr-auto ml-2">
-	<li class="nav-item dropdown">
-	  <a class="nav-link dropdown-toggle" href="#" id="navbar-header-user_1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">user_1</a>
-	  <div class="dropdown-menu"><a class="dropdown-item" href="/home/maps">Maps</a><a class="dropdown-item" href="/home/lists">Lists</a><a class="dropdown-item" href="/users/user_1/edits">Edits</a><div class="dropdown-divider"></div><a class="dropdown-item" href="/users/edit">Settings</a><a class="dropdown-item" href="/logout">Logout</a></div>
-</li>
-	<li class="nav-item dropdown">
-	  <a class="nav-link dropdown-toggle" href="#" id="navbar-header-Explore" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Explore</a>
-	  <div class="dropdown-menu"><a class="dropdown-item" href="/maps">Maps</a><a class="dropdown-item" href="/lists">Lists</a><a class="dropdown-item" href="/tags">Tags</a><a class="dropdown-item" href="/edits">Edits</a></div>
-</li>
-	<li class="nav-item dropdown">
-	  <a class="nav-link dropdown-toggle" href="#" id="navbar-header-Add" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add</a>
-	  <div class="dropdown-menu"><a class="dropdown-item" href="/entities/new">Entity</a><a class="dropdown-item" href="/lists/new">List</a><a class="dropdown-item" href="/maps/new">Map</a></div>
-</li>
-	<li class="nav-item dropdown">
-	  <a class="nav-link dropdown-toggle" href="#" id="navbar-header-Help" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Help</a>
-	  <div class="dropdown-menu"><a class="dropdown-item" href="/toolkit">Toolkit</a><a class="dropdown-item" href="/help">Help</a><a class="dropdown-item" href="/bug_report">Report a bug</a></div>
-</li>
-	<li class="nav-item dropdown">
-	  <a class="nav-link dropdown-toggle" href="#" id="navbar-header-About" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">About</a>
-	  <div class="dropdown-menu"><a class="dropdown-item" href="/about">LittleSis</a><a class="dropdown-item" href="/features">Features</a><a class="dropdown-item" href="/team">Our Team</a><a class="dropdown-item" href="https://news.littlesis.org">Blog</a><a class="dropdown-item" href="/api">Data API</a><a class="dropdown-item" href="https://github.com/public-accountability/littlesis-rails">Source Code</a><a class="dropdown-item" href="/disclaimer">Disclaimer</a><a class="dropdown-item" href="/contact">Contact Us</a><a class="dropdown-item" href="https://public-accountability.org/category/job/">Jobs</a><a class="dropdown-item" href="/donate">Donate</a></div>
-</li>
-  </ul>
-
-
-
-	
-	<div id="top_donate_link">
-	  <span><strong><a id="donate-link-button" href="/donate">Donate</a></strong></span>
-	</div>
-
-	
-<form action="/search" method="get" role="search" id="navbar-search">
-  <div class="input-group">
-    <input type="text" name="q" class="form-control" placeholder="Search LittleSis" />
-    <div class="input-group-append">
-      <button type="submit" class="btn btn-clear" style="border-color: #ccc;">
-	<span class="glyphicon glyphicon-search"></span>
-      </button>
-    </div>
-  </div>
-</form>
-
-      </div>
-
-      <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-	   <span class="navbar-toggler-icon"></span>
-	   </button> -->
-    </div>
-  </div>
-</nav>
-
-    </div>
-
     <div id="oligrapher"></div>
 
     <script>
-
-      var graph = {
-        "nodes": {
-        "15114": {
-          "id": 15114,
-          "display": {
-            "x": -127.88049209138843,
-            "y": -37.51845342706503,
-            "scale": 1,
-            "name": "University of Chicago",
-            "image": "https://d3qi0qp55mx5f5.cloudfront.net/shared-resources/i/template/uc_wordmark_hires.gif",
-            "url": "https://littlesis.org/org/15114-University_of_Chicago",
-            "color": "#ccc"
+      const oli = new Oligrapher({
+        "graph": {
+          "nodes": {
+            "1": {
+              "id": 1,
+              "display": {
+                "x": -480.1757469244288,
+                "y": 525.8558875219683,
+                "scale": 2,
+                "name": "Walmart",
+                "image": "https://littlesis.org/images/profile/1b/1b94e832d0699854a3f9b1cf5732682cf75f395f_1395144942.png",
+                "url": "https://littlesis.org/org/1-Walmart",
+                "color": "#ccc"
+              }
+            },
+            "10": {
+              "id": 10,
+              "display": {
+                "x": -478.780316344464,
+                "y": -106.37961335676627,
+                "scale": 2,
+                "name": "AT&T, Inc.",
+                "image": "https://littlesis.org/images/profile/79/797f5c243d8c8a2ed45686ee3bb16ed08a84aaed_1398359655.png",
+                "url": "https://littlesis.org/org/10-AT&T,_Inc.",
+                "color": "#ccc"
+              }
+            },
+            "48": {
+              "id": 48,
+              "display": {
+                "x": -885.9964850615114,
+                "y": 597.0966608084358,
+                "scale": 2,
+                "name": "Pfizer Inc.",
+                "image": "https://littlesis.org/images/profile/f3/f37b436d92999a5d5b9effe8284e03bd.png",
+                "url": "https://littlesis.org/org/48-Pfizer_Inc.",
+                "color": "#ccc"
+              }
+            },
+            "84": {
+              "id": 84,
+              "display": {
+                "x": 12.126537785588734,
+                "y": -271.3145869947275,
+                "scale": 2,
+                "name": "The Coca-Cola Company",
+                "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAABYlBMVEXmHiv////mHS37///5///1/////v/mHirpHCvjHyv//v7//P/z///pHC3kHi38/P//+f/7//z4/f/hICz/9//oGif4//zjAB3mHiXhISftGizoABnnHDD4//nqEyHwAB/WABnbIyneABbUACTeAA/WVFr56eX89fHqHSLhHzDoABPvxMPXQ1L6+vPcAADwACXYbnTszcnrs7LRFyPy1Nr13NX65+vZHTXVABXZIzHtAA388PDbgIPnUWDSOUf1+evZYG3flZnpkpziT0/05vHhkYfjq7TbiI3moKnPJC3LWFTVlqXtvsLnh5HgZG7NJDfRMUbodYno4tPHSVfUOjfRZ2jlvLnmGz/QQknqqqjvzsfdtbXgYG3m5OH/AB/dxMDVb4HiOD/nZmrkxtPst7HHfIzkNEvXjJPXpqXmiYffU17mUWvCJi/JO0zSjobj0tf2r73KTk3vjZTWfXjORGDWl54K99yHAAAaOUlEQVR4nO2b6XfbRpb2CVZhBwiCcBEbWQRBiuAqLuIiigwjKh1JTlOiO44U0ZY6VsbjOJok7nSm///3FmRnZDuTmZH15T0HvxMdOxQA1kXd5blV5VQqISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISHhLaIriqlUOmV5nvRAj/RSKYmIsiiJJJ0SJUuUJFEUZTmTlghxPrhYzsgwBOJJGfndJxIM5oGGwtD1tEwcx6VlV0qn0w/xSElO6Q1dFx3XIY5r6XqhQSmB/9wG8MHFFtjtpRsZUdTf3S6KXvkhxvEW2XV8m2QaO7QrPpCFMBmi4/vTxcVialPP9+3pon3zxXXDL3U968OLiV7wdzMW6RYyt5+IYmMqPsQ4YiTiizcnq1GtNlyuyQNYKMYPdYLFsl+LOtH4eFG5PGB/LZpR7Xy+COgHN6TrwXreqr05cmML4X6y88/Fg3hpQUwX4Ok/jDo8xyGM8XBN9Ab5lEfCCypYUsG35v0Ox+Uw5jThasQhpGVVBSHEcdHrduCQDLgwizrLI426PR8jntO0NknLslRw6beD3x5mCkXHsV8d13jOMDRU66/G2nNb+lQL0+V6V5yPTJXX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",
+                "url": "https://littlesis.org/org/84-The_Coca-Cola_Company",
+                "color": "#ccc"
+              }
+            },
+            "86": {
+              "id": 86,
+              "display": {
+                "x": -892.8963093145871,
+                "y": -261.9929701230229,
+                "scale": 2,
+                "name": "Aetna Inc.",
+                "image": null,
+                "url": "https://littlesis.org/org/86-Aetna_Inc.",
+                "color": "#ccc"
+              }
+            },
+            "1437": {
+              "id": 1437,
+              "display": {
+                "x": -653.3216168717049,
+                "y": -375.9191564147628,
+                "scale": 1.5,
+                "name": "Larry J Merlo",
+                "url": "https://littlesis.org/person/1437-Larry_J_Merlo",
+                "color": "#ccc",
+                "image": "data:image/jpeg;base64,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"
+              }
+            },
+            "1780": {
+              "id": 1780,
+              "display": {
+                "x": -674.5325131810192,
+                "y": 679.5869947275922,
+                "scale": 1.5,
+                "name": "Ian C Read",
+                "url": "https://littlesis.org/person/1780-Ian_C_Read",
+                "color": "#ccc",
+                "image": ""
+              }
+            },
+            "13699": {
+              "id": 13699,
+              "display": {
+                "x": 314.4797891036906,
+                "y": 92.58172231985935,
+                "scale": 1,
+                "name": "Michael Dewine",
+                "image": "https://littlesis.org/images/profile/ab/abe65a7497e83b2739e2c276238aeb26ffff6008_1226040992.png",
+                "url": "https://littlesis.org/person/13699-Michael_Dewine",
+                "color": "#ccc"
+              }
+            },
+            "18116": {
+              "id": 18116,
+              "display": {
+                "x": -806.1318101933216,
+                "y": -424.36555360281193,
+                "scale": 1,
+                "name": "CVS Health Corporation",
+                "url": "https://littlesis.org/org/18116-CVS_Health_Corporation",
+                "color": "#ccc"
+              }
+            },
+            "39607": {
+              "id": 39607,
+              "display": {
+                "x": -60.1650363455188,
+                "y": 604.4309849550837,
+                "scale": 2,
+                "name": "Eli Lilly & Co",
+                "image": "https://littlesis.org/images/profile/e2/e21054a1c836e64fe6f6477bd43ea6b1452d2580_1227028737.png",
+                "url": "https://littlesis.org/org/39607-Eli_Lilly_&_Co",
+                "color": "#ccc"
+              }
+            },
+            "52218": {
+              "id": 52218,
+              "display": {
+                "x": -473.80785756399314,
+                "y": -379.76983369028983,
+                "scale": 1.5,
+                "name": "Randall L Stephenson",
+                "url": "https://littlesis.org/person/52218-Randall_L_Stephenson",
+                "color": "#ccc",
+                "image": ""
+              }
+            },
+            "58482": {
+              "id": 58482,
+              "display": {
+                "x": -484.8347978910369,
+                "y": 677.5166959578208,
+                "scale": 1.5,
+                "name": "C Douglas McMillon",
+                "image": "",
+                "url": "https://littlesis.org/person/58482-C_Douglas_McMillon",
+                "color": "#ccc"
+              }
+            },
+            "108172": {
+              "id": 108172,
+              "display": {
+                "x": 23.388400702987695,
+                "y": 87.27065026362038,
+                "scale": 1,
+                "name": "Brian Kemp",
+                "url": "https://littlesis.org/person/108172-Brian_Kemp",
+                "color": "#ccc",
+                "image": ""
+              }
+            },
+            "108186": {
+              "id": 108186,
+              "display": {
+                "x": 118.93497363796135,
+                "y": 141.115992970123,
+                "scale": 1,
+                "name": "David Ralston",
+                "url": "https://littlesis.org/person/108186-David_Ralston",
+                "color": "#0062b1"
+              }
+            },
+            "110120": {
+              "id": 110120,
+              "display": {
+                "x": -1226,
+                "y": 102.37961335676627,
+                "scale": 1,
+                "name": "Phil Bryant",
+                "url": "https://littlesis.org/person/110120-Phil_Bryant",
+                "color": "#ccc",
+                "image": "https://pbs.twimg.com/profile_images/1000035809498714113/kB_zUSgH.jpg"
+              }
+            },
+            "122886": {
+              "id": 122886,
+              "display": {
+                "x": -303.6600210594921,
+                "y": 679.5254776530155,
+                "scale": 1.5,
+                "name": "David A Ricks",
+                "image": null,
+                "url": "https://littlesis.org/person/122886-David_A_Ricks",
+                "color": "#ccc"
+              }
+            },
+            "214065": {
+              "id": 214065,
+              "display": {
+                "x": -906.1441124780316,
+                "y": 95.31985940246044,
+                "scale": 1,
+                "name": "Matthew Griswold Bevin",
+                "image": "https://littlesis.org/images/profile/61/61f09fcc8963dc33b19645a79b32757d.jpg",
+                "url": "https://littlesis.org/person/214065-Matthew_Griswold_Bevin",
+                "color": "#ccc"
+              }
+            },
+            "281383": {
+              "id": 281383,
+              "display": {
+                "x": -308.0263620386644,
+                "y": 87.41124780316345,
+                "scale": 1,
+                "name": "Kay Ivey",
+                "url": "https://littlesis.org/person/281383-Kay_Ivey",
+                "color": "#ccc",
+                "image": null
+              }
+            },
+            "307050": {
+              "id": 307050,
+              "display": {
+                "x": -294.29701230228477,
+                "y": -377.84182776801407,
+                "scale": 1.5,
+                "name": "James Robert Quincey",
+                "image": "https://littlesis.org/images/profile/10/10aa204338cc31420d73b0ca348b9e45.jpg",
+                "url": "https://littlesis.org/person/307050-James_Robert_Quincey",
+                "color": "#ccc"
+              }
+            },
+            "345675": {
+              "id": 345675,
+              "display": {
+                "x": -622.5483304042178,
+                "y": 88.74340949033393,
+                "scale": 1,
+                "name": "Mike Parson",
+                "url": "https://littlesis.org/person/345675-Mike_Parson",
+                "color": "#ccc",
+                "image": "https://www.gannett-cdn.com/-mm-/4cae037e959107e022a46e90a8cb0e83070305e6/c=0-121-1200-1721&r=537&c=0-0-534-712/local/-/media/2015/07/25/Springfield/B9318220378Z.1_20150725182631_000_GS3BEPQIG.1-0.jpg"
+              }
+            },
+            "yW3KZt3NU": {
+              "id": "yW3KZt3NU",
+              "display": {
+                "x": -573.4833040421793,
+                "y": 174.13532513181022,
+                "scale": 1,
+                "name": "Elijah Haahr",
+                "color": "#fb9e00",
+                "url": "https://littlesis.org/person/345675-Mike_Parson"
+              }
+            },
+            "0SMMMadvp": {
+              "id": "0SMMMadvp",
+              "display": {
+                "x": -685.2091388400703,
+                "y": 173.02284710017577,
+                "scale": 1,
+                "name": "Caleb Rowden",
+                "color": "#fb9e00",
+                "url": "https://littlesis.org/person/345675-Mike_Parson"
+              }
+            },
+            "5cuNRX0lW": {
+              "id": "5cuNRX0lW",
+              "display": {
+                "x": -362.4077328646748,
+                "y": 233.20562390158176,
+                "scale": 1,
+                "name": "Will Ainsworth",
+                "color": "#9f0500"
+              }
+            },
+            "Nb0tYw2Zo": {
+              "id": "Nb0tYw2Zo",
+              "display": {
+                "x": -209.99121265377855,
+                "y": 139.01581722319864,
+                "scale": 1,
+                "name": "Nathaniel Ledbetter",
+                "color": "#9f0500"
+              }
+            },
+            "PkBKVH730": {
+              "id": "PkBKVH730",
+              "display": {
+                "x": -402.35250538260277,
+                "y": 140.90068320910495,
+                "scale": 1,
+                "name": "Mac McCutcheon",
+                "color": "#9f0500"
+              }
+            },
+            "0SpfKSy-5": {
+              "id": "0SpfKSy-5",
+              "display": {
+                "x": -265.60125791850095,
+                "y": 232.560632688928,
+                "scale": 1,
+                "name": "Greg Reed",
+                "color": "#9f0500"
+              }
+            },
+            "bsMuAEqwJ": {
+              "id": "bsMuAEqwJ",
+              "display": {
+                "x": -58.21792618629175,
+                "y": 142.4586994727592,
+                "scale": 1,
+                "name": "Geoff Duncan",
+                "color": "#0062b1",
+                "url": "https://littlesis.org/person/108186-David_Ralston"
+              }
+            },
+            "2FOCYCTpo": {
+              "id": "2FOCYCTpo",
+              "display": {
+                "x": 26.30404217926184,
+                "y": 214.3268892794376,
+                "scale": 1,
+                "name": "Mike Dugan",
+                "color": "#0062b1",
+                "url": "https://littlesis.org/person/108186-David_Ralston"
+              }
+            },
+            "Rd2YXqMkD": {
+              "id": "Rd2YXqMkD",
+              "display": {
+                "x": -1006.3532513181019,
+                "y": 152.01757469244288,
+                "scale": 1,
+                "name": "David Osborne",
+                "color": "#ab149e"
+              }
+            },
+            "qoHCXW9b-": {
+              "id": "qoHCXW9b-",
+              "display": {
+                "x": -812.6555360281196,
+                "y": 156.11072056239016,
+                "scale": 1,
+                "name": "Damon Thayer",
+                "color": "#ab149e"
+              }
+            },
+            "IY1pTxQyZ": {
+              "id": "IY1pTxQyZ",
+              "display": {
+                "x": -1147.6010544815463,
+                "y": 150.8541300527241,
+                "scale": 1,
+                "name": "Philip Gunn",
+                "color": "#68ccca"
+              }
+            },
+            "PldArao5w": {
+              "id": "PldArao5w",
+              "display": {
+                "x": -1236.6432337434096,
+                "y": 196.9402460456942,
+                "scale": 1,
+                "name": "Tate Reeves",
+                "color": "#68ccca"
+              }
+            },
+            "D2i3zuv2Q": {
+              "id": "D2i3zuv2Q",
+              "display": {
+                "x": -1317.0351493848855,
+                "y": 148.01230228471002,
+                "scale": 1,
+                "name": "Terry Burton",
+                "color": "#68ccca"
+              }
+            },
+            "PHcZ00VXc": {
+              "id": "PHcZ00VXc",
+              "display": {
+                "x": 249.5887521968366,
+                "y": 168.7750439367311,
+                "scale": 1,
+                "name": "Ryan Smith",
+                "color": "#194d33"
+              }
+            },
+            "jG3YErEWP": {
+              "id": "jG3YErEWP",
+              "display": {
+                "x": 390.0720562390158,
+                "y": 169.2442882249561,
+                "scale": 1,
+                "name": "Larry Obhof",
+                "color": "#194d33"
+              }
+            },
+            "2N5JKEC9a": {
+              "id": "2N5JKEC9a",
+              "display": {
+                "x": -911.6942003514939,
+                "y": 208.274165202109,
+                "scale": 1,
+                "name": "Robert Stivers",
+                "color": "#ab149e"
+              }
+            }
+          },
+          "edges": {
+            "1055": {
+              "id": 1055,
+              "display": {
+                "scale": 1,
+                "arrow": "1->2",
+                "label": "CEO",
+                "dash": true,
+                "url": "https://littlesis.org/relationships/1055",
+                "x1": -674.5325131810192,
+                "y1": 679.5869947275922,
+                "x2": -885.9964850615114,
+                "y2": 597.0966608084358,
+                "s1": 1.5,
+                "s2": 2,
+                "cx": 14.580511764723436,
+                "cy": 4.058132583288045
+              },
+              "node1_id": 1780,
+              "node2_id": 48,
+              "cx": 14.62146054185619,
+              "cy": 3.9080244379641664
+            },
+            "245110": {
+              "id": 245110,
+              "display": {
+                "scale": 1,
+                "arrow": "1->2",
+                "label": "CEO",
+                "dash": false,
+                "url": "https://littlesis.org/relationships/245110",
+                "x1": -473.80785756399314,
+                "y1": -379.76983369028983,
+                "x2": -478.780316344464,
+                "y2": -106.37961335676627,
+                "s1": 1.5,
+                "s2": 2,
+                "cx": 0.4313589440251471,
+                "cy": -14.523477525424722
+              },
+              "node1_id": 52218,
+              "node2_id": 10,
+              "cx": 0.6350820402736459,
+              "cy": -14.515996031007635
+            },
+            "569526": {
+              "id": 569526,
+              "display": {
+                "scale": 1,
+                "arrow": "1->2",
+                "label": "CEO",
+                "dash": false,
+                "url": "https://littlesis.org/relationships/569526",
+                "x1": -653.3216168717049,
+                "y1": -375.9191564147628,
+                "x2": -806.1318101933216,
+                "y2": -424.36555360281193,
+                "s1": 1.5,
+                "s2": 1,
+                "cx": 14.233790971206895,
+                "cy": 0.2694299111322689
+              },
+              "node1_id": 1437,
+              "node2_id": 18116,
+              "cx": 24.971652824157296,
+              "cy": 5.641368563101697
+            },
+            "728421": {
+              "id": 728421,
+              "display": {
+                "scale": 1,
+                "arrow": "1->2",
+                "label": "CEO",
+                "dash": false,
+                "url": "https://littlesis.org/relationships/728421",
+                "x1": -484.8347978910369,
+                "y1": 677.5166959578208,
+                "x2": -480.1757469244288,
+                "y2": 525.8558875219683,
+                "s1": 1.5,
+                "s2": 2,
+                "cx": -3.5362791635378032,
+                "cy": 31.228368113329665
+              },
+              "node1_id": 58482,
+              "node2_id": 1,
+              "cx": -3.3126318128144177,
+              "cy": 31.25288332005267
+            },
+            "1304882": {
+              "id": 1304882,
+              "display": {
+                "scale": 1,
+                "arrow": "1->2",
+                "label": "CEO",
+                "dash": false,
+                "url": "https://littlesis.org/relationships/1304882",
+                "x1": -303.6600210594921,
+                "y1": 679.5254776530155,
+                "x2": -60.1650363455188,
+                "y2": 604.4309849550837,
+                "s1": 1.5,
+                "s2": 2,
+                "cx": -10.575371452608886,
+                "cy": 3.587536668264408
+              },
+              "node1_id": 122886,
+              "node2_id": 39607,
+              "cx": -10.479978083590774,
+              "cy": 3.857325507946368
+            },
+            "1419664": {
+              "id": 1419664,
+              "display": {
+                "scale": 1,
+                "arrow": "1->2",
+                "label": "CEO",
+                "dash": false,
+                "url": "https://littlesis.org/relationships/1419664",
+                "x1": -294.29701230228477,
+                "y1": -377.84182776801407,
+                "x2": 12.126537785588734,
+                "y2": -271.3145869947275,
+                "s1": 1.5,
+                "s2": 2,
+                "cx": -2.8530660637067577,
+                "cy": -5.912284708592841
+              },
+              "node1_id": 307050,
+              "node2_id": 84,
+              "cx": -2.676248055362084,
+              "cy": -5.994396782454976
+            },
+            "VgSqi_PnY": {
+              "id": "VgSqi_PnY",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,600",
+                "x1": -478.780316344464,
+                "y1": -106.37961335676627,
+                "x2": -622.5483304042178,
+                "y2": 88.74340949033393,
+                "s1": 2,
+                "s2": 1,
+                "cx": -50.44847641102472,
+                "cy": -45.46920175475215
+              },
+              "node1_id": "10",
+              "node2_id": "345675",
+              "cx": -50.6241635037025,
+              "cy": -45.273514884074004
+            },
+            "G3IdKBX52": {
+              "id": "G3IdKBX52",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,300",
+                "x1": -478.780316344464,
+                "y1": -106.37961335676627,
+                "x2": -573.4833040421793,
+                "y2": 174.13532513181022,
+                "s1": 2,
+                "s2": 1,
+                "cx": -91.10692411946626,
+                "cy": -30.758069286972606
+              },
+              "node1_id": "10",
+              "node2_id": "yW3KZt3NU",
+              "cx": -90.88888065631453,
+              "cy": -31.396525632856363
+            },
+            "q36RRjOto": {
+              "id": "q36RRjOto",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$3,000",
+                "x1": -478.780316344464,
+                "y1": -106.37961335676627,
+                "x2": -685.2091388400703,
+                "y2": 173.02284710017577,
+                "s1": 2,
+                "s2": 1,
+                "cx": -88.15653011353464,
+                "cy": -65.13202738756793
+              },
+              "node1_id": "10",
+              "node2_id": "0SMMMadvp",
+              "cx": -88.24747399234693,
+              "cy": -65.00875423543735
+            },
+            "8zkt702AD": {
+              "id": "8zkt702AD",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$113,000",
+                "x1": -478.780316344464,
+                "y1": -106.37961335676627,
+                "x2": -308.0263620386644,
+                "y2": 87.41124780316345,
+                "s1": 2,
+                "s2": 1,
+                "cx": 39.05707297790213,
+                "cy": -23.19950054373442
+              },
+              "node1_id": "10",
+              "node2_id": "281383",
+              "cx": 39.80734458555531,
+              "cy": -21.887144448894347
+            },
+            "RRK_nV_cy": {
+              "id": "RRK_nV_cy",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$10,000",
+                "x1": -478.780316344464,
+                "y1": -106.37961335676627,
+                "x2": -362.4077328646748,
+                "y2": 233.20562390158176,
+                "s1": 2,
+                "s2": 1,
+                "cx": 77.19216543733296,
+                "cy": -6.609155805051837
+              },
+              "node1_id": "10",
+              "node2_id": "5cuNRX0lW",
+              "cx": 76.96046927691845,
+              "cy": -8.910528269217453
+            },
+            "94Tx41ImA": {
+              "id": "94Tx41ImA",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,250",
+                "x1": -478.780316344464,
+                "y1": -106.37961335676627,
+                "x2": -209.99121265377855,
+                "y2": 139.01581722319864,
+                "s1": 2,
+                "s2": 1,
+                "cx": 63.39947312503928,
+                "cy": -69.44337763529781
+              },
+              "node1_id": "10",
+              "node2_id": "Nb0tYw2Zo",
+              "cx": 63.991840661596875,
+              "cy": -68.89789705551217
+            },
+            "4nVxSoZ3W": {
+              "id": "4nVxSoZ3W",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,500",
+                "x1": -478.780316344464,
+                "y1": -106.37961335676627,
+                "x2": -265.60125791850095,
+                "y2": 232.560632688928,
+                "s1": 2,
+                "s2": 1,
+                "cx": 140.20018373106035,
+                "cy": -58.35758784246238
+              },
+              "node1_id": "10",
+              "node2_id": "0SpfKSy-5",
+              "cx": 138.47914599366533,
+              "cy": -62.33157868912765
+            },
+            "0G4OaYNRf": {
+              "id": "0G4OaYNRf",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,000",
+                "x1": -478.780316344464,
+                "y1": -106.37961335676627,
+                "x2": -402.35250538260277,
+                "y2": 140.90068320910495,
+                "s1": 2,
+                "s2": 1,
+                "cx": 13.19563284694312,
+                "cy": -17.275693726594653
+              },
+              "node1_id": "10",
+              "node2_id": "PkBKVH730",
+              "cx": 12.515599257489715,
+              "cy": -17.774535020425965
+            },
+            "EzTFstmlI": {
+              "id": "EzTFstmlI",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,000",
+                "x1": -480.1757469244288,
+                "y1": 525.8558875219683,
+                "x2": -209.99121265377855,
+                "y2": 139.01581722319864,
+                "s1": 2,
+                "s2": 1,
+                "cx": 191.87049870925588,
+                "cy": 20.671005606421584
+              },
+              "node1_id": "1",
+              "node2_id": "Nb0tYw2Zo",
+              "cx": 192.02976113851767,
+              "cy": 19.13503553179683
+            },
+            "nhJuCUTIR": {
+              "id": "nhJuCUTIR",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$3,000",
+                "x1": -480.1757469244288,
+                "y1": 525.8558875219683,
+                "x2": -402.35250538260277,
+                "y2": 140.90068320910495,
+                "s1": 2,
+                "s2": 1,
+                "cx": -96.66133908213676,
+                "cy": -20.11000255967703
+              },
+              "node1_id": "1",
+              "node2_id": "PkBKVH730",
+              "cx": -96.02106199694097,
+              "cy": -22.97351364248964
+            },
+            "3z_9pcDnn": {
+              "id": "3z_9pcDnn",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$500",
+                "x1": -480.1757469244288,
+                "y1": 525.8558875219683,
+                "x2": -622.5483304042178,
+                "y2": 88.74340949033393,
+                "s1": 2,
+                "s2": 1,
+                "cx": -97.95968794061159,
+                "cy": 7.196206607390993
+              },
+              "node1_id": "1",
+              "node2_id": "345675",
+              "cx": -97.65490130416883,
+              "cy": 10.55490891629596
+            },
+            "1LGM7zWxF": {
+              "id": "1LGM7zWxF",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,000",
+                "x1": -480.1757469244288,
+                "y1": 525.8558875219683,
+                "x2": -265.60125791850095,
+                "y2": 232.560632688928,
+                "s1": 2,
+                "s2": 1,
+                "cx": 18.981003619727495,
+                "cy": 33.24241376484641
+              },
+              "node1_id": "1",
+              "node2_id": "0SpfKSy-5",
+              "cx": 17.980778442657815,
+              "cy": 33.79390740830972
+            },
+            "57RxlRmP8": {
+              "id": "57RxlRmP8",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$6,600",
+                "x1": -478.780316344464,
+                "y1": -106.37961335676627,
+                "x2": -58.21792618629175,
+                "y2": 142.4586994727592,
+                "s1": 2,
+                "s2": 1,
+                "cx": 29.267114726814604,
+                "cy": -65.20204629623137
+              },
+              "node1_id": "10",
+              "node2_id": "bsMuAEqwJ",
+              "cx": 78.44525211110569,
+              "cy": -140.48874807282775
+            },
+            "flG-zqI5j": {
+              "id": "flG-zqI5j",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,600",
+                "x1": -478.780316344464,
+                "y1": -106.37961335676627,
+                "x2": 118.93497363796135,
+                "y2": 141.115992970123,
+                "s1": 2,
+                "s2": 1,
+                "cx": 70.42045841148958,
+                "cy": -170.06921999465726
+              },
+              "node1_id": "10",
+              "node2_id": "108186",
+              "cx": 63.61755951493791,
+              "cy": -172.72922935577174
+            },
+            "zQFyGqLjh": {
+              "id": "zQFyGqLjh",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$500",
+                "x1": -478.780316344464,
+                "y1": -106.37961335676627,
+                "x2": -1006.3532513181019,
+                "y2": 152.01757469244288,
+                "s1": 2,
+                "s2": 1,
+                "cx": -62.30231646843473,
+                "cy": -108.48412658551663
+              },
+              "node1_id": "10",
+              "node2_id": "Rd2YXqMkD",
+              "cx": -62.447748202838966,
+              "cy": -108.40047556514784
+            },
+            "HaKsWy64o": {
+              "id": "HaKsWy64o",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,000",
+                "x1": -478.780316344464,
+                "y1": -106.37961335676627,
+                "x2": -812.6555360281196,
+                "y2": 156.11072056239016,
+                "s1": 2,
+                "s2": 1,
+                "cx": -71.03862559165808,
+                "cy": -90.35775287917699
+              },
+              "node1_id": "10",
+              "node2_id": "qoHCXW9b-",
+              "cx": -69.45942194244847,
+              "cy": -91.5772817610738
+            },
+            "kdRC2Qd16": {
+              "id": "kdRC2Qd16",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$15,000",
+                "x1": -478.780316344464,
+                "y1": -106.37961335676627,
+                "x2": -1226,
+                "y2": 102.37961335676627,
+                "s1": 2,
+                "s2": 1,
+                "cx": -48.49536696426651,
+                "cy": -173.5812750998725
+              },
+              "node1_id": "10",
+              "node2_id": "110120",
+              "cx": -48.50357757119057,
+              "cy": -173.5789810002697
+            },
+            "Dcki-HROv": {
+              "id": "Dcki-HROv",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,000",
+                "x1": -478.780316344464,
+                "y1": -106.37961335676627,
+                "x2": -1147.6010544815463,
+                "y2": 150.8541300527241,
+                "s1": 2,
+                "s2": 1,
+                "cx": -64.1755211380525,
+                "cy": -171.56585684186896
+              },
+              "node1_id": "10",
+              "node2_id": "IY1pTxQyZ",
+              "cx": -68.00449457356919,
+              "cy": -170.08447743700393
+            },
+            "FcVjVUson": {
+              "id": "FcVjVUson",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$10,000",
+                "x1": -478.780316344464,
+                "y1": -106.37961335676627,
+                "x2": -1236.6432337434096,
+                "y2": 196.9402460456942,
+                "s1": 2,
+                "s2": 1,
+                "cx": -71.62462924249995,
+                "cy": -199.3866153696742
+              },
+              "node1_id": "10",
+              "node2_id": "PldArao5w",
+              "cx": -72.58071658982986,
+              "cy": -199.0405724519671
+            },
+            "gtPzleWT8": {
+              "id": "gtPzleWT8",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$1,000",
+                "x1": -478.780316344464,
+                "y1": -106.37961335676627,
+                "x2": -1317.0351493848855,
+                "y2": 148.01230228471002,
+                "s1": 2,
+                "s2": 1,
+                "cx": -58.674399165060734,
+                "cy": -235.28371745419454
+              },
+              "node1_id": "10",
+              "node2_id": "D2i3zuv2Q",
+              "cx": -59.76381981155248,
+              "cy": -235.00935866041254
+            },
+            "BLjOFm7Sm": {
+              "id": "BLjOFm7Sm",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$5,000",
+                "x1": -478.780316344464,
+                "y1": -106.37961335676627,
+                "x2": 314.4797891036906,
+                "y2": 92.58172231985935,
+                "s1": 2,
+                "s2": 1,
+                "cx": 56.541913831729325,
+                "cy": -225.4329685507203
+              },
+              "node1_id": "10",
+              "node2_id": "13699",
+              "cx": 50.557996769507106,
+              "cy": -226.8499510513486
+            },
+            "rVjoPxMO7": {
+              "id": "rVjoPxMO7",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$5,500",
+                "x1": -478.780316344464,
+                "y1": -106.37961335676627,
+                "x2": 249.5887521968366,
+                "y2": 168.7750439367311,
+                "s1": 2,
+                "s2": 1,
+                "cx": 76.76251251349113,
+                "cy": -203.2000486137611
+              },
+              "node1_id": "10",
+              "node2_id": "PHcZ00VXc",
+              "cx": 70.1977655399954,
+              "cy": -205.5602510146614
+            },
+            "nV7kC7izY": {
+              "id": "nV7kC7izY",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$7,750",
+                "x1": -478.780316344464,
+                "y1": -106.37961335676627,
+                "x2": 390.0720562390158,
+                "y2": 169.2442882249561,
+                "s1": 2,
+                "s2": 1,
+                "cx": 117.7358304254705,
+                "cy": -290.9415320061245
+              },
+              "node1_id": "10",
+              "node2_id": "jG3YErEWP",
+              "cx": 116.33896091171371,
+              "cy": -291.5029107676777
+            },
+            "uBE8h6rzQ": {
+              "id": "uBE8h6rzQ",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$1,000",
+                "x1": -478.780316344464,
+                "y1": -106.37961335676627,
+                "x2": 26.30404217926184,
+                "y2": 214.3268892794376,
+                "s1": 2,
+                "s2": 1,
+                "cx": 71.16392144456421,
+                "cy": -144.18777997890095
+              },
+              "node1_id": "10",
+              "node2_id": "2FOCYCTpo",
+              "cx": 131.73719235641732,
+              "cy": -129.448897938953
+            },
+            "mZcarOB4v": {
+              "id": "mZcarOB4v",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$6,600",
+                "x1": -480.1757469244288,
+                "y1": 525.8558875219683,
+                "x2": 23.388400702987695,
+                "y2": 87.27065026362038,
+                "s1": 2,
+                "s2": 1,
+                "cx": 234.96373923104596,
+                "cy": 63.297177411531884
+              },
+              "node1_id": "1",
+              "node2_id": "108172",
+              "cx": 230.67746887240975,
+              "cy": 77.47513650404454
+            },
+            "N8QiNliwS": {
+              "id": "N8QiNliwS",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$5,000",
+                "x1": -480.1757469244288,
+                "y1": 525.8558875219683,
+                "x2": -58.21792618629175,
+                "y2": 142.4586994727592,
+                "s1": 2,
+                "s2": 1,
+                "cx": 97.49651288249547,
+                "cy": 42.201991803594524
+              },
+              "node1_id": "1",
+              "node2_id": "bsMuAEqwJ",
+              "cx": 97.88397930042031,
+              "cy": 41.295335484194226
+            },
+            "1TmgaFBZX": {
+              "id": "1TmgaFBZX",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$5,000",
+                "x1": -480.1757469244288,
+                "y1": 525.8558875219683,
+                "x2": 118.93497363796135,
+                "y2": 141.115992970123,
+                "s1": 2,
+                "s2": 1,
+                "cx": 233.62738034664596,
+                "cy": 46.4940334267218
+              },
+              "node1_id": "1",
+              "node2_id": "108186",
+              "cx": 231.66243365893092,
+              "cy": 55.46138136706415
+            },
+            "b_GdFxlIs": {
+              "id": "b_GdFxlIs",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,000",
+                "x1": -480.1757469244288,
+                "y1": 525.8558875219683,
+                "x2": -1006.3532513181019,
+                "y2": 152.01757469244288,
+                "s1": 2,
+                "s2": 1,
+                "cx": -179.824881640918,
+                "cy": 103.00696762272429
+              },
+              "node1_id": "1",
+              "node2_id": "Rd2YXqMkD",
+              "cx": -173.24559540816577,
+              "cy": 113.72505048435572
+            },
+            "via4l1tRg": {
+              "id": "via4l1tRg",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$1,000",
+                "x1": -480.1757469244288,
+                "y1": 525.8558875219683,
+                "x2": -911.6942003514939,
+                "y2": 208.274165202109,
+                "s1": 2,
+                "s2": 1,
+                "cx": -31.963035577148197,
+                "cy": 63.8260665227693
+              },
+              "node1_id": "1",
+              "node2_id": "2N5JKEC9a",
+              "cx": -27.227131127417216,
+              "cy": 65.98549644918528
+            },
+            "kifrvGumn": {
+              "id": "kifrvGumn",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$1,500",
+                "x1": -480.1757469244288,
+                "y1": 525.8558875219683,
+                "x2": -812.6555360281196,
+                "y2": 156.11072056239016,
+                "s1": 2,
+                "s2": 1,
+                "cx": -186.4945863428983,
+                "cy": -85.23123732087137
+              },
+              "node1_id": "1",
+              "node2_id": "qoHCXW9b-",
+              "cx": -191.74754009354209,
+              "cy": -72.6462347168173
+            },
+            "kpAhmRBuv": {
+              "id": "kpAhmRBuv",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$7,500",
+                "x1": -480.1757469244288,
+                "y1": 525.8558875219683,
+                "x2": -1147.6010544815463,
+                "y2": 150.8541300527241,
+                "s1": 2,
+                "s2": 1,
+                "cx": -138.70098491689188,
+                "cy": 145.16724968360688
+              },
+              "node1_id": "1",
+              "node2_id": "IY1pTxQyZ",
+              "cx": -151.3892218855423,
+              "cy": 93.04564828298523
+            },
+            "Zv4SLwkbh": {
+              "id": "Zv4SLwkbh",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,500",
+                "x1": -480.1757469244288,
+                "y1": 525.8558875219683,
+                "x2": -1236.6432337434096,
+                "y2": 196.9402460456942,
+                "s1": 2,
+                "s2": 1,
+                "cx": -4.980885929814755,
+                "cy": 208.38555805926111
+              },
+              "node1_id": "1",
+              "node2_id": "PldArao5w",
+              "cx": 5.940503992488079,
+              "cy": 208.3604099742337
+            },
+            "t6wIZ4x-S": {
+              "id": "t6wIZ4x-S",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$1,000",
+                "x1": -480.1757469244288,
+                "y1": 525.8558875219683,
+                "x2": -1317.0351493848855,
+                "y2": 148.01230228471002,
+                "s1": 2,
+                "s2": 1,
+                "cx": -58.80312954416336,
+                "cy": 294.3619389054211
+              },
+              "node1_id": "1",
+              "node2_id": "D2i3zuv2Q",
+              "cx": -44.99263530073788,
+              "cy": 296.78682903565874
+            },
+            "GB3s0YpGa": {
+              "id": "GB3s0YpGa",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$7,000",
+                "x1": -480.1757469244288,
+                "y1": 525.8558875219683,
+                "x2": 314.4797891036906,
+                "y2": 92.58172231985935,
+                "s1": 2,
+                "s2": 1,
+                "cx": 394.15170092056275,
+                "cy": 151.79110885105027
+              },
+              "node1_id": "1",
+              "node2_id": "13699",
+              "cx": 392.04946584236643,
+              "cy": 157.14108437171777
+            },
+            "EASWyqurL": {
+              "id": "EASWyqurL",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$1,000",
+                "x1": -480.1757469244288,
+                "y1": 525.8558875219683,
+                "x2": 249.5887521968366,
+                "y2": 168.7750439367311,
+                "s1": 2,
+                "s2": 1,
+                "cx": 253.52439183043373,
+                "cy": 95.17806470163391
+              },
+              "node1_id": "1",
+              "node2_id": "PHcZ00VXc",
+              "cx": 251.37897096765585,
+              "cy": 100.70796497091047
+            },
+            "KU7acfwxD": {
+              "id": "KU7acfwxD",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$10,000",
+                "x1": -480.1757469244288,
+                "y1": 525.8558875219683,
+                "x2": 390.0720562390158,
+                "y2": 169.2442882249561,
+                "s1": 2,
+                "s2": 1,
+                "cx": 287.73624363812314,
+                "cy": 206.60206517455777
+              },
+              "node1_id": "1",
+              "node2_id": "jG3YErEWP",
+              "cx": 288.6625879111749,
+              "cy": 205.3057952854541
+            },
+            "aomh_aQ4X": {
+              "id": "aomh_aQ4X",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,600",
+                "x1": -885.9964850615114,
+                "y1": 597.0966608084358,
+                "x2": -622.5483304042178,
+                "y2": 88.74340949033393,
+                "s1": 2,
+                "s2": 1,
+                "cx": -150.08937308370272,
+                "cy": -74.96042390140217
+              },
+              "node1_id": "48",
+              "node2_id": "345675",
+              "cx": -149.99320159270053,
+              "cy": -75.1526748699493
+            },
+            "nWUKLAzUg": {
+              "id": "nWUKLAzUg",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$1,500",
+                "x1": -885.9964850615114,
+                "y1": 597.0966608084358,
+                "x2": -573.4833040421793,
+                "y2": 174.13532513181022,
+                "s1": 2,
+                "s2": 1,
+                "cx": -80.33092820003314,
+                "cy": -53.539432543253
+              },
+              "node1_id": "48",
+              "node2_id": "yW3KZt3NU",
+              "cx": -103.13517842475059,
+              "cy": -75.0741855926035
+            },
+            "gS7P1IB3U": {
+              "id": "gS7P1IB3U",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$1,250",
+                "x1": -885.9964850615114,
+                "y1": 597.0966608084358,
+                "x2": -685.2091388400703,
+                "y2": 173.02284710017577,
+                "s1": 2,
+                "s2": 1,
+                "cx": -65.08337250748646,
+                "cy": -41.31407491690226
+              },
+              "node1_id": "48",
+              "node2_id": "0SMMMadvp",
+              "cx": -64.9878645476475,
+              "cy": -41.46414866754504
+            },
+            "yZ3Qs_fYV": {
+              "id": "yZ3Qs_fYV",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$5,000",
+                "x1": -885.9964850615114,
+                "y1": 597.0966608084358,
+                "x2": -308.0263620386644,
+                "y2": 87.41124780316345,
+                "s1": 2,
+                "s2": 1,
+                "cx": -105.52642044300686,
+                "cy": -94.86810501389647
+              },
+              "node1_id": "48",
+              "node2_id": "281383",
+              "cx": -106.4379430438117,
+              "cy": -93.8442701556373
+            },
+            "Ylyufy3k1": {
+              "id": "Ylyufy3k1",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$500",
+                "x1": -885.9964850615114,
+                "y1": 597.0966608084358,
+                "x2": -265.60125791850095,
+                "y2": 232.560632688928,
+                "s1": 2,
+                "s2": 1,
+                "cx": -58.10720500561069,
+                "cy": -76.78770214986334
+              },
+              "node1_id": "48",
+              "node2_id": "0SpfKSy-5",
+              "cx": -57.37383575786342,
+              "cy": -77.33719315730244
+            },
+            "--2xRSxjO": {
+              "id": "--2xRSxjO",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$6,600",
+                "x1": -885.9964850615114,
+                "y1": 597.0966608084358,
+                "x2": 23.388400702987695,
+                "y2": 87.27065026362038,
+                "s1": 2,
+                "s2": 1,
+                "cx": -131.79189796237367,
+                "cy": -235.0793360760955
+              },
+              "node1_id": "48",
+              "node2_id": "108172",
+              "cx": -125.19678081401175,
+              "cy": -238.65700218579565
+            },
+            "JUBfY2y2L": {
+              "id": "JUBfY2y2L",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$5,000",
+                "x1": -885.9964850615114,
+                "y1": 597.0966608084358,
+                "x2": -58.21792618629175,
+                "y2": 142.4586994727592,
+                "s1": 2,
+                "s2": 1,
+                "cx": -93.83918580776451,
+                "cy": -28.32990542846175
+              },
+              "node1_id": "48",
+              "node2_id": "bsMuAEqwJ",
+              "cx": -94.06858256410256,
+              "cy": -27.55863039104734
+            },
+            "SIpQ0Qk5j": {
+              "id": "SIpQ0Qk5j",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$3,000",
+                "x1": -885.9964850615114,
+                "y1": 597.0966608084358,
+                "x2": 118.93497363796135,
+                "y2": 141.115992970123,
+                "s1": 2,
+                "s2": 1,
+                "cx": 1.4431102335387753,
+                "cy": -117.08201833565995
+              },
+              "node1_id": "48",
+              "node2_id": "108186",
+              "cx": 3.596919580462891,
+              "cy": -117.03565163756572
+            },
+            "vHCwk1iUO": {
+              "id": "vHCwk1iUO",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,000",
+                "x1": -885.9964850615114,
+                "y1": 597.0966608084358,
+                "x2": -906.1441124780316,
+                "y2": 95.31985940246044,
+                "s1": 2,
+                "s2": 1,
+                "cx": -117.61850713622322,
+                "cy": 39.549091465270365
+              },
+              "node1_id": "48",
+              "node2_id": "214065",
+              "cx": -117.8747804717373,
+              "cy": 38.77860215920436
+            },
+            "AWWPIcWAK": {
+              "id": "AWWPIcWAK",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$1,000",
+                "x1": -885.9964850615114,
+                "y1": 597.0966608084358,
+                "x2": -1006.3532513181019,
+                "y2": 152.01757469244288,
+                "s1": 2,
+                "s2": 1,
+                "cx": -60.83869020053957,
+                "cy": 19.437681422286776
+              },
+              "node1_id": "48",
+              "node2_id": "Rd2YXqMkD",
+              "cx": -61.07992039460055,
+              "cy": 18.665824626327172
+            },
+            "XzATnZe9z": {
+              "id": "XzATnZe9z",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$1,000",
+                "x1": -885.9964850615114,
+                "y1": 597.0966608084358,
+                "x2": -911.6942003514939,
+                "y2": 208.274165202109,
+                "s1": 2,
+                "s2": 1,
+                "cx": -71.07732867016126,
+                "cy": 27.738613843170622
+              },
+              "node1_id": "48",
+              "node2_id": "2N5JKEC9a",
+              "cx": -71.9973835695545,
+              "cy": 25.25458587989732
+            },
+            "wxCq5_iRB": {
+              "id": "wxCq5_iRB",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$1,500",
+                "x1": -885.9964850615114,
+                "y1": 597.0966608084358,
+                "x2": -812.6555360281196,
+                "y2": 156.11072056239016,
+                "s1": 2,
+                "s2": 1,
+                "cx": -106.23396026616514,
+                "cy": -17.667909006688674
+              },
+              "node1_id": "48",
+              "node2_id": "qoHCXW9b-",
+              "cx": -106.29216679913071,
+              "cy": -17.314288886568786
+            },
+            "zmqQuq9uu": {
+              "id": "zmqQuq9uu",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$1,000",
+                "x1": -885.9964850615114,
+                "y1": 597.0966608084358,
+                "x2": -1226,
+                "y2": 102.37961335676627,
+                "s1": 2,
+                "s2": 1,
+                "cx": -65.81289169011487,
+                "cy": 85.74922018002438
+              },
+              "node1_id": "48",
+              "node2_id": "110120",
+              "cx": -69.03378975216916,
+              "cy": 83.17813021792686
+            },
+            "W3Zcv4mXm": {
+              "id": "W3Zcv4mXm",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$5,000",
+                "x1": -885.9964850615114,
+                "y1": 597.0966608084358,
+                "x2": -1147.6010544815463,
+                "y2": 150.8541300527241,
+                "s1": 2,
+                "s2": 1,
+                "cx": 1.3913404026274423,
+                "cy": 71.60456905697613
+              },
+              "node1_id": "48",
+              "node2_id": "IY1pTxQyZ",
+              "cx": -0.4919572784323982,
+              "cy": 71.61639558081266
+            },
+            "WcRrE4_iZ": {
+              "id": "WcRrE4_iZ",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$1,000",
+                "x1": -885.9964850615114,
+                "y1": 597.0966608084358,
+                "x2": -1236.6432337434096,
+                "y2": 196.9402460456942,
+                "s1": 2,
+                "s2": 1,
+                "cx": -98.87202274469409,
+                "cy": 105.17965236265715
+              },
+              "node1_id": "48",
+              "node2_id": "PldArao5w",
+              "cx": -102.97061244674768,
+              "cy": 101.17059417191541
+            },
+            "sXgILUF8Y": {
+              "id": "sXgILUF8Y",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$500",
+                "x1": -885.9964850615114,
+                "y1": 597.0966608084358,
+                "x2": -1317.0351493848855,
+                "y2": 148.01230228471002,
+                "s1": 2,
+                "s2": 1,
+                "cx": -72.55178954415929,
+                "cy": 197.50123809308548
+              },
+              "node1_id": "48",
+              "node2_id": "D2i3zuv2Q",
+              "cx": -76.99576051271441,
+              "cy": 195.81152692686493
+            },
+            "YTFY5-Iqs": {
+              "id": "YTFY5-Iqs",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$12,700",
+                "x1": -885.9964850615114,
+                "y1": 597.0966608084358,
+                "x2": 314.4797891036906,
+                "y2": 92.58172231985935,
+                "s1": 2,
+                "s2": 1,
+                "cx": -113.5208255454295,
+                "cy": -245.96573273672843
+              },
+              "node1_id": "48",
+              "node2_id": "13699",
+              "cx": -112.04841547506625,
+              "cy": -246.6399645287813
+            },
+            "PJqIuJlcK": {
+              "id": "PJqIuJlcK",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$1,750",
+                "x1": -885.9964850615114,
+                "y1": 597.0966608084358,
+                "x2": 249.5887521968366,
+                "y2": 168.7750439367311,
+                "s1": 2,
+                "s2": 1,
+                "cx": -31.31877178453334,
+                "cy": -80.5147280588031
+              },
+              "node1_id": "48",
+              "node2_id": "PHcZ00VXc",
+              "cx": -30.443378532128666,
+              "cy": -80.8497841928117
+            },
+            "b9c2zhzkj": {
+              "id": "b9c2zhzkj",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$750",
+                "x1": -885.9964850615114,
+                "y1": 597.0966608084358,
+                "x2": 390.0720562390158,
+                "y2": 169.2442882249561,
+                "s1": 2,
+                "s2": 1,
+                "cx": 515.6889533435589,
+                "cy": -213.11762592613906
+              },
+              "node1_id": "48",
+              "node2_id": "jG3YErEWP",
+              "cx": 514.9994165599062,
+              "cy": -214.77853715845356
+            },
+            "G8UP8qhX3": {
+              "id": "G8UP8qhX3",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$3,000",
+                "x1": -60.1650363455188,
+                "y1": 604.4309849550837,
+                "x2": -573.4833040421793,
+                "y2": 174.13532513181022,
+                "s1": 2,
+                "s2": 1,
+                "cx": 102.85989367337933,
+                "cy": -122.7060074404822
+              },
+              "node1_id": "39607",
+              "node2_id": "yW3KZt3NU",
+              "cx": 103.74494604736108,
+              "cy": -121.95863297902575
+            },
+            "cD0sQw_6i": {
+              "id": "cD0sQw_6i",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$1,000",
+                "x1": -60.1650363455188,
+                "y1": 604.4309849550837,
+                "x2": -685.2091388400703,
+                "y2": 173.02284710017577,
+                "s1": 2,
+                "s2": 1,
+                "cx": 106.31663728934161,
+                "cy": -124.38119964859037
+              },
+              "node1_id": "39607",
+              "node2_id": "0SMMMadvp",
+              "cx": 106.83779247993473,
+              "cy": -123.93383835155888
+            },
+            "OASXhBmYu": {
+              "id": "OASXhBmYu",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$30,000",
+                "x1": -60.1650363455188,
+                "y1": 604.4309849550837,
+                "x2": -308.0263620386644,
+                "y2": 87.41124780316345,
+                "s1": 2,
+                "s2": 1,
+                "cx": 69.14956115952923,
+                "cy": -44.78786460044818
+              },
+              "node1_id": "39607",
+              "node2_id": "281383",
+              "cx": 68.36155482839861,
+              "cy": -45.981653357262005
+            },
+            "eKGUNVlym": {
+              "id": "eKGUNVlym",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$3,000",
+                "x1": -60.1650363455188,
+                "y1": 604.4309849550837,
+                "x2": -402.35250538260277,
+                "y2": 140.90068320910495,
+                "s1": 2,
+                "s2": 1,
+                "cx": 53.10711887328873,
+                "cy": -42.75890029290638
+              },
+              "node1_id": "39607",
+              "node2_id": "PkBKVH730",
+              "cx": 53.693563320195764,
+              "cy": -42.020124788730186
+            },
+            "-gNRif_F0": {
+              "id": "-gNRif_F0",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,000",
+                "x1": -60.1650363455188,
+                "y1": 604.4309849550837,
+                "x2": -265.60125791850095,
+                "y2": 232.560632688928,
+                "s1": 2,
+                "s2": 1,
+                "cx": 42.73752547548724,
+                "cy": -44.04625854418878
+              },
+              "node1_id": "39607",
+              "node2_id": "0SpfKSy-5",
+              "cx": 43.986036395224396,
+              "cy": -42.7995044100681
+            },
+            "dUbNt3yQ3": {
+              "id": "dUbNt3yQ3",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$4,000",
+                "x1": -60.1650363455188,
+                "y1": 604.4309849550837,
+                "x2": 23.388400702987695,
+                "y2": 87.27065026362038,
+                "s1": 2,
+                "s2": 1,
+                "cx": 176.16911936603333,
+                "cy": 19.264743074634055
+              },
+              "node1_id": "39607",
+              "node2_id": "108172",
+              "cx": 171.98936067216954,
+              "cy": 42.73580184709007
+            },
+            "aVdrkJGbY": {
+              "id": "aVdrkJGbY",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,500",
+                "x1": -60.1650363455188,
+                "y1": 604.4309849550837,
+                "x2": -58.21792618629175,
+                "y2": 142.4586994727592,
+                "s1": 2,
+                "s2": 1,
+                "cx": 63.68245427274507,
+                "cy": -7.795027637433854
+              },
+              "node1_id": "39607",
+              "node2_id": "bsMuAEqwJ",
+              "cx": 63.754145319498186,
+              "cy": -7.185150843853685
+            },
+            "qbDWhN6A2": {
+              "id": "qbDWhN6A2",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$1,000",
+                "x1": -60.1650363455188,
+                "y1": 604.4309849550837,
+                "x2": -1226,
+                "y2": 102.37961335676627,
+                "s1": 2,
+                "s2": 1,
+                "cx": 129.66614977932707,
+                "cy": -255.13872041322864
+              },
+              "node1_id": "39607",
+              "node2_id": "110120",
+              "cx": 118.55220740655575,
+              "cy": -266.4616962529272
+            },
+            "VNXOIzW1u": {
+              "id": "VNXOIzW1u",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$7,000",
+                "x1": -60.1650363455188,
+                "y1": 604.4309849550837,
+                "x2": -1147.6010544815463,
+                "y2": 150.8541300527241,
+                "s1": 2,
+                "s2": 1,
+                "cx": 118.00780450316074,
+                "cy": -194.04593727443248
+              },
+              "node1_id": "39607",
+              "node2_id": "IY1pTxQyZ",
+              "cx": 99.54453562782875,
+              "cy": -229.8945971313253
+            },
+            "9-ruSHShY": {
+              "id": "9-ruSHShY",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$1,000",
+                "x1": -60.1650363455188,
+                "y1": 604.4309849550837,
+                "x2": -1236.6432337434096,
+                "y2": 196.9402460456942,
+                "s1": 2,
+                "s2": 1,
+                "cx": 77.11542606641677,
+                "cy": 95.20742569827729
+              },
+              "node1_id": "39607",
+              "node2_id": "PldArao5w",
+              "cx": 84.57560329635285,
+              "cy": -231.48615973377682
+            },
+            "RktjQ_1ZN": {
+              "id": "RktjQ_1ZN",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$1,000",
+                "x1": -60.1650363455188,
+                "y1": 604.4309849550837,
+                "x2": -1317.0351493848855,
+                "y2": 148.01230228471002,
+                "s1": 2,
+                "s2": 1,
+                "cx": 15.354354339039633,
+                "cy": 11.573992931935258
+              },
+              "node1_id": "39607",
+              "node2_id": "D2i3zuv2Q",
+              "cx": 71.26178209767706,
+              "cy": -160.75779657307223
+            },
+            "0sBhLnzRC": {
+              "id": "0sBhLnzRC",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$5,000",
+                "x1": -60.1650363455188,
+                "y1": 604.4309849550837,
+                "x2": 314.4797891036906,
+                "y2": 92.58172231985935,
+                "s1": 2,
+                "s2": 1,
+                "cx": 224.30281135396572,
+                "cy": 127.16931073972775
+              },
+              "node1_id": "39607",
+              "node2_id": "13699",
+              "cx": 217.9909059179803,
+              "cy": 137.70893112782642
+            },
+            "dZUtDdxyp": {
+              "id": "dZUtDdxyp",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$5,750",
+                "x1": -60.1650363455188,
+                "y1": 604.4309849550837,
+                "x2": 390.0720562390158,
+                "y2": 169.2442882249561,
+                "s1": 2,
+                "s2": 1,
+                "cx": 253.94322656590938,
+                "cy": 130.2654333345099
+              },
+              "node1_id": "39607",
+              "node2_id": "jG3YErEWP",
+              "cx": 254.62134598774162,
+              "cy": 128.9349278043898
+            },
+            "VNXQ2I9be": {
+              "id": "VNXQ2I9be",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$10,000",
+                "x1": 12.126537785588734,
+                "y1": -271.3145869947275,
+                "x2": -308.0263620386644,
+                "y2": 87.41124780316345,
+                "s1": 2,
+                "s2": 1,
+                "cx": -77.96306676720424,
+                "cy": -69.57988380952553
+              },
+              "node1_id": "84",
+              "node2_id": "281383",
+              "cx": -76.76814813157169,
+              "cy": -70.89606084362998
+            },
+            "qJWyrPQEq": {
+              "id": "qJWyrPQEq",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,500",
+                "x1": 12.126537785588734,
+                "y1": -271.3145869947275,
+                "x2": -362.4077328646748,
+                "y2": 233.20562390158176,
+                "s1": 2,
+                "s2": 1,
+                "cx": -76.96925496198065,
+                "cy": 171.5175092934799
+              },
+              "node1_id": "84",
+              "node2_id": "5cuNRX0lW",
+              "cx": -95.8106112570645,
+              "cy": 120.27815033024686
+            },
+            "k2TBKdbHZ": {
+              "id": "k2TBKdbHZ",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,500",
+                "x1": 12.126537785588734,
+                "y1": -271.3145869947275,
+                "x2": -265.60125791850095,
+                "y2": 232.560632688928,
+                "s1": 2,
+                "s2": 1,
+                "cx": 93.53238497386893,
+                "cy": 186.16094964523052
+              },
+              "node1_id": "84",
+              "node2_id": "0SpfKSy-5",
+              "cx": 97.44945097998028,
+              "cy": 184.14073616507156
+            },
+            "B2vlWYFAG": {
+              "id": "B2vlWYFAG",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$6,600",
+                "x1": 12.126537785588734,
+                "y1": -271.3145869947275,
+                "x2": 23.388400702987695,
+                "y2": 87.27065026362038,
+                "s1": 2,
+                "s2": 1,
+                "cx": 92.4990746438884,
+                "cy": 24.244698899026275
+              },
+              "node1_id": "84",
+              "node2_id": "108172",
+              "cx": 95.52383276443737,
+              "cy": 4.368250069751749
+            },
+            "OAPYtHL6H": {
+              "id": "OAPYtHL6H",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,600",
+                "x1": 12.126537785588734,
+                "y1": -271.3145869947275,
+                "x2": -58.21792618629175,
+                "y2": 142.4586994727592,
+                "s1": 2,
+                "s2": 1,
+                "cx": 131.78607153726355,
+                "cy": 22.404589335365785
+              },
+              "node1_id": "84",
+              "node2_id": "bsMuAEqwJ",
+              "cx": 131.92607974956738,
+              "cy": 21.56487320672026
+            },
+            "1NDuiyfns": {
+              "id": "1NDuiyfns",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,600",
+                "x1": 12.126537785588734,
+                "y1": -271.3145869947275,
+                "x2": 118.93497363796135,
+                "y2": 141.115992970123,
+                "s1": 2,
+                "s2": 1,
+                "cx": 157.69789012614027,
+                "cy": -40.83951530225488
+              },
+              "node1_id": "84",
+              "node2_id": "108186",
+              "cx": 150.53923211126016,
+              "cy": -62.244920722187906
+            },
+            "WOc4iKd0t": {
+              "id": "WOc4iKd0t",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$500",
+                "x1": 12.126537785588734,
+                "y1": -271.3145869947275,
+                "x2": 26.30404217926184,
+                "y2": 214.3268892794376,
+                "s1": 2,
+                "s2": 1,
+                "cx": 145.58390190725208,
+                "cy": -4.25008264280317
+              },
+              "node1_id": "84",
+              "node2_id": "2FOCYCTpo",
+              "cx": 145.58211033948078,
+              "cy": -4.311014511027373
+            },
+            "ng2kN0AK7": {
+              "id": "ng2kN0AK7",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$500",
+                "x1": 12.126537785588734,
+                "y1": -271.3145869947275,
+                "x2": -1006.3532513181019,
+                "y2": 152.01757469244288,
+                "s1": 2,
+                "s2": 1,
+                "cx": -88.00166308100796,
+                "cy": -211.72007082644333
+              },
+              "node1_id": "84",
+              "node2_id": "Rd2YXqMkD",
+              "cx": -88.08309572070962,
+              "cy": -211.68620489780085
+            },
+            "ZSZAWsKAL": {
+              "id": "ZSZAWsKAL",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$500",
+                "x1": 12.126537785588734,
+                "y1": -271.3145869947275,
+                "x2": -911.6942003514939,
+                "y2": 208.274165202109,
+                "s1": 2,
+                "s2": 1,
+                "cx": -98.55370210371457,
+                "cy": -189.8417204459958
+              },
+              "node1_id": "84",
+              "node2_id": "2N5JKEC9a",
+              "cx": -96.60420421461986,
+              "cy": -190.8411348433648
+            },
+            "lOnGWf-2u": {
+              "id": "lOnGWf-2u",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,500",
+                "x1": 12.126537785588734,
+                "y1": -271.3145869947275,
+                "x2": -812.6555360281196,
+                "y2": 156.11072056239016,
+                "s1": 2,
+                "s2": 1,
+                "cx": -47.92327825798528,
+                "cy": -120.3915649074583
+              },
+              "node1_id": "84",
+              "node2_id": "qoHCXW9b-",
+              "cx": -86.08088371495437,
+              "cy": -169.78164582798937
+            },
+            "h7uRgmHZV": {
+              "id": "h7uRgmHZV",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$6,500",
+                "x1": 12.126537785588734,
+                "y1": -271.3145869947275,
+                "x2": -1147.6010544815463,
+                "y2": 150.8541300527241,
+                "s1": 2,
+                "s2": 1,
+                "cx": -92.95559745065873,
+                "cy": -255.92478846221707
+              },
+              "node1_id": "84",
+              "node2_id": "IY1pTxQyZ",
+              "cx": -96.18753454777057,
+              "cy": -254.72769508724588
+            },
+            "gVoX6gh_3": {
+              "id": "gVoX6gh_3",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,500",
+                "x1": 12.126537785588734,
+                "y1": -271.3145869947275,
+                "x2": 314.4797891036906,
+                "y2": 92.58172231985935,
+                "s1": 2,
+                "s2": 1,
+                "cx": 140.91047033353493,
+                "cy": -117.07933760129347
+              },
+              "node1_id": "84",
+              "node2_id": "13699",
+              "cx": 129.91279414971967,
+              "cy": -129.174292562368
+            },
+            "QPKs2yG4s": {
+              "id": "QPKs2yG4s",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$1,000",
+                "x1": 12.126537785588734,
+                "y1": -271.3145869947275,
+                "x2": 390.0720562390158,
+                "y2": 169.2442882249561,
+                "s1": 2,
+                "s2": 1,
+                "cx": 202.42878422355213,
+                "cy": -166.86757876524055
+              },
+              "node1_id": "84",
+              "node2_id": "jG3YErEWP",
+              "cx": 201.56365815489076,
+              "cy": -167.9115637364429
+            },
+            "TQFQ4y9VS": {
+              "id": "TQFQ4y9VS",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$1,000",
+                "x1": -892.8963093145871,
+                "y1": -261.9929701230229,
+                "x2": -622.5483304042178,
+                "y2": 88.74340949033393,
+                "s1": 2,
+                "s2": 1,
+                "cx": -8.552574279154738,
+                "cy": 59.87787518756427
+              },
+              "node1_id": "86",
+              "node2_id": "345675",
+              "cx": -8.683473409140646,
+              "cy": 59.859032345425796
+            },
+            "IH7fshZcT": {
+              "id": "IH7fshZcT",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$1,000",
+                "x1": -892.8963093145871,
+                "y1": -261.9929701230229,
+                "x2": -573.4833040421793,
+                "y2": 174.13532513181022,
+                "s1": 2,
+                "s2": 1,
+                "cx": 160.07471261597013,
+                "cy": -100.34608205605828
+              },
+              "node1_id": "86",
+              "node2_id": "yW3KZt3NU",
+              "cx": 159.36631306580924,
+              "cy": -101.46737437667879
+            },
+            "r4RDwbPj9": {
+              "id": "r4RDwbPj9",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$6,600",
+                "x1": -892.8963093145871,
+                "y1": -261.9929701230229,
+                "x2": 23.388400702987695,
+                "y2": 87.27065026362038,
+                "s1": 2,
+                "s2": 1,
+                "cx": 50.160003450923405,
+                "cy": -166.24623161886512
+              },
+              "node1_id": "86",
+              "node2_id": "108172",
+              "cx": 44.85312112315897,
+              "cy": -167.7558732181417
+            },
+            "7xjYI2B9E": {
+              "id": "7xjYI2B9E",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,500",
+                "x1": -892.8963093145871,
+                "y1": -261.9929701230229,
+                "x2": -58.21792618629175,
+                "y2": 142.4586994727592,
+                "s1": 2,
+                "s2": 1,
+                "cx": 90.56473851184845,
+                "cy": -178.29254339676544
+              },
+              "node1_id": "86",
+              "node2_id": "bsMuAEqwJ",
+              "cx": 88.19012974089924,
+              "cy": -179.47897901673701
+            },
+            "xSysa0K6O": {
+              "id": "xSysa0K6O",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$4,500",
+                "x1": -892.8963093145871,
+                "y1": -261.9929701230229,
+                "x2": 118.93497363796135,
+                "y2": 141.115992970123,
+                "s1": 2,
+                "s2": 1,
+                "cx": 216.1344933669498,
+                "cy": -221.70050123134632
+              },
+              "node1_id": "86",
+              "node2_id": "108186",
+              "cx": 91.2319792615319,
+              "cy": -246.83151594510298
+            },
+            "vlFqH7HWw": {
+              "id": "vlFqH7HWw",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$2,000",
+                "x1": -892.8963093145871,
+                "y1": -261.9929701230229,
+                "x2": -1006.3532513181019,
+                "y2": 152.01757469244288,
+                "s1": 2,
+                "s2": 1,
+                "cx": -123.08780482523666,
+                "cy": -33.73142570467961
+              },
+              "node1_id": "86",
+              "node2_id": "Rd2YXqMkD",
+              "cx": -123.46497672052355,
+              "cy": -32.32361830251145
+            },
+            "YDkOkKTUm": {
+              "id": "YDkOkKTUm",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$750",
+                "x1": -892.8963093145871,
+                "y1": -261.9929701230229,
+                "x2": -812.6555360281196,
+                "y2": 156.11072056239016,
+                "s1": 2,
+                "s2": 1,
+                "cx": 61.88984946205039,
+                "cy": -19.916690217589434
+              },
+              "node1_id": "86",
+              "node2_id": "qoHCXW9b-",
+              "cx": -109.46582419903822,
+              "cy": 21.483696140990585
+            },
+            "jEkxZjZDR": {
+              "id": "jEkxZjZDR",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$3,000",
+                "x1": -892.8963093145871,
+                "y1": -261.9929701230229,
+                "x2": 249.5887521968366,
+                "y2": 168.7750439367311,
+                "s1": 2,
+                "s2": 1,
+                "cx": 176.99181058267638,
+                "cy": -316.5558942125067
+              },
+              "node1_id": "86",
+              "node2_id": "PHcZ00VXc",
+              "cx": 100.36138897399152,
+              "cy": -270.62561865657545
+            },
+            "PBPEnNtX6": {
+              "id": "PBPEnNtX6",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "$5,250",
+                "x1": -892.8963093145871,
+                "y1": -261.9929701230229,
+                "x2": 390.0720562390158,
+                "y2": 169.2442882249561,
+                "s1": 2,
+                "s2": 1,
+                "cx": 208.39719426288235,
+                "cy": -255.64461461141903
+              },
+              "node1_id": "86",
+              "node2_id": "jG3YErEWP",
+              "cx": 207.5752737691176,
+              "cy": -256.3124368346928
+            },
+            "NXk-D5Z99": {
+              "id": "NXk-D5Z99",
+              "display": {
+                "scale": 1,
+                "arrow": false,
+                "label": "Parent company",
+                "x1": -806.1318101933216,
+                "y1": -424.36555360281193,
+                "x2": -892.8963093145871,
+                "y2": -261.9929701230229,
+                "s1": 1,
+                "s2": 2,
+                "cx": 2.7915780528798297,
+                "cy": -14.573415451204188
+              },
+              "node1_id": "18116",
+              "node2_id": "86",
+              "cx": -0.2926618877120435,
+              "cy": -14.835487688586381
+            }
+          },
+          "captions": {
+            "SnH_WPQ2j": {
+              "id": "SnH_WPQ2j",
+              "display": {
+                "text": "Missouri",
+                "x": -681.8453427065028,
+                "y": 37.90333919156415,
+                "scale": 2
+              }
+            },
+            "p0QKIrckC": {
+              "id": "p0QKIrckC",
+              "display": {
+                "text": "Alabama",
+                "x": -365.5166959578208,
+                "y": 36.99297012302285,
+                "scale": 2
+              }
+            },
+            "05sEExoud": {
+              "id": "05sEExoud",
+              "display": {
+                "text": "Georgia",
+                "x": -35.70650263620388,
+                "y": 35.73813708260105,
+                "scale": 2
+              }
+            },
+            "5NmZECnBN": {
+              "id": "5NmZECnBN",
+              "display": {
+                "text": "Kentucky",
+                "x": -951.7627416520211,
+                "y": 41.212653778558874,
+                "scale": 2
+              }
+            },
+            "n8UUaNZOY": {
+              "id": "n8UUaNZOY",
+              "display": {
+                "text": "Mississippi",
+                "x": -1261.6186291739896,
+                "y": 46.764499121265374,
+                "scale": 2
+              }
+            },
+            "JnOKm2OmG": {
+              "id": "JnOKm2OmG",
+              "display": {
+                "text": "Ohio",
+                "x": 263.8523725834798,
+                "y": 38.81370826010544,
+                "scale": 2
+              }
+            }
           }
         },
-        "15122": {
-          "id": 15122,
-          "display": {
-            "x": -323.4024181349526,
-            "y": -80.54504459941644,
-            "scale": 1.5,
-            "name": "David Rubenstein",
-            "image": "http://1vze7o2h8a2b2tyahl3i0t68.wpengine.netdna-cdn.com/wp-content/uploads/2015/10/rubenstein.jpg",
-            "url": "//littlesis.org/person/15122/David_Rubenstein",
-            "color": "#ccc"
-          }
+        "annotations": {
+          "currentIndex": 0,
+          "list": [
+            {
+              "id": "CZbRU-cmR",
+              "header": "Corporations fueling state abortion bans, millionaires at the helm",
+              "text": "<p>The website<a href=\"https://popular.info/p/these-six-corporations-are-financing\" target=\"_blank\" rel=\"noopener noreferrer\"> Popular Information</a> recently published a great article outlining six major corporations that made substantial donations to the political leadership in the states that recently passed extreme abortions bans: Alabama, Georgia, Kentucky, Mississippi, Missouri, Ohio.&nbsp;</p><p>Abortion bans represent a huge economic burden for poor and low income communities.<span style=\"font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-size: 1rem;\">&nbsp;F</span><span style=\"font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-size: 1rem;\">rom <a href=\"https://www.marketwatch.com/story/nearly-half-of-women-who-have-abortions-live-below-in-the-federal-poverty-level-2019-05-17\" target=\"_blank\" rel=\"noopener noreferrer\">MarketWatch</a>:</span></p><blockquote><span style=\"font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-size: 1rem;\">Those who weren’t able to obtain an abortion were more likely to be living in poverty four years later; they were also less likely to have a full-time job and were more reliant on public assistance than women who received abortions.</span></blockquote><p><span style=\"font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-size: 1rem;\">According to the latest census data the average median income in the six states that recently passed these bans is $48,752 and the average poverty rate is over 16%.</span><br></p><p>Conversely the average salary for the CEOs of the six companies profiled here was over $21 million for just one year of work.</p><p>It would take someone earning even the median income from these six states 430 YEARS to earn as much as these CEOs earned just last year.&nbsp;</p><p><br></p>",
+              "nodeIds": [
+                "13699",
+                "jG3YErEWP",
+                "PHcZ00VXc",
+                "108186",
+                "108172",
+                "2FOCYCTpo",
+                "bsMuAEqwJ",
+                "PkBKVH730",
+                "281383",
+                "Nb0tYw2Zo",
+                "5cuNRX0lW",
+                "yW3KZt3NU",
+                "345675",
+                "0SMMMadvp",
+                "214065",
+                "qoHCXW9b-",
+                "2N5JKEC9a",
+                "Rd2YXqMkD",
+                "IY1pTxQyZ",
+                "110120",
+                "D2i3zuv2Q",
+                "PldArao5w",
+                "0SpfKSy-5"
+              ],
+              "edgeIds": [],
+              "captionIds": [
+                "n8UUaNZOY",
+                "5NmZECnBN",
+                "SnH_WPQ2j",
+                "p0QKIrckC",
+                "05sEExoud",
+                "JnOKm2OmG"
+              ],
+              "title": "Corporations fueling state abortion bans, millionaires at the helm"
+            },
+            {
+              "id": "wC8TyRCU3",
+              "header": "AT&T, Coca-Cola, and Aetna",
+              "text": "<p>Telecom giant AT&amp;T donated to political leaders in all six states.&nbsp;Coca-Cola donated to the political leadership of five of the six states that passed abortion bans.&nbsp;Finally, health care conglomerate Aetna made donations to anti-choice politicians in four of the abortion ban states. </p>",
+              "nodeIds": [
+                "10",
+                "D2i3zuv2Q",
+                "110120",
+                "PldArao5w",
+                "IY1pTxQyZ",
+                "Rd2YXqMkD",
+                "qoHCXW9b-",
+                "345675",
+                "yW3KZt3NU",
+                "0SMMMadvp",
+                "5cuNRX0lW",
+                "Nb0tYw2Zo",
+                "281383",
+                "0SpfKSy-5",
+                "PkBKVH730",
+                "bsMuAEqwJ",
+                "2FOCYCTpo",
+                "108186",
+                "PHcZ00VXc",
+                "jG3YErEWP",
+                "86",
+                "84",
+                "13699",
+                "108172",
+                "2N5JKEC9a"
+              ],
+              "edgeIds": [
+                "gtPzleWT8",
+                "kdRC2Qd16",
+                "FcVjVUson",
+                "G3IdKBX52",
+                "q36RRjOto",
+                "VgSqi_PnY",
+                "zQFyGqLjh",
+                "HaKsWy64o",
+                "RRK_nV_cy",
+                "94Tx41ImA",
+                "4nVxSoZ3W",
+                "8zkt702AD",
+                "0G4OaYNRf",
+                "57RxlRmP8",
+                "uBE8h6rzQ",
+                "flG-zqI5j",
+                "rVjoPxMO7",
+                "BLjOFm7Sm",
+                "nV7kC7izY",
+                "vlFqH7HWw",
+                "YDkOkKTUm",
+                "TQFQ4y9VS",
+                "IH7fshZcT",
+                "7xjYI2B9E",
+                "r4RDwbPj9",
+                "PBPEnNtX6",
+                "xSysa0K6O",
+                "jEkxZjZDR",
+                "h7uRgmHZV",
+                "ng2kN0AK7",
+                "ZSZAWsKAL",
+                "lOnGWf-2u",
+                "VNXQ2I9be",
+                "qJWyrPQEq",
+                "k2TBKdbHZ",
+                "OAPYtHL6H",
+                "B2vlWYFAG",
+                "WOc4iKd0t",
+                "1NDuiyfns",
+                "gVoX6gh_3",
+                "QPKs2yG4s"
+              ],
+              "captionIds": [
+                "JnOKm2OmG",
+                "05sEExoud",
+                "p0QKIrckC",
+                "SnH_WPQ2j",
+                "5NmZECnBN",
+                "n8UUaNZOY"
+              ],
+              "title": "AT&T, Coca-Cola, and Aetna"
+            },
+            {
+              "id": "nDTxFdxpk",
+              "header": "Randall Stephenson, James Quincey, and Larry Merlo",
+              "text": "<p>AT&amp;T CEO Randall Stephenson. In 2018 Stephenson made over <a href=\"https://www.sec.gov/Archives/edgar/data/732717/000119312519070797/d679803ddef14a.htm\" target=\"_blank\" rel=\"noopener noreferrer\">$29 million</a> in his role.&nbsp;</p><p>In 2018 Coca Cola CEO James Quincey received <a href=\"https://www.sec.gov/Archives/edgar/data/21344/000120677419000735/ko3422831-def14a.htm#compensation\" target=\"_blank\" rel=\"noopener noreferrer\">$16.7 million</a> between base compensation and bonuses.&nbsp;<br></p><p>Aetna is owned by CVS Health Corporation. CVS CEO Larry J. Merlo made <a href=\"https://www.sec.gov/Archives/edgar/data/64803/000120677419001240/cvs3508731-def14a.htm#ceopayratio75\" target=\"_blank\" rel=\"noopener noreferrer\">$22 million</a> in 2018.<br></p><p><br></p>",
+              "nodeIds": [
+                "52218",
+                "10",
+                "307050",
+                "1437",
+                "18116",
+                "86",
+                "84"
+              ],
+              "edgeIds": [
+                "245110",
+                "1419664",
+                "569526",
+                "NXk-D5Z99"
+              ],
+              "captionIds": [],
+              "title": "Randall Stephenson, James Quincey, and Larry Merlo"
+            },
+            {
+              "id": "FSkd5sSGK",
+              "header": "Walmart, Pfizer, and Eli Lilly",
+              "text": "<p>Like AT&amp;T, pervasive retailer Walmart has donated to political leadership in all six states.&nbsp;Pfizer also spread their donations across all six states.&nbsp;Pharma giant Eli Lilly &amp; Co donated to politicians who secured abortion bans in five states.<br></p>",
+              "nodeIds": [
+                "1",
+                "Nb0tYw2Zo",
+                "0SpfKSy-5",
+                "PkBKVH730",
+                "bsMuAEqwJ",
+                "108186",
+                "PHcZ00VXc",
+                "13699",
+                "jG3YErEWP",
+                "2N5JKEC9a",
+                "Rd2YXqMkD",
+                "D2i3zuv2Q",
+                "PldArao5w",
+                "IY1pTxQyZ",
+                "39607",
+                "48",
+                "281383",
+                "345675",
+                "yW3KZt3NU",
+                "0SMMMadvp",
+                "qoHCXW9b-",
+                "214065",
+                "110120",
+                "108172"
+              ],
+              "edgeIds": [
+                "3z_9pcDnn",
+                "kifrvGumn",
+                "via4l1tRg",
+                "kpAhmRBuv",
+                "b_GdFxlIs",
+                "Zv4SLwkbh",
+                "t6wIZ4x-S",
+                "EzTFstmlI",
+                "1LGM7zWxF",
+                "N8QiNliwS",
+                "nhJuCUTIR",
+                "mZcarOB4v",
+                "EASWyqurL",
+                "1TmgaFBZX",
+                "GB3s0YpGa",
+                "KU7acfwxD",
+                "9-ruSHShY",
+                "RktjQ_1ZN",
+                "VNXOIzW1u",
+                "qbDWhN6A2",
+                "cD0sQw_6i",
+                "G8UP8qhX3",
+                "eKGUNVlym",
+                "-gNRif_F0",
+                "OASXhBmYu",
+                "aVdrkJGbY",
+                "dUbNt3yQ3",
+                "0sBhLnzRC",
+                "dZUtDdxyp",
+                "b9c2zhzkj",
+                "PJqIuJlcK",
+                "SIpQ0Qk5j",
+                "JUBfY2y2L",
+                "Ylyufy3k1",
+                "YTFY5-Iqs",
+                "--2xRSxjO",
+                "yZ3Qs_fYV",
+                "nWUKLAzUg",
+                "gS7P1IB3U",
+                "aomh_aQ4X",
+                "wxCq5_iRB",
+                "XzATnZe9z",
+                "vHCwk1iUO",
+                "W3Zcv4mXm",
+                "zmqQuq9uu",
+                "WcRrE4_iZ",
+                "sXgILUF8Y"
+              ],
+              "captionIds": [
+                "JnOKm2OmG",
+                "05sEExoud",
+                "p0QKIrckC",
+                "SnH_WPQ2j",
+                "5NmZECnBN",
+                "n8UUaNZOY"
+              ],
+              "title": "Walmart, Pfizer, and Eli Lilly"
+            },
+            {
+              "id": "Nv6a_bXWR",
+              "header": "Doug McMillon, Ian Read, and David Ricks",
+              "text": "<p>As CEO of Walmart Doug McMillion made nearly <a href=\"https://www.sec.gov/Archives/edgar/data/104169/000120677419001406/wmt3482341-def14a.htm\" target=\"_blank\" rel=\"noopener noreferrer\">$24 million</a> in base and incentive pay in 2018.</p><p>In 2018 Ian Read made <a href=\"https://www.sec.gov/Archives/edgar/data/78003/000093041319000953/c93082_def14a.htm\" target=\"_blank\" rel=\"noopener noreferrer\">$19.5 million</a> as the head of Pfizer. Read left his role in January but incoming CEO Albert Bourla will likely be on the same pay scale.&nbsp;<br></p><p>Eli Lilly is headed by David Ricks. In 2018 Ricks took in <a href=\"https://www.sec.gov/Archives/edgar/data/59478/000005947819000146/proxy2019_def14a.htm\" target=\"_blank\" rel=\"noopener noreferrer\">$17.2 million</a> in base, stock, and incentive pay.&nbsp;<br></p>",
+              "nodeIds": [
+                "1",
+                "58482",
+                "39607",
+                "122886",
+                "1780",
+                "48"
+              ],
+              "edgeIds": [
+                "728421",
+                "1304882",
+                "1055"
+              ],
+              "captionIds": [],
+              "title": "Doug McMillon, Ian Read, and David Ricks"
+            }
+          ]
         },
-        "21689": {
-          "id": 21689,
-          "display": {
-            "x": -119.22671353251323,
-            "y": -148.97715289982423,
-            "scale": 1,
-            "name": "Smithsonian Institution",
-            "image": "https://www.si.edu/sites/default/files/newsdesk/building/si-logo-400.png",
-            "url": "https://littlesis.org/org/21689-Smithsonian_Institution",
-            "color": "#ccc"
-          }
+        "settings": {
+          "debug": true,
+          "noEditing": true
         },
-        "28657": {
-          "id": 28657,
-          "display": {
-            "x": -179.18277680140602,
-            "y": -252.45694200351494,
-            "scale": 1,
-            "name": "National Gallery of Art",
-            "image": "http://localhost:8090/brand.gif",
-            "url": "https://littlesis.org/org/28657-National_Gallery_of_Art",
-            "color": "#ccc"
-          }
-        },
-        "33586": {
-          "id": 33586,
-          "display": {
-            "x": -464.8546503679344,
-            "y": 53.76652021844583,
-            "scale": 2,
-            "name": "Carlyle Group",
-            "image": "http://cdn.historycommons.org/images/events/636_carlyle_group_logo_2050081722-8653.jpg",
-            "url": "//littlesis.org/org/33586/Carlyle_Group",
-            "color": "#ccc"
-          }
-        },
-        "34926": {
-          "id": 34926,
-          "display": {
-            "x": -313.4165202108963,
-            "y": -290.36555360281193,
-            "scale": 1,
-            "name": "Lincoln Center for the Performing Arts",
-            "image": "data:image/png;base64,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",
-            "url": "https://littlesis.org/org/34926-Lincoln_Center_for_the_Performing_Arts",
-            "color": "#ccc"
-          }
-        },
-        "37225": {
-          "id": 37225,
-          "display": {
-            "x": 210.51669595782067,
-            "y": -15.286467486818978,
-            "scale": 1,
-            "name": "Whitney Museum of American Art",
-            "image": "https://dfl6orqdcqt4f.cloudfront.net/images/profile/beebfe4f5ba667bf637bb0ae2a2c7e43b0db322d_1354463901.png",
-            "url": "https://littlesis.org/org/37225-Whitney_Museum_of_American_Art"
-          }
-        },
-        "38938": {
-          "id": 38938,
-          "display": {
-            "x": -504.9384885764499,
-            "y": -284.7521968365554,
-            "scale": 1,
-            "name": "John F Kennedy Center for the Performing Arts",
-            "image": "http://localhost:8090/0aa87f5d3c53d0418d1d6426aedd7ba9bd12c030_1246972526.png",
-            "url": "https://littlesis.org/org/38938-John_F_Kennedy_Center_for_the_Performing_Arts"
-          }
-        },
-        "71359": {
-          "id": 71359,
-          "display": {
-            "x": 32.1503108951454,
-            "y": -43.87678000240193,
-            "scale": 1.5,
-            "name": "Warren B Kanders",
-            "image": "http://www2.pictures.zimbio.com/gi/Warren+Kanders+_jbqNlPis7im.jpg",
-            "url": "//littlesis.org/person/71359/Warren_B_Kanders",
-            "color": "#ccc"
-          }
-        },
-        "74541": {
-          "id": 74541,
-          "display": {
-            "name": "Combined Systems",
-            "x": -311.01857898692043,
-            "y": 162.3706066386352,
-            "scale": 2,
-            "image": "http://localhost:8090/0e875f98f387eb9f887fdd8a506ea4be42a33e11_1296334029.png",
-            "url": "//littlesis.org/org/74541/Combined_Systems",
-            "color": "#ccc"
-          }
-        },
-        "87008": {
-          "id": 87008,
-          "display": {
-            "x": 16.46703387899009,
-            "y": 146.22192577653695,
-            "scale": 2,
-            "name": "Safariland",
-            "url": "//littlesis.org/org/87008/Safariland",
-            "color": "#000000",
-            "image": "https://www.aquaterro.com/wp-content/uploads/2017/05/logo-safariland.png"
-          }
-        },
-        "186939": {
-          "id": 186939,
-          "display": {
-            "x": 120.36028119507905,
-            "y": -172.05799648506155,
-            "scale": 1,
-            "name": "Allison Kanders",
-            "image": "http://www1.pictures.zimbio.com/gi/2012+Whitney+Gala+Arrivals+dTJnLetK6xKl.jpg",
-            "url": "https://littlesis.org/person/186939-Allison_Kanders",
-            "color": "#ccc"
-          }
-        },
-        "226193": {
-          "id": 226193,
-          "display": {
-            "x": 264.89279437609844,
-            "y": -166.66256590509664,
-            "scale": 1,
-            "name": "Aspen Music Festival and School",
-            "image": "https://pbs.twimg.com/profile_images/742474117727674368/PZ58dGGm_400x400.jpg",
-            "url": "https://littlesis.org/org/226193-Aspen_Music_Festival_and_School",
-            "color": "#ccc"
-          }
-        },
-        "x1": {
-          "id": "x1",
-          "display": {
-            "x": -150.98345974543608,
-            "y": 450.0964043901405,
-            "scale": 1,
-            "name": "Egypt",
-            "color": "#000000"
-          }
-        },
-        "x2": {
-          "id": "x2",
-          "display": {
-            "x": -149.38059894159218,
-            "y": 363.5221053307796,
-            "scale": 1,
-            "name": "Palestine ",
-            "color": "#000000"
-          }
-        },
-        "x3": {
-          "id": "x3",
-          "display": {
-            "x": -145.21592048677672,
-            "y": 278.27380873087156,
-            "scale": 1,
-            "name": "Ferguson, MO",
-            "color": "#000000"
-          }
-        },
-        "x11": {
-          "id": "x11",
-          "display": {
-            "x": 169.49985779149384,
-            "y": 314.9498156915079,
-            "scale": 1,
-            "name": "Oakland",
-            "color": "#000000"
-          }
-        },
-        "SOcyEJvRv": {
-          "id": "SOcyEJvRv",
-          "display": {
-            "x": 310.2601054481546,
-            "y": 153.20210896309317,
-            "scale": 1.5,
-            "name": "Tijuana border",
-            "color": "#000000"
-          }
-        },
-        "eH4UiaI0G": {
-          "id": "eH4UiaI0G",
-          "display": {
-            "x": 240.26055690814397,
-            "y": 266.7308814756292,
-            "scale": 1,
-            "name": "Venezuela",
-            "color": "#000000"
-          }
-        },
-        "KOBTd3z1B": {
-          "id": "KOBTd3z1B",
-          "display": {
-            "x": 94.86238532110093,
-            "y": 343.22935779816515,
-            "scale": 1,
-            "name": "San Juan",
-            "color": "#000000"
-          }
+        "attributes": {
+          "id": 4084,
+          "title": "Millionaire CEOs lead the corporations that fund abortion bans",
+          "subtitle": "Just a placeholder subtitle",
+          "date": "May 24, 2019",
+          "owner": {
+            "id": 2088,
+            "name": "user_2088",
+            "url": "/users/user_2088"
+          },
+          "user": {
+            "id": 2088,
+            "name": "user_2088",
+            "url": "/users/user_2088"
+          },
+          "settings": {
+            "private": false,
+            "clone": false
+          },
+          "editors": [],
+          "version": 2,
+          "shareUrl": null
         }
-      },
-      "edges": {
-        "91168": {
-          "id": 91168,
-          "display": {
-            "scale": 1.5,
-            "arrow": "1->2",
-            "label": "Co-founder",
-            "cx": -27.424993041930446,
-            "cy": -28.90145065408806,
-            "dash": false,
-            "url": "//littlesis.org/relationship/view/id/91168",
-            "x1": -323.4024181349526,
-            "y1": -80.54504459941644,
-            "x2": -464.8546503679344,
-            "y2": 53.76652021844583,
-            "s1": 1.5,
-            "s2": 2
-          },
-          "node1_id": 15122,
-          "node2_id": 33586,
-          "cx": -36.438080860450036,
-          "cy": -16.114910997828233
-        },
-        "121691": {
-          "id": 121691,
-          "display": {
-            "scale": 1,
-            "arrow": "1->2",
-            "label": "Chairman",
-            "dash": false,
-            "url": "https://littlesis.org/relationships/121691",
-            "x1": -323.4024181349526,
-            "y1": -80.54504459941644,
-            "x2": -504.9384885764499,
-            "y2": -284.7521968365554,
-            "s1": 1.5,
-            "s2": 1,
-            "cx": -62.271627573682814,
-            "cy": 55.35823033561126
-          },
-          "node1_id": 15122,
-          "node2_id": 38938,
-          "cx": -64.43723909505589,
-          "cy": 52.821695205404424
-        },
-        "128609": {
-          "id": 128609,
-          "display": {
-            "scale": 1,
-            "arrow": "1->2",
-            "label": "Member, Board of Trustees",
-            "dash": false,
-            "url": "https://littlesis.org/relationships/128609",
-            "x1": -323.4024181349526,
-            "y1": -80.54504459941644,
-            "x2": -127.88049209138843,
-            "y2": -37.51845342706503,
-            "s1": 1.5,
-            "s2": 1,
-            "cx": 12.159688701726651,
-            "cy": -23.578989518958245
-          },
-          "node1_id": 15122,
-          "node2_id": 15114,
-          "cx": 18.152066340720324,
-          "cy": -19.34759064121757
-        },
-        "227015": {
-          "id": 227015,
-          "display": {
-            "scale": 1,
-            "arrow": "1->2",
-            "label": "Donation · $10,000,000",
-            "dash": true,
-            "url": "https://littlesis.org/relationships/227015",
-            "x1": -323.4024181349526,
-            "y1": -80.54504459941644,
-            "x2": -313.4165202108963,
-            "y2": -290.36555360281193,
-            "s1": 1.5,
-            "s2": 1,
-            "cx": -101.58415336942886,
-            "cy": -4.834651250571408
-          },
-          "node1_id": 15122,
-          "node2_id": 34926,
-          "cx": -100.80702086499124,
-          "cy": -13.440930504377892
-        },
-        "227022": {
-          "id": 227022,
-          "display": {
-            "scale": 1,
-            "arrow": "1->2",
-            "label": "Board of Regents",
-            "dash": false,
-            "url": "https://littlesis.org/relationships/227022",
-            "x1": -323.4024181349526,
-            "y1": -80.54504459941644,
-            "x2": -119.22671353251323,
-            "y2": -148.97715289982423,
-            "s1": 1.5,
-            "s2": 1,
-            "cx": 3.812680436383598,
-            "cy": -30.812412413365703
-          },
-          "node1_id": 15122,
-          "node2_id": 21689,
-          "cx": 8.192431322002854,
-          "cy": -29.947042589804784
-        },
-        "231425": {
-          "id": 231425,
-          "display": {
-            "scale": 1,
-            "arrow": "1->2",
-            "label": "Vice Chairman",
-            "dash": false,
-            "url": "https://littlesis.org/relationships/231425",
-            "x1": -323.4024181349526,
-            "y1": -80.54504459941644,
-            "x2": -313.4165202108963,
-            "y2": -290.36555360281193,
-            "s1": 1.5,
-            "s2": 1,
-            "cx": -101.58415336942886,
-            "cy": -4.834651250571408
-          },
-          "node1_id": 15122,
-          "node2_id": 34926,
-          "cx": -100.80702086499124,
-          "cy": -13.440930504377892
-        },
-        "293533": {
-          "id": 293533,
-          "display": {
-            "scale": 1.5,
-            "arrow": "1->2",
-            "label": "Board Member",
-            "dash": false,
-            "url": "https://littlesis.org/relationships/293533",
-            "x1": 32.1503108951454,
-            "y1": -43.87678000240193,
-            "x2": 210.51669595782067,
-            "y2": -15.286467486818978,
-            "s1": 1.5,
-            "s2": 1,
-            "cx": 8.299225195426121,
-            "cy": -53.86693900765264
-          },
-          "node1_id": 71359,
-          "node2_id": 37225,
-          "cx": 20.705759279888976,
-          "cy": -50.41622545909062
-        },
-        "819218": {
-          "id": 819218,
-          "display": {
-            "scale": 1.5,
-            "arrow": "1->2",
-            "label": "Owner, Chairman & CEO",
-            "cx": -39.374427423185644,
-            "cy": -12.718894321232133,
-            "dash": false,
-            "url": "//littlesis.org/relationship/view/id/819218",
-            "x1": 32.1503108951454,
-            "y1": -43.87678000240193,
-            "x2": 16.46703387899009,
-            "y2": 146.22192577653695,
-            "s1": 1.5,
-            "s2": 2
-          },
-          "node1_id": 71359,
-          "node2_id": 87008,
-          "cx": -39.33910780988136,
-          "cy": -12.827720155230853
-        },
-        "819299": {
-          "id": 819299,
-          "display": {
-            "scale": 1.5,
-            "arrow": "1->2",
-            "label": "Owner",
-            "dash": false,
-            "url": "//littlesis.org/relationship/view/id/819299",
-            "x1": -464.8546503679344,
-            "y1": 53.76652021844583,
-            "x2": -311.01857898692043,
-            "y2": 162.3706066386352,
-            "s1": 2,
-            "s2": 2,
-            "cx": 8.792243064846827,
-            "cy": -38.32366537367153
-          },
-          "node1_id": 33586,
-          "node2_id": 74541,
-          "cx": 7.134945965690116,
-          "cy": -38.666515382837126
-        },
-        "914657": {
-          "id": 914657,
-          "display": {
-            "scale": 1,
-            "arrow": false,
-            "label": "partner",
-            "dash": false,
-            "url": "https://littlesis.org/relationships/914657",
-            "x1": 32.1503108951454,
-            "y1": -43.87678000240193,
-            "x2": 120.36028119507905,
-            "y2": -172.05799648506155,
-            "s1": 1.5,
-            "s2": 1,
-            "cx": 28.840624915887375,
-            "cy": 14.081716670157181
-          },
-          "node1_id": 71359,
-          "node2_id": 186939,
-          "cx": 27.712181143888362,
-          "cy": 16.1898550384432
-        },
-        "1110895": {
-          "id": 1110895,
-          "display": {
-            "scale": 1,
-            "arrow": "1->2",
-            "label": "Member, Board of Trustees",
-            "dash": false,
-            "url": "https://littlesis.org/relationships/1110895",
-            "x1": 120.36028119507905,
-            "y1": -172.05799648506155,
-            "x2": 264.89279437609844,
-            "y2": -166.66256590509664,
-            "s1": 1,
-            "s2": 1,
-            "cx": -5.375076004308787,
-            "cy": -41.58099931279615
-          },
-          "node1_id": 186939,
-          "node2_id": 226193,
-          "cx": -2.0491149305788214,
-          "cy": -41.87686800495148
-        },
-        "1315002": {
-          "id": 1315002,
-          "display": {
-            "scale": 1,
-            "arrow": "1->2",
-            "dash": false,
-            "url": "https://littlesis.org/relationships/1315002",
-            "x1": -323.4024181349526,
-            "y1": -80.54504459941644,
-            "x2": -504.9384885764499,
-            "y2": -284.7521968365554,
-            "s1": 1.5,
-            "s2": 1,
-            "cx": -62.271627573682814,
-            "cy": 55.35823033561126,
-            "label": "chairman"
-          },
-          "node1_id": 15122,
-          "node2_id": 38938,
-          "cx": -64.43723909505589,
-          "cy": 52.821695205404424
-        },
-        "1383011": {
-          "id": 1383011,
-          "display": {
-            "scale": 1,
-            "arrow": "1->2",
-            "label": "Trustee",
-            "dash": false,
-            "url": "https://littlesis.org/relationships/1383011",
-            "x1": -323.4024181349526,
-            "y1": -80.54504459941644,
-            "x2": -179.18277680140602,
-            "y2": -252.45694200351494,
-            "s1": 1.5,
-            "s2": 1,
-            "cx": -16.070695201145504,
-            "cy": -20.237577492469278
-          },
-          "node1_id": 15122,
-          "node2_id": 28657,
-          "cx": -14.57017031994705,
-          "cy": -21.343310986338423
-        },
-        "x2": {
-          "id": "x2",
-          "display": {
-            "scale": 1.5,
-            "arrow": false,
-            "label": "Tear gas used",
-            "url": "//littlesis.org/relationship/view/id/819315",
-            "x1": -311.01857898692043,
-            "y1": 162.3706066386352,
-            "x2": -150.98345974543608,
-            "y2": 450.0964043901405,
-            "s1": 2,
-            "s2": 1,
-            "cx": -114.46830912387924,
-            "cy": 39.062748566105235
-          },
-          "node1_id": 74541,
-          "node2_id": "x1",
-          "cx": -115.7994563628264,
-          "cy": 34.91959371602991
-        },
-        "x3": {
-          "id": "x3",
-          "display": {
-            "scale": 1.5,
-            "arrow": false,
-            "label": "Tear gas used",
-            "url": "//littlesis.org/relationship/view/id/819315",
-            "x1": -311.01857898692043,
-            "y1": 162.3706066386352,
-            "x2": -149.38059894159218,
-            "y2": 363.5221053307796,
-            "s1": 2,
-            "s2": 1,
-            "cx": -56.99787602807654,
-            "cy": 64.34950238016985
-          },
-          "node1_id": 74541,
-          "node2_id": "x2",
-          "cx": -59.463583328121175,
-          "cy": 62.07816513128475
-        },
-        "x4": {
-          "id": "x4",
-          "display": {
-            "scale": 1.5,
-            "arrow": false,
-            "label": "Tear gas used",
-            "dash": false,
-            "url": "//littlesis.org/relationship/view/id/819315",
-            "x1": -311.01857898692043,
-            "y1": 162.3706066386352,
-            "x2": -145.21592048677672,
-            "y2": 278.27380873087156,
-            "s1": 2,
-            "s2": 1,
-            "cx": -25.38628860892241,
-            "cy": 57.53275876918979
-          },
-          "node1_id": 74541,
-          "node2_id": "x3",
-          "cx": -27.165473949789593,
-          "cy": 56.714363313120174
-        },
-        "x10": {
-          "id": "x10",
-          "display": {
-            "scale": 1.5,
-            "arrow": false,
-            "label": "Tear gas used",
-            "cx": 47.34566206372979,
-            "cy": 44.29436502782809,
-            "dash": false,
-            "url": "//littlesis.org/relationship/view/id/819315",
-            "x1": 16.46703387899009,
-            "y1": 146.22192577653695,
-            "x2": -145.21592048677672,
-            "y2": 278.27380873087156,
-            "s1": 2,
-            "s2": 1
-          },
-          "node1_id": 87008,
-          "node2_id": "x3",
-          "cx": 45.23380496510915,
-          "cy": 46.44895453990164
-        },
-        "x16": {
-          "id": "x16",
-          "display": {
-            "scale": 1.5,
-            "arrow": "1->2",
-            "label": "Tear gas used during Occupy protest",
-            "url": "//littlesis.org/relationship/view/id/819418",
-            "x1": 16.46703387899009,
-            "y1": 146.22192577653695,
-            "x2": 169.49985779149384,
-            "y2": 314.9498156915079,
-            "s1": 2,
-            "s2": 1,
-            "cx": 27.210701719829473,
-            "cy": -24.679562619581187
-          },
-          "node1_id": 87008,
-          "node2_id": "x11",
-          "cx": 27.826844548676327,
-          "cy": -23.982698381190602
-        },
-        "aJQDmEM5m": {
-          "id": "aJQDmEM5m",
-          "display": {
-            "scale": 1.5,
-            "arrow": "1->2",
-            "label": "used against migrant caravan 2018",
-            "x1": 16.46703387899009,
-            "y1": 146.22192577653695,
-            "x2": 310.2601054481546,
-            "y2": 153.20210896309317,
-            "s1": 2,
-            "s2": 1.5,
-            "cx": 14.801314523103366,
-            "cy": -2.4303092592639977
-          },
-          "node1_id": "87008",
-          "node2_id": "SOcyEJvRv",
-          "cx": 14.9222206691699,
-          "cy": -1.5207383101946315
-        },
-        "2qtBaw_fd": {
-          "id": "2qtBaw_fd",
-          "display": {
-            "scale": 1.5,
-            "arrow": false,
-            "label": "Tear gas used",
-            "x1": 16.46703387899009,
-            "y1": 146.22192577653695,
-            "x2": -149.38059894159218,
-            "y2": 363.5221053307796,
-            "s1": 2,
-            "s2": 1,
-            "cx": 90.41636431660235,
-            "cy": 84.31318966568439
-          },
-          "node1_id": "87008",
-          "node2_id": "x2",
-          "cx": 88.20877992226761,
-          "cy": 86.62011332513478
-        },
-        "VnaMYFfYi": {
-          "id": "VnaMYFfYi",
-          "display": {
-            "scale": 1.5,
-            "arrow": false,
-            "label": "Tear gas used",
-            "x1": 16.46703387899009,
-            "y1": 146.22192577653695,
-            "x2": -150.98345974543608,
-            "y2": 450.0964043901405,
-            "s1": 2,
-            "s2": 1,
-            "cx": 144.66432287187,
-            "cy": 75.74979419304601
-          },
-          "node1_id": "87008",
-          "node2_id": "x1",
-          "cx": 143.52209473138092,
-          "cy": 77.89227147915257
-        },
-        "_ebsu1Ja7": {
-          "id": "_ebsu1Ja7",
-          "display": {
-            "scale": 1.5,
-            "arrow": "1->2",
-            "label": "Tear gas used",
-            "x1": 16.46703387899009,
-            "y1": 146.22192577653695,
-            "x2": 240.26055690814397,
-            "y2": 266.7308814756292,
-            "s1": 2,
-            "s2": 1,
-            "cx": 26.70039321645001,
-            "cy": -49.58448962991121
-          },
-          "node1_id": "87008",
-          "node2_id": "eH4UiaI0G",
-          "cx": 27.94412608971788,
-          "cy": -48.89435986751203
-        },
-        "TuV4PLzUi": {
-          "id": "TuV4PLzUi",
-          "display": {
-            "scale": 1.5,
-            "arrow": "1->2",
-            "label": "Tear gas used against Rosselló protesters",
-            "x1": 16.46703387899009,
-            "y1": 146.22192577653695,
-            "x2": 94.86238532110093,
-            "y2": 343.22935779816515,
-            "s1": 2,
-            "s2": 1
-          },
-          "node1_id": "87008",
-          "node2_id": "KOBTd3z1B"
-        }
-      },
-      "captions": {
-        "x1": {
-          id: "x1",
-          text: "A sophisticated observation about what's going on in this map",
-          x: 400,
-          y: 100,
-          scale: 1,
-          width: 250,
-          height: 150,
-          weight: '400',
-          font: 'Arial',
-          size: '20'
-        }
-      }
-    }
-
-    var oli = new Oligrapher({
-      graph: graph,
-      settings: {
-        debug: true,
-        url: "https://littlesis.org/oligrapher/999999/some-map"
-      },
-      attributes: {
-        id: "3686",
-        title: "Example Title That's Not Too Long",
-        date: "January 12, 2018",
-        subtitle: "A longer description of this map. Use this space to give more context.",
-        user: { id: "1", name: "Kevin", url: "http://littlesis.org/user/kevin" },
-        owner: { id: "1", name: "Kevin", url: "http://littlesis.org/user/kevin" },
-        settings: { private: false, list_sources: true, scrollToZoom: true },
-        shareUrl: "https://littlesis.org/oligrapher/999999/some-map/share/abcdef"
-      },
-      display: {
-        modes: { editor: true }
-      },
-      annotations: {
-        list: [],
-        currentIndex: 0,
-        sources: {"id":"sources","nodeIds":[],"edgeIds":[],"captionIds":[],"header":"Sources","text":"<div><a href=\"http://www.thecrimson.com/article.aspx?ref=180921\">Harvard Crimson - Winokur resigns</a></div>\n<div><a href=\"http://belfercenter.ksg.harvard.edu/about/international-council.html\">Belfer Center international council</a></div>"}
-      }
-    })
+      })
     </script>
   </body>
 </html>

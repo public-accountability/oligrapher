@@ -1,10 +1,10 @@
-# Oligrapher 2
+# Oligrapher
 
 Oligrapher is a JavaScript app for visualizing network graphs. It allows a user to design a nice-looking network graph using a combination of imported or manually entered data, and to create a collection of annotations for a graph.
 
 Oligrapher was originally developed by [LittleSis](https://littlesis.org) before it was separated into a standalone library. LittleSis has a large collection of [maps created with Oligrapher](https://littlesis.org/oligrapher).
 
-Oligrapher 2 is built with [React](http://reactjs.com) and [Redux](http://rackt.org/redux) and is bundled into a single JavaScript file that is easy to run on any web page.
+Oligrapher is built with [React](https://reactjs.com) and [Redux](https://redux.js.org) and is bundled with [Webpack](https://webpack.js.org)
 
 - [Features](#features)
 - [Install](#install)
@@ -30,19 +30,20 @@ Features
 Install
 -------
 
-To run Oligrapher app in a web page, include [oligrapher.js](build/oligrapher.js) in your page and mount the app in an HTML element:
+To run Oligrapher app in a web page, include *oligrapher.js* on your page and mount the app in an HTML element:
 
 ```html
-<script src="oligrapherjs"></script>
+<script src="oligrapher.js"></script>
+
+<div id="oligrapher"></div>
+
 <script>
-var elem = document.getElementById('oligrapher');
-var oli = new Oligrapher({
-  root: elem,
+const oli = new Oligrapher({
+  root: document.getElementById('oligrapher'),
   isEditor: true
-});
+})
 </script>
 ```
-Examine [html/dev.html](html/dev.html) in the repository for a complete example.
 
 Development
 -----------
@@ -56,16 +57,23 @@ npm install
 npm run dev-server
 ```
 
-Then point your browser to [localhost:8090/dev.html](http://localhost:8090/dev.html) to view a demo graph. In development mode the React application is served by webpack with hot loading.
+Start the webpack dev server : `npm run dev-server`
 
-Hot-loading Dev server : `npm run dev-server`
+Then point your browser to [localhost:8090/dev.html](http://localhost:8090/dev.html) to view a demo graph.
+
+Also available:
+
+`/index.html` blank map
+`/editor.html` example map in editor mode
+`/embedded.html` embedded-mode
+`/article.html` an map in embedded-mode using an inframe
+
 
 Development build: `npm run build-dev`
 
 Production build: `npm run build-prod`
 
 Run tests: `npm test`
-
 
 Data Schema
 -----------
@@ -164,8 +172,8 @@ API
 ### `constructor(config)`
 Returns an Oligrapher instance within a specified ```root``` DOM element and accepts other configuration options.
 ```javascript
-var elem = document.getElementById('oligrapher');
-var data = getDataFromSomeWhere();
+var const = document.getElementById('oligrapher')
+var const = getDataFromSomeWhere()
 var config = {
   root: elem,   // DOM element to mount Oligrapher within
   data: data,   // initial graph data to load and display (null by default)

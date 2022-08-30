@@ -5,20 +5,25 @@ import { StateWithHistory } from './defaultState'
 import { Annotation } from './annotations'
 import { LsMap } from '../datasources/littlesis3'
 
-export type Selector<T> = (state: StateWithHistory) => T
 
-export const userIsOwnerSelector: Selector<boolean> = state => {
-  return !!state.attributes.user
-    && (!state.attributes.owner || state.attributes.owner.id === state.attributes.user.id)
+export function userIsOwnerSelector(state: StateWithHistory): Boolean {
+  return !!state.attributes?.user?.id &&
+    !!state.attributes?.owner?.id &&
+    (state.attributes.owner.id === state.attributes.user.id)
 }
 
-export const userIsEditorSelector: Selector<boolean> = state => {
-  return !!state.attributes.user
-    && state.attributes.editors.filter(e => !e.pending).map(e => e.name).includes(state.attributes.user.name)
+export function userIsEditorSelector(state: StateWithHistory): Boolean {
+  return !!state.attributes?.user?.id &&
+    !!state.attributes?.editors &&
+    state.attributes.editors.filter(e => !e.pending).map(e => e.id).includes(state.attributes.user.id)
 }
 
-export const userCanEditSelector: Selector<boolean> = state => {
-  return !state.settings.embed && (userIsOwnerSelector(state) || userIsEditorSelector(state))
+export function userCanEditSelector(state: StateWithHistory): Boolean {
+  if (state.settings.embed || state.settings.noEditing) {
+    return false
+  } else {
+    return userIsOwnerSelector(state) || userIsEditorSelector(state)
+  }
 }
 
 export const annotationsListSelector: Selector<Annotation[]> = state => {

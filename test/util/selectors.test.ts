@@ -39,7 +39,7 @@ describe('Selectors', function() {
     })
 
     test('owner is missing', function() {
-      expect(userIsOwnerSelector(stateWithOwner(null))).toBeTruthy()
+      expect(userIsOwnerSelector(stateWithOwner(null))).toBeFalsy()
     })
   })
 

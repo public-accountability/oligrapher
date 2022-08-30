@@ -2,12 +2,8 @@
 <html>
   <head>
     <title>Oligrapher</title>
-    <meta name="csrf-param" content="authenticity_token" />
-    <meta name="csrf-token" content="ilVDtBMQkU2KS6iFmZRS3olt/h/PXpy3lWAuRCnwTUgzRKjMMiQ0S4gMNridFddjLoDwNGtv/Pxr94PFnj8LFA==" />
-    <script src="http://localhost:8090/webpack-dev-server.js"></script>
-    <script src="http://localhost:8090/oligrapher-dev.js"></script>
+    <script src="/oligrapher/assets/oligrapher-dev.bundle.js"></script>
   </head>
-
   <body>
     <div id="oligrapher"></div>
 
@@ -757,8 +753,7 @@
       graph: graph,
       settings: {
         debug: true,
-        embed: true,
-        url: "http://localhost:8090/dev.html"
+        embed: true
       },
       attributes: {
         id: "3686",
@@ -781,13 +776,13 @@
           }
         ],
         currentIndex: 0,
-        sources: { 
+        sources: {
           "id": "sources",
           "nodeIds": [],
           "edgeIds": [],
           "captionIds": [],
           "header": "Sources",
-          "text": "<div><a href=\"http://www.thecrimson.com/article.aspx?ref=180921\">Harvard Crimson - Winokur resigns</a></div>\n<div><a href=\"http://belfercenter.ksg.harvard.edu/about/international-council.html\">Belfer Center international council</a></div>"
+          "text": "<div><a href=\"http://example.com\">Example Website</a></div>\n<div></div>"
         }
       }
     })
