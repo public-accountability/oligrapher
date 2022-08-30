@@ -66,7 +66,7 @@ module.exports = function(env) {
 
   return {
     mode: production ? 'production' : 'development',
-    entry: path.resolve(__dirname, 'app/Oligrapher.jsx'),
+    entry: path.resolve(__dirname, 'app/Oligrapher.tsx'),
     output: {
       path: outputPath,
       publicPath: publicPath,

@@ -1,13 +1,14 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux'
+import type { Store } from 'redux'
 import loadable from '@loadable/component'
 
 import Graph from './graph/graph'
-// import Root from './components/Root'
-// import EmbeddedRoot from './components/EmbeddedRoot'
-const Root = loadable(() => import('./components/Root'))
-const EmbeddedRoot = loadable(() => import('./components/EmbeddedRoot'))
+import Root from './components/Root'
+import EmbeddedRoot from './components/EmbeddedRoot'
+// const Root = loadable(() => import('./components/Root'))
+// const EmbeddedRoot = loadable(() => import('./components/EmbeddedRoot'))
 //Root.preload()
 //EmbeddedRoot.preload()
 
@@ -31,18 +32,12 @@ export default class Oligrapher {
   static Graph = Graph
   static Api = LittleSisApi
 
+  store: Store;
+  element: HTMLElement;
+
   constructor(initialState = {}) {
     this.store = createOligrapherStore(stateInitalizer(initialState))
     this.element = document.getElementById(this.store.getState().settings.domId)
-    this.graph = () => this.store.getState().graph
-    this.toSvg = () => toSvg(this.store.getState())
-    this.toJpeg = () => toJpeg(this.store.getState())
-    this.hideAnnotations = () => this.store.dispatch({type: 'HIDE_ANNOTATIONS'})
-    this.showAnnotations = () => this.store.dispatch({type: 'SHOW_ANNOTATIONS'})
-    this.hideHeader = () => this.store.dispatch({type: 'HIDE_HEADER'})
-    this.showHeader = () => this.store.dispatch({type: 'SHOW_HEADER'})
-    this.hideZoomControl = () => this.store.dispatch({type: 'HIDE_ZOOM_CONTROL'})
-    this.showZoomControl = () => this.store.dispatch({type: 'SHOW_ZOOM_CONTROL'})
 
     const isEmbedded = this.store.getState().settings.embed
 
@@ -52,4 +47,17 @@ export default class Oligrapher {
                   { isEmbedded ? <EmbeddedRoot /> : <Root /> }
                 </Provider>)
   }
+
+  graph() {
+    return this.store.getState().graph
+  }
+
+  toSvg() {
+    return toSvg(this.store.getState())
+  }
+
+  toJpeg() {
+    return toJpeg(this.store.getState())
+  }
+
 }

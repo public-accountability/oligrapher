@@ -2,7 +2,7 @@
   "name": "@public-accountability/oligrapher",
   "version": "3.2.0",
   "description": "Network graph visualizer built for LittleSis",
-  "main": "app/Oligrapher.jsx",
+  "main": "app/Oligrapher.tsx",
   "scripts": {
     "build-dev": "webpack --color --progress",
     "build-dev-one": "webpack --color --progress --env onefile",
