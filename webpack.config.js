@@ -55,7 +55,6 @@ module.exports = function(env) {
   const development = !production
   const devServer = env.dev_server
   const onefile = Boolean(env.onefile)
-  const maxChunks = onefile ? 1 : 10
   const fileBaseName = env.production ? 'oligrapher' : 'oligrapher-dev'
   const fileName = fileBaseName + (devServer ? "" : "-[git-revision-hash]") + (!onefile ? ".bundle" : "") + ".js"
   const chunkFileName = fileBaseName + (devServer ? "" : "-[git-revision-hash]") + "-[id].bundle.js"
@@ -125,7 +124,7 @@ module.exports = function(env) {
 
     plugins: [
       new GitRevisionPlugin(),
-      new webpack.optimize.LimitChunkCountPlugin({ maxChunks: maxChunks }),
+      onefile ? new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }) : false,
       new webpack.DefinePlugin({
         'API_URL': JSON.stringify(apiUrl),
         'PRODUCTION': JSON.stringify(production)

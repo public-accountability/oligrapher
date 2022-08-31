@@ -2,15 +2,9 @@ import React from 'react'
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux'
 import type { Store } from 'redux'
-import loadable from '@loadable/component'
-
 import Graph from './graph/graph'
 import Root from './components/Root'
 import EmbeddedRoot from './components/EmbeddedRoot'
-// const Root = loadable(() => import('./components/Root'))
-// const EmbeddedRoot = loadable(() => import('./components/EmbeddedRoot'))
-//Root.preload()
-//EmbeddedRoot.preload()
 
 import { toSvg, toJpeg } from './util/imageExport'
 import { createOligrapherStore } from './util/store'
@@ -37,7 +31,12 @@ export default class Oligrapher {
 
   constructor(initialState = {}) {
     this.store = createOligrapherStore(stateInitalizer(initialState))
-    this.element = document.getElementById(this.store.getState().settings.domId)
+
+    const element = document.getElementById(this.store.getState().settings.domId)
+
+    if (!element) { throw new Error('could not find requested oligrapher element') }
+
+    this.element = element
 
     const isEmbedded = this.store.getState().settings.embed
 
