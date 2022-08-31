@@ -1,15 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "esnext",
     "module": "commonjs",
     "jsx": "react",
     "moduleResolution": "node",
     "strict": true,
     "noEmit": true,
     "allowJs": true,
-    "skipLibCheck": true,
-    "isolatedModules": true,
-    "esModuleInterop": true
+    "skipLibCheck": true
   },
   "include": ["app/**/*"]
 }

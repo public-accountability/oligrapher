@@ -2,14 +2,13 @@ import React from 'react'
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux'
 import type { Store } from 'redux'
-import Graph from './graph/graph'
+// import Graph from './graph/graph'
 import Root from './components/Root'
 import EmbeddedRoot from './components/EmbeddedRoot'
 
 import { toSvg, toJpeg } from './util/imageExport'
 import { createOligrapherStore } from './util/store'
 import stateInitalizer from './util/stateInitalizer'
-import LittleSisApi from './datasources/littlesis3'
 import './oligrapher.scss'
 
 /*
@@ -23,9 +22,6 @@ import './oligrapher.scss'
 
 */
 export default class Oligrapher {
-  static Graph = Graph
-  static Api = LittleSisApi
-
   store: Store;
   element: HTMLElement;
 

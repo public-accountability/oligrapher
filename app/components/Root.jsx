@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import loadable from '@loadable/component'
 import { useSelector } from 'react-redux'
 //import { hot } from 'react-hot-loader/root'
 import { ThemeProvider } from '@mui/material/styles'
@@ -18,7 +19,9 @@ import {
 } from '../util/selectors'
 
 import Annotations from './Annotations'
-import Editor from './Editor'
+
+//import Editor from './Editor'
+const Editor = loadable(() => import('./Editor'))
 
 export const ROOT_CONTAINER_ID = "oligrapher-container"
 
@@ -28,6 +31,8 @@ export function Root() {
   const hasUnsavedChanges = useSelector(hasUnsavedChangesSelector)
   const showHeader = useSelector(showHeaderSelector)
   const showZoomControl = useSelector(showZoomControlSelector)
+  const editorMode = useSelector(state => state.display.modes.editor)
+
   // to pevent backspace form navigating away from page
   // in firefox and possibly other browsers
   useEffect(() => {
@@ -56,6 +61,7 @@ export function Root() {
     }
   }, [hasUnsavedChanges])
 
+
   return (
     <div id={ROOT_CONTAINER_ID}>
       <ThemeProvider theme={muiTheme}>
@@ -74,7 +80,7 @@ export function Root() {
             <div id="oligrapher-graph-container">
               <Graph />
               <Hidden xsDown>
-                <Editor />
+                { editorMode && <Editor /> }
               </Hidden>
               { showZoomControl && <ZoomControl /> }
               <FloatingEditors />
