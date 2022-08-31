@@ -78,6 +78,7 @@
     "wretch": "^2.0.4"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.3.0",
     "chai": "^4.3.6",
     "jest": "^29.0.1",
@@ -86,7 +87,8 @@
     "react-test-renderer": "^18.2.0",
     "redux-saga-test-plan": "^4.0.5",
     "webpack-bundle-analyzer": "^4.6.1",
-    "webpack-dev-server": "^4.10.1"
+    "webpack-dev-server": "^4.10.1",
+    "whatwg-fetch": "^3.6.2"
   },
   "jest": {
     "testMatch": [
@@ -95,6 +97,9 @@
     "transformIgnorePatterns": [
       "node_modules/(?!(nanoid)/)"
     ],
-    "testEnvironment": "jsdom"
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": [
+      "./jest.setup.js"
+    ]
   }
 }
