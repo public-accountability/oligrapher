@@ -7,8 +7,8 @@ export default function Example() {
 
   useEffect(() => {
     fetch("/hello")
-      .then(response => response.text())
-      .then(text => setResults(text))
+      .then(response => response.json())
+      .then(json => setResults(json.data))
       .catch(console.error)
   })
 

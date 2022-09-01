@@ -15,3 +15,5 @@ global.renderWithStore  = (Element, props = null, configuration = {}) => {
   const app = React.createElement(Provider, { store: store }, React.createElement(Element, props))
   return { store, ...render(app) }
 }
+
+global.jsonHandler = (url, data) => rest.get(url, (req, res, ctx) => res(ctx.delay(), ctx.json(data)))

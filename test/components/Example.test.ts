@@ -1,14 +1,7 @@
 import { screen, waitFor } from '@testing-library/react'
 import Example from '../../app/components/Example'
 
-const server = setupServer(
-  rest.get('/hello', (req, res, ctx) => {
-    return res(
-      ctx.delay(),
-      ctx.text("world")
-    )
-  })
-)
+const server = setupServer(jsonHandler('/hello', { "data": "world"}))
 
 beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
