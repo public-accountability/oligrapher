@@ -12,6 +12,7 @@ global.setupServer = setupServer
 
 global.renderWithStore  = (Element, props = null, configuration = {}) => {
   const store = createOligrapherStore(configuration)
+  console.log("Initial State", store.getState())
   const app = React.createElement(Provider, { store: store }, React.createElement(Element, props))
   return { store, ...render(app) }
 }

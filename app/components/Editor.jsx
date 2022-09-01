@@ -7,7 +7,7 @@ import NodeTool from './NodeTool'
 import TextTool from './TextTool'
 import StyleNodesTool from './StyleNodesTool'
 import InterlocksTool from './InterlocksTool'
-import OrganizeTool from './OrganizeTool'
+//import OrganizeTool from './OrganizeTool'
 import Settings from './Settings'
 import Editors from './Editors'
 import Help from './Help'
@@ -32,7 +32,7 @@ export function Editor() {
       { tool === 'text' && <TextTool /> }
       { tool === 'style' && <StyleNodesTool /> }
       { tool === 'interlocks' && <InterlocksTool /> }
-      { tool === 'organize' && <OrganizeTool /> }
+      { /* tool === 'organize' && <OrganizeTool /> */ }
       { tool === 'settings' && <Settings /> }
       { tool === 'editors' && <Editors /> }
       { tool === 'help' && <Help /> }

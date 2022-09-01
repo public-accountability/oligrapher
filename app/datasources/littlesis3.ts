@@ -9,8 +9,8 @@ import { Node } from '../graph/node'
 import { Edge } from '../graph/edge'
 import { LockState } from '../util/lock'
 
-declare var API_URL: string
-declare var PRODUCTION: string
+declare const API_URL: string
+declare const PRODUCTION: string
 
 // API_URL is defined by webpack.DefinePlugin
 // see webpack.config.js

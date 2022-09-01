@@ -8,7 +8,7 @@ import EmbeddedRoot from './components/EmbeddedRoot'
 
 import { toSvg, toJpeg } from './util/imageExport'
 import createOligrapherStore from './util/store'
-import './oligrapher.scss'
+//import './oligrapher.scss'
 
 /*
   Main entry point of Oligrapher.

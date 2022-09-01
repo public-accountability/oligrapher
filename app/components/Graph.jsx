@@ -31,7 +31,7 @@ export function Graph(props) {
   useEffect(() => {
     setSvgWidth(svgRef.current.getBoundingClientRect().width)
   }, [setSvgWidth, storyMode])
-  
+
   const className = draggedNode ? "oligrapher-graph-dragging-node" : ""
 
   return (
