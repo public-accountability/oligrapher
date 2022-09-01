@@ -12,7 +12,7 @@ const MENU_ITEMS = [
   'style',
   'interlocks',
   'annotations',
-  'organize',
+//  'organize',
   'settings',
   'editors',
   'help'

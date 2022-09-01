@@ -1,5 +1,4 @@
 import React from 'react'
-//import loadable from '@loadable/component'
 import { useSelector } from '../util/helpers'
 import { enableLockSelector } from '../util/selectors'
 
