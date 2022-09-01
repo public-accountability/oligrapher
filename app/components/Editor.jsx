@@ -11,19 +11,14 @@ import OrganizeTool from './OrganizeTool'
 import Settings from './Settings'
 import Editors from './Editors'
 import Help from './Help'
-
 import LockManager from './LockManager'
 import EditorMenu from './EditorMenu'
-
-// const LockManager = loadable(() => import('./LockManager'))
-// const EditorMenu = loadable(() => import('./EditorMenu'))
 
 /*
   Container for the editing interfaces
 */
 export function Editor() {
   const tool = useSelector(state => state.display.tool)
-  // const disabled = useSelector(state => !state.display.modes.editor)
   const className = 'oligrapher-graph-editor' + (tool === 'text' ? ' text-tool' : '')
   const enableLock = useSelector(enableLockSelector)
 

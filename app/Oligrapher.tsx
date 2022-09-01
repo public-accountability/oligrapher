@@ -8,7 +8,7 @@ import EmbeddedRoot from './components/EmbeddedRoot'
 
 import { toSvg, toJpeg } from './util/imageExport'
 import { createOligrapherStore } from './util/store'
-import stateInitalizer from './util/stateInitalizer'
+import stateInitializer from './util/stateInitializer'
 import './oligrapher.scss'
 
 /*
@@ -26,7 +26,7 @@ export default class Oligrapher {
   element: HTMLElement;
 
   constructor(initialState = {}) {
-    this.store = createOligrapherStore(stateInitalizer(initialState))
+    this.store = createOligrapherStore(stateInitializer(initialState))
 
     const element = document.getElementById(this.store.getState().settings.domId)
 

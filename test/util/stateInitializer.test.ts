@@ -1,8 +1,8 @@
 import values from 'lodash/values'
 import Node from '../../app/graph/node'
-import stateInitalizer, { flatten } from '../../app/util/stateInitalizer'
+import stateInitializer, { flatten } from '../../app/util/stateInitializer'
 
-describe('stateInitalizer', function() {
+describe('stateInitializer', function() {
   let node, serializedState
 
   beforeEach(function() {
@@ -17,7 +17,7 @@ describe('stateInitalizer', function() {
   })
 
   it('initializes the graph', function(){
-    let initialState = stateInitalizer(serializedState)
+    let initialState =  stateInitializer(serializedState)
     expect(values(initialState.graph.nodes).length).toEqual(1)
     expect(initialState.graph.edges).toEqual({})
   })

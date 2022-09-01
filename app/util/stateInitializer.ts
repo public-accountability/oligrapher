@@ -90,8 +90,10 @@ function calculateStoryMode(state: any): boolean {
 /*
   Converts legacy oligrapher data, performs initial display state calculations,
   and adds graph history.
+
+
 */
-export default function stateInitalizer(legacyState: any): StateWithHistory {
+export default function stateInitializer (legacyState: any): StateWithHistory {
   let state = merge({}, defaultState, legacyState)
 
   state.graph = convertGraph(state.graph)
