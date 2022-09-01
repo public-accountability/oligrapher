@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react'
-import loadable from '@loadable/component'
 import { useSelector } from 'react-redux'
-//import { hot } from 'react-hot-loader/root'
 import { ThemeProvider } from '@mui/material/styles'
 import { Grid, Hidden } from '@mui/material'
 
@@ -19,9 +17,7 @@ import {
 } from '../util/selectors'
 
 import Annotations from './Annotations'
-
-//import Editor from './Editor'
-const Editor = loadable(() => import('./Editor'))
+import Editor from './Editor'
 
 export const ROOT_CONTAINER_ID = "oligrapher-container"
 
