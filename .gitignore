@@ -5,3 +5,4 @@ node_modules
 NOTES.md
 .vscode
 /stats.json
+mocha/

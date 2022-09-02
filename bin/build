@@ -1,0 +1,28 @@
+#!/bin/bash
+set -e
+
+mkdir -p dist
+
+commit=$(git rev-parse HEAD)
+
+printf "\033[93mCompiling app/oligrapher.scss\033[0m\n"
+npx sass app/oligrapher.scss dist/oligrapher.css
+
+printf "\033[93mCompiling index.ts\033[0m\n"
+npx esbuild \
+    --bundle \
+    --outfile=dist/oligrapher.js \
+    --minify \
+    --sourcemap \
+    --target=firefox102,safari14,chrome104 \
+    --define:API_URL='"https://littlesis.org"' \
+    index.ts
+
+printf "\033[94mMaking copies for $commit\033[0m\n"
+cp dist/oligrapher.css dist/oligrapher-$commit.css
+cp dist/oligrapher.css.map dist/oligrapher-$commit.css.map
+cp dist/oligrapher.js dist/oligrapher-$commit.js
+cp dist/oligrapher.js.map dist/oligrapher-$commit.js.map
+
+printf "Contents of dist/ "
+ls -lh dist/

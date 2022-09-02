@@ -41,9 +41,7 @@ export default function SaveButton() {
           disabled={isSaving}
           disableElevation={true}
           variant="contained"
-          size="small"
-          color="primary"
-        >
+          size="small">
           Save
         </Button>
 

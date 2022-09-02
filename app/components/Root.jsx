@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { ThemeProvider } from '@mui/material/styles'
 import { Grid, Hidden } from '@mui/material'
-
 import Header from './Header'
 import CondensedHeader from './CondensedHeader'
 import Graph from './Graph'
@@ -11,7 +10,7 @@ import ZoomControl from './ZoomControl'
 import UserMessage from './UserMessage'
 import CondensedAnnotations from './CondensedAnnotations'
 import AnnotationsToggler from './AnnotationsToggler'
-import { muiTheme } from '../util/helpers'
+import theme from '../util/theme'
 import {
   showAnnotationsSelector, annotationsListSelector, hasUnsavedChangesSelector, showHeaderSelector, showZoomControlSelector
 } from '../util/selectors'
@@ -60,7 +59,7 @@ export function Root() {
 
   return (
     <div id={ROOT_CONTAINER_ID}>
-      <ThemeProvider theme={muiTheme}>
+      <ThemeProvider theme={theme}>
         {
           showHeader &&
             <Hidden xsDown>

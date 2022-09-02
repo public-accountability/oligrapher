@@ -2,13 +2,10 @@ import React from 'react'
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux'
 import type { Store } from 'redux'
-// import Graph from './graph/graph'
 import Root from './components/Root'
 import EmbeddedRoot from './components/EmbeddedRoot'
-
 import { toSvg, toJpeg } from './util/imageExport'
 import createOligrapherStore from './util/store'
-//import './oligrapher.scss'
 
 /*
   Main entry point of Oligrapher.

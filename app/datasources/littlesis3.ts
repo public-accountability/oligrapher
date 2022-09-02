@@ -9,11 +9,7 @@ import { Node } from '../graph/node'
 import { Edge } from '../graph/edge'
 import { LockState } from '../util/lock'
 
-declare const API_URL: string
-declare const PRODUCTION: string
-
-// API_URL is defined by webpack.DefinePlugin
-// see webpack.config.js
+// API_URL is set by the "define" option of esbuild
 export const urls = {
   findNodes: () => `${API_URL}/oligrapher/find_nodes`,
   findConnections: () => `${API_URL}/oligrapher/find_connections`,
@@ -32,15 +28,13 @@ export const urls = {
 const isInteger = (x: any): boolean => RegExp('^[0-9]+$').test(x.toString())
 
 const getCsrfToken = (): string => {
-  const token = (document.head.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content
+  const token = document.head.querySelector('meta[name="csrf-token"]')?.content
 
-  if (token) {
-    return token
-  } else if (PRODUCTION) {
-    throw new Error("No csrf token found")
-  } else {
-    return "LittleSis-Test-CSRF-Token"
+  if (!token) {
+    //throw new Error("No csrf token found")
   }
+
+  return token
 }
 
 const headers = () => ({
