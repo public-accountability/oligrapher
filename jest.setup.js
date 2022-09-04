@@ -7,12 +7,15 @@ import { rest } from 'msw'
 import { setupServer } from 'msw/node'
 import createOligrapherStore from './app/util/store'
 
+// global.API_URL = 'http://localhost:8080'
+global.API_URL = ''
+
 global.rest = rest
 global.setupServer = setupServer
 
 global.renderWithStore  = (Element, props = null, configuration = {}) => {
   const store = createOligrapherStore(configuration)
-  console.log("Initial State", store.getState())
+  // console.log("Initial State", store.getState())
   const app = React.createElement(Provider, { store: store }, React.createElement(Element, props))
   return { store, ...render(app) }
 }
