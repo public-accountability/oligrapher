@@ -41,7 +41,10 @@ const graph = {
   "captions": {}
 }
 
-const server = setupServer(jsonHandler('/oligrapher/find_connections', data))
+const server = setupServer(
+  jsonHandler('/oligrapher/find_connections', data),
+  jsonHandler('/oligrapher/get_edges', [])
+)
 
 beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
