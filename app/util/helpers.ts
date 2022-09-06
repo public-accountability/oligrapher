@@ -15,7 +15,7 @@ export function classNames(...classes: Array<string | undefined>): string {
 }
 
 export function callWithTargetValue(func: (arg: any) => any): (event: Event | React.ChangeEvent) => any {
-  return function(event: Event) {
+  return function(event: Event | React.ChangeEvent) {
     const value = (event.target as HTMLInputElement).value
     return func(value)
   }

@@ -24,5 +24,10 @@ cp dist/oligrapher.css.map dist/oligrapher-$commit.css.map
 cp dist/oligrapher.js dist/oligrapher-$commit.js
 cp dist/oligrapher.js.map dist/oligrapher-$commit.js.map
 
+printf "\033[93mCompressing...\033[0m\n"
+find ./dist -type f -name "*oligrapher-$commit*" ! -name '*.gz' ! -name '*.br' -print0 |
+    xargs -0 -P 4 -I FILE bash -c "gzip -f -k FILE && brotli -f -k FILE"
+
+
 printf "Contents of dist/ "
 ls -lh dist/

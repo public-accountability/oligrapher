@@ -27,7 +27,7 @@ export default function EntitySearchResults({ results, onClick }) {
   const visibleResults = results.filter(entity => !existingNodeIds.includes(entity.id))
 
   return (
-    <div className="entity-search-results">
+    <div className="entity-search-results" data-testid="entity-search-results">
       { visibleResults.map(entity => (
           <SearchResult
             onClick={onClick}

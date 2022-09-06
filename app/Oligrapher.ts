@@ -34,7 +34,7 @@ export default class Oligrapher {
 
     const root = createRoot(this.element)
     const rootElement = React.createElement(isEmbedded ? EmbeddedRoot: Root)
-    root.render(React.createElement(Provider, { store: this.store}, rootElement))
+    root.render(React.createElement(Provider, { store: this.store }, rootElement))
   }
 
   graph() {

@@ -14,8 +14,6 @@ import Caption from '../graph/caption'
 import { translatePoint } from '../util/geometry'
 import { GraphState } from '../util/defaultState'
 
-let draggedNode, draggedOverNode, newEdge
-
 export const reducer = produce((graph: Graph, action: any): void => {
   switch(action.type) {
   case 'ADD_NODE':

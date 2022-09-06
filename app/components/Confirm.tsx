@@ -9,15 +9,14 @@ export default function Confirm({ open, message, cancel, confirm }: ConfirmProps
       id="oligrapher-confirm"
       open={open}
       onClose={close}
-      aria-describedby="alert-dialog-description"
-    >
+      aria-describedby="alert-dialog-description">
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
           {message}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={cancel.onClick} variant="contained" color="default">
+        <Button onClick={cancel.onClick} variant="contained" color="primary">
           {cancel.label}
         </Button>
         <Button id="oligrapher-confirm-button" onClick={confirm.onClick} variant="contained" color="secondary">

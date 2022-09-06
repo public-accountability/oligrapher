@@ -32,18 +32,16 @@ Features
 Install
 -------
 
-To run Oligrapher app in a web page, include *oligrapher.js* on your page and mount the app in an HTML element:
+To run Oligrapher app in a web page, include *oligrapher.js*  and *oligrapher.css* on your page and create a element for the map:
 
 ```html
+<link rel="stylesheet" href="oligrapher.css">
 <script src="oligrapher.js"></script>
 
-<div id="oligrapher"></div>
+<div id="example-oligrapher"></div>
 
 <script>
-const oli = new Oligrapher({
-  root: document.getElementById('oligrapher'),
-  isEditor: true
-})
+const oli = new Oligrapher({ isEditor: true, domId: "example-oligrapher" })
 </script>
 ```
 

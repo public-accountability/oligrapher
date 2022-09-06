@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/><meta charset="UTF-8">
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
     <title>Oligrapher Editor Demo</title>
-    <script src="/oligrapher/assets/oligrapher-dev.bundle.js"></script>
+    <link rel="stylesheet" href="oligrapher.css">
+    <script src="oligrapher.js"></script>
     <style>
      body {
        margin: 10px;
@@ -20,7 +21,7 @@
     <div id="oligrapher"></div>
     <script>
 
-     var graph = {
+     const graph = {
        "nodes": {
          "EI-H6Mvz": {
            "id": "EI-H6Mvz",
@@ -81,6 +82,7 @@
          }
        }
      }
+
      const oli = new Oligrapher({
        graph: graph,
        settings: { debug: true },
