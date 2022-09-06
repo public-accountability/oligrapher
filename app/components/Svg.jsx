@@ -1,10 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-/*
-  A thin abstraction over a regular dom <svg> element
-*/
-// eslint-disable-next-line react/display-name
+// A thin abstraction over a regular dom <svg> element
 const Svg = React.forwardRef((props, ref) => {
   let svgAttributes = {
     height: props.height,

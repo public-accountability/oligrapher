@@ -38,9 +38,11 @@ export default function NodeTool() {
           type="text"
           placeholder="Search database"
           value={searchValue}
-          onChange={handleInputChange} />
+          onChange={handleInputChange}
+          data-testid="add-node-input"
+        />
 
-        { doSearch && 
+        { doSearch &&
           <div>
             Select below or <a onClick={onClickCreateNew}>create new node</a>
             <hr />
