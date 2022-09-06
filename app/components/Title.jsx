@@ -5,17 +5,17 @@ import { callWithTargetValue } from '../util/helpers'
 
 export default function Title({ text, editable, onChange, url }) {
 
-  return (
-    <h1 id="oligrapher-title">
-      {
-        editable 
-        ? <input value={text}
-            onChange={callWithTargetValue(onChange)}
-            placeholder="Title" />
-        : url ? <a href={url} target="_blank" rel="noreferrer" title="View this map on LittleSis">{text}</a> : text
-      }
-    </h1>
-  )
+  return <h1 id="oligrapher-title">
+           {
+             editable
+               ? <input value={text}
+                        onChange={callWithTargetValue(onChange)}
+                        placeholder="Title"
+                        data-testid="oligrapher-title-input"
+                 />
+             : url ? <a href={url} target="_blank" rel="noreferrer" title="View this map on LittleSis">{text}</a> : text
+           }
+         </h1>
 }
 
 Title.propTypes = {

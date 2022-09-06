@@ -14,6 +14,7 @@ global.API_URL = ''
 
 global.rest = rest
 global.setupServer = setupServer
+global.createElement = React.createElement
 
 global.renderWithStore  = (Element, props = null, configuration = {}) => {
   const user = userEvent.setup()

@@ -1,6 +1,9 @@
 import { createElement,  ReactElement } from 'react'
+import { ThemeProvider } from '@mui/material/styles'
+import theme from '../app/util/theme'
 
 export const wrapInSvg = (element: ReactElement): ReactElement => createElement('svg', null, element)
+export const wrapInThemeProvider = (element: ReactElement): ReactElement => createElement(ThemeProvider, { theme: theme }, element)
 
 export const simpleGraph = {
   "nodes": {

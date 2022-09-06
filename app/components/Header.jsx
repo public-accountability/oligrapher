@@ -79,7 +79,7 @@ export default function Header() {
       }
 
       { editMode &&
-        <div id="oligrapher-header-toggler">
+        <div id="oligrapher-header-toggler" data-testid="oligrapher-header-toggler">
           { isCollapsed
             ? <MdExpandMore onClick={expand} />
             : <MdExpandLess onClick={collapse} />
