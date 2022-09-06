@@ -1,8 +1,8 @@
+.vscode
 logs
 *.log
 node_modules
-/dist/*
-NOTES.md
-.vscode
-/stats.json
 mocha/
+/build
+/dist/*
+/html/oligrapher.css*

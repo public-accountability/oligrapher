@@ -6,6 +6,7 @@ import Root from './components/Root'
 import EmbeddedRoot from './components/EmbeddedRoot'
 import { toSvg, toJpeg } from './util/imageExport'
 import createOligrapherStore from './util/store'
+import { urls } from './datasources/littlesis3'
 
 /*
   Main entry point of Oligrapher.
@@ -47,6 +48,10 @@ export default class Oligrapher {
 
   toJpeg() {
     return toJpeg(this.store.getState())
+  }
+
+  static get apiUrls() {
+    return urls
   }
 
 }
