@@ -55,5 +55,9 @@ test('AddConnections', async function() {
   expect(screen.getByText("New York State Senate")).toBeTruthy()
   expect(result.container.querySelector('.entity-search-description').textContent).toEqual(data[0].description)
 
-  // on click
+  expect(Object.keys(result.store.getState().graph.nodes).length).toEqual(1)
+  // Add node to map
+  await result.user.click(result.container.querySelector('.entity-search-result a'))
+  expect(Object.keys(result.store.getState().graph.nodes).length).toEqual(2)
+  expect(result.container.querySelector('.entity-search-description')).not.toBeInTheDocument()
 })
