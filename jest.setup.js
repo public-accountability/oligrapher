@@ -7,6 +7,7 @@ import { render } from '@testing-library/react'
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
 import createOligrapherStore from './app/util/store'
+import { isElement } from 'react-dom/test-utils'
 
 // global.API_URL = 'http://localhost:8080'
 global.API_URL = ''
@@ -17,9 +18,12 @@ global.setupServer = setupServer
 global.renderWithStore  = (Element, props = null, configuration = {}) => {
   const user = userEvent.setup()
   const store = createOligrapherStore(configuration)
-  // console.log("Initial State", store.getState())
-  const app = React.createElement(Provider, { store: store }, React.createElement(Element, props))
+
+  const app = React.createElement(Provider,
+                                  { store: store },
+                                  isElement(Element) ? Element : React.createElement(Element, props))
   return { user, store, ...render(app) }
 }
+
 
 global.jsonHandler = (url, data) => rest.get(url, (req, res, ctx) => res(ctx.delay(), ctx.json(data)))

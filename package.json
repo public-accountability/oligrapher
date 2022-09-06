@@ -76,7 +76,7 @@
   },
   "jest": {
     "testMatch": [
-      "**/test/**/*.[jt]s?(x)"
+      "**/test/**/*.test.[jt]s?(x)"
     ],
     "transformIgnorePatterns": [
       "node_modules/(?!(nanoid)/)"

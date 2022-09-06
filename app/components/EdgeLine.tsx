@@ -14,7 +14,7 @@ export function EdgeLine({ id, bezier, width, dash, status, arrow, isReverse }: 
   return (
     <path
       id={`path-${id}`}
-      className="edge-path"
+      className={`edge-path edge-path-${status}`}
       d={bezier}
       strokeWidth={width}
       strokeDasharray={dash ? "5 5" : ''}
