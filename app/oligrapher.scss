@@ -692,9 +692,14 @@ body {
 
 #oligrapher-container div.oligrapher-edge-editor {
   width: 325px;
-  height: 420px;
+  max-height: 800px;
   padding: 10px;
   box-sizing: border-box;
+
+  form input {
+      width: 92%;
+  }
+
 
   .edit-edge-style {
     width: 100%;

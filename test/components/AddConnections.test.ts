@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import AddConnections from '../../app/components/AddConnections'
 
 const data =  [
