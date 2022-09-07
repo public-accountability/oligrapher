@@ -1,21 +1,15 @@
-name: Npm Compile
+name: Compile
 
 on: push
 
 jobs:
   compile:
-    runs-on: Ubuntu-20.04
-
-    strategy:
-      matrix:
-        node-version: [16.x, 18.x]
-
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
-    - name: Install requirements
-      run: sudo apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
-    - run: npm install --include=dev
+        node-version: 18
+    - run: sudo apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+    - run: npm ci
     - run: npm run build
