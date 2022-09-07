@@ -48,18 +48,19 @@ export const getId = (display: DisplayState, t?: FloatingEditorType): string | n
 export const getType = (display: DisplayState): FloatingEditorType | null => display.floatingEditor.type
 
 export const svgToHtmlPosition = (position: Point): Point => {
-  const svg = getElementById('oligrapher-svg')
+  const svg = getElementById('oligrapher-svg') as SVGSVGElement
 
-  // @ts-ignore ...why doesn't typescript know about createSVGPoint or getScreenCTM?
+  // ...why doesn't typescript know about createSVGPoint or getScreenCTM?
   const point = svg.createSVGPoint()
   point.x = position.x
   point.y = position.y
 
   // using pannable because it's the innermost svg transformation
   // and getScreenCTM() incorporates all ancestor transformations
-  const pannable = getElementById('oligrapher-pannable')
-  // @ts-ignore
-  return point.matrixTransform(pannable.getScreenCTM())
+  const pannable = getElementById('oligrapher-pannable') as SVGGElement
+
+  // https://svgwg.org/svg2-draft/types.html#InterfaceSVGGraphicsElement
+  return point.matrixTransform(pannable.getScreenCTM() as DOMMatrix)
 }
 
 export const floatingEditorPositionSelector = (state: State): Point | null => {
@@ -67,11 +68,10 @@ export const floatingEditorPositionSelector = (state: State): Point | null => {
     return null
   }
 
+  const currentPosition = getPosition(state.graph, state.display.floatingEditor.id, state.display.floatingEditor.type)
+
   return keepWithinScreen(state.display,
-                          transformPosition(
-                            getPosition(state.graph, state.display.floatingEditor.id, state.display.floatingEditor.type),
-                            state.display.floatingEditor.type
-                          ),
+                          transformPosition(currentPosition, state.display.floatingEditor.type),
                           state.display.floatingEditor.type)
 }
 

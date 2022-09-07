@@ -19,12 +19,6 @@
     "url": "https://github.com/public-accountability/oligrapher/issues"
   },
   "homepage": "https://littlesis.org/oligrapher",
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "Firefox ESR",
-    "not dead"
-  ],
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^35.0.1",
     "@ckeditor/ckeditor5-react": "^5.0.2",

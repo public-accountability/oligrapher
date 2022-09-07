@@ -71,13 +71,14 @@ body {
   box-sizing: border-box;
   position: relative;
 
+
   &.oligrapher-header-expanded {
-    min-height: 142px;
-    height: 142px;
+    /* min-height: 142px; */
+    /* height: 142px; */
   }
 
   &.oligrapher-header-collapsed {
-    height: 52px;
+    min-height: 52px;
 
     #oligrapher-header-top {
       display: flex;
@@ -155,6 +156,8 @@ body {
   #oligrapher-header-bottom {
     display: flex;
     flex-direction: row;
+
+    margin-bottom: 8px;
 
     &:not(.editing) {
       margin-bottom: 0.5em;
