@@ -6,3 +6,4 @@ mocha/
 /build
 /dist/*
 /html/oligrapher.css*
+/coverage

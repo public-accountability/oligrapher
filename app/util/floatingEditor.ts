@@ -2,6 +2,7 @@ import { State, DisplayState, FloatingEditorType } from './defaultState'
 import { Point } from './geometry'
 import { Graph } from '../graph/graph'
 import { edgeToCurve } from '../graph/curve'
+import { getElementById } from '../util/helpers'
 
 export const X_OFFSET = {
   node: 40,
@@ -31,8 +32,8 @@ const Y_SIZE = {
   caption: 175
 }
 
-export const set = (display: DisplayState, type: FloatingEditorType | null = null, id: string | null = null): void => {
-  display.floatingEditor.type = type
+export const set = (display: DisplayState, t: FloatingEditorType | null = null, id: string | null = null): void => {
+  display.floatingEditor.type = t
   display.floatingEditor.id = id
 }
 
@@ -40,55 +41,47 @@ export const clear = (display: DisplayState): void => {
   set(display, null, null)
 }
 
-export const getId = (display: DisplayState, type?: FloatingEditorType): string | null => {
-  return (!type || type === display.floatingEditor.type)
-    ? display.floatingEditor.id
-    : null
+export const getId = (display: DisplayState, t?: FloatingEditorType): string | null => {
+  return (!t || t === display.floatingEditor.type) ? display.floatingEditor.id : null
 }
 
 export const getType = (display: DisplayState): FloatingEditorType | null => display.floatingEditor.type
 
-export const svgToHtmlPosition = (display: DisplayState, position: Point): Point => {
-  const svg = document.getElementById('oligrapher-svg') as any
+export const svgToHtmlPosition = (position: Point): Point => {
+  const svg = getElementById('oligrapher-svg')
 
-  // for tests to pass, since jsdom doesn't cover svg, 
-  // we just return the provided position unchaged
-  if (typeof svg.createSVGPoint !== 'function') {
-    return position
-  }
-
+  // @ts-ignore ...why doesn't typescript know about createSVGPoint or getScreenCTM?
   const point = svg.createSVGPoint()
   point.x = position.x
   point.y = position.y
 
   // using pannable because it's the innermost svg transformation
   // and getScreenCTM() incorporates all ancestor transformations
-  const pannable = document.getElementById('oligrapher-pannable') as any
-
+  const pannable = getElementById('oligrapher-pannable')
+  // @ts-ignore
   return point.matrixTransform(pannable.getScreenCTM())
 }
 
 export const floatingEditorPositionSelector = (state: State): Point | null => {
-  const { id, type } = state.display.floatingEditor
-
-  if (!id || !type) {
+  if (!state.display.floatingEditor.id || !state.display.floatingEditor.type) {
     return null
   }
 
-  return keepWithinScreen(state.display, transformPosition(
-    state.display, 
-    getPosition(state.graph, id, type),
-    type
-  ), type)
+  return keepWithinScreen(state.display,
+                          transformPosition(
+                            getPosition(state.graph, state.display.floatingEditor.id, state.display.floatingEditor.type),
+                            state.display.floatingEditor.type
+                          ),
+                          state.display.floatingEditor.type)
 }
 
-export const keepWithinScreen = (display: DisplayState, position: Point, type: FloatingEditorType): Point => {
+export const keepWithinScreen = (display: DisplayState, position: Point, t: FloatingEditorType): Point => {
   let { x, y } = position
 
   const top = y
   const left = x
-  const width = X_SIZE[type]
-  const height = Y_SIZE[type]
+  const width = X_SIZE[t]
+  const height = Y_SIZE[t]
   const bottom = top + height
   const right = left + width
 
@@ -112,16 +105,16 @@ export const keepWithinScreen = (display: DisplayState, position: Point, type: F
   if (right > window.innerWidth - horizontalPadding - BUFFER) {
     x -= right - window.innerWidth + horizontalPadding + BUFFER
   }
-  
+
   return { x, y }
 }
 
 // used to calculate floating editor position based on node or edge position
-export const transformPosition = (display: DisplayState, position: Point, type: FloatingEditorType): Point => {
-  const xOffset = X_OFFSET[type]
-  const yOffset = Y_OFFSET[type]
+export const transformPosition = (position: Point, t: FloatingEditorType): Point => {
+  const xOffset = X_OFFSET[t]
+  const yOffset = Y_OFFSET[t]
 
-  const { x, y } = svgToHtmlPosition(display, position)
+  const { x, y } = svgToHtmlPosition(position)
 
   return {
     x: x + xOffset,
@@ -152,14 +145,14 @@ const EDITOR_TYPES = {
   caption: ['caption']
 }
 
-export const toggleEditor = (display: DisplayState, type: 'node' | 'edge' | 'caption', id: string): void => {
-  let isOpen = EDITOR_TYPES[type].includes(getType(display) as string)
+export const toggleEditor = (display: DisplayState, t: 'node' | 'edge' | 'caption', id: string): void => {
+  let isOpen = Boolean(getType(display)) && EDITOR_TYPES[t].includes(getType(display) as string)
   let isBeingEdited = getId(display) === id
 
   if (isOpen && isBeingEdited) {
     clear(display)
   } else {
-    set(display, type, id)
+    set(display, t, id)
   }
 }
 

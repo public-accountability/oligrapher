@@ -1,7 +1,7 @@
 import { DisplayState, SelectionType } from './defaultState'
 
-export function swapSelection(display: DisplayState, type: SelectionType, id: string, singleSelect: boolean = true): void {
-  let ids = display.selection[type]
+export function swapSelection(display: DisplayState, t: SelectionType, id: string, singleSelect: boolean = true): void {
+  let ids = display.selection[t]
   const index = ids.indexOf(id)
 
   if (index === -1) {
@@ -10,11 +10,11 @@ export function swapSelection(display: DisplayState, type: SelectionType, id: st
     ids.splice(index, 1)
   }
 
-  display.selection[type] = ids
+  display.selection[t] = ids
 }
 
-export function getSelection(display: DisplayState, type: SelectionType): string[] {
-  return display.selection[type]
+export function getSelection(display: DisplayState, t: SelectionType): string[] {
+  return display.selection[t]
 }
 
 export function clearSelection(display: DisplayState): void {
@@ -26,6 +26,6 @@ export function clearSelection(display: DisplayState): void {
   }
 }
 
-export function selectionCount(display: DisplayState, type: SelectionType = 'node'): number {
-  return display.selection[type].length
+export function selectionCount(display: DisplayState, t: SelectionType = 'node'): number {
+  return display.selection[t].length
 }

@@ -49,6 +49,17 @@ export function makeCancelable(promise: Promise<any>): { promise: Promise<any>, 
   }
 }
 
+export function getElementById(id: string): Element {
+  let element = document.getElementById(id)
+
+  if (element) {
+    return element
+  } else {
+    throw new Error(`#${id} is not in the document`)
+  }
+
+}
+
 export function frozenArray(...items: any[]): readonly any[] {
   return Object.freeze(items)
 }

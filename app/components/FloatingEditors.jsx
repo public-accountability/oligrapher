@@ -25,7 +25,7 @@ export default function FloatingEditors() {
 
   return (
     <Draggable key={key} enableUserSelectHack={false} handle=".editor-header" positionOffset={position || undefined}>
-      <div className="oligrapher-floating-editor">
+      <div className="oligrapher-floating-editor" test-id="oligrapher-floating-editor">
         { type === 'node' && <NodeEditor id={id} /> }
         { (type === 'connections' && !useClassicAddConnections) && <AddConnections id={id} /> }
         { (type === 'connections' && useClassicAddConnections) && <AddConnectionsClassic id={id} /> }
