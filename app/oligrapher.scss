@@ -1,12 +1,5 @@
 @use "sass:color";
 
-/*
-  Oligrapher uses IDs for components that have only one.
-  Otherwise classes are used.
-
-  SCSS nesting is used here, even when not necessary,
-  to help us navigate the DOM tree.
-*/
 $oligrapher_blue: #0c7fff;
 $font_color: black;
 $link_color: $oligrapher_blue;
@@ -50,7 +43,6 @@ body {
 
 /*
    This is our outermost div.
-
    It's a flex container with two children: #oligrapher-header and #oligrapher-graph
 */
 #oligrapher-container {
@@ -79,13 +71,14 @@ body {
   box-sizing: border-box;
   position: relative;
 
+
   &.oligrapher-header-expanded {
-    min-height: 142px;
-    height: 142px;
+    /* min-height: 142px; */
+    /* height: 142px; */
   }
 
   &.oligrapher-header-collapsed {
-    height: 52px;
+    min-height: 52px;
 
     #oligrapher-header-top {
       display: flex;
@@ -163,6 +156,8 @@ body {
   #oligrapher-header-bottom {
     display: flex;
     flex-direction: row;
+
+    margin-bottom: 8px;
 
     &:not(.editing) {
       margin-bottom: 0.5em;
@@ -700,9 +695,14 @@ body {
 
 #oligrapher-container div.oligrapher-edge-editor {
   width: 325px;
-  height: 420px;
+  max-height: 800px;
   padding: 10px;
   box-sizing: border-box;
+
+  form input {
+      width: 92%;
+  }
+
 
   .edit-edge-style {
     width: 100%;
@@ -1270,4 +1270,16 @@ div.lock {
     background-color: white;
     border: 1px solid #ccc;
   }
+}
+
+.add-connections-classic-button {
+    margin-left: 1em;
+}
+
+.add-connections-classic-statusbox {
+    margin-top: 2em;
+}
+
+.add-connections-classic-p {
+    margin-top: 2em;
 }

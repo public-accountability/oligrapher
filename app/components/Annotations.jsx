@@ -1,17 +1,17 @@
 import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button } from '@material-ui/core'
-import loadable from '@loadable/component'
+import { Button } from '@mui/material'
 
 import Annotation from './Annotation'
-import AnnotationList from './AnnotationList'
+
 import RemoveAnnotationButton from './RemoveAnnotationButton'
-//import AnnotationForm from './AnnotationForm'
-const AnnotationForm = loadable(() => import('./AnnotationForm'))
 import AnnotationsNav from './AnnotationsNav'
 import AnnotationsTracker from './AnnotationsTracker'
 import HideAnnotationsButton from './HideAnnotationsButton'
 import { annotationsListSelector } from '../util/selectors'
+
+import AnnotationForm from './AnnotationForm'
+import AnnotationList from './AnnotationList'
 
 export function Annotations() {
   const dispatch = useDispatch()

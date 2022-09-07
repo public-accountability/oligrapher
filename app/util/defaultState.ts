@@ -19,8 +19,9 @@ export interface User {
 
 export interface Editor {
   name: string,
+  url: string,
+  id: number,
   pending?: boolean,
-  url: string
 }
 
 export interface UserSettings {
@@ -102,9 +103,9 @@ export interface DisplayState {
 export interface SettingsState {
   debug: boolean,
   domId: string,
-  embed: boolean
+  embed: boolean,
+  noEditing: boolean
 }
-
 
 export interface State {
   graph: Graph,
@@ -210,7 +211,8 @@ const defaultState: State = {
   settings: {
     debug: false,
     domId: 'oligrapher',
-    embed: false
+    embed: false,
+    noEditing: false
   },
 
   lastSavedData: null

@@ -10,10 +10,9 @@ import EditorSubmitButtons from './EditorSubmitButtons'
 import Graph from '../graph/graph'
 import { callWithTargetValue } from '../util/helpers'
 
-
 export function MainPage({ nodes, edge, updateEdge }) {
   return (
-    <div>
+    <div data-testid="edge-editor-mainpage">
       <form>
         <div>
           <label>Label</label>
@@ -90,7 +89,7 @@ export default function EdgeEditor({ id }) {
     <EditorHotKeys remove={removeEdge}>
       <div className="oligrapher-edge-editor">
         <EditorHeader title="Customize Edge" />
-        <main>
+        <div>
           { page === 'main' &&
             <MainPage
               edge={edge}
@@ -98,14 +97,14 @@ export default function EdgeEditor({ id }) {
               setPage={setPage}
               nodes={nodes} />
           }
-        </main>
-        <footer>
+        </div>
+        <div>
           <EditorSubmitButtons
             hideSubmitButton={true}
             handleDelete={removeEdge}
             page={page}
             setPage={setPage} />
-        </footer>
+        </div>
       </div>
     </EditorHotKeys>
   )

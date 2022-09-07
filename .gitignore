@@ -1,8 +1,9 @@
+.vscode
 logs
 *.log
 node_modules
+mocha/
+/build
 /dist/*
-!/dist/.keep
-NOTES.md
-.vscode
-/stats.json
+/html/oligrapher.css*
+/coverage

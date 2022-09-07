@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { hot } from 'react-hot-loader/root'
-import { ThemeProvider } from '@material-ui/core/styles'
-import { Grid, Hidden } from '@material-ui/core'
-
+import { ThemeProvider } from '@mui/material/styles'
+import { Grid, Hidden } from '@mui/material'
 import Header from './Header'
 import CondensedHeader from './CondensedHeader'
 import Graph from './Graph'
@@ -12,7 +10,7 @@ import ZoomControl from './ZoomControl'
 import UserMessage from './UserMessage'
 import CondensedAnnotations from './CondensedAnnotations'
 import AnnotationsToggler from './AnnotationsToggler'
-import { muiTheme } from '../util/helpers'
+import theme from '../util/theme'
 import {
   showAnnotationsSelector, annotationsListSelector, hasUnsavedChangesSelector, showHeaderSelector, showZoomControlSelector
 } from '../util/selectors'
@@ -28,6 +26,8 @@ export function Root() {
   const hasUnsavedChanges = useSelector(hasUnsavedChangesSelector)
   const showHeader = useSelector(showHeaderSelector)
   const showZoomControl = useSelector(showZoomControlSelector)
+  const editorMode = useSelector(state => state.display.modes.editor)
+
   // to pevent backspace form navigating away from page
   // in firefox and possibly other browsers
   useEffect(() => {
@@ -56,9 +56,10 @@ export function Root() {
     }
   }, [hasUnsavedChanges])
 
+
   return (
     <div id={ROOT_CONTAINER_ID}>
-      <ThemeProvider theme={muiTheme}>
+      <ThemeProvider theme={theme}>
         {
           showHeader &&
             <Hidden xsDown>
@@ -74,7 +75,7 @@ export function Root() {
             <div id="oligrapher-graph-container">
               <Graph />
               <Hidden xsDown>
-                <Editor />
+                { editorMode && <Editor /> }
               </Hidden>
               { showZoomControl && <ZoomControl /> }
               <FloatingEditors />
@@ -109,4 +110,4 @@ export function Root() {
   )
 }
 
-export default hot(Root)
+export default Root

@@ -5,8 +5,7 @@ import uniq from 'lodash/uniq'
 import values from 'lodash/values'
 import { isLittleSisId } from '../util/helpers'
 
-// @ts-ignore
-import Springy from 'springy'
+// import Springy from 'springy'
 
 import { Point, translatePoint, rotatePoint } from '../util/geometry'
 import { Node, NodeAttributes, newNode, findIntersectingNode } from './node'
@@ -520,20 +519,21 @@ export function forceLayout(graph: Graph, steps:number = 1000): Graph {
 }
 
 function buildForceLayout(graph: Graph) {
-  let gr = new Springy.Graph()
+  throw new Error("Springy needs to be replaced")
+  // let gr = new Springy.Graph()
 
-  let nodeIds = Object.keys(graph.nodes)
-  let edges = values(graph.edges).map(e => [e.node1_id, e.node2_id])
+  // let nodeIds = Object.keys(graph.nodes)
+  // let edges = values(graph.edges).map(e => [e.node1_id, e.node2_id])
 
-  gr.addNodes(...nodeIds)
-  gr.addEdges(...edges)
+  // gr.addNodes(...nodeIds)
+  // gr.addEdges(...edges)
 
-  let stiffness = 200.0
-  let repulsion = 300.0
-  let damping = 0.5
-  let minEnergyThreshold = 0.1
+  // let stiffness = 200.0
+  // let repulsion = 300.0
+  // let damping = 0.5
+  // let minEnergyThreshold = 0.1
 
-  return new Springy.Layout.ForceDirected(gr, stiffness, repulsion, damping, minEnergyThreshold);
+  // return new Springy.Layout.ForceDirected(gr, stiffness, repulsion, damping, minEnergyThreshold);
 }
 
 export function addInterlocks(graph: Graph, node1Id: string, node2Id: string, nodes: Node[], edges: Edge[]) {

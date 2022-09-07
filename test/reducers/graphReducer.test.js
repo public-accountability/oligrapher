@@ -3,10 +3,7 @@ import Graph from '../../app/graph/graph'
 import Node from '../../app/graph/node'
 import Edge from '../../app/graph/edge'
 import defaultState from '../../app/util/defaultState'
-
 import values from 'lodash/values'
-
-import { expect } from 'chai'
 
 describe('graphReducer', function() {
   describe('ADD_NODE', function() {
@@ -17,7 +14,7 @@ describe('graphReducer', function() {
       state = defaultState.graph
       action = { type: 'ADD_NODE', node }
       nextState = reducer(state, action)
-      expect(Object.keys(nextState.nodes)).to.eql([node.id])
+      expect(Object.keys(nextState.nodes)).toEqual([node.id])
     })
   })
 
@@ -40,7 +37,7 @@ describe('graphReducer', function() {
     })
 
     it('removes node and edges from graph', function() {
-      expect(Object.keys(nextState.nodes)).to.eql([n2.id, n3.id])
+      expect(Object.keys(nextState.nodes)).toEqual([n2.id, n3.id])
     })
 
   })
@@ -62,10 +59,10 @@ describe('graphReducer', function() {
     it('moves edge but not node', function() {
       action = { type: 'DRAG_NODE', id: n1.id, node: n1, deltas: { x: 50, y: 50 } }
       nextState = reducer(state, action)
-      expect(nextState.nodes[n1.id].x).to.equal(n1.x)
-      expect(nextState.nodes[n1.id].y).to.equal(n1.y)
-      expect(nextState.edges[e1.id].x1).to.equal(e1.x1 + 50)
-      expect(nextState.edges[e1.id].y1).to.equal(e1.y1 + 50)
+      expect(nextState.nodes[n1.id].x).toBe(n1.x)
+      expect(nextState.nodes[n1.id].y).toBe(n1.y)
+      expect(nextState.edges[e1.id].x1).toBe(e1.x1 + 50)
+      expect(nextState.edges[e1.id].y1).toBe(e1.y1 + 50)
     })
   })
 
@@ -82,8 +79,8 @@ describe('graphReducer', function() {
     it('moves node and its edges when no intersection', function() {
       action = { type: 'MOVE_NODE', id: n1.id, deltas: { x: 50, y: 50 } }
       nextState = reducer(state, action)
-      expect(nextState.nodes[n1.id].x).to.equal(n1.x + 50)
-      expect(nextState.nodes[n1.id].y).to.equal(n1.y + 50)
+      expect(nextState.nodes[n1.id].x).toEqual(n1.x + 50)
+      expect(nextState.nodes[n1.id].y).toEqual(n1.y + 50)
     })
   })
 
@@ -107,7 +104,7 @@ describe('graphReducer', function() {
     })
 
     it('adds only edges with existing nodes', function() {
-      expect(Object.keys(nextState.edges)).to.eql([e1.id, e2.id])
+      expect(Object.keys(nextState.edges)).toEqual([e1.id, e2.id])
     })
   })
 
@@ -131,7 +128,7 @@ describe('graphReducer', function() {
     })
 
     it('removes edge from graph', function() {
-      expect(values(nextState.edges)).to.eql([e1])
+      expect(values(nextState.edges)).toEqual([e1])
     })
   })
 })

@@ -1,5 +1,4 @@
 import { applyZoomToViewBox } from '../../app/util/dimensions'
-import { expect } from 'chai'
 
 describe('applyZoomToViewBox', function() {
   it('applies zoom', function() {
@@ -10,7 +9,7 @@ describe('applyZoomToViewBox', function() {
       h: 200
     }
     let zoom = 0.5
-    expect(applyZoomToViewBox(viewBox, zoom)).to.eql({
+    expect(applyZoomToViewBox(viewBox, zoom)).toEqual({
       minX: -400,
       minY: -200,
       w: 800,

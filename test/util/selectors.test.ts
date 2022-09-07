@@ -1,4 +1,3 @@
-import { expect } from 'chai'
 import merge from 'lodash/merge'
 import cloneDeep from 'lodash/cloneDeep'
 import Graph from '../../app/graph/graph'
@@ -26,40 +25,40 @@ function stateWithOwner(owner: User | null, user: User | null = defaultUser): St
 
 describe('Selectors', function() {
   describe('userIsOwnerSelector', function() {
-    specify('when user and owner are null', function() {
-      expect(userIsOwnerSelector(stateWithOwner(null, null))).to.be.false
+    test('when user and owner are null', function() {
+      expect(userIsOwnerSelector(stateWithOwner(null, null))).toBeFalsy()
     })
 
-    specify('when user is the owner', function() {
-      expect(userIsOwnerSelector(stateWithOwner(defaultUser, defaultUser))).to.be.true
+    test('when user is the owner', function() {
+      expect(userIsOwnerSelector(stateWithOwner(defaultUser, defaultUser))).toBeTruthy()
     })
 
-    specify('when user is not the owner', function() {
+    test('when user is not the owner', function() {
       let otherUser = { id: 456, name: 'bar', url: 'http://bar.com' }
-      expect(userIsOwnerSelector(stateWithOwner(otherUser))).to.be.false
+      expect(userIsOwnerSelector(stateWithOwner(otherUser))).toBeFalsy()
     })
 
-    specify('owner is missing', function() {
-      expect(userIsOwnerSelector(stateWithOwner(null))).to.be.true
+    test('owner is missing', function() {
+      expect(userIsOwnerSelector(stateWithOwner(null))).toBeFalsy()
     })
   })
 
   describe('hasUnsavedChangesSelector', function() {
     it('returns false unless in editing mode', function() {
       let state = mergeState({ display: { modes: { editor: false } } })
-      expect(hasUnsavedChangesSelector(state)).to.be.false
+      expect(hasUnsavedChangesSelector(state)).toBeFalsy()
     })
 
     it('returns false when there is no lastSavedData', function() {
-      expect(hasUnsavedChangesSelector(stateWithGraphInEditorMode)).to.be.false
+      expect(hasUnsavedChangesSelector(stateWithGraphInEditorMode)).toBeFalsy()
     })
 
     it('returns false when graph has not changed', function() {
-      expect(hasUnsavedChangesSelector(stateWithLastSavedData)).to.be.false
+      expect(hasUnsavedChangesSelector(stateWithLastSavedData)).toBeFalsy()
     })
 
     it('returns true when graph has changed', function() {
-      expect(hasUnsavedChangesSelector(stateWithDifferentLastSavedData)).to.be.true
+      expect(hasUnsavedChangesSelector(stateWithDifferentLastSavedData)).toBeTruthy()
     })
   })
 })

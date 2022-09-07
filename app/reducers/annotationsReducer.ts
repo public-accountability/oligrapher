@@ -2,12 +2,10 @@ import produce from 'immer'
 
 import { AnnotationsState } from '../util/defaultState'
 
-import { 
+import {
   createAnnotation, moveAnnotation, showAnnotation, updateAnnotation, removeAnnotation,
   swapHighlight, clearHighlights
 } from '../util/annotations'
-
-const ZOOM_INTERVAL = 1.2
 
 export default produce((annotations: AnnotationsState, action: any): void => {
   switch(action.type) {

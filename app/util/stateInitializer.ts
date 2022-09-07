@@ -3,9 +3,9 @@ import omit from 'lodash/omit'
 import flow from 'lodash/flow'
 
 import defaultState, { StateWithHistory } from './defaultState'
-import { 
+import {
   Graph, NodeMap, EdgeMap, CaptionMap,
-  newGraph, calculateViewBoxFromGraph, updateEdgeFromNodes, registerEdgeWithNodes 
+  newGraph, calculateViewBoxFromGraph, updateEdgeFromNodes, registerEdgeWithNodes
 } from '../graph/graph'
 import { Edge, newEdge } from '../graph/edge'
 import { Node, newNode } from '../graph/node'
@@ -90,16 +90,17 @@ function calculateStoryMode(state: any): boolean {
 /*
   Converts legacy oligrapher data, performs initial display state calculations,
   and adds graph history.
+
+
 */
-export default function stateInitalizer(legacyState: any): StateWithHistory {
+export default function stateInitializer (legacyState: any): StateWithHistory {
   let state = merge({}, defaultState, legacyState)
 
   state.graph = convertGraph(state.graph)
 
-  state.display.modes.editor = !state.settings.embed && userCanEditSelector(state)
+  state.display.modes.editor = userCanEditSelector(state)
   state.display.viewBox = calculateViewBoxFromGraph(state.graph)
   state.display.svgOffset = computeSvgOffset(state.display.viewBox)
-
   state.display.modes.story = calculateStoryMode(state)
 
   if (legacyState.attributes?.lock) {

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/><meta charset="UTF-8">
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
     <title>Oligrapher Editor Demo</title>
-    <script src="/oligrapher/assets/oligrapher-dev.js"></script>
+    <link rel="stylesheet" href="oligrapher.css">
+    <script src="oligrapher.js"></script>
     <style>
      body {
        margin: 10px;
@@ -20,7 +21,7 @@
     <div id="oligrapher"></div>
     <script>
 
-     var graph = {
+     const graph = {
        "nodes": {
          "EI-H6Mvz": {
            "id": "EI-H6Mvz",
@@ -81,17 +82,15 @@
          }
        }
      }
-     var oli = new Oligrapher({
+
+     const oli = new Oligrapher({
        graph: graph,
        settings: { debug: true },
-       display: { modes: { editor: true } },
        attributes: {
          id: 123,
-         title: "Blank map",
-         date: "January 12, 2018",
-         subtitle: "",
-         user: { name: "Editor", url: "http://littlesis.org/user/editor" },
-         settings: { private: false },
+         title: "Example Map",
+         user: { name: "Editor", url: "http://littlesis.org/user/editor", id: 2 },
+         owner: { name: "mapmaker", id: 2 },
          links: [
            { text: "Edit", url: "https://littlesis.org/oligrapher/edit" },
            { text: "Clone", url: "https://littlesis.org/oligrapher/clone" },

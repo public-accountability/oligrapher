@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button } from '@material-ui/core'
+import { Button } from '@mui/material'
 
 export default function AnnotationsToggler() {
   const dispatch = useDispatch()

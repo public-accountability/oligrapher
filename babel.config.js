@@ -1,22 +1,14 @@
 module.exports = function(api) {
-  // These are run in reverse order. @babel/preset-react is run first.
+  api.cache.never()
+
+  // These are run in reverse order. @babel/preset-typescript is run first.
   const presets = [
-    [ "@babel/preset-env", { useBuiltIns: "usage", corejs: 3 } ],
-    [ "@babel/preset-react", {} ],
-    [ "@babel/preset-typescript"]
+    ["@babel/preset-env", {targets: {node: 'current'}}],
+    ["@babel/preset-react"],
+    ["@babel/preset-typescript"]
   ]
 
-  const plugins = [
-    "@babel/plugin-proposal-class-properties",
-    "@babel/plugin-proposal-optional-chaining",
-    "@loadable/babel-plugin"
-  ]
+  const plugins = []
 
-  api.cache(true)
-  // api.cache.never()
-
-  return {
-    presets,
-    plugins
-  }
+  return { presets, plugins }
 }

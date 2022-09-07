@@ -31,7 +31,7 @@ export function Edge({ id, currentlyEdited, status }: EdgeProps) {
   status = selected ? 'selected' : status
 
   const updateEdge = useCallback(
-    attributes => dispatch({ type: 'UPDATE_EDGE', id, attributes }), 
+    attributes => dispatch({ type: 'UPDATE_EDGE', id, attributes }),
     [dispatch, id]
   )
   const clickEdge = useCallback(() => {
@@ -44,7 +44,7 @@ export function Edge({ id, currentlyEdited, status }: EdgeProps) {
 
   // This resets the curve based on new props when they are passed to an already rendered component
   // This happens after the DRAG_NODE action occurs.
-  useEffect(() => {  
+  useEffect(() => {
     setCurve(edgeToCurve({ cx, cy, x1, x2, y1, y2, s1, s2 }))
   }, [cx, cy, x1, x2, y1, y2, s1, s2, id])
 
@@ -77,13 +77,13 @@ export function Edge({ id, currentlyEdited, status }: EdgeProps) {
   const edgeHighlightProps = { bezier, width }
   const edgeLineProps = { bezier, width, isReverse: curve.is_reverse, id, scale, dash, status, arrow }
   const edgeLabelProps = { bezier, width, id, scale, status, arrow, label }
-  const edgeHandleProps = { 
+  const edgeHandleProps = {
     bezier, width,
     onMouseEnter: useCallback(() => setHovering(true), []),
     onMouseLeave: useCallback(() => setHovering(false), [])
   }
 
-  return (  
+  return (
     <DraggableCore
       handle=".edge-handle"
       onStart={onStart}

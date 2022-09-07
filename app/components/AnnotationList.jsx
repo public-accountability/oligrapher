@@ -1,7 +1,7 @@
 import React, { useCallback } from "react"
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd"
 
 const getItemStyle = (isDragging, draggableStyle) => ({
   // some basic styles to make the items look a bit nicer
@@ -21,11 +21,11 @@ export default function AnnotationList({ list, currentIndex }) {
     if (!result.destination) {
       return
     }
-    
+
     move(result.source.index, result.destination.index)
   }
 
-  const itemClassName = (index, isDragging) => 
+  const itemClassName = (index, isDragging) =>
     "annotation-list-item " + (
       isDragging ? "annotation-list-item-dragging " : " "
     ) + (

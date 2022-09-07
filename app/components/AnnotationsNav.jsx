@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button } from '@material-ui/core'
+import { Button } from '@mui/material'
 
 export default function AnnotationsNav({ count, currentIndex, prev, next, size }) {
   return (
     <>
-      <Button 
+      <Button
         variant="outlined"
         size={size}
         onClick={prev}

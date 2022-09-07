@@ -1,7 +1,6 @@
 import reducer from '../../app/reducers/displayReducer'
 import Node from '../../app/graph/node'
 import defaultState from '../../app/util/defaultState'
-import { expect } from 'chai'
 
 describe('displayReducer', function() {
   describe('SET_EDITOR_MODE', function() {
@@ -12,8 +11,7 @@ describe('displayReducer', function() {
       }
       const action = { type: 'SET_EDITOR_MODE', enabled: true }
 
-      expect(reducer(state, action).modes)
-        .to.eql({ editor: true })
+      expect(reducer(state, action).modes).toEqual({ editor: true })
     })
 
     it('clears floating editor', function() {
@@ -24,7 +22,7 @@ describe('displayReducer', function() {
       const action = { type: 'SET_EDITOR_MODE', enabled: true }
 
       expect(reducer(state, action).floatingEditor)
-        .to.eql({ type: null, id: null })
+        .toEqual({ type: null, id: null })
     })
   })
 
@@ -36,7 +34,7 @@ describe('displayReducer', function() {
         selection: { node: [] }
       }
       const action = { type: 'TOGGLE_TOOL', tool: 'text'}
-      expect(reducer(state, action).tool).to.equal('text')
+      expect(reducer(state, action).tool).toEqual('text')
     })
 
     it('closes tool', function() {
@@ -46,7 +44,7 @@ describe('displayReducer', function() {
         selection: { node: [] }
       }
       const action = { type: 'TOGGLE_TOOL', tool: 'node'}
-      expect(reducer(state, action).tool).to.be.null
+      expect(reducer(state, action).tool).toBeNull()
     })
   })
 
@@ -55,21 +53,21 @@ describe('displayReducer', function() {
       const state = { actualZoom: 2, zoom: 1, offset: { x: 50, y: 50 }, floatingEditor: { type: null, id: null } }
       const action = { type: 'CLICK_NODE', id: 'xyz' }
       expect(reducer(state, action).floatingEditor)
-        .to.eql({ type: 'node', id: 'xyz' })
+        .toEqual({ type: 'node', id: 'xyz' })
     })
 
     it('closes node editor', function() {
       const state = { floatingEditor: { type: 'node', id: 'xyz' } }
       const action = { type: 'CLICK_NODE', id: 'xyz' }
       expect(reducer(state, action).floatingEditor)
-        .to.eql({ type: null, id: null })
+        .toEqual({ type: null, id: null })
     })
 
     it('closes add connections', function() {
       const state = { floatingEditor: { type: 'connections', id: 'xyz' } }
       const action = { type: 'CLICK_NODE', id: 'xyz' }
       expect(reducer(state, action).floatingEditor)
-        .to.eql({ type: null, id: null })
+        .toEqual({ type: null, id: null })
     })
   })
 
@@ -78,7 +76,7 @@ describe('displayReducer', function() {
       const state = { editor: { tool: 'node' }, floatingEditor: { type: 'node', id: 'abc' } }
       const action = { type: 'CLOSE_EDITOR' }
       expect(reducer(state, action).floatingEditor)
-        .to.eql({ type: null, id: null })
+        .toEqual({ type: null, id: null })
     })
   })
 
@@ -90,8 +88,8 @@ describe('displayReducer', function() {
       state = defaultState.display
       action = { type: 'ADD_NODE', node }
       nextState = reducer(state, action)
-      expect(nextState.floatingEditor.type).to.equal('node')
-      expect(nextState.floatingEditor.id).to.not.be.null
+      expect(nextState.floatingEditor.type).toEqual('node')
+      expect(nextState.floatingEditor.id).toBeTruthy()
     })
 
     it('does not open node editor if node is from LittleSis', function() {
@@ -99,8 +97,8 @@ describe('displayReducer', function() {
       state = defaultState.display
       action = { type: 'ADD_NODE', node }
       nextState = reducer(state, action)
-      expect(nextState.floatingEditor.type).to.be.null
-      expect(nextState.floatingEditor.id).to.be.null
+      expect(nextState.floatingEditor.type).toBeNull()
+      expect(nextState.floatingEditor.id).toBeNull()
     })
   })
 
@@ -114,8 +112,8 @@ describe('displayReducer', function() {
     })
 
     it('closes floating menu', function() {
-      expect(nextState.floatingEditor.type).to.eql(null)
-      expect(nextState.floatingEditor.id).to.eql(null)
+      expect(nextState.floatingEditor.type).toBeNull()
+      expect(nextState.floatingEditor.id).toBeNull()
     })
   })
 
@@ -130,7 +128,7 @@ describe('displayReducer', function() {
     it('sets dragged node', function() {
       action = { type: 'DRAG_NODE', id: node.id, node: node, deltas: { x: 0, y: 100 } }
       nextState = reducer(state, action)
-      expect(nextState.draggedNode).to.eql(node)
+      expect(nextState.draggedNode).toEqual(node)
     })
   })
 
@@ -144,8 +142,8 @@ describe('displayReducer', function() {
     })
 
     it('closes floating menu', function() {
-      expect(nextState.floatingEditor.type).to.eql(null)
-      expect(nextState.floatingEditor.id).to.eql(null)
+      expect(nextState.floatingEditor.type).toBeNull()
+      expect(nextState.floatingEditor.id).toBeNull()
     })
   })
 
@@ -154,14 +152,14 @@ describe('displayReducer', function() {
       const state = { floatingEditor: { type: null, id: null } }
       const action = { type: 'CLICK_EDGE', id: 'xyz' }
       expect(reducer(state, action).floatingEditor)
-        .to.eql({ type: 'edge', id: 'xyz' })
+        .toEqual({ type: 'edge', id: 'xyz' })
     })
 
     it('closes edge editor', function() {
       const state = { floatingEditor: { type: 'edge', id: 'xyz' } }
       const action = { type: 'CLICK_EDGE', id: 'xyz' }
       expect(reducer(state, action).floatingEditor)
-        .to.eql({ type: null, id: null })
+        .toEqual({ type: null, id: null })
     })
   })
 })

@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { Button } from '@material-ui/core'
+import { Button } from '@mui/material'
 
 import Confirm from './Confirm'
 
@@ -13,7 +13,7 @@ export default function RemoveAnnotationButton({ annotation }) {
   const openConfirm = useCallback(() => setShowConfirm(true), [])
   const closeConfirm = useCallback(() => setShowConfirm(false), [])
   const remove = useCallback(
-    () => dispatch({ type: 'REMOVE_ANNOTATION', id }), 
+    () => dispatch({ type: 'REMOVE_ANNOTATION', id }),
     [dispatch, id]
   )
   const confirmRemove = useCallback(() => {

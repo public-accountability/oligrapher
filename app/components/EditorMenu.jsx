@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import useMediaQuery from '@material-ui/core/useMediaQuery'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 import EditorMenuItem from './EditorMenuItem'
 import UndoRedo from './UndoRedo'
@@ -12,7 +12,7 @@ const MENU_ITEMS = [
   'style',
   'interlocks',
   'annotations',
-  'organize',
+//  'organize',
   'settings',
   'editors',
   'help'

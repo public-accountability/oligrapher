@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { 
-  Button, Dialog, DialogActions, DialogContent, DialogContentText 
-} from '@material-ui/core'
+import {
+  Button, Dialog, DialogActions, DialogContent, DialogContentText
+} from '@mui/material'
 
 const WAIT_TIME = 10 * 1000
 

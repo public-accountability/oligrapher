@@ -1,5 +1,3 @@
-import { expect } from 'chai'
-
 import curry from 'lodash/curry'
 import values from 'lodash/values'
 import Graph, {
@@ -14,11 +12,12 @@ import { xy, distance } from '../../app/util/geometry'
 
 describe('Graph', function() {
   describe("Helpers", function() {
-    specify("new()", function() {
+    test("new()", function() {
       let g = Graph.new()
-      expect(g.nodes).to.eql({})
-      expect(g.edges).to.eql({})
-      expect(Graph.new()).not.to.eq(Graph.new())
+      expect(g.nodes).toEqual({})
+      expect(g.edges).toEqual({})
+      expect(Graph.new()).toEqual(Graph.new())
+      expect(Graph.new()).not.toBe(Graph.new())
     })
   })
 
@@ -37,19 +36,19 @@ describe('Graph', function() {
       Graph.addEdgesIfNodes(graph, [e1, e2])
     })
 
-    specify("edgesOf", function() {
+    test("edgesOf", function() {
       let edgesOf = curry(Graph.edgesOf)(graph)
-      expect(edgesOf(n1.id)).to.have.lengthOf(1)
-      expect(edgesOf(n2.id)).to.have.lengthOf(2)
-      expect(edgesOf(n3.id)).to.have.lengthOf(1)
-      expect(edgesOf(n4.id)).to.have.lengthOf(0)
+      expect(edgesOf(n1.id).length).toEqual(1)
+      expect(edgesOf(n2.id).length).toEqual(2)
+      expect(edgesOf(n3.id).length).toEqual(1)
+      expect(edgesOf(n4.id).length).toEqual(0)
     })
 
-    specify("nodesOf", function() {
+    test("nodesOf", function() {
       let nodesOf = curry(Graph.nodesOf)(graph)
       // we don't compare the full nodes because adding edges gives the nodes edgeIds
-      expect(nodesOf(e1.id).map(node => node.id)).to.eql([n1.id, n2.id])
-      expect(nodesOf(e2.id).map(node => node.id)).to.eql([n2.id, n3.id])
+      expect(nodesOf(e1.id).map(node => node.id)).toEqual([n1.id, n2.id])
+      expect(nodesOf(e2.id).map(node => node.id)).toEqual([n2.id, n3.id])
     })
   })
 
@@ -66,81 +65,81 @@ describe('Graph', function() {
       captions =[]
     })
 
-    specify("nodeCount", function() {
-      expect(Graph.stats(nodes, edges, captions).nodeCount).to.eql(3)
+    test("nodeCount", function() {
+      expect(Graph.stats(nodes, edges, captions).nodeCount).toEqual(3)
     })
 
-    specify("edgeCount", function() {
-      expect(Graph.stats(nodes, edges, captions).edgeCount).to.eql(1)
+    test("edgeCount", function() {
+      expect(Graph.stats(nodes, edges, captions).edgeCount).toEqual(1)
     })
 
-    specify("min and max node XY values", function() {
+    test("min and max node XY values", function() {
       let stats = Graph.stats(nodes, edges, captions)
-      expect(stats.minNodeX).to.eql(-10)
-      expect(stats.minNodeY).to.eql(-30)
-      expect(stats.maxNodeX).to.eql(10)
-      expect(stats.maxNodeY).to.eql(30)
+      expect(stats.minNodeX).toEqual(-10)
+      expect(stats.minNodeY).toEqual(-30)
+      expect(stats.maxNodeX).toEqual(10)
+      expect(stats.maxNodeY).toEqual(30)
     })
   })
 
   describe("Nodes", function() {
-    specify("addNode() - with values", function() {
+    test("addNode() - with values", function() {
       let g = Graph.new()
       let n = Node.new({ x: 1, y: 1 })
-      expect(g.nodes).to.eql({})
+      expect(g.nodes).toEqual({})
       Graph.addNode(g, n)
-      expect(g.nodes).to.eql({ [n.id]: n })
+      expect(g.nodes).toEqual({ [n.id]: n })
     })
 
-    specify("addNode() - placed at center", function() {
+    test("addNode() - placed at center", function() {
       let g = Graph.new()
       let n = Node.new()
-      expect(g.nodes).to.eql({})
+      expect(g.nodes).toEqual({})
       Graph.addNode(g, n, true)
-      expect(g.nodes[n.id]).to.be.ok
-      expect(xy(g.nodes[n.id])).to.eql({ x: 0, y: 0 })
+      expect(g.nodes[n.id]).toBeTruthy()
+      expect(xy(g.nodes[n.id])).toEqual({ x: 0, y: 0 })
     })
 
-    specify("addNode() - placed away from center", function() {
+    test("addNode() - placed away from center", function() {
       let g = Graph.new()
       let n1 = Node.new()
       let n2 = Node.new()
       Graph.addNode(g, n1, true)
       Graph.addNode(g, n2, true)
-      expect(xy(g.nodes[n2.id])).not.to.eql({ x: 0, y: 0 })
+      expect(xy(g.nodes[n2.id])).not.toEqual({ x: 0, y: 0 })
     })
 
-    specify("addNodes()", function() {
+    test("addNodes()", function() {
       let g = Graph.new()
       let n1 = Node.new()
       let n2 = Node.new()
-      expect(values(g.nodes).length).to.eq(0)
+      expect(values(g.nodes).length).toEqual(0)
       Graph.addNodes(g, [n1, n2])
-      expect(values(g.nodes).length).to.eq(2)
+      expect(values(g.nodes).length).toEqual(2)
     })
 
-    specify("removeNode()", function() {
+    test("removeNode()", function() {
       let n = Node.new()
       let g = Graph.new()
-      expect(g.nodes[n.id]).not.to.be.ok
+      expect(g.nodes[n.id]).toBeFalsy()
       Graph.addNode(g, n)
-      expect(g.nodes[n.id]).to.be.ok
+      expect(g.nodes[n.id]).toBeTruthy()
       Graph.removeNode(g, n.id)
-      expect(g.nodes[n.id]).not.to.be.ok
+      expect(g.nodes[n.id]).toBeFalsy()
       Graph.addNode(g, n)
-      expect(g.nodes[n.id]).to.be.ok
+      expect(g.nodes[n.id]).toBeTruthy()
     })
 
-    specify("updateNode", function() {
+    test("updateNode", function() {
       let n = Node.new()
       let g = Graph.new()
       Graph.addNode(g, n)
-      expect(g.nodes[n.id].scale).to.eql(1)
+      expect(g.nodes[n.id].scale).toEqual(1)
       Graph.updateNode(g, n.id, { scale: 2 })
-      expect(g.nodes[n.id].scale).to.eql(2)
+      expect(g.nodes[n.id].scale).toEqual(2)
     })
 
-    specify("removeNode", function() {
+    test("removeNode", function() {
       let g = Graph.new()
       let n1 = Node.new()
       let n2 = Node.new()
@@ -148,17 +147,17 @@ describe('Graph', function() {
       let e = Edge.new( { node1_id: n1.id, node2_id: n2.id })
       Graph.addEdge(g, e)
       Graph.removeNode(g, n2.id)
-      expect(Object.keys(g.nodes)).to.eql([n1.id])
-      expect(Object.values(g.edges)).to.have.lengthOf(0)
+      expect(Object.keys(g.nodes)).toEqual([n1.id])
+      expect(Object.values(g.edges).length).toEqual(0)
     })
 
-    specify("moveNode", function() {
+    test("moveNode", function() {
       let n = Node.new({x: 1, y: 2})
       let g = Graph.new()
       Graph.addNode(g, n)
-      expect(xy(g.nodes[n.id])).to.eql({x: 1, y: 2})
+      expect(xy(g.nodes[n.id])).toEqual({x: 1, y: 2})
       Graph.moveNode(g, n.id, {x: 2, y: 4})
-      expect(xy(g.nodes[n.id])).to.eql({x: 3, y: 6})
+      expect(xy(g.nodes[n.id])).toEqual({x: 3, y: 6})
     })
   })
 
@@ -174,25 +173,25 @@ describe('Graph', function() {
       edge = Edge.new({ node1_id: n1.id, node2_id: n2.id })
     })
 
-    specify("addEdge", function() {
-      expect(g.edges).to.eql({})
+    test("addEdge", function() {
+      expect(g.edges).toEqual({})
       Graph.addEdge(g, edge)
-      expect(g.edges).to.eql({ [edge.id]: edge })
+      expect(g.edges).toEqual({ [edge.id]: edge })
       // shouldn't be able to add edge where node1 = node2
       let weirdEdge = Edge.new({ node1_id: n1.id, node2_id: n1.id })
       Graph.addEdge(g, weirdEdge)
-      expect(g.edges).to.eql({ [edge.id]: edge })
+      expect(g.edges).toEqual({ [edge.id]: edge })
     })
 
-    specify("addEdgeIfNodes", function() {
-      expect(g.edges).to.eql({})
+    test("addEdgeIfNodes", function() {
+      expect(g.edges).toEqual({})
       let weirdEdge = Edge.new({ node1_id: n1.id, node2_id: n1.id })
       Graph.addEdgeIfNodes(g, weirdEdge)
-      expect(g.edges).to.eql({})
+      expect(g.edges).toEqual({})
     })
 
-    specify("addSimilarEdges", function() {
-      expect(g.edges).to.eql({})
+    test("addSimilarEdges", function() {
+      expect(g.edges).toEqual({})
       let node1 = Node.new({ x: -100, y: -100 })
       let node2 = Node.new({ x: 100, y: 100 })
       let edges = [1, 2, 3].map(() => Edge.newEdgeFromNodes(node1, node2))
@@ -203,32 +202,32 @@ describe('Graph', function() {
       let { cx: x1, cy: y1 } = edges[0]
       let { cx: x2, cy: y2 } = edges[1]
       let { cx: x3, cy: y3 } = edges[2]
-      expect(distance({ x: x1, y: y1 }, { x: x2, y: y2 })).to.be.above(20)
-      expect(distance({ x: x2, y: y2 }, { x: x3, y: y3 })).to.be.above(20)
-      expect(distance({ x: x1, y: y1 }, { x: x3, y: y3 })).to.be.above(20)
+      expect(distance({ x: x1, y: y1 }, { x: x2, y: y2 })).toBeGreaterThan(20)
+      expect(distance({ x: x2, y: y2 }, { x: x3, y: y3 })).toBeGreaterThan(20)
+      expect(distance({ x: x1, y: y1 }, { x: x3, y: y3 })).toBeGreaterThan(20)
     })
 
-    specify("removeEdge", function() {
+    test("removeEdge", function() {
       Graph.addEdge(g, edge)
-      expect(g.edges).to.eql({ [edge.id]: edge })
+      expect(g.edges).toEqual({ [edge.id]: edge })
       Graph.removeEdge(g, edge.id)
-      expect(g.edges).to.eql({})
+      expect(g.edges).toEqual({})
     })
 
-    specify("removeEdge by id", function() {
+    test("removeEdge by id", function() {
       Graph.addEdge(g, edge)
-      expect(g.edges).to.eql({ [edge.id]: edge })
+      expect(g.edges).toEqual({ [edge.id]: edge })
       Graph.removeEdge(g, edge.id)
-      expect(g.edges).to.eql({})
+      expect(g.edges).toEqual({})
     })
 
-    specify("updateEdge", function() {
+    test("updateEdge", function() {
       Graph.addEdge(g, edge)
-      expect(g.edges[edge.id].url).not.to.be.ok
-      expect(g.edges[edge.id].label).to.eql("New Edge")
+      expect(g.edges[edge.id].url).toBeFalsy()
+      expect(g.edges[edge.id].label).toEqual("New Edge")
       Graph.updateEdge(g, edge.id, { url: 'http://example.com', label: 'example label' })
-      expect(g.edges[edge.id].url).to.eql('http://example.com')
-      expect(g.edges[edge.id].label).to.eql('example label')
+      expect(g.edges[edge.id].url).toEqual('http://example.com')
+      expect(g.edges[edge.id].label).toEqual('example label')
     })
   })
 
@@ -246,20 +245,20 @@ describe('Graph', function() {
       Graph.addEdgesIfNodes(graph, [edge1, edge2])
     })
 
-    specify('moveNode', function() {
+    test('moveNode', function() {
       let node = Node.new({x: 10, y: 20 })
       let graph = Graph.new()
       Graph.addNode(graph, node)
-      expect(xy(graph.nodes[node.id])).to.eql({ x: 10, y: 20 })
+      expect(xy(graph.nodes[node.id])).toEqual({ x: 10, y: 20 })
       Graph.moveNode(graph, node.id, { x: -2,  y: -5 })
-      expect(xy(graph.nodes[node.id])).to.eql({ x: 8, y: 15 })
+      expect(xy(graph.nodes[node.id])).toEqual({ x: 8, y: 15 })
     })
   })
 
   describe('calculateCenter()', function() {
     it("calculates for default graph", function() {
       let graph = Graph.new()
-      expect(calculateCenter(graph)).to.eql({ x: 0, y: 0 })
+      expect(calculateCenter(graph)).toEqual({ x: 0, y: 0 })
     })
   })
 
@@ -276,7 +275,9 @@ describe('Graph', function() {
       e2 = Edge.newEdgeFromNodes(n1, n3)
       Graph.addNodes(graph, [n1, n2, n3, n4])
       Graph.addEdgesIfNodes(graph, [e1, e2])
-      expect(Graph.connectedNodeIds(graph, n1.id)).to.have.members([n2.id, n3.id])
+      let connectedNodeIds = Graph.connectedNodeIds(graph, n1.id)
+      expect(connectedNodeIds).toContain(n2.id)
+      expect(connectedNodeIds).toContain(n3.id)
     })
   })
 
@@ -286,7 +287,7 @@ describe('Graph', function() {
       Graph.addNodes(graph, [Node.new({id: '100'}),
                              Node.new({id: '200'}),
                              Node.new({id: 'abc'})])
-      expect(Graph.littleSisNodes(graph).length).to.eql(2)
+      expect(Graph.littleSisNodes(graph).length).toEqual(2)
     })
   })
 
@@ -301,7 +302,7 @@ describe('Graph', function() {
       nodes = [n1, n2, n3]
       edges = []
       captions = [c]
-      expect(Graph.calculateViewBox(nodes, edges, captions)).to.eql({
+      expect(Graph.calculateViewBox(nodes, edges, captions)).toEqual({
         minX: -100 - GRAPH_PADDING_X,
         minY: -100 - GRAPH_PADDING_Y,
         w: 250 + 2 * GRAPH_PADDING_X,

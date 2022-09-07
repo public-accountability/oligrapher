@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Hidden } from '@material-ui/core'
+import { Hidden } from '@mui/material'
 
 import { callWithTargetValue } from '../util/helpers'
 

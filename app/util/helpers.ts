@@ -2,7 +2,7 @@ import { SyntheticEvent, useState, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import isFunction from 'lodash/isFunction'
 import toNumber from 'lodash/toNumber'
-import { createTheme } from '@material-ui/core/styles'
+
 
 import { Selector } from './selectors'
 import { State, StateWithHistory } from './defaultState'
@@ -15,7 +15,7 @@ export function classNames(...classes: Array<string | undefined>): string {
 }
 
 export function callWithTargetValue(func: (arg: any) => any): (event: Event | React.ChangeEvent) => any {
-  return function(event: Event) {
+  return function(event: Event | React.ChangeEvent) {
     const value = (event.target as HTMLInputElement).value
     return func(value)
   }
@@ -47,6 +47,17 @@ export function makeCancelable(promise: Promise<any>): { promise: Promise<any>, 
       hasCanceled = true
     }
   }
+}
+
+export function getElementById(id: string): Element {
+  let element = document.getElementById(id)
+
+  if (element) {
+    return element
+  } else {
+    throw new Error(`#${id} is not in the document`)
+  }
+
 }
 
 export function frozenArray(...items: any[]): readonly any[] {
@@ -138,72 +149,3 @@ function useConvertedSelector(selector: Selector<any>) {
 }
 
 export { useConvertedSelector as useSelector }
-
-export const muiTheme = createTheme({
-  breakpoints: {
-    values: {
-      xs: 0,
-      sm: 600,
-      md: 860, // default is 960 but we'd like annotation editor to appear as low as 860
-      lg: 1280,
-      xl: 1920,
-    },
-  },
-  props: {
-    MuiButtonBase: {
-      disableRipple: true
-    },
-    MuiButton: {
-      disableElevation: true
-    }
-  },
-  palette: {
-    primary: {
-      main: '#0c7fff',
-    },
-    secondary: {
-      main: '#c82c63'
-    }
-  },
-  typography: {
-    button: {
-      textTransform: 'none'
-    }
-  },
-  overrides: {
-    MuiDialogActions: {
-      root: {
-        padding: '1em',
-        justifyContent: 'center'
-      }
-    },
-    MuiButton: {
-      root: {
-        minWidth: 'none'
-      }
-    },
-    MuiSelect: {
-      root: {
-        padding: 5,
-        paddingLeft: 10
-      }
-    },
-    MuiInput: {
-      root: {
-        border: '1px solid #eee',
-        padding: '0.5em'
-      },
-      underline: {
-        '&:hover::before': {
-          border: '0 !important'
-        },
-        '&::before': {
-          border: 0
-        },
-        '&::after': {
-          border: 0
-        }
-      }
-    }
-  }
-})

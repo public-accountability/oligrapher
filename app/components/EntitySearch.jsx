@@ -25,7 +25,7 @@ export default function EntitySearch({ query, maxHeight }) {
       .promise
       .then(json => {
         setResults(json)
-        setLoading(false)    
+        setLoading(false)
       })
       .catch(err => {
         if (!err.isCanceled) {

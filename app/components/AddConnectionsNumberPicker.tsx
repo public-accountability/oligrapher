@@ -1,10 +1,7 @@
 import React from 'react'
-import { callWithTargetValue } from '../util/helpers'
 import toNumber from 'lodash/toNumber'
-
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import { makeStyles } from '@material-ui/core/styles';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 interface AddConnectionNumberPickerProps {
   value: number
@@ -17,7 +14,6 @@ const callWithNumberValue: CallWithNumberValueType = (f) => (event) => {
   f(toNumber(event.target.value))
 }
 
-const useStyles = makeStyles({})
 
 export default function AddConnectionsNumberPicker(props: AddConnectionNumberPickerProps) {
   return <Select

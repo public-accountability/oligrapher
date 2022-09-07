@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button } from '@material-ui/core'
+import { Button } from '@mui/material'
 
 import { StateWithHistory } from '../util/defaultState'
 import { hasContents } from '../graph/graph'
@@ -35,15 +35,13 @@ export default function SaveButton() {
 
   return (
     <>
-      <Button 
-          id="oligrapher-save-button" 
-          onClick={saveMap} 
-          disabled={isSaving} 
-          disableElevation={true} 
-          variant="contained" 
-          size="small"
-          color="primary"
-        >
+      <Button
+          id="oligrapher-save-button"
+          onClick={saveMap}
+          disabled={isSaving}
+          disableElevation={true}
+          variant="contained"
+          size="small">
           Save
         </Button>
 

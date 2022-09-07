@@ -1,4 +1,5 @@
-import { put, select as sagaSelect, call, takeEvery, all } from 'redux-saga/effects'
+import { put, select, call, takeEvery, all } from 'redux-saga/effects'
+import { SagaIterator } from 'redux-saga'
 import cloneDeep from 'lodash/cloneDeep'
 
 import { isLittleSisId, convertSelectorForUndo } from './util/helpers'
@@ -8,12 +9,12 @@ import { paramsForSaveSelector } from './util/selectors'
 import { forceLayout, calculateViewBoxFromGraph } from './graph/graph'
 import { findIntersectingNodeFromDrag } from './graph/node'
 import { newEdgeFromNodes } from './graph/edge'
-import { Selector } from './util/selectors'
+// import { Selector } from './util/selectors'
 import { getGraphMarkup, downloadRasteredSvg, padViewbox } from './util/imageExport'
 
 // redux-undo places present state at state.present, so we use our own
 // select() to "transparently" make this change to all our saga selectors
-const select = (selector: Selector<any>) => sagaSelect(convertSelectorForUndo(selector))
+//const select = (selector: Selector<any>) => sagaSelect(convertSelectorForUndo(selector))
 
 const delay = (time: number) => new Promise(resolve => setTimeout(resolve, time))
 const RESET_DELAY = process.env.NODE_ENV === 'test' ? 10 : 5000
@@ -98,7 +99,7 @@ export function* watchReleaseNode() {
   yield takeEvery(['RELEASE_NODE'], moveNodeOrCreateEdge)
 }
 
-export function* setSvgHeight(action: any) {
+export function* setSvgHeight(action: any): SagaIterator {
   const { svgTop, svgBottom, svgWidth } = yield select(state => state.display)
   const height = (svgBottom || window.innerHeight) - svgTop
   yield put({ type: 'SET_SVG_HEIGHT', height })
@@ -106,7 +107,7 @@ export function* setSvgHeight(action: any) {
 
 // Calculate actual zoom = user-set zoom (zoom) x automatic svg zoom.
 // Triggered by initial render, user zoom changes, and svg resize.
-export function* setActualZoom() {
+export function* setActualZoom(): SagaIterator {
   const { viewBox, zoom, svgSize } = yield select(state => state.display)
   const zoomedViewBox = yield call(applyZoomToViewBox, viewBox, zoom)
   const svgZoom = yield call(computeSvgZoom, zoomedViewBox, svgSize)
@@ -117,7 +118,7 @@ export function* setActualZoom() {
 }
 
 // Automatically fetches edges when a node is added from LittleSis
-export function* addNode(action: any) {
+export function* addNode(action: any): SagaIterator {
   const { automaticallyAddEdges } = yield select(state => state.attributes.settings)
   const allNodeIds = yield select(state => Object.keys(state.graph.nodes))
 
@@ -127,7 +128,7 @@ export function* addNode(action: any) {
 }
 
 // Fetch edges for a LittleSis node and add them to graph
-export function* addEdges(newNodeId: string, allNodeIds: string[]) {
+export function* addEdges(newNodeId: string, allNodeIds: string[]): SagaIterator {
   try {
     const results = yield call(getEdges, newNodeId, allNodeIds)
 
@@ -139,8 +140,8 @@ export function* addEdges(newNodeId: string, allNodeIds: string[]) {
   }
 }
 
-// Attempt to save map
-export function* save() {
+// Save map
+export function* save(): SagaIterator {
   const params = yield select(paramsForSaveSelector)
   const { id } = params
   const requestType = id ? 'update' : 'create'
@@ -164,7 +165,7 @@ export function* save() {
 }
 
 // Attempt to clone map
-export function* clone() {
+export function* clone(): SagaIterator {
   const id = yield select(state => state.attributes.id)
 
   try {
@@ -180,7 +181,7 @@ export function* clone() {
 }
 
 // Attempt to delete map
-export function* deleteMap() {
+export function* deleteMap(): SagaIterator {
   const id = yield select(state => state.attributes.id)
 
   try {
@@ -195,14 +196,14 @@ export function* deleteMap() {
   yield put({ type: 'DELETE_RESET' })
 }
 
-export function* generateForceLayout() {
+export function* generateForceLayout(): SagaIterator {
   const graph = yield select(state => state.graph.present)
   yield call(delay, 50)
   const newGraph = yield call(forceLayout, cloneDeep(graph))
   yield put({ type: 'APPLY_FORCE_LAYOUT', graph: newGraph })
 }
 
-export function* doAddEditor(action: any) {
+export function* doAddEditor(action: any): SagaIterator {
   const { username } = action
   const id = yield select(state => state.attributes.id)
 
@@ -217,7 +218,7 @@ export function* doAddEditor(action: any) {
   yield put({ type: 'ADD_EDITOR_RESET' })
 }
 
-export function* doRemoveEditor(action: any) {
+export function* doRemoveEditor(action: any): SagaIterator {
   const { username } = action
   const id = yield select(state => state.attributes.id)
 
@@ -232,7 +233,7 @@ export function* doRemoveEditor(action: any) {
   yield put({ type: 'REMOVE_EDITOR_RESET' })
 }
 
-export function* interlocks(action: any): any {
+export function* interlocks(action: any): SagaIterator {
   const [node1Id, node2Id] = yield select(state => state.display.selection.node)
   const nodeIds = yield select(state => Object.keys(state.graph.nodes).filter(isLittleSisId))
 
@@ -247,7 +248,7 @@ export function* interlocks(action: any): any {
   yield put({ type: 'INTERLOCKS_RESET' })
 }
 
-export function* calculateViewBox(action: any) {
+export function* calculateViewBox(action: any): SagaIterator {
   // recalculate only if switching out of editor mode
   if (action.enabled === false) {
     const graph = yield select(state => state.graph)
@@ -256,7 +257,7 @@ export function* calculateViewBox(action: any) {
   }
 }
 
-export function* doTakeoverLock(action: any) {
+export function* doTakeoverLock(action: any): SagaIterator {
   const id = yield select(state => state.attributes.id)
 
   try {
@@ -277,7 +278,7 @@ export function* doTakeoverLock(action: any) {
   yield put({ type: 'LOCK_TAKEOVER_RESET' })
 }
 
-export function* doReleaseLock(action: any) {
+export function* doReleaseLock(action: any): SagaIterator {
   const id = yield select(state => state.attributes.id)
 
   try {
@@ -297,7 +298,7 @@ export function* doReleaseLock(action: any) {
   yield put({ type: 'LOCK_RELEASE_RESET' })
 }
 
-export function* exportImage(action: any) {
+export function* exportImage(action: any): SagaIterator {
   const title = yield select(state => state.attributes.title)
   const viewbox = yield select(state => state.display.viewBox)
   const paddedViewbox = padViewbox(viewbox)
@@ -322,7 +323,7 @@ export function* exportImage(action: any) {
 // this logic is in a saga and not part of graphReducer because
 // we need edge creation to be triggered by a new action in order
 // for displayReducer to open the edge editor
-export function* moveNodeOrCreateEdge(action: any) {
+export function* moveNodeOrCreateEdge(action: any): SagaIterator {
   const nodes = yield select(state => state.graph.nodes)
   const draggedNode = nodes[action.id]
   const draggedOverNode = findIntersectingNodeFromDrag(

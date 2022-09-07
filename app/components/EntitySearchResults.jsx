@@ -5,8 +5,8 @@ import { FiExternalLink } from '@react-icons/all-files/fi/FiExternalLink'
 
 export function SearchResult({ entity, onClick }) {
   return (
-    <div className="entity-search-result">
-      <a onClick={() => onClick(entity)}><b>{entity.name}</b></a>
+    <div className="entity-search-result" data-testid="entity-search-result">
+      <a data-testid="entity-search-result-addnode" onClick={() => onClick(entity)}><b>{entity.name}</b></a>
       { entity.url &&
         <a className="entity-external-link" href={entity.url} target="_blank" rel="noopener noreferrer">
           <FiExternalLink />
@@ -27,7 +27,7 @@ export default function EntitySearchResults({ results, onClick }) {
   const visibleResults = results.filter(entity => !existingNodeIds.includes(entity.id))
 
   return (
-    <div className="entity-search-results">
+    <div className="entity-search-results" data-testid="entity-search-results">
       { visibleResults.map(entity => (
           <SearchResult
             onClick={onClick}

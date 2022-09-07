@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import pick from 'lodash/pick'
 import uniq from 'lodash/uniq'
-import { Button } from '@material-ui/core'
+import { Button } from '@mui/material'
 import { MdPhotoSizeSelectSmall } from "@react-icons/all-files/md/MdPhotoSizeSelectSmall"
 import { MdFormatColorFill } from "@react-icons/all-files/md/MdFormatColorFill"
 import { MdImage } from "@react-icons/all-files/md/MdImage"

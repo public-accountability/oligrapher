@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { 
+import {
   Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle
-} from '@material-ui/core'
+} from '@mui/material'
 
 export default function ShareModal({ open, close, url }: ShareModalProps) {
   const { protocol, host } = window.location
@@ -35,4 +35,4 @@ export interface ShareModalProps {
   open: boolean,
   close: () => void,
   url: string
-} 
+}

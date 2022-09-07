@@ -1,5 +1,5 @@
 import React from 'react'
-import { Select, MenuItem } from '@material-ui/core'
+import { Select, MenuItem } from '@mui/material'
 
 export const CATEGORIES = [
   'All Categories',

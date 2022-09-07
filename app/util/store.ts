@@ -1,18 +1,14 @@
-import { createStore, applyMiddleware, Middleware } from 'redux'
+import { configureStore, Middleware } from '@reduxjs/toolkit'
 import { createLogger } from 'redux-logger'
 import createSagaMiddleware from 'redux-saga'
-
-import { StateWithHistory } from './defaultState'
 import reducers from '../reducers'
 import rootSaga from '../sagas'
+import stateInitializer from './stateInitializer'
 
-/*
-  Returns an Redux store initialized configured oligrapher state
-  See util/configuration for the default values.
-
-  If preloadedState.settings.debug is true, redux's logger is enabled.
-*/
-export const createOligrapherStore = (initialState: StateWithHistory) => {
+// Creates an Redux store configured with default values
+// also see util/defaultState and util/stateInitializer
+export default function createOligrapherStore(configuration = {}) {
+  const initialState = stateInitializer(configuration)
   const sagaMiddleware = createSagaMiddleware()
   let middleware: Middleware[] = [sagaMiddleware]
 
@@ -20,11 +16,11 @@ export const createOligrapherStore = (initialState: StateWithHistory) => {
     middleware.push(createLogger())
   }
 
-  const store = createStore(
-    reducers,
-    initialState,
-    applyMiddleware(...middleware)
-  )
+  const store = configureStore({
+    reducer: reducers,
+    preloadedState: initialState,
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(...middleware)
+  })
 
   sagaMiddleware.run(rootSaga)
 
