@@ -14,7 +14,7 @@ Oligrapher is built with [React](https://reactjs.com) and [Redux](https://redux.
 - [Data Sources](#data-sources)
 - [Editing Guide](#editing-guide)
 
-![Oligrapher Demo Screenshot](https://cloud.githubusercontent.com/assets/981611/12380419/5fbd509e-bd40-11e5-823b-07f093ef6844.png)
+![Oligrapher Demo Screenshot](https://user-images.githubusercontent.com/8505044/189668138-500bbbe0-5781-4f80-8fae-ad1f4efb85d2.png)
 
 Features
 --------
