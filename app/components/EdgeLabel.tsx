@@ -25,8 +25,8 @@ export default function EdgeLabel({ id, width, bezier, status, label, scale }: E
     className: "edge-label-textpath",
     startOffset: "50%",
     href: `#${curveId}`,
-    fontSize: 10 * Math.sqrt(scale),
-    fontFamily: "Helvetica, Arial, sans-serif"
+    fontSize: 10 * Math.sqrt(scale)
+    // fontFamily: "Helvetica, Arial, sans-serif"
   }
 
   return (

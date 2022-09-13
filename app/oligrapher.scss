@@ -28,10 +28,69 @@ $node_highlight_color: $oligrapher_blue;
 $edge_highlight_color: $oligrapher_blue;
 
 @font-face {
-  font-family: 'Helvetica Neue Medium';
-  font-weight: normal;
-  src: url(./fonts/HelveticaNeueLTStdMd.otf) format('opentype');
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local(''),
+       url('https://littlesis.org/static/fonts/open-sans-v34-latin-regular.woff2') format('woff2'),
+       url('https://littlesis.org/static/fonts/open-sans-v34-latin-regular.woff') format('woff'),
+       url('https://littlesis.org/static/fonts/open-sans-v34-latin-regular.ttf') format('truetype');
 }
+
+%box_shadow {
+  -webkit-box-shadow: 0px 0px 20px 2px #eee;
+  -moz-box-shadow: 0px 0px 20px 2p #eee;
+  box-shadow: 0px 0px 20px 2px rgba(128, 128, 128, 0.3);
+}
+
+%editor_label {
+  margin-bottom: 0.25em;
+  color: $oligrapher_dark_gray;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+%editor_input {
+  font-size: 14px;
+  line-height: 1em;
+  height: 28px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 5px;
+}
+
+%toolbox_header {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  line-height: 1.5em;
+
+  button {
+    float: right;
+    border: none;
+    margin-left: 0.5em;
+    margin-top: 0;
+    background-color: #FFF;
+    padding: 0;
+  }
+}
+
+%message {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  background-color: white;
+  @extend %box_shadow;
+}
+
+%floating_editor_box {
+    width: 235px;
+    min-height: 300px;
+    max-height: 450px;
+    padding: 0.5em;
+    box-sizing: border-box;
+}
+
 
 html, body, div#oligrapher {
   height: 100%;
@@ -51,7 +110,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
 
   button, a:hover {
     cursor: pointer;
@@ -102,7 +161,7 @@ body {
     box-sizing: border-box;
 
     input {
-      font-family: Helvetica, Arial, sans-serif;
+      font-family: "Open Sans", Helvetica, Arial, sans-serif;
       font-size: 42px;
       height: 48px;
       margin-left: -4px;
@@ -130,7 +189,6 @@ body {
       width: 100%;
       height: 24px;
       box-sizing: border-box;
-      font-family: Helvetica, Arial, sans-serif;
       font-size: 18px;
       line-height: 24px;
       margin-left: -4px;
@@ -212,12 +270,6 @@ body {
   }
 }
 
-%box_shadow {
-  -webkit-box-shadow: 0px 0px 20px 2px #eee;
-  -moz-box-shadow: 0px 0px 20px 2p #eee;
-  box-shadow: 0px 0px 20px 2px rgba(128, 128, 128, 0.3);
-}
-
 #oligrapher-container .MuiGrid-container {
   flex: 1 2 auto;
   // overflow: hidden;
@@ -296,23 +348,6 @@ body {
 }
 
 /* EDITOR */
-
-%editor_label {
-  margin-bottom: 0.25em;
-  color: $oligrapher_dark_gray;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-%editor_input {
-  font-size: 14px;
-  line-height: 1em;
-  height: 28px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  padding: 5px;
-}
-
 #oligrapher-container .oligrapher-graph-editor .editor-menu {
   z-index: 100;
   border: 1px solid #ccc;
@@ -375,22 +410,6 @@ body {
         cursor: not-allowed;
       }
     }
-  }
-}
-
-%toolbox_header {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 5px;
-  line-height: 1.5em;
-
-  button {
-    float: right;
-    border: none;
-    margin-left: 0.5em;
-    margin-top: 0;
-    background-color: #FFF;
-    padding: 0;
   }
 }
 
@@ -618,7 +637,6 @@ body {
   }
 
   footer {
-    margin-top: 0.75em;
   }
 
   form {
@@ -630,9 +648,7 @@ body {
     }
 
     input {
-      width: 100%;
-      margin-bottom: 0.5em;
-      @extend %editor_input;
+        @extend %editor_input;
     }
   }
 
@@ -643,42 +659,35 @@ body {
   }
 } /* end: .oligrapher-floating-editor */
 
-
 #oligrapher-container div.oligrapher-node-editor {
-  width: 235px;
-  height: 415px;
-  padding: 10px;
-  box-sizing: border-box;
+    @extend %floating_editor_box;
 
-  a.add-connections-link {
-    display: block;
-    font-size: 16px;
-    color: $oligrapher_blue;
-    font-weight: bold;
-    margin-top: 10px;
-    text-decoration: none;
+    a.add-connections-link {
+        display: block;
+        font-size: 16px;
+        color: $oligrapher_blue;
+        font-weight: bold;
+        margin-top: 10px;
+        text-decoration: none;
 
-    &:hover {
-      text-decoration: none;
+        &:hover {
+            text-decoration: none;
+        }
     }
-  }
 
-  .node-littlesis-link {
-    float: left;
+    .node-littlesis-link {
+        float: left;
 
-    svg {
-      height: 20px;
-      width: 20px;
+        svg {
+            height: 20px;
+            width: 20px;
+        }
     }
-  }
 }
 
 /* add connections tool */
 #oligrapher-container div.oligrapher-add-connections {
-  width: 235px;
-  height: 415px;
-  padding: 10px;
-  box-sizing: border-box;
+    @extend %floating_editor_box;
 
   .add-connections-category {
     margin-top: 5px;
@@ -958,7 +967,7 @@ div.lock {
   }
 
   .node-label text {
-    font-family: 'Helvetica Neue Medium', Helvetica, sans-serif;
+    // font-family: 'Helvetica Neue Medium', Helvetica, sans-serif;
     color: black;
   }
 
@@ -1043,14 +1052,6 @@ div.lock {
 }
 
 /* user message */
-
-%message {
-  padding: 10px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  background-color: white;
-  @extend %box_shadow;
-}
 
 #oligrapher-container .oligrapher-user-message {
   position: absolute;
@@ -1272,14 +1273,14 @@ div.lock {
   }
 }
 
-.add-connections-classic-button {
+#oligrapher-container .add-connections-classic-button {
     margin-left: 1em;
 }
 
-.add-connections-classic-statusbox {
+#oligrapher-container .add-connections-classic-statusbox {
     margin-top: 2em;
 }
 
-.add-connections-classic-p {
+#oligrapher-container .add-connections-classic-p {
     margin-top: 2em;
 }

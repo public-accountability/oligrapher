@@ -16,7 +16,7 @@ export default function NodeLabel({ node, perLineMax, status }) {
     faded: "#ddd"
   }[status]
 
-  // we use a cube root so that font size and line height 
+  // we use a cube root so that font size and line height
   // don't grow too much as node scale increases
   const scalePower = scale > 1 ? 1/3 : 1
   const fontSize = FONT_SIZE * Math.pow(scale, scalePower)
@@ -52,7 +52,6 @@ export default function NodeLabel({ node, perLineMax, status }) {
       y={radius + y + lineHeight}
       dy={i * lineHeight}
       textAnchor="middle"
-      fontFamily="Helvetica Neue Medium, Helvetica, Arial, sans-serif"
       fontSize={fontSize + 'px'}
       fill={color}
     >
