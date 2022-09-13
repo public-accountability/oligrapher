@@ -105,33 +105,32 @@ export const UNDO_ACTIONS = [
   'REMOVE_NODES'
 ]
 
-// @ts-ignore
 const undoableReducer = undoable(reducer, {
   filter: includeAction(UNDO_ACTIONS),
   groupBy: (action) => {
-    let { type } = action
+    let actionType = action.type
 
     // force layouts shouldn't be grouped
-    if (type === 'APPLY_FORCE_LAYOUT') {
-      type = nanoid()
+    if (actionType === 'APPLY_FORCE_LAYOUT') {
+      actionType = nanoid()
     }
 
     // consider all consecutive drags and moves for the same node(s) as one action
-    if (type === 'DRAG_NODE') {
-      type = 'MOVE_NODE'
+    if (actionType === 'DRAG_NODE') {
+      actionType = 'MOVE_NODE'
     }
 
-    if (type === 'ADD_EDGE') {
-      type = 'MOVE_NODE'
+    if (actionType === 'ADD_EDGE') {
+      actionType = 'MOVE_NODE'
     }
 
-    if (type == 'DRAG_NODES') {
-      type = 'MOVE_NODES'
+    if (actionType == 'DRAG_NODES') {
+      actionType = 'MOVE_NODES'
     }
 
     let ids = action.nodeIds ? action.nodeIds.join(',') : action.id
 
-    return type + (ids ? ("-" + String(ids)) : "")
+    return actionType + (ids ? ("-" + String(ids)) : "")
   },
   debug: false,
   ignoreInitialState: true,
@@ -150,5 +149,4 @@ const flattenStateReducer = (graph: GraphState, action: any) => {
   }
 }
 
-// @ts-ignore
 export default (state: GraphState, action: any) => flattenStateReducer(undoableReducer(state, action), action)
