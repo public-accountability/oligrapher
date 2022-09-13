@@ -6,7 +6,8 @@ mkdir -p build dist
 commit=$(git rev-parse HEAD)
 
 printf "\033[93mCompiling build/oligrapher.scss\033[0m\n"
-npx sass app/oligrapher.scss build/oligrapher.css
+npx sass app/oligrapher.scss build/oligrapher.css --style=compressed
+npx sass app/oligrapher.scss build/oligrapher-dev.css
 
 printf "\033[93mCompiling build/oligrapher.js\033[0m\n"
 npx esbuild \
@@ -31,6 +32,8 @@ printf "\033[93mMaking copies for \033[94m$commit\033[93m in dist/\033[0m\n"
 
 cp build/oligrapher.css dist/oligrapher-$commit.css
 cp build/oligrapher.css.map dist/oligrapher-$commit.css.map
+cp build/oligrapher-dev.css dist/oligrapher-dev-$commit.css
+cp build/oligrapher-dev.css.map dist/oligrapher-dev-$commit.css.map
 cp build/oligrapher.js dist/oligrapher-$commit.js
 cp build/oligrapher.js.map dist/oligrapher-$commit.js.map
 cp build/oligrapher-dev.js dist/oligrapher-dev-$commit.js
@@ -41,6 +44,6 @@ find ./dist -type f -name "*oligrapher-$commit*" ! -name '*.gz' ! -name '*.br' -
     xargs -0 -P 4 -I FILE bash -c "gzip -f -k FILE && brotli -f -k FILE"
 
 printf "\033[93mFiles for \033[94m$commit\033[93m in dist/\033[0m\n"
-find ./dist -type f -name "*oligrapher-$commit*" -print0 | xargs -0 ls -l
+find ./dist -type f -name "*oligrapher*$commit*" -print0 | xargs -0 ls -l
 
-printf "dist/ contains $(find ./dist -type f | wc -l) files using $(du -sh dist/ | cut -f 1)"
+printf "\033[93mdist/\033[0m contains \033[94m$(find ./dist -type f | wc -l) files\033[0m using \033[94m$(du -sh dist/ | cut -f 1)\033[0m\n"

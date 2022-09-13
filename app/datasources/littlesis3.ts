@@ -11,15 +11,19 @@ import { LockState } from '../util/lock'
 
 // API_URL is set by the "define" option of esbuild
 export const urls = {
+  // Search API
   findNodes: () => `${API_URL}/oligrapher/find_nodes`,
   findConnections: () => `${API_URL}/oligrapher/find_connections`,
   getEdges: () => `${API_URL}/oligrapher/get_edges`,
-  getRelationship: (id: string) => `${API_URL}/api/relationships/${id}`,
   getInterlocks: () => `${API_URL}/oligrapher/get_interlocks`,
+  // Uses our regular api
+  getRelationship: (id: string) => `${API_URL}/api/relationships/${id}`,
+  // NetworkMap crud actions
   createOligrapher: () => `${API_URL}/oligrapher`,
   updateOligrapher: (id: number) => `${API_URL}/oligrapher/${id}`,
   cloneOligrapher: (id: number) => `${API_URL}/oligrapher/${id}/clone`,
   deleteOligrapher: (id: number) => `${API_URL}/oligrapher/${id}`,
+  // Locking
   editors: (id: number) => `${API_URL}/oligrapher/${id}/editors`,
   lock: (id: number) => `${API_URL}/oligrapher/${id}/lock`,
   releaseLock: (id: number) => `${API_URL}/oligrapher/${id}/release_lock`
