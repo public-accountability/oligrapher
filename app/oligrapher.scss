@@ -28,9 +28,13 @@ $node_highlight_color: $oligrapher_blue;
 $edge_highlight_color: $oligrapher_blue;
 
 @font-face {
-  font-family: 'Helvetica Neue Medium';
-  font-weight: normal;
-  src: url(./fonts/HelveticaNeueLTStdMd.otf) format('opentype');
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local(''),
+       url('https://littlesis.org/static/fonts/open-sans-v34-latin-regular.woff2') format('woff2'),
+       url('https://littlesis.org/static/fonts/open-sans-v34-latin-regular.woff') format('woff'),
+       url('https://littlesis.org/static/fonts/open-sans-v34-latin-regular.ttf') format('truetype');
 }
 
 %box_shadow {
@@ -106,7 +110,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
 
   button, a:hover {
     cursor: pointer;
@@ -157,7 +161,7 @@ body {
     box-sizing: border-box;
 
     input {
-      font-family: Helvetica, Arial, sans-serif;
+      font-family: "Open Sans", Helvetica, Arial, sans-serif;
       font-size: 42px;
       height: 48px;
       margin-left: -4px;
@@ -185,7 +189,6 @@ body {
       width: 100%;
       height: 24px;
       box-sizing: border-box;
-      font-family: Helvetica, Arial, sans-serif;
       font-size: 18px;
       line-height: 24px;
       margin-left: -4px;
@@ -964,7 +967,7 @@ div.lock {
   }
 
   .node-label text {
-    font-family: 'Helvetica Neue Medium', Helvetica, sans-serif;
+    // font-family: 'Helvetica Neue Medium', Helvetica, sans-serif;
     color: black;
   }
 
