@@ -30,7 +30,7 @@ export function Node({ id, currentlyEdited, selected, status }) {
     }
   }, [dispatch, id, isMultipleSelection])
 
-  // the id in the payload, while otherwise redundant, allows redux-undo 
+  // the id in the payload, while otherwise redundant, allows redux-undo
   // to group drag actions into a single action
   const dragNode = useCallback(deltas => {
     if (isMultipleSelection) {
@@ -54,15 +54,15 @@ export function Node({ id, currentlyEdited, selected, status }) {
     }
   }, [dispatch, isSelecting, isHighlighting, id, editMode, node])
 
-  const onMouseEnter = useCallback(() => { 
+  const onMouseEnter = useCallback(() => {
     dispatch({ type: 'MOUSE_ENTERED_NODE', name })
   }, [dispatch, name])
 
-  const onMouseLeave = useCallback(() => { 
+  const onMouseLeave = useCallback(() => {
     dispatch({ type: 'MOUSE_LEFT_NODE' })
   }, [dispatch])
 
-  // ordinarily the node should always be present, but when removing selected nodes we encounter the 
+  // ordinarily the node should always be present, but when removing selected nodes we encounter the
   // zombie child problem: https://react-redux.js.org/api/hooks#stale-props-and-zombie-children
   if (!node) {
     return null
@@ -74,17 +74,17 @@ export function Node({ id, currentlyEdited, selected, status }) {
       onStop={moveNode}
       onClick={clickNode}
       onDrag={dragNode}>
-      <g 
-        id={"node-" + id} 
+      <g
+        id={"node-" + id}
         className="oligrapher-node"
-        onMouseEnter={onMouseEnter} 
+        onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         onDragOver={onMouseEnter}
         onDragLeave={onMouseLeave}
       >
-        <ConditionalLink 
-          condition={!editMode && node.url} 
-          href={node.url} 
+        <ConditionalLink
+          condition={!editMode && node.url}
+          href={node.url}
           target="_blank" rel="noopener noreferrer"
           onDragStart={e => e.preventDefault()} // to prevent HTML5 drag-n-drop (draggable="false" used to work)
         >

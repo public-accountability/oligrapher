@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Draggable, { DraggableEventHandler, ControlPosition } from 'react-draggable'
+import Draggable, { DraggableEventHandler, ControlPosition, DraggableEvent } from 'react-draggable'
 import { useSelector } from 'react-redux'
 import { StateWithHistory } from '../util/defaultState'
 
@@ -22,28 +22,30 @@ const ZEROZERO = { x: 0, y: 0 }
 
 // Wrapper around Draggable that can also handle click events
 export default function DraggableComponent(props: DraggableComponentProps) {
-  const [isDragging, setDragging] = useState(false)
+  const [dragStartPos, setDragStartPos] = useState(ZEROZERO)
   const svgZoom = useSelector<StateWithHistory, number>(state=> state.display.svgZoom)
 
-  const onDrag: DraggableEventHandler = (evt, data) => {
-    setDragging(true)
-    const { x, y } = data
-    props.onDrag && props.onDrag({ x, y })
+  const onStart: DraggableEventHandler = (evt, data) => {
+    setDragStartPos({ x: evt.screenX, y: evt.screenY })
+    props.onStart && props.onStart(evt, data)
   }
 
+  const onDrag: DraggableEventHandler = (evt, data) => {
+    props.onDrag && props.onDrag({ x: data.x, y: data.y })
+  }
+
+  // see https://github.com/react-grid-layout/react-draggable/issues/531
   const onStop: DraggableEventHandler = (evt, data) => {
-    if (isDragging) {
-      setDragging(false)
+    // calls onClick instead of onStop if mouse has not moved (or barely moved)
+    if (Math.abs(dragStartPos.x - evt.screenX) < 5 || Math.abs(dragStartPos.y - evt.screenY) < 5 ) {
+      props.onClick && props.onClick(evt, data)
+    } else {
       props.onStop && props.onStop({ x: data.x, y: data.y })
-    } else if (props.onClick) {
-      props.onClick(evt, data)
     }
   }
 
   const draggableProps = {
-    onDrag,
-    onStop,
-    onStart: props.onStart,
+    onDrag, onStop, onStart,
     scale: svgZoom,
     handle: props.handle,
     disabled: Boolean(props.disabled),
@@ -54,5 +56,4 @@ export default function DraggableComponent(props: DraggableComponentProps) {
   }
 
   return React.createElement(Draggable, draggableProps, props.children)
-
 }
