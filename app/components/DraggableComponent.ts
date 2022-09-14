@@ -8,7 +8,6 @@ type PositionDataHandler = (data: ControlPosition) => void | false
 type DraggableComponentProps = {
   children: React.ReactNode,
   handle: string,
-  svgZoom: number,
   position?: ControlPosition,
   onStop: PositionDataHandler,
   onDrag?: PositionDataHandler,
