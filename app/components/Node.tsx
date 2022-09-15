@@ -71,33 +71,22 @@ export function Node({ id, currentlyEdited, selected, status } : NodeProps) {
   // to prevent HTML5 drag-n-drop (draggable="false" used to work)
   const onDragStart = (e: DraggableEvent) => e.preventDefault()
 
-  return <DraggableComponent
-           handle=".draggable-node-handle"
-           onStop={moveNode}
-           onClick={clickNode}
-           onDrag={dragNode}>
-           <g
-             id={"node-" + id}
-             className="oligrapher-node"
-             onMouseEnter={onMouseEnter}
-             onMouseLeave={onMouseLeave}
-             onDragOver={onMouseEnter}
-             onDragLeave={onMouseLeave}>
-             <ConditionalLink
-               condition={Boolean(!editMode && node.url)}
-               href={node.url}
-               target="_blank" rel="noopener noreferrer"
-               onDragStart={onDragStart}>
-               { node.description && <title>{node.description}</title> }
-               <ConditionalLink condition={Boolean(editMode && node.url)} href={node.url} target="_blank" rel="noopener noreferrer">
-                 <NodeLabel node={node} status={status} />
-               </ConditionalLink>
-               <NodeHalo node={node} selected={showSelection} highlighted={status === "highlighted"} />
-               <NodeCircle node={node} status={status} />
-               <NodeImage node={node} status={status} />
-             </ConditionalLink>
-           </g>
-         </DraggableComponent>
+  return (
+    <DraggableComponent handle=".draggable-node-handle" onStop={moveNode} onClick={clickNode} onDrag={dragNode}>
+      <g id={"node-" + id} className="oligrapher-node" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onDragOver={onMouseEnter} onDragLeave={onMouseLeave}>
+        <ConditionalLink condition={Boolean(!editMode && node.url)} url={node.url}>
+          { node.description && <title>{node.description}</title> }
+          <ConditionalLink condition={Boolean(editMode && node.url)} url={node.url}>
+            <NodeLabel node={node} status={status} />
+          </ConditionalLink>
+          <NodeHalo node={node} selected={showSelection} highlighted={status === "highlighted"} />
+          <NodeCircle node={node} status={status} />
+          <NodeImage node={node} status={status} />
+        </ConditionalLink>
+      </g>
+    </DraggableComponent>
+  )
+
 }
 
 export default React.memo(Node)

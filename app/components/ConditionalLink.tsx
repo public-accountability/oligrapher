@@ -1,16 +1,15 @@
 import React from 'react'
 
-export default function ConditionalLink({ children, condition, ...linkProps }: ConditionalLinkProps) {
-  return (
-    <>
-      { condition && <a {...linkProps}>{children}</a> }
-      { !condition && children }
-    </>
-  )
+type ConditionalLinkProps = {
+  children: React.ReactNode,
+  condition: boolean,
+  url?: string
 }
 
-interface ConditionalLinkProps {
-  children: any,
-  condition: boolean,
-  [key: string]: any
+export default function ConditionalLink({ children, condition, url }: ConditionalLinkProps) {
+  if (condition && url) {
+    return <a target="_blank" rel="noopener noreferrer" href={url}>{children}</a>
+  } else {
+    return <>{children}</>
+  }
 }
