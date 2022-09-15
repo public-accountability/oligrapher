@@ -2,7 +2,7 @@ import { put, select, call, takeEvery, all } from 'redux-saga/effects'
 import { SagaIterator } from 'redux-saga'
 import cloneDeep from 'lodash/cloneDeep'
 
-import { isLittleSisId, convertSelectorForUndo } from './util/helpers'
+import { isLittleSisId  } from './util/helpers'
 import { oligrapher, addEditor, removeEditor, getEdges, getInterlocks, takeoverLock, releaseLock } from './datasources/littlesis3'
 import { applyZoomToViewBox, computeSvgZoom, computeSvgOffset } from './util/dimensions'
 import { paramsForSaveSelector } from './util/selectors'

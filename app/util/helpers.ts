@@ -1,11 +1,8 @@
-import { SyntheticEvent, useState, useCallback } from 'react'
+import React, { SyntheticEvent, useState, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import isFunction from 'lodash/isFunction'
 import toNumber from 'lodash/toNumber'
-
-
-import { Selector } from './selectors'
-import { State, StateWithHistory } from './defaultState'
+import { StateWithHistory } from './defaultState'
 import ConfirmSave from '../components/ConfirmSave'
 import EmptySave from '../components/EmptySave'
 import { hasContents } from '../graph/graph'
@@ -142,10 +139,10 @@ export function useClientRect(callback: RectCallback) {
 //   settings: state.settings
 // }))
 
-export const convertSelectorForUndo = (selector: Selector<any>): Selector<any> => selector
+// export const convertSelectorForUndo = (selector: Selector<any>): Selector<any> => selector
 
-function useConvertedSelector(selector: Selector<any>) {
-  return useSelector(convertSelectorForUndo(selector))
-}
+// function useConvertedSelector(selector: Selector<any>) {
+//   return useSelector(convertSelectorForUndo(selector))
+// }
 
-export { useConvertedSelector as useSelector }
+export { useSelector as useSelector }
