@@ -1,20 +1,28 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-
-import ConditionalLink from './ConditionalLink'
 import textLines from '../util/textLines'
-import { NODE_RADIUS } from '../graph/node'
+
+import { NODE_RADIUS, Node as NodeType } from '../graph/node'
+
+import type { NodeUIState } from '../util/NodeUIState'
 
 const FONT_SIZE = 16
 
-export default function NodeLabel({ node, perLineMax, status }) {
+// Label for Node
+// Will split into to two lines for instance:
+// <g>
+//  <rect>
+//  <rect>
+//    <g>
+//      <text>
+//      <text>
+export default function NodeLabel({ node, uiState }: { node: NodeType, uiState: NodeUIState }) {
   const { name, x, y, scale } = node
 
   const color = {
     normal: "#000",
     highlighted: "#000",
     faded: "#ddd"
-  }[status]
+  }[uiState.appearance]
 
   // we use a cube root so that font size and line height
   // don't grow too much as node scale increases
@@ -23,7 +31,7 @@ export default function NodeLabel({ node, perLineMax, status }) {
   const lineHeight = fontSize * 1.25
   const radius = NODE_RADIUS * scale
 
-  const rects = textLines(name, perLineMax).map((line, i) => {
+  const rects = textLines(name).map((line, i) => {
     const width = line.length * 8
     const height = lineHeight
     const dy = radius + 4 + (i * lineHeight)
@@ -53,29 +61,17 @@ export default function NodeLabel({ node, perLineMax, status }) {
       dy={i * lineHeight}
       textAnchor="middle"
       fontSize={fontSize + 'px'}
-      fill={color}
-    >
+      fill={color}>
       {line}
     </text>
   ))
 
   return (
-    <g>
+    <g className="node-label-container">
       { rects }
-
       <g className="node-label">
         {lines}
       </g>
     </g>
   )
-}
-
-NodeLabel.propTypes = {
-  node: PropTypes.object.isRequired,
-  perLineMax: PropTypes.number,
-  status: PropTypes.string.isRequired
-}
-
-NodeLabel.defaultProps = {
-  status: 'normal'
 }

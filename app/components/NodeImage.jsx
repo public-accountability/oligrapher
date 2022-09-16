@@ -1,24 +1,21 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
-import { NODE_RADIUS } from '../graph/node'
+import { NODE_RADIUS, Node as NodeType } from '../graph/node'
+import { NodeUIState } from '../util/NodeUIState'
 
 const IMAGE_SCALE = 3
 
-export function NodeImage({ node, status }) {
+export function NodeImage({ node, uiState }: { node: NodeType, uiState: NodeUIState }) {
   const { id, x, y, image, scale } = node
   const radius = NODE_RADIUS * scale
   const imageWidth = IMAGE_SCALE * radius
   const clipPathId = `image-clip-${id}`
+
   const opacity = {
     normal: "1",
     highlighted: "1",
     faded: "0.2"
-  }[status]
-
-  if (!node.image) {
-    return null
-  }
+  }[uiState.appearance]
 
   return (
     <>

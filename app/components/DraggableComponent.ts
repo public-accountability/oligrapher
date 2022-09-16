@@ -25,6 +25,7 @@ export default function DraggableComponent(props: DraggableComponentProps) {
   const svgZoom = useSelector<StateWithHistory, number>(state=> state.display.svgZoom)
 
   const onStart: DraggableEventHandler = (evt, data) => {
+    // @ts-ignore
     setDragStartPos({ x: evt.screenX, y: evt.screenY })
     props.onStart && props.onStart(evt, data)
   }
@@ -50,7 +51,7 @@ export default function DraggableComponent(props: DraggableComponentProps) {
     disabled: Boolean(props.disabled),
     // Setting the position to 0,0 has the effect of ensuring that all drag deltas always start with 0,0.
     // The onStop and onDrag callbacks all work off of relative coordinates.
-    position: props.position || ZEROZERO
+    // position: props.position || ZEROZERO
     // enableUserSelectHack: props.enableUserSelectHack
   }
 

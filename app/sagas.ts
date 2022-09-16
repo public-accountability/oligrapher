@@ -34,8 +34,8 @@ export default function* rootSaga() {
     watchExportImage(),
     watchEditMode(),
     watchLockTakeover(),
-    watchLockRelease(),
-    watchReleaseNode()
+    watchLockRelease()
+    // watchReleaseNode()
   ])
 }
 
@@ -95,9 +95,9 @@ export function* watchExportImage() {
   yield takeEvery(['EXPORT_IMAGE_REQUESTED'], exportImage)
 }
 
-export function* watchReleaseNode() {
-  yield takeEvery(['RELEASE_NODE'], moveNodeOrCreateEdge)
-}
+// export function* watchReleaseNode() {
+//   yield takeEvery(['RELEASE_NODE'], moveNodeOrCreateEdge)
+// }
 
 export function* setSvgHeight(action: any): SagaIterator {
   const { svgTop, svgBottom, svgWidth } = yield select(state => state.display)
