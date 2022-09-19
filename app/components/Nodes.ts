@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { State, StateWithHistory } from '../util/defaultState'
-import Node2 from './Node2'
+import Node from './Node'
 
 export default function Nodes() {
   // const editMode = useSelector<State>(state => state.display.modes.editor)
@@ -14,7 +14,6 @@ export default function Nodes() {
   //   }
   // }, undefined, [editMode, floatingEditorIsOpen, selectedNodeIds])
 
-
-  const nodes = nodeIds.map(id => React.createElement(Node2, { id: id, key: id }))
+  const nodes = nodeIds.map(id => React.createElement(Node, { id: id, key: id }))
   return React.createElement('g', { className: "nodes"}, nodes)
 }
