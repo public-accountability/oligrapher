@@ -7,10 +7,11 @@ interface NodeBodyProps extends React.SVGAttributes<SVGGElement> {
   enableClick: boolean,
   appearance: NodeAppearance,
   url?: string | null,
+  nodeRef: React.Ref<React.ReactSVGElement>
 }
 
-export default function NodeBody(props: NodeBodyProps): React.ReactSVGElement {
-  const { children, nodeId, enableClick, appearance, url, ...gProps } = props
+export default function NodeBody(props: NodeBodyProps) {
+  const { children, nodeId, nodeRef, enableClick, appearance, url, ...gProps } = props
   gProps.id = `node-${nodeId}`
   gProps.className = "oligrapher-node"
 
@@ -19,5 +20,5 @@ export default function NodeBody(props: NodeBodyProps): React.ReactSVGElement {
     gProps.style = { cursor: "pointer" }
   }
 
-  return React.createElement('g', gProps, children)
+  return <g ref={nodeRef} {...gProps}>{children}</g>
 }

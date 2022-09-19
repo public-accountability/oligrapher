@@ -4,7 +4,7 @@ import { useHotkeys } from 'react-hotkeys-hook'
 import { State, StateWithHistory } from '../util/defaultState'
 import Node from './Node'
 
-export default function Nodes() {
+export default function Nodes({ svgRef }): React.ReactNode {
   // const editMode = useSelector<State>(state => state.display.modes.editor)
   const nodeIds = useSelector<State, Array<String>>(state => Object.keys(state.graph.nodes))
 
@@ -14,6 +14,6 @@ export default function Nodes() {
   //   }
   // }, undefined, [editMode, floatingEditorIsOpen, selectedNodeIds])
 
-  const nodes = nodeIds.map(id => React.createElement(Node, { id: id, key: id }))
+  const nodes = nodeIds.map(id => React.createElement(Node, { svgRef, id, key: id }))
   return React.createElement('g', { className: "nodes"}, nodes)
 }

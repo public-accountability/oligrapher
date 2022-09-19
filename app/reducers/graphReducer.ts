@@ -1,6 +1,6 @@
 import produce from 'immer'
 import merge from 'lodash/merge'
-import undoable, { includeAction } from 'redux-undo'
+import undoable, { includeAction, GroupByFunction } from 'redux-undo'
 import { nanoid } from 'nanoid/non-secure'
 
 import {
@@ -33,18 +33,37 @@ export const reducer = produce((graph: Graph, action: any): void => {
   case 'REMOVE_NODES':
     removeNodes(graph, action.ids)
     return
+
+
+  case 'MOUSE_ENTERED_NODE':
+    return
+  case 'DRAG_NODE_START':
+    return
   case 'DRAG_NODE':
     dragNodeEdges(graph, action.id, action.deltas)
     return
-  case 'DRAG_NODES':
-    action.nodeIds.forEach((id: string) => dragNodeEdges(graph, id, action.deltas))
-    return
-  case 'MOVE_NODE':
+  case 'DRAG_NODE_STOP':
     moveNode(graph, action.id, action.deltas)
     return
-  case 'MOVE_NODES':
-    action.nodeIds.forEach((id: string) => moveNode(graph, id, action.deltas))
+  case 'CLICK_NODE':
     return
+  case 'MOUSE_LEFT_NODE':
+    return
+
+
+  // case 'DRAG_NODE':
+
+  //   return
+  // case 'DRAG_NODES':
+  //   action.nodeIds.forEach((id: string) => dragNodeEdges(graph, id, action.deltas))
+  //   return
+  // case 'MOVE_NODE':
+  //   moveNode(graph, action.id, action.deltas)
+  //   return
+  // case 'MOVE_NODES':
+  //   action.nodeIds.forEach((id: string) => moveNode(graph, id, action.deltas))
+  //   return
+
   case 'ADD_EDGE':
     addEdgeIfNodes(graph, action.edge)
     dragNodeEdges(graph, action.id, { x: 0, y: 0 })
@@ -89,10 +108,8 @@ export const UNDO_ACTIONS = [
   'UPDATE_NODE',
   'UPDATE_NODES',
   'REMOVE_NODE',
-  'DRAG_NODE',
-  'DRAG_NODES',
-  'MOVE_NODE',
-  'MOVE_NODES',
+  // 'DRAG_NODE_START',
+  // 'DRAG_NODE_STOP',
   'ADD_EDGE',
   'ADD_EDGES',
   'UPDATE_EDGE',
@@ -105,41 +122,61 @@ export const UNDO_ACTIONS = [
   'REMOVE_NODES'
 ]
 
+
+// const undoableGroupBy: GroupByFunction = (action, currentState, previousHistory) => {
+//   let actionType = action.type
+
+//   if (actionType === 'DRAG_NODE') {
+//     actionType = 'MOVE_NODE'
+//   }
+
+
+
+// }
+
 const undoableReducer = undoable(reducer, {
   filter: includeAction(UNDO_ACTIONS),
-  groupBy: (action) => {
-    let actionType = action.type
-
-    // force layouts shouldn't be grouped
-    if (actionType === 'APPLY_FORCE_LAYOUT') {
-      actionType = nanoid()
-    }
-
-    // consider all consecutive drags and moves for the same node(s) as one action
-    if (actionType === 'DRAG_NODE') {
-      actionType = 'MOVE_NODE'
-    }
-
-    if (actionType === 'ADD_EDGE') {
-      actionType = 'MOVE_NODE'
-    }
-
-    if (actionType == 'DRAG_NODES') {
-      actionType = 'MOVE_NODES'
-    }
-
-    let ids = action.nodeIds ? action.nodeIds.join(',') : action.id
-
-    return actionType + (ids ? ("-" + String(ids)) : "")
-  },
+  // groupBy: undoableGroupBy,
   debug: false,
   ignoreInitialState: true,
   syncFilter: true
 })
 
+// const undoableReducer = undoable(reducer, {
+
+//   groupBy: (action) => {
+//     let actionType = action.type
+
+//     // force layouts shouldn't be grouped
+//     if (actionType === 'APPLY_FORCE_LAYOUT') {
+//       actionType = nanoid()
+//     }
+
+//     // consider all consecutive drags and moves for the same node(s) as one action
+//     if (actionType === 'DRAG_NODE') {
+//       actionType = 'MOVE_NODE'
+//     }
+
+//     if (actionType === 'ADD_EDGE') {
+//       actionType = 'MOVE_NODE'
+//     }
+
+//     if (actionType == 'DRAG_NODES') {
+//       actionType = 'MOVE_NODES'
+//     }
+
+//     let ids = action.nodeIds ? action.nodeIds.join(',') : action.id
+
+//     return actionType + (ids ? ("-" + String(ids)) : "")
+//   },
+//   debug: false,
+//   ignoreInitialState: true,
+//   syncFilter: true
+// })
+
 const flattenStateReducer = (graph: GraphState, action: any) => {
   // include SET_SVG_ZOOM so that state is flattened at the start
-  if (!graph.nodes || UNDO_ACTIONS.concat(['SET_SVG_ZOOM']).includes(action.type)) {
+  if (!graph.nodes || (action.type === 'SET_SVG_ZOOM' || UNDO_ACTIONS.includes(action.type))) {
     return {
       ...graph.present,
       ...graph

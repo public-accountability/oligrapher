@@ -25,17 +25,18 @@ export function DraggableComponent(props: DraggableComponentProps) {
 
   // see https://github.com/react-grid-layout/react-draggable/issues/531
   const onStop: DraggableEventHandler = (evt, data) => {
-    // calls onClick instead of onStop if mouse has not moved (or barely moved)
-    if (Math.abs(dragStartPos.x - evt.screenX) < 5 || Math.abs(dragStartPos.y - evt.screenY) < 5 ) {
-      props.onClick && props.onClick(evt, data)
-    } else {
-      props.onStop && props.onStop(evt, data)
+    props.onStop && props.onStop(evt, data)
+    if (props.onClick) {
+      const mouseHasBarelyMoved = Math.abs(dragStartPos.x - evt.screenX) < 5 || Math.abs(dragStartPos.y - evt.screenY) < 5
+      if (mouseHasBarelyMoved) {
+        props.onClick(evt, data)
+      }
     }
   }
 
-  const draggableProps = Object.assign({}, props, { onDrag, onStop, onStart, scale })
+  const draggableProps = Object.assign({ position: { x: 0, y: 0 } }, props, { onDrag, onStop, onStart, scale })
 
-  return <Draggable {...draggableProps} >
+  return <Draggable {...draggableProps}>
            {props.children}
          </Draggable>
 

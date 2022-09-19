@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import partial from 'lodash/partial'
 import DraggableComponent from './DraggableComponent'
@@ -11,6 +11,9 @@ import NodeLabel from './NodeLabel'
 import type { Node as NodeType } from '../graph/node'
 import type { State } from '../util/defaultState'
 import { getNodeUIState, NodeUIState } from '../util/NodeUIState'
+import { createSvgIcon } from '@mui/material'
+
+type NodeProps = { id: string }
 
 // This is our main node component
 // <Node>
@@ -20,14 +23,17 @@ import { getNodeUIState, NodeUIState } from '../util/NodeUIState'
 //       <NodeLabel>
 //       <NodeCircle>
 //       <NodeImage>
-export default function Node({ id }: { id: string }) {
+export default function Node({ id }: NodeProps) {
   const dispatch = useDispatch()
   const editMode = useSelector<State, boolean>(state => Boolean(state.display.modes.editor))
   const node = useSelector<State, NodeType>(state => state.graph.nodes[id])
   const uiState = useSelector<State, NodeUIState>(partial(getNodeUIState, id))
 
+  // reference to outermost <g> for node
+  const nodeRef = useRef(null)
+
   const onStart = () => {
-    dispatch({ type: 'DRAG_NODE_STOP', id })
+    dispatch({ type: 'DRAG_NODE_START', id })
   }
 
   const onStop: DraggableEventHandler = (_event, data) => {
@@ -53,8 +59,8 @@ export default function Node({ id }: { id: string }) {
   }
 
   return (
-    <DraggableComponent disabled={editMode} handle=".draggable-node-handle" onStart={onStart} onStop={onStop} onDrag={onDrag} onClick={onClickDraggable}>
-      <NodeBody nodeId={node.id} appearance={uiState.appearance} url={node.url} enableClick={!editMode} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+    <DraggableComponent nodeRef={nodeRef} disabled={!editMode} handle=".draggable-node-handle" onStart={onStart} onStop={onStop} onDrag={onDrag} onClick={onClickDraggable}>
+      <NodeBody nodeRef={nodeRef} nodeId={node.id} appearance={uiState.appearance} url={node.url} enableClick={!editMode} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
         <NodeLabel node={node} uiState={uiState} />
         <NodeHalo node={node} uiState={uiState} />
         <NodeCircle node={node} uiState={uiState} />
@@ -64,10 +70,3 @@ export default function Node({ id }: { id: string }) {
   )
 
 }
-
-// // the id in the payload, while otherwise redundant, allows redux-undo to group drag actions into a single action
-  // to prevent HTML5 drag-n-drop (draggable="false" used to work)
-  //const onDragStart = (e: DraggableEvent) => e.preventDefault()
-  // <DraggableComponent handle=".draggable-node-handle" onStop={onStop} onClick={onClick} onDrag={onDrag}>
-  // onDragLeave={onMouseLeave}
-  // { node.description && <title>{node.description}</title>}
