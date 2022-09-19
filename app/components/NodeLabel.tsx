@@ -15,7 +15,7 @@ const FONT_SIZE = 16
 //    <g>
 //      <text>
 //      <text>
-export default function NodeLabel({ node, uiState }: { node: NodeType, uiState: NodeUIState }) {
+export default function NodeLabel({ node, uiState, perLineMax }: { node: NodeType, uiState: NodeUIState, perLineMax?: number }) {
   const { name, x, y, scale } = node
 
   const color = {
@@ -31,7 +31,7 @@ export default function NodeLabel({ node, uiState }: { node: NodeType, uiState: 
   const lineHeight = fontSize * 1.25
   const radius = NODE_RADIUS * scale
 
-  const rects = textLines(name).map((line, i) => {
+  const rects = textLines(name, perLineMax).map((line, i) => {
     const width = line.length * 8
     const height = lineHeight
     const dy = radius + 4 + (i * lineHeight)

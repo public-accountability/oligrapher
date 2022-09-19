@@ -69,7 +69,7 @@ export function Node({ id, currentlyEdited, selected, status } : NodeProps) {
 
 
   // to prevent HTML5 drag-n-drop (draggable="false" used to work)
-  const onDragStart = (e: DraggableEvent) => e.preventDefault()
+  //const onDragStart = (e: DraggableEvent) => e.preventDefault()
 
   return (
     <DraggableComponent handle=".draggable-node-handle" onStop={moveNode} onClick={clickNode} onDrag={dragNode}>

@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 
 import { useSelector } from '../util/helpers'
 import { Point, calculateDeltas } from '../util/geometry'
+import { getEdgeAppearance } from '../util/edgeAppearance'
 import { edgeToCurve, curveToBezier } from '../graph/curve'
 import { EdgeStatusType } from '../graph/edge'
 import EdgeLine from './EdgeLine'
@@ -11,13 +12,15 @@ import EdgeHandle from './EdgeHandle'
 import EdgeLabel from './EdgeLabel'
 import EdgeHighlight from './EdgeHighlight'
 import ConditionalLink from './ConditionalLink'
+import { State } from '../util/defaultState'
 
-export function Edge({ id, currentlyEdited, status }: EdgeProps) {
+export function Edge({ id, currentlyEdited }: EdgeProps) {
   const dispatch = useDispatch()
-  const edge = useSelector(state => state.graph.edges[id])
-  const actualZoom = useSelector(state => state.display.actualZoom)
-  const { isHighlighting } = useSelector(state => state.annotations)
-  const editMode = useSelector(state => state.display.modes.editor)
+  const edge = useSelector<State>(state => state.graph.edges[id])
+  const actualZoom = useSelector<State>(state => state.display.actualZoom)
+  const isHighlighting  = useSelector<State>(state => state.annotations.isHighlighting)
+  const editMode = useSelector<State>(state => state.display.modes.editor)
+  const edgeStatus: EdgeStatusType = useSelector<State>(state => getEdgeAppearance(id, state))
 
   const [isHovering, setHovering] = useState(false)
   const [isDragging, setDragging] = useState(false)
@@ -26,9 +29,9 @@ export function Edge({ id, currentlyEdited, status }: EdgeProps) {
   const { cx, cy, x1, x2, y1, y2, s1, s2, scale, label, dash, arrow, url } = edge
   const [curve, setCurve] = useState(edgeToCurve({ cx, cy, x1, x2, y1, y2, s1, s2 }))
   const bezier = useMemo(() => curveToBezier(curve), [curve])
-  const highlighted = status === 'highlighted'
   const selected = !isDragging && (currentlyEdited || isHovering)
-  status = selected ? 'selected' : status
+  const status = selected ? 'selected' : edgeStatus
+  const highlighted = status === 'highlighted'
 
   const updateEdge = useCallback(
     attributes => dispatch({ type: 'UPDATE_EDGE', id, attributes }),
@@ -107,8 +110,8 @@ export function Edge({ id, currentlyEdited, status }: EdgeProps) {
 
 interface EdgeProps {
   id: string,
-  currentlyEdited: boolean,
-  status: EdgeStatusType
+  currentlyEdited: boolean
+  // status: EdgeStatusType
 }
 
 export default React.memo(Edge)

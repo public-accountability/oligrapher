@@ -59,6 +59,8 @@ export type AsyncStatus = "REQUESTED" | "SUCCESS" | "FAILED" | null
 
 export type SelectionType = "node" | "edge" | "caption"
 
+export type SvgSizeType = { width: number, height: number }
+
 export interface Selection {
   node: string[],
   edge: string[],
@@ -80,7 +82,7 @@ export interface DisplayState {
   viewBox: Viewbox | null,
   svgTop: number,
   svgBottom: number | null,
-  svgSize: { width: number, height: number },
+  svgSize: SvgSizeType,
   svgOffset: Point,
   offset: Point,
   showHeader: boolean,

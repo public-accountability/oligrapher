@@ -1,5 +1,6 @@
 import React from 'react'
 import { NODE_RADIUS, Node as NodeType } from '../graph/node'
+import { NodeUIState } from '../util/NodeUIState'
 
 export function NodeCircle({ node, uiState }: { node: NodeType, uiState: NodeUIState }) {
   const { x, y, color, scale } = node
