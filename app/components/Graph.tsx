@@ -23,7 +23,7 @@ export function Graph() {
   const viewBox = useSelector(calculateAnnotationViewBox)
   const storyMode = useSelector<State>(state => state.display.modes.story)
   const zoom = useSelector<State>(state => state.display.zoom)
-  const draggedNode = useSelector<State>(state => state.display.draggedNode)
+  // const draggedNode = useSelector<State>(state => state.display.draggedNode)
   const { width, height } = useSelector<State, SvgSizeType>(state => state.display.svgSize)
 
   const svgRef = useRef(null)
@@ -34,7 +34,8 @@ export function Graph() {
     dispatch({ type: 'SET_SVG_WIDTH', width })
   }, [svgRef, dispatch, storyMode])
 
-  const className = draggedNode ? "oligrapher-graph-dragging-node" : ""
+  // const className = draggedNode ? "oligrapher-graph-dragging-node" : ""
+  const className = ""
 
   return  <div id={GRAPH_CONTAINER_ID} className={className} style={{ height: height + "px" }}>
             <Svg outermost={true} viewBox={viewBox} height={height + "px"} ref={svgRef}>

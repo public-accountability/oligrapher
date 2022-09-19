@@ -80,14 +80,18 @@ export default produce((display: DisplayState, action: any): void => {
       clearSelection(display)
       display.selection.node = [action.id]
       FloatingEditor.clear(display)
-      display.draggedNode = action.node
+      display.draggedNode = action.id
       return
     case 'DRAG_NODE_STOP':
       clearSelection(display)
+      display.draggedNode = null
       return
     case 'MOUSE_ENTERED_NODE':
-      if (display.draggedNode && display.draggedNode.name !== action.name) {
+      if (display.modes.editor && display.draggedNode && display.draggedNode !== action.id) {
         display.userMessage = `Drop node to create new edge between ${display.draggedNode.name} and ${action.name}`
+      }
+      if (display.draggedNode && display.draggedNode.name !== action.name) {
+
       }
       return
     case 'MOUSE_LEFT_NODE':

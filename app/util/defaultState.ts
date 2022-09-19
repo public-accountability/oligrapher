@@ -93,7 +93,7 @@ export interface DisplayState {
     type: FloatingEditorType | null,
     id: string | null
   },
-  draggedNode: Node | null,
+  draggedNode: String | null,
   tool: "node" | "text" | "organize" | "settings" | "editors" | "help" | null,
   saveMapStatus: AsyncStatus,
   cloneMapStatus: AsyncStatus,

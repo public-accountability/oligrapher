@@ -26,7 +26,7 @@ export const calculateAppearance = (id: string, state: State): NodeAppearance =>
 
 export function getNodeUIState(id: string, state: State): NodeUIState {
   return {
-    dragged: Boolean(state.display.draggedNode && state.display.draggedNode.id === id),
+    dragged: Boolean(state.display.draggedNode === id),
     edited: Boolean(state.display.floatingEditor.type === 'node' && state.display.floatingEditor.id  === id),
     selected: Boolean(state.display.selection['node']?.includes(id)),
     highlighted: Boolean(state.display.modes.story && state.annotations.list[state.annotations.currentIndex]?.nodeIds?.includes(id)),
