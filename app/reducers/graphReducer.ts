@@ -33,37 +33,12 @@ export const reducer = produce((graph: Graph, action: any): void => {
   case 'REMOVE_NODES':
     removeNodes(graph, action.ids)
     return
-
-
-  case 'MOUSE_ENTERED_NODE':
-    return
-  case 'DRAG_NODE_START':
-    return
   case 'DRAG_NODE':
     dragNodeEdges(graph, action.id, action.deltas)
     return
   case 'DRAG_NODE_STOP':
     moveNode(graph, action.id, action.deltas)
     return
-  case 'CLICK_NODE':
-    return
-  case 'MOUSE_LEFT_NODE':
-    return
-
-
-  // case 'DRAG_NODE':
-
-  //   return
-  // case 'DRAG_NODES':
-  //   action.nodeIds.forEach((id: string) => dragNodeEdges(graph, id, action.deltas))
-  //   return
-  // case 'MOVE_NODE':
-  //   moveNode(graph, action.id, action.deltas)
-  //   return
-  // case 'MOVE_NODES':
-  //   action.nodeIds.forEach((id: string) => moveNode(graph, id, action.deltas))
-  //   return
-
   case 'ADD_EDGE':
     addEdgeIfNodes(graph, action.edge)
     dragNodeEdges(graph, action.id, { x: 0, y: 0 })

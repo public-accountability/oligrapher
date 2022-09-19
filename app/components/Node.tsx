@@ -46,8 +46,8 @@ export default function Node({ id }: NodeProps) {
     dispatch({ type: 'DRAG_NODE', id, deltas })
   }
 
-  const onClickDraggable: DraggableEventHandler = () => {
-    dispatch({ type: 'CLICK_NODE', id })
+  const onClickDraggable: DraggableEventHandler = (event) => {
+    dispatch({ type: 'CLICK_NODE', id, shiftKey: event.shiftKey })
   }
 
   const onMouseEnter = () => {
