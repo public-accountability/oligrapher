@@ -1,7 +1,6 @@
 import React from 'react'
-import { noop } from 'lodash'
 
-type NodeBodyProps = {
+interface NodeBodyProps extends React.SVGAttributes<SVGGElement> {
   children: React.ReactNode,
   nodeId: string,
   enableClick: boolean,
@@ -15,6 +14,7 @@ export default function NodeBody(props: NodeBodyProps) {
 
   if (enableClick && url) {
     gProps.onClick = () => window.open(url, "_blank")
+    gProps.style = { cursor: "pointer" }
   }
 
   return React.createElement('g', gProps, children)
