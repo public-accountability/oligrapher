@@ -20,10 +20,9 @@ import { getNodeUIState, NodeUIState } from '../util/NodeUIState'
 //       <NodeLabel>
 //       <NodeCircle>
 //       <NodeImage>
-
 export default function Node({ id }: { id: string }) {
   const dispatch = useDispatch()
-  const editMode = useSelector<State>(state => state.display.modes.editor)
+  const editMode = useSelector<State, boolean>(state => Boolean(state.display.modes.editor))
   const node = useSelector<State, NodeType>(state => state.graph.nodes[id])
   const uiState = useSelector<State, NodeUIState>(partial(getNodeUIState, id))
 
@@ -41,7 +40,7 @@ export default function Node({ id }: { id: string }) {
     dispatch({ type: 'DRAG_NODE', id, deltas })
   }
 
-  const onClickDraggable = () => {
+  const onClickDraggable: DraggableEventHandler = () => {
     dispatch({ type: 'CLICK_NODE', id })
   }
 
@@ -54,8 +53,8 @@ export default function Node({ id }: { id: string }) {
   }
 
   return (
-    <DraggableComponent disable={editMode} handle=".draggable-node-handle" onStart={onStart} onStop={onStop} onDrag={onDrag} onClick={onClickDraggable}>
-      <NodeBody nodeId={node.id} url={node.url} enableClick={!editMode} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+    <DraggableComponent disabled={editMode} handle=".draggable-node-handle" onStart={onStart} onStop={onStop} onDrag={onDrag} onClick={onClickDraggable}>
+      <NodeBody nodeId={node.id} appearance={uiState.appearance} url={node.url} enableClick={!editMode} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
         <NodeLabel node={node} uiState={uiState} />
         <NodeHalo node={node} uiState={uiState} />
         <NodeCircle node={node} uiState={uiState} />

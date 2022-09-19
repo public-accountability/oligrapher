@@ -10,12 +10,11 @@ interface DraggableComponentProps extends DraggableProps {
 // Wrapper around Draggable from react-draggable which
 //   - adds another callback, onClick, for click events
 //   - set the scale = state.display.svgZoom
-export default function DraggableComponent(props: DraggableComponentProps) {
+export function DraggableComponent(props: DraggableComponentProps) {
   const [dragStartPos, setDragStartPos] = useState({ x: 0, y: 0})
   const scale = useSelector<State, number>(state=> state.display.svgZoom)
 
   const onStart: DraggableEventHandler = (evt, data) => {
-    // @ts-ignore
     setDragStartPos({ x: evt.screenX, y: evt.screenY })
     props.onStart && props.onStart(evt, data)
   }
@@ -27,7 +26,6 @@ export default function DraggableComponent(props: DraggableComponentProps) {
   // see https://github.com/react-grid-layout/react-draggable/issues/531
   const onStop: DraggableEventHandler = (evt, data) => {
     // calls onClick instead of onStop if mouse has not moved (or barely moved)
-    // @ts-ignore
     if (Math.abs(dragStartPos.x - evt.screenX) < 5 || Math.abs(dragStartPos.y - evt.screenY) < 5 ) {
       props.onClick && props.onClick(evt, data)
     } else {
@@ -37,5 +35,10 @@ export default function DraggableComponent(props: DraggableComponentProps) {
 
   const draggableProps = Object.assign({}, props, { onDrag, onStop, onStart, scale })
 
-  return React.createElement(Draggable, draggableProps, props.children)
+  return <Draggable {...draggableProps} >
+           {props.children}
+         </Draggable>
+
 }
+
+export default DraggableComponent

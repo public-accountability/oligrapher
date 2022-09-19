@@ -1,7 +1,7 @@
 import type { State } from './defaultState'
 import { annotationHasHighlightsSelector } from './selectors'
 
-type NodeAppearance = "normal" | "highlighted" | "faded"
+export type NodeAppearance = "normal" | "highlighted" | "faded"
 
 export interface NodeUIState {
   dragged: boolean,
