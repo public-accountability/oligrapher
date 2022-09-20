@@ -160,6 +160,7 @@ export default produce( (state: State, action: ActionType): void => {
       return
     case 'DRAG_NODE_STOP':
       if (state.display.modes.editor) {
+        // When dragging over another node create a new edge
         if (state.display.overNode && state.display.overNode !== action.id) {
           const node1 = state.graph.nodes[action.id]
           const node2 = state.graph.nodes[state.display.overNode]
@@ -174,19 +175,20 @@ export default produce( (state: State, action: ActionType): void => {
           // if there are existing edges
           if (similarEdges.length > 0) {
             // delete them
-            similarEdges.forEach(e => delete state.graph.edges[e.id])
-            // change the curves and add to back to graph
-            curveSimilarEdges(similarEdges.concat([edge])).forEach(e => addEdgeIfNodes(state.graph, e))
+            similarEdges.forEach(e => removeEdge(state.graph, e.id))
+            // change the curves and return graph with new edge
+            curveSimilarEdges(similarEdges.concat([edge])).forEach(e => addEdge(state.graph, e))
           } else {
-            addEdgeIfNodes(state.graph, edge)
+            addEdge(state.graph, edge)
           }
-
-          // dragNodeEdges(state.graph, action.id, { x: 0, y: 0 })
-          // addEdge(state.graph, newEdgeFromNodes(node1, node1))
+          // Otherwise move the node to the new position
         } else {
           moveNode(state.graph, action.id, action.deltas)
           clearSelection(state.display)
         }
+
+        // update the edges for this node
+        dragNodeEdges(state.graph, action.id, { x: 0, y: 0 })
       }
 
       state.display.draggedNode = null
