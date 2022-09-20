@@ -45,15 +45,13 @@ export function Graph() {
               </defs>
               <Zoomable zoom={zoom}>
                 <Pannable>
-                  <Selectable>
-                    <Highlightable>
-                      <g id={GRAPH_CONTENT_ID}>
-                        <Edges />
-                        <Nodes />
-                        <Captions />
-                      </g>
-                    </Highlightable>
-                  </Selectable>
+                  <Highlightable>
+                    <g id={GRAPH_CONTENT_ID}>
+                      <Edges />
+                      <Nodes />
+                      <Captions />
+                    </g>
+                  </Highlightable>
                 </Pannable>
               </Zoomable>
             </Svg>

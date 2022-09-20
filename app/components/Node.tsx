@@ -37,43 +37,33 @@ export default function Node({ id }: NodeProps) {
   // reference to outermost <g> for node
   const nodeRef = useRef(null)
 
-  const onStart = () => {
-    dispatch({ type: 'DRAG_NODE_START', id })
-  }
-
   const onStop: DraggableEventHandler = (_event, data) => {
     const deltas = { x: data.x, y: data.y }
-    dispatch({ type: 'DRAG_NODE_STOP', id, deltas })
-  }
+    if (editMode) {
 
+      dispatch({ type: 'MOVE_NODE_OR_ADD_EDGE_FROM_DRAG', id, deltas })
+    }
+  }
   const onDrag: DraggableEventHandler = (_event, data) => {
     const deltas = { x: data.x, y: data.y }
     dispatch({ type: 'DRAG_NODE', id, deltas })
   }
 
-  const onClickDraggable: DraggableEventHandler = (event) => {
-    dispatch({ type: 'CLICK_NODE', id, shiftKey: event.shiftKey })
+  const onClick: DraggableEventHandler = (event, data) => {
+    const deltas = { x: data.x, y: data.y }
+    // dispatch({ type: 'MOVE_NODE', id, deltas })
+    dispatch({ type: 'CLICK_NODE', id, shiftKey: event.shiftKey, deltas })
   }
 
   const onMouseEnter = () => {
     dispatch({ type: 'MOUSE_ENTERED_NODE', id })
   }
-
   const onMouseLeave = () => {
     dispatch({ type: 'MOUSE_LEFT_NODE', id })
   }
-
   // defaultPosition={defaultPosition}
   return (
-    <DraggableComponent
-      nodeRef={nodeRef}
-      disabled={disabled}
-      handle=".draggable-node-handle"
-      onStart={onStart}
-      onStop={onStop}
-      onDrag={onDrag}
-      onClick={onClickDraggable}
-    >
+    <DraggableComponent nodeId={id} nodeRef={nodeRef} disabled={disabled} handle=".draggable-node-handle" onStop={onStop} onDrag={onDrag} onClick={onClick} >
       <NodeBody nodeRef={nodeRef} nodeId={node.id} appearance={uiState.appearance} url={node.url} enableClick={!editMode} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
         <NodeLabel node={node} uiState={uiState} />
         <NodeHalo node={node} uiState={uiState} />

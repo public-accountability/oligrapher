@@ -1,5 +1,8 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit'
 
+import without from 'lodash/without'
+import isEqual from 'lodash/isEqual'
+
 import {
   addNode, updateNode, removeNode, removeNodes, dragNodeEdges, moveNode,
   addEdgeIfNodes, addEdgesIfNodes, updateEdge, removeEdge,
@@ -8,7 +11,7 @@ import {
 import Caption from './graph/caption'
 import { newEdgeFromNodes } from './graph/edge'
 import { curveSimilarEdges } from './graph/curve'
-import defaultState, { State } from './util/defaultState'
+import { State } from './util/defaultState'
 
 import {
   createAnnotation, moveAnnotation, showAnnotation, updateAnnotation, removeAnnotation,
@@ -16,11 +19,13 @@ import {
 } from './util/annotations'
 
 import updateSetting from './util/updateSetting'
-import { translatePoint } from './util/geometry'
+import { Point, translatePoint } from './util/geometry'
 import { updateLock } from './util/lock'
 import FloatingEditor, { toggleEditor } from './util/floatingEditor'
 import { swapSelection, clearSelection, selectionCount } from './util/selection'
 import { isLittleSisId } from './util/helpers'
+
+const ZOOM_INTERVAL = 1.2
 
 const DISPLAY_ACTIONS = new Set([
   'SET_SVG_TOP',
@@ -70,6 +75,11 @@ const ACTION_TO_MESSAGE = {
 }
 
 const MESSAGE_ACTIONS = new Set(Object.keys(ACTION_TO_MESSAGE))
+
+function moveNodeAndEdges(state: State, id: string, deltas: Point): void {
+  moveNode(state.graph, id, deltas)
+  dragNodeEdges(state.graph, id, { x: 0, y: 0 })
+}
 
 const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   builder.addCase('SET_SAVED_DATA', (state, action) => {
@@ -154,26 +164,23 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase('CLICK_NODE', (state, action) => {
-    console.debug(`selected nodes: ${state.display.selection.node.join(',')}`)
-    // if shift key is held, action is a selection
+    moveNodeAndEdges(state, action.id, action.deltas)
+
     if (action.shiftKey) {
       if (state.display.selection.node.includes(action.id)) {
-        console.debug(`selected nodes: ${state.display.selection.node.join(',')}`)
-        console.debug(`removing ${action.id} from selected nodes: ${state.display.selection.node.join(',')}`)
         state.display.selection.node = without(state.display.selection.node, action.id)
       } else {
-        console.debug(`adding ${action.id} to selected nodes: ${state.display.selection.node.join(',')}`)
-        let newSelection = state.display.selection.node.concat(action.id)
-        state.display.selection.node = newSelection
+        state.display.selection.node.push(action.id)
       }
     } else {
       state.display.selection.node = [action.id]
       toggleEditor(state.display, 'node', action.id)
-      // select node if editing it
-      // if (FloatingEditor.getId(state.display, 'node') === action.id) {
-      //   swapSelection(state.display, 'node', action.id)
-      // }
     }
+
+    // select node if editing it
+    // if (FloatingEditor.getId(state.display, 'node') === action.id) {
+    //   swapSelection(state.display, 'node', action.id)
+    // }
   })
 
   builder.addCase('MOUSE_ENTERED_NODE', (state, action) => {
@@ -185,7 +192,6 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
 
       state.display.userMessage = `Drop node to create new edge between ${draggedNodeName} and ${hoveringName}`
     }
-
   })
 
   builder.addCase('MOUSE_LEFT_NODE', (state, action) => {
@@ -194,49 +200,53 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase('DRAG_NODE_START', (state, action) => {
-    clearSelection(state.display)
-    state.display.selection.node = [action.id]
-    if (state.display.overNode === action.id) {
-      state.display.overNode = null
-    }
+    // clearSelection(state.display)
+
+    // if (state.display.overNode === action.id) {
+    //   state.display.overNode = null
+    // }
     FloatingEditor.clear(state.display)
     state.display.draggedNode = action.id
+  })
+
+  builder.addCase('DRAG_NODE_STOP', (state, action) => {
+    state.display.draggedNode = null
   })
 
   builder.addCase('DRAG_NODE', (state, action) => {
     dragNodeEdges(state.graph, action.id, action.deltas)
   })
 
-  builder.addCase('DRAG_NODE_STOP', (state, action) => {
-    if (state.display.modes.editor) {
-      // When dragging over another node create a new edge
-      if (state.display.overNode && state.display.overNode !== action.id) {
-        const node1 = state.graph.nodes[action.id]
-        const node2 = state.graph.nodes[state.display.overNode]
+  // builder.addCase('MOVE_NODE', (state, action) => {
+  //   moveNode(state.graph, action.id, action.deltas)
+  //   dragNodeEdges(state.graph, action.id, { x: 0, y: 0 })
+  // })
 
-        const edge = newEdgeFromNodes(node1, node2)
-        // are there already edges between these two nodes?
-        const nodeIds = new Set([edge.node1_id, edge.node2_id])
-        const similarEdges = Object.values(state.graph.edges).filter(e => isEqual(new Set([e.node1_id, e.node2_id]), nodeIds))
-        // if there are
-        if (similarEdges.length > 0) {
-          // delete them
-          similarEdges.forEach(e => removeEdge(state.graph, e.id))
-          // change the curves and add them to the graph
-          curveSimilarEdges(similarEdges.concat([edge])).forEach(e => addEdge(state.graph, e))
-        } else {
-          addEdge(state.graph, edge)
-        }
-        // Otherwise move the node to the new position
+  builder.addCase('MOVE_NODE_OR_ADD_EDGE_FROM_DRAG', (state, action) => {
+    // When dragging over another node create a new edge
+    if (state.display.overNode && state.display.overNode !== action.id) {
+      const node1 = state.graph.nodes[action.id]
+      const node2 = state.graph.nodes[state.display.overNode]
+
+      const edge = newEdgeFromNodes(node1, node2)
+      // are there already edges between these two nodes?
+      const nodeIds = new Set([edge.node1_id, edge.node2_id])
+      const similarEdges = Object.values(state.graph.edges).filter(e => isEqual(new Set([e.node1_id, e.node2_id]), nodeIds))
+      // if there are
+      if (similarEdges.length > 0) {
+        // delete them
+        similarEdges.forEach(e => removeEdge(state.graph, e.id))
+        // change the curves and add them to the graph
+        curveSimilarEdges(similarEdges.concat([edge])).forEach(e => addEdge(state.graph, e))
       } else {
-        moveNode(state.graph, action.id, action.deltas)
-        clearSelection(state.display)
+        addEdge(state.graph, edge)
       }
-      // update the edges for this node
+      // reset edges back to original position
       dragNodeEdges(state.graph, action.id, { x: 0, y: 0 })
+    // Otherwise move the node
+    } else {
+      moveNodeAndEdges(state, action.id, action.deltas)
     }
-
-    state.display.draggedNode = null
   })
 
   builder.addCase('ADD_EDGE', (state, action) => {
@@ -530,3 +540,5 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     }
   })
 }
+
+export default builderCallback

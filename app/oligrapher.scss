@@ -1,6 +1,7 @@
 @use "sass:color";
 
 $oligrapher_blue: #0c7fff;
+$oligrapher_blue_dark: #3B0AFF;
 $font_color: black;
 $link_color: $oligrapher_blue;
 $button_bg_color: #2c63c8;
@@ -992,6 +993,11 @@ div.lock {
       stroke: $oligrapher_blue;
       stroke-width: 2;
     }
+
+    &.node-halo-dragged {
+      fill: $oligrapher_blue_dark;
+    }
+
   }
 }
 
