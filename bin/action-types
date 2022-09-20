@@ -1,0 +1,15 @@
+#!/usr/bin/env node
+
+const { readFileSync } = require('node:fs')
+
+const types = []
+
+readFileSync('./app/reducers.ts').toString().split("\n").forEach(line => {
+  const re = /\s+case ('\w+'):.*/
+  const result = re.exec(line)
+  if (result) {
+    types.push(result[1])
+  }
+})
+
+console.log(types.join(" | "))
