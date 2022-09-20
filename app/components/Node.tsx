@@ -27,7 +27,7 @@ export default function Node({ id }: NodeProps) {
   const dispatch = useDispatch()
   const editMode = useSelector<State, boolean>(state => Boolean(state.display.modes.editor))
   const node = useSelector<State, NodeType>(state => state.graph.nodes[id])
-  const uiState = useSelector<State, NodeUIState>(partial(getNodeUIState, id))
+  const uiState = useSelector<State, NodeUIState>(state => getNodeUIState(id, state))
   const draggedNode = useSelector<State>(state => state.display.draggedNode)
   // disable if not in edit mode or if another node is being dragged
   const disabled = !editMode || Boolean(editMode && draggedNode && draggedNode !== id)
