@@ -2,7 +2,6 @@ import isNumber from 'lodash/isNumber'
 import merge from 'lodash/merge'
 import assign from 'lodash/assign'
 import uniq from 'lodash/uniq'
-import values from 'lodash/values'
 import { isLittleSisId } from '../util/helpers'
 
 // import Springy from 'springy'
@@ -55,13 +54,13 @@ const DEFAULT_GRAPH: Graph = {
   captions: {}
 }
 
-/*
-    - Stats & Getters
-    - ViewBox Calculations
-    - Graph Functions
-    - Dragging
-    - Add Connections
-*/
+
+// Overview
+//   - Stats & Getters
+//   - ViewBox Calculations
+//   - Graph Functions
+//   - Dragging
+//   - Add Connections
 
 // Stats, Getters, and Calculations
 const minNodeX = (nodes: Array<Node>): number => Math.min(...nodes.map(n => n.x))
@@ -151,9 +150,8 @@ const DEFAULT_PADDING: PaddingType = {
 }
 const DEFAULT_VIEWBOX: Viewbox = { minX: -500, minY: -400, w: 1000, h: 800 }
 
-// output: { minX, minY, w, h }
-// These values are used to create the viewBox attribute for the outermost SVG,
-// which is effectively the smallest rectangle that can be fit around all nodes.
+// These values are used to create the viewBox attribute for the outermost SVG.
+// It is the smallest rectangle with padding that can be fit around all nodes
 export function calculateViewBox(
   nodes: Node[],
   edges: Edge[],
@@ -242,7 +240,7 @@ export function positionNear({ x, y }: Point, radius: number) {
 // Creates a new, empty graph object
 // exported in the module default as Graph.new
 export function newGraph(attributes: GraphAttributes = {}): Graph {
-  return merge({}, DEFAULT_GRAPH, attributes)
+  return assign({}, DEFAULT_GRAPH, attributes)
 }
 
 export function addNode(graph: Graph, attributes: NodeAttributes, position: boolean | Point = false): Graph {
@@ -286,7 +284,7 @@ export function removeNodes(graph: Graph, nodeIds: string[]): Graph {
 
 export function updateNode(graph: Graph, nodeId: string, attributes: NodeAttributes): Graph {
   // assign instead of merge so that edgeIds can be updated with fewer ids
-  Object.assign(graph.nodes[nodeId], attributes)
+  assign(graph.nodes[nodeId], attributes)
 
   // If scale is changed, update any associated edges
   if (attributes.scale) {
@@ -453,7 +451,7 @@ export function addCaption(graph: Graph, caption: Caption): Graph {
 // Moves a node to new position,
 export function moveNode(graph: Graph, nodeId: string, deltas: Point): Graph {
   const newPosition = translatePoint(getNode(graph, nodeId), deltas)
-  merge(graph.nodes[nodeId], newPosition)
+  assign(graph.nodes[nodeId], newPosition)
   return graph
 }
 
@@ -551,7 +549,7 @@ export function addInterlocks(graph: Graph, node1Id: string, node2Id: string, no
   nodes.forEach((node: Node, i: number) => {
     const x = midX + Math.cos(angle) * (-(num-1)*spacing/2 + i*spacing);
     const y = midY + Math.sin(angle) * (-(num-1)*spacing/2 + i*spacing);
-    addNode(graph, merge(node, { x, y }))
+    addNode(graph, assign(node, { x, y }))
   })
 
   addEdgesIfNodes(graph, edges)

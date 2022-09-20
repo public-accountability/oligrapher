@@ -114,6 +114,16 @@ export function useClientRect(callback: RectCallback) {
   }, [])
 }
 
+export function querySelector(query: string): Element {
+  const element = document.querySelector(query)
+  if (element) {
+    return element
+  } else {
+    throw new Error(`Expecting to find "${query}" in the document`)
+  }
+}
+
+
 // For now, this isn't needed because we flatten state.graph after every action:
 //
 // export const convertSelectorForUndo = selector => (state => selector({

@@ -3,7 +3,6 @@ import merge from 'lodash/merge'
 import isEqual from 'lodash/isEqual'
 
 import Caption from './graph/caption'
-// import Graph from './graph/graph'
 
 import { State } from './util/defaultState'
 
@@ -115,13 +114,14 @@ export default produce( (state: State, action: ActionType): void => {
       clearSelection(state.display)
       return
     case 'CLICK_NODE':
+
       // if shift key is held, action is a selection
       if (action.shiftKey) {
         let indexOfNode = state.display.selection.node.indexOf(action.id)
         if (indexOfNode === -1) {
           state.display.selection.node.push(action.id)
         } else {
-          state.display.selection.node.splice(indexOfNode)
+          state.display.selection.node.splice(indexOfNode, 1)
         }
       } else {
         state.display.selection.node = [action.id]

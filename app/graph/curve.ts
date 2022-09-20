@@ -1,7 +1,5 @@
 import toNumber from 'lodash/toNumber'
 import chunk from  'lodash/chunk'
-import merge from 'lodash/merge'
-
 import { Point } from '../util/geometry'
 import { Edge, EdgeGeometry } from './edge'
 
@@ -141,7 +139,6 @@ export function curveSimilarEdges(edges: Edge[]): Edge[] {
   return edges.map((edge, i) => {
     let strength = startStrength + (i * step)
     let { cx, cy } = edgeToCurve(edge, strength)
-    edge = merge(edge, { cx, cy })
-    return edge
+    return Object.assign({}, edge, { cx, cy })
   })
 }
