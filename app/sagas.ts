@@ -323,19 +323,19 @@ export function* exportImage(action: any): SagaIterator {
 // this logic is in a saga and not part of graphReducer because
 // we need edge creation to be triggered by a new action in order
 // for displayReducer to open the edge editor
-export function* moveNodeOrCreateEdge(action: any): SagaIterator {
-  const nodes = yield select(state => state.graph.nodes)
-  const draggedNode = nodes[action.id]
-  const draggedOverNode = findIntersectingNodeFromDrag(
-    Object.values(nodes),
-    draggedNode,
-    action.deltas
-  )
+// export function* moveNodeOrCreateEdge(action: any): SagaIterator {
+//   const nodes = yield select(state => state.graph.nodes)
+//   const draggedNode = nodes[action.id]
+//   const draggedOverNode = findIntersectingNodeFromDrag(
+//     Object.values(nodes),
+//     draggedNode,
+//     action.deltas
+//   )
 
-  if (draggedOverNode) {
-    const edge = newEdgeFromNodes(draggedNode, draggedOverNode)
-    yield put({ type: 'ADD_EDGE', edge, id: action.id })
-  } else {
-    yield put({ type: 'MOVE_NODE', id: action.id, deltas: action.deltas })
-  }
-}
+//   if (draggedOverNode) {
+//     const edge = newEdgeFromNodes(draggedNode, draggedOverNode)
+//     yield put({ type: 'ADD_EDGE', edge, id: action.id })
+//   } else {
+//     yield put({ type: 'MOVE_NODE', id: action.id, deltas: action.deltas })
+//   }
+// }

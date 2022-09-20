@@ -34,7 +34,7 @@ export interface Curve {
   ya: number,
   xb: number,
   yb: number,
-  is_reverse: boolean  
+  is_reverse: boolean
 }
 
 export const defaultCurveStrength = 0.5
@@ -122,7 +122,7 @@ export function curveToBezier({ x, y, xa, ya, xb, yb, cx, cy }: Curve): string {
 }
 
 // modifies control points of a group of edges between the same nodes
-// sothat the edges are nicely spaced out
+// so that the edges are nicely spaced out
 export function curveSimilarEdges(edges: Edge[]): Edge[] {
   const count = edges.length
 
@@ -132,12 +132,12 @@ export function curveSimilarEdges(edges: Edge[]): Edge[] {
   }
 
   // curve strength is default if there are only 2 edges
-  // curve strength approaches twice default as number of edges increases 
+  // curve strength approaches twice default as number of edges increases
   const maxCurveStrength = defaultCurveStrength * (3 - 2/count)
   const range = maxCurveStrength * 2
   const step = range / (count - 1)
   let startStrength = -maxCurveStrength
-  
+
   return edges.map((edge, i) => {
     let strength = startStrength + (i * step)
     let { cx, cy } = edgeToCurve(edge, strength)

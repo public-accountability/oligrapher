@@ -1,5 +1,6 @@
 import produce from 'immer'
 import merge from 'lodash/merge'
+import isEqual from 'lodash/isEqual'
 
 import Caption from './graph/caption'
 // import Graph from './graph/graph'
@@ -9,8 +10,10 @@ import { State } from './util/defaultState'
 import {
   addNode, updateNode, removeNode, removeNodes, dragNodeEdges, moveNode,
   addEdgeIfNodes, addEdgesIfNodes, updateEdge, removeEdge,
-  addCaption, addInterlocks
+  addCaption, addInterlocks, addEdge
 } from './graph/graph'
+
+import { curveSimilarEdges } from './graph/curve'
 
 import {
   createAnnotation, moveAnnotation, showAnnotation, updateAnnotation, removeAnnotation,
@@ -23,6 +26,7 @@ import { updateLock } from './util/lock'
 import FloatingEditor, { toggleEditor } from './util/floatingEditor'
 import { swapSelection, clearSelection, selectionCount } from './util/selection'
 import { isLittleSisId } from './util/helpers'
+import { newEdgeFromNodes } from './graph/edge'
 
 const ZOOM_INTERVAL = 1.2
 
@@ -107,18 +111,84 @@ export default produce( (state: State, action: ActionType): void => {
       removeNodes(state.graph, action.ids)
       clearSelection(state.display)
       return
-    case 'DRAG_NODE':
-      dragNodeEdges(state.graph, action.id, action.deltas)
+    case 'CLICK_NODE':
+      // if shift key is held, action is a selection
+      if (action.shiftKey) {
+        let indexOfNode = state.display.selection.node.indexOf(action.id)
+        if (indexOfNode === -1) {
+          state.display.selection.node.push(action.id)
+        } else {
+          state.display.selection.node.splice(indexOfNode)
+        }
+      } else {
+        state.display.selection.node = [action.id]
+        toggleEditor(state.display, 'node', action.id)
+        // select node if editing it
+        // if (FloatingEditor.getId(state.display, 'node') === action.id) {
+        //   swapSelection(state.display, 'node', action.id)
+        // }
+      }
       return
+    case 'MOUSE_ENTERED_NODE':
+      console.log(`MOUSE ENTERED ${state.graph.nodes[action.id].name}`)
+      state.display.overNode = action.id
+
+      if (state.display.modes.editor && state.display.draggedNode && state.display.draggedNode !== action.id) {
+        const draggedNodeName = state.graph.nodes[state.display.draggedNode].name
+        const hoveringName = state.graph.nodes[action.id].name
+
+        state.display.userMessage = `Drop node to create new edge between ${draggedNodeName} and ${hoveringName}`
+      }
+      return
+    case 'MOUSE_LEFT_NODE':
+      console.log(`MOUSE LEFT ${state.graph.nodes[action.id].name}`)
+      state.display.overNode = null
+      state.display.userMessage = null
+      return
+
     case 'DRAG_NODE_START':
       clearSelection(state.display)
       state.display.selection.node = [action.id]
+      if (state.display.overNode === action.id) {
+        state.display.overNode = null
+      }
       FloatingEditor.clear(state.display)
       state.display.draggedNode = action.id
       return
+    case 'DRAG_NODE':
+      dragNodeEdges(state.graph, action.id, action.deltas)
+      return
     case 'DRAG_NODE_STOP':
-      moveNode(state.graph, action.id, action.deltas)
-      clearSelection(state.display)
+      if (state.display.modes.editor) {
+        if (state.display.overNode && state.display.overNode !== action.id) {
+          const node1 = state.graph.nodes[action.id]
+          const node2 = state.graph.nodes[state.display.overNode]
+
+          const edge = newEdgeFromNodes(node1, node2)
+          // check if there already exists and eges between these nodes
+          const nodeIds = new Set([edge.node1_id, edge.node2_id])
+          const similarEdges = Object.values(state.graph.edges).filter(function(e) {
+            return isEqual(new Set([e.node1_id, e.node2_id]), nodeIds)
+          })
+
+          // if there are existing edges
+          if (similarEdges.length > 0) {
+            // delete them
+            similarEdges.forEach(e => delete state.graph.edges[e.id])
+            // change the curves and add to back to graph
+            curveSimilarEdges(similarEdges.concat([edge])).forEach(e => addEdgeIfNodes(state.graph, e))
+          } else {
+            addEdgeIfNodes(state.graph, edge)
+          }
+
+          // dragNodeEdges(state.graph, action.id, { x: 0, y: 0 })
+          // addEdge(state.graph, newEdgeFromNodes(node1, node1))
+        } else {
+          moveNode(state.graph, action.id, action.deltas)
+          clearSelection(state.display)
+        }
+      }
+
       state.display.draggedNode = null
       return
     case 'ADD_EDGE':
@@ -207,41 +277,10 @@ export default produce( (state: State, action: ActionType): void => {
     case 'EXPAND_HEADER':
       state.display.headerIsCollapsed = false
       return
-    case 'CLICK_NODE':
-      // if shift key is held, action is a selection
-      if (action.shiftKey) {
-        let indexOfNode = state.display.selection.node.indexOf(action.id)
-        if (indexOfNode === -1) {
-          state.display.selection.node.push(action.id)
-        } else {
-          state.display.selection.node.splice(indexOfNode)
-        }
-      } else {
-        state.display.selection.node = [action.id]
-        toggleEditor(state.display, 'node', action.id)
-        // select node if editing it
-        // if (FloatingEditor.getId(state.display, 'node') === action.id) {
-        //   swapSelection(state.display, 'node', action.id)
-        // }
-      }
-      return
-
-    case 'MOUSE_ENTERED_NODE':
-      if (state.display.modes.editor && state.display.draggedNode && state.display.draggedNode !== action.id) {
-
-        const draggedNodeName = state.graph.nodes[state.display.draggedNode].name
-        const hoveringName = state.graph.nodes[action.id].name
-
-        state.display.userMessage = `Drop node to create new edge between ${draggedNodeName} and ${hoveringName}`
-      }
-      return
-    case 'MOUSE_LEFT_NODE':
-      state.display.userMessage = null
-      return
-    case 'RELEASE_NODE':
-      state.display.userMessage = null
-      state.display.draggedNode = null
-      return
+    // case 'RELEASE_NODE':
+    //   state.display.userMessage = null
+    //   state.display.draggedNode = null
+    //   return
     case 'CLICK_EDGE':
       clearSelection(state.display)
       toggleEditor(state.display, 'edge', action.id)

@@ -4,7 +4,7 @@ import { useHotkeys } from 'react-hotkeys-hook'
 import { State, StateWithHistory } from '../util/defaultState'
 import Node from './Node'
 
-export default function Nodes({ svgRef }): React.ReactNode {
+export default function Nodes({ svgRef }) {
   // const editMode = useSelector<State>(state => state.display.modes.editor)
   const nodeIds = useSelector<State, Array<String>>(state => Object.keys(state.graph.nodes))
 

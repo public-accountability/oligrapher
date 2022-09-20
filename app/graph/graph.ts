@@ -322,7 +322,7 @@ export function updateEdgeFromNodes(graph: Graph, edgeId: string): Graph {
 }
 
 export function registerEdgeWithNodes(graph: Graph, edgeId: string): Graph {
-  let { node1_id, node2_id, x1, x2, y1, y2 } = getEdge(graph, edgeId)
+  let { node1_id, node2_id } = getEdge(graph, edgeId)
 
   addEdgeIdToNode(graph, node1_id, edgeId)
   addEdgeIdToNode(graph, node2_id, edgeId)

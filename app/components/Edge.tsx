@@ -93,11 +93,11 @@ export function Edge({ id, currentlyEdited }: EdgeProps) {
       onDrag={onDrag}
       onStop={onStop}>
       <g className="oligrapher-edge" id={`edge-${id}`}>
-        <ConditionalLink condition={!editMode && url} href={url} target="_blank" rel="noopener noreferrer">
+        <ConditionalLink condition={!editMode} url={url}>
           { highlighted && <EdgeHighlight {...edgeHighlightProps} /> }
           <EdgeLine {...edgeLineProps} />
           { label &&
-            <ConditionalLink condition={editMode && url} href={url} target="_blank" rel="noopener noreferrer">
+            <ConditionalLink condition={editMode} url={url}>
               <EdgeLabel {...edgeLabelProps} />
             </ConditionalLink>
           }

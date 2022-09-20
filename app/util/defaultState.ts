@@ -94,6 +94,7 @@ export interface DisplayState {
     id: string | null
   },
   draggedNode: String | null,
+  overNode: String | null,
   tool: "node" | "text" | "organize" | "settings" | "editors" | "help" | null,
   saveMapStatus: AsyncStatus,
   cloneMapStatus: AsyncStatus,
@@ -194,6 +195,7 @@ const defaultState: State = {
       id: null
     },
     draggedNode: null,
+    overNode: null,
     tool: null,
     saveMapStatus: null,
     cloneMapStatus: null,

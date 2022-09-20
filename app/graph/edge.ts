@@ -67,7 +67,7 @@ const edgeDefaults: EdgeDefaults = {
   dash: false
 }
 
-export function newEdge(attributes: EdgeAttributes = {}) {
+export function newEdge(attributes: EdgeAttributes = {}): Edge {
   return merge({ id: nanoid(10), label: "New Edge" }, edgeDefaults, attributes)
 }
 
@@ -82,7 +82,7 @@ export function newEdgeFromNodes(n1: Node, n2: Node, attributes: EdgeAttributes 
   edge.y2 = n2.y
   edge.s2 = n2.scale
 
-  return edge as Edge
+  return edge
 }
 
 export function edgeCoordinates(nodeNumber: number, coordinates: Point) {
