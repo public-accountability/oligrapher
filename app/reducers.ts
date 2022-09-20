@@ -30,6 +30,10 @@ import { newEdgeFromNodes } from './graph/edge'
 
 const ZOOM_INTERVAL = 1.2
 
+
+
+
+
 interface ActionType {
   type: string;
   [x: string | symbol]: any;
@@ -166,27 +170,26 @@ export default produce( (state: State, action: ActionType): void => {
           const node2 = state.graph.nodes[state.display.overNode]
 
           const edge = newEdgeFromNodes(node1, node2)
-          // check if there already exists and eges between these nodes
+          // are there already edges between these two nodes?
           const nodeIds = new Set([edge.node1_id, edge.node2_id])
           const similarEdges = Object.values(state.graph.edges).filter(function(e) {
             return isEqual(new Set([e.node1_id, e.node2_id]), nodeIds)
           })
 
-          // if there are existing edges
+          // if there are
           if (similarEdges.length > 0) {
             // delete them
             similarEdges.forEach(e => removeEdge(state.graph, e.id))
-            // change the curves and return graph with new edge
+            // change the curves and add them to the graph
             curveSimilarEdges(similarEdges.concat([edge])).forEach(e => addEdge(state.graph, e))
           } else {
             addEdge(state.graph, edge)
           }
-          // Otherwise move the node to the new position
+        // Otherwise move the node to the new position
         } else {
           moveNode(state.graph, action.id, action.deltas)
           clearSelection(state.display)
         }
-
         // update the edges for this node
         dragNodeEdges(state.graph, action.id, { x: 0, y: 0 })
       }
@@ -208,7 +211,6 @@ export default produce( (state: State, action: ActionType): void => {
     case 'UPDATE_EDGE':
       updateEdge(state.graph, action.id, action.attributes)
       return
-      // Reserving "DELETE" for future ability to delete data from littlesis backend
     case 'REMOVE_EDGE':
       removeEdge(state.graph, action.id)
       FloatingEditor.clear(state.display)
