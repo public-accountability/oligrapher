@@ -87,13 +87,12 @@ function calculateStoryMode(state: any): boolean {
   return state.attributes.settings.defaultStoryMode
 }
 
-/*
-  Converts legacy oligrapher data, performs initial display state calculations,
-  and adds graph history.
 
-
-*/
-export default function stateInitializer (legacyState: any): StateWithHistory {
+// Takes input from rails  configureation
+//    - Converts legacy oligrapher data
+//    - Performs initial display state calculations,
+//    - FIXME and adds graph history
+export default function stateInitializer(legacyState: any): State {
   let state = merge({}, defaultState, legacyState)
 
   state.graph = convertGraph(state.graph)
@@ -108,12 +107,12 @@ export default function stateInitializer (legacyState: any): StateWithHistory {
   }
 
   // for redux-undo
-  state.graph = {
-    ...state.graph,
-    past: [],
-    present: newGraph(state.graph),
-    future: []
-  }
+  // state.graph = {
+  //   ...state.graph,
+  //   past: [],
+  //   present: newGraph(state.graph),
+  //   future: []
+  // }
 
   // if map has id, it's been saved before, let's keep the data
   // for comparison against current data when user leaves app

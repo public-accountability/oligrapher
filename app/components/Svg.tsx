@@ -46,7 +46,6 @@ const Svg = React.forwardRef((props: SvgPropTypes, ref) => {
       h: props.viewBox.h
     }
 
-
     setViewBoxString(viewBoxToString(newViewBox))
   }
 

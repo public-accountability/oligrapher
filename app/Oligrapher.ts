@@ -1,12 +1,13 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client';
+import { EnhancedStore } from '@reduxjs/toolkit'
 import { Provider } from 'react-redux'
-import type { Store } from 'redux'
 import Root from './components/Root'
 import EmbeddedRoot from './components/EmbeddedRoot'
 import { toSvg, toJpeg } from './util/imageExport'
 import createOligrapherStore from './util/store'
 import { urls } from './datasources/littlesis3'
+import { State } from './util/defaultState';
 
 /*
   Main entry point of Oligrapher.
@@ -19,7 +20,7 @@ import { urls } from './datasources/littlesis3'
 
 */
 export default class Oligrapher {
-  store: Store;
+  store: EnhancedStore<State>;
   element: HTMLElement;
 
   constructor(configuration = {}) {
