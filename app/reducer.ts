@@ -1,5 +1,6 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit'
 
+import merge from 'lodash/merge'
 import without from 'lodash/without'
 import isEqual from 'lodash/isEqual'
 
@@ -308,7 +309,6 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     state.display.zoom = 1
   })
 
-
   builder.addCase('CLICK_EDGE', (state, action) => {
     clearSelection(state.display)
     toggleEditor(state.display, 'edge', action.id)
@@ -326,7 +326,6 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   builder.addCase('ZOOM_OUT', (state, action) => {
     state.display.zoom = state.display.zoom / (action.interval || ZOOM_INTERVAL)
   })
-
 
   builder.addCase('TOGGLE_ANNOTATIONS', (state, action) => {
     state.display.modes.story = !state.display.modes.story
@@ -411,7 +410,6 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     state.display.userMessage = 'Cloned map :)'
   })
 
-
   builder.addCase('CLONE_FAILED', (state, action) => {
     state.display.cloneMapStatus = 'FAILED'
     state.display.userMessage = 'Failed to clone map :('
@@ -455,7 +453,6 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     )
     FloatingEditor.clear(state.display)
   })
-
 
   builder.addCase('CLEAR_SELECTION', (state, action) => {
     clearSelection(state.display)

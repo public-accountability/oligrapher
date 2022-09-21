@@ -7,6 +7,7 @@ import Svg from './Svg'
 import Markers from './Markers'
 import Filters from './Filters'
 import Pannable from './Pannable'
+import Pannable2 from './Pannable2'
 import Zoomable from './Zoomable'
 import Selectable from './Selectable'
 import Highlightable from './Highlightable'
@@ -44,15 +45,13 @@ export function Graph() {
                 <Markers />
               </defs>
               <Zoomable zoom={zoom}>
-                <Pannable>
-                  <Highlightable>
+                <Highlightable>
                     <g id={GRAPH_CONTENT_ID}>
                       <Edges />
                       <Nodes />
                       <Captions />
-                    </g>
-                  </Highlightable>
-                </Pannable>
+                  </g>
+                </Highlightable>
               </Zoomable>
             </Svg>
           </div>

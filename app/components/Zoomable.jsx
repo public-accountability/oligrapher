@@ -29,15 +29,17 @@ export default function Zoomable({ zoom, children }) {
     return () => clearTimeout(timeout)
   }, [zoom])
 
-  return (
-    <g
-      id="oligrapher-zoom-container"
-      transform={`scale(${scrolledZoom(zoom, scroll)})`}
-      className="graph-zoom-container zoomable" 
-      onWheel={editMode && scrollToZoom ? ({ deltaY }) => onWheel(deltaY) : noop}>
-      {children}
-    </g>
-  )
+  return <>{children}</>
+
+  // return (
+  //   <g
+  //     id="oligrapher-zoom-container"
+  //     transform={`scale(${scrolledZoom(zoom, scroll)})`}
+  //     className="graph-zoom-container zoomable"
+  //     onWheel={editMode && scrollToZoom ? ({ deltaY }) => onWheel(deltaY) : noop}>
+  //     {children}
+  //   </g>
+  // )
 }
 
 Zoomable.propTypes = {

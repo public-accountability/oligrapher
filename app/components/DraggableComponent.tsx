@@ -17,6 +17,7 @@ export function DraggableComponent(props: DraggableComponentProps) {
   const scale = useSelector<State, number>(state=> state.display.svgZoom)
 
   const onStart: DraggableEventHandler = (evt, data) => {
+    evt.stopPropagation()  // see https://github.com/react-grid-layout/react-draggable/issues/11
     setDragStartPos({ x: evt.screenX, y: evt.screenY })
     dispatch({ type: 'DRAG_NODE_START', id: props.nodeId })
     props.onStart && props.onStart(evt, data)
@@ -28,6 +29,7 @@ export function DraggableComponent(props: DraggableComponentProps) {
 
   // see https://github.com/react-grid-layout/react-draggable/issues/531
   const onStop: DraggableEventHandler = (evt, data) => {
+    evt.stopPropagation()
     const mouseHasBarelyMoved = Math.abs(dragStartPos.x - evt.screenX) < 5 || Math.abs(dragStartPos.y - evt.screenY) < 5
 
     if (mouseHasBarelyMoved) {

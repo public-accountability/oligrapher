@@ -52,6 +52,7 @@ export function Edge({ id, currentlyEdited }: EdgeProps) {
   }, [cx, cy, x1, x2, y1, y2, s1, s2, id])
 
   const onStart = useCallback((evt, data) => {
+    evt.stopPropagation()
     setStartDrag(data)
     // edge may not have a set control point
     setStartPosition({ x: cx || curve.cx, y: cy || curve.cy })
@@ -66,6 +67,7 @@ export function Edge({ id, currentlyEdited }: EdgeProps) {
   }, [startPosition, startDrag, actualZoom, edge])
 
   const onStop = useCallback((evt, data) => {
+    evt.stopPropagation()
     if (isDragging) {
       const deltas = calculateDeltas(data, startPosition, startDrag, actualZoom)
       updateEdge({ cx: deltas.x, cy: deltas.y })

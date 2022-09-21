@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { MouseEventHandler, useCallback, useRef, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import partial from 'lodash/partial'
 import DraggableComponent from './DraggableComponent'
@@ -61,10 +61,15 @@ export default function Node({ id }: NodeProps) {
   const onMouseLeave = () => {
     dispatch({ type: 'MOUSE_LEFT_NODE', id })
   }
+
+  const onMouseMove: MouseEventHandler = (event) => {
+    event.stopPropagation()
+  }
+
   // defaultPosition={defaultPosition}
   return (
     <DraggableComponent nodeId={id} nodeRef={nodeRef} disabled={disabled} handle=".draggable-node-handle" onStop={onStop} onDrag={onDrag} onClick={onClick} >
-      <NodeBody nodeRef={nodeRef} nodeId={node.id} appearance={uiState.appearance} url={node.url} enableClick={!editMode} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+      <NodeBody nodeRef={nodeRef} nodeId={node.id} appearance={uiState.appearance} url={node.url} enableClick={!editMode} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onMouseMove={onMouseMove}>
         <NodeLabel node={node} uiState={uiState} />
         <NodeHalo node={node} uiState={uiState} />
         <NodeCircle node={node} uiState={uiState} />

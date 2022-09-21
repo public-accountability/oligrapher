@@ -2,7 +2,7 @@ import { Point, xy } from './geometry'
 import { Viewbox } from '../graph/graph'
 import { querySelector } from './helpers'
 
-const SVG_ID = 'oligrapher-svg'
+export const SVG_ID = 'oligrapher-svg'
 
 // Utilities for dimension calculations.
 // Used primarily to help placement of editing windows.
@@ -65,4 +65,8 @@ export function svgCoordinatesFromMouseEvent(event: MouseEvent): Point {
     .inverse()
 
   return xy(point.matrixTransform(matrix))
+}
+
+export function viewBoxToString(viewBox: Viewbox): string {
+  return [viewBox.minX, viewBox.minY, viewBox.w, viewBox.h].join(' ')
 }
