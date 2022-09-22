@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { ThemeProvider } from '@mui/material/styles'
-import { Grid, Hidden } from '@mui/material'
+import { Hidden } from '@mui/material'
+import Grid from '@mui/material/Unstable_Grid2'
 
 import Header from './Header'
 import CondensedHeader from './CondensedHeader'
@@ -86,12 +87,13 @@ export function Root() {
 
 
   return (
-    <div id={ROOT_CONTAINER_ID}>
-      <ThemeProvider theme={theme}>
-        { showHeader && <Hidden xsDown><Header /></Hidden> }
-        <Hidden smUp> <CondensedHeader /></Hidden>
-
+    <ThemeProvider theme={theme}>
+      <div id={ROOT_CONTAINER_ID}>
         <Grid container spacing={0}>
+          <Grid item xs={12}>
+            { showHeader && <Hidden xsDown><Header /></Hidden> }
+            <Hidden smUp><CondensedHeader /></Hidden>
+          </Grid>
           <Grid item xs={12} md={showAnnotations ? 8 : 12}>
             <div id="oligrapher-graph-container">
               <Graph />
@@ -125,8 +127,8 @@ export function Root() {
             </div>
           </Hidden>
         }
-      </ThemeProvider>
-    </div>
+      </div>
+    </ThemeProvider>
   )
 }
 
