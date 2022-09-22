@@ -10,7 +10,7 @@ const padding = {
   bottom: 100
 }
 
-export default function calculateAnnotationViewBox(state: State): Viewbox | null {
+export default function calculateAnnotationViewBox(state: State): Viewbox {
   // show normal viewbox if editing or annotations hidden
   if (state.display.modes.editor || !state.display.modes.story) {
     return state.display.viewBox

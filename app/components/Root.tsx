@@ -10,6 +10,7 @@ import Editor from './Editor'
 import ZoomControl from './ZoomControl'
 import FloatingEditors from './FloatingEditors'
 import UserMessage from './UserMessage'
+import DebugMessage from './DebugMessage'
 import Annotations from './Annotations'
 import CondensedAnnotations from './CondensedAnnotations'
 import AnnotationsToggler from './AnnotationsToggler'
@@ -22,7 +23,8 @@ import {
   showHeaderSelector,
   showZoomControlSelector,
   hasAnnotationsSelector,
-  editModeSelector
+  editModeSelector,
+  debugModeSelector
 } from '../util/selectors'
 
 
@@ -32,7 +34,6 @@ const handleBeforeunload = (event: BeforeUnloadEvent) => {
   event.returnValue = "Are you sure you want to leave? You have unsaved changes!"
   return event.returnValue
 }
-
 
 // Root Oligrapher Component
 //
@@ -46,6 +47,7 @@ const handleBeforeunload = (event: BeforeUnloadEvent) => {
 //        <ZoomControl>
 //        <FloatingEditors>
 //        <UserMessage>
+//        <DebugMessage>
 //      Grid-Item if Annotations are visible
 //         <Annotations>
 //   <CondensedAnnotations>
@@ -58,6 +60,7 @@ export function Root() {
   const showHeader = useSelector(showHeaderSelector)
   const showZoomControl = useSelector(showZoomControlSelector)
   const editorMode = useSelector(editModeSelector)
+  const debugMode = useSelector(debugModeSelector)
 
   // prevent backspace form navigating away from page in firefox and possibly other browsers
   useEffect(() => {
@@ -96,6 +99,7 @@ export function Root() {
               { showZoomControl && <ZoomControl /> }
               <FloatingEditors />
               <UserMessage />
+              { debugMode && <DebugMessage />}
             </div>
           </Grid>
 

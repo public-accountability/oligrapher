@@ -92,7 +92,6 @@ $edge_highlight_color: $oligrapher_blue;
     box-sizing: border-box;
 }
 
-
 html, body, div#oligrapher {
   height: 100%;
 }
@@ -1067,7 +1066,21 @@ div.lock {
   @extend %message;
 }
 
-/* ANNOTATIONS */
+#oligrapher-container .oligrapher-debug-message {
+    position: absolute;
+    right: 0px;
+    bottom: 00px;
+    @extend %box_shadow;
+    padding: 15px;
+    font-size: 10px;
+    max-width: 70vh;
+    max-height: 30vh;
+    overflow: scroll;
+q    background-color: rgba(255,255,255,0.4);
+}
+
+
+/* Annotations */
 
 #oligrapher-container #oligrapher-annotations-condensed {
   padding: 1em;

@@ -75,11 +75,13 @@ export interface AnnotationsState {
   isHighlighting: boolean
 }
 
+export type DisplayModesState = { editor: boolean, story: boolean }
+
 export interface DisplayState {
-  zoom: number,
+  zoom: number,   // transform = `scale(${zoom})`
   svgZoom: number,
   actualZoom: number,
-  viewBox: Viewbox | null,
+  viewBox: Viewbox,
   svgTop: number,
   svgBottom: number | null,
   svgSize: SvgSizeType,
@@ -88,7 +90,7 @@ export interface DisplayState {
   showHeader: boolean,
   showZoomControl: boolean,
   headerIsCollapsed: boolean,
-  modes: { editor: boolean, story: boolean },
+  modes: DisplayModesState,
   floatingEditor: {
     type: FloatingEditorType | null,
     id: string | null
@@ -100,14 +102,16 @@ export interface DisplayState {
   cloneMapStatus: AsyncStatus,
   deleteMapStatus: AsyncStatus,
   userMessage: string | null,
-  selection: Selection
+  selection: Selection,
+  pannable: boolean
 }
 
 export interface SettingsState {
   debug: boolean,
   domId: string,
   embed: boolean,
-  noEditing: boolean
+  noEditing: boolean,
+  logActions: boolean
 }
 
 export interface State {
@@ -177,7 +181,7 @@ const defaultState: State = {
     zoom: 1,
     svgZoom: 1,
     actualZoom: 1,
-    viewBox: null,
+    viewBox: { minX: 0, minY: 0, height: '100%', width: '100%'},
     svgTop: 0,
     svgBottom: null,
     svgSize: { width: 0, height: 0 },
@@ -206,17 +210,19 @@ const defaultState: State = {
       edge: [],
       caption: [],
       isSelecting: false
-    }
+    },
+    pannable: true
   },
 
   // Global settings
   // These settings are NOT changable via the settings interface;
   // those are located at above under attributes.settings
   settings: {
-    debug: false,
     domId: 'oligrapher',
     embed: false,
-    noEditing: false
+    noEditing: false,
+    debug: false,
+    logActions: false
   },
 
   lastSavedData: null

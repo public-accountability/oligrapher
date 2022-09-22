@@ -16,7 +16,7 @@ export default function createOligrapherStore(configuration = {}): EnhancedStore
     reducer: createReducer(initialState, reducer),
     middleware: (getDefaultMiddleware) => {
       let m = getDefaultMiddleware().concat(sagaMiddleware)
-      if (initialState.settings.debug) {
+      if (initialState.settings.logActions) {
         m.push(logger)
       }
       return m

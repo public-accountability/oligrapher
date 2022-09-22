@@ -478,6 +478,10 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     }
   })
 
+  builder.addCase('SET_SVG_SIZE', (state, action) => {
+    state.display.svgSize = action.svgSize
+  })
+
   builder.addMatcher(action => MESSAGE_ACTIONS.has(action.type), (state, action) => {
     state.display.userMessage = ACTION_TO_MESSAGE[action.type]
   })

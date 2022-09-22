@@ -1,33 +1,70 @@
 import isEqual from 'lodash/isEqual'
 import isNil from 'lodash/isNil'
 
-import { State } from './defaultState'
+import { DisplayModesState, State } from './defaultState'
 import { Annotation } from './annotations'
 import { LsMap } from '../datasources/littlesis3'
 import { Selector } from 'react-redux'
 
-export function editModeSelector(state: State): Boolean {
+
+export function displayModesSelector (state: State): DisplayModesState {
+  return state.display.modes
+}
+
+export function editModeSelector(state: State): boolean {
   return state.display.modes.editor
 }
 
-export function userIsOwnerSelector(state: State): Boolean {
+export const showHeaderSelector = (state: State) => {
+  return state.display.showHeader
+}
+
+export const showZoomControlSelector: Selector<State, boolean> = state => {
+  return state.display.showZoomControl
+}
+
+export const currentZoomSelector: Selector<State, number> = state => {
+  return state.display.zoom
+}
+
+type SvgUI = {
+  scrollToZoom: boolean,
+  pannable: boolean,
+  storyMode: boolean,
+  showHeader: boolean
+}
+
+export const svgUISelector = (state: State): SvgUI => {
+  return {
+    scrollToZoom: state.attributes.settings.scrollToZoom,
+    pannable: state.display.pannable,
+    storyMode: state.display.modes.story,
+    showHeader: state.display.showHeader
+  }
+}
+
+export function userIsOwnerSelector(state: State): boolean {
   return !!state.attributes?.user?.id &&
     !!state.attributes?.owner?.id &&
     (state.attributes.owner.id === state.attributes.user.id)
 }
 
-export function userIsEditorSelector(state: State): Boolean {
+export function userIsEditorSelector(state: State): boolean {
   return !!state.attributes?.user?.id &&
     !!state.attributes?.editors &&
     state.attributes.editors.filter(e => !e.pending).map(e => e.id).includes(state.attributes.user.id)
 }
 
-export function userCanEditSelector(state: State): Boolean {
+export function userCanEditSelector(state: State): boolean {
   if (state.settings.embed || state.settings.noEditing) {
     return false
   } else {
     return userIsOwnerSelector(state) || userIsEditorSelector(state)
   }
+}
+
+export function debugModeSelector(state: State): boolean {
+  return state.settings.debug
 }
 
 // If List Sources is on, there is sources data, and we are not editing
@@ -40,7 +77,7 @@ export const annotationsListSelector = (state: State): Annotation[] => {
   }
 }
 
-export const hasAnnotationsSelector = (state: State): Boolean => {
+export const hasAnnotationsSelector = (state: State): boolean => {
   return annotationsListSelector(state).length > 0
 }
 
@@ -64,13 +101,6 @@ export const showAnnotationsSelector = (state: State): boolean => {
   return false
 }
 
-export const showHeaderSelector = (state: State) => {
-  return state.display.showHeader
-}
-
-export const showZoomControlSelector: Selector<State, boolean> = state => {
-  return state.display.showZoomControl
-}
 
 export const currentAnnotationSelector: Selector<State, Annotation> = state => {
   const list = annotationsListSelector(state)
