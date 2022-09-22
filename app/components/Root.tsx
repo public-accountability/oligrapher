@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { ThemeProvider } from '@mui/material/styles'
-import { Container, Box, useMediaQuery } from '@mui/material'
+import { ThemeProvider, useTheme } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
+// import Container from '@mui/material/Container'
 import Grid from '@mui/material/Unstable_Grid2'
-
-
 import Header from './Header'
 import CondensedHeader from './CondensedHeader'
 import Graph from './Graph'
@@ -15,7 +14,6 @@ import UserMessage from './UserMessage'
 import DebugMessage from './DebugMessage'
 import Annotations from './Annotations'
 import CondensedAnnotations from './CondensedAnnotations'
-// import AnnotationsToggler from './AnnotationsToggler'
 import theme from '../util/theme'
 
 import {
@@ -66,11 +64,11 @@ export function Root() {
 
   // use condensed versions of header and annotations for small screens
   const largeHeight = useMediaQuery("(min-height:600px)")
-  const largeWidth = useMediaQuery("(min-width:400px)")
+  const smallScreen = useMediaQuery(theme.breakpoints.down('sm'))
   const showNormalHeader = showHeader && (editorMode || largeHeight)
   const showCondensedHeader = showHeader && !showNormalHeader
-  const showAnnotationsOnRight =  showAnnotations && (editorMode || largeWidth)
-  const showAnnotationsOnBottom =  showAnnotations && !showAnnotationsOnRight && largeHeight
+  const showAnnotationsOnRight =  showAnnotations && !smallScreen
+  const showAnnotationsOnBottom =  showAnnotations && smallScreen
 
   // prevent backspace form navigating away from page in firefox and possibly other browsers
   useEffect(() => {
@@ -97,28 +95,25 @@ export function Root() {
   return (
     <ThemeProvider theme={theme}>
       <div id={ROOT_CONTAINER_ID}>
-        <Box sx={{ flexGrow: 1 }}>
-          <Grid container spacing={1}>
+        <Grid container spacing={1}>
+          <Grid item sm={12} spacing={1}>
+            { showNormalHeader && <Header /> }
+            { showCondensedHeader && <CondensedHeader /> }
+          </Grid>
 
-            <Grid item xs={12}>
-              { showNormalHeader && <Header /> }
-              { showCondensedHeader && <CondensedHeader /> }
-            </Grid>
+          <Grid item sm={showAnnotationsOnRight ? 8 : 12}>
+            <div id="oligrapher-graph-container">
+              <Graph />
+              { editorMode && <Editor /> }
+              { showZoomControl && <ZoomControl /> }
+              <FloatingEditors />
+              <UserMessage />
 
-            <Grid item xs={12} md={showAnnotationsOnRight ? 8 : 12}>
-              <div id="oligrapher-graph-container">
-                <Graph />
-                { editorMode && <Editor /> }
-                { showZoomControl && <ZoomControl /> }
-                <FloatingEditors />
-                <UserMessage />
-
-              </div>
-            </Grid>
-            { showAnnotationsOnRight && <Grid item xs={4}><Annotations /></Grid> }
-            { showAnnotationsOnBottom && <Grid item xs={12}><CondensedAnnotations /></Grid> }
+            </div>
+          </Grid>
+          { showAnnotationsOnRight && <Grid item sm={4}><Annotations /></Grid> }
+          { showAnnotationsOnBottom && <Grid item sm={12}><CondensedAnnotations /></Grid> }
         </Grid>
-        </Box>
         { debugMode && <DebugMessage />}
       </div>
     </ThemeProvider>

@@ -7,19 +7,16 @@
     <link rel="stylesheet" href="oligrapher.css">
     <script src="oligrapher.js"></script>
     <style>
-      body {
-        margin: 0;
-      }
-
-     #oligrapher {
-       width: 100%;
+     html, body {
+       margin: 0;
+       height: 100%;
+       overflow: hidden;
      }
     </style>
   </head>
 
   <body>
     <div id="oligrapher"></div>
-
     <script>
      const graph ={
        "nodes": {
@@ -2703,7 +2700,7 @@
        "annotations": annotations,
        "settings": {
          "debug": true,
-         "logActions": false,
+         "logActions": true,
          "noEditing": false,
          "defaultStoryMode": false,
          "scrollToZoom": true
