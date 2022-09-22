@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { MdExpandMore } from '@react-icons/all-files/md/MdExpandMore'
 import { MdExpandLess } from '@react-icons/all-files/md/MdExpandLess'
@@ -26,21 +26,21 @@ import Subtitle from './Subtitle'
 */
 
 export default function Header() {
-  const dispatch = useDispatch()
-  const { title, subtitle, owner, editors, date } = useSelector(state => state.attributes)
+  const screenIsSmall = useMediaQuery("(max-height:600px)")
+
   const editMode = useSelector(state => state.display.modes.editor)
+  const { title, subtitle, owner, editors, date } = useSelector(state => state.attributes)
   const isCollapsed = useSelector(state => state.display.headerIsCollapsed)
 
-  const updateTitle = useCallback(value => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'title', value }), [dispatch])
-  const updateSubtitle = useCallback(value => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'subtitle', value }), [dispatch])
-  const expand = useCallback(() => dispatch({ type: 'EXPAND_HEADER' }), [dispatch])
-  const collapse = useCallback(() => dispatch({ type: 'COLLAPSE_HEADER' }), [dispatch])
+  const dispatch = useDispatch()
+  const updateTitle = value => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'title', value })
+  const updateSubtitle = value => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'subtitle', value })
+  const expand = () => dispatch({ type: 'EXPAND_HEADER' })
+  const collapse = () => dispatch({ type: 'COLLAPSE_HEADER' })
+
   const className = editMode ? (isCollapsed ? "oligrapher-header-collapsed" : "oligrapher-header-expanded") : ""
   const users = [owner].concat(editors.filter(e => !e.pending))
-
-  const screenIsSmall = useMediaQuery(theme => theme.breakpoints.down('xs'))
   const hideAttribution = !editMode && screenIsSmall
-
   const divRef = useRef()
 
   useEffect(() => {

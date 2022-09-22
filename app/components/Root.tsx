@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { ThemeProvider } from '@mui/material/styles'
-import { Hidden } from '@mui/material'
+import { Hidden, useMediaQuery } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 
 import Header from './Header'
@@ -55,6 +55,7 @@ const handleBeforeunload = (event: BeforeUnloadEvent) => {
 //   <AnnotationsToggler>
 //
 export function Root() {
+  const shortScreen = useMediaQuery("(max-height:600px)")
   const showAnnotations = useSelector(showAnnotationsSelector)
   const hasAnnotations = useSelector(hasAnnotationsSelector)
   const hasUnsavedChanges = useSelector(hasUnsavedChangesSelector)
@@ -62,6 +63,9 @@ export function Root() {
   const showZoomControl = useSelector(showZoomControlSelector)
   const editorMode = useSelector(editModeSelector)
   const debugMode = useSelector(debugModeSelector)
+
+  const showNormalHeader = showHeader && (editorMode || !shortScreen)
+  const showCondensedHeader = showHeader && !showNormalHeader
 
   // prevent backspace form navigating away from page in firefox and possibly other browsers
   useEffect(() => {
@@ -89,15 +93,17 @@ export function Root() {
   return (
     <ThemeProvider theme={theme}>
       <div id={ROOT_CONTAINER_ID}>
-        <Grid container spacing={0}>
+        <Grid container spacing={1}>
+
           <Grid item xs={12}>
-            { showHeader && <Hidden xsDown><Header /></Hidden> }
-            <Hidden smUp><CondensedHeader /></Hidden>
+            { showNormalHeader && <Header /> }
+            { showCondensedHeader && <CondensedHeader /> }
           </Grid>
+
           <Grid item xs={12} md={showAnnotations ? 8 : 12}>
             <div id="oligrapher-graph-container">
               <Graph />
-              { editorMode && <Hidden xsDown><Editor /></Hidden> }
+              { editorMode && <Editor /> }
               { showZoomControl && <ZoomControl /> }
               <FloatingEditors />
               <UserMessage />
@@ -112,6 +118,9 @@ export function Root() {
               </Grid>
             </Hidden>
           }
+
+
+
         </Grid>
 
         { showAnnotations &&
