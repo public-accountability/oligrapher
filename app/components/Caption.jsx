@@ -40,7 +40,7 @@ export default function Caption({ caption, currentlyEdited, status }) {
               caption={caption}
               updateCaption={updateCaption}
               setForeignObjectSize={setForeignObjectSize} />
-          }N
+          }
           { !currentlyEdited && <CaptionTextbox caption={caption} status={status} /> }
         </foreignObject>
       </g>

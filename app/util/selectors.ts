@@ -5,7 +5,7 @@ import { DisplayModesState, State } from './defaultState'
 import { Annotation } from './annotations'
 import { LsMap } from '../datasources/littlesis3'
 import { Selector } from 'react-redux'
-
+import { Viewbox, calculateAnnotationViewBox } from '../graph/graph'
 
 export function displayModesSelector (state: State): DisplayModesState {
   return state.display.modes
@@ -23,24 +23,25 @@ export const showZoomControlSelector: Selector<State, boolean> = state => {
   return state.display.showZoomControl
 }
 
+export const pannableSelector: Selector<State, boolean> = state => {
+  return state.display.pannable
+}
+
 export const currentZoomSelector: Selector<State, number> = state => {
   return state.display.zoom
 }
 
-type SvgUI = {
-  scrollToZoom: boolean,
-  pannable: boolean,
-  storyMode: boolean,
-  showHeader: boolean
+export const currentViewboxSelector: Selector<State, Viewbox> = state => {
+  if (shouldRecalculateViewboxSelector(state)) {
+    return calculateAnnotationViewBox(state.graph, currentAnnotationSelector(state))
+  } else {
+    return state.display.viewBox
+  }
 }
 
-export const svgUISelector = (state: State): SvgUI => {
-  return {
-    scrollToZoom: state.attributes.settings.scrollToZoom,
-    pannable: state.display.pannable,
-    storyMode: state.display.modes.story,
-    showHeader: state.display.showHeader
-  }
+//  do we need to recalculate the viewbox becuase of highlights?
+export const shouldRecalculateViewboxSelector: Selector<State, boolean> = state => {
+  return !state.display.modes.editor && state.display.modes.story && annotationHasHighlightsSelector(state)
 }
 
 export function userIsOwnerSelector(state: State): boolean {
@@ -114,13 +115,7 @@ export const annotationHasHighlightsSelector: Selector<State, boolean> = state =
   }
 
   const annotation = currentAnnotationSelector(state)
-
-  if (!annotation) {
-    return false
-  }
-
-  const { nodeIds, edgeIds, captionIds } = annotation
-  return nodeIds.length + edgeIds.length + captionIds.length > 0
+  return Boolean(annotation) && (annotation.nodeIds.length + annotation.edgeIds.length + annotation.captionIds.length) > 0
 }
 
 export const enableLockSelector: Selector<State, boolean> = state => {

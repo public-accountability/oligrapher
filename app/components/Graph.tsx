@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { MouseEventHandler, useRef, WheelEventHandler } from 'react'
 
 import Edges from './Edges'
 import Nodes from './Nodes'
@@ -9,11 +9,14 @@ import Filters from './Filters'
 import Zoomable from './Zoomable'
 import Selectable from './Selectable'
 import Highlightable from './Highlightable'
-import calculateAnnotationViewBox from '../util/calculateAnnotationViewBox'
 import { State, SvgSizeType } from '../util/defaultState'
+
+import { useDispatch, useSelector } from 'react-redux'
 
 export const GRAPH_CONTAINER_ID = 'oligrapher-graph-svg'
 export const GRAPH_CONTENT_ID = 'oligrapher-svg-export'
+
+
 
 // The core component that displays the graph
 // <div id="oligrapher-graph">
@@ -25,23 +28,19 @@ export const GRAPH_CONTENT_ID = 'oligrapher-svg-export'
 //            <Nodes>
 //            <Captions>
 export default function Graph() {
-  const ref = React.useRef<HTMLDivElement>(null)
-  // const [size, setSize] = React.useState<SvgSizeType|null>(null)
-  // const height = size ? size.height : 800
-  // const width = size ? size.width : 600
-
+  const dispatch = useDispatch()
+  const scrollToZoom = useSelector<State, boolean>(state => state.attributes.settings.scrollToZoom)
+  const ref = useRef<HTMLDivElement>(null)
   const height = '100%'
   const width = '100%'
 
-  // React.useLayoutEffect(() => {
-  //   if (ref.current) {
-  //     const rect = ref.current.getBoundingClientRect()
-  //     setSize({ height: rect.height, width: rect.width })
-  //   }
-  // }, [ref])
+  let onWheel: WheelEventHandler = (event) => {
+    event.preventDefault()
+    dispatch({ type: 'SET_ZOOM_FROM_SCROLL', deltaY: event.deltaY })
+  }
 
   return (
-    <div ref={ref} id={GRAPH_CONTAINER_ID}>
+    <div ref={ref} id={GRAPH_CONTAINER_ID} onWheel={scrollToZoom ? onWheel : undefined }>
       <Svg outermost={true} height={height} width={width}>
         <defs>
           <Filters />
@@ -63,3 +62,12 @@ export default function Graph() {
 
 
 // const className = draggedNode ? "oligrapher-graph-dragging-node" : ""
+  // React.useLayoutEffect(() => {
+  //   if (ref.current) {
+  //     const rect = ref.current.getBoundingClientRect()
+  //     setSize({ height: rect.height, width: rect.width })
+  //   }
+  // }, [ref])
+// const [size, setSize] = React.useState<SvgSizeType|null>(null)
+  // const height = size ? size.height : 800
+  // const width = size ? size.width : 600

@@ -3,6 +3,7 @@ import { ActionReducerMapBuilder } from '@reduxjs/toolkit'
 import merge from 'lodash/merge'
 import without from 'lodash/without'
 import isEqual from 'lodash/isEqual'
+import clamp from 'lodash/clamp'
 
 import {
   addNode, updateNode, removeNode, removeNodes, dragNodeEdges, moveNode,
@@ -481,6 +482,16 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   builder.addCase('SET_SVG_SIZE', (state, action) => {
     state.display.svgSize = action.svgSize
   })
+
+  // https://developer.mozilla.org/en-US/docs/Web/API/Element/wheel_event
+  builder.addCase('SET_ZOOM_FROM_SCROLL', (state, action) => {
+    state.display.zoom = clamp(
+      state.display.zoom + (action.deltaY * -0.01),
+      0.25,
+      10
+    )
+  })
+
 
   builder.addMatcher(action => MESSAGE_ACTIONS.has(action.type), (state, action) => {
     state.display.userMessage = ACTION_TO_MESSAGE[action.type]

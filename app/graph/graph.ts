@@ -9,6 +9,7 @@ import { Edge, EdgeAttributes, edgeCoordinates, newEdgeFromNodes, determineNodeN
 import { Caption } from './caption'
 import { curveSimilarEdges } from './curve'
 import { LsEdge } from '../datasources/littlesis3'
+import { Annotation } from '../util/annotations'
 
 export interface NodeMap {
   [key: string]: Node
@@ -197,6 +198,14 @@ export function calculateViewBoxFromGraph(graph: Graph): Viewbox {
   )
 }
 
+// recalculate view box based on elements that are highlighted
+export function calculateAnnotationViewBox(graph: Graph, annotation: Annotation): Viewbox {
+  const nodes = Object.values(graph.nodes).filter(node => annotation.nodeIds.includes(node.id))
+  const edges = Object.values(graph.edges).filter(edge => annotation.edgeIds.includes(edge.id))
+  const captions = Object.values(graph.captions).filter(caption => annotation.captionIds.includes(caption.id))
+  const padding = 250
+  return calculateViewBox(nodes, edges, captions, padding)
+}
 
 
 // Returns the geometric center point of a graph's viewbox

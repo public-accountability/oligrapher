@@ -1,6 +1,7 @@
 import { Point, xy } from './geometry'
 import { Viewbox } from '../graph/graph'
-import { querySelector } from './helpers'
+import fromPairs from 'lodash/fromPairs'
+import zip from 'lodash/zip'
 
 export const SVG_ID = 'oligrapher-svg'
 
@@ -57,7 +58,10 @@ export function svgCoordinatesFromMouseEvent(event: MouseEvent): Point {
   return xy(point.matrixTransform(matrix))
 }
 
-
 export function viewBoxToString(viewBox: Viewbox): string {
   return [viewBox.minX, viewBox.minY, viewBox.w, viewBox.h].join(' ')
+}
+
+export function stringToViewBox(s: String) {
+  return fromPairs(zip(['minX', 'minY', 'w', 'h'], s.split(' ').map(Number))) as Viewbox
 }

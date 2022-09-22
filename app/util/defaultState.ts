@@ -79,9 +79,9 @@ export type DisplayModesState = { editor: boolean, story: boolean }
 
 export interface DisplayState {
   zoom: number,   // transform = `scale(${zoom})`
+  viewBox: Viewbox,
   svgZoom: number,
   actualZoom: number,
-  viewBox: Viewbox,
   svgTop: number,
   svgBottom: number | null,
   svgSize: SvgSizeType,
@@ -181,7 +181,7 @@ const defaultState: State = {
     zoom: 1,
     svgZoom: 1,
     actualZoom: 1,
-    viewBox: { minX: 0, minY: 0, height: '100%', width: '100%'},
+    viewBox: { minX: 0, minY: 0, h: 1200, w: 800 },
     svgTop: 0,
     svgBottom: null,
     svgSize: { width: 0, height: 0 },
