@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { ThemeProvider } from '@mui/material/styles'
-import { Hidden, useMediaQuery } from '@mui/material'
+import { useMediaQuery } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 
 import Header from './Header'
@@ -14,8 +14,7 @@ import UserMessage from './UserMessage'
 import DebugMessage from './DebugMessage'
 import Annotations from './Annotations'
 import CondensedAnnotations from './CondensedAnnotations'
-import AnnotationsToggler from './AnnotationsToggler'
-
+// import AnnotationsToggler from './AnnotationsToggler'
 import theme from '../util/theme'
 
 import {
@@ -39,9 +38,9 @@ const handleBeforeunload = (event: BeforeUnloadEvent) => {
 // Root Oligrapher Component
 //
 // div#oligrapher-container
-//    <Header />
-//    <CondensedHeader />
 //   Grid-Container
+//      Grid-Item
+//        <Header /> or <CondensedHeader />
 //      Grid-Item
 //        <Graph>
 //        <Editor>
@@ -49,13 +48,9 @@ const handleBeforeunload = (event: BeforeUnloadEvent) => {
 //        <FloatingEditors>
 //        <UserMessage>
 //        <DebugMessage>
-//      Grid-Item if Annotations are visible
-//         <Annotations>
-//   <CondensedAnnotations>
-//   <AnnotationsToggler>
-//
+//      Grid-Item
+//         <Annotations> or  <CondensedAnnotations>
 export function Root() {
-  const shortScreen = useMediaQuery("(max-height:600px)")
   const showAnnotations = useSelector(showAnnotationsSelector)
   const hasAnnotations = useSelector(hasAnnotationsSelector)
   const hasUnsavedChanges = useSelector(hasUnsavedChangesSelector)
@@ -64,8 +59,13 @@ export function Root() {
   const editorMode = useSelector(editModeSelector)
   const debugMode = useSelector(debugModeSelector)
 
-  const showNormalHeader = showHeader && (editorMode || !shortScreen)
+  // used condensed versions of header and annotations for small screens
+  const largeHeight = useMediaQuery("(min-height:600px)")
+  const largeWidth = useMediaQuery("(min-width:400px)")
+  const showNormalHeader = showHeader && (editorMode || largeHeight)
   const showCondensedHeader = showHeader && !showNormalHeader
+  const showAnnotationsOnRight =  showAnnotations && (editorMode || largeWidth)
+  const showAnnotationsOnBottom =  showAnnotations && !showAnnotationsOnRight && largeHeight
 
   // prevent backspace form navigating away from page in firefox and possibly other browsers
   useEffect(() => {
@@ -89,7 +89,6 @@ export function Root() {
     }
   }, [hasUnsavedChanges])
 
-
   return (
     <ThemeProvider theme={theme}>
       <div id={ROOT_CONTAINER_ID}>
@@ -100,7 +99,7 @@ export function Root() {
             { showCondensedHeader && <CondensedHeader /> }
           </Grid>
 
-          <Grid item xs={12} md={showAnnotations ? 8 : 12}>
+          <Grid item xs={12} md={showAnnotationsOnRight ? 8 : 12}>
             <div id="oligrapher-graph-container">
               <Graph />
               { editorMode && <Editor /> }
@@ -110,32 +109,9 @@ export function Root() {
               { debugMode && <DebugMessage />}
             </div>
           </Grid>
-
-          { showAnnotations &&
-            <Hidden smDown>
-              <Grid item xs={4}>
-                <Annotations />
-              </Grid>
-            </Hidden>
-          }
-
-
-
+          { showAnnotationsOnRight && <Grid item xs={4}><Annotations /></Grid> }
+          { showAnnotationsOnBottom && <Grid item xs={12}><CondensedAnnotations /></Grid> }
         </Grid>
-
-        { showAnnotations &&
-          <Hidden mdUp>
-            <CondensedAnnotations />
-          </Hidden>
-        }
-
-        { !showAnnotations && hasAnnotations &&
-          <Hidden smUp>
-            <div id="oligrapher-condensed-annotations-toggler">
-              <AnnotationsToggler />
-            </div>
-          </Hidden>
-        }
       </div>
     </ThemeProvider>
   )
