@@ -12,13 +12,9 @@ export default function ZoomControl() {
 
   return (
     <div id="oligrapher-zoomcontrol">
-      <div id="oligrapher-zoom-buttons">
-        <button title="Zoom in" onClick={zoomIn}><FiPlus /></button>
-        <button title="Zoom out" onClick={zoomOut}><FiMinus /></button>
-      </div>
-      <div id="oligrapher-zoom-reset-button">
-        <button title="Recenter" onClick={resetView}><IoMdLocate /></button>
-      </div>
+      <button title="Zoom in" onClick={zoomIn}><FiPlus /></button>
+      <button title="Zoom out" onClick={zoomOut}><FiMinus /></button>
+      <button title="Recenter" onClick={resetView}><IoMdLocate /></button>
     </div>
   )
 }

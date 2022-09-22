@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { ThemeProvider } from '@mui/material/styles'
-import { useMediaQuery } from '@mui/material'
+import { Container, Box, useMediaQuery } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
+
 
 import Header from './Header'
 import CondensedHeader from './CondensedHeader'
@@ -42,9 +43,13 @@ const handleBeforeunload = (event: BeforeUnloadEvent) => {
 //      Grid-Item
 //        <Header /> or <CondensedHeader />
 //      Grid-Item
-//        <Graph>
-//        <Editor>
-//        <ZoomControl>
+//        div#oligrapher-graph-container
+//          div#oligrapher-graph-svg
+//            <Graph>
+//        div#oligrapher-graph-editor
+//          <Editor>
+//        div#oligrapher-zoomcontrol
+//          <ZoomControl>
 //        <FloatingEditors>
 //        <UserMessage>
 //        <DebugMessage>
@@ -59,7 +64,7 @@ export function Root() {
   const editorMode = useSelector(editModeSelector)
   const debugMode = useSelector(debugModeSelector)
 
-  // used condensed versions of header and annotations for small screens
+  // use condensed versions of header and annotations for small screens
   const largeHeight = useMediaQuery("(min-height:600px)")
   const largeWidth = useMediaQuery("(min-width:400px)")
   const showNormalHeader = showHeader && (editorMode || largeHeight)
@@ -92,26 +97,29 @@ export function Root() {
   return (
     <ThemeProvider theme={theme}>
       <div id={ROOT_CONTAINER_ID}>
-        <Grid container spacing={1}>
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid container spacing={1}>
 
-          <Grid item xs={12}>
-            { showNormalHeader && <Header /> }
-            { showCondensedHeader && <CondensedHeader /> }
-          </Grid>
+            <Grid item xs={12}>
+              { showNormalHeader && <Header /> }
+              { showCondensedHeader && <CondensedHeader /> }
+            </Grid>
 
-          <Grid item xs={12} md={showAnnotationsOnRight ? 8 : 12}>
-            <div id="oligrapher-graph-container">
-              <Graph />
-              { editorMode && <Editor /> }
-              { showZoomControl && <ZoomControl /> }
-              <FloatingEditors />
-              <UserMessage />
-              { debugMode && <DebugMessage />}
-            </div>
-          </Grid>
-          { showAnnotationsOnRight && <Grid item xs={4}><Annotations /></Grid> }
-          { showAnnotationsOnBottom && <Grid item xs={12}><CondensedAnnotations /></Grid> }
+            <Grid item xs={12} md={showAnnotationsOnRight ? 8 : 12}>
+              <div id="oligrapher-graph-container">
+                <Graph />
+                { editorMode && <Editor /> }
+                { showZoomControl && <ZoomControl /> }
+                <FloatingEditors />
+                <UserMessage />
+
+              </div>
+            </Grid>
+            { showAnnotationsOnRight && <Grid item xs={4}><Annotations /></Grid> }
+            { showAnnotationsOnBottom && <Grid item xs={12}><CondensedAnnotations /></Grid> }
         </Grid>
+        </Box>
+        { debugMode && <DebugMessage />}
       </div>
     </ThemeProvider>
   )

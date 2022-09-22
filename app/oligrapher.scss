@@ -94,11 +94,11 @@ $edge_highlight_color: $oligrapher_blue;
 
 #oligrapher-container {
   font-family: "Open Sans", Helvetica, Arial, sans-serif;
-  margin: 0 auto;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  /* margin: 0 auto; */
+  /* height: 100%; */
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* justify-content: space-between; */
 
   button, a:hover {
     cursor: pointer;
@@ -248,15 +248,13 @@ $edge_highlight_color: $oligrapher_blue;
   }
 }
 
-#oligrapher-container #oligrapher-graph-container {
-  flex: 1 2 auto;
-  overflow: hidden;
-  position: relative;
+#oligrapher-container #oligrapher-svg-container {
+  width: 100%;
+}
 
-  #oligrapher-graph-svg {
-    z-index: 1;
-    height: 95%;
-  }
+#oligrapher-container #oligrapher-graph-container {
+  width: 100%;
+  position: relative;
 
   .oligrapher-graph-editor {
     position: absolute;
@@ -274,23 +272,14 @@ $edge_highlight_color: $oligrapher_blue;
   }
 
   #oligrapher-zoomcontrol {
-    div {
-      z-index: 1;
-      position: absolute;
-        display: flex;
-      flex-direction: column;
-      border: 1px solid #ccc;
-      @extend %box_shadow;
-      right: 15px;
-    }
-
-    #oligrapher-zoom-buttons {
-      top: 1em;
-    }
-
-    #oligrapher-zoom-reset-button {
-      top: 5.5em;
-    }
+    z-index: 10;
+    right: 15px;
+    top: 0;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    @extend %box_shadow;
 
     button {
       padding: 8px;

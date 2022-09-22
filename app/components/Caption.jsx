@@ -30,17 +30,17 @@ export default function Caption({ caption, currentlyEdited, status }) {
       onClick={onClick}
       handle=".oligrapher-caption">
       <g className="oligrapher-caption" id={`caption-${id}`} >
-        <foreignObject 
-          x={Math.round(x)} 
-          y={Math.round(y)} 
-          width={foreignObjectSize.width} 
+        <foreignObject
+          x={Math.round(x)}
+          y={Math.round(y)}
+          width={foreignObjectSize.width}
           height={foreignObjectSize.height}>
           { currentlyEdited &&
             <CaptionEditorTextarea
               caption={caption}
               updateCaption={updateCaption}
               setForeignObjectSize={setForeignObjectSize} />
-          }
+          }N
           { !currentlyEdited && <CaptionTextbox caption={caption} status={status} /> }
         </foreignObject>
       </g>

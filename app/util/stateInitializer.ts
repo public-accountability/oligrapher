@@ -87,8 +87,7 @@ function calculateStoryMode(state: any): boolean {
   return state.attributes.settings.defaultStoryMode
 }
 
-
-// Takes input from rails  configureation
+// Handles object for Oligrapher instance configuration
 //    - Converts legacy oligrapher data
 //    - Performs initial display state calculations,
 //    - FIXME and adds graph history
@@ -99,7 +98,7 @@ export default function stateInitializer(legacyState: any): State {
 
   state.display.modes.editor = userCanEditSelector(state)
   state.display.viewBox = calculateViewBoxFromGraph(state.graph)
-  state.display.svgOffset = computeSvgOffset(state.display.viewBox)
+  // state.display.svgOffset = computeSvgOffset(state.display.viewBox)
   state.display.modes.story = calculateStoryMode(state)
 
   if (legacyState.attributes?.lock) {

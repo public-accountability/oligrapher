@@ -1,7 +1,4 @@
-import isNumber from 'lodash/isNumber'
-import merge from 'lodash/merge'
-import assign from 'lodash/assign'
-import uniq from 'lodash/uniq'
+import { isNumber, merge, assign, uniq } from 'lodash'
 import { isLittleSisId } from '../util/helpers'
 
 // import Springy from 'springy'
@@ -96,11 +93,19 @@ interface GraphStats {
   minCaptionX: number,
   minCaptionY: number,
   maxCaptionX: number,
-  maxCaptionY: number
+  maxCaptionY: number,
+  minX: number,
+  minY: number,
+  maxX: number,
+  maxY: number
 }
 
-export function stats(nodes: Node[], edges: Edge[], captions: Caption[]): GraphStats {
-  return {
+export const graphStats = (graph: Graph) => {
+  return stats(Object.values(graph.nodes), Object.values(graph.edges),Object.values(graph.captions))
+}
+
+export const stats = (nodes: Node[], edges: Edge[], captions: Caption[]): GraphStats => {
+  const graphStats = {
     nodeCount: nodes.length,
     edgeCount: edges.length,
     captionCount: captions.length,
@@ -117,6 +122,12 @@ export function stats(nodes: Node[], edges: Edge[], captions: Caption[]): GraphS
     maxCaptionX: maxCaptionX(captions),
     maxCaptionY: maxCaptionY(captions)
   }
+
+  graphStats.minX = Math.min(graphStats.minNodeX, graphStats.minEdgeX, graphStats.minCaptionX)
+  graphStats.minY = Math.min(graphStats.minNodeY, graphStats.minEdgeY, graphStats.minCaptionY)
+  graphStats.maxX = Math.max(graphStats.maxNodeX, graphStats.maxEdgeX, graphStats.maxCaptionX)
+  graphStats.maxY = Math.max(graphStats.maxNodeY, graphStats.maxEdgeY, graphStats.maxCaptionY)
+  return graphStats
 }
 
 export const getNode = (graph: Graph, nodeId: string): Node => graph.nodes[nodeId]
@@ -140,53 +151,42 @@ type PaddingType = {
   bottom: number
 }
 
-export const GRAPH_PADDING_X = 100
-export const GRAPH_PADDING_Y = 50
-const DEFAULT_PADDING: PaddingType = {
-  left: GRAPH_PADDING_X,
-  right: GRAPH_PADDING_X,
-  top: GRAPH_PADDING_Y,
-  bottom: GRAPH_PADDING_Y
-}
-const DEFAULT_VIEWBOX: Viewbox = { minX: -500, minY: -400, w: 1000, h: 800 }
+export const GRAPH_PADDING = 100
 
+// const DEFAULT_PADDING: PaddingType = {
+//   left: GRAPH_PADDING,
+//   right: GRAPH_PADDING,
+//   top: GRAPH_PADDING,
+//   bottom: GRAPH_PADDING
+// }
+
+const handleInfinite = (value: number) => isFinite(value) ? value : 0
+
+// const DEFAULT_VIEWBOX: Viewbox = { minX: -500, minY: -400, w: 1000, h: 800 }
+// const DEFAULT_VIEWBOX: Viewbox = { minX: 0, minY: 0, w: 800, h: 600 }
+
+// finds the smallest rectangle with padding that can be fit around all nodes
 // These values are used to create the viewBox attribute for the outermost SVG.
-// It is the smallest rectangle with padding that can be fit around all nodes
-export function calculateViewBox(
-  nodes: Node[],
-  edges: Edge[],
-  captions: Caption[],
-  padding: PaddingType = DEFAULT_PADDING
-): Viewbox {
+export function calculateViewBox(nodes: Node[], edges: Edge[], captions: Caption[], padding: number = GRAPH_PADDING): Viewbox {
   const graphStats = stats(nodes, edges, captions)
-
-  if (graphStats.nodeCount === 0) {
-    return DEFAULT_VIEWBOX
-  }
-
-  const {
-    minNodeX, minNodeY, maxNodeX, maxNodeY,
-    minEdgeX, minEdgeY, maxEdgeX, maxEdgeY,
-    minCaptionX, minCaptionY, maxCaptionX, maxCaptionY
-  } = graphStats
-
-  const minX = Math.min(minNodeX, minEdgeX, minCaptionX) - padding.left
-  const minY = Math.min(minNodeY, minEdgeY, minCaptionY) - padding.top
-  const maxX = Math.max(maxNodeX, maxEdgeX, maxCaptionX) + padding.right
-  const maxY = Math.max(maxNodeY, maxEdgeY, maxCaptionY) + padding.bottom
+  let minX = handleInfinite(graphStats.minX) - padding
+  let minY = handleInfinite(graphStats.minY) - padding
+  let maxX = handleInfinite(graphStats.maxX) + padding
+  let maxY = handleInfinite(graphStats.maxY) + padding
   const w = maxX - minX
   const h = maxY - minY
+  return { minX, minY, w, h }
 
   // adjustments to enforce minimum 400x300 viewbox
-  const diffX = Math.max(400 - w, 0)
-  const diffY = Math.max(300 - h, 0)
+  // const diffX = Math.max(400 - w, 0)
+  // const diffY = Math.max(300 - h, 0)
 
-  return {
-    minX: minX - diffX / 2,
-    minY: minY - diffY / 2,
-    w: w + diffX,
-    h: h + diffY
-  }
+  // return {
+  //   minX: minX - diffX / 2,
+  //   minY: minY - diffY / 2,
+  //   w: w + diffX,
+  //   h: h + diffY
+  // }
 }
 
 export function calculateViewBoxFromGraph(graph: Graph): Viewbox {
@@ -196,6 +196,8 @@ export function calculateViewBoxFromGraph(graph: Graph): Viewbox {
     Object.values(graph.captions)
   )
 }
+
+
 
 // Returns the geometric center point of a graph's viewbox
 export function calculateCenter(graph: Graph): Point {

@@ -22,7 +22,7 @@ export function Editor() {
   const enableLock = useSelector(enableLockSelector)
 
   return (
-    <div className={className}>
+    <div className={className} id="oligrapher-graph-editor">
       { enableLock &&
         <LockManager />
       }

@@ -8,6 +8,7 @@ import { toSvg, toJpeg } from './util/imageExport'
 import createOligrapherStore from './util/store'
 import { urls } from './datasources/littlesis3'
 import { State } from './util/defaultState';
+import { graphStats } from './graph/graph';
 
 /*
   Main entry point of Oligrapher.
@@ -41,6 +42,10 @@ export default class Oligrapher {
 
   graph() {
     return this.store.getState().graph
+  }
+
+  graphStats() {
+    return graphStats(this.graph())
   }
 
   toSvg() {

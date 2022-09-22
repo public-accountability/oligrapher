@@ -22,7 +22,7 @@ const RESET_DELAY = process.env.NODE_ENV === 'test' ? 10 : 5000
 export default function* rootSaga() {
   yield all([
     watchSvgHeight(),
-    watchZoom(),
+    // watchZoom(),
     watchAddNode(),
     watchSave(),
     watchClone(),
@@ -34,7 +34,8 @@ export default function* rootSaga() {
     watchExportImage(),
     watchEditMode(),
     watchLockTakeover(),
-    watchLockRelease()
+    watchLockRelease(),
+    // watchGraphChanges()
     // watchReleaseNode()
   ])
 }
@@ -43,9 +44,9 @@ export function* watchSvgHeight() {
   yield takeEvery(['SET_SVG_TOP', 'SET_SVG_BOTTOM'], setSvgHeight)
 }
 
-export function* watchZoom() {
-  yield takeEvery(['ZOOM_IN', 'ZOOM_OUT', 'SET_ZOOM', 'SET_SVG_HEIGHT', 'SET_SVG_WIDTH', 'RESET_VIEW'], setActualZoom)
-}
+// export function* watchZoom() {
+//   yield takeEvery(['ZOOM_IN', 'ZOOM_OUT', 'SET_ZOOM', 'SET_SVG_HEIGHT', 'SET_SVG_WIDTH', 'RESET_VIEW'], setActualZoom)
+// }
 
 export function* watchAddNode() {
   yield takeEvery('ADD_NODE', addNode)
@@ -107,17 +108,17 @@ export function* setSvgHeight(action: any): SagaIterator {
 
 // Calculate actual zoom = user-set zoom (zoom) x automatic svg zoom.
 // Triggered by initial render, user zoom changes, and svg resize.
-export function* setActualZoom(): SagaIterator {
-  const { viewBox, zoom, svgSize } = yield select(state => state.display)
-  const zoomedViewBox = yield call(applyZoomToViewBox, viewBox, zoom)
-  const svgZoom = yield call(computeSvgZoom, zoomedViewBox, svgSize)
-  const svgOffset = yield call(computeSvgOffset, zoomedViewBox)
-  yield put({ type: 'SET_SVG_ZOOM', svgZoom })
-  yield put({ type: 'SET_SVG_OFFSET', svgOffset })
-  yield put({ type: 'SET_ACTUAL_ZOOM', actualZoom: zoom * svgZoom })
-}
+// export function* setActualZoom(): SagaIterator {
+//   const { viewBox, zoom, svgSize } = yield select(state => state.display)
+//   const zoomedViewBox = yield call(applyZoomToViewBox, viewBox, zoom)
+//   const svgZoom = yield call(computeSvgZoom, zoomedViewBox, svgSize)
+//   const svgOffset = yield call(computeSvgOffset, zoomedViewBox)
+//   yield put({ type: 'SET_SVG_ZOOM', svgZoom })
+//   yield put({ type: 'SET_SVG_OFFSET', svgOffset })
+//   yield put({ type: 'SET_ACTUAL_ZOOM', actualZoom: zoom * svgZoom })
+// }
 
-// Automatically fetches edges when a node is added from LittleSis
+// automatically fetches edges when a node is added from LittleSis
 export function* addNode(action: any): SagaIterator {
   const { automaticallyAddEdges } = yield select(state => state.attributes.settings)
   const allNodeIds = yield select(state => Object.keys(state.graph.nodes))

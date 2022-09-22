@@ -31,15 +31,10 @@ export default function() {
 
   const data: DebugMessage[] = [
     "display.zoom",
-    "display.svgZoom",
-    "display.actualZoom",
     "display.viewBox.minX",
     "display.viewBox.minY",
     "display.viewBox.w",
     "display.viewBox.h",
-    "display.svgTop",
-    "display.svgSize",
-    "display.svgOffset",
     "display.offset",
     "display.overNode",
     "display.selection.node",

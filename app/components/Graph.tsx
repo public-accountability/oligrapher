@@ -26,16 +26,19 @@ export const GRAPH_CONTENT_ID = 'oligrapher-svg-export'
 //            <Captions>
 export default function Graph() {
   const ref = React.useRef<HTMLDivElement>(null)
-  const [size, setSize] = React.useState<SvgSizeType|null>(null)
-  const height = size ? size.height : 800
-  const width = size ? size.width : 600
+  // const [size, setSize] = React.useState<SvgSizeType|null>(null)
+  // const height = size ? size.height : 800
+  // const width = size ? size.width : 600
 
-  React.useLayoutEffect(() => {
-    if (ref.current) {
-      const rect = ref.current.getBoundingClientRect()
-      setSize({ height: rect.height, width: rect.width })
-    }
-  }, [ref])
+  const height = '100%'
+  const width = '100%'
+
+  // React.useLayoutEffect(() => {
+  //   if (ref.current) {
+  //     const rect = ref.current.getBoundingClientRect()
+  //     setSize({ height: rect.height, width: rect.width })
+  //   }
+  // }, [ref])
 
   return (
     <div ref={ref} id={GRAPH_CONTAINER_ID}>

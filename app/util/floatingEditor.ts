@@ -2,7 +2,7 @@ import { State, DisplayState, FloatingEditorType } from './defaultState'
 import { Point } from './geometry'
 import { Graph } from '../graph/graph'
 import { edgeToCurve } from '../graph/curve'
-import { getElementById } from '../util/helpers'
+import { getElementById, querySelector } from '../util/helpers'
 
 export const X_OFFSET = {
   node: 40,
@@ -63,18 +63,6 @@ export const svgToHtmlPosition = (position: Point): Point => {
   return point.matrixTransform(pannable.getScreenCTM() as DOMMatrix)
 }
 
-export const floatingEditorPositionSelector = (state: State): Point | null => {
-  if (!state.display.floatingEditor.id || !state.display.floatingEditor.type) {
-    return null
-  }
-
-  const currentPosition = getPosition(state.graph, state.display.floatingEditor.id, state.display.floatingEditor.type)
-
-  return keepWithinScreen(state.display,
-                          transformPosition(currentPosition, state.display.floatingEditor.type),
-                          state.display.floatingEditor.type)
-}
-
 export const keepWithinScreen = (display: DisplayState, position: Point, t: FloatingEditorType): Point => {
   let { x, y } = position
 
@@ -110,27 +98,28 @@ export const keepWithinScreen = (display: DisplayState, position: Point, t: Floa
 }
 
 // used to calculate floating editor position based on node or edge position
-export const transformPosition = (position: Point, t: FloatingEditorType): Point => {
-  const xOffset = X_OFFSET[t]
-  const yOffset = Y_OFFSET[t]
+// export const transformPosition = (position: Point): Point => {
+//   const xOffset = X_OFFSET[t]
+//   const yOffset = Y_OFFSET[t]
 
-  const { x, y } = svgToHtmlPosition(position)
+//   const { x, y } = svgToHtmlPosition(position)
 
-  return {
-    x: x + xOffset,
-    y: y + yOffset
-  }
-}
+//   return {
+//     x: x + xOffset,
+//     y: y + yOffset
+//   }
+// }
 
-export const getPosition = (graph: Graph, id: string, type: FloatingEditorType): Point => {
+// Retrives position of Node, Edge, or Caption
+export const getPosition = (graph: Graph, id: string, feType: FloatingEditorType): Point => {
   let x, y, xb
 
-  if (type === 'node' || type === 'connections') {
+  if (feType === 'node' || feType === 'connections') {
     ({ x, y } = graph.nodes[id])
     return { x, y }
   }
 
-  if (type === 'edge') {
+  if (feType === 'edge') {
     ({ xb, y } = edgeToCurve(graph.edges[id]))
     return { x: xb, y }
   }
@@ -156,11 +145,23 @@ export const toggleEditor = (display: DisplayState, t: 'node' | 'edge' | 'captio
   }
 }
 
+export const floatingEditorPositionSelector = (state: State): Point | null => {
+  if (!state.display.floatingEditor.id || !state.display.floatingEditor.type) {
+    return null
+  }
+
+  const svgPosition = getPosition(state.graph, state.display.floatingEditor.id, state.display.floatingEditor.type)
+  const point = DOMPoint.fromPoint(svgPosition).matrixTransform(getElementById('oligrapher-svg').getScreenCTM())
+  point.x += X_OFFSET[state.display.floatingEditor.type]
+  point.y += Y_OFFSET[state.display.floatingEditor.type]
+
+  return keepWithinScreen(state.display, point, state.display.floatingEditor.type)
+}
+
 export default {
   clear,
   set,
   getId,
   getType,
-  transformPosition,
   toggleEditor
 }
