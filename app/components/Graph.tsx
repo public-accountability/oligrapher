@@ -16,8 +16,6 @@ import { useDispatch, useSelector } from 'react-redux'
 export const GRAPH_CONTAINER_ID = 'oligrapher-graph-svg'
 export const GRAPH_CONTENT_ID = 'oligrapher-svg-export'
 
-
-
 // The core component that displays the graph
 // <div id="oligrapher-graph">
 //   <Svg>
@@ -41,12 +39,11 @@ export default function Graph() {
 
   return (
     <div ref={ref} id={GRAPH_CONTAINER_ID} onWheel={scrollToZoom ? onWheel : undefined }>
-      <Svg outermost={true} height={height} width={width}>
+      <Svg height={height} width={width}>
         <defs>
           <Filters />
           <Markers />
         </defs>
-        <Zoomable>
           <Highlightable>
             <g id={GRAPH_CONTENT_ID}>
               <Edges />
@@ -54,7 +51,6 @@ export default function Graph() {
               <Captions />
             </g>
           </Highlightable>
-        </Zoomable>
       </Svg>
     </div>
   )

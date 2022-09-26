@@ -65,3 +65,10 @@ export function viewBoxToString(viewBox: Viewbox): string {
 export function stringToViewBox(s: String) {
   return fromPairs(zip(['minX', 'minY', 'w', 'h'], s.split(' ').map(Number))) as Viewbox
 }
+
+export function svgRectToViewbox(rect: SVGRect): Viewbox {
+  return { minX: rect.x,
+           minY: rect.y,
+           w: rect.width,
+           h: rect.height }
+}
