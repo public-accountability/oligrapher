@@ -21,7 +21,7 @@ const RESET_DELAY = process.env.NODE_ENV === 'test' ? 10 : 5000
 
 export default function* rootSaga() {
   yield all([
-    watchSvgHeight(),
+    // watchSvgHeight(),
     // watchZoom(),
     watchAddNode(),
     watchSave(),
@@ -100,11 +100,11 @@ export function* watchExportImage() {
 //   yield takeEvery(['RELEASE_NODE'], moveNodeOrCreateEdge)
 // }
 
-export function* setSvgHeight(action: any): SagaIterator {
-  const { svgTop, svgBottom, svgWidth } = yield select(state => state.display)
-  const height = (svgBottom || window.innerHeight) - svgTop
-  yield put({ type: 'SET_SVG_HEIGHT', height })
-}
+// export function* setSvgHeight(action: any): SagaIterator {
+//   const { svgTop, svgBottom, svgWidth } = yield select(state => state.display)
+//   const height = (svgBottom || window.innerHeight) - svgTop
+//   yield put({ type: 'SET_SVG_HEIGHT', height })
+// }
 
 // Calculate actual zoom = user-set zoom (zoom) x automatic svg zoom.
 // Triggered by initial render, user zoom changes, and svg resize.

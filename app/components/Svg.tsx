@@ -23,8 +23,8 @@ export default function Svg(props) {
   // const [scale, setScale] = useState(1)
 
   const svgAttrs: React.SVGProps<SVGSVGElement> = {
-    height: props.height,
-    width: props.width,
+    height: '100%',
+    width: '100%',
     viewBox: viewBoxToString(viewBox),
     preserveAspectRatio: 'xMidYMid',
     xmlns: "http://www.w3.org/2000/svg" ,
@@ -32,8 +32,7 @@ export default function Svg(props) {
   }
 
   const divAttrs: React.HTMLProps<HTMLDivElement> = {
-    height: props.height,
-    width: props.width
+    style: { height: '100%', width: '100%' }
   }
 
   // Panning
@@ -78,7 +77,6 @@ export default function Svg(props) {
         </Zoomable>
       </svg>
     </div>
-
   )
 
 }

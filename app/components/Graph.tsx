@@ -29,8 +29,6 @@ export default function Graph() {
   const dispatch = useDispatch()
   const scrollToZoom = useSelector<State, boolean>(state => state.attributes.settings.scrollToZoom)
   const ref = useRef<HTMLDivElement>(null)
-  const height = '100%'
-  const width = '100%'
 
   let onWheel: WheelEventHandler = (event) => {
     event.preventDefault()
@@ -38,8 +36,8 @@ export default function Graph() {
   }
 
   return (
-    <div ref={ref} id={GRAPH_CONTAINER_ID} onWheel={scrollToZoom ? onWheel : undefined }>
-      <Svg height={height} width={width}>
+    <div ref={ref} id={GRAPH_CONTAINER_ID} onWheel={scrollToZoom ? onWheel : undefined } style={{height: '100%'}}>
+      <Svg>
         <defs>
           <Filters />
           <Markers />

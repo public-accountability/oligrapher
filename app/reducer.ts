@@ -306,8 +306,8 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase('RESET_VIEW', (state, action) => {
-    state.display.offset = { x: 0, y: 0}
-    state.display.zoom = 1
+    // state.display.offset = { x: 0, y: 0}
+    // state.display.zoom = 1
   })
 
   builder.addCase('CLICK_EDGE', (state, action) => {

@@ -102,7 +102,7 @@ export function Root() {
           </Grid>
 
           <Grid item sm={showAnnotationsOnRight ? 8 : 12}>
-            <div id="oligrapher-graph-container">
+        <div id="oligrapher-graph-container" style={{height: '100%'}}>
               <Graph />
               { editorMode && <Editor /> }
               { showZoomControl && <ZoomControl /> }
