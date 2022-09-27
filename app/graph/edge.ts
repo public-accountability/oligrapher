@@ -1,11 +1,9 @@
-import PropTypes from 'prop-types'
 import merge from 'lodash/merge'
 import { nanoid } from 'nanoid/non-secure'
 
 import { Node } from './node'
 import { ArrowType } from './arrow'
 import { Point } from '../util/geometry'
-import { stringOrBool } from '../util/types'
 
 export type EdgeStatusType = "normal" | "highlighted" | "faded" | "selected"
 
@@ -106,32 +104,7 @@ export function determineNodeNumber(edge: Edge, nodeId: string): number {
   }
 }
 
-export const edgeShape = {
-  id: PropTypes.string.isRequired,
-  node1_id: PropTypes.string.isRequired,
-  node2_id: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  scale: PropTypes.number.isRequired,
-  arrow: stringOrBool.isRequired,
-  dash: stringOrBool.isRequired,
-  url: PropTypes.string,
-  x1: PropTypes.number,
-  y1: PropTypes.number,
-  x2: PropTypes.number,
-  y2: PropTypes.number,
-  cx: PropTypes.number,
-  cy: PropTypes.number,
-  s1: PropTypes.number,
-  s2: PropTypes.number
-}
-
-const types = {
-  edge: PropTypes.shape(edgeShape),
-  arrayOfEdges: PropTypes.arrayOf(PropTypes.shape(edgeShape))
-}
-
 export default {
   "new": newEdge,
-  "newEdgeFromNodes": newEdgeFromNodes,
-  "types": types
+  "newEdgeFromNodes": newEdgeFromNodes
 }

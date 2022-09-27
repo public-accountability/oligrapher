@@ -252,7 +252,7 @@ export function positionNear({ x, y }: Point, radius: number) {
 // Creates a new, empty graph object
 // exported in the module default as Graph.new
 export function newGraph(attributes: GraphAttributes = {}): Graph {
-  return assign({}, DEFAULT_GRAPH, attributes)
+  return Object.assign({}, DEFAULT_GRAPH, attributes)
 }
 
 export function addNode(graph: Graph, attributes: NodeAttributes, position: boolean | Point = false): Graph {

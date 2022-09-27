@@ -3,7 +3,6 @@ import { Point } from './geometry'
 import { Graph } from '../graph/graph'
 import { edgeToCurve } from '../graph/curve'
 import { getElementById, getElementForGraphItem } from '../util/helpers'
-import { documentSvgSize, svgCoordinatesFromPoint } from './dimensions'
 
 export const X_OFFSET = {
   node: 40,
@@ -47,35 +46,6 @@ export const getId = (display: DisplayState, t?: FloatingEditorTypeType): string
 }
 
 export const getType = (display: DisplayState): FloatingEditorTypeType | null => display.floatingEditor.type
-
-// export const svgToHtmlPosition = (position: Point): Point => {
-//   const svg = getElementById('oligrapher-svg') as SVGSVGElement
-
-//   // ...why doesn't typescript know about createSVGPoint or getScreenCTM?
-//   const point = svg.createSVGPoint()
-//   point.x = position.x
-//   point.y = position.y
-
-//   // using pannable because it's the innermost svg transformation
-//   // and getScreenCTM() incorporates all ancestor transformations
-//   const pannable = getElementById('oligrapher-pannable') as SVGGElement
-
-//   // https://svgwg.org/svg2-draft/types.html#InterfaceSVGGraphicsElement
-//   return point.matrixTransform(pannable.getScreenCTM() as DOMMatrix)
-// }
-
-// used to calculate floating editor position based on node or edge position
-// export const transformPosition = (position: Point): Point => {
-//   const xOffset = X_OFFSET[t]
-//   const yOffset = Y_OFFSET[t]
-
-//   const { x, y } = svgToHtmlPosition(position)
-
-//   return {
-//     x: x + xOffset,
-//     y: y + yOffset
-//   }
-// }
 
 // Retrives position of Node, Edge, or Caption
 export const getPosition = (graph: Graph, id: string, feType: FloatingEditorTypeType): Point => {

@@ -1,4 +1,4 @@
-import { ActionReducerMapBuilder } from '@reduxjs/toolkit'
+import type { ActionReducerMapBuilder } from '@reduxjs/toolkit'
 
 import merge from 'lodash/merge'
 import without from 'lodash/without'
@@ -13,7 +13,7 @@ import {
 import Caption from './graph/caption'
 import { newEdgeFromNodes } from './graph/edge'
 import { curveSimilarEdges } from './graph/curve'
-import { State } from './util/defaultState'
+import type { State } from './util/defaultState'
 
 import {
   createAnnotation, moveAnnotation, showAnnotation, updateAnnotation, removeAnnotation,
