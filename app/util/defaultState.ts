@@ -34,7 +34,9 @@ export interface UserSettings {
   exploreModeOnly: boolean,
   automaticallyAddEdges: boolean,
   scrollToZoom: boolean,
-  useClassicAddConnections: boolean
+  useClassicAddConnections: boolean,
+  debug: boolean,
+  showControlpoint: boolean
 }
 
 export interface AttributesState {
@@ -156,8 +158,6 @@ const defaultState: State = {
     version: 3,
     user: null,
     owner: null,
-    // will be displayed in editor mode. It is used by LittleSis.org
-    // to create additional buttons that set various map privacy settings.
     settings: {
       private: false,
       clone: true,
@@ -168,7 +168,10 @@ const defaultState: State = {
       exploreModeOnly: false,
       automaticallyAddEdges: true,
       scrollToZoom: false,
-      useClassicAddConnections: false
+      useClassicAddConnections: false,
+      debug: false,
+      showControlpoint: false
+
     },
     editors: [],
     lock: defaultLockState,
@@ -225,7 +228,6 @@ const defaultState: State = {
     domId: 'oligrapher',
     embed: false,
     noEditing: false,
-    debug: false,
     logActions: false
   },
 

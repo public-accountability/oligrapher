@@ -6,13 +6,8 @@
     <link rel="stylesheet" href="oligrapher.css">
     <script src="oligrapher.js"></script>
     <style>
-     body {
-       margin: 10px;
-     }
-
      #oligrapher {
-       height: 600px;
-       width: 100%;
+       height: 100vh;
      }
     </style>
   </head>
@@ -85,7 +80,7 @@
 
      const oli = new Oligrapher({
        graph: graph,
-       settings: { debug: true },
+       settings: { logActions: true },
        attributes: {
          id: 123,
          title: "Example Map",
@@ -95,7 +90,11 @@
            { text: "Edit", url: "https://littlesis.org/oligrapher/edit" },
            { text: "Clone", url: "https://littlesis.org/oligrapher/clone" },
            { text: "Disclaimer", url: "https://littlesis.org/oligrapher/disclaimer" }
-         ]
+         ],
+         settings: {
+           debug: true,
+           showControlpoint: true
+         }
        }
      })
     </script>

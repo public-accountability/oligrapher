@@ -49,7 +49,7 @@ export function parseCurveString(str: string) {
   return chunk(str.replace(/(M|Q)/g, '').trim().split(/[ ]+/).map(toNumber), 2)
 }
 
-export function edgeToCurve(edge: EdgeGeometry, curveStrength: number = defaultCurveStrength): Curve {
+export function edgeToCurve(edge: Edge | EdgeGeometry, curveStrength: number = defaultCurveStrength): Curve {
   let { cx, cy, x1, y1, x2, y2, s1, s2 } = edge
   let r1 = s1 * circleRadius
   let r2 = s2 * circleRadius
@@ -76,7 +76,7 @@ export function edgeToCurve(edge: EdgeGeometry, curveStrength: number = defaultC
   }
 
   // generate control point if it doesn't exist
-  if (cx == null || cy == null) {
+  if (!cx || !cy) {
     cx = -(ya - y) * curveStrength
     cy = (xa - x) * curveStrength
   }

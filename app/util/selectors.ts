@@ -83,7 +83,7 @@ export function userCanEditSelector(state: State): boolean {
 }
 
 export function debugModeSelector(state: State): boolean {
-  return state.settings.debug
+  return state.attributes.settings.debug
 }
 
 export function scrollToZoomSelector(state: State): boolean {

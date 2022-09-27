@@ -5,21 +5,25 @@ import { useSelector } from '../util/helpers'
 import Toolbox from './Toolbox'
 
 const OPTIONS = {
-  'Privacy': {
+  "Privacy": {
     "private": "Set map to private",
     "clone": "Allow map cloning",
     "list_sources": "Show source links"
   },
-  'View': {
+  "View": {
     "defaultStoryMode": "Default: Story Mode",
     "defaultExploreMode": "Default: Explore Mode",
     "storyModeOnly": "Story Mode Only",
     "exploreModeOnly": "Explore Mode Only"
   },
-  'Editing': {
+  "Editing": {
     "automaticallyAddEdges": "Automatically add edges",
     "scrollToZoom": "Scroll to zoom",
     "useClassicAddConnections": "Classic add connections tool"
+  },
+  "Development": {
+    "debug": "Show debugging information",
+    "showControlpoint": "Show curve control point"
   }
 }
 
