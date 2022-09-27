@@ -9,10 +9,11 @@ import { State } from '../util/defaultState'
 //  <Edge />
 export default function Edges() {
   const editedEdgeId =  useSelector<State>(state => FloatingEditor.getId(state.display, 'edge'))
+  const edgeIds = useSelector<State, string[]>(state => Object.keys(state.graph.edges))
 
-  const elements = useSelector<State, string[]>(state => Object.keys(state.graph.edges))
-    .map(id => ({ id: id, key: id, currentlyEdited: id === editedEdgeId }))
-    .map(props =>  React.createElement(Edge, props))
-
-  return React.createElement('g', { className: "edges" }, elements)
+  return (
+    <g className="edges">
+      { edgeIds.map(id => <Edge id={id} key={id} currentlyEdited={id === editedEdgeId} />) }
+    </g>
+  )
 }

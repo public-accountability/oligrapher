@@ -64,8 +64,6 @@ export const getType = (display: DisplayState): FloatingEditorTypeType | null =>
 //   return point.matrixTransform(pannable.getScreenCTM() as DOMMatrix)
 // }
 
-
-
 // used to calculate floating editor position based on node or edge position
 // export const transformPosition = (position: Point): Point => {
 //   const xOffset = X_OFFSET[t]

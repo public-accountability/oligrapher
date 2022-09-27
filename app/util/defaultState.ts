@@ -1,6 +1,4 @@
-import { Point } from './geometry'
 import { Graph, Viewbox } from '../graph/graph'
-import { Node } from '../graph/node'
 import { Annotation } from './annotations'
 import { LockState, defaultLockState } from './lock'
 import { LsMap } from '../datasources/littlesis3'
@@ -88,13 +86,6 @@ export interface DisplayState {
   zoom: number,   // transform = `scale(${zoom})`
   viewBox: Viewbox,
   svgHeight: number, // Height of SVG element
-  // svgZoom: number,
-  // actualZoom: number,
-  // svgTop: number,
-  // svgBottom: number | null,
-  // svgSize: SvgSizeType,
-  // svgOffset: Point,
-  // offset: Point,
   showHeader: boolean,
   showZoomControl: boolean,
   headerIsCollapsed: boolean,
@@ -112,7 +103,6 @@ export interface DisplayState {
 }
 
 export interface SettingsState {
-  debug: boolean,
   domId: string,
   embed: boolean,
   noEditing: boolean,

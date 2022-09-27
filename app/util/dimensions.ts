@@ -73,7 +73,9 @@ export function svgRectToViewbox(rect: SVGRect): Viewbox {
            h: rect.height }
 }
 
-
+// export function computeSvgZoom(svg: SVGSVGElement) {
+//   return (svg.clientHeight / svg.viewBox.baseVal.height)
+// }
 
 // The outermost svg element automatically zooms its content
 // in order to fit the viewbox within the element's dimensions.

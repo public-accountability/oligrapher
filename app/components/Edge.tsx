@@ -81,14 +81,6 @@ export function Edge({ id, currentlyEdited }: EdgeProps) {
     setStartPosition(controlpoint)
   }
 
-
-//   const deltaX = (draggableData.x - startDrag.x)
-//   const deltaY = (draggableData.y - startDrag.y)
-//   const x = deltaX + startPosition.x
-//   const y = deltaY + startPosition.y
-//   return { x, y }
-
-
   const onDrag: DraggableEventHandler = (evt, data) => {
     setDragging(true)
     const deltas = calculateDeltas(data, startPosition, startDrag, actualZoom)

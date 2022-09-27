@@ -8,7 +8,8 @@ export interface NodeUIState {
   edited: boolean,
   selected: boolean,
   highlighted: boolean,
-  appearance: NodeAppearance
+  appearance: NodeAppearance,
+  disabled: boolean
 }
 
 export const calculateAppearance = (id: string, state: State): NodeAppearance => {
@@ -30,6 +31,8 @@ export function getNodeUIState(id: string, state: State): NodeUIState {
     edited: Boolean(state.display.floatingEditor.type === 'node' && state.display.floatingEditor.id  === id),
     selected: state.display.selection.node.includes(id),
     highlighted: Boolean(state.display.modes.story && state.annotations.list[state.annotations.currentIndex]?.nodeIds?.includes(id)),
-    appearance: calculateAppearance(id, state)
+    appearance: calculateAppearance(id, state),
+    // disable dragging if not editing and while another node is being dragged
+    disabled: !state.display.modes.editor || Boolean(state.display.modes.editor && state.display.draggedNode && state.display.draggedNode !== id)
   }
 }

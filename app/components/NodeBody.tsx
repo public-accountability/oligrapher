@@ -10,7 +10,7 @@ interface NodeBodyProps extends React.SVGAttributes<SVGGElement> {
   nodeRef: React.Ref<React.ReactSVGElement>
 }
 
-export default function NodeBody(props: NodeBodyProps) {
+const NodeBody = React.forwardRef((props: NodeBodyProps, ref: React.Ref<SVGGElement>) => {
   const { children, nodeId, nodeRef, enableClick, appearance, url, ...gProps } = props
   gProps.id = `node-${nodeId}`
   gProps.className = "oligrapher-node"
@@ -20,5 +20,8 @@ export default function NodeBody(props: NodeBodyProps) {
     gProps.style = { cursor: "pointer" }
   }
 
-  return <g ref={nodeRef} {...gProps}>{children}</g>
-}
+  return <g ref={ref} {...gProps}>{children}</g>
+})
+
+
+export default NodeBody
