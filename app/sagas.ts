@@ -40,9 +40,9 @@ export default function* rootSaga() {
   ])
 }
 
-export function* watchSvgHeight() {
-  yield takeEvery(['SET_SVG_TOP', 'SET_SVG_BOTTOM'], setSvgHeight)
-}
+// export function* watchSvgHeight() {
+//   yield takeEvery(['SET_SVG_TOP', 'SET_SVG_BOTTOM'], setSvgHeight)
+// }
 
 // export function* watchZoom() {
 //   yield takeEvery(['ZOOM_IN', 'ZOOM_OUT', 'SET_ZOOM', 'SET_SVG_HEIGHT', 'SET_SVG_WIDTH', 'RESET_VIEW'], setActualZoom)

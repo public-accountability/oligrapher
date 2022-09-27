@@ -510,7 +510,8 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
         state.display.svgSize.width = action.width
         break
       case 'SET_SVG_HEIGHT':
-        state.display.svgSize.height = action.height
+        state.display.svgHeight = action.height
+        // state.display.svgSize.height = action.height
         break
       case 'SET_ACTUAL_ZOOM':
         state.display.actualZoom = action.actualZoom

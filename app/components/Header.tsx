@@ -9,7 +9,7 @@ import HeaderRight from './HeaderRight'
 import Attribution from './Attribution'
 import Title from './Title'
 import Subtitle from './Subtitle'
-import { editModeSelector } from '../util/selectors'
+import { editModeSelector, headerIsCollapsedSelector } from '../util/selectors'
 import { State } from '../util/defaultState'
 
 
@@ -28,11 +28,11 @@ import { State } from '../util/defaultState'
 */
 
 export default function Header() {
-  const screenIsSmall = useMediaQuery("(max-height:600px)")
+  const smallScreen = useMediaQuery("(max-height:600px)")
 
   const editMode = useSelector(editModeSelector)
   const { title, subtitle, owner, editors, date } = useSelector<State, AttributesState>(state => state.attributes)
-  const isCollapsed = useSelector<State, boolean>(state => state.display.headerIsCollapsed)
+  const isCollapsed = useSelector(headerIsCollapsedSelector)
   const { embed, url } = useSelector<State>(state => state.settings)
 
   const dispatch = useDispatch()
@@ -44,28 +44,24 @@ export default function Header() {
   const className = editMode ? (isCollapsed ? "oligrapher-header-collapsed" : "oligrapher-header-expanded") : ""
   const users = [owner].concat(editors.filter(e => !e.pending))
 
-  const hideAttribution = !editMode && screenIsSmall
+  const hideAttribution = !editMode && smallScreen
 
   // Use the normal header while editing or if the screen is large enough
-  const showNormalHeader = editMode || !screenIsSmall
+  const showNormalHeader = editMode || !smallScreen
   const showCondensedHeader = !showNormalHeader
 
-  const divRef = useRef()
-
-  useEffect(() => {
-    dispatch({ type: 'SET_SVG_TOP', svgTop: divRef.current.getBoundingClientRect().bottom })
-  }, [dispatch, isCollapsed])
+  // const divRef = useRef()
 
   if (showCondensedHeader) {
     return (
-      <div id="oligrapher-header-condensed" ref={divRef}>
+      <div id="oligrapher-header-condensed">
         <Title text={title} editable={false} url={embed && url} />
       </div>
     )
   }
 
   return (
-    <div id="oligrapher-header" className={className} ref={divRef}>
+    <div id="oligrapher-header" className={className}>
       { isCollapsed &&
         <div id="oligrapher-header-bottom" className={editMode ? "editing" : ""}>
           <Title text={title} editable={false} />

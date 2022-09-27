@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useRef, useLayoutEffect, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { ThemeProvider, useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Container from '@mui/material/Container'
@@ -22,7 +22,7 @@ import {
   hasUnsavedChangesSelector,
   showHeaderSelector,
   showZoomControlSelector,
-  hasAnnotationsSelector,
+  headerIsCollapsedSelector,
   editModeSelector,
   debugModeSelector
 } from '../util/selectors'
@@ -54,24 +54,22 @@ const handleBeforeunload = (event: BeforeUnloadEvent) => {
 //      Grid-Item
 //         <Annotations> or  <CondensedAnnotations>
 export function Root() {
+  const dispatch = useDispatch()
+  const smallScreen = useMediaQuery("(max-height:600px)")
+
   const showAnnotations = useSelector(showAnnotationsSelector)
-  const hasAnnotations = useSelector(hasAnnotationsSelector)
   const hasUnsavedChanges = useSelector(hasUnsavedChangesSelector)
   const showHeader = useSelector(showHeaderSelector)
   const showZoomControl = useSelector(showZoomControlSelector)
   const editorMode = useSelector(editModeSelector)
   const debugMode = useSelector(debugModeSelector)
-
-  // use condensed versions of header and annotations for small screens
-  const largeHeight = useMediaQuery("(min-height:600px)")
-  const smallScreen = useMediaQuery(theme.breakpoints.down('sm'))
-
-  const showNormalHeader = showHeader && (editorMode || largeHeight)
-  const showCondensedHeader = showHeader && !showNormalHeader
+  const headerIsCollapsed = useSelector(headerIsCollapsedSelector)
 
   const showAnnotationsOnRight =  showAnnotations && !smallScreen
   const showAnnotationsOnBottom =  showAnnotations && smallScreen
+  const showCondensedHeader = showHeader && !editorMode && !smallScreen
 
+  const containerRef = React.useRef(null)
   const headerGridRef = React.useRef(null)
 
   // prevent backspace form navigating away from page in firefox and possibly other browsers
@@ -96,15 +94,17 @@ export function Root() {
     }
   }, [hasUnsavedChanges])
 
-
-  useEffect(() => {
-    console.log(headerGridRef.current)
-
-  }, [])
+  // Set SVG Height to fill container to bottom
+  useLayoutEffect(() => {
+    if (headerGridRef.current && containerRef.current) {
+      let height = containerRef.current.clientHeight - headerGridRef.current.clientHeight - 5
+      dispatch({ type: 'SET_SVG_HEIGHT', height })
+    }
+  }, [showCondensedHeader, headerIsCollapsed])
 
   return (
     <ThemeProvider theme={theme}>
-      <div id={ROOT_CONTAINER_ID}>
+      <div id={ROOT_CONTAINER_ID} ref={containerRef}>
         <Grid container spacing={1} alignItems="stretch">
           { showHeader && <Grid ref={headerGridRef} item sm={12}><Header /></Grid> }
           <Grid item sm={showAnnotationsOnRight ? 8 : 12}>

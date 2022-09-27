@@ -23,7 +23,7 @@ const formatValue = (v: any): string | React.ReactNode => {
   }
 }
 
-type DebugMessage = { k: string, v: string }
+type DebugMessage = { k: string, v: string | React.ReactNode }
 const Item: React.FC<DebugMessage> = (props) => <tr><td>{props.k}</td><td>{props.v}</td></tr>
 
 export default function() {
@@ -31,11 +31,11 @@ export default function() {
 
   const data: DebugMessage[] = [
     "display.zoom",
+    "display.svgHeight",
     "display.viewBox.minX",
     "display.viewBox.minY",
     "display.viewBox.w",
     "display.viewBox.h",
-    "display.offset",
     "display.overNode",
     "display.selection.node",
     "display.selection.edge",

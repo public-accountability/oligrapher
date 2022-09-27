@@ -163,9 +163,6 @@ export const GRAPH_PADDING = 100
 
 const handleInfinite = (value: number) => isFinite(value) ? value : 0
 
-// const DEFAULT_VIEWBOX: Viewbox = { minX: -500, minY: -400, w: 1000, h: 800 }
-// const DEFAULT_VIEWBOX: Viewbox = { minX: 0, minY: 0, w: 800, h: 600 }
-
 // finds the smallest rectangle with padding that can be fit around all nodes
 // These values are used to create the viewBox attribute for the outermost SVG.
 export function calculateViewBox(nodes: Node[], edges: Edge[], captions: Caption[], padding: number = GRAPH_PADDING): Viewbox {
@@ -188,6 +185,10 @@ export function calculateViewBox(nodes: Node[], edges: Edge[], captions: Caption
   //   w: w + diffX,
   //   h: h + diffY
   // }
+}
+
+export function calculateZoomFromViewbox(viewbox: Viewbox, height: number) {
+
 }
 
 export function calculateViewBoxFromGraph(graph: Graph): Viewbox {

@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { xy, Point } from '../util/geometry'
 import { svgRectToViewbox, SVG_ID, viewBoxToString } from '../util/dimensions'
 import { useDispatch, useSelector } from 'react-redux'
-import { currentViewboxSelector, pannableSelector, scrollToZoomSelector } from '../util/selectors'
+import { currentViewboxSelector, pannableSelector, scrollToZoomSelector, svgHeightSelector } from '../util/selectors'
 
 //const pointFromEvent = (event: React.MouseEvent): Point => ({ x: event.clientX, y: event.clientY })
 
@@ -17,13 +17,12 @@ export default function Svg(props: { children: React.ReactNode }) {
   const viewBox = useSelector(currentViewboxSelector)
   const pannable = useSelector(pannableSelector)
   const scrollToZoom = useSelector(scrollToZoomSelector)
-  //const zoom = useSelector(currentZoomSelector)
+  const svgHeight = useSelector(svgHeightSelector)
   const [pointerDown, setPointerDown] = useState(false)
   const [startPosition, setStartPosition] = useState<Point>({ x: 0, y: 0})
-  // const [scale, setScale] = useState(1)
 
   const svgAttrs: React.SVGProps<SVGSVGElement> = {
-    height: '100%',
+    height: svgHeight,
     width: '100%',
     viewBox: viewBoxToString(viewBox),
     preserveAspectRatio: 'xMidYMid',
@@ -49,7 +48,6 @@ export default function Svg(props: { children: React.ReactNode }) {
       event.preventDefault()
       setPointerDown(true)
       setStartPosition(pointFromEvent(event, svgRef.current))
-      // setScale(ref.current.getBoundingClientRect().width / ref.current.viewBox.baseVal.width)
     }
 
     divAttrs.onMouseUp = (event) => {

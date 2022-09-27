@@ -19,12 +19,20 @@ export const showHeaderSelector = (state: State) => {
   return state.display.showHeader
 }
 
+export const headerIsCollapsedSelector = (state: State) => {
+  return state.display.headerIsCollapsed
+}
+
 export const showZoomControlSelector: Selector<State, boolean> = state => {
   return state.display.showZoomControl
 }
 
 export const pannableSelector: Selector<State, boolean> = state => {
   return state.display.pannable
+}
+
+export const svgHeightSelector: Selector<State, number> = state => {
+  return state.display.svgHeight
 }
 
 export const currentZoomSelector: Selector<State, number> = state => {
@@ -39,7 +47,7 @@ export const currentViewboxSelector: Selector<State, Viewbox> = state => {
   }
 }
 
-//  do we need to recalculate the viewbox becuase of highlights?
+// do we need to recalculate the viewbox because of highlights?
 export const shouldRecalculateViewboxSelector: Selector<State, boolean> = state => {
   return !state.display.modes.editor && state.display.modes.story && annotationHasHighlightsSelector(state)
 }
