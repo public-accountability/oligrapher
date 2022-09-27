@@ -1,7 +1,7 @@
 import isEqual from 'lodash/isEqual'
 import isNil from 'lodash/isNil'
 
-import { DisplayModesState, State } from './defaultState'
+import { DisplayModesState, State, FloatingEditorType } from './defaultState'
 import { Annotation } from './annotations'
 import { LsMap } from '../datasources/littlesis3'
 import { Selector } from 'react-redux'
@@ -13,6 +13,16 @@ export function displayModesSelector (state: State): DisplayModesState {
 
 export function editModeSelector(state: State): boolean {
   return state.display.modes.editor
+}
+
+export function floatingEditorSelector(state: State): FloatingEditorType {
+  return state.display.floatingEditor
+}
+
+export function showFloatingEditorsSelector(state: State): boolean {
+  const floatingEditor = floatingEditorSelector(state)
+  const editMode = editModeSelector(state)
+  return Boolean(editMode && floatingEditor.id && floatingEditor.type)
 }
 
 export const showHeaderSelector = (state: State) => {

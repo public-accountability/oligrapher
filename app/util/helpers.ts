@@ -5,7 +5,7 @@ import toNumber from 'lodash/toNumber'
 import { StateWithHistory } from './defaultState'
 import ConfirmSave from '../components/ConfirmSave'
 import EmptySave from '../components/EmptySave'
-import { hasContents } from '../graph/graph'
+import { Graph, hasContents } from '../graph/graph'
 
 export function classNames(...classes: Array<string | undefined>): string {
   return classes.filter(Boolean).join(' ')
@@ -122,6 +122,15 @@ export function querySelector(query: string): Element {
   } else {
     throw new Error(`Expecting to find "${query}" in the document`)
   }
+}
+
+
+export function getElementForGraphItem(graph: Graph, id: string, t: "node" | "edge" | "caption" | "connections") {
+  if (t === "connections") {
+    t = "node"
+  }
+
+  return querySelector(`g#${t}-${id}`) as SVGGElement
 }
 
 

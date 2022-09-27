@@ -16,6 +16,7 @@ import DebugMessage from './DebugMessage'
 import Annotations from './Annotations'
 import CondensedAnnotations from './CondensedAnnotations'
 import theme from '../util/theme'
+import SvgRefContext from '../util/SvgRefContext'
 
 import {
   showAnnotationsSelector,
@@ -23,6 +24,7 @@ import {
   showHeaderSelector,
   showZoomControlSelector,
   headerIsCollapsedSelector,
+  showFloatingEditorsSelector,
   editModeSelector,
   debugModeSelector
 } from '../util/selectors'
@@ -33,6 +35,7 @@ const handleBeforeunload = (event: BeforeUnloadEvent) => {
   event.returnValue = "Are you sure you want to leave? You have unsaved changes!"
   return event.returnValue
 }
+
 
 // Root Oligrapher Component
 //
@@ -64,11 +67,13 @@ export function Root() {
   const editorMode = useSelector(editModeSelector)
   const debugMode = useSelector(debugModeSelector)
   const headerIsCollapsed = useSelector(headerIsCollapsedSelector)
+  const showFloatingEditors = useSelector(showFloatingEditorsSelector)
 
   const showAnnotationsOnRight =  showAnnotations && !smallScreen
   const showAnnotationsOnBottom =  showAnnotations && smallScreen
   const showCondensedHeader = showHeader && !editorMode && !smallScreen
 
+  const svgRef = React.useRef(null)
   const containerRef = React.useRef(null)
   const headerGridRef = React.useRef(null)
 
@@ -104,32 +109,27 @@ export function Root() {
 
   return (
     <ThemeProvider theme={theme}>
-      <div id={ROOT_CONTAINER_ID} ref={containerRef}>
-        <Grid container spacing={1} alignItems="stretch">
-          { showHeader && <Grid ref={headerGridRef} item sm={12}><Header /></Grid> }
-          <Grid item sm={showAnnotationsOnRight ? 8 : 12}>
-            <div id="oligrapher-graph-container">
-              <Graph />
-              { editorMode && <Editor /> }
-              { showZoomControl && <ZoomControl /> }
-              <FloatingEditors />
-              <UserMessage />
-            </div>
+      <SvgRefContext.Provider value={svgRef}>
+        <div id={ROOT_CONTAINER_ID} ref={containerRef}>
+          <Grid container spacing={1} alignItems="stretch">
+            { showHeader && <Grid ref={headerGridRef} item sm={12}><Header /></Grid> }
+            <Grid item sm={showAnnotationsOnRight ? 8 : 12}>
+              <div id="oligrapher-graph-container">
+                <Graph />
+                { editorMode && <Editor /> }
+                { showZoomControl && <ZoomControl /> }
+                { showFloatingEditors &&  <FloatingEditors /> }
+                <UserMessage />
+              </div>
+            </Grid>
+            { showAnnotationsOnRight && <Grid item sm={4}><Annotations /></Grid> }
+            { showAnnotationsOnBottom && <Grid item sm={12}><CondensedAnnotations /></Grid> }
           </Grid>
-          { showAnnotationsOnRight && <Grid item sm={4}><Annotations /></Grid> }
-          { showAnnotationsOnBottom && <Grid item sm={12}><CondensedAnnotations /></Grid> }
-        </Grid>
-        { debugMode && <DebugMessage />}
-      </div>
+          { debugMode && <DebugMessage />}
+        </div>
+      </SvgRefContext.Provider>
     </ThemeProvider>
   )
 }
 
 export default Root
-
-
-/*
-
-
-
- */

@@ -1,8 +1,9 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState, useContext } from 'react'
 import { xy, Point } from '../util/geometry'
 import { svgRectToViewbox, SVG_ID, viewBoxToString } from '../util/dimensions'
 import { useDispatch, useSelector } from 'react-redux'
 import { currentViewboxSelector, pannableSelector, scrollToZoomSelector, svgHeightSelector } from '../util/selectors'
+import SvgRefContext from '../util/SvgRefContext'
 
 //const pointFromEvent = (event: React.MouseEvent): Point => ({ x: event.clientX, y: event.clientY })
 
@@ -12,7 +13,8 @@ const pointFromEvent = (event: React.MouseEvent, svg: SVGSVGElement): Point => {
 }
 
 export default function Svg(props: { children: React.ReactNode }) {
-  const svgRef = useRef(null)
+  // const svgRef = useRef(null)
+  const svgRef = useContext(SvgRefContext)
   const dispatch = useDispatch()
   const viewBox = useSelector(currentViewboxSelector)
   const pannable = useSelector(pannableSelector)

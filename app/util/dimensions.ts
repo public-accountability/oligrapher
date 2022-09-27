@@ -2,6 +2,8 @@ import { Point, xy } from './geometry'
 import { Viewbox } from '../graph/graph'
 import fromPairs from 'lodash/fromPairs'
 import zip from 'lodash/zip'
+import { getElementById } from './helpers'
+import { SvgSizeType } from './defaultState'
 
 export const SVG_ID = 'oligrapher-svg'
 
@@ -27,17 +29,6 @@ export function applyZoomToViewBox(viewBox: Viewbox, zoom: number): Viewbox {
   }
 }
 
-// The outermost svg element automatically zooms its content
-// in order to fit the viewbox within the element's dimensions.
-// This function calculates this automatic zoom so as to inform
-// other zoom-dependent calculations.
-// export function computeSvgZoom(viewBox: Viewbox, svgSize: { width: number, height: number }): number {
-//   const { width, height } = svgSize
-//   const xFactor = width / viewBox.w
-//   const yFactor = height / viewBox.h
-//   return Math.min(xFactor, yFactor)
-// }
-
 // Computes how far the svg viewbox's minX and minY is from 0, 0
 export function computeSvgOffset(viewBox: Viewbox): Point {
   return {
@@ -54,6 +45,19 @@ export function svgCoordinatesFromMouseEvent(event: MouseEvent): Point {
   return xy(point.matrixTransform(matrix))
 }
 
+export function svgCoordinatesFromPoint(point: Point): Point {
+  const matrix = getElementById(SVG_ID).getScreenCTM().inverse()
+  return xy(DOMPoint.fromPoint(point).matrixTransform(matrix))
+}
+
+export function documentSvgSize(): SvgSizeType {
+  const svg = getElementById(SVG_ID)
+  return {
+    width: svg.clientWidth,
+    height: svg.clientHeight
+  }
+}
+
 export function viewBoxToString(viewBox: Viewbox): string {
   return [viewBox.minX, viewBox.minY, viewBox.w, viewBox.h].join(' ')
 }
@@ -68,3 +72,16 @@ export function svgRectToViewbox(rect: SVGRect): Viewbox {
            w: rect.width,
            h: rect.height }
 }
+
+
+
+// The outermost svg element automatically zooms its content
+// in order to fit the viewbox within the element's dimensions.
+// This function calculates this automatic zoom so as to inform
+// other zoom-dependent calculations.
+// export function computeSvgZoom(viewBox: Viewbox, svgSize: { width: number, height: number }): number {
+//   const { width, height } = svgSize
+//   const xFactor = width / viewBox.w
+//   const yFactor = height / viewBox.h
+//   return Math.min(xFactor, yFactor)
+// }

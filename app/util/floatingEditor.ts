@@ -1,8 +1,9 @@
-import { State, DisplayState, FloatingEditorType } from './defaultState'
+import { State, DisplayState, FloatingEditorTypeType } from './defaultState'
 import { Point } from './geometry'
 import { Graph } from '../graph/graph'
 import { edgeToCurve } from '../graph/curve'
-import { getElementById, querySelector } from '../util/helpers'
+import { getElementById, getElementForGraphItem } from '../util/helpers'
+import { documentSvgSize, svgCoordinatesFromPoint } from './dimensions'
 
 export const X_OFFSET = {
   node: 40,
@@ -32,7 +33,7 @@ const Y_SIZE = {
   caption: 175
 }
 
-export const set = (display: DisplayState, t: FloatingEditorType | null = null, id: string | null = null): void => {
+export const set = (display: DisplayState, t: FloatingEditorTypeType | null = null, id: string | null = null): void => {
   display.floatingEditor.type = t
   display.floatingEditor.id = id
 }
@@ -41,61 +42,29 @@ export const clear = (display: DisplayState): void => {
   set(display, null, null)
 }
 
-export const getId = (display: DisplayState, t?: FloatingEditorType): string | null => {
+export const getId = (display: DisplayState, t?: FloatingEditorTypeType): string | null => {
   return (!t || t === display.floatingEditor.type) ? display.floatingEditor.id : null
 }
 
-export const getType = (display: DisplayState): FloatingEditorType | null => display.floatingEditor.type
+export const getType = (display: DisplayState): FloatingEditorTypeType | null => display.floatingEditor.type
 
-export const svgToHtmlPosition = (position: Point): Point => {
-  const svg = getElementById('oligrapher-svg') as SVGSVGElement
+// export const svgToHtmlPosition = (position: Point): Point => {
+//   const svg = getElementById('oligrapher-svg') as SVGSVGElement
 
-  // ...why doesn't typescript know about createSVGPoint or getScreenCTM?
-  const point = svg.createSVGPoint()
-  point.x = position.x
-  point.y = position.y
+//   // ...why doesn't typescript know about createSVGPoint or getScreenCTM?
+//   const point = svg.createSVGPoint()
+//   point.x = position.x
+//   point.y = position.y
 
-  // using pannable because it's the innermost svg transformation
-  // and getScreenCTM() incorporates all ancestor transformations
-  const pannable = getElementById('oligrapher-pannable') as SVGGElement
+//   // using pannable because it's the innermost svg transformation
+//   // and getScreenCTM() incorporates all ancestor transformations
+//   const pannable = getElementById('oligrapher-pannable') as SVGGElement
 
-  // https://svgwg.org/svg2-draft/types.html#InterfaceSVGGraphicsElement
-  return point.matrixTransform(pannable.getScreenCTM() as DOMMatrix)
-}
+//   // https://svgwg.org/svg2-draft/types.html#InterfaceSVGGraphicsElement
+//   return point.matrixTransform(pannable.getScreenCTM() as DOMMatrix)
+// }
 
-export const keepWithinScreen = (display: DisplayState, position: Point, t: FloatingEditorType): Point => {
-  let { x, y } = position
 
-  const top = y
-  const left = x
-  const width = X_SIZE[t]
-  const height = Y_SIZE[t]
-  const bottom = top + height
-  const right = left + width
-
-  const { width: svgWidth, height: svgHeight } = display.svgSize
-  const headerHeight = window.innerHeight - svgHeight
-  const horizontalPadding = (window.innerWidth - svgWidth) / 2
-  const BUFFER = 20
-
-  if (top < headerHeight + BUFFER) {
-    y += headerHeight + BUFFER - top
-  }
-
-  if (bottom > window.innerHeight - BUFFER) {
-    y -= bottom - window.innerHeight + BUFFER
-  }
-
-  if (left < horizontalPadding + BUFFER) {
-    x += (horizontalPadding + BUFFER - left)
-  }
-
-  if (right > window.innerWidth - horizontalPadding - BUFFER) {
-    x -= right - window.innerWidth + horizontalPadding + BUFFER
-  }
-
-  return { x, y }
-}
 
 // used to calculate floating editor position based on node or edge position
 // export const transformPosition = (position: Point): Point => {
@@ -111,7 +80,7 @@ export const keepWithinScreen = (display: DisplayState, position: Point, t: Floa
 // }
 
 // Retrives position of Node, Edge, or Caption
-export const getPosition = (graph: Graph, id: string, feType: FloatingEditorType): Point => {
+export const getPosition = (graph: Graph, id: string, feType: FloatingEditorTypeType): Point => {
   let x, y, xb
 
   if (feType === 'node' || feType === 'connections') {
@@ -146,16 +115,35 @@ export const toggleEditor = (display: DisplayState, t: 'node' | 'edge' | 'captio
 }
 
 export const floatingEditorPositionSelector = (state: State): Point | null => {
-  if (!state.display.floatingEditor.id || !state.display.floatingEditor.type) {
+  const floatingEditor = state.display.floatingEditor
+
+  if (!(floatingEditor.id && floatingEditor.type)) {
     return null
   }
 
-  const svgPosition = getPosition(state.graph, state.display.floatingEditor.id, state.display.floatingEditor.type)
-  const point = DOMPoint.fromPoint(svgPosition).matrixTransform(getElementById('oligrapher-svg').getScreenCTM())
-  point.x += X_OFFSET[state.display.floatingEditor.type]
-  point.y += Y_OFFSET[state.display.floatingEditor.type]
+  const svgRect = getElementById("oligrapher-svg").getBoundingClientRect()
+  const itemRect = getElementForGraphItem(state.graph, floatingEditor.id, floatingEditor.type).getBoundingClientRect()
 
-  return keepWithinScreen(state.display, point, state.display.floatingEditor.type)
+  const buffer = 20
+  const width = X_SIZE[floatingEditor.type]
+  const height = Y_SIZE[floatingEditor.type]
+
+  let point = {
+    x: itemRect.right + buffer,
+    y: itemRect.bottom - (itemRect.height / 2)
+  }
+
+  // move to left side when it doesn't fit on the right
+  if ((point.x + buffer + width) > svgRect.right) {
+    point.x = itemRect.left - buffer - width
+  }
+
+  // move up if it would go off screen
+  if ((point.y + height + buffer) > svgRect.bottom) {
+    point.y -= ((point.y + height + buffer) - svgRect.bottom)
+  }
+
+  return point
 }
 
 export default {

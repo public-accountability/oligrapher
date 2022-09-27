@@ -53,7 +53,12 @@ export interface AttributesState {
   helpUrl: string | null
 }
 
-export type FloatingEditorType = "node" | "connections" | "edge" | "caption"
+export type FloatingEditorTypeType = "node" | "connections" | "edge" | "caption"
+
+export type FloatingEditorType = {
+  "type": FloatingEditorTypeType | null,
+  "id": string | null
+}
 
 export type AsyncStatus = "REQUESTED" | "SUCCESS" | "FAILED" | null
 
@@ -92,10 +97,7 @@ export interface DisplayState {
   showZoomControl: boolean,
   headerIsCollapsed: boolean,
   modes: DisplayModesState,
-  floatingEditor: {
-    type: FloatingEditorType | null,
-    id: string | null
-  },
+  floatingEditor: FloatingEditorType,
   draggedNode: string | null,
   overNode: string | null,
   tool: "node" | "text" | "organize" | "settings" | "editors" | "help" | null,
