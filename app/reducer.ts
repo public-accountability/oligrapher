@@ -8,7 +8,7 @@ import clamp from 'lodash/clamp'
 import {
   addNode, updateNode, removeNode, removeNodes, dragNodeEdges, moveNode,
   addEdgeIfNodes, addEdgesIfNodes, updateEdge, removeEdge,
-  addCaption, addInterlocks, addEdge
+  addCaption, addInterlocks, addEdge, calculateViewBoxFromGraph
 } from './graph/graph'
 import Caption from './graph/caption'
 import { newEdgeFromNodes } from './graph/edge'
@@ -300,8 +300,8 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase('RESET_VIEW', (state, action) => {
-    // state.display.offset = { x: 0, y: 0}
-    // state.display.zoom = 1
+    state.display.viewBox = calculateViewBoxFromGraph(state.graph)
+    state.display.zoom = 1
   })
 
   builder.addCase('CLICK_EDGE', (state, action) => {

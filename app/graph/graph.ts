@@ -42,8 +42,8 @@ export interface EdgeIndex {
 export interface Viewbox {
   minX: number,
   minY: number,
-  w: number | '100%',
-  h: number | '100%'
+  w: number,
+  h: number
 }
 
 const DEFAULT_GRAPH: Graph = {
