@@ -1,10 +1,13 @@
-import reducer from '../app/reducers'
+import { createReducer } from '@reduxjs/toolkit'
+import reducerBuilder from '../app/reducer'
 import Graph from '../app/graph/graph'
 import Node from '../app/graph/node'
 import Edge from '../app/graph/edge'
 
 import defaultState from '../app/util/defaultState'
 import { cloneDeep, values } from 'lodash'
+
+const reducer = createReducer({}, reducerBuilder)
 
 const setupState = () => {
   let state = cloneDeep(defaultState)
@@ -59,13 +62,13 @@ describe('graphReducer', function() {
     })
   })
 
-  describe('DRAG_NODE_STOP', function() {
+  describe('MOVE_NODE_OR_ADD_EDGE_FROM_DRAG', function() {
     it('moves node and its edges when no intersection', function() {
       const state = setupState()
       state.display.modes.editor = true
       const n1 = Node.new({ x: 0, y: 0 })
       Graph.addNodes(state.graph, [n1])
-      const action = { type: 'DRAG_NODE_STOP', id: n1.id, deltas: { x: 50, y: 50 } }
+      const action = { type: 'MOVE_NODE_OR_ADD_EDGE_FROM_DRAG', id: n1.id, deltas: { x: 50, y: 50 } }
       const nextState = reducer(state, action)
       expect(nextState.graph.nodes[n1.id].x).toEqual(n1.x + 50)
       expect(nextState.graph.nodes[n1.id].y).toEqual(n1.y + 50)

@@ -30,14 +30,8 @@ import { isLittleSisId } from './util/helpers'
 const ZOOM_INTERVAL = 1.2
 
 const DISPLAY_ACTIONS = new Set([
-  'SET_SVG_TOP',
-  'SET_SVG_BOTTOM',
-  'SET_SVG_WIDTH',
   'SET_SVG_HEIGHT',
-  'SET_ACTUAL_ZOOM',
   'SET_SVG_ZOOM',
-  'SET_OFFSET',
-  'SET_SVG_OFFSET',
   'SET_VIEWBOX',
   'COLLAPSE_HEADER',
   'EXPAND_HEADER',
@@ -492,7 +486,6 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     )
   })
 
-
   builder.addMatcher(action => MESSAGE_ACTIONS.has(action.type), (state, action) => {
     state.display.userMessage = ACTION_TO_MESSAGE[action.type]
   })
@@ -503,27 +496,9 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
       case 'SET_SVG_TOP':
         state.display.svgTop = action.svgTop
         break
-      case 'SET_SVG_BOTTOM':
-        state.display.svgBottom = action.svgBottom
-        break
-      case 'SET_SVG_WIDTH':
-        state.display.svgSize.width = action.width
-        break
       case 'SET_SVG_HEIGHT':
         state.display.svgHeight = action.height
         // state.display.svgSize.height = action.height
-        break
-      case 'SET_ACTUAL_ZOOM':
-        state.display.actualZoom = action.actualZoom
-        break
-      case 'SET_SVG_ZOOM':
-        state.display.svgZoom = action.svgZoom
-        break
-      case 'SET_OFFSET':
-        state.display.offset = action.offset
-        break
-      case 'SET_SVG_OFFSET':
-        state.display.svgOffset = action.svgOffset
         break
       case 'SET_VIEWBOX':
         state.display.viewBox = action.viewBox
