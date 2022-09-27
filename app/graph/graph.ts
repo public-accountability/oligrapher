@@ -1,4 +1,7 @@
-import { isNumber, merge, assign, uniq } from 'lodash'
+import isNumber from 'lodash/isNumber'
+import merge from 'lodash/merge'
+import assign from 'lodash/assign'
+import uniq from 'lodash/uniq'
 import { isLittleSisId } from '../util/helpers'
 
 // import Springy from 'springy'

@@ -1,7 +1,17 @@
 import React from 'react'
-import { State } from '../util/defaultState'
+
 import { useSelector } from 'react-redux'
-import { identity, get, isNull, isArrayLike, map, isPlainObject, isString, isEmpty} from 'lodash'
+import identity from 'lodash/identity'
+import get from 'lodash/get'
+import isNull from 'lodash/isNull'
+import isArrayLike from 'lodash/isArrayLike'
+import map from 'lodash/map'
+import isPlainObject from 'lodash/isPlainObject'
+import isString from 'lodash/isString'
+import isEmpty from 'lodash/isEmpty'
+
+import { State } from '../util/defaultState'
+
 
 const formatValue = (v: any): string | React.ReactNode => {
   if (typeof v === 'undefined') {
