@@ -68,6 +68,10 @@ export function debugModeSelector(state: State): boolean {
   return state.settings.debug
 }
 
+export function scrollToZoomSelector(state: State): boolean {
+  return state.attributes.settings.scrollToZoom
+}
+
 // If List Sources is on, there is sources data, and we are not editing
 // add the sources annotation to our list of annotations
 export const annotationsListSelector = (state: State): Annotation[] => {

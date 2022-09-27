@@ -2,8 +2,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { xy, Point } from '../util/geometry'
 import { svgRectToViewbox, SVG_ID, viewBoxToString } from '../util/dimensions'
 import { useDispatch, useSelector } from 'react-redux'
-import { currentViewboxSelector, currentZoomSelector, pannableSelector, svgUISelector } from '../util/selectors'
-import Zoomable from './Zoomable'
+import { currentViewboxSelector, pannableSelector, scrollToZoomSelector } from '../util/selectors'
 
 //const pointFromEvent = (event: React.MouseEvent): Point => ({ x: event.clientX, y: event.clientY })
 
@@ -12,12 +11,13 @@ const pointFromEvent = (event: React.MouseEvent, svg: SVGSVGElement): Point => {
   return xy(DOMPoint.fromPoint({ x: event.clientX, y: event.clientY }).matrixTransform(invertedSVGMatrix))
 }
 
-export default function Svg(props) {
+export default function Svg(props: { children: React.ReactNode }) {
   const svgRef = useRef(null)
   const dispatch = useDispatch()
   const viewBox = useSelector(currentViewboxSelector)
   const pannable = useSelector(pannableSelector)
-  const zoom = useSelector(currentZoomSelector)
+  const scrollToZoom = useSelector(scrollToZoomSelector)
+  //const zoom = useSelector(currentZoomSelector)
   const [pointerDown, setPointerDown] = useState(false)
   const [startPosition, setStartPosition] = useState<Point>({ x: 0, y: 0})
   // const [scale, setScale] = useState(1)
@@ -33,6 +33,13 @@ export default function Svg(props) {
 
   const divAttrs: React.HTMLProps<HTMLDivElement> = {
     style: { height: '100%', width: '100%' }
+  }
+
+  if (scrollToZoom) {
+    divAttrs.onWheel = (event) => {
+      event.preventDefault()
+      dispatch({ type: 'SET_ZOOM_FROM_SCROLL', deltaY: event.deltaY })
+    }
   }
 
   // Panning
@@ -70,11 +77,9 @@ export default function Svg(props) {
   }
 
   return (
-    <div {...divAttrs}>
+    <div {...divAttrs} id="oligrapher-graph-svg">
       <svg ref={svgRef} {...svgAttrs}>
-        <Zoomable>
-          {props.children}
-        </Zoomable>
+        {props.children}
       </svg>
     </div>
   )

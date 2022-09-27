@@ -9,6 +9,8 @@ import HeaderRight from './HeaderRight'
 import Attribution from './Attribution'
 import Title from './Title'
 import Subtitle from './Subtitle'
+import { editModeSelector } from '../util/selectors'
+import { State } from '../util/defaultState'
 
 
 /*
@@ -28,24 +30,39 @@ import Subtitle from './Subtitle'
 export default function Header() {
   const screenIsSmall = useMediaQuery("(max-height:600px)")
 
-  const editMode = useSelector(state => state.display.modes.editor)
-  const { title, subtitle, owner, editors, date } = useSelector(state => state.attributes)
-  const isCollapsed = useSelector(state => state.display.headerIsCollapsed)
+  const editMode = useSelector(editModeSelector)
+  const { title, subtitle, owner, editors, date } = useSelector<State, AttributesState>(state => state.attributes)
+  const isCollapsed = useSelector<State, boolean>(state => state.display.headerIsCollapsed)
+  const { embed, url } = useSelector<State>(state => state.settings)
 
   const dispatch = useDispatch()
-  const updateTitle = value => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'title', value })
-  const updateSubtitle = value => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'subtitle', value })
+  const updateTitle = (value: string) => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'title', value })
+  const updateSubtitle = (value: string) => dispatch({ type: 'UPDATE_ATTRIBUTE', name: 'subtitle', value })
   const expand = () => dispatch({ type: 'EXPAND_HEADER' })
   const collapse = () => dispatch({ type: 'COLLAPSE_HEADER' })
 
   const className = editMode ? (isCollapsed ? "oligrapher-header-collapsed" : "oligrapher-header-expanded") : ""
   const users = [owner].concat(editors.filter(e => !e.pending))
+
   const hideAttribution = !editMode && screenIsSmall
+
+  // Use the normal header while editing or if the screen is large enough
+  const showNormalHeader = editMode || !screenIsSmall
+  const showCondensedHeader = !showNormalHeader
+
   const divRef = useRef()
 
   useEffect(() => {
     dispatch({ type: 'SET_SVG_TOP', svgTop: divRef.current.getBoundingClientRect().bottom })
   }, [dispatch, isCollapsed])
+
+  if (showCondensedHeader) {
+    return (
+      <div id="oligrapher-header-condensed" ref={divRef}>
+        <Title text={title} editable={false} url={embed && url} />
+      </div>
+    )
+  }
 
   return (
     <div id="oligrapher-header" className={className} ref={divRef}>

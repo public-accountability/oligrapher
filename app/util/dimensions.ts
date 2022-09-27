@@ -50,10 +50,6 @@ export function computeSvgOffset(viewBox: Viewbox): Point {
 // It transforms regular viewpoint coordinates into the correct SVG coordinates, considing the
 export function svgCoordinatesFromMouseEvent(event: MouseEvent): Point {
   const point = DOMPoint.fromPoint({x: event.clientX, y: event.clientY})
-  // An oligrapher map can be zoomed and panned. This gets the transformation from those elements (see <Pannable> and <Zoomable>)
-  // const pannableMatrix = querySelector('g.pannable').transform.baseVal.getItem(0).matrix
-  // const zoomableMatrix = querySelector('g.zoomable').transform.baseVal.getItem(0).matrix
-  // @ts-ignore: svg could be null
   const matrix = document.getElementById(SVG_ID).getScreenCTM().inverse()
   return xy(point.matrixTransform(matrix))
 }

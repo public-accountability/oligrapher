@@ -2,10 +2,11 @@ import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { ThemeProvider, useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
-// import Container from '@mui/material/Container'
+import Container from '@mui/material/Container'
+import Stack from '@mui/material/Stack'
+import Box from '@mui/material/Box'
 import Grid from '@mui/material/Unstable_Grid2'
 import Header from './Header'
-import CondensedHeader from './CondensedHeader'
 import Graph from './Graph'
 import Editor from './Editor'
 import ZoomControl from './ZoomControl'
@@ -26,7 +27,6 @@ import {
   debugModeSelector
 } from '../util/selectors'
 
-
 export const ROOT_CONTAINER_ID = "oligrapher-container"
 
 const handleBeforeunload = (event: BeforeUnloadEvent) => {
@@ -43,7 +43,7 @@ const handleBeforeunload = (event: BeforeUnloadEvent) => {
 //      Grid-Item
 //        div#oligrapher-graph-container
 //          div#oligrapher-graph-svg
-//            <Graph>
+//              <svg>
 //        div#oligrapher-graph-editor
 //          <Editor>
 //        div#oligrapher-zoomcontrol
@@ -65,10 +65,14 @@ export function Root() {
   // use condensed versions of header and annotations for small screens
   const largeHeight = useMediaQuery("(min-height:600px)")
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'))
+
   const showNormalHeader = showHeader && (editorMode || largeHeight)
   const showCondensedHeader = showHeader && !showNormalHeader
+
   const showAnnotationsOnRight =  showAnnotations && !smallScreen
   const showAnnotationsOnBottom =  showAnnotations && smallScreen
+
+  const headerGridRef = React.useRef(null)
 
   // prevent backspace form navigating away from page in firefox and possibly other browsers
   useEffect(() => {
@@ -92,23 +96,24 @@ export function Root() {
     }
   }, [hasUnsavedChanges])
 
+
+  useEffect(() => {
+    console.log(headerGridRef.current)
+
+  }, [])
+
   return (
     <ThemeProvider theme={theme}>
       <div id={ROOT_CONTAINER_ID}>
-        <Grid container spacing={1}>
-          <Grid item sm={12} spacing={1}>
-            { showNormalHeader && <Header /> }
-            { showCondensedHeader && <CondensedHeader /> }
-          </Grid>
-
+        <Grid container spacing={1} alignItems="stretch">
+          { showHeader && <Grid ref={headerGridRef} item sm={12}><Header /></Grid> }
           <Grid item sm={showAnnotationsOnRight ? 8 : 12}>
-        <div id="oligrapher-graph-container" style={{height: '100%'}}>
+            <div id="oligrapher-graph-container">
               <Graph />
               { editorMode && <Editor /> }
               { showZoomControl && <ZoomControl /> }
               <FloatingEditors />
               <UserMessage />
-
             </div>
           </Grid>
           { showAnnotationsOnRight && <Grid item sm={4}><Annotations /></Grid> }
@@ -121,3 +126,10 @@ export function Root() {
 }
 
 export default Root
+
+
+/*
+
+
+
+ */
