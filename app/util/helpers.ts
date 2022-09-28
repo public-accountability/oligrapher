@@ -124,8 +124,7 @@ export function querySelector(query: string): Element {
   }
 }
 
-
-export function getElementForGraphItem(graph: Graph, id: string, t: "node" | "edge" | "caption" | "connections") {
+export function getElementForGraphItem(id: string, t: "node" | "edge" | "caption" | "connections") {
   if (t === "connections") {
     t = "node"
   }

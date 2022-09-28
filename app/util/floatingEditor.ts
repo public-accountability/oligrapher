@@ -92,7 +92,7 @@ export const floatingEditorPositionSelector = (state: State): Point | null => {
   }
 
   const svgRect = getElementById("oligrapher-svg").getBoundingClientRect()
-  const itemRect = getElementForGraphItem(state.graph, floatingEditor.id, floatingEditor.type).getBoundingClientRect()
+  const itemRect = getElementForGraphItem(floatingEditor.id, floatingEditor.type).getBoundingClientRect()
 
   const buffer = 20
   const width = X_SIZE[floatingEditor.type]

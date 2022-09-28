@@ -40,7 +40,8 @@ export default function Node({ id }: NodeProps) {
   }
   const onDrag: DraggableEventHandler = (_event, data) => {
     const deltas = { x: data.x, y: data.y }
-    dispatch({ type: 'DRAG_NODE', id, deltas })
+    const transform = nodeRef.current.getAttribute('transform')
+    dispatch({ type: 'DRAG_NODE', id, deltas, transform })
   }
 
   const onClick: DraggableEventHandler = (event, data) => {

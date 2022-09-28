@@ -25,7 +25,7 @@ import { Point, translatePoint } from './util/geometry'
 import { updateLock } from './util/lock'
 import FloatingEditor from './util/floatingEditor'
 import { swapSelection, clearSelection, selectionCount } from './util/selection'
-import { isLittleSisId } from './util/helpers'
+import { getElementForGraphItem, isLittleSisId } from './util/helpers'
 
 const ZOOM_INTERVAL = 1.2
 
@@ -75,6 +75,18 @@ const MESSAGE_ACTIONS = new Set(Object.keys(ACTION_TO_MESSAGE))
 function moveNodeAndEdges(state: State, id: string, deltas: Point): void {
   moveNode(state.graph, id, deltas)
   dragNodeEdges(state.graph, id, { x: 0, y: 0 })
+}
+
+function hasOtherSelectedNodes(state: State, id: string): boolean {
+  return state.display.selection.node.length > 0 && !isEqual(state.display.selection.node, [id])
+}
+
+function loopOtherSelectedNodes(state: State, thisNode: string, action: (nodeId: string) => void) {
+  state.display.selection.node.forEach(nodeId => {
+    if (nodeId !== thisNode) {
+      action(nodeId)
+    }
+  })
 }
 
 const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
@@ -160,8 +172,8 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase('CLICK_NODE', (state, action) => {
-    // Because CLICK_NODE is triggered instead of MOVE_NODE by DraggableComponent,
-    // and can happen after small (< 5) movement, we still call this function
+    // Because CLICK_NODE is triggered instead of MOVE_NODE by DraggableComponent
+    // and can happen after small (< 5) movement we still need call this function
     moveNodeAndEdges(state, action.id, action.deltas)
 
     if (action.shiftKey) {
@@ -211,12 +223,13 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
 
   builder.addCase('DRAG_NODE', (state, action) => {
     dragNodeEdges(state.graph, action.id, action.deltas)
+    if (hasOtherSelectedNodes(state, action.id)) {
+      loopOtherSelectedNodes(state, action.id, nodeId => {
+        dragNodeEdges(state.graph, nodeId, action.deltas)
+        getElementForGraphItem(nodeId, "node").setAttribute("transform", action.transform)
+      })
+    }
   })
-
-  // builder.addCase('MOVE_NODE', (state, action) => {
-  //   moveNode(state.graph, action.id, action.deltas)
-  //   dragNodeEdges(state.graph, action.id, { x: 0, y: 0 })
-  // })
 
   builder.addCase('MOVE_NODE_OR_ADD_EDGE_FROM_DRAG', (state, action) => {
     // When dragging over another node create a new edge
@@ -239,9 +252,23 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
       }
       // reset edges back to original position
       dragNodeEdges(state.graph, action.id, { x: 0, y: 0 })
-    // Otherwise move the node
+      // reset other selected nodes
+      if (hasOtherSelectedNodes(state, action.id)) {
+        loopOtherSelectedNodes(state, action.id, nodeId => {
+          dragNodeEdges(state.graph, nodeId, { x: 0, y: 0 })
+          getElementForGraphItem(nodeId, "node").setAttribute("transform", "translate(0,0)")
+        })
+      }
+      // Otherwise move the node moveNodeAndEdges(state, nodeId, action.deltas)
     } else {
       moveNodeAndEdges(state, action.id, action.deltas)
+      // and move other selected nodes
+      if (hasOtherSelectedNodes(state, action.id)) {
+        loopOtherSelectedNodes(state, action.id, nodeId => {
+          moveNodeAndEdges(state, nodeId, action.deltas)
+          getElementForGraphItem(nodeId, "node").setAttribute("transform", "translate(0,0)")
+        })
+      }
     }
   })
 
@@ -273,7 +300,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
       { id: action.id }
     ))
 
-    toggleEditor(state.display, 'caption', action.id)
+    FloatingEditor.toggleEditor(state.display, 'caption', action.id)
   })
 
   builder.addCase('UPDATE_CAPTION', (state, action) => {
@@ -471,10 +498,6 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     if (action.lock.editors) {
       state.attributes.editors = action.lock.editors
     }
-  })
-
-  builder.addCase('SET_SVG_SIZE', (state, action) => {
-    state.display.svgSize = action.svgSize
   })
 
   // https://developer.mozilla.org/en-US/docs/Web/API/Element/wheel_event
