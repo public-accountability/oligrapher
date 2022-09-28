@@ -93,7 +93,6 @@ export function Edge({ id, currentlyEdited }: EdgeProps) {
     evt.stopPropagation()
     if (isDragging) {
       const deltas = calculateDeltas(data, startPosition, startDrag, actualZoom)
-      console.log("Deltas-onStop", deltas)
       updateEdge({ cx: deltas.x, cy: deltas.y })
       setDragging(false)
     } else {

@@ -5,28 +5,17 @@ import identity from 'lodash/identity'
 import get from 'lodash/get'
 import isNull from 'lodash/isNull'
 import isArrayLike from 'lodash/isArrayLike'
-import map from 'lodash/map'
 import isPlainObject from 'lodash/isPlainObject'
 import isString from 'lodash/isString'
-import isEmpty from 'lodash/isEmpty'
 
 import { State } from '../util/defaultState'
-
 
 const formatValue = (v: any): string | React.ReactNode => {
   if (typeof v === 'undefined') {
     return <b>undefined</b>
   } else if (isString(v)) {
     return <em>{v}</em>
-  } else if (isNull(v)) {
-    return "null"
-  } else if (isArrayLike(v)) {
-    if (isEmpty(v)) {
-      return "[]"
-    } else {
-      return map(v, formatValue).join(",")
-    }
-  } else if (isPlainObject(v)) {
+  } else if (isNull(v) || isArrayLike(v) || isPlainObject(v)) {
     return JSON.stringify(v)
   } else {
     return v.toString()

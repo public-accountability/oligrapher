@@ -1,15 +1,21 @@
 import React, { useCallback, useState } from 'react'
-import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 
 import DraggableComponent from './DraggableComponent'
 import CaptionTextbox from './CaptionTextbox'
 import CaptionEditorTextarea from './CaptionEditorTextarea'
+import { Caption } from '../graph/caption'
 
-export default function Caption({ caption, currentlyEdited, status }) {
+type CaptionPropTypes = {
+  caption: Caption,
+  status: string,
+  currentlyEdited: boolean | undefined
+}
+
+export default function Caption({ caption, currentlyEdited, status }: CaptionPropTypes) {
   const { id, x, y, width, height } = caption
   const [foreignObjectSize, setForeignObjectSize] = useState({ width, height })
-  const { isHighlighting } = useSelector(state => state.annotations)
+  const isHighlighting = useSelector(state => state.annotations.isHighlighting)
 
   const dispatch = useDispatch()
   const onClick = useCallback(() => {
@@ -18,7 +24,8 @@ export default function Caption({ caption, currentlyEdited, status }) {
     } else {
       dispatch({ type: 'CLICK_CAPTION', id })
     }
-  }, [dispatch, id, isHighlighting])
+  }, [id, isHighlighting])
+
   const updateCaption = useCallback(attributes => dispatch({ type: 'UPDATE_CAPTION', attributes, id }), [dispatch, id])
   const moveCaption = useCallback(deltas => dispatch({ type: 'MOVE_CAPTION', deltas, id }), [dispatch, id])
 
@@ -46,14 +53,4 @@ export default function Caption({ caption, currentlyEdited, status }) {
       </g>
     </DraggableComponent>
   )
-}
-
-Caption.propTypes = {
-  caption: PropTypes.object.isRequired,
-  currentlyEdited: PropTypes.bool.isRequired,
-  status: PropTypes.string.isRequired
-}
-
-Caption.defaultProps = {
-  currentlyEdited: false
 }
