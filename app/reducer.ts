@@ -23,7 +23,7 @@ import {
 import updateSetting from './util/updateSetting'
 import { Point, translatePoint } from './util/geometry'
 import { updateLock } from './util/lock'
-import FloatingEditor, { toggleEditor } from './util/floatingEditor'
+import FloatingEditor from './util/floatingEditor'
 import { swapSelection, clearSelection, selectionCount } from './util/selection'
 import { isLittleSisId } from './util/helpers'
 
@@ -134,7 +134,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     addNode(state.graph, action.node, action.position || true)
 
     if (!isLittleSisId(action.node.id)) {
-      toggleEditor(state.display, 'node', action.node.id)
+      FloatingEditor.toggleEditor(state.display, 'node', action.node.id)
     }
   })
 
@@ -160,6 +160,8 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase('CLICK_NODE', (state, action) => {
+    // Because CLICK_NODE is triggered instead of MOVE_NODE by DraggableComponent,
+    // and can happen after small (< 5) movement, we still call this function
     moveNodeAndEdges(state, action.id, action.deltas)
 
     if (action.shiftKey) {
@@ -169,14 +171,14 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
         state.display.selection.node.push(action.id)
       }
     } else {
-      state.display.selection.node = [action.id]
-      toggleEditor(state.display, 'node', action.id)
+      if (state.display.floatingEditor.type === 'node' && state.display.floatingEditor.id === action.id) {
+        state.display.selection.node = without(state.display.selection.node, action.id)
+        FloatingEditor.clear(state.display)
+      } else {
+        state.display.selection.node = [action.id]
+        FloatingEditor.toggleEditor(state.display, 'node', action.id)
+      }
     }
-
-    // select node if editing it
-    // if (FloatingEditor.getId(state.display, 'node') === action.id) {
-    //   swapSelection(state.display, 'node', action.id)
-    // }
   })
 
   builder.addCase('MOUSE_ENTERED_NODE', (state, action) => {
@@ -196,13 +198,11 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase('DRAG_NODE_START', (state, action) => {
+    state.display.draggedNode = action.id
     // clearSelection(state.display)
-
     // if (state.display.overNode === action.id) {
     //   state.display.overNode = null
-    // }
-    FloatingEditor.clear(state.display)
-    state.display.draggedNode = action.id
+    //}
   })
 
   builder.addCase('DRAG_NODE_STOP', (state, action) => {
@@ -250,7 +250,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     dragNodeEdges(state.graph, action.id, { x: 0, y: 0 })
 
     if (!isLittleSisId(action.edge.id)) {
-      toggleEditor(state.display, 'edge', action.edge.id)
+      FloatingEditor.toggleEditor(state.display, 'edge', action.edge.id)
     }
   })
 
@@ -306,12 +306,12 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
 
   builder.addCase('CLICK_EDGE', (state, action) => {
     clearSelection(state.display)
-    toggleEditor(state.display, 'edge', action.id)
+    FloatingEditor.toggleEditor(state.display, 'edge', action.id)
   })
 
   builder.addCase('CLICK_CAPTION', (state, action) => {
     clearSelection(state.display)
-    toggleEditor(state.display, 'caption', action.id)
+    FloatingEditor.toggleEditor(state.display, 'caption', action.id)
   })
 
   builder.addCase('ZOOM_IN', (state, action) => {

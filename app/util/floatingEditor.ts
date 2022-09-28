@@ -38,6 +38,8 @@ export const set = (display: DisplayState, t: FloatingEditorTypeType | null = nu
 }
 
 export const clear = (display: DisplayState): void => {
+  // display.floatingEditor.type = null
+  // display.floatingEditor.id = null
   set(display, null, null)
 }
 
