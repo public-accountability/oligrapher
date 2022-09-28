@@ -1,7 +1,7 @@
 import isEqual from 'lodash/isEqual'
 import isNil from 'lodash/isNil'
 
-import { DisplayModesState, State, FloatingEditorType } from './defaultState'
+import { DisplayModesState, State, FloatingEditorType, StateWithoutHistory } from './defaultState'
 import { Annotation } from './annotations'
 import { LsMap } from '../datasources/littlesis3'
 import { Selector } from 'react-redux'
@@ -176,3 +176,6 @@ export const hasUnsavedChangesSelector = (state: State): boolean => {
 
   return !isEqual(lastSavedData, latestData)
 }
+
+export const pastHistorySelector = (state: State): StateWithoutHistory[] => state.history.past
+export const futureHistorySelector = (state: State): StateWithoutHistory[] => state.history.future

@@ -1,4 +1,5 @@
 import { configureStore, createReducer, EnhancedStore } from '@reduxjs/toolkit'
+//import undoable from 'redux-undo';
 import logger from 'redux-logger'
 import createSagaMiddleware from 'redux-saga'
 import reducer from '../reducer'

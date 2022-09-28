@@ -4,6 +4,7 @@ import merge from 'lodash/merge'
 import without from 'lodash/without'
 import isEqual from 'lodash/isEqual'
 import clamp from 'lodash/clamp'
+import omit from 'lodash/omit'
 
 import {
   addNode, updateNode, removeNode, removeNodes, dragNodeEdges, moveNode,
@@ -89,7 +90,37 @@ function loopOtherSelectedNodes(state: State, thisNode: string, action: (nodeId:
   })
 }
 
+function addToPastHistory(state: State): void {
+  state.history.past.unshift(omit(state, 'history'))
+}
+
 const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
+  builder.addCase('HISTORY_UNDO', (state, action) => {
+    if (state.history.past.length > 0) {
+      return Object.assign({}, state.history.past[0], {
+        history: {
+          past: state.history.past.slice(1),
+          future: [omit(state, 'history')].concat(state.history.future)
+        }
+      })
+    } else {
+      console.error("no history found")
+    }
+  })
+
+  builder.addCase('HISTORY_REDO', (state, action) => {
+    if (state.history.future.length > 0) {
+      return Object.assign({}, state.history.future[0], {
+        history: {
+          past: [omit(state, 'history')].concat(state.history.past),
+          future: state.history.past.slice(1)
+        }
+      })
+    } else {
+      console.error("no future history found")
+    }
+  })
+
   builder.addCase('SET_SAVED_DATA', (state, action) => {
     state.lastSavedData = action.data
   })
@@ -148,6 +179,8 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     if (!isLittleSisId(action.node.id)) {
       FloatingEditor.toggleEditor(state.display, 'node', action.node.id)
     }
+
+    // addToPastHistory(state)
   })
 
   builder.addCase('UPDATE_NODE', (state, action) => {
@@ -486,6 +519,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
 
   builder.addCase('UPDATE_SETTING', (state, action) => {
     updateSetting(state.attributes, action.key, action.value)
+    addToPastHistory(state)
   })
 
   builder.addCase('REMOVE_EDITOR_SUCCESS', (state, action) => {

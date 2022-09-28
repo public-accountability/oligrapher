@@ -109,7 +109,7 @@ export interface SettingsState {
   logActions: boolean
 }
 
-export interface State {
+export interface StateWithoutHistory {
   graph: Graph,
   annotations: AnnotationsState,
   attributes: AttributesState,
@@ -118,8 +118,13 @@ export interface State {
   lastSavedData: LsMap | null
 }
 
-export interface StateWithHistory extends State {
-  graph: GraphState
+type StateHistory = {
+  past: StateWithoutHistory[],
+  future: StateWithoutHistory[]
+}
+
+export interface State extends StateWithoutHistory {
+  history: StateHistory
 }
 
 const defaultState: State = {
@@ -177,13 +182,6 @@ const defaultState: State = {
     zoom: 1,
     viewBox: { minX: 0, minY: 0, h: 1200, w: 800 },
     svgHeight: 400,
-    // svgZoom: 1,
-    // actualZoom: 1,
-    // svgTop: 0,
-    // svgBottom: null,
-    // svgSize: { width: 0, height: 0 },
-    // svgOffset: { x: 0, y: 0 },
-    // offset: { x: 0, y: 0 },
     showHeader: true,
     showZoomControl: true,
     headerIsCollapsed: false,
@@ -219,6 +217,12 @@ const defaultState: State = {
     embed: false,
     noEditing: false,
     logActions: false
+  },
+
+  // for Undo/Redo
+  history: {
+    past: [],
+    future: []
   },
 
   lastSavedData: null

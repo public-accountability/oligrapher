@@ -105,14 +105,6 @@ export default function stateInitializer(legacyState: any): State {
     state.attributes.lock = transformLockData(legacyState.attributes.lock)
   }
 
-  // for redux-undo
-  // state.graph = {
-  //   ...state.graph,
-  //   past: [],
-  //   present: newGraph(state.graph),
-  //   future: []
-  // }
-
   // if map has id, it's been saved before, let's keep the data
   // for comparison against current data when user leaves app
   if (legacyState.attributes?.id) {
