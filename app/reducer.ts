@@ -4,7 +4,7 @@ import merge from 'lodash/merge'
 import without from 'lodash/without'
 import isEqual from 'lodash/isEqual'
 import clamp from 'lodash/clamp'
-import omit from 'lodash/omit'
+import cloneDeep from 'lodash/cloneDeep'
 
 import {
   addNode, updateNode, removeNode, removeNodes, dragNodeEdges, moveNode,
@@ -26,7 +26,7 @@ import { Point, translatePoint } from './util/geometry'
 import { updateLock } from './util/lock'
 import FloatingEditor from './util/floatingEditor'
 import { swapSelection, clearSelection, selectionCount } from './util/selection'
-import { getElementForGraphItem, isLittleSisId } from './util/helpers'
+import { getElementForGraphItem, isLittleSisId, omit } from './util/helpers'
 
 const ZOOM_INTERVAL = 1.2
 
@@ -91,18 +91,14 @@ function loopOtherSelectedNodes(state: State, thisNode: string, action: (nodeId:
 }
 
 function addToPastHistory(state: State): void {
-  state.history.past.unshift(omit(state, 'history'))
+  state.history.past.unshift(cloneDeep(state.graph))
 }
 
 const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   builder.addCase('HISTORY_UNDO', (state, action) => {
     if (state.history.past.length > 0) {
-      return Object.assign({}, state.history.past[0], {
-        history: {
-          past: state.history.past.slice(1),
-          future: [omit(state, 'history')].concat(state.history.future)
-        }
-      })
+      state.history.future.unshift(cloneDeep(state.graph))
+      state.graph = cloneDeep(state.history.past.shift())
     } else {
       console.error("no history found")
     }
@@ -110,12 +106,8 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
 
   builder.addCase('HISTORY_REDO', (state, action) => {
     if (state.history.future.length > 0) {
-      return Object.assign({}, state.history.future[0], {
-        history: {
-          past: [omit(state, 'history')].concat(state.history.past),
-          future: state.history.past.slice(1)
-        }
-      })
+      state.history.past.unshift(cloneDeep(state.graph))
+      state.graph = cloneDeep(state.history.future.shift())
     } else {
       console.error("no future history found")
     }
@@ -174,13 +166,13 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase('ADD_NODE', (state, action) => {
+    addToPastHistory(state)
+
     addNode(state.graph, action.node, action.position)
 
     if (!isLittleSisId(action.node.id)) {
       FloatingEditor.toggleEditor(state.display, 'node', action.node.id)
     }
-
-    // addToPastHistory(state)
   })
 
   builder.addCase('UPDATE_NODE', (state, action) => {

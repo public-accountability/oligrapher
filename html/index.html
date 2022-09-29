@@ -20,7 +20,7 @@
 
     <script>
      const oli = new Oligrapher({
-       settings: { debug: true },
+       settings: { logActions: true },
        attributes: {
          title: "Blank Map",
          date: "January 12, 2018",
@@ -33,7 +33,7 @@
          owner: {
            id: 1
          },
-         settings: { private: false },
+         settings: { private: false, debug: true  },
          links: [
            { text: "Edit", url: "https://littlesis.org/oligrapher/edit" },
            { text: "Clone", url: "https://littlesis.org/oligrapher/clone" },

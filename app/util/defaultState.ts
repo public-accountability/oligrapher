@@ -119,8 +119,8 @@ export interface StateWithoutHistory {
 }
 
 type StateHistory = {
-  past: StateWithoutHistory[],
-  future: StateWithoutHistory[]
+  past: Graph[],
+  future: Graph[]
 }
 
 export interface State extends StateWithoutHistory {

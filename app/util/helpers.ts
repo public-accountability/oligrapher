@@ -50,6 +50,12 @@ export function frozenArray(...items: any[]): readonly any[] {
   return Object.freeze(items)
 }
 
+export function omit(obj: any, key: string): object {
+  let clone = Object.assign({}, obj)
+  delete clone[key]
+  return clone
+}
+
 export function isLittleSisId(id: any): boolean {
   return Number.isFinite(toNumber(id))
 }
