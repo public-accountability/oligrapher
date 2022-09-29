@@ -225,11 +225,12 @@ export function calculateCenter(graph: Graph): Point {
 export function findFreePositionNear(graph: Graph, startPosition: Point): Point {
   const padding = 50
   const maxTries = 30
+  const nodes = Object.values(graph.nodes)
   let position, node, success = false, tries = 0, radius = 0
 
   do {
     position = positionNear(startPosition, radius)
-    node = findIntersectingNode(Object.values(graph.nodes), position, padding)
+    node = findIntersectingNode(nodes, position, padding)
     success = (node === undefined)
     tries += 1
     radius += 20
@@ -258,7 +259,7 @@ export function newGraph(attributes: GraphAttributes = {}): Graph {
   return Object.assign({}, DEFAULT_GRAPH, attributes)
 }
 
-export function addNode(graph: Graph, attributes: NodeAttributes, position: boolean | Point = false): Graph {
+export function addNode(graph: Graph, attributes: NodeAttributes, position: Point | undefined | false): Graph {
   let node = newNode(attributes)
 
   // skip if already contains node with same id

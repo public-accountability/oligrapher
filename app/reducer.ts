@@ -174,7 +174,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase('ADD_NODE', (state, action) => {
-    addNode(state.graph, action.node, action.position || true)
+    addNode(state.graph, action.node, action.position)
 
     if (!isLittleSisId(action.node.id)) {
       FloatingEditor.toggleEditor(state.display, 'node', action.node.id)
