@@ -1,8 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
-
-import { useSelector } from '../util/helpers'
+import { useSelector, useDispatch } from 'react-redux'
 import EditorHeader from './EditorHeader'
 import SizePicker from './SizePicker'
 import EditNodeColorPage from './EditNodeColorPage'
@@ -11,8 +8,22 @@ import EditorSubmitButtons from './EditorSubmitButtons'
 import EditorHotKeys from './EditorHotKeys'
 import { callWithTargetValue, isLittleSisId } from '../util/helpers'
 import { IoIosLink } from '@react-icons/all-files/io/IoIosLink'
+import { NodeAttributes } from '../graph/node'
 
-export function MainPage({ node, setPage, updateNode, openAddConnections }) {
+type NodeEditorMainPagePropTypes = {
+  node: {
+    id: string,
+    name?: string,
+    description?: string,
+    image?: string,
+    url?: string
+  },
+  setPage: (page: string) => void,
+  updateNode: (node: NodeAttributes) => void,
+  openAddConnections: () => void
+}
+
+export function MainPage({ node, setPage, updateNode, openAddConnections }: NodeEditorMainPagePropTypes) {
   const isLsNode = isLittleSisId(node.id)
 
   return (
@@ -64,19 +75,6 @@ export function MainPage({ node, setPage, updateNode, openAddConnections }) {
   )
 }
 
-MainPage.propTypes = {
-  node: PropTypes.shape({
-    id: PropTypes.any,
-    name: PropTypes.string,
-    description: PropTypes.string,
-    image: PropTypes.string,
-    url: PropTypes.string
-  }).isRequired,
-  setPage: PropTypes.func.isRequired,
-  updateNode: PropTypes.func.isRequired,
-  openAddConnections: PropTypes.func.isRequired
-}
-
 export default function NodeEditor({ id }) {
   // possible pages: main, color, size
   const [page, setPage] = useState('main')
@@ -115,8 +113,4 @@ export default function NodeEditor({ id }) {
       </div>
     </EditorHotKeys>
   )
-}
-
-NodeEditor.propTypes = {
-  id: PropTypes.string.isRequired
 }
