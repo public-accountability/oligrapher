@@ -94,14 +94,24 @@ function addToPastHistory(state: State): void {
   state.history.past.unshift(cloneDeep(state.graph))
 }
 
+// Closing the tools after UNDO/REDO avoids errors that can
+// happen if the open editors have stale data
+function closeToolAndFloatingEditor(state: State): void  {
+  state.display.tool = null
+  state.display.floatingEditor.type = null
+  state.display.floatingEditor.id = null
+}
+
 const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   builder.addCase('HISTORY_UNDO', (state, action) => {
     if (state.history.past.length > 0) {
       state.history.future.unshift(cloneDeep(state.graph))
       state.graph = cloneDeep(state.history.past.shift())
     } else {
-      console.error("no history found")
+      console.error("no past history found")
     }
+
+    closeToolAndFloatingEditor(state)
   })
 
   builder.addCase('HISTORY_REDO', (state, action) => {
@@ -111,6 +121,8 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     } else {
       console.error("no future history found")
     }
+
+    closeToolAndFloatingEditor(state)
   })
 
   builder.addCase('SET_SAVED_DATA', (state, action) => {
@@ -176,22 +188,26 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase('UPDATE_NODE', (state, action) => {
+    addToPastHistory(state)
     updateNode(state.graph, action.id, action.attributes)
   })
 
   builder.addCase('UPDATE_NODES', (state, action) => {
+    addToPastHistory(state)
     action.nodeIds.forEach((nodeId: string) => {
       updateNode(state.graph, nodeId, action.attributes)
     })
   })
 
   builder.addCase('REMOVE_NODE', (state, action) => {
+    addToPastHistory(state)
     removeNode(state.graph, action.id)
     FloatingEditor.clear(state.display)
     swapSelection(state.display, 'node', action.id)
   })
 
   builder.addCase('REMOVE_NODES', (state, action) => {
+    addToPastHistory(state)
     removeNodes(state.graph, action.ids)
     clearSelection(state.display)
   })
@@ -257,6 +273,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase('MOVE_NODE_OR_ADD_EDGE_FROM_DRAG', (state, action) => {
+    addToPastHistory(state)
     // When dragging over another node create a new edge
     if (state.display.overNode && state.display.overNode !== action.id) {
       const node1 = state.graph.nodes[action.id]
@@ -298,6 +315,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase('ADD_EDGE', (state, action) => {
+    addToPastHistory(state)
     addEdgeIfNodes(state.graph, action.edge)
     dragNodeEdges(state.graph, action.id, { x: 0, y: 0 })
 
