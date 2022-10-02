@@ -10,6 +10,8 @@ import { callWithTargetValue, isLittleSisId } from '../util/helpers'
 import { IoIosLink } from '@react-icons/all-files/io/IoIosLink'
 import { NodeAttributes } from '../graph/node'
 
+import Input from '@mui/material/Input';
+
 type NodeEditorMainPagePropTypes = {
   node: {
     id: string,
@@ -26,12 +28,24 @@ type NodeEditorMainPagePropTypes = {
 export function MainPage({ node, setPage, updateNode, openAddConnections }: NodeEditorMainPagePropTypes) {
   const isLsNode = isLittleSisId(node.id)
 
+  const [imageValue, setImageValue] = useState(node.image || '')
+
+
+  const imageLinkOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let url = event.target.value
+    setImageValue(event.target.value)
+
+
+
+    // callWithTargetValue(image => updateNode({ image }))
+  }
+
   return (
     <>
       <form>
         <div>
           <label>Name</label>
-          <input
+          <Input
             type="text"
             placeholder="Node name"
             value={node.name || ''}
@@ -40,7 +54,7 @@ export function MainPage({ node, setPage, updateNode, openAddConnections }: Node
 
         <div>
           <label>Hover-Over Description</label>
-          <input
+          <Input
             type="text"
             placeholder="Description"
             value={node.description || ''}
@@ -49,16 +63,16 @@ export function MainPage({ node, setPage, updateNode, openAddConnections }: Node
 
         <div>
           <label>Image Link</label>
-          <input
+          <Input
             type="text"
             placeholder="Image link"
-            value={node.image || ''}
-            onChange={callWithTargetValue(image => updateNode({ image }))} />
+            value={imageValue}
+            onChange={imageLinkOnChange} />
         </div>
 
         <div>
           <label>Clickthrough Link</label>
-          <input
+          <Input
             type="text"
             placeholder="Link"
             value={node.url || ''}
