@@ -69,15 +69,9 @@
     "whatwg-fetch": "^3.6.2"
   },
   "jest": {
-    "testMatch": [
-      "**/test/**/*.test.[jt]s?(x)"
-    ],
-    "transformIgnorePatterns": [
-      "node_modules/(?!(nanoid)/)"
-    ],
+    "testMatch": ["**/test/**/*.test.[jt]s?(x)"],
+    "transformIgnorePatterns": ["node_modules/(?!(nanoid)/)"],
     "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": [
-      "./jest.setup.js"
-    ]
+    "setupFilesAfterEnv": ["./jest.setup.js"]
   }
 }

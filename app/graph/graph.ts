@@ -337,7 +337,9 @@ export function updateNode(graph: Graph, nodeId: string, attributes: NodeAttribu
 }
 
 export function addEdgeIdToNode(graph: Graph, nodeId: string, edgeId: string): Graph {
-  updateNode(graph, nodeId, { edgeIds: uniq(getNode(graph, nodeId).edgeIds.concat([edgeId])) })
+  const node = getNode(graph, nodeId)
+  const newEdgeIds = [...new Set(node.edgeIds.concat(edgeId))]
+  updateNode(graph, nodeId, { edgeIds: newEdgeIds })
   return graph
 }
 

@@ -69,6 +69,9 @@ export function newEdge(attrs: EdgeAttributes | undefined): EdgeAttributes {
 }
 
 export function newEdgeFromNodes(n1: Node, n2: Node, attributes: EdgeAttributes | undefined): Edge {
+  if (!n1.id || !n2.id) {
+    throw new Error("missing node id")
+  }
   const edge = newEdge(attributes) as Edge
   edge.node1_id = n1.id
   edge.node2_id = n2.id
