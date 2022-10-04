@@ -6,14 +6,15 @@
     <title>Blank Map</title>
     <link rel="stylesheet" href="oligrapher.css">
     <script src="oligrapher.js"></script>
+
     <style>
-     body {
-       margin: 10px;
+     html, body {
+       margin: 0;
+       height: 100%;
      }
 
      #oligrapher {
-       height: 600px;
-       width: 100%;
+       height: 100vh;
      }
     </style>
   </head>
@@ -23,7 +24,7 @@
 
     <script>
      const oli = new Oligrapher({
-       settings: { debug: true },
+       settings: { logActions: true },
        attributes: {
          title: "Blank Map",
          date: "January 12, 2018",
@@ -36,7 +37,7 @@
          owner: {
            id: 1
          },
-         settings: { private: false },
+         settings: { private: false, debug: true  },
          links: [
            { text: "Edit", url: "https://littlesis.org/oligrapher/edit" },
            { text: "Clone", url: "https://littlesis.org/oligrapher/clone" },

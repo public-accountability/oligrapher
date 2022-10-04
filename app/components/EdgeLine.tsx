@@ -26,7 +26,6 @@ export function EdgeLine({ id, bezier, width, dash, status, arrow, isReverse }: 
   )
 }
 
-
 interface EdgeLineProps {
   id: string,
   bezier: string,

@@ -54,16 +54,17 @@ const MENU = {
 export default function EditorMenuItem({ item, disabled, inUse }) {
   const { title, icon } = MENU[item]
   const dispatch = useDispatch()
-  const toggleTool = useCallback(() => dispatch({ type: 'TOGGLE_TOOL', tool: item }), [dispatch, item])
-  const toggleAnnotations = useCallback(() => dispatch({ type: 'TOGGLE_ANNOTATIONS' }), [dispatch])
   const helpUrl = useSelector(state => state.attributes.helpUrl)
 
-  let onClick = toggleTool
-
-  if (item === 'annotations') {
-    onClick = toggleAnnotations
-  } else if (item == 'help') {
-    onClick = () =>  window.open(helpUrl, '_blank')
+  let onClick = (evt) => {
+    evt.stopPropagation()
+    if (item === 'annotations') {
+      dispatch({ type: 'TOGGLE_ANNOTATIONS' })
+    } else if (item == 'help') {
+      window.open(helpUrl, '_blank')
+    } else {
+      dispatch({ type: 'TOGGLE_TOOL', tool: item })
+    }
   }
 
   const className = `editor-menu-item editor-${item}-item`

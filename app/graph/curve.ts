@@ -1,7 +1,5 @@
 import toNumber from 'lodash/toNumber'
 import chunk from  'lodash/chunk'
-import merge from 'lodash/merge'
-
 import { Point } from '../util/geometry'
 import { Edge, EdgeGeometry } from './edge'
 
@@ -34,7 +32,7 @@ export interface Curve {
   ya: number,
   xb: number,
   yb: number,
-  is_reverse: boolean  
+  is_reverse: boolean
 }
 
 export const defaultCurveStrength = 0.5
@@ -51,7 +49,7 @@ export function parseCurveString(str: string) {
   return chunk(str.replace(/(M|Q)/g, '').trim().split(/[ ]+/).map(toNumber), 2)
 }
 
-export function edgeToCurve(edge: EdgeGeometry, curveStrength: number = defaultCurveStrength): Curve {
+export function edgeToCurve(edge: Edge | EdgeGeometry, curveStrength: number = defaultCurveStrength): Curve {
   let { cx, cy, x1, y1, x2, y2, s1, s2 } = edge
   let r1 = s1 * circleRadius
   let r2 = s2 * circleRadius
@@ -78,7 +76,7 @@ export function edgeToCurve(edge: EdgeGeometry, curveStrength: number = defaultC
   }
 
   // generate control point if it doesn't exist
-  if (cx == null || cy == null) {
+  if (!cx || !cy) {
     cx = -(ya - y) * curveStrength
     cy = (xa - x) * curveStrength
   }
@@ -122,7 +120,7 @@ export function curveToBezier({ x, y, xa, ya, xb, yb, cx, cy }: Curve): string {
 }
 
 // modifies control points of a group of edges between the same nodes
-// sothat the edges are nicely spaced out
+// so that the edges are nicely spaced out
 export function curveSimilarEdges(edges: Edge[]): Edge[] {
   const count = edges.length
 
@@ -132,16 +130,15 @@ export function curveSimilarEdges(edges: Edge[]): Edge[] {
   }
 
   // curve strength is default if there are only 2 edges
-  // curve strength approaches twice default as number of edges increases 
+  // curve strength approaches twice default as number of edges increases
   const maxCurveStrength = defaultCurveStrength * (3 - 2/count)
   const range = maxCurveStrength * 2
   const step = range / (count - 1)
   let startStrength = -maxCurveStrength
-  
+
   return edges.map((edge, i) => {
     let strength = startStrength + (i * step)
     let { cx, cy } = edgeToCurve(edge, strength)
-    edge = merge(edge, { cx, cy })
-    return edge
+    return Object.assign({}, edge, { cx, cy })
   })
 }

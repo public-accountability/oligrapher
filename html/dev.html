@@ -7,19 +7,20 @@
     <link rel="stylesheet" href="oligrapher.css">
     <script src="oligrapher.js"></script>
     <style>
-      body {
-        margin: 0;
-      }
+     html, body {
+       margin: 0;
+       height: 100%;
+       overflow: hidden;
+     }
 
      #oligrapher {
-       width: 100%;
+       height: 100vh;
      }
     </style>
   </head>
 
   <body>
     <div id="oligrapher"></div>
-
     <script>
      const graph ={
        "nodes": {
@@ -2702,33 +2703,42 @@
        "graph": graph,
        "annotations": annotations,
        "settings": {
-         "debug": true,
-         "noEditing": false
+         "logActions": false,
+         "noEditing": false,
+         "defaultStoryMode": false,
+         "scrollToZoom": true
+       },
+       "display": {
+         "modes": {
+           "editor": true,
+           "story": false
+         }
        },
        "attributes": {
-          "id": 4084,
-          "title": "Millionaire CEOs lead the corporations that fund abortion bans",
-          "subtitle": "Just a placeholder subtitle",
-          "date": "May 24, 2019",
-          "owner": {
-            "id": 2088,
-            "name": "user_2088",
-            "url": "/users/user_2088"
-          },
-          "user": {
-            "id": 2088,
-            "name": "user_2088",
-            "url": "/users/user_2088"
-          },
-          "settings": {
-            "private": false,
-            "clone": false
-          },
-          "editors": [],
-          "version": 2,
-          "shareUrl": null
-        }
-      })
+         "id": 100,
+         "title": "Millionaire CEOs lead the corporations that fund abortion bans",
+         "subtitle": "subtitle placeholder",
+         "date": "May 24, 2019",
+         "owner": {
+           "id": 1,
+           "name": "ExampleLittleSisUser",
+           "url": "/users/examplelittlesisuser"
+         },
+         "user": {
+           "id": 1,
+           "name": "ExampleLittleSisUser",
+           "url": "/users/examplelittlesisuser"
+         },
+         "settings": {
+           "private": false,
+           "clone": true,
+           "debug": true,
+           "showControlpoint": true
+         },
+         "editors": [],
+         "shareUrl": null
+       }
+     })
     </script>
   </body>
 </html>

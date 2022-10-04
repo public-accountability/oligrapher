@@ -1,6 +1,7 @@
 @use "sass:color";
 
 $oligrapher_blue: #0c7fff;
+$oligrapher_blue_dark: #3b0aff;
 $font_color: black;
 $link_color: $oligrapher_blue;
 $button_bg_color: #2c63c8;
@@ -28,13 +29,13 @@ $node_highlight_color: $oligrapher_blue;
 $edge_highlight_color: $oligrapher_blue;
 
 @font-face {
-  font-family: 'Open Sans';
+  font-family: "Open Sans";
   font-style: normal;
   font-weight: 400;
-  src: local(''),
-       url('https://littlesis.org/static/fonts/open-sans-v34-latin-regular.woff2') format('woff2'),
-       url('https://littlesis.org/static/fonts/open-sans-v34-latin-regular.woff') format('woff'),
-       url('https://littlesis.org/static/fonts/open-sans-v34-latin-regular.ttf') format('truetype');
+  src: local(""),
+    url("https://littlesis.org/static/fonts/open-sans-v34-latin-regular.woff2") format("woff2"),
+    url("https://littlesis.org/static/fonts/open-sans-v34-latin-regular.woff") format("woff"),
+    url("https://littlesis.org/static/fonts/open-sans-v34-latin-regular.ttf") format("truetype");
 }
 
 %box_shadow {
@@ -70,7 +71,7 @@ $edge_highlight_color: $oligrapher_blue;
     border: none;
     margin-left: 0.5em;
     margin-top: 0;
-    background-color: #FFF;
+    background-color: #fff;
     padding: 0;
   }
 }
@@ -84,35 +85,23 @@ $edge_highlight_color: $oligrapher_blue;
 }
 
 %floating_editor_box {
-    width: 235px;
-    min-height: 300px;
-    max-height: 450px;
-    padding: 0.5em;
-    box-sizing: border-box;
+  width: 235px;
+  min-height: 300px;
+  max-height: 450px;
+  padding: 0.5em;
+  box-sizing: border-box;
 }
 
-
-html, body, div#oligrapher {
-  height: 100%;
-}
-
-body {
-  margin: 0;
-}
-
-/*
-   This is our outermost div.
-   It's a flex container with two children: #oligrapher-header and #oligrapher-graph
-*/
 #oligrapher-container {
-  margin: 0 auto;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  /* margin: 0 auto; */
+  height: 100%;
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* justify-content: space-between; */
 
-  button, a:hover {
+  button,
+  a:hover {
     cursor: pointer;
   }
 
@@ -121,27 +110,17 @@ body {
   }
 }
 
-#oligrapher-container #oligrapher-header, #oligrapher-container #oligrapher-header-condensed {
-  display: flex;
-  flex-direction: column;
-  width: calc(100vw - 30px);
-  margin: 0 auto;
+#oligrapher-container #oligrapher-header,
+#oligrapher-container #oligrapher-header-condensed {
   border-bottom: 1px solid #ccc;
-  box-sizing: border-box;
   position: relative;
-
-
-  &.oligrapher-header-expanded {
-    /* min-height: 142px; */
-    /* height: 142px; */
-  }
 
   &.oligrapher-header-collapsed {
     min-height: 52px;
 
     #oligrapher-header-top {
-      display: flex;
-      flex-direction: row;
+      /* display: flex; */
+      /* flex-direction: row; */
     }
 
     h1#oligrapher-title {
@@ -221,6 +200,7 @@ body {
       margin-bottom: 0.5em;
     }
 
+    /* byline  */
     #oligrapher-header-left-wrapper {
       flex-grow: 2;
       flex-shrink: 2;
@@ -240,7 +220,7 @@ body {
         }
       }
     }
-
+    /* edit actions/  */
     #oligrapher-header-right-wrapper {
       flex-grow: 0;
       flex-shrink: 0;
@@ -252,7 +232,8 @@ body {
         margin-right: 5px;
       }
 
-      .oligrapher-header-actions, .oligrapher-header-edit-actions  {
+      .oligrapher-header-actions,
+      .oligrapher-header-edit-actions {
         .oligrapher-header-edit-actions-lock {
           margin-right: 0.5em;
           color: $oligrapher_dark_gray;
@@ -270,20 +251,13 @@ body {
   }
 }
 
-#oligrapher-container .MuiGrid-container {
-  flex: 1 2 auto;
-  // overflow: hidden;
+#oligrapher-container #oligrapher-svg-container {
+  width: 100%;
 }
 
 #oligrapher-container #oligrapher-graph-container {
-  flex: 1 2 auto;
-  overflow: hidden;
+  width: 100%;
   position: relative;
-
-  #oligrapher-graph-svg {
-    z-index: 1;
-    height: 95%;
-  }
 
   .oligrapher-graph-editor {
     position: absolute;
@@ -301,23 +275,14 @@ body {
   }
 
   #oligrapher-zoomcontrol {
-    div {
-      z-index: 1;
-      position: absolute;
-        display: flex;
-      flex-direction: column;
-      border: 1px solid #ccc;
-      @extend %box_shadow;
-      right: 15px;
-    }
-
-    #oligrapher-zoom-buttons {
-      top: 1em;
-    }
-
-    #oligrapher-zoom-reset-button {
-      top: 5.5em;
-    }
+    z-index: 10;
+    right: 15px;
+    top: 0;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    @extend %box_shadow;
 
     button {
       padding: 8px;
@@ -484,7 +449,8 @@ body {
 
 /* COMMON NODE EDITING */
 
-#oligrapher-container .oligrapher-graph-editor, #oligrapher-container .oligrapher-floating-editor {
+#oligrapher-container .oligrapher-graph-editor,
+#oligrapher-container .oligrapher-floating-editor {
   > div {
     @extend %box_shadow;
   }
@@ -562,7 +528,7 @@ body {
     padding-top: 0 !important;
     padding-bottom: 0 !important;
 
-    >div:nth-child(1) {
+    > div:nth-child(1) {
       height: 75px;
       padding-bottom: 0 !important;
     }
@@ -624,7 +590,7 @@ body {
       margin-left: 10px;
       padding: 0;
       border: none;
-      background-color: #FFF;
+      background-color: #fff;
     }
   }
 
@@ -639,18 +605,18 @@ body {
   footer {
   }
 
-  form {
-    label {
-      @extend %editor_label;
-      display: block;
-      margin-bottom: 3px;
-      margin-top: 5px;
-    }
+  /* form { */
+  /*   label { */
+  /*     @extend %editor_label; */
+  /*     display: block; */
+  /*     margin-bottom: 3px; */
+  /*     margin-top: 5px; */
+  /*   } */
 
-    input {
-        @extend %editor_input;
-    }
-  }
+  /*   input { */
+  /*       @extend %editor_input; */
+  /*   } */
+  /* } */
 
   hr {
     margin-top: 0.5em;
@@ -660,34 +626,34 @@ body {
 } /* end: .oligrapher-floating-editor */
 
 #oligrapher-container div.oligrapher-node-editor {
-    @extend %floating_editor_box;
+  @extend %floating_editor_box;
 
-    a.add-connections-link {
-        display: block;
-        font-size: 16px;
-        color: $oligrapher_blue;
-        font-weight: bold;
-        margin-top: 10px;
-        text-decoration: none;
+  a.add-connections-link {
+    display: block;
+    font-size: 16px;
+    color: $oligrapher_blue;
+    font-weight: bold;
+    margin-top: 10px;
+    text-decoration: none;
 
-        &:hover {
-            text-decoration: none;
-        }
+    &:hover {
+      text-decoration: none;
     }
+  }
 
-    .node-littlesis-link {
-        float: left;
+  .node-littlesis-link {
+    float: left;
 
-        svg {
-            height: 20px;
-            width: 20px;
-        }
+    svg {
+      height: 20px;
+      width: 20px;
     }
+  }
 }
 
 /* add connections tool */
 #oligrapher-container div.oligrapher-add-connections {
-    @extend %floating_editor_box;
+  @extend %floating_editor_box;
 
   .add-connections-category {
     margin-top: 5px;
@@ -701,7 +667,6 @@ body {
   }
 }
 
-
 #oligrapher-container div.oligrapher-edge-editor {
   width: 325px;
   max-height: 800px;
@@ -709,9 +674,8 @@ body {
   box-sizing: border-box;
 
   form input {
-      width: 92%;
+    width: 92%;
   }
-
 
   .edit-edge-style {
     width: 100%;
@@ -757,7 +721,7 @@ body {
       width: 35px;
     }
 
-    input[type='range'] {
+    input[type="range"] {
       position: relative;
       top: 8px;
       width: 100px;
@@ -826,7 +790,7 @@ body {
 #oligrapher-container .oligrapher-graph-editor .oligrapher-settings {
   width: 225px;
 
-  div.settings-option  {
+  div.settings-option {
     font-size: 0.8em;
     display: flex;
 
@@ -879,7 +843,6 @@ body {
     color: gray;
   }
 }
-
 
 #oligrapher-container div.oligrapher-editors {
   font-size: 14px;
@@ -943,7 +906,6 @@ div.lock {
   padding: 10px;
 }
 
-
 /* NODES */
 
 #oligrapher-container .oligrapher-graph-dragging-node {
@@ -992,6 +954,10 @@ div.lock {
       stroke: $oligrapher_blue;
       stroke-width: 2;
     }
+
+    &.node-halo-dragged {
+      fill: $oligrapher_blue_dark;
+    }
   }
 }
 
@@ -1007,11 +973,12 @@ div.lock {
   }
 }
 
-
 /* captions */
 
 #oligrapher-container #oligrapher-graph-container .oligrapher-caption {
-  foreignObject, textarea, div {
+  foreignObject,
+  textarea,
+  div {
     box-sizing: border-box;
     line-height: 1.2em;
   }
@@ -1030,12 +997,14 @@ div.lock {
     overflow: hidden;
   }
 
-  .edit-caption-textarea::-webkit-scrollbar { /* WebKit */
+  .edit-caption-textarea::-webkit-scrollbar {
+    /* WebKit */
     width: 0;
     height: 0;
   }
 
-  .caption-text, .edit-caption-textarea {
+  .caption-text,
+  .edit-caption-textarea {
     margin: 0;
     box-sizing: border-box;
     padding: 15px;
@@ -1043,7 +1012,8 @@ div.lock {
   }
 
   .caption-text.caption-text-highlighted {
-    text-shadow: 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00;
+    text-shadow: 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00,
+      0 0 5px #ffff00;
   }
 
   .caption-text.caption-text-faded {
@@ -1061,7 +1031,20 @@ div.lock {
   @extend %message;
 }
 
-/* ANNOTATIONS */
+#oligrapher-container .oligrapher-debug-message {
+  position: absolute;
+  right: 0px;
+  bottom: 00px;
+  @extend %box_shadow;
+  padding: 15px;
+  font-size: 10px;
+  max-width: 70vh;
+  max-height: 30vh;
+  overflow: scroll;
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Annotations */
 
 #oligrapher-container #oligrapher-annotations-condensed {
   padding: 1em;
@@ -1134,7 +1117,8 @@ div.lock {
   }
 }
 
-#oligrapher-container #oligrapher-annotations, #oligrapher-container #oligrapher-annotations-condensed {
+#oligrapher-container #oligrapher-annotations,
+#oligrapher-container #oligrapher-annotations-condensed {
   .oligrapher-annotations-hide {
     float: right;
     position: relative;
@@ -1274,13 +1258,13 @@ div.lock {
 }
 
 #oligrapher-container .add-connections-classic-button {
-    margin-left: 1em;
+  margin-left: 1em;
 }
 
 #oligrapher-container .add-connections-classic-statusbox {
-    margin-top: 2em;
+  margin-top: 2em;
 }
 
 #oligrapher-container .add-connections-classic-p {
-    margin-top: 2em;
+  margin-top: 2em;
 }

@@ -1,39 +1,60 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { DraggableCore } from 'react-draggable'
+import React, { useContext, useState, useEffect, useMemo, useCallback } from 'react'
+import { DraggableCore, DraggableEventHandler } from 'react-draggable'
 import { useDispatch } from 'react-redux'
 
 import { useSelector } from '../util/helpers'
 import { Point, calculateDeltas } from '../util/geometry'
+import { getEdgeAppearance } from '../util/edgeAppearance'
 import { edgeToCurve, curveToBezier } from '../graph/curve'
-import { EdgeStatusType } from '../graph/edge'
+import { EdgeStatusType, Edge as EdgeType } from '../graph/edge'
 import EdgeLine from './EdgeLine'
 import EdgeHandle from './EdgeHandle'
 import EdgeLabel from './EdgeLabel'
 import EdgeHighlight from './EdgeHighlight'
 import ConditionalLink from './ConditionalLink'
+import { State } from '../util/defaultState'
+import { currentZoomSelector, editModeSelector } from '../util/selectors'
+import SvgRefContext from '../util/SvgRefContext'
+import { ControlPoint } from './ControlPoint'
 
-export function Edge({ id, currentlyEdited, status }: EdgeProps) {
+type EdgeProps = {
+  id: string,
+  currentlyEdited: boolean
+}
+
+function getActualZoom(svg: SVGSVGElement, zoom: number): number {
+  return (svg.clientHeight / svg.viewBox.baseVal.height) * zoom
+}
+
+export function Edge({ id, currentlyEdited }: EdgeProps) {
   const dispatch = useDispatch()
-  const edge = useSelector(state => state.graph.edges[id])
-  const actualZoom = useSelector(state => state.display.actualZoom)
-  const { isHighlighting } = useSelector(state => state.annotations)
-  const editMode = useSelector(state => state.display.modes.editor)
+  const svgRef = useContext(SvgRefContext)
+
+  const edge = useSelector<State, EdgeType>(state => state.graph.edges[id])
+  const { scale, label, dash, arrow, url } = edge
+
+  const zoom = useSelector(currentZoomSelector)
+  const isHighlighting  = useSelector<State>(state => state.annotations.isHighlighting)
+  const editMode = useSelector(editModeSelector)
+  const edgeStatus = useSelector<State, EdgeStatusType>(state => getEdgeAppearance(id, state))
+  const showControlpoint = useSelector<State>(state => state.attributes.settings.showControlpoint)
 
   const [isHovering, setHovering] = useState(false)
   const [isDragging, setDragging] = useState(false)
   const [startDrag, setStartDrag] = useState<Point>({ x: 0, y: 0 })
   const [startPosition, setStartPosition] = useState<Point>({ x: 0, y: 0 })
-  const { cx, cy, x1, x2, y1, y2, s1, s2, scale, label, dash, arrow, url } = edge
-  const [curve, setCurve] = useState(edgeToCurve({ cx, cy, x1, x2, y1, y2, s1, s2 }))
-  const bezier = useMemo(() => curveToBezier(curve), [curve])
-  const highlighted = status === 'highlighted'
+  const [actualZoom, setActualZoom] = useState(1)
+  const [curve, setCurve] = useState(edgeToCurve(edge))
+  const bezier = curveToBezier(curve)
   const selected = !isDragging && (currentlyEdited || isHovering)
-  status = selected ? 'selected' : status
+  const status = selected ? 'selected' : edgeStatus
+  const highlighted = status === 'highlighted'
 
   const updateEdge = useCallback(
     attributes => dispatch({ type: 'UPDATE_EDGE', id, attributes }),
     [dispatch, id]
   )
+
   const clickEdge = useCallback(() => {
     if (isHighlighting) {
       dispatch({ type: 'SWAP_EDGE_HIGHLIGHT', id })
@@ -45,24 +66,31 @@ export function Edge({ id, currentlyEdited, status }: EdgeProps) {
   // This resets the curve based on new props when they are passed to an already rendered component
   // This happens after the DRAG_NODE action occurs.
   useEffect(() => {
-    setCurve(edgeToCurve({ cx, cy, x1, x2, y1, y2, s1, s2 }))
-  }, [cx, cy, x1, x2, y1, y2, s1, s2, id])
+    setCurve(edgeToCurve(edge))
+  }, [edge])
 
-  const onStart = useCallback((evt, data) => {
+  useEffect(()=> {
+    setActualZoom(getActualZoom(svgRef.current, zoom))
+  }, [])
+
+  const onStart: DraggableEventHandler = (evt, data) => {
+    evt.stopPropagation()
     setStartDrag(data)
-    // edge may not have a set control point
-    setStartPosition({ x: cx || curve.cx, y: cy || curve.cy })
-  }, [cx, cy, curve])
+    setActualZoom(getActualZoom(svgRef.current, zoom))
+    const controlpoint = { "x": curve.cx, "y": curve.cy }
+    setStartPosition(controlpoint)
+  }
 
-  const onDrag = useCallback((evt, data) => {
+  const onDrag: DraggableEventHandler = (evt, data) => {
     setDragging(true)
     const deltas = calculateDeltas(data, startPosition, startDrag, actualZoom)
-    setCurve(
-      edgeToCurve({...edge, cx: deltas.x, cy: deltas.y })
-    )
-  }, [startPosition, startDrag, actualZoom, edge])
+    const newControlpoint = { cx: deltas.x, cy: deltas.y }
+    const newCurve = edgeToCurve(Object.assign({}, edge, newControlpoint))
+    setCurve(newCurve)
+  }
 
-  const onStop = useCallback((evt, data) => {
+  const onStop: DraggableEventHandler = (evt, data) => {
+    evt.stopPropagation()
     if (isDragging) {
       const deltas = calculateDeltas(data, startPosition, startDrag, actualZoom)
       updateEdge({ cx: deltas.x, cy: deltas.y })
@@ -70,17 +98,15 @@ export function Edge({ id, currentlyEdited, status }: EdgeProps) {
     } else {
       clickEdge()
     }
-  }, [isDragging, startPosition, startDrag, actualZoom, clickEdge, updateEdge])
+  }
 
   // Children Props
-  const width = 1.5 + (scale -1) * 3
+  const width = 1.5 + (edge.scale -1) * 3
   const edgeHighlightProps = { bezier, width }
   const edgeLineProps = { bezier, width, isReverse: curve.is_reverse, id, scale, dash, status, arrow }
   const edgeLabelProps = { bezier, width, id, scale, status, arrow, label }
-  const edgeHandleProps = {
-    bezier, width,
-    onMouseEnter: useCallback(() => setHovering(true), []),
-    onMouseLeave: useCallback(() => setHovering(false), [])
+  const edgeHandleProps = { bezier, width, onMouseEnter: () => setHovering(true),
+    onMouseLeave: () => setHovering(false)
   }
 
   return (
@@ -90,25 +116,21 @@ export function Edge({ id, currentlyEdited, status }: EdgeProps) {
       onDrag={onDrag}
       onStop={onStop}>
       <g className="oligrapher-edge" id={`edge-${id}`}>
-        <ConditionalLink condition={!editMode && url} href={url} target="_blank" rel="noopener noreferrer">
+        <ConditionalLink condition={!editMode} url={url}>
           { highlighted && <EdgeHighlight {...edgeHighlightProps} /> }
           <EdgeLine {...edgeLineProps} />
           { label &&
-            <ConditionalLink condition={editMode && url} href={url} target="_blank" rel="noopener noreferrer">
+            <ConditionalLink condition={editMode} url={url}>
               <EdgeLabel {...edgeLabelProps} />
             </ConditionalLink>
           }
           <EdgeHandle {...edgeHandleProps} />
         </ConditionalLink>
+        { showControlpoint && (isDragging || isHovering) && <ControlPoint zoom={zoom} cx={curve.cx} cy={curve.cy} /> }
       </g>
     </DraggableCore>
   )
 }
 
-interface EdgeProps {
-  id: string,
-  currentlyEdited: boolean,
-  status: EdgeStatusType
-}
-
-export default React.memo(Edge)
+export default Edge
+// export default React.memo(Edge)

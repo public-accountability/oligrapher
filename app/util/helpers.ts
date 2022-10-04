@@ -1,14 +1,11 @@
-import { SyntheticEvent, useState, useCallback } from 'react'
+import React, { SyntheticEvent, useState, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import isFunction from 'lodash/isFunction'
 import toNumber from 'lodash/toNumber'
-
-
-import { Selector } from './selectors'
-import { State, StateWithHistory } from './defaultState'
+import { StateWithHistory } from './defaultState'
 import ConfirmSave from '../components/ConfirmSave'
 import EmptySave from '../components/EmptySave'
-import { hasContents } from '../graph/graph'
+import { Graph, hasContents } from '../graph/graph'
 
 export function classNames(...classes: Array<string | undefined>): string {
   return classes.filter(Boolean).join(' ')
@@ -49,39 +46,18 @@ export function makeCancelable(promise: Promise<any>): { promise: Promise<any>, 
   }
 }
 
-export function getElementById(id: string): Element {
-  let element = document.getElementById(id)
-
-  if (element) {
-    return element
-  } else {
-    throw new Error(`#${id} is not in the document`)
-  }
-
-}
-
 export function frozenArray(...items: any[]): readonly any[] {
   return Object.freeze(items)
 }
 
-export function isLittleSisId(id: any): boolean {
-  return Number.isFinite(toNumber(id))
+export function omit(obj: any, key: string): object {
+  let clone = Object.assign({}, obj)
+  delete clone[key]
+  return clone
 }
 
-export const calculateStatus = (id: string, highlightedIds: string[], annotationHasHighlights: boolean, editMode: boolean): string => {
-  if (!annotationHasHighlights) {
-    return "normal"
-  }
-
-  if (highlightedIds.includes(id)) {
-    return "highlighted"
-  }
-
-  if (editMode) {
-    return "normal"
-  }
-
-  return "faded"
+export function isLittleSisId(id: any): boolean {
+  return Number.isFinite(toNumber(id))
 }
 
 export const eventTargetIsFormElement = (event: Event): boolean => {
@@ -133,6 +109,36 @@ export function useClientRect(callback: RectCallback) {
   }, [])
 }
 
+export function getElementById(id: string): Element {
+  let element = document.getElementById(id)
+
+  if (element) {
+    return element
+  } else {
+    throw new Error(`#${id} is not in the document`)
+  }
+
+}
+
+export function querySelector(query: string): Element {
+  const element = document.querySelector(query)
+
+  if (element) {
+    return element
+  } else {
+    throw new Error(`Expecting to find "${query}" in the document`)
+  }
+}
+
+export function getElementForGraphItem(id: string, t: "node" | "edge" | "caption" | "connections") {
+  if (t === "connections") {
+    t = "node"
+  }
+
+  return querySelector(`g#${t}-${id}`) as SVGGElement
+}
+
+
 // For now, this isn't needed because we flatten state.graph after every action:
 //
 // export const convertSelectorForUndo = selector => (state => selector({
@@ -142,10 +148,10 @@ export function useClientRect(callback: RectCallback) {
 //   settings: state.settings
 // }))
 
-export const convertSelectorForUndo = (selector: Selector<any>): Selector<any> => selector
+// export const convertSelectorForUndo = (selector: Selector<any>): Selector<any> => selector
 
-function useConvertedSelector(selector: Selector<any>) {
-  return useSelector(convertSelectorForUndo(selector))
-}
+// function useConvertedSelector(selector: Selector<any>) {
+//   return useSelector(convertSelectorForUndo(selector))
+// }
 
-export { useConvertedSelector as useSelector }
+export { useSelector as useSelector }

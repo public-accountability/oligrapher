@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import Node from '../graph/node'
-import { callWithTargetValue } from '../util/helpers'
+import { useClientRect, callWithTargetValue } from '../util/helpers'
 import EntitySearch from './EntitySearch'
 import Toolbox from './Toolbox'
-import { useClientRect } from '../util/helpers'
 
 export default function NodeTool() {
   const dispatch = useDispatch()
@@ -16,7 +14,7 @@ export default function NodeTool() {
   const handleInputChange = callWithTargetValue(setSearchValue)
 
   const onClickCreateNew = () => {
-    dispatch({ type: 'ADD_NODE', node: Node.new({ name: trimmed }) })
+    dispatch({ type: 'ADD_NODE', node: { name: trimmed }})
   }
 
   // fit node tool within visible window

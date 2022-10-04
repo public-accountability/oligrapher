@@ -1,9 +1,19 @@
 #!/bin/bash
 
+# npx esbuild \
+#     --bundle \
+#     --outfile=html/oligrapher.js \
+#     --servedir=html \
+#     --sourcemap \
+#     --target=firefox102 \
+#     --define:API_URL='"http://localhost:8081"' \
+#     index.ts
+
+
 npx esbuild \
+    --watch \
     --bundle \
     --outfile=html/oligrapher.js \
-    --servedir=html \
     --sourcemap \
     --target=firefox102 \
     --define:API_URL='"http://localhost:8081"' \

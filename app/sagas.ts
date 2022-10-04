@@ -2,14 +2,10 @@ import { put, select, call, takeEvery, all } from 'redux-saga/effects'
 import { SagaIterator } from 'redux-saga'
 import cloneDeep from 'lodash/cloneDeep'
 
-import { isLittleSisId, convertSelectorForUndo } from './util/helpers'
+import { isLittleSisId  } from './util/helpers'
 import { oligrapher, addEditor, removeEditor, getEdges, getInterlocks, takeoverLock, releaseLock } from './datasources/littlesis3'
-import { applyZoomToViewBox, computeSvgZoom, computeSvgOffset } from './util/dimensions'
 import { paramsForSaveSelector } from './util/selectors'
 import { forceLayout, calculateViewBoxFromGraph } from './graph/graph'
-import { findIntersectingNodeFromDrag } from './graph/node'
-import { newEdgeFromNodes } from './graph/edge'
-// import { Selector } from './util/selectors'
 import { getGraphMarkup, downloadRasteredSvg, padViewbox } from './util/imageExport'
 
 // redux-undo places present state at state.present, so we use our own
@@ -21,8 +17,6 @@ const RESET_DELAY = process.env.NODE_ENV === 'test' ? 10 : 5000
 
 export default function* rootSaga() {
   yield all([
-    watchSvgHeight(),
-    watchZoom(),
     watchAddNode(),
     watchSave(),
     watchClone(),
@@ -35,16 +29,9 @@ export default function* rootSaga() {
     watchEditMode(),
     watchLockTakeover(),
     watchLockRelease(),
-    watchReleaseNode()
+    // watchGraphChanges()
+    // watchReleaseNode()
   ])
-}
-
-export function* watchSvgHeight() {
-  yield takeEvery(['SET_SVG_TOP', 'SET_SVG_BOTTOM'], setSvgHeight)
-}
-
-export function* watchZoom() {
-  yield takeEvery(['ZOOM_IN', 'ZOOM_OUT', 'SET_ZOOM', 'SET_SVG_HEIGHT', 'SET_SVG_WIDTH', 'RESET_VIEW'], setActualZoom)
 }
 
 export function* watchAddNode() {
@@ -95,29 +82,7 @@ export function* watchExportImage() {
   yield takeEvery(['EXPORT_IMAGE_REQUESTED'], exportImage)
 }
 
-export function* watchReleaseNode() {
-  yield takeEvery(['RELEASE_NODE'], moveNodeOrCreateEdge)
-}
-
-export function* setSvgHeight(action: any): SagaIterator {
-  const { svgTop, svgBottom, svgWidth } = yield select(state => state.display)
-  const height = (svgBottom || window.innerHeight) - svgTop
-  yield put({ type: 'SET_SVG_HEIGHT', height })
-}
-
-// Calculate actual zoom = user-set zoom (zoom) x automatic svg zoom.
-// Triggered by initial render, user zoom changes, and svg resize.
-export function* setActualZoom(): SagaIterator {
-  const { viewBox, zoom, svgSize } = yield select(state => state.display)
-  const zoomedViewBox = yield call(applyZoomToViewBox, viewBox, zoom)
-  const svgZoom = yield call(computeSvgZoom, zoomedViewBox, svgSize)
-  const svgOffset = yield call(computeSvgOffset, zoomedViewBox)
-  yield put({ type: 'SET_SVG_ZOOM', svgZoom })
-  yield put({ type: 'SET_SVG_OFFSET', svgOffset })
-  yield put({ type: 'SET_ACTUAL_ZOOM', actualZoom: zoom * svgZoom })
-}
-
-// Automatically fetches edges when a node is added from LittleSis
+// automatically fetches edges when a node is added from LittleSis
 export function* addNode(action: any): SagaIterator {
   const { automaticallyAddEdges } = yield select(state => state.attributes.settings)
   const allNodeIds = yield select(state => Object.keys(state.graph.nodes))
@@ -318,24 +283,4 @@ export function* exportImage(action: any): SagaIterator {
 
   yield call(delay, RESET_DELAY)
   yield put({ type: 'EXPORT_IMAGE_RESET' })
-}
-
-// this logic is in a saga and not part of graphReducer because
-// we need edge creation to be triggered by a new action in order
-// for displayReducer to open the edge editor
-export function* moveNodeOrCreateEdge(action: any): SagaIterator {
-  const nodes = yield select(state => state.graph.nodes)
-  const draggedNode = nodes[action.id]
-  const draggedOverNode = findIntersectingNodeFromDrag(
-    Object.values(nodes),
-    draggedNode,
-    action.deltas
-  )
-
-  if (draggedOverNode) {
-    const edge = newEdgeFromNodes(draggedNode, draggedOverNode)
-    yield put({ type: 'ADD_EDGE', edge, id: action.id })
-  } else {
-    yield put({ type: 'MOVE_NODE', id: action.id, deltas: action.deltas })
-  }
 }

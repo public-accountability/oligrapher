@@ -2,12 +2,12 @@ import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHotkeys } from 'react-hotkeys-hook'
 
-import { StateWithHistory } from '../util/defaultState'
+import { State } from '../util/defaultState'
 
 export default function Highlightable({ children }: HighlightableProps) {
   const dispatch = useDispatch()
-  const editMode = useSelector<StateWithHistory>(state => state.display.modes.editor)
-  const storyMode = useSelector<StateWithHistory>(state => state.display.modes.story)
+  const editMode = useSelector<State>(state => state.display.modes.editor)
+  const storyMode = useSelector<State>(state => state.display.modes.story)
   const isEditingAnnotations = editMode && storyMode
 
   const setHighlighting = useCallback(isHighlighting => {

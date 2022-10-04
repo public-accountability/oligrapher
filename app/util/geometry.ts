@@ -1,7 +1,5 @@
 import pick from 'lodash/pick'
 
-import { Edge } from '../graph/edge'
-
 export interface Point {
   x: number,
   y: number

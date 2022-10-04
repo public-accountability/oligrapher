@@ -1,9 +1,5 @@
-import PropTypes from 'prop-types'
-import merge from 'lodash/merge'
 import { nanoid } from 'nanoid/non-secure'
-
-import { Point } from '../util/geometry'
-import { translatePoint, distance } from '../util/geometry'
+import { Point, translatePoint, distance } from '../util/geometry'
 
 export const NODE_RADIUS = 25
 
@@ -31,15 +27,8 @@ export interface Node extends NodeAttributes {
   edgeIds: Array<string>
 }
 
-interface NodeDefaults extends NodeAttributes {
-  x: number,
-  y: number,
-  scale: number,
-  color: string,
-  edgeIds: Array<string>
-}
-
-const nodeDefaults: NodeDefaults = {
+const nodeDefaults: NodeAttributes = {
+  name: "New Node",
   x: 0,
   y: 0,
   scale: 1,
@@ -47,30 +36,12 @@ const nodeDefaults: NodeDefaults = {
   edgeIds: []
 }
 
-export const nodeShape = {
-  id: PropTypes.string.isRequired,
-  name: PropTypes.string,
-  description: PropTypes.string,
-  x: PropTypes.number,
-  y: PropTypes.number,
-  scale: PropTypes.number,
-  image: PropTypes.string,
-  url: PropTypes.string,
-  color: PropTypes.string
-}
-
-export const propTypes = {
-  node: PropTypes.shape(nodeShape),
-  arrayOfNodes: PropTypes.arrayOf(PropTypes.shape(nodeShape)),
-}
-
-export function newNode(attributes: NodeAttributes = {}): Node {
-  return merge({ id: nanoid(10), name: "New Node" }, nodeDefaults, attributes)
-}
-
-export default {
-  "new": newNode,
-  "types": propTypes
+export function newNode(attributes: NodeAttributes = {}) {
+  let node = Object.assign({}, nodeDefaults, attributes) as Node
+  if (!node.id) {
+    node.id = nanoid(10)
+  }
+  return node
 }
 
 function intersects(coordinates: Point, node: Node, padding: number = 20): boolean {
@@ -91,4 +62,9 @@ export function findIntersectingNodeFromDrag(nodes: Array<Node>, draggedNode: No
     20,
     draggedNode.id
   )
+}
+
+
+export default {
+  "new": newNode,
 }

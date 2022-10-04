@@ -39,7 +39,7 @@ export const createAnnotation = (annotations: AnnotationsState): void => {
   annotations.currentIndex = annotations.list.length - 1
 }
 
-export const moveAnnotation = (annotations: AnnotationsState, from: numbre, to: number): void => {
+export const moveAnnotation = (annotations: AnnotationsState, from: number, to: number): void => {
   let { list, currentIndex } = annotations
   const currentId = list[currentIndex].id
   list.splice(to, 0, list.splice(from, 1)[0])

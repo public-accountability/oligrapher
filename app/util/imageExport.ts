@@ -3,9 +3,6 @@ import { Viewbox } from '../graph/graph'
 import { State } from './defaultState'
 import isNull from 'lodash/isNull'
 
-// @ts-ignore
-import { GRAPH_CONTAINER_ID, GRAPH_CONTENT_ID } from '../components/Graph'
-
 // converts an image's href from plain URL to data URL
 function convertImage(image: any) {
   // we have to load the url into a new image object
@@ -117,9 +114,9 @@ export async function downloadRasteredSvg(
 // TODO: import element ids as constants from elsewhere or
 // use querySelector to locate elements based on structure
 export function getGraphMarkup(viewbox: Viewbox): string {
-  const svg = document.querySelector(`#${GRAPH_CONTAINER_ID} > svg`) as any
-  const g = document.getElementById(GRAPH_CONTENT_ID) as any
-  const defs = document.querySelector(`#${GRAPH_CONTAINER_ID} > svg > defs`) as any
+  const svg = document.querySelector("#oligrapher-graph-svg  > svg") as any
+  const g = document.getElementById("#oligrapher-svg-export") as any
+  const defs = document.querySelector("#oligrapher-graph-svg  > svg > defs") as any
   const clonedSvg = svg.cloneNode(false)
   const clonedG = g.cloneNode(true)
   const clonedDefs = defs.cloneNode(true)

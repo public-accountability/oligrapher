@@ -1,6 +1,4 @@
-import { Point } from './geometry'
 import { Graph, Viewbox } from '../graph/graph'
-import { Node } from '../graph/node'
 import { Annotation } from './annotations'
 import { LockState, defaultLockState } from './lock'
 import { LsMap } from '../datasources/littlesis3'
@@ -34,7 +32,9 @@ export interface UserSettings {
   exploreModeOnly: boolean,
   automaticallyAddEdges: boolean,
   scrollToZoom: boolean,
-  useClassicAddConnections: boolean
+  useClassicAddConnections: boolean,
+  debug: boolean,
+  showControlpoint: boolean
 }
 
 export interface AttributesState {
@@ -53,11 +53,18 @@ export interface AttributesState {
   helpUrl: string | null
 }
 
-export type FloatingEditorType = "node" | "connections" | "edge" | "caption"
+export type FloatingEditorTypeType = "node" | "connections" | "edge" | "caption"
+
+export type FloatingEditorType = {
+  "type": FloatingEditorTypeType | null,
+  "id": string | null
+}
 
 export type AsyncStatus = "REQUESTED" | "SUCCESS" | "FAILED" | null
 
 export type SelectionType = "node" | "edge" | "caption"
+
+export type SvgSizeType = { width: number, height: number }
 
 export interface Selection {
   node: string[],
@@ -73,41 +80,36 @@ export interface AnnotationsState {
   isHighlighting: boolean
 }
 
+export type DisplayModesState = { editor: boolean, story: boolean }
+
 export interface DisplayState {
-  zoom: number,
-  svgZoom: number,
-  actualZoom: number,
-  viewBox: Viewbox | null,
-  svgTop: number,
-  svgBottom: number | null,
-  svgSize: { width: number, height: number },
-  svgOffset: Point,
-  offset: Point,
+  zoom: number,   // transform = `scale(${zoom})`
+  viewBox: Viewbox,
+  svgHeight: number, // Height of SVG element
   showHeader: boolean,
   showZoomControl: boolean,
   headerIsCollapsed: boolean,
-  modes: { editor: boolean, story: boolean },
-  floatingEditor: {
-    type: FloatingEditorType | null,
-    id: string | null
-  },
-  draggedNode: Node | null,
+  modes: DisplayModesState,
+  floatingEditor: FloatingEditorType,
+  draggedNode: string | null,
+  overNode: string | null,
   tool: "node" | "text" | "organize" | "settings" | "editors" | "help" | null,
   saveMapStatus: AsyncStatus,
   cloneMapStatus: AsyncStatus,
   deleteMapStatus: AsyncStatus,
   userMessage: string | null,
-  selection: Selection
+  selection: Selection,
+  pannable: boolean
 }
 
 export interface SettingsState {
-  debug: boolean,
   domId: string,
   embed: boolean,
-  noEditing: boolean
+  noEditing: boolean,
+  logActions: boolean
 }
 
-export interface State {
+export interface StateWithoutHistory {
   graph: Graph,
   annotations: AnnotationsState,
   attributes: AttributesState,
@@ -116,8 +118,13 @@ export interface State {
   lastSavedData: LsMap | null
 }
 
-export interface StateWithHistory extends State {
-  graph: GraphState
+type StateHistory = {
+  past: Graph[],
+  future: Graph[]
+}
+
+export interface State extends StateWithoutHistory {
+  history: StateHistory
 }
 
 const defaultState: State = {
@@ -146,8 +153,6 @@ const defaultState: State = {
     version: 3,
     user: null,
     owner: null,
-    // will be displayed in editor mode. It is used by LittleSis.org
-    // to create additional buttons that set various map privacy settings.
     settings: {
       private: false,
       clone: true,
@@ -158,7 +163,10 @@ const defaultState: State = {
       exploreModeOnly: false,
       automaticallyAddEdges: true,
       scrollToZoom: false,
-      useClassicAddConnections: false
+      useClassicAddConnections: false,
+      debug: false,
+      showControlpoint: false
+
     },
     editors: [],
     lock: defaultLockState,
@@ -172,14 +180,8 @@ const defaultState: State = {
   // Many actions trigger a reconfiguration of these menus
   display: {
     zoom: 1,
-    svgZoom: 1,
-    actualZoom: 1,
-    viewBox: null,
-    svgTop: 0,
-    svgBottom: null,
-    svgSize: { width: 0, height: 0 },
-    svgOffset: { x: 0, y: 0 },
-    offset: { x: 0, y: 0 },
+    viewBox: { minX: 0, minY: 0, h: 1200, w: 800 },
+    svgHeight: 400,
     showHeader: true,
     showZoomControl: true,
     headerIsCollapsed: false,
@@ -192,6 +194,7 @@ const defaultState: State = {
       id: null
     },
     draggedNode: null,
+    overNode: null,
     tool: null,
     saveMapStatus: null,
     cloneMapStatus: null,
@@ -202,17 +205,24 @@ const defaultState: State = {
       edge: [],
       caption: [],
       isSelecting: false
-    }
+    },
+    pannable: true
   },
 
   // Global settings
   // These settings are NOT changable via the settings interface;
   // those are located at above under attributes.settings
   settings: {
-    debug: false,
     domId: 'oligrapher',
     embed: false,
-    noEditing: false
+    noEditing: false,
+    logActions: false
+  },
+
+  // for Undo/Redo
+  history: {
+    past: [],
+    future: []
   },
 
   lastSavedData: null

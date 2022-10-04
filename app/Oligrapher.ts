@@ -1,12 +1,14 @@
-import React from 'react'
-import { createRoot } from 'react-dom/client';
-import { Provider } from 'react-redux'
-import type { Store } from 'redux'
-import Root from './components/Root'
-import EmbeddedRoot from './components/EmbeddedRoot'
-import { toSvg, toJpeg } from './util/imageExport'
-import createOligrapherStore from './util/store'
-import { urls } from './datasources/littlesis3'
+import React from "react"
+import { createRoot } from "react-dom/client"
+import { EnhancedStore } from "@reduxjs/toolkit"
+import { Provider } from "react-redux"
+import Root from "./components/Root"
+import EmbeddedRoot from "./components/EmbeddedRoot"
+import { toSvg, toJpeg } from "./util/imageExport"
+import createOligrapherStore from "./util/store"
+import { urls } from "./datasources/littlesis3"
+import { State } from "./util/defaultState"
+import { graphStats } from "./graph/graph"
 
 /*
   Main entry point of Oligrapher.
@@ -19,27 +21,41 @@ import { urls } from './datasources/littlesis3'
 
 */
 export default class Oligrapher {
-  store: Store;
-  element: HTMLElement;
+  store: EnhancedStore<State>
+  element: HTMLElement
 
   constructor(configuration = {}) {
     this.store = createOligrapherStore(configuration)
 
-    const element = document.getElementById(this.store.getState().settings.domId)
+    const element = document.getElementById(
+      this.store.getState().settings.domId
+    )
 
-    if (!element) { throw new Error('could not find requested oligrapher element') }
+    if (!element) {
+      throw new Error("could not find requested oligrapher element")
+    }
 
     this.element = element
 
     const isEmbedded = this.store.getState().settings.embed
 
     const root = createRoot(this.element)
-    const rootElement = React.createElement(isEmbedded ? EmbeddedRoot: Root)
-    root.render(React.createElement(Provider, { store: this.store }, rootElement))
+
+    root.render(
+      React.createElement(
+        Provider,
+        { store: this.store },
+        React.createElement(Root)
+      )
+    )
   }
 
   graph() {
     return this.store.getState().graph
+  }
+
+  graphStats() {
+    return graphStats(this.graph())
   }
 
   toSvg() {
@@ -53,5 +69,4 @@ export default class Oligrapher {
   static get apiUrls() {
     return urls
   }
-
 }
