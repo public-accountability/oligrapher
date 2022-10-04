@@ -1,71 +1,53 @@
 import React from "react"
 import { NodeAttributes } from "../graph/node"
-import { callWithTargetValue, isLittleSisId } from "../util/helpers"
+import { callWithTargetValue } from "../util/helpers"
 import Input from "@mui/material/Input"
-import NodeStyleForm from "./NodeStyleForm"
+import Box from "@mui/material/Box"
+import FormLabel from "@mui/material/FormLabel"
+import { Node as NodeType } from "../graph/node"
 
 type NodeEditorMainPropTypes = {
-  node: {
-    id: string
-    name?: string
-    description?: string
-    image?: string
-    url?: string
-  }
-  setPage: (page: string) => void
+  node: NodeType
   updateNode: (node: NodeAttributes) => void
-  openAddConnections: () => void
 }
 
-export default function NodeEditorMain({
-  node,
-  setPage,
-  updateNode,
-  openAddConnections,
-}: NodeEditorMainPropTypes) {
-  const isLsNode = isLittleSisId(node.id)
+const InputGroup = props => <Box sx={{ m: "5px", mb: "25px" }}>{props.children}</Box>
 
+export default function NodeEditorMain({ node, updateNode }: NodeEditorMainPropTypes) {
   return (
-    <>
-      <form>
-        <div>
-          <label>Name</label>
-          <Input
-            type="text"
-            placeholder="Node name"
-            value={node.name || ""}
-            onChange={callWithTargetValue(name => updateNode({ name }))}
-          />
-        </div>
+    <Box sx={{ display: "flex", flexDirection: "column" }}>
+      <InputGroup>
+        <FormLabel>Name</FormLabel>
+        <Input
+          id="oligrapher-node-editor-name"
+          type="text"
+          placeholder="Node name"
+          value={node.name || ""}
+          onChange={callWithTargetValue(name => updateNode({ name }))}
+        />
+      </InputGroup>
 
-        <div>
-          <label>Hover-Over Description</label>
-          <Input
-            type="text"
-            placeholder="Description"
-            value={node.description || ""}
-            onChange={callWithTargetValue(description => updateNode({ description }))}
-          />
-        </div>
+      <InputGroup>
+        <FormLabel>Hover-Over Description</FormLabel>
+        <Input
+          id="oligrapher-node-editor-description"
+          type="text"
+          placeholder="Description"
+          value={node.description || ""}
+          onChange={callWithTargetValue(description => updateNode({ description }))}
+        />
+      </InputGroup>
 
-        <div>
-          <label>Clickthrough Link</label>
-          <Input
-            type="text"
-            placeholder="Link"
-            value={node.url || ""}
-            onChange={callWithTargetValue(url => updateNode({ url }))}
-          />
-        </div>
-      </form>
-      <hr />
-      <NodeStyleForm setPage={setPage} />
-      <hr />
-      {isLsNode && (
-        <a className="add-connections-link" onClick={openAddConnections}>
-          Add Connections +
-        </a>
-      )}
-    </>
+      <InputGroup>
+        <FormLabel>Clickthrough Link</FormLabel>
+        <Input
+          id="oligrapher-node-editor-link"
+          type="url"
+          placeholder="Link"
+          value={node.url || ""}
+          onChange={callWithTargetValue(url => updateNode({ url }))}
+        />
+      </InputGroup>
+    </Box>
   )
 }
