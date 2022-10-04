@@ -24,6 +24,7 @@
     "@ckeditor/ckeditor5-react": "^5.0.2",
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
+    "@hello-pangea/color-picker": "^3.2.1",
     "@hello-pangea/dnd": "^16.0.0",
     "@mui/material": "^5.10.2",
     "@react-icons/all-files": "^4.1.0",
@@ -36,7 +37,6 @@
     "lodash": "^4.17.21",
     "nanoid": "^4.0.0",
     "react": "^18.2.0",
-    "react-color": "^2.19.3",
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.5",
     "react-hotkeys-hook": "^3.4.7",
@@ -69,9 +69,15 @@
     "whatwg-fetch": "^3.6.2"
   },
   "jest": {
-    "testMatch": ["**/test/**/*.test.[jt]s?(x)"],
-    "transformIgnorePatterns": ["node_modules/(?!(nanoid)/)"],
+    "testMatch": [
+      "**/test/**/*.test.[jt]s?(x)"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(nanoid)/)"
+    ],
     "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": ["./jest.setup.js"]
+    "setupFilesAfterEnv": [
+      "./jest.setup.js"
+    ]
   }
 }

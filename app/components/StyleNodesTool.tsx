@@ -1,16 +1,16 @@
-import React, { useState, useCallback, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import pick from 'lodash/pick'
-import uniq from 'lodash/uniq'
-import { Button } from '@mui/material'
+import React, { useState, useCallback, useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import pick from "lodash/pick"
+import uniq from "lodash/uniq"
+import { Button } from "@mui/material"
 import { MdPhotoSizeSelectSmall } from "@react-icons/all-files/md/MdPhotoSizeSelectSmall"
 import { MdFormatColorFill } from "@react-icons/all-files/md/MdFormatColorFill"
 import { MdImage } from "@react-icons/all-files/md/MdImage"
 
-import Toolbox from './Toolbox'
-import EditNodeColorPage from './EditNodeColorPage'
-import SizePicker from './SizePicker'
-import { callWithTargetValue } from '../util/helpers'
+import Toolbox from "./Toolbox"
+import NodeEditorColor from "./NodeEditorColor"
+import SizePicker from "./SizePicker"
+import { callWithTargetValue } from "../util/helpers"
 
 // returns attribute value the given nodes have in common
 function sharedAttribute(nodes, attribute) {
@@ -24,51 +24,54 @@ export default function StyleNodesMenu() {
   const nodes = useSelector(state => Object.values(pick(state.graph.nodes, nodeIds)))
   const colors = useSelector(state => Object.values(state.graph.nodes).map(node => node.color))
 
-  const [page, setPage] = useState('color')
-  const [image, setImage] = useState(sharedAttribute(nodes, 'image') || '')
-  const [color, setColor] = useState(sharedAttribute(nodes, 'color') || '#cccccc')
-  const [scale, setScale] = useState(sharedAttribute(nodes, 'scale') || 1)
+  const [page, setPage] = useState("color")
+  const [image, setImage] = useState(sharedAttribute(nodes, "image") || "")
+  const [color, setColor] = useState(sharedAttribute(nodes, "color") || "#cccccc")
+  const [scale, setScale] = useState(sharedAttribute(nodes, "scale") || 1)
 
   const handleImageChange = useCallback(callWithTargetValue(setImage), [])
 
   const handleSubmit = useCallback(() => {
     const attributes = pick({ image, color, scale }, page)
-    dispatch({ type: 'UPDATE_NODES',  nodeIds, attributes })
+    dispatch({ type: "UPDATE_NODES", nodeIds, attributes })
   }, [dispatch, nodeIds, image, color, scale, page])
 
   return (
     <Toolbox title="Style Nodes">
       <div className="oligrapher-style-nodes">
         <main>
-          { page === 'color' &&
-            <EditNodeColorPage color={color} onChange={setColor} colors={colors} />
-          }
+          {page === "color" && (
+            <NodeEditorColor color={color} onChange={setColor} colors={colors} />
+          )}
 
-          { page === 'scale' &&
-            <SizePicker scale={scale} onChange={setScale} />
-          }
+          {page === "scale" && <SizePicker scale={scale} onChange={setScale} />}
 
-          { page === 'image' &&
+          {page === "image" && (
             <>
               <label>Image</label>
-              <input type="url" value={image} placeholder="image url" onChange={handleImageChange} />
+              <input
+                type="url"
+                value={image}
+                placeholder="image url"
+                onChange={handleImageChange}
+              />
             </>
-          }
+          )}
         </main>
 
         <hr />
 
         <div className="editor-page-buttons">
           <div>
-            <span title="Color" className="entity-color-icon" onClick={() => setPage('color')}>
+            <span title="Color" className="entity-color-icon" onClick={() => setPage("color")}>
               <MdFormatColorFill />
             </span>
 
-            <span title="Size" className="entity-size-icon" onClick={() => setPage('scale')}>
+            <span title="Size" className="entity-size-icon" onClick={() => setPage("scale")}>
               <MdPhotoSizeSelectSmall />
             </span>
 
-            <span title="Image" className="entity-image-icon" onClick={() => setPage('image')}>
+            <span title="Image" className="entity-image-icon" onClick={() => setPage("image")}>
               <MdImage />
             </span>
           </div>
