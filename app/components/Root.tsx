@@ -1,22 +1,22 @@
-import React, { useRef, useLayoutEffect, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { ThemeProvider, useTheme } from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import Container from '@mui/material/Container'
-import Stack from '@mui/material/Stack'
-import Box from '@mui/material/Box'
-import Grid from '@mui/material/Unstable_Grid2'
-import Header from './Header'
-import Graph from './Graph'
-import Editor from './Editor'
-import ZoomControl from './ZoomControl'
-import FloatingEditors from './FloatingEditors'
-import UserMessage from './UserMessage'
-import DebugMessage from './DebugMessage'
-import Annotations from './Annotations'
-import CondensedAnnotations from './CondensedAnnotations'
-import theme from '../util/theme'
-import SvgRefContext from '../util/SvgRefContext'
+import React, { useRef, useLayoutEffect, useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { ThemeProvider, useTheme } from "@mui/material/styles"
+import useMediaQuery from "@mui/material/useMediaQuery"
+import Container from "@mui/material/Container"
+import Stack from "@mui/material/Stack"
+import Box from "@mui/material/Box"
+import Grid from "@mui/material/Unstable_Grid2"
+import Header from "./Header"
+import Graph from "./Graph"
+import Editor from "./Editor"
+import ZoomControl from "./ZoomControl"
+import FloatingEditors from "./FloatingEditors"
+import UserMessage from "./UserMessage"
+import DebugMessage from "./DebugMessage"
+import Annotations from "./Annotations"
+import CondensedAnnotations from "./CondensedAnnotations"
+import theme from "../util/theme"
+import SvgRefContext from "../util/SvgRefContext"
 
 import {
   showAnnotationsSelector,
@@ -26,8 +26,9 @@ import {
   headerIsCollapsedSelector,
   showFloatingEditorsSelector,
   editModeSelector,
-  debugModeSelector
-} from '../util/selectors'
+  debugModeSelector,
+  embedSelector,
+} from "../util/selectors"
 
 export const ROOT_CONTAINER_ID = "oligrapher-container"
 
@@ -35,7 +36,6 @@ const handleBeforeunload = (event: BeforeUnloadEvent) => {
   event.returnValue = "Are you sure you want to leave? You have unsaved changes!"
   return event.returnValue
 }
-
 
 // Root Oligrapher Component
 //
@@ -66,12 +66,13 @@ export function Root() {
   const showZoomControl = useSelector(showZoomControlSelector)
   const editorMode = useSelector(editModeSelector)
   const debugMode = useSelector(debugModeSelector)
+  const embedMode = useSelector(embedSelector)
   const headerIsCollapsed = useSelector(headerIsCollapsedSelector)
   const showFloatingEditors = useSelector(showFloatingEditorsSelector)
 
-  const showAnnotationsOnRight =  showAnnotations && !smallScreen
-  const showAnnotationsOnBottom =  showAnnotations && smallScreen
-  const showCondensedHeader = showHeader && !editorMode && !smallScreen
+  const showAnnotationsOnRight = showAnnotations && !smallScreen
+  const showAnnotationsOnBottom = showAnnotations && smallScreen
+  const showCondensedHeader = showHeader && (embedMode || (!editorMode && !smallScreen))
 
   const svgRef = React.useRef(null)
   const containerRef = React.useRef(null)
@@ -79,9 +80,9 @@ export function Root() {
 
   // prevent backspace form navigating away from page in firefox and possibly other browsers
   useEffect(() => {
-    window.addEventListener('keydown', event => {
-      const isBackspace = event.key === 'Backspace'
-      const isInput = ['INPUT', 'TEXTAREA', 'SELECT'].includes(event.target.tagName)
+    window.addEventListener("keydown", event => {
+      const isBackspace = event.key === "Backspace"
+      const isInput = ["INPUT", "TEXTAREA", "SELECT"].includes(event.target.tagName)
 
       if (isBackspace && !isInput) {
         event.preventDefault()
@@ -92,9 +93,9 @@ export function Root() {
   // Check for unsaved changed in beforeunload event
   useEffect(() => {
     if (hasUnsavedChanges) {
-      window.addEventListener('beforeunload', handleBeforeunload)
+      window.addEventListener("beforeunload", handleBeforeunload)
       return () => {
-        window.removeEventListener('beforeunload', handleBeforeunload);
+        window.removeEventListener("beforeunload", handleBeforeunload)
       }
     }
   }, [hasUnsavedChanges])
@@ -103,7 +104,7 @@ export function Root() {
   useLayoutEffect(() => {
     if (headerGridRef.current && containerRef.current) {
       let height = containerRef.current.clientHeight - headerGridRef.current.clientHeight - 5
-      dispatch({ type: 'SET_SVG_HEIGHT', height })
+      dispatch({ type: "SET_SVG_HEIGHT", height })
     }
   }, [showCondensedHeader, headerIsCollapsed])
 
@@ -112,20 +113,32 @@ export function Root() {
       <SvgRefContext.Provider value={svgRef}>
         <div id={ROOT_CONTAINER_ID} ref={containerRef}>
           <Grid container spacing={1} alignItems="stretch">
-            { showHeader && <Grid ref={headerGridRef} item sm={12}><Header /></Grid> }
+            {showHeader && (
+              <Grid ref={headerGridRef} item sm={12}>
+                <Header />
+              </Grid>
+            )}
             <Grid item sm={showAnnotationsOnRight ? 8 : 12}>
               <div id="oligrapher-graph-container">
                 <Graph />
-                { editorMode && <Editor /> }
-                { showZoomControl && <ZoomControl /> }
-                { showFloatingEditors &&  <FloatingEditors /> }
+                {editorMode && <Editor />}
+                {showZoomControl && <ZoomControl />}
+                {showFloatingEditors && <FloatingEditors />}
                 <UserMessage />
               </div>
             </Grid>
-            { showAnnotationsOnRight && <Grid item sm={4}><Annotations /></Grid> }
-            { showAnnotationsOnBottom && <Grid item sm={12}><CondensedAnnotations /></Grid> }
+            {showAnnotationsOnRight && (
+              <Grid item sm={4}>
+                <Annotations />
+              </Grid>
+            )}
+            {showAnnotationsOnBottom && (
+              <Grid item sm={12}>
+                <CondensedAnnotations />
+              </Grid>
+            )}
           </Grid>
-          { debugMode && <DebugMessage />}
+          {debugMode && <DebugMessage />}
         </div>
       </SvgRefContext.Provider>
     </ThemeProvider>

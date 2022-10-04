@@ -60,6 +60,7 @@
     "@testing-library/user-event": "^14.4.3",
     "@types/jest": "^29.0.0",
     "babel-jest": "^29.0.1",
+    "http-server": "^14.1.1",
     "jest": "^29.0.1",
     "jest-environment-jsdom": "^29.0.1",
     "msw": "^0.47.0",
@@ -72,9 +73,5 @@
     "transformIgnorePatterns": ["node_modules/(?!(nanoid)/)"],
     "testEnvironment": "jsdom",
     "setupFilesAfterEnv": ["./jest.setup.js"]
-  },
-  "prettier": {
-    "tabWidth": 2,
-    "semi": false
   }
 }

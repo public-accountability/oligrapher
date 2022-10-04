@@ -1,13 +1,18 @@
-import isEqual from 'lodash/isEqual'
-import isNil from 'lodash/isNil'
+import isEqual from "lodash/isEqual"
+import isNil from "lodash/isNil"
 
-import { DisplayModesState, State, FloatingEditorType, StateWithoutHistory } from './defaultState'
-import { Annotation } from './annotations'
-import { LsMap } from '../datasources/littlesis3'
-import { Selector } from 'react-redux'
-import { Viewbox, calculateAnnotationViewBox } from '../graph/graph'
+import {
+  DisplayModesState,
+  State,
+  FloatingEditorType,
+  StateWithoutHistory,
+} from "./defaultState"
+import { Annotation } from "./annotations"
+import { LsMap } from "../datasources/littlesis3"
+import { Selector } from "react-redux"
+import { Viewbox, calculateAnnotationViewBox } from "../graph/graph"
 
-export function displayModesSelector (state: State): DisplayModesState {
+export function displayModesSelector(state: State): DisplayModesState {
   return state.display.modes
 }
 
@@ -33,45 +38,61 @@ export const headerIsCollapsedSelector = (state: State) => {
   return state.display.headerIsCollapsed
 }
 
-export const showZoomControlSelector: Selector<State, boolean> = state => {
+export const showZoomControlSelector: Selector<State, boolean> = (state) => {
   return state.display.showZoomControl
 }
 
-export const pannableSelector: Selector<State, boolean> = state => {
+export const pannableSelector: Selector<State, boolean> = (state) => {
   return state.display.pannable
 }
 
-export const svgHeightSelector: Selector<State, number> = state => {
+export const svgHeightSelector: Selector<State, number> = (state) => {
   return state.display.svgHeight
 }
 
-export const currentZoomSelector: Selector<State, number> = state => {
+export const currentZoomSelector: Selector<State, number> = (state) => {
   return state.display.zoom
 }
 
-export const currentViewboxSelector: Selector<State, Viewbox> = state => {
+export const currentViewboxSelector: Selector<State, Viewbox> = (state) => {
   if (shouldRecalculateViewboxSelector(state)) {
-    return calculateAnnotationViewBox(state.graph, currentAnnotationSelector(state))
+    return calculateAnnotationViewBox(
+      state.graph,
+      currentAnnotationSelector(state)
+    )
   } else {
     return state.display.viewBox
   }
 }
 
 // do we need to recalculate the viewbox because of highlights?
-export const shouldRecalculateViewboxSelector: Selector<State, boolean> = state => {
-  return !state.display.modes.editor && state.display.modes.story && annotationHasHighlightsSelector(state)
+export const shouldRecalculateViewboxSelector: Selector<State, boolean> = (
+  state
+) => {
+  return (
+    !state.display.modes.editor &&
+    state.display.modes.story &&
+    annotationHasHighlightsSelector(state)
+  )
 }
 
 export function userIsOwnerSelector(state: State): boolean {
-  return !!state.attributes?.user?.id &&
+  return (
+    !!state.attributes?.user?.id &&
     !!state.attributes?.owner?.id &&
-    (state.attributes.owner.id === state.attributes.user.id)
+    state.attributes.owner.id === state.attributes.user.id
+  )
 }
 
 export function userIsEditorSelector(state: State): boolean {
-  return !!state.attributes?.user?.id &&
+  return (
+    !!state.attributes?.user?.id &&
     !!state.attributes?.editors &&
-    state.attributes.editors.filter(e => !e.pending).map(e => e.id).includes(state.attributes.user.id)
+    state.attributes.editors
+      .filter((e) => !e.pending)
+      .map((e) => e.id)
+      .includes(state.attributes.user.id)
+  )
 }
 
 export function userCanEditSelector(state: State): boolean {
@@ -90,10 +111,18 @@ export function scrollToZoomSelector(state: State): boolean {
   return state.attributes.settings.scrollToZoom
 }
 
+export function embedSelector(state: State) {
+  return state.settings.embed
+}
+
 // If List Sources is on, there is sources data, and we are not editing
 // add the sources annotation to our list of annotations
 export const annotationsListSelector = (state: State): Annotation[] => {
-  if (!state.display.modes.editor && state.attributes.settings.list_sources && state.annotations.sources) {
+  if (
+    !state.display.modes.editor &&
+    state.attributes.settings.list_sources &&
+    state.annotations.sources
+  ) {
     return state.annotations.list.concat([state.annotations.sources])
   } else {
     return state.annotations.list
@@ -124,23 +153,32 @@ export const showAnnotationsSelector = (state: State): boolean => {
   return false
 }
 
-
-export const currentAnnotationSelector: Selector<State, Annotation> = state => {
+export const currentAnnotationSelector: Selector<State, Annotation> = (
+  state
+) => {
   const list = annotationsListSelector(state)
   const { currentIndex } = state.annotations
   return list[currentIndex]
 }
 
-export const annotationHasHighlightsSelector: Selector<State, boolean> = state => {
+export const annotationHasHighlightsSelector: Selector<State, boolean> = (
+  state
+) => {
   if (!state.display.modes.story) {
     return false
   }
 
   const annotation = currentAnnotationSelector(state)
-  return Boolean(annotation) && (annotation.nodeIds.length + annotation.edgeIds.length + annotation.captionIds.length) > 0
+  return (
+    Boolean(annotation) &&
+    annotation.nodeIds.length +
+      annotation.edgeIds.length +
+      annotation.captionIds.length >
+      0
+  )
 }
 
-export const enableLockSelector: Selector<State, boolean> = state => {
+export const enableLockSelector: Selector<State, boolean> = (state) => {
   const isOwner = userIsOwnerSelector(state)
   const { id, editors } = state.attributes
 
@@ -158,8 +196,8 @@ export const paramsForSaveSelector = (state: State): LsMap => {
       is_cloneable: state.attributes.settings.clone,
       list_sources: state.attributes.settings.list_sources,
       settings: JSON.stringify(state.attributes.settings),
-      annotations_data: JSON.stringify(state.annotations.list)
-    }
+      annotations_data: JSON.stringify(state.annotations.list),
+    },
   }
 }
 
@@ -177,5 +215,7 @@ export const hasUnsavedChangesSelector = (state: State): boolean => {
   return !isEqual(lastSavedData, latestData)
 }
 
-export const pastHistorySelector = (state: State): StateWithoutHistory[] => state.history.past
-export const futureHistorySelector = (state: State): StateWithoutHistory[] => state.history.future
+export const pastHistorySelector = (state: State): StateWithoutHistory[] =>
+  state.history.past
+export const futureHistorySelector = (state: State): StateWithoutHistory[] =>
+  state.history.future

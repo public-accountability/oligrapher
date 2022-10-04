@@ -40,9 +40,13 @@ export default class Oligrapher {
     const isEmbedded = this.store.getState().settings.embed
 
     const root = createRoot(this.element)
-    const rootElement = React.createElement(isEmbedded ? EmbeddedRoot : Root)
+
     root.render(
-      React.createElement(Provider, { store: this.store }, rootElement)
+      React.createElement(
+        Provider,
+        { store: this.store },
+        React.createElement(Root)
+      )
     )
   }
 
