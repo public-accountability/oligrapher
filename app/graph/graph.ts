@@ -1,18 +1,23 @@
-import isNumber from 'lodash/isNumber'
-import merge from 'lodash/merge'
-import assign from 'lodash/assign'
-import uniq from 'lodash/uniq'
-import { isLittleSisId } from '../util/helpers'
+import isNumber from "lodash/isNumber"
+import merge from "lodash/merge"
+import assign from "lodash/assign"
+import uniq from "lodash/uniq"
+import { isLittleSisId } from "../util/helpers"
 
 // import Springy from 'springy'
-
-import { Point, translatePoint, rotatePoint } from '../util/geometry'
-import { Node, NodeAttributes, newNode, findIntersectingNode } from './node'
-import { Edge, EdgeAttributes, edgeCoordinates, newEdgeFromNodes, determineNodeNumber } from './edge'
-import { Caption } from './caption'
-import { curveSimilarEdges } from './curve'
-import { LsEdge } from '../datasources/littlesis3'
-import { Annotation } from '../util/annotations'
+import { Point, translatePoint, rotatePoint } from "../util/geometry"
+import { Node, NodeAttributes, newNode, findIntersectingNode } from "./node"
+import {
+  Edge,
+  EdgeAttributes,
+  edgeCoordinates,
+  newEdgeFromNodes,
+  determineNodeNumber,
+} from "./edge"
+import { Caption } from "./caption"
+import { curveSimilarEdges } from "./curve"
+import { LsEdge } from "../datasources/littlesis3"
+import { Annotation } from "../util/annotations"
 
 export interface NodeMap {
   [key: string]: Node
@@ -27,14 +32,14 @@ export interface CaptionMap {
 }
 
 export interface Graph {
-  nodes: NodeMap,
-  edges: EdgeMap,
+  nodes: NodeMap
+  edges: EdgeMap
   captions: CaptionMap
 }
 
 export interface GraphAttributes {
-  nodes?: NodeMap,
-  edges?: EdgeMap,
+  nodes?: NodeMap
+  edges?: EdgeMap
   captions?: CaptionMap
 }
 
@@ -43,18 +48,11 @@ export interface EdgeIndex {
 }
 
 export interface Viewbox {
-  minX: number,
-  minY: number,
-  w: number,
+  minX: number
+  minY: number
+  w: number
   h: number
 }
-
-const DEFAULT_GRAPH: Graph = {
-  nodes: {},
-  edges: {},
-  captions: {}
-}
-
 
 // Overview
 //   - Stats & Getters
@@ -69,8 +67,8 @@ const minNodeY = (nodes: Array<Node>): number => Math.min(...nodes.map(n => n.y)
 const maxNodeX = (nodes: Array<Node>): number => Math.max(...nodes.map(n => n.x))
 const maxNodeY = (nodes: Array<Node>): number => Math.max(...nodes.map(n => n.y))
 
-const edgeControlPointX = (edge: Edge): number => ((edge.x1 + edge.x2) / 2) + (edge.cx || 0)
-const edgeControlPointY = (edge: Edge): number => ((edge.y1 + edge.y2) / 2) + (edge.cy || 0)
+const edgeControlPointX = (edge: Edge): number => (edge.x1 + edge.x2) / 2 + (edge.cx || 0)
+const edgeControlPointY = (edge: Edge): number => (edge.y1 + edge.y2) / 2 + (edge.cy || 0)
 
 const minEdgeX = (edges: Array<Edge>): number => Math.min(...edges.map(edgeControlPointX))
 const minEdgeY = (edges: Array<Edge>): number => Math.min(...edges.map(edgeControlPointY))
@@ -79,33 +77,39 @@ const maxEdgeY = (edges: Array<Edge>): number => Math.max(...edges.map(edgeContr
 
 const minCaptionX = (captions: Array<Caption>): number => Math.min(...captions.map(c => c.x))
 const minCaptionY = (captions: Array<Caption>): number => Math.min(...captions.map(c => c.y))
-const maxCaptionX = (captions: Array<Caption>): number => Math.max(...captions.map(c => c.x + c.width))
-const maxCaptionY = (captions: Array<Caption>): number => Math.max(...captions.map(c => c.y + c.height))
+const maxCaptionX = (captions: Array<Caption>): number =>
+  Math.max(...captions.map(c => c.x + c.width))
+const maxCaptionY = (captions: Array<Caption>): number =>
+  Math.max(...captions.map(c => c.y + c.height))
 
 interface GraphStats {
-  nodeCount: number,
-  edgeCount: number,
-  captionCount: number,
-  minNodeX: number,
-  minNodeY: number,
-  maxNodeX: number,
-  maxNodeY: number,
-  minEdgeX: number,
-  minEdgeY: number,
-  maxEdgeX: number,
-  maxEdgeY: number,
-  minCaptionX: number,
-  minCaptionY: number,
-  maxCaptionX: number,
-  maxCaptionY: number,
-  minX: number,
-  minY: number,
-  maxX: number,
+  nodeCount: number
+  edgeCount: number
+  captionCount: number
+  minNodeX: number
+  minNodeY: number
+  maxNodeX: number
+  maxNodeY: number
+  minEdgeX: number
+  minEdgeY: number
+  maxEdgeX: number
+  maxEdgeY: number
+  minCaptionX: number
+  minCaptionY: number
+  maxCaptionX: number
+  maxCaptionY: number
+  minX: number
+  minY: number
+  maxX: number
   maxY: number
 }
 
 export const graphStats = (graph: Graph) => {
-  return stats(Object.values(graph.nodes), Object.values(graph.edges),Object.values(graph.captions))
+  return stats(
+    Object.values(graph.nodes),
+    Object.values(graph.edges),
+    Object.values(graph.captions)
+  )
 }
 
 export const stats = (nodes: Node[], edges: Edge[], captions: Caption[]): GraphStats => {
@@ -124,7 +128,7 @@ export const stats = (nodes: Node[], edges: Edge[], captions: Caption[]): GraphS
     minCaptionX: minCaptionX(captions),
     minCaptionY: minCaptionY(captions),
     maxCaptionX: maxCaptionX(captions),
-    maxCaptionY: maxCaptionY(captions)
+    maxCaptionY: maxCaptionY(captions),
   }
 
   graphStats.minX = Math.min(graphStats.minNodeX, graphStats.minEdgeX, graphStats.minCaptionX)
@@ -149,9 +153,9 @@ export function nodesOf(graph: Graph, edgeId: string): Array<Node> {
 // ViewBox Calculations
 
 type PaddingType = {
-  left: number,
-  right: number,
-  top: number,
+  left: number
+  right: number
+  top: number
   bottom: number
 }
 
@@ -164,11 +168,16 @@ export const GRAPH_PADDING = 100
 //   bottom: GRAPH_PADDING
 // }
 
-const handleInfinite = (value: number) => isFinite(value) ? value : 0
+const handleInfinite = (value: number) => (isFinite(value) ? value : 0)
 
 // finds the smallest rectangle with padding that can be fit around all nodes
 // These values are used to create the viewBox attribute for the outermost SVG.
-export function calculateViewBox(nodes: Node[], edges: Edge[], captions: Caption[], padding: number = GRAPH_PADDING): Viewbox {
+export function calculateViewBox(
+  nodes: Node[],
+  edges: Edge[],
+  captions: Caption[],
+  padding: number = GRAPH_PADDING
+): Viewbox {
   const graphStats = stats(nodes, edges, captions)
   let minX = handleInfinite(graphStats.minX) - padding
   let minY = handleInfinite(graphStats.minY) - padding
@@ -190,9 +199,7 @@ export function calculateViewBox(nodes: Node[], edges: Edge[], captions: Caption
   // }
 }
 
-export function calculateZoomFromViewbox(viewbox: Viewbox, height: number) {
-
-}
+export function calculateZoomFromViewbox(viewbox: Viewbox, height: number) {}
 
 export function calculateViewBoxFromGraph(graph: Graph): Viewbox {
   return calculateViewBox(
@@ -206,17 +213,18 @@ export function calculateViewBoxFromGraph(graph: Graph): Viewbox {
 export function calculateAnnotationViewBox(graph: Graph, annotation: Annotation): Viewbox {
   const nodes = Object.values(graph.nodes).filter(node => annotation.nodeIds.includes(node.id))
   const edges = Object.values(graph.edges).filter(edge => annotation.edgeIds.includes(edge.id))
-  const captions = Object.values(graph.captions).filter(caption => annotation.captionIds.includes(caption.id))
+  const captions = Object.values(graph.captions).filter(caption =>
+    annotation.captionIds.includes(caption.id)
+  )
   const padding = 250
   return calculateViewBox(nodes, edges, captions, padding)
 }
 
-
 // Returns the geometric center point of a graph's viewbox
 export function calculateCenter(graph: Graph): Point {
   const vb = calculateViewBoxFromGraph(graph)
-  const x = vb.minX + (vb.w / 2)
-  const y = vb.minY + (vb.h / 2)
+  const x = vb.minX + vb.w / 2
+  const y = vb.minY + vb.h / 2
   return { x, y }
 }
 
@@ -226,12 +234,16 @@ export function findFreePositionNear(graph: Graph, startPosition: Point): Point 
   const padding = 50
   const maxTries = 30
   const nodes = Object.values(graph.nodes)
-  let position, node, success = false, tries = 0, radius = 0
+  let position,
+    node,
+    success = false,
+    tries = 0,
+    radius = 0
 
   do {
     position = positionNear(startPosition, radius)
     node = findIntersectingNode(nodes, position, padding)
-    success = (node === undefined)
+    success = node === undefined
     tries += 1
     radius += 20
   } while (!success && tries < maxTries)
@@ -255,11 +267,22 @@ export function positionNear({ x, y }: Point, radius: number) {
 
 // Creates a new, empty graph object
 // exported in the module default as Graph.new
-export function newGraph(attributes: GraphAttributes = {}): Graph {
-  return Object.assign({}, DEFAULT_GRAPH, attributes)
+export function newGraph(attributes: GraphAttributes | undefined): Graph {
+  return Object.assign(
+    {
+      nodes: {},
+      edges: {},
+      captions: {},
+    },
+    attributes
+  )
 }
 
-export function addNode(graph: Graph, attributes: NodeAttributes, position: Point | undefined | false): Graph {
+export function addNode(
+  graph: Graph,
+  attributes: NodeAttributes,
+  position: Point | undefined | false
+): Graph {
   let node = newNode(attributes)
 
   // skip if already contains node with same id
@@ -270,7 +293,7 @@ export function addNode(graph: Graph, attributes: NodeAttributes, position: Poin
   // Place the node at random spaced position near a provided point
   // or the graph center, unless coordinates are provided
   if (position || !isNumber(node.x) || !isNumber(node.y)) {
-    if (typeof position !== 'object') {
+    if (typeof position !== "object") {
       position = calculateCenter(graph)
     }
 
@@ -305,7 +328,7 @@ export function updateNode(graph: Graph, nodeId: string, attributes: NodeAttribu
   // If scale is changed, update any associated edges
   if (attributes.scale) {
     edgesOf(graph, nodeId).forEach(edge => {
-      let attribute = 's' + determineNodeNumber(edge, nodeId).toString()
+      let attribute = "s" + determineNodeNumber(edge, nodeId).toString()
       updateEdge(graph, edge.id, { [attribute]: attributes.scale })
     })
   }
@@ -320,8 +343,8 @@ export function addEdgeIdToNode(graph: Graph, nodeId: string, edgeId: string): G
 
 export function updateEdgeFromNodes(graph: Graph, edgeId: string): Graph {
   let { node1_id, node2_id } = getEdge(graph, edgeId)
-  let node1 = getNode(graph, node1_id )
-  let node2 = getNode(graph, node2_id )
+  let node1 = getNode(graph, node1_id)
+  let node2 = getNode(graph, node2_id)
 
   updateEdge(graph, edgeId, {
     x1: node1.x,
@@ -329,7 +352,7 @@ export function updateEdgeFromNodes(graph: Graph, edgeId: string): Graph {
     x2: node2.x,
     y2: node2.y,
     s1: node1.scale,
-    s2: node2.scale
+    s2: node2.scale,
   })
 
   return graph
@@ -397,15 +420,13 @@ export function createEdgeIndex(lsEdges: LsEdge[]): EdgeIndex {
 // creates multiple edges between the same nodes
 // so that the edges are nicely spaced out
 export function addSimilarEdges(graph: Graph, lsEdges: LsEdge[]): Graph {
-  let edges = lsEdges.map(lsEdge => {
-    let node1 = getNode(graph, lsEdge.node1_id)
-    let node2 = getNode(graph, lsEdge.node2_id)
-    return newEdgeFromNodes(node1, node2, lsEdge)
-  })
-
-  edges = curveSimilarEdges(edges)
-
-  edges.forEach(edge => {
+  curveSimilarEdges(
+    lsEdges.map(lsEdge => {
+      let node1 = getNode(graph, lsEdge.node1_id)
+      let node2 = getNode(graph, lsEdge.node2_id)
+      return newEdgeFromNodes(node1, node2, lsEdge)
+    })
+  ).forEach(edge => {
     addEdgeIfNodes(graph, edge)
   })
 
@@ -487,11 +508,13 @@ export function dragNodeEdges(graph: Graph, nodeId: string, deltas: Point): Grap
 }
 
 function connectedNodeIds(graph: Graph, nodeId: string): Array<string> {
-  let nodeIds = edgesOf(graph, nodeId).map(edge => [edge.node1_id, edge.node2_id]).flat()
+  let nodeIds = edgesOf(graph, nodeId)
+    .map(edge => [edge.node1_id, edge.node2_id])
+    .flat()
   return uniq(nodeIds).filter(id => id != nodeId)
 }
 
-export function forceLayout(graph: Graph, steps:number = 1000): Graph {
+export function forceLayout(graph: Graph, steps: number = 1000): Graph {
   let layout = buildForceLayout(graph)
   let nodeCount = Object.keys(graph.nodes).length
   let edgeCount = Object.keys(graph.edges).length
@@ -505,7 +528,7 @@ export function forceLayout(graph: Graph, steps:number = 1000): Graph {
   layout.eachNode((node: { id: string }, point: { p: Point }) => {
     updateNode(graph, node.id, {
       x: point.p.x * 50,
-      y: point.p.y * 50
+      y: point.p.y * 50,
     })
   })
 
@@ -519,12 +542,10 @@ export function forceLayout(graph: Graph, steps:number = 1000): Graph {
     const { node1_id, node2_id } = edge
     const node1 = getNode(graph, node1_id)
     const node2 = getNode(graph, node2_id)
-    return assign(
-      edge,
-      edgeCoordinates(1, node1),
-      edgeCoordinates(2, node2),
-      { cx: undefined, cy: undefined }
-    )
+    return assign(edge, edgeCoordinates(1, node1), edgeCoordinates(2, node2), {
+      cx: undefined,
+      cy: undefined,
+    })
   })
 
   addEdgesIfNodes(graph, edges)
@@ -550,21 +571,27 @@ function buildForceLayout(graph: Graph) {
   // return new Springy.Layout.ForceDirected(gr, stiffness, repulsion, damping, minEnergyThreshold);
 }
 
-export function addInterlocks(graph: Graph, node1Id: string, node2Id: string, nodes: Node[], edges: Edge[]) {
+export function addInterlocks(
+  graph: Graph,
+  node1Id: string,
+  node2Id: string,
+  nodes: Node[],
+  edges: Edge[]
+) {
   const n1 = graph.nodes[node1Id]
   const n2 = graph.nodes[node2Id]
   const { x: x1, y: y1 } = n1
   const { x: x2, y: y2 } = n2
 
-  const midX = (x1 + x2)/2
-  const midY = (y1 + y2)/2
+  const midX = (x1 + x2) / 2
+  const midY = (y1 + y2) / 2
   const angle = Math.atan2(x1 - x2, y2 - y1)
   const num = Object.keys(nodes).length
-  const spacing = Math.max(50, 200 - (num * 10));
+  const spacing = Math.max(50, 200 - num * 10)
 
   nodes.forEach((node: Node, i: number) => {
-    const x = midX + Math.cos(angle) * (-(num-1)*spacing/2 + i*spacing);
-    const y = midY + Math.sin(angle) * (-(num-1)*spacing/2 + i*spacing);
+    const x = midX + Math.cos(angle) * ((-(num - 1) * spacing) / 2 + i * spacing)
+    const y = midY + Math.sin(angle) * ((-(num - 1) * spacing) / 2 + i * spacing)
     addNode(graph, assign(node, { x, y }))
   })
 
@@ -581,34 +608,34 @@ export function hasContents(graph: Graph): boolean {
   return nodeCount + edgeCount + captionCount > 0
 }
 
-
 export function littleSisNodes(graph: Graph): Node[] {
   return Object.values(graph.nodes).filter(node => isLittleSisId(node.id))
 }
 
 export default {
-  "new": newGraph,
-  "stats": stats,
-  "edgesOf": edgesOf,
-  "nodesOf": nodesOf,
-  "getNode": getNode,
-  "getEdge": getEdge,
-  "calculateViewBox": calculateViewBox,
-  "addNode": addNode,
-  "addNodes": addNodes,
-  "removeNode": removeNode,
-  "updateNode": updateNode,
-  "addEdge": addEdge,
-  "addEdgeIfNodes": addEdgeIfNodes,
-  "addEdgesIfNodes": addEdgesIfNodes,
-  "addSimilarEdges": addSimilarEdges,
-  "removeEdge": removeEdge,
-  "updateEdge": updateEdge,
-  "addCaption": addCaption,
-  "moveNode": moveNode,
-  "dragNodeEdges": dragNodeEdges,
-  "connectedNodeIds": connectedNodeIds,
-  "forceLayout": forceLayout,
-  "registerEdgeWithNodes": registerEdgeWithNodes,
-  "littleSisNodes": littleSisNodes
+  new: newGraph,
+  stats,
+  graphStats,
+  edgesOf,
+  nodesOf,
+  getNode,
+  getEdge,
+  calculateViewBox,
+  addNode,
+  addNodes,
+  removeNode,
+  updateNode,
+  addEdge,
+  addEdgeIfNodes,
+  addEdgesIfNodes,
+  addSimilarEdges,
+  removeEdge,
+  updateEdge,
+  addCaption,
+  moveNode,
+  dragNodeEdges,
+  connectedNodeIds,
+  forceLayout,
+  registerEdgeWithNodes,
+  littleSisNodes,
 }
