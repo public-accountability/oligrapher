@@ -6,14 +6,19 @@ import EditorSubmitButtons from "./EditorSubmitButtons"
 import EditorHotKeys from "./EditorHotKeys"
 import { isLittleSisId } from "../util/helpers"
 import { IoIosLink } from "@react-icons/all-files/io/IoIosLink"
+
+import NodeEditorImage from "./NodeEditorImage"
 import NodeEditorMain from "./NodeEditorMain"
 import NodeEditorColor from "./NodeEditorColor"
+
 import { State } from "../util/defaultState"
 import { Node as NodeType } from "../graph/node"
+import NodeEditorSwitcher from "./NodeEditorSwitcher"
+
+export type NodeEditorPages = "main" | "color" | "size" | "image"
 
 export default function NodeEditor({ id }: { id: string }) {
-  // possible pages: main, color, size
-  const [page, setPage] = useState("main")
+  const [page, setPage] = useState<NodeEditorPages>("main")
   const node = useSelector<State, NodeType>(state => state.graph.nodes[id])
   const colors = useSelector(state => Object.values(state.graph.nodes).map(node => node.color))
 
@@ -44,9 +49,11 @@ export default function NodeEditor({ id }: { id: string }) {
             <NodeEditorColor color={node.color} onChange={handleColorChange} colors={colors} />
           )}
           {page === "size" && <SizePicker scale={node.scale} onChange={handleScaleChange} />}
+
+          {page === "image" && <NodeEditorImage id={id} image={node.image} />}
         </main>
         <footer>
-          <p>...switcher...</p>
+          <NodeEditorSwitcher currentPage={page} setPage={setPage} />
         </footer>
       </div>
     </EditorHotKeys>

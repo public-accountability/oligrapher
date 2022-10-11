@@ -1,25 +1,26 @@
-import React, { SyntheticEvent, useState, useCallback } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import isFunction from 'lodash/isFunction'
-import toNumber from 'lodash/toNumber'
-import { StateWithHistory } from './defaultState'
-import ConfirmSave from '../components/ConfirmSave'
-import EmptySave from '../components/EmptySave'
-import { Graph, hasContents } from '../graph/graph'
+import React, { SyntheticEvent, useState, useCallback } from "react"
+import { useSelector, useDispatch } from "react-redux"
+import isFunction from "lodash/isFunction"
+import toNumber from "lodash/toNumber"
+import ConfirmSave from "../components/ConfirmSave"
+import EmptySave from "../components/EmptySave"
+import { Graph, hasContents } from "../graph/graph"
 
 export function classNames(...classes: Array<string | undefined>): string {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ")
 }
 
-export function callWithTargetValue(func: (arg: any) => any): (event: Event | React.ChangeEvent) => any {
-  return function(event: Event | React.ChangeEvent) {
+export function callWithTargetValue(
+  func: (arg: any) => any
+): (event: Event | React.ChangeEvent) => any {
+  return function (event: Event | React.ChangeEvent) {
     const value = (event.target as HTMLInputElement).value
     return func(value)
   }
 }
 
 export function callWithPersistedEvent(func: (arg: any) => any): (event: SyntheticEvent) => any {
-  return function(event: SyntheticEvent) {
+  return function (event: SyntheticEvent) {
     if (isFunction(event.persist)) {
       event.persist()
     }
@@ -28,13 +29,16 @@ export function callWithPersistedEvent(func: (arg: any) => any): (event: Synthet
 }
 
 // source: https://reactjs.org/blog/2015/12/16/ismounted-antipattern.html
-export function makeCancelable(promise: Promise<any>): { promise: Promise<any>, cancel: () => void } {
+export function makeCancelable(promise: Promise<any>): {
+  promise: Promise<any>
+  cancel: () => void
+} {
   let hasCanceled = false
 
   const wrappedPromise = new Promise((resolve, reject) => {
     promise.then(
-      val => hasCanceled ? reject({ isCanceled: true }) : resolve(val),
-      error => hasCanceled ? reject({ isCanceled: true }) : reject(error)
+      val => (hasCanceled ? reject({ isCanceled: true }) : resolve(val)),
+      error => (hasCanceled ? reject({ isCanceled: true }) : reject(error))
     )
   })
 
@@ -42,7 +46,7 @@ export function makeCancelable(promise: Promise<any>): { promise: Promise<any>, 
     promise: wrappedPromise,
     cancel() {
       hasCanceled = true
-    }
+    },
   }
 }
 
@@ -61,14 +65,16 @@ export function isLittleSisId(id: any): boolean {
 }
 
 export const eventTargetIsFormElement = (event: Event): boolean => {
-  return ['INPUT', 'TEXTAREA', 'SELECT'].includes((event.target as HTMLElement)?.tagName)
+  return ["INPUT", "TEXTAREA", "SELECT"].includes((event.target as HTMLElement)?.tagName)
 }
 
 export function useSaveMap() {
   const dispatch = useDispatch()
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [emptyOpen, setEmptyOpen] = useState(false)
-  const isSaving = useSelector<StateWithHistory>(state => state.display.saveMapStatus === 'REQUESTED')
+  const isSaving = useSelector<StateWithHistory>(
+    state => state.display.saveMapStatus === "REQUESTED"
+  )
   const version = useSelector<StateWithHistory>(state => state.attributes.version)
   const isEmpty = useSelector<StateWithHistory>(state => !hasContents(state.graph))
 
@@ -76,14 +82,14 @@ export function useSaveMap() {
     if (isEmpty) {
       setEmptyOpen(true)
     } else if (version === 3) {
-      dispatch({ type: 'SAVE_REQUESTED' })
+      dispatch({ type: "SAVE_REQUESTED" })
     } else {
       setConfirmOpen(true)
     }
   }, [version, dispatch, isEmpty])
 
   const save = useCallback(() => {
-    dispatch({ type: 'SAVE_REQUESTED' })
+    dispatch({ type: "SAVE_REQUESTED" })
     setConfirmOpen(false)
   }, [dispatch])
 
@@ -91,9 +97,10 @@ export function useSaveMap() {
   const closeEmpty = useCallback(() => setEmptyOpen(false), [])
 
   return {
-    isSaving, saveMap,
+    isSaving,
+    saveMap,
     confirmSave: ConfirmSave({ open: confirmOpen, close: closeConfirm, save }),
-    emptySave: EmptySave({ open: emptyOpen, close: closeEmpty })
+    emptySave: EmptySave({ open: emptyOpen, close: closeEmpty }),
   }
 }
 
@@ -117,7 +124,6 @@ export function getElementById(id: string): Element {
   } else {
     throw new Error(`#${id} is not in the document`)
   }
-
 }
 
 export function querySelector(query: string): Element {
@@ -137,7 +143,6 @@ export function getElementForGraphItem(id: string, t: "node" | "edge" | "caption
 
   return querySelector(`g#${t}-${id}`) as SVGGElement
 }
-
 
 // For now, this isn't needed because we flatten state.graph after every action:
 //

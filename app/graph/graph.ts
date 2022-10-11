@@ -170,8 +170,7 @@ export const GRAPH_PADDING = 100
 
 const handleInfinite = (value: number) => (isFinite(value) ? value : 0)
 
-// finds the smallest rectangle with padding that can be fit around all nodes
-// These values are used to create the viewBox attribute for the outermost SVG.
+// Finds the smallest rectangle with padding that fits around all nodes.
 export function calculateViewBox(
   nodes: Node[],
   edges: Edge[],

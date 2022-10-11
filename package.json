@@ -6,6 +6,7 @@
   "scripts": {
     "build": "bin/build",
     "dev": "bin/dev",
+    "serve": "http-server -c-1 -p 8000 html",
     "sass": "sass app/oligrapher.scss html/oligrapher.css",
     "test": "jest"
   },
