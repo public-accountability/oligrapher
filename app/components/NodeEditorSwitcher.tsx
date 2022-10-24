@@ -1,5 +1,6 @@
 import React from "react"
 import IconButton from "@mui/material/IconButton"
+import Stack from "@mui/material/Stack"
 import { FaRegDotCircle } from "@react-icons/all-files/fa/FaRegDotCircle"
 import { MdColorLens } from "@react-icons/all-files/md/MdColorLens"
 import { MdImage } from "@react-icons/all-files/md/MdImage"
@@ -8,14 +9,14 @@ import { MdPhotoSizeSelectSmall } from "@react-icons/all-files/md/MdPhotoSizeSel
 import type { NodeEditorPages } from "./NodeEditor"
 
 type NodeEditorSwitcherPropTypes = {
-  currentPage: NodeEditorPages
+  currentPage: NodeEditorPages,
   setPage: (page: NodeEditorPages) => void
 }
 
 type MenuEditorPropTypes = {
-  currentPage: NodeEditorPages
-  setPage: (page: NodeEditorPages) => void
-  text: string
+  currentPage: NodeEditorPages,
+  setPage: (page: NodeEditorPages) => void,
+  text: string,
   page: NodeEditorPages
 }
 
@@ -23,15 +24,13 @@ const ICONS = {
   main: <FaRegDotCircle />,
   color: <MdColorLens />,
   size: <MdPhotoSizeSelectSmall />,
-  image: <MdImage />,
+  image: <MdImage />
 }
 
 const MenuButton = ({ text, page, currentPage, setPage }: MenuEditorPropTypes) => {
-  const active = currentPage === page
-  const color = active ? "primary" : "secondary"
-
+  const color = currentPage === page ? "primary" : "secondary"
   return (
-    <IconButton color={color} onClick={() => setPage(page)} title={text}>
+    <IconButton color={color} onClick={() => setPage(page)} title={text} size="small" sx={{mt: '5px'}}>
       {ICONS[page]}
     </IconButton>
   )
@@ -39,11 +38,11 @@ const MenuButton = ({ text, page, currentPage, setPage }: MenuEditorPropTypes) =
 
 export default function ({ currentPage, setPage }: NodeEditorSwitcherPropTypes) {
   return (
-    <div>
+    <Stack direction="row" spacing={1}>
       <MenuButton text="Node" page="main" currentPage={currentPage} setPage={setPage} />
       <MenuButton text="Color" page="color" currentPage={currentPage} setPage={setPage} />
       <MenuButton text="Size" page="size" currentPage={currentPage} setPage={setPage} />
       <MenuButton text="Image" page="image" currentPage={currentPage} setPage={setPage} />
-    </div>
+    </Stack>
   )
 }

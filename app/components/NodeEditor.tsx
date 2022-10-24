@@ -21,7 +21,9 @@ export type NodeEditorPages = "main" | "color" | "size" | "image"
 export default function NodeEditor({ id }: { id: string }) {
   const [page, setPage] = useState<NodeEditorPages>("main")
   const node = useSelector<State, NodeType>(state => state.graph.nodes[id])
-  const colors = useSelector(state => Object.values(state.graph.nodes).map(node => node.color))
+  const colors = useSelector<State, string[]>(state =>
+    Object.values(state.graph.nodes).map(node => node.color)
+  )
 
   const dispatch = useDispatch()
   const removeNode = () => dispatch({ type: "REMOVE_NODE", id })
@@ -31,12 +33,12 @@ export default function NodeEditor({ id }: { id: string }) {
   const handleColorChange = (color: string) => updateNode({ color })
   const handleScaleChange = scale => updateNode({ scale })
   const openAddConnections = () => dispatch({ type: "OPEN_ADD_CONNECTIONS", id })
-  const isLsNode = isLittleSisId(id)
 
   return (
     <EditorHotKeys remove={removeNode}>
       <div className="oligrapher-node-editor">
         <EditorHeader title="Customize Node" />
+        <NodeEditorSwitcher currentPage={page} setPage={setPage} />
         <main>
           {page === "main" && (
             <NodeEditorMain
@@ -53,9 +55,6 @@ export default function NodeEditor({ id }: { id: string }) {
 
           {page === "image" && <NodeEditorImage id={id} image={node.image} />}
         </main>
-        <footer>
-          <NodeEditorSwitcher currentPage={page} setPage={setPage} />
-        </footer>
       </div>
     </EditorHotKeys>
   )
