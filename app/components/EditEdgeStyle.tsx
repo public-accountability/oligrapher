@@ -16,41 +16,28 @@ export default function EditEdgeStyle({ edge, nodes, updateEdge }: EditEdgeStyle
   const rightArrow = node2 ? "→" : "―"
   const dash = edge.dash ? "---" : "―"
 
-  const toggleLeftArrow = useCallback(() => {
-    const arrow = Arrow.change(edge.arrow, !node1, "1")
-    updateEdge({ arrow })
-  }, [edge, updateEdge, node1])
-
-  const toggleRightArrow = useCallback(() => {
-    const arrow = Arrow.change(edge.arrow, !node2, "2")
-    updateEdge({ arrow })
-  }, [edge, updateEdge, node2])
-
-  const toggleDash = useCallback(() => {
-    const dash = !edge.dash
-    updateEdge({ dash })
-  }, [edge, updateEdge])
+  const toggleLeftArrow = () => updateEdge({ arrow: Arrow.change(edge.arrow, !node1, "1") })
+  const toggleRightArrow = () => updateEdge({ arrow: Arrow.change(edge.arrow, !node2, "2") })
+  const toggleDash = () => updateEdge({ dash: !edge.dash })
 
   return (
     <div className="edit-edge-style">
       <div>
         <EdgeEditorNode node={nodes[0]} />
       </div>
+
       <div className="edge-style-buttons">
         <button className="edge-style-button" onClick={toggleLeftArrow} title="Toggle arrow">
           {leftArrow}
         </button>
-        &nbsp;
         <button className="edge-style-button" onClick={toggleDash} title="Toggle dashes">
           {dash}
         </button>
-        &nbsp;
         <button className="edge-style-button" onClick={toggleRightArrow} title="Toggle arrow">
           {rightArrow}
         </button>
-        <br />
-        <small>toggle dashes and arrows</small>
       </div>
+
       <div>
         <EdgeEditorNode node={nodes[1]} />
       </div>

@@ -678,37 +678,24 @@ $edge_highlight_color: $oligrapher_blue;
   }
 
   .edit-edge-style {
-    width: 100%;
-    padding-top: 10px;
+      display: flex;
+      align-items: flex-start;
 
-    div {
-      display: inline-block;
-    }
+      .edge-style-buttons {
+          display: flex;
+          flex-wrap: nowrap;
+          gap: 3px;
+          color: #888;
+      }
 
-    small {
-      font-size: 10px;
-    }
-
-    .edge-style-buttons {
-      position: relative;
-      top: -5px;
-      padding-left: 8px;
-      padding-right: 8px;
-      color: #888;
-    }
-
-    .edge-style-button {
-      font-size: 0.8em;
-      background-color: #fff;
-      color: #000;
-      border: 1px solid #ccc;
-      text-align: center;
-      padding: 0px;
-      padding-top: 1px;
-      width: 35px;
-      font-size: 1.3em;
-      line-height: 1em;
-    }
+      .edge-style-button {
+          width: 35px;
+          font-size: 1em;
+          color: #000;
+          background-color: #fff;
+          border: 1px solid #ccc;
+          text-align: center;
+      }
   }
 
   .node-label {
