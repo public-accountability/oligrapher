@@ -1,16 +1,17 @@
-import React, { useState, useCallback } from "react"
+import React, { useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import EditorHeader from "./EditorHeader"
 import SizePicker from "./SizePicker"
-import EditorSubmitButtons from "./EditorSubmitButtons"
+// import EditorSubmitButtons from "./EditorSubmitButtons"
 import EditorHotKeys from "./EditorHotKeys"
 import { isLittleSisId } from "../util/helpers"
-import { IoIosLink } from "@react-icons/all-files/io/IoIosLink"
+// import { IoIosLink } from "@react-icons/all-files/io/IoIosLink"
 
 import NodeEditorImage from "./NodeEditorImage"
 import NodeEditorMain from "./NodeEditorMain"
 import NodeEditorColor from "./NodeEditorColor"
 
+import { NodeAttributes } from "../graph/node"
 import { State } from "../util/defaultState"
 import { Node as NodeType } from "../graph/node"
 import NodeEditorSwitcher from "./NodeEditorSwitcher"
@@ -24,7 +25,7 @@ export default function NodeEditor({ id }: { id: string }) {
 
   const dispatch = useDispatch()
   const removeNode = () => dispatch({ type: "REMOVE_NODE", id })
-  const updateNode = attributes => {
+  const updateNode = (attributes: NodeAttributes) => {
     dispatch({ type: "UPDATE_NODE", id, attributes })
   }
   const handleColorChange = (color: string) => updateNode({ color })
