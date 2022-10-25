@@ -1,16 +1,12 @@
 import React, { useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
+
 import EditorHeader from "./EditorHeader"
 import SizePicker from "./SizePicker"
-// import EditorSubmitButtons from "./EditorSubmitButtons"
 import EditorHotKeys from "./EditorHotKeys"
-import { isLittleSisId } from "../util/helpers"
-// import { IoIosLink } from "@react-icons/all-files/io/IoIosLink"
-
 import NodeEditorImage from "./NodeEditorImage"
 import NodeEditorMain from "./NodeEditorMain"
 import NodeEditorColor from "./NodeEditorColor"
-
 import { NodeAttributes } from "../graph/node"
 import { State } from "../util/defaultState"
 import { Node as NodeType } from "../graph/node"
@@ -52,7 +48,6 @@ export default function NodeEditor({ id }: { id: string }) {
             <NodeEditorColor color={node.color} onChange={handleColorChange} colors={colors} />
           )}
           {page === "size" && <SizePicker scale={node.scale} onChange={handleScaleChange} />}
-
           {page === "image" && <NodeEditorImage id={id} image={node.image} />}
         </main>
       </div>

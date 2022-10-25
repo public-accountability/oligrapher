@@ -27,6 +27,7 @@
     "@emotion/styled": "^11.10.0",
     "@hello-pangea/color-picker": "^3.2.1",
     "@hello-pangea/dnd": "^16.0.0",
+    "@mui/lab": "^5.0.0-alpha.105",
     "@mui/material": "^5.10.2",
     "@react-icons/all-files": "^4.1.0",
     "@reduxjs/toolkit": "^1.8.5",
@@ -70,9 +71,15 @@
     "whatwg-fetch": "^3.6.2"
   },
   "jest": {
-    "testMatch": ["**/test/**/*.test.[jt]s?(x)"],
-    "transformIgnorePatterns": ["node_modules/(?!(nanoid)/)"],
+    "testMatch": [
+      "**/test/**/*.test.[jt]s?(x)"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(nanoid)/)"
+    ],
     "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": ["./jest.setup.js"]
+    "setupFilesAfterEnv": [
+      "./jest.setup.js"
+    ]
   }
 }
