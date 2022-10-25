@@ -668,10 +668,8 @@ $edge_highlight_color: $oligrapher_blue;
 }
 
 #oligrapher-container div.oligrapher-edge-editor {
-  width: 325px;
-  max-height: 800px;
-  padding: 10px;
-  box-sizing: border-box;
+  @extend %floating_editor_box;
+  width: 292px;
 
   form input {
     width: 92%;
