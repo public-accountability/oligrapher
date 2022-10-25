@@ -25,7 +25,7 @@ export default function EdgeEditor({ id }: { id: string }) {
 
   return (
     <EditorHotKeys remove={removeEdge}>
-      <div className="oligrapher-edge-editor">
+      <div className="oligrapher-edge-editor" data-testid="oligrapher-edge-editor">
         <EditorHeader title="Customize Edge" />
 
         <Box sx={{ m: "5px", mb: "25px" }}>
