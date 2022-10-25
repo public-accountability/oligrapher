@@ -239,6 +239,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
       } else {
         state.display.selection.node.push(action.id)
       }
+      FloatingEditor.clear(state.display)
     } else {
       if (
         state.display.floatingEditor.type === "node" &&
