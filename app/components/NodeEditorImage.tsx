@@ -27,6 +27,7 @@ type NodeEditorImagePropTypes = {
 
 const messages = {
   invalidUrl: "This url is invalid",
+  requestFailed: "Remote request failed",
   noDataurl: "Failed to save remote image",
 }
 
