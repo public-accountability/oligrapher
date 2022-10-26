@@ -114,6 +114,8 @@ $edge_highlight_color: $oligrapher_blue;
 #oligrapher-container #oligrapher-header-condensed {
   border-bottom: 1px solid #ccc;
   position: relative;
+  margin-left: 8px;
+  margin-right: 8px;
 
   &.oligrapher-header-collapsed {
     min-height: 52px;

@@ -3,7 +3,7 @@ import isNil from "lodash/isNil"
 
 import { DisplayModesState, State, FloatingEditorType, StateWithoutHistory } from "./defaultState"
 import { Annotation } from "./annotations"
-import { LsMap } from "../datasources/littlesis3"
+import { LsMap, urls } from "../datasources/littlesis3"
 import { Selector } from "react-redux"
 import { Viewbox, calculateAnnotationViewBox } from "../graph/graph"
 
@@ -109,6 +109,13 @@ export function edgeDraggingEnabledSelector(state: State) {
   return state.display.modes.editor || state.attributes.settings.edgeDraggingWhenPresenting
 }
 
+export function embeddedUrlSelector(state: State) {
+  if (state.attributes.id) {
+    return urls.embeddedOligrapher(state.attributes.id)
+  } else {
+    return ""
+  }
+}
 // If List Sources is on, there is sources data, and we are not editing
 // add the sources annotation to our list of annotations
 export const annotationsListSelector = (state: State): Annotation[] => {

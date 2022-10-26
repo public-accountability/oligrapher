@@ -24,6 +24,7 @@ export const urls = {
   createOligrapher: () => `${API_URL}/oligrapher`,
   updateOligrapher: (id: number) => `${API_URL}/oligrapher/${id}`,
   cloneOligrapher: (id: number) => `${API_URL}/oligrapher/${id}/clone`,
+  embeddedOligrapher: (id: number) => `${API_URL}/oligrapher/${id}/embedded`,
   deleteOligrapher: (id: number) => `${API_URL}/oligrapher/${id}`,
   // Locking
   editors: (id: number) => `${API_URL}/oligrapher/${id}/editors`,

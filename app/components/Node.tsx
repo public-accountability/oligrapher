@@ -73,13 +73,12 @@ export default function Node({ id }: NodeProps) {
       <NodeBody
         ref={nodeRef}
         nodeId={node.id}
-        appearance={uiState.appearance}
+        ui={uiState}
         url={node.url}
         enableClick={!editMode}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         onMouseMove={onMouseMove}
-        dragged={uiState.dragged}
       >
         <NodeLabel node={node} uiState={uiState} />
         <NodeHalo node={node} uiState={uiState} />
