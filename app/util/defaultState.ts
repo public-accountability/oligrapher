@@ -1,7 +1,7 @@
-import { Graph, Viewbox } from '../graph/graph'
-import { Annotation } from './annotations'
-import { LockState, defaultLockState } from './lock'
-import { LsMap } from '../datasources/littlesis3'
+import { Graph, Viewbox } from "../graph/graph"
+import { Annotation } from "./annotations"
+import { LockState, defaultLockState } from "./lock"
+import { LsMap } from "../datasources/littlesis3"
 
 export interface GraphState extends Graph {
   present: Graph
@@ -10,116 +10,117 @@ export interface GraphState extends Graph {
 }
 
 export interface User {
-  id: number,
-  name: string,
+  id: number
+  name: string
   url: string
 }
 
 export interface Editor {
-  name: string,
-  url: string,
-  id: number,
-  pending?: boolean,
+  name: string
+  url: string
+  id: number
+  pending?: boolean
 }
 
 export interface UserSettings {
-  private: boolean,
-  clone: boolean,
-  list_sources: boolean,
-  defaultStoryMode: boolean,
-  defaultExploreMode: boolean,
-  storyModeOnly: boolean,
-  exploreModeOnly: boolean,
-  automaticallyAddEdges: boolean,
-  scrollToZoom: boolean,
-  useClassicAddConnections: boolean,
-  debug: boolean,
+  private: boolean
+  clone: boolean
+  list_sources: boolean
+  defaultStoryMode: boolean
+  defaultExploreMode: boolean
+  edgeDraggingWhenPresenting: boolean
+  storyModeOnly: boolean
+  exploreModeOnly: boolean
+  automaticallyAddEdges: boolean
+  scrollToZoom: boolean
+  useClassicAddConnections: boolean
+  debug: boolean
   showControlpoint: boolean
 }
 
 export interface AttributesState {
-  id: number | null,
-  title: string | null,
-  subtitle: string | null,
-  date: string | null,
-  version: number | null,
-  user: User | null,
-  owner: User | null,
+  id: number | null
+  title: string | null
+  subtitle: string | null
+  date: string | null
+  version: number | null
+  user: User | null
+  owner: User | null
   settings: UserSettings
-  editors: Editor[],
-  lock: LockState,
-  shareUrl: string | null,
-  bugReportUrl: string | null,
+  editors: Editor[]
+  lock: LockState
+  shareUrl: string | null
+  bugReportUrl: string | null
   helpUrl: string | null
 }
 
 export type FloatingEditorTypeType = "node" | "connections" | "edge" | "caption"
 
 export type FloatingEditorType = {
-  "type": FloatingEditorTypeType | null,
-  "id": string | null
+  type: FloatingEditorTypeType | null
+  id: string | null
 }
 
 export type AsyncStatus = "REQUESTED" | "SUCCESS" | "FAILED" | null
 
 export type SelectionType = "node" | "edge" | "caption"
 
-export type SvgSizeType = { width: number, height: number }
+export type SvgSizeType = { width: number; height: number }
 
 export interface Selection {
-  node: string[],
-  edge: string[],
-  caption: string[],
+  node: string[]
+  edge: string[]
+  caption: string[]
   isSelecting: boolean
 }
 
 export interface AnnotationsState {
-  list: Annotation[],
-  currentIndex: number,
-  sources: Annotation | null,
+  list: Annotation[]
+  currentIndex: number
+  sources: Annotation | null
   isHighlighting: boolean
 }
 
-export type DisplayModesState = { editor: boolean, story: boolean }
+export type DisplayModesState = { editor: boolean; story: boolean }
 
 export interface DisplayState {
-  zoom: number,   // transform = `scale(${zoom})`
-  viewBox: Viewbox,
-  svgHeight: number, // Height of SVG element
-  showHeader: boolean,
-  showZoomControl: boolean,
-  headerIsCollapsed: boolean,
-  modes: DisplayModesState,
-  floatingEditor: FloatingEditorType,
-  draggedNode: string | null,
-  overNode: string | null,
-  tool: "node" | "text" | "organize" | "settings" | "editors" | "help" | null,
-  saveMapStatus: AsyncStatus,
-  cloneMapStatus: AsyncStatus,
-  deleteMapStatus: AsyncStatus,
-  userMessage: string | null,
-  selection: Selection,
+  zoom: number // transform = `scale(${zoom})`
+  viewBox: Viewbox
+  svgHeight: number // Height of SVG element
+  showHeader: boolean
+  showZoomControl: boolean
+  headerIsCollapsed: boolean
+  modes: DisplayModesState
+  floatingEditor: FloatingEditorType
+  draggedNode: string | null
+  overNode: string | null
+  tool: "node" | "text" | "organize" | "settings" | "editors" | "help" | null
+  saveMapStatus: AsyncStatus
+  cloneMapStatus: AsyncStatus
+  deleteMapStatus: AsyncStatus
+  userMessage: string | null
+  selection: Selection
   pannable: boolean
 }
 
 export interface SettingsState {
-  domId: string,
-  embed: boolean,
-  noEditing: boolean,
+  domId: string
+  embed: boolean
+  noEditing: boolean
   logActions: boolean
 }
 
 export interface StateWithoutHistory {
-  graph: Graph,
-  annotations: AnnotationsState,
-  attributes: AttributesState,
-  display: DisplayState,
-  settings: SettingsState,
+  graph: Graph
+  annotations: AnnotationsState
+  attributes: AttributesState
+  display: DisplayState
+  settings: SettingsState
   lastSavedData: LsMap | null
 }
 
 type StateHistory = {
-  past: Graph[],
+  past: Graph[]
   future: Graph[]
 }
 
@@ -133,14 +134,14 @@ const defaultState: State = {
   graph: {
     nodes: {},
     edges: {},
-    captions: {}
+    captions: {},
   },
 
   annotations: {
     list: [],
     currentIndex: 0,
     sources: null,
-    isHighlighting: false
+    isHighlighting: false,
   },
 
   // Graph attributes and metadata
@@ -159,20 +160,20 @@ const defaultState: State = {
       list_sources: false,
       defaultStoryMode: true,
       defaultExploreMode: false,
+      edgeDraggingWhenPresenting: false,
       storyModeOnly: false,
       exploreModeOnly: false,
       automaticallyAddEdges: true,
       scrollToZoom: false,
       useClassicAddConnections: false,
       debug: false,
-      showControlpoint: false
-
+      showControlpoint: false,
     },
     editors: [],
     lock: defaultLockState,
     shareUrl: null,
-    bugReportUrl: 'https://littlesis.org/bug_report',
-    helpUrl: 'https://littlesis.org/help/oligrapher'
+    bugReportUrl: "https://littlesis.org/bug_report",
+    helpUrl: "https://littlesis.org/help/oligrapher",
   },
 
   // This section of the state is not sync'd with the server;
@@ -187,11 +188,11 @@ const defaultState: State = {
     headerIsCollapsed: false,
     modes: {
       editor: false,
-      story: false
+      story: false,
     },
     floatingEditor: {
       type: null,
-      id: null
+      id: null,
     },
     draggedNode: null,
     overNode: null,
@@ -204,28 +205,28 @@ const defaultState: State = {
       node: [],
       edge: [],
       caption: [],
-      isSelecting: false
+      isSelecting: false,
     },
-    pannable: true
+    pannable: true,
   },
 
   // Global settings
   // These settings are NOT changable via the settings interface;
   // those are located at above under attributes.settings
   settings: {
-    domId: 'oligrapher',
+    domId: "oligrapher",
     embed: false,
     noEditing: false,
-    logActions: false
+    logActions: false,
   },
 
   // for Undo/Redo
   history: {
     past: [],
-    future: []
+    future: [],
   },
 
-  lastSavedData: null
+  lastSavedData: null,
 }
 
 export default Object.freeze(defaultState)
