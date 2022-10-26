@@ -637,7 +637,7 @@ $edge_highlight_color: $oligrapher_blue;
     text-decoration: none;
 
     &:hover {
-      text-decoration: none;
+      text-decoration: underline dotted $oligrapher_gray;
     }
   }
 

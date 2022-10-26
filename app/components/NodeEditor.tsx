@@ -52,7 +52,6 @@ export default function NodeEditor({ id }: { id: string }) {
           {page === "main" && (
             <NodeEditorMain
               node={node}
-              setPage={setPage}
               updateNode={updateNode}
               openAddConnections={openAddConnections}
             />
