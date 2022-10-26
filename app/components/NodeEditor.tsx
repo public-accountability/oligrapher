@@ -11,6 +11,7 @@ import { NodeAttributes } from "../graph/node"
 import { State } from "../util/defaultState"
 import { Node as NodeType } from "../graph/node"
 import NodeEditorSwitcher from "./NodeEditorSwitcher"
+import EditorSubmitButtons from "./EditorSubmitButtons"
 
 export type NodeEditorPages = "main" | "color" | "size" | "image"
 
