@@ -38,6 +38,7 @@
     "immer": "^9.0.15",
     "lodash": "^4.17.21",
     "nanoid": "^4.0.0",
+    "p-limit": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.5",
@@ -71,15 +72,9 @@
     "whatwg-fetch": "^3.6.2"
   },
   "jest": {
-    "testMatch": [
-      "**/test/**/*.test.[jt]s?(x)"
-    ],
-    "transformIgnorePatterns": [
-      "node_modules/(?!(nanoid)/)"
-    ],
+    "testMatch": ["**/test/**/*.test.[jt]s?(x)"],
+    "transformIgnorePatterns": ["node_modules/(?!(p-limit|yocto-queue|nanoid)/)"],
     "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": [
-      "./jest.setup.js"
-    ]
+    "setupFilesAfterEnv": ["./jest.setup.js"]
   }
 }

@@ -82,7 +82,7 @@ const ACTION_TO_MESSAGE = {
   LOCK_RELEASE_FAILED: "Failed to release map lock",
   LOCK_RELEASE_RESET: null,
   EXPORT_IMAGE_REQUESTED: "Exporting...",
-  EXPORT_IMAGE_SUCCESS: "Exported map to JPG",
+  EXPORT_IMAGE_SUCCESS: "Exported map",
   EXPORT_IMAGE_FAILED: "Failed to export",
   EXPORT_IMAGE_RESET: null,
 }

@@ -3,8 +3,7 @@ import { createRoot } from "react-dom/client"
 import { EnhancedStore } from "@reduxjs/toolkit"
 import { Provider } from "react-redux"
 import Root from "./components/Root"
-import EmbeddedRoot from "./components/EmbeddedRoot"
-import { toSvg, toJpeg } from "./util/imageExport"
+import { getGraphMarkup } from "./util/imageExport"
 import createOligrapherStore from "./util/store"
 import { urls } from "./datasources/littlesis3"
 import { State } from "./util/defaultState"
@@ -52,11 +51,7 @@ export default class Oligrapher {
   }
 
   toSvg() {
-    return toSvg(this.store.getState())
-  }
-
-  toJpeg() {
-    return toJpeg(this.store.getState())
+    return getGraphMarkup()
   }
 
   getElementForGraphItem(id: string, t: "node" | "edge" | "caption") {
