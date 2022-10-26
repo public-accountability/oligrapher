@@ -642,11 +642,13 @@ $edge_highlight_color: $oligrapher_blue;
   }
 
   .node-littlesis-link {
-    float: left;
+    padding-left: 5px;
+    display: inline-block;
+    cursor: default !important;
 
     svg {
-      height: 20px;
-      width: 20px;
+      height: 16px;
+      width: 16px;
     }
   }
 }

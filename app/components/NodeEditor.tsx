@@ -11,7 +11,10 @@ import { NodeAttributes } from "../graph/node"
 import { State } from "../util/defaultState"
 import { Node as NodeType } from "../graph/node"
 import NodeEditorSwitcher from "./NodeEditorSwitcher"
-import EditorSubmitButtons from "./EditorSubmitButtons"
+import Button from "@mui/material/Button"
+import { isLittleSisId } from "../util/helpers"
+
+import { IoIosLink } from "@react-icons/all-files/io/IoIosLink"
 
 export type NodeEditorPages = "main" | "color" | "size" | "image"
 
@@ -31,10 +34,19 @@ export default function NodeEditor({ id }: { id: string }) {
   const handleScaleChange = scale => updateNode({ scale })
   const openAddConnections = () => dispatch({ type: "OPEN_ADD_CONNECTIONS", id })
 
+  const isLsNode = isLittleSisId(id)
+
   return (
     <EditorHotKeys remove={removeNode}>
       <div className="oligrapher-node-editor">
-        <EditorHeader title="Customize Node" />
+        <EditorHeader title="Customize Node">
+          {isLsNode && (
+            <div title={`LittleSis Entity ID: ${id}`} className="node-littlesis-link">
+              <IoIosLink />
+            </div>
+          )}
+        </EditorHeader>
+
         <NodeEditorSwitcher currentPage={page} setPage={setPage} />
         <main>
           {page === "main" && (
@@ -51,6 +63,19 @@ export default function NodeEditor({ id }: { id: string }) {
           {page === "size" && <SizePicker scale={node.scale} onChange={handleScaleChange} />}
           {page === "image" && <NodeEditorImage id={id} image={node.image} />}
         </main>
+        <footer>
+          {page === "main" && (
+            <Button
+              onClick={removeNode}
+              variant="contained"
+              color="secondary"
+              size="small"
+              disableElevation={true}
+            >
+              Delete
+            </Button>
+          )}
+        </footer>
       </div>
     </EditorHotKeys>
   )

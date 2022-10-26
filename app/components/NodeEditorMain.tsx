@@ -48,6 +48,12 @@ export default function NodeEditorMain({ node, updateNode }: NodeEditorMainPropT
           onChange={callWithTargetValue(url => updateNode({ url }))}
         />
       </InputGroup>
+
+      {/* {isLsNode && (
+          <a className="add-connections-link" onClick={openAddConnections}>
+          Add Connections +
+          </a>
+          )} */}
     </Box>
   )
 }
