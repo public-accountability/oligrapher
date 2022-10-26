@@ -29,6 +29,7 @@ export interface UserSettings {
   defaultStoryMode: boolean
   defaultExploreMode: boolean
   edgeDraggingWhenPresenting: boolean
+  nodeDraggingWhenPresenting: boolean
   storyModeOnly: boolean
   exploreModeOnly: boolean
   automaticallyAddEdges: boolean
@@ -161,6 +162,7 @@ const defaultState: State = {
       defaultStoryMode: true,
       defaultExploreMode: false,
       edgeDraggingWhenPresenting: false,
+      nodeDraggingWhenPresenting: false,
       storyModeOnly: false,
       exploreModeOnly: false,
       automaticallyAddEdges: true,

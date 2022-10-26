@@ -16,6 +16,7 @@ const OPTIONS = {
     storyModeOnly: "Story Mode Only",
     exploreModeOnly: "Explore Mode Only",
     edgeDraggingWhenPresenting: "Edges can be dragged",
+    nodeDraggingWhenPresenting: "Nodes can be dragged",
   },
   Editing: {
     automaticallyAddEdges: "Automatically add edges",
