@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useRef } from "react"
+import React, { MouseEventHandler, useRef, useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import DraggableComponent from "./DraggableComponent"
 import { DraggableEventHandler } from "react-draggable"
@@ -25,10 +25,8 @@ type NodeProps = { id: string }
 export default function Node({ id }: NodeProps) {
   const dispatch = useDispatch()
   const editMode = useSelector(editModeSelector)
-  const node = useSelector<State, NodeType>((state) => state.graph.nodes[id])
-  const uiState = useSelector<State, NodeUIState>((state) =>
-    getNodeUIState(id, state)
-  )
+  const node = useSelector<State, NodeType>(state => state.graph.nodes[id])
+  const uiState = useSelector<State, NodeUIState>(state => getNodeUIState(id, state))
 
   // reference to outermost <g> for node
   const nodeRef = useRef(null)
@@ -58,7 +56,7 @@ export default function Node({ id }: NodeProps) {
     dispatch({ type: "MOUSE_LEFT_NODE", id })
   }
 
-  const onMouseMove: MouseEventHandler = (event) => {
+  const onMouseMove: MouseEventHandler = event => {
     event.stopPropagation()
   }
 
@@ -81,6 +79,7 @@ export default function Node({ id }: NodeProps) {
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         onMouseMove={onMouseMove}
+        dragged={uiState.dragged}
       >
         <NodeLabel node={node} uiState={uiState} />
         <NodeHalo node={node} uiState={uiState} />
