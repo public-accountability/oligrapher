@@ -28,6 +28,7 @@ export interface UserSettings {
   list_sources: boolean
   defaultStoryMode: boolean
   defaultExploreMode: boolean
+  allowPanning: boolean
   edgeDraggingWhenPresenting: boolean
   nodeDraggingWhenPresenting: boolean
   storyModeOnly: boolean
@@ -101,7 +102,6 @@ export interface DisplayState {
   deleteMapStatus: AsyncStatus
   userMessage: string | null
   selection: Selection
-  pannable: boolean
 }
 
 export interface SettingsState {
@@ -161,6 +161,7 @@ const defaultState: State = {
       list_sources: false,
       defaultStoryMode: true,
       defaultExploreMode: false,
+      allowPanning: true,
       edgeDraggingWhenPresenting: false,
       nodeDraggingWhenPresenting: false,
       storyModeOnly: false,
@@ -209,7 +210,6 @@ const defaultState: State = {
       caption: [],
       isSelecting: false,
     },
-    pannable: true,
   },
 
   // Global settings

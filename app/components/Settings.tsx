@@ -8,15 +8,16 @@ const OPTIONS = {
   Privacy: {
     private: "Set map to private",
     clone: "Allow map cloning",
-    list_sources: "Show source links",
   },
-  View: {
+  Presentation: {
     defaultStoryMode: "Default: Story Mode",
     defaultExploreMode: "Default: Explore Mode",
     storyModeOnly: "Story Mode Only",
     exploreModeOnly: "Explore Mode Only",
+    allowPanning: "Map can be panned",
     edgeDraggingWhenPresenting: "Edges can be dragged",
     nodeDraggingWhenPresenting: "Nodes can be dragged",
+    list_sources: "Show source links",
   },
   Editing: {
     automaticallyAddEdges: "Automatically add edges",

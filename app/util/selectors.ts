@@ -38,7 +38,7 @@ export const showZoomControlSelector: Selector<State, boolean> = state => {
 }
 
 export const pannableSelector: Selector<State, boolean> = state => {
-  return state.display.pannable
+  return state.attributes.settings.allowPanning && !state.display.overNode
 }
 
 export const svgHeightSelector: Selector<State, number> = state => {
