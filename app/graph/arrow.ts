@@ -13,7 +13,7 @@
 //
 // str, boolean -> str
 
-export type ArrowType = '1->2' | '2->1' | 'both' | null
+export type ArrowType = "1->2" | "2->1" | "both" | null
 interface Marker {
   [key: string]: string
 }
@@ -23,22 +23,26 @@ const MARKER_END: Marker = {
   normal: "url(#marker1)",
   highlighted: "url(#highlightedmarker1)",
   faded: "url(#fadedmarker1)",
-  selected: "url(#selectedmarker1)"
+  selected: "url(#selectedmarker1)",
 }
 const MARKER_START: Marker = {
   normal: "url(#marker2)",
   highlighted: "url(#highlightedmarker2)",
   faded: "url(#fadedmarker2)",
-  selected: "url(#selectedmarker2)"
+  selected: "url(#selectedmarker2)",
 }
 
 // String, Bool => String
-export function markerStartArrow(arrow: ArrowType, is_reverse: boolean, status: string = 'normal'): string {
+export function markerStartArrow(
+  arrow: ArrowType,
+  is_reverse: boolean,
+  status: string = "normal"
+): string {
   if (arrow === "1->2" && is_reverse) {
     return MARKER_START[status]
   } else if (arrow === "2->1" && !is_reverse) {
     return MARKER_START[status]
-  } else if (arrow === 'both') {
+  } else if (arrow === "both") {
     return MARKER_START[status]
   } else {
     return ""
@@ -46,12 +50,16 @@ export function markerStartArrow(arrow: ArrowType, is_reverse: boolean, status: 
 }
 
 // String, Bool => String
-export function markerEndArrow(arrow: ArrowType, is_reverse: boolean, status: string = 'normal'): string {
+export function markerEndArrow(
+  arrow: ArrowType,
+  is_reverse: boolean,
+  status: string = "normal"
+): string {
   if (arrow === "1->2" && !is_reverse) {
     return MARKER_END[status]
   } else if (arrow === "2->1" && is_reverse) {
     return MARKER_END[status]
-  } else if (arrow === 'both') {
+  } else if (arrow === "both") {
     return MARKER_END[status]
   } else {
     return ""
@@ -59,32 +67,32 @@ export function markerEndArrow(arrow: ArrowType, is_reverse: boolean, status: st
 }
 
 // String => Object
-export function parse(arrow: ArrowType): { node1: boolean, node2: boolean } {
+export function parse(arrow: ArrowType): { node1: boolean; node2: boolean } {
   switch (arrow) {
-  case 'both':
-    return { node1: true, node2: true }
-  case '1->2':
-    return { node1: false, node2: true }
-  case '2->1':
-    return { node1: true, node2: false }
-  default:
-    return { node1: false, node2: false }
+    case "both":
+      return { node1: true, node2: true }
+    case "1->2":
+      return { node1: false, node2: true }
+    case "2->1":
+      return { node1: true, node2: false }
+    default:
+      return { node1: false, node2: false }
   }
 }
 
 // String, Boolean, (1 | 2) => String
-export function change(arrow: ArrowType, addArrow: boolean, selected: '1' | '2'): string | null {
+export function change(arrow: ArrowType, addArrow: boolean, selected: "1" | "2"): string | null {
   let { node1, node2 } = parse(arrow)
 
-  if (selected === '1') {
+  if (selected === "1") {
     node1 = addArrow
-  } else if (selected === '2') {
+  } else if (selected === "2") {
     node2 = addArrow
   }
 
   return [
-    [null, '1->2'],
-    ['2->1', 'both']
+    [null, "1->2"],
+    ["2->1", "both"],
   ][Number(node1)][Number(node2)]
 }
 

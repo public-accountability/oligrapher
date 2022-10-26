@@ -1,6 +1,6 @@
 import React from "react"
 import { NodeAttributes } from "../graph/node"
-import { callWithTargetValue } from "../util/helpers"
+import { callWithTargetValue, isLittleSisId } from "../util/helpers"
 import Input from "@mui/material/Input"
 import Box from "@mui/material/Box"
 import FormLabel from "@mui/material/FormLabel"
@@ -9,11 +9,16 @@ import { Node as NodeType } from "../graph/node"
 type NodeEditorMainPropTypes = {
   node: NodeType
   updateNode: (node: NodeAttributes) => void
+  openAddConnections: () => void
 }
 
-const InputGroup = props => <Box sx={{ m: "5px", mb: "25px" }}>{props.children}</Box>
+const InputGroup: React.FC = ({ children }) => <Box sx={{ m: "5px", mb: "25px" }}>{children}</Box>
 
-export default function NodeEditorMain({ node, updateNode }: NodeEditorMainPropTypes) {
+export default function NodeEditorMain({
+  node,
+  updateNode,
+  openAddConnections,
+}: NodeEditorMainPropTypes) {
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       <InputGroup>
@@ -47,6 +52,14 @@ export default function NodeEditorMain({ node, updateNode }: NodeEditorMainPropT
           value={node.url || ""}
           onChange={callWithTargetValue(url => updateNode({ url }))}
         />
+      </InputGroup>
+
+      <InputGroup>
+        {isLittleSisId(node.id) && (
+          <a className="add-connections-link" onClick={openAddConnections}>
+            Add Connections +
+          </a>
+        )}
       </InputGroup>
     </Box>
   )

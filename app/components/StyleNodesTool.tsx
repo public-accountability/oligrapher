@@ -46,17 +46,17 @@ export default function StyleNodesMenu() {
 
           {page === "scale" && <SizePicker scale={scale} onChange={setScale} />}
 
-          {page === "image" && (
-            <>
+          {/* {page === "image" && (
+              <>
               <label>Image</label>
               <input
-                type="url"
-                value={image}
-                placeholder="image url"
-                onChange={handleImageChange}
+              type="url"
+              value={image}
+              placeholder="image url"
+              onChange={handleImageChange}
               />
-            </>
-          )}
+              </>
+              )} */}
         </main>
 
         <hr />
@@ -71,9 +71,9 @@ export default function StyleNodesMenu() {
               <MdPhotoSizeSelectSmall />
             </span>
 
-            <span title="Image" className="entity-image-icon" onClick={() => setPage("image")}>
-              <MdImage />
-            </span>
+            {/* <span title="Image" className="entity-image-icon" onClick={() => setPage("image")}>
+                <MdImage />
+                </span> */}
           </div>
         </div>
 

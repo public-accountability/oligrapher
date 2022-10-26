@@ -3,12 +3,12 @@ import { createRoot } from "react-dom/client"
 import { EnhancedStore } from "@reduxjs/toolkit"
 import { Provider } from "react-redux"
 import Root from "./components/Root"
-import EmbeddedRoot from "./components/EmbeddedRoot"
-import { toSvg, toJpeg } from "./util/imageExport"
+import { getGraphMarkup } from "./util/imageExport"
 import createOligrapherStore from "./util/store"
 import { urls } from "./datasources/littlesis3"
 import { State } from "./util/defaultState"
 import { graphStats } from "./graph/graph"
+import { getElementForGraphItem } from "./util/helpers"
 
 /*
   Main entry point of Oligrapher.
@@ -27,9 +27,7 @@ export default class Oligrapher {
   constructor(configuration = {}) {
     this.store = createOligrapherStore(configuration)
 
-    const element = document.getElementById(
-      this.store.getState().settings.domId
-    )
+    const element = document.getElementById(this.store.getState().settings.domId)
 
     if (!element) {
       throw new Error("could not find requested oligrapher element")
@@ -41,13 +39,7 @@ export default class Oligrapher {
 
     const root = createRoot(this.element)
 
-    root.render(
-      React.createElement(
-        Provider,
-        { store: this.store },
-        React.createElement(Root)
-      )
-    )
+    root.render(React.createElement(Provider, { store: this.store }, React.createElement(Root)))
   }
 
   graph() {
@@ -59,11 +51,11 @@ export default class Oligrapher {
   }
 
   toSvg() {
-    return toSvg(this.store.getState())
+    return getGraphMarkup()
   }
 
-  toJpeg() {
-    return toJpeg(this.store.getState())
+  getElementForGraphItem(id: string, t: "node" | "edge" | "caption") {
+    return getElementForGraphItem(id, t)
   }
 
   static get apiUrls() {

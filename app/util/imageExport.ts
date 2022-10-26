@@ -1,151 +1,76 @@
-import slugify from 'slugify'
-import { Viewbox } from '../graph/graph'
-import { State } from './defaultState'
-import isNull from 'lodash/isNull'
+import slugify from "slugify"
+import pLimit from "p-limit"
+import { getElementById } from "./helpers"
+import { getDataUrl } from "../datasources/littlesis3"
 
-// converts an image's href from plain URL to data URL
-function convertImage(image: any) {
-  // we have to load the url into a new image object
-  // in order to get the original width and height
-  const url = image.getAttribute('href')
-  const img = new Image()
-  img.src = url
-  img.crossOrigin = "anonymous"
+async function convertImage(image: SVGElement) {
+  const url = image.getAttribute("href")
 
-  const canvas = document.createElement('canvas')
-  const ctx = canvas.getContext('2d') as any
-  canvas.width = img.width
-  canvas.height = img.height
-  ctx.drawImage(image, 0, 0)
+  // nothing to be done when already a dataurl
+  if (!url || url.slice(0, 5) === "data:") {
+    return
+  }
 
-  // catch CORS-related errors if url is external to littlesis
   try {
-    const dataUrl = canvas.toDataURL('image/jpeg')
-    image.setAttribute('href', dataUrl)
+    const dataurl = await getDataUrl(url)
+
+    if (dataurl.dataurl) {
+      image.setAttribute("href", dataurl.dataurl)
+    } else {
+      throw new Error(`Failed to get data url for ${url}`)
+    }
   } catch (error) {
-    console.error(`Couldn't convert image to data uri: ${url}`)
     console.error(error)
   }
 }
 
-// Converts a SVG string to a jpeg  data url using <canvas>
-async function svgToJpeg(svg: string, width: number, height: number): Promise<string> {
-  const source = await blobToDataUrl(new Blob([svg], { type: 'image/svg+xml' }))
-  const image = new Image()
-  const canvas = document.createElement('canvas')
-  canvas.width = width
-  canvas.height = height
+async function convertImages(element: SVGSVGElement): Promise<SVGSVGElement> {
+  const limit = pLimit(2)
+  const actions = []
 
-  return new Promise( (resolve, reject) => {
-    try {
-      image.onload = () => {
-        const context = canvas.getContext('2d') as any
-        context.drawImage(image, 0, 0, width, height)
-        const jpegDataUrl = canvas.toDataURL('image/jpeg')
-        canvas.remove()
-        resolve(jpegDataUrl)
-      }
-      image.src = source
-    } catch(error) {
-      reject(error)
-    }
-  })
-}
-
-// we use FileReader istead of the simpler URL.createObjectURL() in order to
-// circumvent a longstanding chrome bug that causes svg to taint a canvas
-// see: https://bugs.chromium.org/p/chromium/issues/detail?id=294129
-async function blobToDataUrl(blob: Blob): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-
-    try {
-      reader.onload = (e: any) => {
-        resolve(e.target.result)
-      }
-
-      reader.readAsDataURL(blob)
-    } catch (error) {
-      reject(error)
-    }
-  })
-}
-
-export function padViewbox(viewbox: Viewbox, padding: number = 100): Viewbox {
-  return {
-    minX: viewbox.minX - padding,
-    minY: viewbox.minY - padding,
-    w: viewbox.w + padding * 2,
-    h: viewbox.h + padding * 2
+  for (const image of element.getElementsByTagName("image")) {
+    actions.push(limit(() => convertImage(image)))
   }
+
+  await Promise.all(actions)
+  return element
 }
 
-function serializeViewbox(viewbox: Viewbox): string {
-  return [
-    viewbox.minX, viewbox.minY, viewbox.w, viewbox.h
-  ].join(' ')
+function simulateClick(filename: string, dataUrl: string) {
+  const link = document.createElement("a")
+  link.download = filename
+  link.style.opacity = "0"
+  document.body.append(link)
+  link.href = dataUrl
+  link.click()
+  link.remove()
 }
 
-export async function downloadRasteredSvg(
-  svg: string,
-  title: string,
-  width: number,
-  height: number
-): Promise<boolean> {
+const serializeToString = (element: Node): string => new XMLSerializer().serializeToString(element)
+
+export function cloneSvg(): Promise<SVGSVGElement> {
+  const svg = getElementById("oligrapher-svg")
+  const clonedSvg = svg.cloneNode(true)
+  clonedSvg.setAttribute("style", "background-color: white")
+  return convertImages(clonedSvg)
+}
+
+export function getGraphMarkup(): Promise<string> {
+  return cloneSvg().then(serializeToString)
+}
+
+export async function downloadSvg(title: string) {
   try {
-    const jpegDataUrl = await svgToJpeg(svg, width, height)
-
-    // download image by using data url a href
-    // a in a link and simulating a click
-    const link = document.createElement('a')
-    link.download = slugify(title) + '.jpg'
-    link.style.opacity = "0"
-    document.body.append(link)
-    link.href = jpegDataUrl
-    link.click()
-    link.remove()
+    const svgElement = await cloneSvg()
+    const data = serializeToString(svgElement)
+    const svgBlob = new Blob([data], { type: "image/svg+xml;charset=utf-8" })
+    const dataurl = URL.createObjectURL(svgBlob)
+    const filename = slugify(title) + ".jpeg"
+    simulateClick(filename, dataurl)
+    URL.revokeObjectURL(dataurl)
     return true
-  } catch(error) {
+  } catch (error) {
     console.error(error)
     return false
   }
-}
-
-// TODO: import element ids as constants from elsewhere or
-// use querySelector to locate elements based on structure
-export function getGraphMarkup(viewbox: Viewbox): string {
-  const svg = document.querySelector("#oligrapher-graph-svg  > svg") as any
-  const g = document.getElementById("#oligrapher-svg-export") as any
-  const defs = document.querySelector("#oligrapher-graph-svg  > svg > defs") as any
-  const clonedSvg = svg.cloneNode(false)
-  const clonedG = g.cloneNode(true)
-  const clonedDefs = defs.cloneNode(true)
-  Array.from(clonedG.getElementsByTagName('image')).forEach(convertImage)
-  clonedSvg.setAttribute('width', viewbox.w)
-  clonedSvg.setAttribute('height', viewbox.h)
-  clonedSvg.setAttribute('viewBox', serializeViewbox(viewbox))
-  clonedSvg.setAttribute('style', 'background-color: white')
-  clonedSvg.appendChild(clonedDefs)
-  clonedSvg.appendChild(clonedG)
-  return clonedSvg.outerHTML
-}
-
-function checkViewBox(x: any): any {
-  if (isNull(x)) {
-    throw new Error("viewBox is null")
-  } else {
-    return x
-  }
-}
-
-export function toSvg(state: State): string {
-  return getGraphMarkup(padViewbox(checkViewBox(state.display.viewBox)))
-}
-
-export function toJpeg(state: State): Promise<string> {
-  const paddedViewBox = padViewbox(checkViewBox(state.display.viewBox))
-  const svg = getGraphMarkup(paddedViewBox)
-  const width = paddedViewBox.w * 2
-  const height = paddedViewBox.h * 2
-  return svgToJpeg(svg, width, height)
 }

@@ -114,6 +114,8 @@ $edge_highlight_color: $oligrapher_blue;
 #oligrapher-container #oligrapher-header-condensed {
   border-bottom: 1px solid #ccc;
   position: relative;
+  margin-left: 8px;
+  margin-right: 8px;
 
   &.oligrapher-header-collapsed {
     min-height: 52px;
@@ -578,7 +580,7 @@ $edge_highlight_color: $oligrapher_blue;
   header.editor-header {
     font-size: 18px;
     font-weight: bold;
-    margin-bottom: 1em;
+    /* margin-bottom: 1em; */
 
     div {
       display: inline-block;
@@ -637,16 +639,18 @@ $edge_highlight_color: $oligrapher_blue;
     text-decoration: none;
 
     &:hover {
-      text-decoration: none;
+      text-decoration: underline dotted $oligrapher_gray;
     }
   }
 
   .node-littlesis-link {
-    float: left;
+    padding-left: 5px;
+    display: inline-block;
+    cursor: default !important;
 
     svg {
-      height: 20px;
-      width: 20px;
+      height: 16px;
+      width: 16px;
     }
   }
 }
@@ -668,47 +672,32 @@ $edge_highlight_color: $oligrapher_blue;
 }
 
 #oligrapher-container div.oligrapher-edge-editor {
-  width: 325px;
-  max-height: 800px;
-  padding: 10px;
-  box-sizing: border-box;
+  @extend %floating_editor_box;
+  width: 292px;
 
   form input {
     width: 92%;
   }
 
   .edit-edge-style {
-    width: 100%;
-    padding-top: 10px;
+      display: flex;
+      align-items: flex-start;
 
-    div {
-      display: inline-block;
-    }
+      .edge-style-buttons {
+          display: flex;
+          flex-wrap: nowrap;
+          gap: 3px;
+          color: #888;
+      }
 
-    small {
-      font-size: 10px;
-    }
-
-    .edge-style-buttons {
-      position: relative;
-      top: -5px;
-      padding-left: 8px;
-      padding-right: 8px;
-      color: #888;
-    }
-
-    .edge-style-button {
-      font-size: 0.8em;
-      background-color: #fff;
-      color: #000;
-      border: 1px solid #ccc;
-      text-align: center;
-      padding: 0px;
-      padding-top: 1px;
-      width: 35px;
-      font-size: 1.3em;
-      line-height: 1em;
-    }
+      .edge-style-button {
+          width: 35px;
+          font-size: 1em;
+          color: #000;
+          background-color: #fff;
+          border: 1px solid #ccc;
+          text-align: center;
+      }
   }
 
   .node-label {

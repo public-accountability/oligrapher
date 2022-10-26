@@ -1,19 +1,15 @@
-import React, { MouseEventHandler, useEffect, useRef, WheelEventHandler } from 'react'
+import React from "react"
 
-import Edges from './Edges'
-import Nodes from './Nodes'
-import Captions from './Captions'
-import Svg from './Svg'
-import Markers from './Markers'
-import Filters from './Filters'
-import Zoomable from './Zoomable'
-import Selectable from './Selectable'
-import Highlightable from './Highlightable'
-import { State, SvgSizeType } from '../util/defaultState'
-import { useDispatch, useSelector } from 'react-redux'
+import Edges from "./Edges"
+import Nodes from "./Nodes"
+import Captions from "./Captions"
+import Svg from "./Svg"
+import Markers from "./Markers"
+import Filters from "./Filters"
+import Zoomable from "./Zoomable"
+import Highlightable from "./Highlightable"
 
-// export const GRAPH_CONTAINER_ID = 'oligrapher-graph-svg'
-export const GRAPH_CONTENT_ID = 'oligrapher-svg-export'
+export const GRAPH_CONTENT_ID = "oligrapher-svg-export"
 
 // The core component that displays the graph
 //   <Svg>
@@ -41,15 +37,3 @@ export default function Graph() {
     </Svg>
   )
 }
-
-// <div ref={ref} id="oligrapher-graph-svg-" onWheel={scrollToZoom ? onWheel : undefined } style={{height: '100%'}}> </div>
-// const className = draggedNode ? "oligrapher-graph-dragging-node" : ""
-  // React.useLayoutEffect(() => {
-  //   if (ref.current) {
-  //     const rect = ref.current.getBoundingClientRect()
-  //     setSize({ height: rect.height, width: rect.width })
-  //   }
-  // }, [ref])
-// const [size, setSize] = React.useState<SvgSizeType|null>(null)
-  // const height = size ? size.height : 800
-  // const width = size ? size.width : 600
