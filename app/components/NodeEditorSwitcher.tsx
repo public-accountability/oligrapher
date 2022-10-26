@@ -2,35 +2,41 @@ import React from "react"
 import IconButton from "@mui/material/IconButton"
 import Stack from "@mui/material/Stack"
 import { FaRegDotCircle } from "@react-icons/all-files/fa/FaRegDotCircle"
-import { MdColorLens } from "@react-icons/all-files/md/MdColorLens"
 import { MdImage } from "@react-icons/all-files/md/MdImage"
 import { MdPhotoSizeSelectSmall } from "@react-icons/all-files/md/MdPhotoSizeSelectSmall"
+import { MdFormatColorFill } from "@react-icons/all-files/md/MdFormatColorFill"
 
 import type { NodeEditorPages } from "./NodeEditor"
 
 type NodeEditorSwitcherPropTypes = {
-  currentPage: NodeEditorPages,
+  currentPage: NodeEditorPages
   setPage: (page: NodeEditorPages) => void
 }
 
 type MenuEditorPropTypes = {
-  currentPage: NodeEditorPages,
-  setPage: (page: NodeEditorPages) => void,
-  text: string,
+  currentPage: NodeEditorPages
+  setPage: (page: NodeEditorPages) => void
+  text: string
   page: NodeEditorPages
 }
 
 const ICONS = {
   main: <FaRegDotCircle />,
-  color: <MdColorLens />,
+  color: <MdFormatColorFill />,
   size: <MdPhotoSizeSelectSmall />,
-  image: <MdImage />
+  image: <MdImage />,
 }
 
 const MenuButton = ({ text, page, currentPage, setPage }: MenuEditorPropTypes) => {
   const color = currentPage === page ? "primary" : "secondary"
   return (
-    <IconButton color={color} onClick={() => setPage(page)} title={text} size="small" sx={{mt: '5px'}}>
+    <IconButton
+      color={color}
+      onClick={() => setPage(page)}
+      title={text}
+      size="small"
+      sx={{ mt: "5px" }}
+    >
       {ICONS[page]}
     </IconButton>
   )
