@@ -233,23 +233,39 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     // and can happen after small (< 5) movement we still need call this function
     moveNodeAndEdges(state, action.id, action.deltas || { x: 0, y: 0 })
 
-    if (action.shiftKey) {
-      if (state.display.selection.node.includes(action.id)) {
-        state.display.selection.node = without(state.display.selection.node, action.id)
+    // If we are editing annotations and holding down the control key
+    if (state.display.modes.editor && state.display.modes.story && action.ctrlKey) {
+      if (state.annotations.list[state.annotations.currentIndex].nodeIds.includes(action.id)) {
+        state.annotations.list[state.annotations.currentIndex].nodeIds = without(
+          state.annotations.list[state.annotations.currentIndex].nodeIds,
+          action.id
+        )
       } else {
-        state.display.selection.node.push(action.id)
+        state.annotations.list[state.annotations.currentIndex].nodeIds.push(action.id)
       }
-      FloatingEditor.clear(state.display)
     } else {
-      if (
-        state.display.floatingEditor.type === "node" &&
-        state.display.floatingEditor.id === action.id
-      ) {
-        state.display.selection.node = without(state.display.selection.node, action.id)
+      // if shift key is on, action is to add or remove node from selection
+      if (action.shiftKey) {
+        if (state.display.selection.node.includes(action.id)) {
+          state.display.selection.node = without(state.display.selection.node, action.id)
+        } else {
+          state.display.selection.node.push(action.id)
+        }
         FloatingEditor.clear(state.display)
       } else {
-        state.display.selection.node = [action.id]
-        FloatingEditor.toggleEditor(state.display, "node", action.id)
+        if (
+          state.display.floatingEditor.type === "node" &&
+          state.display.floatingEditor.id === action.id
+        ) {
+          // remove selection and close editor
+          state.display.selection.node = without(state.display.selection.node, action.id)
+          FloatingEditor.clear(state.display)
+        } else if (state.display.selection.node.includes(action.id)) {
+          FloatingEditor.toggleEditor(state.display, "node", action.id)
+        } else {
+          state.display.selection.node = [action.id]
+          FloatingEditor.toggleEditor(state.display, "node", action.id)
+        }
       }
     }
   })
@@ -276,10 +292,6 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
 
   builder.addCase("DRAG_NODE_START", (state, action) => {
     state.display.draggedNode = action.id
-    // clearSelection(state.display)
-    // if (state.display.overNode === action.id) {
-    //   state.display.overNode = null
-    //}
   })
 
   builder.addCase("DRAG_NODE_STOP", (state, action) => {
@@ -402,8 +414,19 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("CLICK_EDGE", (state, action) => {
-    clearSelection(state.display)
-    FloatingEditor.toggleEditor(state.display, "edge", action.id)
+    if (state.display.modes.editor && state.display.modes.story && action.ctrlKey) {
+      if (state.annotations.list[state.annotations.currentIndex].edgeIds.includes(action.id)) {
+        state.annotations.list[state.annotations.currentIndex].edgeIds = without(
+          state.annotations.list[state.annotations.currentIndex].edgeIds,
+          action.id
+        )
+      } else {
+        state.annotations.list[state.annotations.currentIndex].edgeIds.push(action.id)
+      }
+    } else {
+      clearSelection(state.display)
+      FloatingEditor.toggleEditor(state.display, "edge", action.id)
+    }
   })
 
   builder.addCase("CLICK_CAPTION", (state, action) => {
