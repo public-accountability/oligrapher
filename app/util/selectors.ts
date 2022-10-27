@@ -57,6 +57,10 @@ export const currentViewboxSelector: Selector<State, Viewbox> = state => {
   }
 }
 
+export const isEditingAnnotationsSelector: Selector<State, boolean> = state => {
+  return state.display.modes.editor && state.display.modes.story
+}
+
 // do we need to recalculate the viewbox because of highlights?
 export const shouldRecalculateViewboxSelector: Selector<State, boolean> = state => {
   return (

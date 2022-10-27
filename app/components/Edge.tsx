@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useMemo, useCallback } from "react"
+import React, { useContext, useState, useEffect, useCallback } from "react"
 import { DraggableCore, DraggableEventHandler } from "react-draggable"
 import { useDispatch } from "react-redux"
 
@@ -38,7 +38,6 @@ export function Edge({ id, currentlyEdited }: EdgeProps) {
   const { scale, label, dash, arrow, url } = edge
 
   const zoom = useSelector(currentZoomSelector)
-  const isHighlighting = useSelector<State>(state => state.annotations.isHighlighting)
   const editMode = useSelector(editModeSelector)
   const draggingEnabled = useSelector(edgeDraggingEnabledSelector)
   const edgeStatus = useSelector<State, EdgeStatusType>(state => getEdgeAppearance(id, state))
@@ -59,14 +58,6 @@ export function Edge({ id, currentlyEdited }: EdgeProps) {
     attributes => dispatch({ type: "UPDATE_EDGE", id, attributes }),
     [dispatch, id]
   )
-
-  const clickEdge = useCallback(() => {
-    if (isHighlighting) {
-      dispatch({ type: "SWAP_EDGE_HIGHLIGHT", id })
-    } else {
-      dispatch({ type: "CLICK_EDGE", id })
-    }
-  }, [dispatch, id, isHighlighting])
 
   // This resets the curve based on new props when they are passed to an already rendered component
   // This happens after the DRAG_NODE action occurs.
@@ -101,7 +92,7 @@ export function Edge({ id, currentlyEdited }: EdgeProps) {
       updateEdge({ cx: deltas.x, cy: deltas.y })
       setDragging(false)
     } else {
-      clickEdge()
+      dispatch({ type: "CLICK_EDGE", id, ctrlKey: event.ctrlKey || event.metaKey })
     }
   }
 

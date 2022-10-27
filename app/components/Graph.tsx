@@ -26,13 +26,11 @@ export default function Graph() {
         <Markers />
       </defs>
       <Zoomable>
-        <Highlightable>
-          <g id={GRAPH_CONTENT_ID}>
-            <Edges />
-            <Nodes />
-            <Captions />
-          </g>
-        </Highlightable>
+        <g id={GRAPH_CONTENT_ID}>
+          <Edges />
+          <Nodes />
+          <Captions />
+        </g>
       </Zoomable>
     </Svg>
   )
