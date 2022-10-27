@@ -233,6 +233,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     // and can happen after small (< 5) movement we still need call this function
     moveNodeAndEdges(state, action.id, action.deltas || { x: 0, y: 0 })
 
+    // if shift key is on, action is to add or remove node from selection
     if (action.shiftKey) {
       if (state.display.selection.node.includes(action.id)) {
         state.display.selection.node = without(state.display.selection.node, action.id)
@@ -245,8 +246,11 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
         state.display.floatingEditor.type === "node" &&
         state.display.floatingEditor.id === action.id
       ) {
+        // remove selection and close editor
         state.display.selection.node = without(state.display.selection.node, action.id)
         FloatingEditor.clear(state.display)
+      } else if (state.display.selection.node.includes(action.id)) {
+        FloatingEditor.toggleEditor(state.display, "node", action.id)
       } else {
         state.display.selection.node = [action.id]
         FloatingEditor.toggleEditor(state.display, "node", action.id)
@@ -276,10 +280,6 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
 
   builder.addCase("DRAG_NODE_START", (state, action) => {
     state.display.draggedNode = action.id
-    // clearSelection(state.display)
-    // if (state.display.overNode === action.id) {
-    //   state.display.overNode = null
-    //}
   })
 
   builder.addCase("DRAG_NODE_STOP", (state, action) => {
