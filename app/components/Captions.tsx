@@ -1,6 +1,7 @@
 import React from "react"
 import { useSelector } from "../util/helpers"
 import Caption from "./Caption"
+import Caption2 from "./Caption2"
 import FloatingEditor from "../util/floatingEditor"
 import { annotationHasHighlightsSelector, highlightedCaptionIdsSelector } from "../util/selectors"
 import { State } from "../util/defaultState"
@@ -35,7 +36,7 @@ export default function Captions() {
   return (
     <g className="captions">
       {Object.entries(captions).map(([id, caption]) => (
-        <Caption
+        <Caption2
           key={id}
           caption={caption}
           currentlyEdited={editMode && id === editedCaptionId}

@@ -45,7 +45,8 @@ export const pannableSelector: Selector<State, boolean> = state => {
   return (
     state.attributes.settings.allowPanning &&
     !state.display.overNode &&
-    state.display.tool !== "text"
+    state.display.tool !== "text" &&
+    state.display.floatingEditor.type !== "caption"
   )
 }
 
