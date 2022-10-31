@@ -2,7 +2,7 @@ import React, { useCallback } from "react"
 import { useDispatch } from "react-redux"
 import range from "lodash/range"
 import toString from "lodash/toString"
-
+import Box from "@mui/material/Box"
 import { useSelector } from "../util/helpers"
 import EditorHotKeys from "./EditorHotKeys"
 import EditorHeader from "./EditorHeader"
@@ -44,38 +44,40 @@ export default function CaptionEditor({ id }: CaptionEditorProps) {
 
   return (
     <EditorHotKeys remove={removeCaption}>
-      <div className="oligrapher-caption-editor">
+      <div className="oligrapher-caption-editor" data-testid="oligrapher-caption-editor">
         <EditorHeader title="Customize Caption" />
-        <main>
-          <label>Font</label>
-          <br />
+
+        <Box sx={{ mt: "10px" }}>
           <CaptionEditorSelect
             name="font"
+            title="Font"
             value={caption.font}
             onChange={onChange}
             options={FONT_FAMILY_OPTIONS}
-            width={150}
           />
-          <br />
+        </Box>
+
+        <Box>
           <CaptionEditorSelect
             name="weight"
             value={caption.weight}
             onChange={onChange}
             options={FONT_WEIGHT_OPTIONS}
-            width={100}
           />
+        </Box>
+
+        <Box>
           <CaptionEditorSelect
             name="size"
             value={caption.size}
             onChange={onChange}
             options={FONT_SIZE_OPTIONS}
-            width={55}
           />
-        </main>
+        </Box>
 
-        <footer>
+        <Box>
           <EditorSubmitButtons hideSubmitButton={true} handleDelete={removeCaption} page="main" />
-        </footer>
+        </Box>
       </div>
     </EditorHotKeys>
   )

@@ -17,6 +17,7 @@ import MenuItem from "@mui/material/MenuItem"
 export default function CaptionEditorSelect(props: CaptionEditorSelectProps) {
   return (
     <Select
+      sx={{ mt: 1 }}
       id={`caption-editor-select-${props.name}`}
       MenuProps={{ id: "caption-editor-select-menu", transitionDuration: 0 }}
       value={props.value}
@@ -36,6 +37,5 @@ interface CaptionEditorSelectProps {
   value: string
   onChange: (name: string) => () => void
   options: Array<{ value: any; label: any }>
-  width: number
   name: string
 }

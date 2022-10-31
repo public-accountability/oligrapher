@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react"
+import React from "react"
 import { useSelector, useDispatch } from "react-redux"
 import Input from "@mui/material/Input"
 import Box from "@mui/material/Box"
@@ -11,7 +11,6 @@ import EditEdgeStyle from "./EditEdgeStyle"
 import EditorSubmitButtons from "./EditorSubmitButtons"
 import Graph from "../graph/graph"
 import type { Edge, EdgeAttributes } from "../graph/edge"
-import type { Node } from "../graph/node"
 import { State } from "../util/defaultState"
 
 export default function EdgeEditor({ id }: { id: string }) {
