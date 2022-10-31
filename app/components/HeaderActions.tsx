@@ -1,6 +1,9 @@
 import React, { useCallback, useState, useRef } from "react"
 import { useDispatch } from "react-redux"
-import { Button, IconButton, Menu, MenuItem, Hidden } from "@mui/material"
+import Button from "@mui/material/Button"
+import IconButton from "@mui/material/IconButton"
+import Menu from "@mui/material/Menu"
+import MenuItem from "@mui/material/MenuItem"
 import { IoIosMore } from "@react-icons/all-files/io/IoIosMore"
 
 import { useSelector } from "../util/helpers"

@@ -24,7 +24,6 @@
     "@ckeditor/ckeditor5-build-classic": "^35.2.1",
     "@ckeditor/ckeditor5-react": "^5.0.2",
     "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
     "@hello-pangea/color-picker": "^3.2.1",
     "@hello-pangea/dnd": "^16.0.1",
     "@mui/lab": "^5.0.0-alpha.106",
@@ -72,9 +71,15 @@
     "whatwg-fetch": "^3.6.2"
   },
   "jest": {
-    "testMatch": ["**/test/**/*.test.[jt]s?(x)"],
-    "transformIgnorePatterns": ["node_modules/(?!(p-limit|yocto-queue|nanoid)/)"],
+    "testMatch": [
+      "**/test/**/*.test.[jt]s?(x)"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(p-limit|yocto-queue|nanoid)/)"
+    ],
     "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": ["./jest.setup.js"]
+    "setupFilesAfterEnv": [
+      "./jest.setup.js"
+    ]
   }
 }

@@ -1,14 +1,16 @@
-import React, { useCallback, useState, useRef } from 'react'
-import { useDispatch } from 'react-redux'
-import { IoIosMore } from '@react-icons/all-files/io/IoIosMore'
-import { FaLock } from '@react-icons/all-files/fa/FaLock'
-import { IconButton, Menu, MenuItem } from '@mui/material'
+import React, { useCallback, useState, useRef } from "react"
+import { useDispatch } from "react-redux"
+import { IoIosMore } from "@react-icons/all-files/io/IoIosMore"
+import { FaLock } from "@react-icons/all-files/fa/FaLock"
+import IconButton from "@mui/material/IconButton"
+import Menu from "@mui/material/Menu"
+import MenuItem from "@mui/material/MenuItem"
 
-import SaveButton from './SaveButton'
-import Confirm from './Confirm'
-import ShareModal from './ShareModal'
-import { useSelector } from '../util/helpers'
-import { userIsOwnerSelector } from '../util/selectors'
+import SaveButton from "./SaveButton"
+import Confirm from "./Confirm"
+import ShareModal from "./ShareModal"
+import { useSelector } from "../util/helpers"
+import { userIsOwnerSelector } from "../util/selectors"
 
 export default function HeaderEditActions() {
   const dispatch = useDispatch()
@@ -36,28 +38,28 @@ export default function HeaderEditActions() {
   const closeShare = useCallback(() => setShowShare(false), [])
 
   const exportImage = useCallback(() => {
-    dispatch({ type: 'EXPORT_IMAGE_REQUESTED' })
+    dispatch({ type: "EXPORT_IMAGE_REQUESTED" })
     closeMenu()
   }, [dispatch, closeMenu])
 
   const presentMap = useCallback(() => {
-    dispatch({ type: 'SET_EDITOR_MODE', enabled: false })
-    dispatch({ type: 'EXPAND_HEADER' })
+    dispatch({ type: "SET_EDITOR_MODE", enabled: false })
+    dispatch({ type: "EXPAND_HEADER" })
   }, [dispatch])
 
   const cloneMap = useCallback(() => {
-    dispatch({ type: 'CLONE_REQUESTED' })
+    dispatch({ type: "CLONE_REQUESTED" })
     closeMenu()
   }, [dispatch, closeMenu])
 
   const cancelDelete = useCallback(() => setShowConfirm(false), [])
 
   const confirmDelete = useCallback(() => {
-    dispatch({ type: 'DELETE_REQUESTED' })
+    dispatch({ type: "DELETE_REQUESTED" })
     setShowConfirm(false)
   }, [dispatch])
 
-  const openBugReportUrl = useCallback( () => {
+  const openBugReportUrl = useCallback(() => {
     window.open(bugReportUrl, "_blank")
     closeMenu()
   }, [closeMenu, bugReportUrl])
@@ -69,14 +71,23 @@ export default function HeaderEditActions() {
 
   return (
     <div className="oligrapher-header-edit-actions">
-      { isPrivate &&
-        <span className="oligrapher-header-edit-actions-lock" title="This map is private"><FaLock /></span>
-      }
+      {isPrivate && (
+        <span className="oligrapher-header-edit-actions-lock" title="This map is private">
+          <FaLock />
+        </span>
+      )}
 
       <SaveButton />
 
       <div className="header-action-menu-wrapper">
-        <IconButton id="toggle-action-menu" ref={toggleRef} aria-controls="simple-menu" aria-haspopup="true" size="small" onClick={openMenu}>
+        <IconButton
+          id="toggle-action-menu"
+          ref={toggleRef}
+          aria-controls="simple-menu"
+          aria-haspopup="true"
+          size="small"
+          onClick={openMenu}
+        >
           <IoIosMore />
         </IconButton>
 
@@ -87,21 +98,41 @@ export default function HeaderEditActions() {
           onClose={closeMenu}
           transitionDuration={0}
         >
-          <MenuItem dense={true} onClick={presentMap}>Present</MenuItem>
+          <MenuItem dense={true} onClick={presentMap}>
+            Present
+          </MenuItem>
           {/* ActionMenu is visible to editors but only owners can share or clone or delete */}
-          { canShare && <MenuItem dense={true} onClick={openShare}>Share</MenuItem> }
-          <MenuItem dense={true} onClick={exportImage}>Export</MenuItem>
-          { canClone && <MenuItem dense={true} onClick={cloneMap}>Clone</MenuItem> }
-          { canDelete && <MenuItem dense={true} onClick={openConfirm}>Delete</MenuItem> }
-          { canBug && <MenuItem dense={true} onClick={openBugReportUrl}>Report a bug</MenuItem> }
+          {canShare && (
+            <MenuItem dense={true} onClick={openShare}>
+              Share
+            </MenuItem>
+          )}
+          <MenuItem dense={true} onClick={exportImage}>
+            Export
+          </MenuItem>
+          {canClone && (
+            <MenuItem dense={true} onClick={cloneMap}>
+              Clone
+            </MenuItem>
+          )}
+          {canDelete && (
+            <MenuItem dense={true} onClick={openConfirm}>
+              Delete
+            </MenuItem>
+          )}
+          {canBug && (
+            <MenuItem dense={true} onClick={openBugReportUrl}>
+              Report a bug
+            </MenuItem>
+          )}
         </Menu>
 
         <Confirm
           open={showConfirm}
-          message={'Are you sure you want to delete this map?'}
-          cancel={{ label: 'Cancel', onClick: cancelDelete }}
-          confirm={{ label: 'Delete', onClick: confirmDelete }}
-          />
+          message={"Are you sure you want to delete this map?"}
+          cancel={{ label: "Cancel", onClick: cancelDelete }}
+          confirm={{ label: "Delete", onClick: confirmDelete }}
+        />
         <ShareModal open={showShare} close={closeShare} url={shareUrl} />
       </div>
     </div>
