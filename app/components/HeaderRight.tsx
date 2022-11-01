@@ -1,9 +1,9 @@
-import React from 'react'
+import React from "react"
 
-import { useSelector } from '../util/helpers'
-import HeaderEditActions from './HeaderEditActions'
-import HeaderActions from './HeaderActions'
-import { userCanEditSelector } from '../util/selectors'
+import { useSelector } from "../util/helpers"
+import HeaderEditActions from "./HeaderEditActions"
+import HeaderActions from "./HeaderActions"
+import { userCanEditSelector } from "../util/selectors"
 
 export default function HeaderRight() {
   const editMode = useSelector(state => state.display.modes.editor)

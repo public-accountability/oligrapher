@@ -1,20 +1,20 @@
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useState } from "react"
+import { useDispatch } from "react-redux"
 
-import { useClientRect, callWithTargetValue } from '../util/helpers'
-import EntitySearch from './EntitySearch'
-import Toolbox from './Toolbox'
+import { useClientRect, callWithTargetValue } from "../util/helpers"
+import EntitySearch from "./EntitySearch"
+import Toolbox from "./Toolbox"
 
 export default function NodeTool() {
   const dispatch = useDispatch()
-  const [searchValue, setSearchValue] = useState('')
+  const [searchValue, setSearchValue] = useState("")
   const [maxHeight, setMaxHeight] = useState()
   const trimmed = searchValue.trim()
   const doSearch = trimmed.length > 2
   const handleInputChange = callWithTargetValue(setSearchValue)
 
   const onClickCreateNew = () => {
-    dispatch({ type: 'ADD_NODE', node: { name: trimmed }})
+    dispatch({ type: "ADD_NODE", node: { name: trimmed } })
   }
 
   // fit node tool within visible window
@@ -40,13 +40,13 @@ export default function NodeTool() {
           data-testid="add-node-input"
         />
 
-        { doSearch &&
+        {doSearch && (
           <div>
             Select below or <a onClick={onClickCreateNew}>create new node</a>
             <hr />
             <EntitySearch query={trimmed} maxHeight={maxHeight} />
           </div>
-        }
+        )}
       </div>
     </Toolbox>
   )
