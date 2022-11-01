@@ -144,6 +144,11 @@ export function getElementForGraphItem(id: string, t: "node" | "edge" | "caption
   return querySelector(`g#${t}-${id}`) as SVGGElement
 }
 
+export function eventHalt(event: React.BaseSyntheticEvent) {
+  event.stopPropagation()
+  event.preventDefault()
+}
+
 // For now, this isn't needed because we flatten state.graph after every action:
 //
 // export const convertSelectorForUndo = selector => (state => selector({

@@ -1,9 +1,13 @@
 import React from "react"
 import { useSelector } from "../util/helpers"
-import Caption from "./Caption"
+// import Caption from "./Caption"
 import Caption2 from "./Caption2"
-import FloatingEditor from "../util/floatingEditor"
-import { annotationHasHighlightsSelector, highlightedCaptionIdsSelector } from "../util/selectors"
+import {
+  editModeSelector,
+  annotationHasHighlightsSelector,
+  highlightedCaptionIdsSelector,
+  editedCaptionIdSelector,
+} from "../util/selectors"
 import { State } from "../util/defaultState"
 
 type CaptionAppearance = "normal" | "highlighted" | "faded"
@@ -25,17 +29,15 @@ function calculateAppearance(
 }
 
 export default function Captions() {
-  const captions = useSelector<State>(state => state.graph.captions)
-  const editedCaptionId = useSelector<State>(state =>
-    FloatingEditor.getId(state.display, "caption")
-  )
+  const captions = useSelector<State>(state => Object.entries(state.graph.captions))
+  const editedCaptionId = useSelector(editedCaptionIdSelector)
   const highlightedCaptionIds = useSelector(highlightedCaptionIdsSelector)
   const annotationHasHighlights = useSelector(annotationHasHighlightsSelector)
-  const editMode = useSelector<State>(state => state.display.modes.editor)
+  const editMode = useSelector(editModeSelector)
 
   return (
     <g className="captions">
-      {Object.entries(captions).map(([id, caption]) => (
+      {captions.map(([id, caption]) => (
         <Caption2
           key={id}
           caption={caption}

@@ -1,6 +1,6 @@
-import React from 'react'
+import React from "react"
 
-import Toolbox from './Toolbox'
+import Toolbox from "./Toolbox"
 
 export default function Text() {
   return (

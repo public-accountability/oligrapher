@@ -1,10 +1,8 @@
 import React from "react"
 import IconButton from "@mui/material/IconButton"
 import Stack from "@mui/material/Stack"
-import { FaRegDotCircle } from "@react-icons/all-files/fa/FaRegDotCircle"
-import { MdImage } from "@react-icons/all-files/md/MdImage"
-import { MdPhotoSizeSelectSmall } from "@react-icons/all-files/md/MdPhotoSizeSelectSmall"
-import { MdFormatColorFill } from "@react-icons/all-files/md/MdFormatColorFill"
+import { FaRegDotCircle } from "react-icons/fa"
+import { MdImage, MdPhotoSizeSelectSmall, MdFormatColorFill } from "react-icons/md"
 
 import type { NodeEditorPages } from "./NodeEditor"
 

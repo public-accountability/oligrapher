@@ -1,14 +1,14 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { ThemeProvider } from '@mui/material/styles'
+import React from "react"
+import { useSelector } from "react-redux"
+import { ThemeProvider } from "@mui/material/styles"
 
-import CondensedHeader from './CondensedHeader'
-import Graph from './Graph'
-import ZoomControl from './ZoomControl'
-import CondensedAnnotations from './CondensedAnnotations'
-import AnnotationsToggler from './AnnotationsToggler'
-import theme from '../util/theme'
-import { showAnnotationsSelector, annotationsListSelector } from '../util/selectors'
+import CondensedHeader from "./CondensedHeader"
+import Graph from "./Graph"
+import ZoomControl from "./ZoomControl"
+import CondensedAnnotations from "./CondensedAnnotations"
+import AnnotationsToggler from "./AnnotationsToggler"
+import theme from "../util/theme"
+import { showAnnotationsSelector, annotationsListSelector } from "../util/selectors"
 
 export const ROOT_CONTAINER_ID = "oligrapher-container"
 
@@ -24,14 +24,12 @@ export function EmbeddedRoot() {
           <Graph rootContainerId={ROOT_CONTAINER_ID} />
           <ZoomControl />
         </div>
-        { showAnnotations &&
-          <CondensedAnnotations />
-        }
-        { !showAnnotations && hasAnnotations &&
+        {showAnnotations && <CondensedAnnotations />}
+        {!showAnnotations && hasAnnotations && (
           <div id="oligrapher-condensed-annotations-toggler">
             <AnnotationsToggler />
           </div>
-        }
+        )}
       </ThemeProvider>
     </div>
   )

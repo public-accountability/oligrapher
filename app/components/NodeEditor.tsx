@@ -14,7 +14,7 @@ import NodeEditorSwitcher from "./NodeEditorSwitcher"
 import Button from "@mui/material/Button"
 import { isLittleSisId } from "../util/helpers"
 
-import { IoIosLink } from "@react-icons/all-files/io/IoIosLink"
+import { IoIosLink } from "react-icons/io"
 
 export type NodeEditorPages = "main" | "color" | "size" | "image"
 

@@ -1,7 +1,13 @@
-import React from "react"
-import { useDispatch } from "react-redux"
+import React, { useContext, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
 import { Caption } from "../graph/caption"
-import Draggable from "react-draggable"
+import { DraggableEventHandler } from "react-draggable"
+import { editModeSelector, storyModeSelector } from "../util/selectors"
+import { MdOpenWith } from "react-icons/md"
+import CaptionResizer from "./CaptionResizer"
+import ScaleContext from "../util/ScaleContext"
+import DraggableComponent from "./DraggableComponent"
+import { eventHalt } from "../util/helpers"
 
 type CaptionProps = {
   caption: Caption
@@ -9,55 +15,91 @@ type CaptionProps = {
   status: "normal" | "highlighted" | "faded"
 }
 
-export const styleForCaption = (caption: Caption) => {
-  return {
-    fontFamily: caption.font,
-    fontSize: caption.size + "px",
-    fontWeight: caption.weight,
-    height: caption.height + "px",
-    width: caption.width + "px",
-  }
-}
-
+// <g>
+//    <foreignObject>
+//      <div>
+//        <div.caption-text-move>
+//        <div.caption-text-resize>
+//        <div.caption-text-text>
 export default function Caption(props: CaptionProps) {
-  const dispatch = useDispatch()
   const id = props.caption.id
+
+  const scale = useContext(ScaleContext)
+  const dispatch = useDispatch()
+  const [width, setWidth] = useState(props.caption.width)
+  const [height, setHeight] = useState(props.caption.height)
+  const storyMode = useSelector(storyModeSelector)
+  const editMode = useSelector(editModeSelector)
+
+  const isEditing = editMode && !storyMode
+
+  const divStyle = {
+    fontFamily: props.caption.font,
+    fontSize: props.caption.size + "px",
+    fontWeight: props.caption.weight,
+    width: width + "px",
+    height: height + "px",
+  }
+
+  const divClassName = `caption-text caption-text-${props.status} ${isEditing ? "editing" : ""}`
 
   const onClick = () => {
     dispatch({ type: "CLICK_CAPTION", id })
   }
 
-  const onStart = (event, data) => {
-    event.stopPropagation()
-    event.preventDefault()
+  const onResize: DraggableEventHandler = (event, data) => {
+    eventHalt(event)
+    setWidth(width + data.deltaX)
+    setHeight(height + data.deltaY)
   }
-  const onStop = (event, data) => {
-    event.stopPropagation()
-    event.preventDefault()
+
+  const afterResize: DraggableEventHandler = (event, _data) => {
+    eventHalt(event)
+    dispatch({ type: "RESIZE_CAPTION", id, width, height })
   }
-  const onDrag = (event, data) => {
-    event.stopPropagation()
-    event.preventDefault()
+
+  const afterMove: DraggableEventHandler = (event, data) => {
+    const deltas = { x: data.x, y: data.y }
+    dispatch({ type: "MOVE_CAPTION", id, deltas })
   }
 
   return (
-    <Draggable disabled={props.currentlyEdited} onStart={onStart} onStop={onStop} onDrag={onDrag}>
-      <g className="oligrapher-caption" id={`caption-${id}`} onClick={onClick}>
+    <DraggableComponent
+      disabled={props.currentlyEdited || !isEditing}
+      scale={scale}
+      handle=".caption-text-move"
+      onStop={afterMove}
+    >
+      <g className="oligrapher-caption" id={`caption-${id}`}>
         <foreignObject
-          x={props.caption.x}
-          y={props.caption.y}
-          width={props.caption.width}
-          height={props.caption.height}
+          x={props.caption.x - 1}
+          y={props.caption.y - 1}
+          width={width + 4}
+          height={height + 4}
         >
           <div
             xmlns="http://www.w3.org/1999/xhtml"
-            className={`caption-text caption-text-${props.status}`}
-            style={styleForCaption(props.caption)}
+            className={divClassName}
+            style={divStyle}
+            onClick={onClick}
           >
-            {props.caption.text}
+            {isEditing && (
+              <div className="caption-text-move" onClick={eventHalt}>
+                <MdOpenWith />
+              </div>
+            )}
+            {isEditing && (
+              <CaptionResizer
+                scale={scale}
+                onStart={eventHalt}
+                onStop={afterResize}
+                onDrag={onResize}
+              />
+            )}
+            <div className="caption-text-text">{props.caption.text}</div>
           </div>
         </foreignObject>
       </g>
-    </Draggable>
+    </DraggableComponent>
   )
 }

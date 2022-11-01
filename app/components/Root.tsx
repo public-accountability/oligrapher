@@ -1,10 +1,7 @@
-import React, { useRef, useLayoutEffect, useEffect } from "react"
+import React, { useRef, useLayoutEffect, useEffect, useCallback } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { ThemeProvider, useTheme } from "@mui/material/styles"
 import useMediaQuery from "@mui/material/useMediaQuery"
-import Container from "@mui/material/Container"
-import Stack from "@mui/material/Stack"
-import Box from "@mui/material/Box"
 import Grid from "@mui/material/Unstable_Grid2"
 import Header from "./Header"
 import Graph from "./Graph"
@@ -17,6 +14,7 @@ import Annotations from "./Annotations"
 import CondensedAnnotations from "./CondensedAnnotations"
 import theme from "../util/theme"
 import SvgRefContext from "../util/SvgRefContext"
+import ScaleContext from "../util/ScaleContext"
 
 import {
   showAnnotationsSelector,
@@ -29,6 +27,8 @@ import {
   debugModeSelector,
   embedSelector,
 } from "../util/selectors"
+import { useScale } from "../util/useScale"
+import { useResizeDetector } from "react-resize-detector"
 
 export const ROOT_CONTAINER_ID = "oligrapher-container"
 
@@ -78,6 +78,14 @@ export function Root() {
   const containerRef = React.useRef(null)
   const headerGridRef = React.useRef(null)
 
+  const [scale, updateScale] = useScale(svgRef)
+
+  const onSvgResize = useCallback(() => {
+    updateScale()
+  }, [svgRef, updateScale])
+
+  useResizeDetector({ targetRef: svgRef, onResize: onSvgResize })
+
   // prevent backspace form navigating away from page in firefox and possibly other browsers
   useEffect(() => {
     window.addEventListener("keydown", event => {
@@ -110,37 +118,39 @@ export function Root() {
 
   return (
     <ThemeProvider theme={theme}>
-      <SvgRefContext.Provider value={svgRef}>
-        <div id={ROOT_CONTAINER_ID} ref={containerRef}>
-          <Grid container spacing={1} alignItems="stretch">
-            {showHeader && (
-              <Grid ref={headerGridRef} item sm={12}>
-                <Header />
+      <ScaleContext.Provider value={scale}>
+        <SvgRefContext.Provider value={svgRef}>
+          <div id={ROOT_CONTAINER_ID} ref={containerRef}>
+            <Grid container spacing={1} alignItems="stretch">
+              {showHeader && (
+                <Grid ref={headerGridRef} item sm={12}>
+                  <Header />
+                </Grid>
+              )}
+              <Grid item sm={showAnnotationsOnRight ? 8 : 12}>
+                <div id="oligrapher-graph-container">
+                  <Graph />
+                  {editorMode && <Editor />}
+                  {showZoomControl && <ZoomControl />}
+                  {showFloatingEditors && <FloatingEditors />}
+                  <UserMessage />
+                </div>
               </Grid>
-            )}
-            <Grid item sm={showAnnotationsOnRight ? 8 : 12}>
-              <div id="oligrapher-graph-container">
-                <Graph />
-                {editorMode && <Editor />}
-                {showZoomControl && <ZoomControl />}
-                {showFloatingEditors && <FloatingEditors />}
-                <UserMessage />
-              </div>
+              {showAnnotationsOnRight && (
+                <Grid item sm={4}>
+                  <Annotations />
+                </Grid>
+              )}
+              {showAnnotationsOnBottom && (
+                <Grid item sm={12}>
+                  <CondensedAnnotations />
+                </Grid>
+              )}
             </Grid>
-            {showAnnotationsOnRight && (
-              <Grid item sm={4}>
-                <Annotations />
-              </Grid>
-            )}
-            {showAnnotationsOnBottom && (
-              <Grid item sm={12}>
-                <CondensedAnnotations />
-              </Grid>
-            )}
-          </Grid>
-          {debugMode && <DebugMessage />}
-        </div>
-      </SvgRefContext.Provider>
+            {debugMode && <DebugMessage />}
+          </div>
+        </SvgRefContext.Provider>
+      </ScaleContext.Provider>
     </ThemeProvider>
   )
 }

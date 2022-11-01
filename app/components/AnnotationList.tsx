@@ -1,20 +1,28 @@
 import React, { useCallback } from "react"
-import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
+import { useDispatch } from "react-redux"
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd"
+import { Annotation } from "../util/annotations"
 
 const getItemStyle = (isDragging, draggableStyle) => ({
   // some basic styles to make the items look a bit nicer
   userSelect: "none",
 
   // styles we need to apply on draggables
-  ...draggableStyle
+  ...draggableStyle,
 })
 
-export default function AnnotationList({ list, currentIndex }) {
+type AnnotationListPropTypes = {
+  list: Annotation[]
+  currentIndex: number
+}
+
+export default function AnnotationList({ list, currentIndex }: AnnotationListPropTypes) {
   const dispatch = useDispatch()
-  const show = useCallback(index => dispatch({ type: 'SHOW_ANNOTATION', index  }), [dispatch])
-  const move = useCallback((from, to) => dispatch({ type: 'MOVE_ANNOTATION', from, to }), [dispatch])
+  const show = useCallback(index => dispatch({ type: "SHOW_ANNOTATION", index }), [dispatch])
+  const move = useCallback(
+    (from, to) => dispatch({ type: "MOVE_ANNOTATION", from, to }),
+    [dispatch]
+  )
 
   const onDragEnd = result => {
     // dropped outside the list
@@ -26,18 +34,16 @@ export default function AnnotationList({ list, currentIndex }) {
   }
 
   const itemClassName = (index, isDragging) =>
-    "annotation-list-item " + (
-      isDragging ? "annotation-list-item-dragging " : " "
-    ) + (
-      index === currentIndex ? "annotation-list-item-current" : ""
-    )
+    "annotation-list-item " +
+    (isDragging ? "annotation-list-item-dragging " : " ") +
+    (index === currentIndex ? "annotation-list-item-current" : "")
 
   // Normally you would want to split things out into separate components.
   // But in this example everything is just done in one place for simplicity
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable">
-        {(provided) => (
+        {provided => (
           <div
             id="oligrapher-annotations-list"
             {...provided.droppableProps}
@@ -52,10 +58,7 @@ export default function AnnotationList({ list, currentIndex }) {
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                     onClick={() => show(index)}
-                    style={getItemStyle(
-                      snapshot.isDragging,
-                      provided.draggableProps.style
-                    )}
+                    style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
                   >
                     {index + 1}. {item.header}
                   </div>
@@ -68,9 +71,4 @@ export default function AnnotationList({ list, currentIndex }) {
       </Droppable>
     </DragDropContext>
   )
-}
-
-AnnotationList.propTypes = {
-  list: PropTypes.array.isRequired,
-  currentIndex: PropTypes.number.isRequired
 }
