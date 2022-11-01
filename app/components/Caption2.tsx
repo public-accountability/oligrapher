@@ -1,9 +1,12 @@
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useContext, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Caption } from "../graph/caption"
 import Draggable from "react-draggable"
 import { editModeSelector } from "../util/selectors"
 import { MdOpenWith, MdSouthEast } from "react-icons/md"
+import { useScale } from "../util/useScale"
+import CaptionResizer from "./CaptionResizer"
+import ScaleContext from "../util/ScaleContext"
 
 type CaptionProps = {
   caption: Caption
@@ -16,21 +19,6 @@ const eventHalt = event => {
   event.preventDefault()
 }
 
-export const styleForCaption = (caption: Caption) => {
-  return {
-    fontFamily: caption.font,
-    fontSize: caption.size + "px",
-    fontWeight: caption.weight,
-    // height: caption.height + "px",
-    //width: caption.width + "px",
-  }
-}
-
-/* const CustomComponent = () => {
- *   const { width, height, ref } = useResizeDetector()
- *   return <div ref={ref}>{`${width}x${height}`}</div>
- *  */
-
 // <g>
 //    <foreignObject>
 //      <div>
@@ -39,7 +27,7 @@ export const styleForCaption = (caption: Caption) => {
 //        <div.caption-text-text>
 export default function Caption(props: CaptionProps) {
   const id = props.caption.id
-
+  const scale = useContext(ScaleContext)
   const [width, setWidth] = useState(props.caption.width)
   const [height, setHeight] = useState(props.caption.height)
 
@@ -56,10 +44,22 @@ export default function Caption(props: CaptionProps) {
 
   const divClassName = `caption-text caption-text-${props.status} ${editMode ? "editing" : ""}`
 
-  //console.log(`${props.caption.width}/${width} ${props.caption.height}/${height}`)
-
   const onClick = () => {
     dispatch({ type: "CLICK_CAPTION", id })
+  }
+
+  const onStart = () => {
+    console.log("onstart")
+  }
+
+  const onResize = (event, data) => {
+    console.log("scale", scale)
+    console.log("on drag", data)
+    eventHalt(event)
+    const deltaX = data.x - data.lastX
+    const deltaY = data.y - data.lastY
+    setWidth(width + deltaX)
+    setHeight(height + deltaY)
   }
 
   return (
@@ -68,22 +68,21 @@ export default function Caption(props: CaptionProps) {
       onStart={eventHalt}
       onStop={eventHalt}
       onDrag={eventHalt}
+      scale={scale}
       handle=".caption-text-move"
     >
       <g className="oligrapher-caption" id={`caption-${id}`} onClick={onClick}>
         <foreignObject
-          x={props.caption.x}
-          y={props.caption.y}
-          width={width + 2}
-          height={height + 2}
+          x={props.caption.x - 1}
+          y={props.caption.y - 1}
+          width={width + 4}
+          height={height + 4}
         >
           <div xmlns="http://www.w3.org/1999/xhtml" className={divClassName} style={divStyle}>
             <div className="caption-text-move">
               <MdOpenWith />
             </div>
-            <div className="caption-text-resize">
-              <MdSouthEast />
-            </div>
+            <CaptionResizer scale={scale} onStart={onStart} onDrag={onResize} />
             <div className="caption-text-text">{props.caption.text}</div>
           </div>
         </foreignObject>

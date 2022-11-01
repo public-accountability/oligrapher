@@ -50,6 +50,13 @@ export const pannableSelector: Selector<State, boolean> = state => {
   )
 }
 
+export const editedCaptionIdSelector = (state: State): string | null => {
+  if (state.display.floatingEditor.type === "caption") {
+    return state.display.floatingEditor.id
+  } else {
+    return null
+  }
+}
 export const svgHeightSelector: Selector<State, number> = state => {
   return state.display.svgHeight
 }

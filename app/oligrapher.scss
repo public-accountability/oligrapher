@@ -996,9 +996,10 @@ div.lock {
   }
 
   @mixin caption_handle_positioning {
-    width: 22px;
-    height: 22px;
+    width: 18px;
+    height: 18px;
     position: absolute;
+    color: $oligrapher_blue_dark;
   }
 
   .caption-text-move {
