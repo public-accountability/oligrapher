@@ -1,12 +1,15 @@
-import React, { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
-import { FaBezierCurve } from '@react-icons/all-files/fa/FaBezierCurve'
+import React, { useCallback } from "react"
+import { useDispatch } from "react-redux"
+import { FaBezierCurve } from "react-icons/fa"
 
-import Toolbox from './Toolbox'
+import Toolbox from "./Toolbox"
 
 export default function OrganizeTool() {
   const dispatch = useDispatch()
-  const forceDirectedLayout = useCallback(() => dispatch({ type: 'FORCE_LAYOUT_REQUESTED' }), [dispatch])
+  const forceDirectedLayout = useCallback(
+    () => dispatch({ type: "FORCE_LAYOUT_REQUESTED" }),
+    [dispatch]
+  )
 
   return (
     <Toolbox title="Organize Map">
@@ -15,11 +18,13 @@ export default function OrganizeTool() {
           <tbody>
             <tr>
               <td>
-                <a title="Force-directed" onClick={forceDirectedLayout}><FaBezierCurve /></a>
+                <a title="Force-directed" onClick={forceDirectedLayout}>
+                  <FaBezierCurve />
+                </a>
               </td>
               <td>
-                <strong>Force-directed:</strong> use physics simulation to automatically
-                arrange nodes
+                <strong>Force-directed:</strong> use physics simulation to automatically arrange
+                nodes
               </td>
             </tr>
           </tbody>

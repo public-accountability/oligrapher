@@ -1,7 +1,7 @@
 import React, { useCallback } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import Button from "@mui/material/Button"
-import { IoIosLink } from "@react-icons/all-files/io/IoIosLink"
+import { IoIosLink } from "react-icons/io"
 
 import Toolbox from "./Toolbox"
 import { isLittleSisId } from "../util/helpers"

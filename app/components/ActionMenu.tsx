@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useRef } from "react"
 import { useDispatch } from "react-redux"
-import { IoIosMore } from "@react-icons/all-files/io/IoIosMore"
+import { IoIosMore } from "react-icons/io"
 import IconButton from "@mui/material/IconButton"
 import Menu from "@mui/material/Menu"
 import MenuItem from "@mui/material/MenuItem"

@@ -94,14 +94,9 @@ $edge_highlight_color: $oligrapher_blue;
 
 #oligrapher-container {
   font-family: "Open Sans", Helvetica, Arial, sans-serif;
-  /* margin: 0 auto; */
   height: 100%;
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* justify-content: space-between; */
 
-  button,
-  a:hover {
+  button, a:hover {
     cursor: pointer;
   }
 
@@ -265,7 +260,6 @@ $edge_highlight_color: $oligrapher_blue;
     position: absolute;
     top: 0;
     left: 15px;
-
     z-index: 10;
     width: 100%;
     pointer-events: none;
@@ -314,7 +308,7 @@ $edge_highlight_color: $oligrapher_blue;
   }
 }
 
-/* EDITOR */
+/* Editor */
 #oligrapher-container .oligrapher-graph-editor .editor-menu {
   z-index: 100;
   border: 1px solid #ccc;
@@ -449,7 +443,7 @@ $edge_highlight_color: $oligrapher_blue;
   }
 }
 
-/* COMMON NODE EDITING */
+/* Common Node Editing */
 
 #oligrapher-container .oligrapher-graph-editor,
 #oligrapher-container .oligrapher-floating-editor {
@@ -566,7 +560,7 @@ $edge_highlight_color: $oligrapher_blue;
   }
 }
 
-/* FLOATING EDITORS */
+/* Floating Editor */
 
 #oligrapher-container .oligrapher-floating-editor {
   z-index: 20;
@@ -604,28 +598,14 @@ $edge_highlight_color: $oligrapher_blue;
     }
   }
 
-  footer {
-  }
-
-  /* form { */
-  /*   label { */
-  /*     @extend %editor_label; */
-  /*     display: block; */
-  /*     margin-bottom: 3px; */
-  /*     margin-top: 5px; */
-  /*   } */
-
-  /*   input { */
-  /*       @extend %editor_input; */
-  /*   } */
-  /* } */
-
   hr {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
     border: 1px solid;
   }
-} /* end: .oligrapher-floating-editor */
+}
+
+/* Node Editor */
 
 #oligrapher-container div.oligrapher-node-editor {
   @extend %floating_editor_box;
@@ -656,6 +636,7 @@ $edge_highlight_color: $oligrapher_blue;
 }
 
 /* add connections tool */
+
 #oligrapher-container div.oligrapher-add-connections {
   @extend %floating_editor_box;
 
@@ -670,6 +651,20 @@ $edge_highlight_color: $oligrapher_blue;
     overflow-y: scroll;
   }
 }
+
+#oligrapher-container .add-connections-classic-button {
+  margin-left: 1em;
+}
+
+#oligrapher-container .add-connections-classic-statusbox {
+  margin-top: 2em;
+}
+
+#oligrapher-container .add-connections-classic-p {
+  margin-top: 2em;
+}
+
+/* Edge Editor */
 
 #oligrapher-container div.oligrapher-edge-editor {
   @extend %floating_editor_box;
@@ -719,6 +714,8 @@ $edge_highlight_color: $oligrapher_blue;
   }
 }
 
+/* Caption Editor */
+
 #oligrapher-container div.oligrapher-caption-editor {
   width: 230px;
   max-height: 375px;
@@ -733,6 +730,8 @@ $edge_highlight_color: $oligrapher_blue;
     border: 1px solid $oligrapher_gray;
   }
 }
+
+/* Style Nodes */
 
 #oligrapher-container .oligrapher-graph-editor .oligrapher-style-nodes {
   margin-top: 0.5em;
@@ -895,7 +894,7 @@ div.lock {
   padding: 10px;
 }
 
-/* NODES */
+/* Nodes */
 
 #oligrapher-container .oligrapher-graph-dragging-node {
   cursor: grabbing;
@@ -950,7 +949,7 @@ div.lock {
   }
 }
 
-/* EDGES */
+/* Edges */
 
 #oligrapher-container #oligrapher-graph-container .oligrapher-edge {
   a:hover {
@@ -962,23 +961,67 @@ div.lock {
   }
 }
 
-/* captions */
+/* Captions */
 
 #oligrapher-container #oligrapher-graph-container .oligrapher-caption {
-  foreignObject,
-  textarea,
-  div {
-    box-sizing: border-box;
-    line-height: 1.2em;
-  }
+  /* foreignObject, */
+  /* textarea, */
+  /* div { */
+  /*   box-sizing: border-box; */
+  /*   line-height: 1.2em; */
+  /* } */
+
 
   .caption-text {
-    border: 1px solid rgba(0, 0, 0, 0);
+    position: relative;
+    border: 0;
+    overflow: hidden;
+
+    &.editing {
+      border: 1px solid $oligrapher_blue_dark;
+      /* resize: both; */
+    }
 
     &.editing:hover {
       border: 1px solid $oligrapher_blue;
     }
+
+    &.caption-text-highlighted {
+      text-shadow: 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00;
+    }
+
+    &.caption-text-faded {
+      color: #ddd;
+    }
   }
+
+  @mixin caption_handle_positioning {
+    width: 22px;
+    height: 22px;
+    position: absolute;
+  }
+
+  .caption-text-move {
+    @include caption_handle_positioning;
+    top: 0;
+    right: 0;
+
+    &:hover {
+      cursor: move;
+    }
+  }
+
+  .caption-text-resize {
+    @include caption_handle_positioning;
+    bottom: 0;
+    right: 0;
+
+    &:hover {
+      cursor: nwse-resize;
+    }
+  }
+
+  .caption-text-text {}
 
   .edit-caption-textarea {
     resize: both;
@@ -986,13 +1029,6 @@ div.lock {
     overflow: hidden;
   }
 
-  .edit-caption-textarea::-webkit-scrollbar {
-    /* WebKit */
-    width: 0;
-    height: 0;
-  }
-
-  .caption-text,
   .edit-caption-textarea {
     margin: 0;
     box-sizing: border-box;
@@ -1000,17 +1036,10 @@ div.lock {
     background-color: rgba(0, 0, 0, 0);
   }
 
-  .caption-text.caption-text-highlighted {
-    text-shadow: 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00,
-      0 0 5px #ffff00;
-  }
 
-  .caption-text.caption-text-faded {
-    color: #ddd;
-  }
 }
 
-/* user message */
+/* User message */
 
 #oligrapher-container .oligrapher-user-message {
   position: absolute;
@@ -1226,6 +1255,8 @@ div.lock {
   }
 }
 
+/* Other */
+
 #oligrapher-embed-form {
   padding: 0.8em;
   width: 500px;
@@ -1244,16 +1275,4 @@ div.lock {
     background-color: white;
     border: 1px solid #ccc;
   }
-}
-
-#oligrapher-container .add-connections-classic-button {
-  margin-left: 1em;
-}
-
-#oligrapher-container .add-connections-classic-statusbox {
-  margin-top: 2em;
-}
-
-#oligrapher-container .add-connections-classic-p {
-  margin-top: 2em;
 }
