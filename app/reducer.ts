@@ -392,6 +392,11 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     )
   })
 
+  builder.addCase("RESIZE_CAPTION", (state, action) => {
+    state.graph.captions[action.id].width = action.width
+    state.graph.captions[action.id].height = action.height
+  })
+
   builder.addCase("REMOVE_CAPTION", (state, action) => {
     delete state.graph.captions[action.id]
     FloatingEditor.clear(state.display)

@@ -5,7 +5,7 @@ import { MdSouthEast } from "react-icons/md"
 export default function CaptionResizer(props: DraggableCoreProps) {
   return (
     <DraggableCore {...props}>
-      <div className="caption-text-resize">
+      <div className="caption-text-resize" onClick={e => e.stopPropagation()}>
         <MdSouthEast />
       </div>
     </DraggableCore>

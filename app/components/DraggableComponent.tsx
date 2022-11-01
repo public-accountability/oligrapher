@@ -19,6 +19,7 @@ export function DraggableComponent(props: DraggableComponentProps) {
   }
 
   const onDrag: DraggableEventHandler = (evt, data) => {
+    evt.stopPropagation()
     props.onDrag && props.onDrag(evt, data)
   }
 

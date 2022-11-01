@@ -15,6 +15,10 @@ export function editModeSelector(state: State): boolean {
   return state.display.modes.editor
 }
 
+export function storyModeSelector(state: State): boolean {
+  return state.display.modes.story
+}
+
 export function floatingEditorSelector(state: State): FloatingEditorType {
   return state.display.floatingEditor
 }
