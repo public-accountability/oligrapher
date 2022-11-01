@@ -37,8 +37,17 @@ export const showZoomControlSelector: Selector<State, boolean> = state => {
   return state.display.showZoomControl
 }
 
+export const textToolOpenSelector: Selector<State, boolean> = state => {
+  return state.display.tool === "text"
+}
+
 export const pannableSelector: Selector<State, boolean> = state => {
-  return state.attributes.settings.allowPanning && !state.display.overNode
+  return (
+    state.attributes.settings.allowPanning &&
+    !state.display.overNode &&
+    state.display.tool !== "text" &&
+    state.display.floatingEditor.type !== "caption"
+  )
 }
 
 export const svgHeightSelector: Selector<State, number> = state => {
@@ -174,6 +183,17 @@ export const annotationHasHighlightsSelector: Selector<State, boolean> = state =
     Boolean(annotation) &&
     annotation.nodeIds.length + annotation.edgeIds.length + annotation.captionIds.length > 0
   )
+}
+
+export const highlightedCaptionIdsSelector: Selector<State, string[]> = state => {
+  if (state.display.modes.story) {
+    const currentAnnotation = state.annotations.list[state.annotations.currentIndex]
+    if (currentAnnotation) {
+      return currentAnnotation.captionIds
+    }
+  }
+
+  return []
 }
 
 export const enableLockSelector: Selector<State, boolean> = state => {

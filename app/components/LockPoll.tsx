@@ -1,8 +1,8 @@
-import { useEffect, useCallback } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useEffect } from "react"
+import { useDispatch } from "react-redux"
 
-import { useSelector, makeCancelable } from '../util/helpers'
-import { lock } from '../datasources/littlesis3'
+import { useSelector, makeCancelable } from "../util/helpers"
+import { lock } from "../datasources/littlesis3"
 
 const POLL_INTERVAL = 10 * 1000
 const FAILURE_LIMIT = 10
@@ -20,10 +20,10 @@ export default function LockPoll() {
 
     httpRequest.promise
       .then(json => {
-        dispatch({ type: 'SET_LOCK', lock: json })
+        dispatch({ type: "SET_LOCK", lock: json })
         timeout = setTimeout(() => requestLock(), POLL_INTERVAL)
       })
-      .catch((err) => {
+      .catch(err => {
         failCount++
 
         if (failCount > FAILURE_LIMIT) {
@@ -33,12 +33,12 @@ export default function LockPoll() {
         }
       })
 
-    return () => { 
+    return () => {
       httpRequest.cancel()
       clearTimeout(timeout)
     }
   }
-  
+
   useEffect(requestLock, [mapId, dispatch])
 
   return null

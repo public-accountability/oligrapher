@@ -1,16 +1,18 @@
-import React, { useEffect, useLayoutEffect, useRef, useState, useContext } from "react"
+import React, { useState, useContext } from "react"
+import { useDispatch, useSelector } from "react-redux"
+
+import Caption from "../graph/caption"
 import { xy, Point } from "../util/geometry"
 import { svgRectToViewbox, SVG_ID, viewBoxToString } from "../util/dimensions"
-import { useDispatch, useSelector } from "react-redux"
+
 import {
   currentViewboxSelector,
   pannableSelector,
   scrollToZoomSelector,
   svgHeightSelector,
+  textToolOpenSelector,
 } from "../util/selectors"
 import SvgRefContext from "../util/SvgRefContext"
-
-//const pointFromEvent = (event: React.MouseEvent): Point => ({ x: event.clientX, y: event.clientY })
 
 const pointFromEvent = (event: React.MouseEvent, svg: SVGSVGElement): Point => {
   const invertedSVGMatrix = svg.getScreenCTM().inverse()
@@ -20,11 +22,11 @@ const pointFromEvent = (event: React.MouseEvent, svg: SVGSVGElement): Point => {
 }
 
 export default function Svg(props: { children: React.ReactNode }) {
-  // const svgRef = useRef(null)
   const svgRef = useContext(SvgRefContext)
   const dispatch = useDispatch()
   const viewBox = useSelector(currentViewboxSelector)
   const pannable = useSelector(pannableSelector)
+  const textToolOpen = useSelector(textToolOpenSelector)
   const scrollToZoom = useSelector(scrollToZoomSelector)
   const svgHeight = useSelector(svgHeightSelector)
   const [pointerDown, setPointerDown] = useState(false)
@@ -50,6 +52,19 @@ export default function Svg(props: { children: React.ReactNode }) {
     }
   }
 
+  if (pointerDown) {
+    divAttrs.style = { cursor: "grabbing" }
+  }
+
+  if (textToolOpen) {
+    divAttrs.style = { cursor: "crosshair" }
+
+    divAttrs.onClick = event => {
+      const caption = Caption.fromEvent(event)
+      dispatch({ type: "ADD_CAPTION", caption })
+    }
+  }
+
   // Panning
   // try using stopPropagation() if other oligrapher events bubble up
   if (pannable) {
@@ -70,6 +85,7 @@ export default function Svg(props: { children: React.ReactNode }) {
       if (!pointerDown) {
         return
       }
+
       event.preventDefault()
       const currentPosition = pointFromEvent(event, svgRef.current)
       const diffX = currentPosition.x - startPosition.x
@@ -83,10 +99,6 @@ export default function Svg(props: { children: React.ReactNode }) {
       setPointerDown(false)
       dispatch({ type: "SET_VIEWBOX", viewBox: svgRectToViewbox(svgRef.current.viewBox.baseVal) })
     }
-  }
-
-  if (pointerDown) {
-    divAttrs.style = { cursor: "grabbing" }
   }
 
   return (

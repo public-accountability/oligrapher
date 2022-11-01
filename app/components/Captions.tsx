@@ -1,47 +1,48 @@
-import React, { useMemo } from 'react'
-import { useSelector } from '../util/helpers'
-import Caption from './Caption'
-import FloatingEditor from '../util/floatingEditor'
-import { annotationHasHighlightsSelector } from '../util/selectors'
-import { State } from '../util/defaultState'
+import React from "react"
+import { useSelector } from "../util/helpers"
+import Caption from "./Caption"
+import Caption2 from "./Caption2"
+import FloatingEditor from "../util/floatingEditor"
+import { annotationHasHighlightsSelector, highlightedCaptionIdsSelector } from "../util/selectors"
+import { State } from "../util/defaultState"
 
-function calculateAppearance(id: string, highlightedIds: string[], annotationHasHighlights: boolean, editMode: boolean): string {
-  if (!annotationHasHighlights) {
+type CaptionAppearance = "normal" | "highlighted" | "faded"
+
+function calculateAppearance(
+  id: string,
+  highlightedIds: string[],
+  annotationHasHighlights: boolean
+): CaptionAppearance {
+  if (annotationHasHighlights) {
+    if (highlightedIds.includes(id)) {
+      return "highlighted"
+    } else {
+      return "faded"
+    }
+  } else {
     return "normal"
   }
-
-  if (highlightedIds.includes(id)) {
-    return "highlighted"
-  }
-
-  if (editMode) {
-    return "normal"
-  }
-
-  return "faded"
 }
 
 export default function Captions() {
   const captions = useSelector<State>(state => state.graph.captions)
-  const editedCaptionId = useSelector<State>(state => FloatingEditor.getId(state.display, 'caption'))
-  const storyMode = useSelector<State>(state => state.display.modes.story)
-  const { list, currentIndex } = useSelector<State>(state => state.annotations)
-  const highlightedCaptionIds = useMemo(
-    () => storyMode ? (list[currentIndex]?.captionIds || []) : [],
-    [storyMode, list, currentIndex]
+  const editedCaptionId = useSelector<State>(state =>
+    FloatingEditor.getId(state.display, "caption")
   )
+  const highlightedCaptionIds = useSelector(highlightedCaptionIdsSelector)
   const annotationHasHighlights = useSelector(annotationHasHighlightsSelector)
   const editMode = useSelector<State>(state => state.display.modes.editor)
 
   return (
     <g className="captions">
-      { Object.entries(captions).map(([id, caption]) => (
-        <Caption
+      {Object.entries(captions).map(([id, caption]) => (
+        <Caption2
           key={id}
           caption={caption}
           currentlyEdited={editMode && id === editedCaptionId}
-          status={calculateAppearance(id, highlightedCaptionIds, annotationHasHighlights, editMode)} />
-      )) }
+          status={calculateAppearance(id, highlightedCaptionIds, annotationHasHighlights)}
+        />
+      ))}
     </g>
   )
 }

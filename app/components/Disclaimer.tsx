@@ -1,7 +1,11 @@
-import * as React from 'react'
-import {
-  Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle
-} from '@mui/material'
+import React from "react"
+
+import Button from "@mui/material/Button"
+import Dialog from "@mui/material/Dialog"
+import DialogActions from "@mui/material/DialogActions"
+import DialogContent from "@mui/material/DialogContent"
+import DialogContentText from "@mui/material/DialogContentText"
+import DialogTitle from "@mui/material/DialogTitle"
 
 export default function Disclaimer({ open, close }: DisclaimerProps) {
   return (
@@ -16,7 +20,10 @@ export default function Disclaimer({ open, close }: DisclaimerProps) {
         <DialogContentText id="alert-dialog-description">
           <strong>User-contributed maps don't represent the views of LittleSis.</strong>
           <br />
-          <a href="https://littlesis.org/disclaimer" target="_blank">Click here</a> to read our full disclaimer.
+          <a href="https://littlesis.org/disclaimer" target="_blank">
+            Click here
+          </a>{" "}
+          to read our full disclaimer.
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -29,6 +36,6 @@ export default function Disclaimer({ open, close }: DisclaimerProps) {
 }
 
 export interface DisclaimerProps {
-  open: boolean,
+  open: boolean
   close: () => void
 }

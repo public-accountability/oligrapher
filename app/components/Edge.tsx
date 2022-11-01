@@ -92,7 +92,7 @@ export function Edge({ id, currentlyEdited }: EdgeProps) {
       updateEdge({ cx: deltas.x, cy: deltas.y })
       setDragging(false)
     } else {
-      dispatch({ type: "CLICK_EDGE", id, ctrlKey: event.ctrlKey || event.metaKey })
+      dispatch({ type: "CLICK_EDGE", id, ctrlKey: evt.ctrlKey || evt.metaKey })
     }
   }
 

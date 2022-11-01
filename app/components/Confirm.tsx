@@ -1,7 +1,9 @@
-import React from 'react'
-import {
-  Button, Dialog, DialogActions, DialogContent, DialogContentText
-} from '@mui/material'
+import React from "react"
+import Button from "@mui/material/Button"
+import Dialog from "@mui/material/Dialog"
+import DialogActions from "@mui/material/DialogActions"
+import DialogContent from "@mui/material/DialogContent"
+import DialogContentText from "@mui/material/DialogContentText"
 
 export default function Confirm({ open, message, cancel, confirm }: ConfirmProps) {
   return (
@@ -9,17 +11,21 @@ export default function Confirm({ open, message, cancel, confirm }: ConfirmProps
       id="oligrapher-confirm"
       open={open}
       onClose={close}
-      aria-describedby="alert-dialog-description">
+      aria-describedby="alert-dialog-description"
+    >
       <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          {message}
-        </DialogContentText>
+        <DialogContentText id="alert-dialog-description">{message}</DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={cancel.onClick} variant="contained" color="primary">
           {cancel.label}
         </Button>
-        <Button id="oligrapher-confirm-button" onClick={confirm.onClick} variant="contained" color="secondary">
+        <Button
+          id="oligrapher-confirm-button"
+          onClick={confirm.onClick}
+          variant="contained"
+          color="secondary"
+        >
           {confirm.label}
         </Button>
       </DialogActions>
@@ -33,8 +39,8 @@ interface Button {
 }
 
 interface ConfirmProps {
-  open: boolean,
-  message: string,
-  cancel: Button,
+  open: boolean
+  message: string
+  cancel: Button
   confirm: Button
 }

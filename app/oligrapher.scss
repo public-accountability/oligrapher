@@ -721,7 +721,7 @@ $edge_highlight_color: $oligrapher_blue;
 
 #oligrapher-container div.oligrapher-caption-editor {
   width: 230px;
-  height: 175px;
+  max-height: 375px;
   padding: 10px;
   box-sizing: border-box;
 

@@ -376,9 +376,9 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("ADD_CAPTION", (state, action) => {
-    addCaption(state.graph, merge(Caption.fromEvent(action.event), { id: action.id }))
-
-    FloatingEditor.toggleEditor(state.display, "caption", action.id)
+    addCaption(state.graph, action.caption)
+    // Does not work because the caption is not yet rendered
+    // FloatingEditor.toggleEditor(state.display, "caption", action.caption.id)
   })
 
   builder.addCase("UPDATE_CAPTION", (state, action) => {
