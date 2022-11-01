@@ -31,7 +31,12 @@ export default function Node({ id }: NodeProps) {
   // reference to outermost <g> for node
   const nodeRef = useRef(null)
 
+  const onStart: DraggableEventHandler = (_event, _data) => {
+    dispatch({ type: "DRAG_NODE_START", id: id })
+  }
+
   const onStop: DraggableEventHandler = (_event, data) => {
+    dispatch({ type: "DRAG_NODE_STOP" })
     const deltas = { x: data.x, y: data.y }
     if (editMode) {
       dispatch({ type: "MOVE_NODE_OR_ADD_EDGE_FROM_DRAG", id, deltas })
@@ -44,6 +49,7 @@ export default function Node({ id }: NodeProps) {
   }
 
   const onClick: DraggableEventHandler = (event, data) => {
+    dispatch({ type: "DRAG_NODE_STOP" })
     const deltas = { x: data.x, y: data.y }
     dispatch({
       type: "CLICK_NODE",
@@ -71,6 +77,7 @@ export default function Node({ id }: NodeProps) {
       nodeRef={nodeRef}
       disabled={uiState.disabled}
       handle=".draggable-node-handle"
+      onStart={onStart}
       onStop={onStop}
       onDrag={onDrag}
       onClick={onClick}

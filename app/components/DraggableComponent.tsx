@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import Draggable, { DraggableEventHandler, DraggableProps } from "react-draggable"
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import { getElementById } from "../util/helpers"
 import { currentZoomSelector } from "../util/selectors"
 
@@ -13,8 +13,6 @@ interface DraggableComponentProps extends DraggableProps {
 //   - adds another callback, onClick, for click events
 //   - set the scale = state.display.svgZoom
 export function DraggableComponent(props: DraggableComponentProps) {
-  const dispatch = useDispatch()
-
   const zoom = useSelector(currentZoomSelector)
 
   const [dragStartPos, setDragStartPos] = useState({ x: 0, y: 0 })
@@ -28,9 +26,7 @@ export function DraggableComponent(props: DraggableComponentProps) {
     // You can also try passing a Ref or storing this value in the store
     const svg = getElementById("oligrapher-svg")
     setScale((svg.getBoundingClientRect().width / svg.viewBox.baseVal.width) * zoom)
-
     setDragStartPos({ x: evt.screenX, y: evt.screenY })
-    dispatch({ type: "DRAG_NODE_START", id: props.nodeId })
     props.onStart && props.onStart(evt, data)
   }
 
@@ -49,8 +45,6 @@ export function DraggableComponent(props: DraggableComponentProps) {
     } else {
       props.onStop && props.onStop(evt, data)
     }
-
-    dispatch({ type: "DRAG_NODE_STOP" })
   }
 
   const draggableProps = Object.assign({ position: { x: 0, y: 0 } }, props, {
