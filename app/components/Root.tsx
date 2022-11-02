@@ -88,6 +88,12 @@ export function Root() {
   }, [])
 
   useEffect(() => {
+    // Set SVG Height to fill container to bottom
+    if (headerGridRef.current && containerRef.current) {
+      let height = containerRef.current.clientHeight - headerGridRef.current.clientHeight - 1
+      dispatch({ type: "SET_SVG_HEIGHT", height })
+    }
+    // Set Scale
     dispatch({ type: "SET_SVG_SCALE" })
   })
 
@@ -101,25 +107,18 @@ export function Root() {
     }
   }, [hasUnsavedChanges])
 
-  // Set SVG Height to fill container to bottom
-  useLayoutEffect(() => {
-    if (headerGridRef.current && containerRef.current) {
-      let height = containerRef.current.clientHeight - headerGridRef.current.clientHeight - 5
-      dispatch({ type: "SET_SVG_HEIGHT", height })
-    }
-  }, [showCondensedHeader, headerIsCollapsed])
-
+  // spacing={1} alignItems="stretch"
   return (
     <ThemeProvider theme={theme}>
       <SvgRefContext.Provider value={svgRef}>
         <div id={ROOT_CONTAINER_ID} ref={containerRef}>
-          <Grid container spacing={1} alignItems="stretch">
+          <Grid container>
             {showHeader && (
               <Grid ref={headerGridRef} item sm={12}>
                 <Header />
               </Grid>
             )}
-            <Grid item sm={showAnnotationsOnRight ? 8 : 12}>
+            <Grid item sm={showAnnotationsOnRight ? 8 : 12} sx={10}>
               <div id="oligrapher-graph-container">
                 <Graph />
                 {editorMode && <Editor />}
@@ -129,12 +128,12 @@ export function Root() {
               </div>
             </Grid>
             {showAnnotationsOnRight && (
-              <Grid item sm={4}>
+              <Grid item sm={4} sx={10}>
                 <Annotations />
               </Grid>
             )}
             {showAnnotationsOnBottom && (
-              <Grid item sm={12}>
+              <Grid item sm={12} sx={10}>
                 <CondensedAnnotations />
               </Grid>
             )}

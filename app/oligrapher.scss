@@ -278,6 +278,7 @@ $edge_highlight_color: $oligrapher_blue;
     display: flex;
     flex-direction: column;
     border: 1px solid #ccc;
+    margin-top: 1em;
     @extend %box_shadow;
 
     button {
