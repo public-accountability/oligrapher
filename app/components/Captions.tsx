@@ -37,7 +37,7 @@ export default function Captions() {
   return (
     <g className="captions">
       {captions.map(([id, caption]) => (
-        <Caption2
+        <Caption
           key={id}
           caption={caption}
           currentlyEdited={editMode && id === editedCaptionId}

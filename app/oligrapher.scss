@@ -965,13 +965,6 @@ div.lock {
 /* Captions */
 
 #oligrapher-container #oligrapher-graph-container .oligrapher-caption {
-  /* foreignObject, */
-  /* textarea, */
-  /* div { */
-  /*   box-sizing: border-box; */
-  /*   line-height: 1.2em; */
-  /* } */
-
   foreignObject {
     overflow: visible;
   }
@@ -987,16 +980,17 @@ div.lock {
       margin: 1px
     }
 
-    &.editing:hover {
-      border: 1px solid $oligrapher_blue_dark;
-    }
-
-    &.editor-open {
+    &.editing:focus-within {
       border: 1px dotted $oligrapher_blue_dark;
     }
   }
 
   .caption-text-text {
+    &:focus {
+      outline: 0px solid transparent;
+      background-color: rgba(216, 216, 216, 0.2);
+    }
+
     &.caption-text-highlighted {
       text-shadow: 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00;
     }
@@ -1006,50 +1000,45 @@ div.lock {
     }
   }
 
-  @mixin caption_handle_positioning {
-    padding: 1px;
-    width: 18px;
-    height: 18px;
+  .caption-textbox-editor-menu {
     position: absolute;
-    color: $oligrapher_blue_dark;
+    display: flex;
+    flex-direction: row;
+    gap: 2px;
+    top: 0;
+    right: 0;
+    padding-top: 2px;
+    padding-right: 2px;
+  }
+
+
+  @mixin caption_editor_handle($cursor) {
+    width: 15px;
+    height: 15px;
+    color: $oligrapher_blue;
+
+    &:hover {
+      cursor: $cursor;
+      color: $oligrapher_blue_dark;
+    }
+  }
+
+  .caption-text-open {
+    @include caption_editor_handle(pointer);
   }
 
   .caption-text-move {
-    @include caption_handle_positioning;
-    top: 0;
-    right: 0;
-    // padding: 5px;
-
-    &:hover {
-      cursor: move;
-    }
+    @include caption_editor_handle(move);
   }
 
   .caption-text-resize {
-    @include caption_handle_positioning;
-    bottom: 0;
+    @include caption_editor_handle(nwse-resize);
+    position: absolute;
     right: 0;
-    // padding: 5;
-
-    &:hover {
-      cursor: nwse-resize;
-    }
+    bottom: 0;
+    padding-right: 2px;
+    padding-bottom: 2px;
   }
-
-  /* .edit-caption-textarea { */
-  /*   resize: both; */
-  /*   border: 1px solid $oligrapher_blue; */
-  /*   overflow: hidden; */
-  /* } */
-
-  /* .edit-caption-textarea { */
-  /*   margin: 0; */
-  /*   box-sizing: border-box; */
-  /*   padding: 15px; */
-  /*   background-color: rgba(0, 0, 0, 0); */
-  /* } */
-
-
 }
 
 /* User message */

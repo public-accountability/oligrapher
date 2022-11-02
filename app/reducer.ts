@@ -435,13 +435,24 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("CLICK_CAPTION", (state, action) => {
+    // if (
+    //   !(
+    //     state.display.floatingEditor.type === "caption" &&
+    //     state.display.floatingEditor.id === action.id
+    //   )
+    // ) {
+    //   // clearSelection(state.display)
+    //   FloatingEditor.toggleEditor(state.display, "caption", action.id)
+    // }
+  })
+
+  builder.addCase("TOGGLE_CAPTION_EDITOR", (state, action) => {
     if (
-      !(
-        state.display.floatingEditor.type === "caption" &&
-        state.display.floatingEditor.id === action.id
-      )
+      state.display.floatingEditor.type === "caption" &&
+      state.display.floatingEditor.id === action.id
     ) {
-      // clearSelection(state.display)
+      FloatingEditor.clear(state.display)
+    } else {
       FloatingEditor.toggleEditor(state.display, "caption", action.id)
     }
   })

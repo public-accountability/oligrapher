@@ -1,10 +1,10 @@
 import { noop } from "lodash"
 import React from "react"
-import { useHotkeys } from "react-hotkeys-hook"
 import { useDispatch } from "react-redux"
 import { Caption } from "../graph/caption"
 
 type CaptionTextboxProps = {
+  id: string
   currentlyEdited: boolean
   isEditing: boolean
   caption: Caption
@@ -35,7 +35,7 @@ const CaptionTextBox = React.forwardRef<HTMLDivElement, CaptionTextboxProps>(
     const onBlur = props.currentlyEdited
       ? function (event: React.ChangeEvent) {
           const attributes = { text: event.target.textContent }
-          dispatch({ type: "UPDATE_CAPTION", attributes })
+          dispatch({ type: "UPDATE_CAPTION", id: props.id, attributes })
         }
       : noop
 
@@ -44,6 +44,7 @@ const CaptionTextBox = React.forwardRef<HTMLDivElement, CaptionTextboxProps>(
           if (event.key === "Enter") {
             event.preventDefault()
             ref.current.blur()
+            dispatch({ type: "CLOSE_EDITOR" })
           }
         }
       : noop

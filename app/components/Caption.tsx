@@ -7,8 +7,8 @@ import { editModeSelector, storyModeSelector, svgScaleSelector } from "../util/s
 import CaptionResizer from "./CaptionResizer"
 import DraggableComponent from "./DraggableComponent"
 import { eventHalt } from "../util/helpers"
-import CaptionMover from "./CaptionMover"
 import CaptionTextbox from "./CaptionTextbox"
+import CaptionTextboxEditorMenu from "./CaptionTextboxEditorMenu"
 
 type CaptionProps = {
   caption: Caption
@@ -48,14 +48,9 @@ export default function Caption(props: CaptionProps) {
     props.currentlyEdited ? " editor-open" : ""
   }`
 
-  const onClick = () => {
-    dispatch({ type: "CLICK_CAPTION", id })
-  }
-
-  const onResize: DraggableEventHandler = (event, data) => {
-    eventHalt(event)
-    setWidth(width + data.deltaX)
-    setHeight(height + data.deltaY)
+  const afterMove: DraggableEventHandler = (event, data) => {
+    const deltas = { x: data.x, y: data.y }
+    dispatch({ type: "MOVE_CAPTION", id, deltas })
   }
 
   const afterResize: DraggableEventHandler = (event, _data) => {
@@ -63,9 +58,10 @@ export default function Caption(props: CaptionProps) {
     dispatch({ type: "RESIZE_CAPTION", id, width, height })
   }
 
-  const afterMove: DraggableEventHandler = (event, data) => {
-    const deltas = { x: data.x, y: data.y }
-    dispatch({ type: "MOVE_CAPTION", id, deltas })
+  const onResize: DraggableEventHandler = (event, data) => {
+    eventHalt(event)
+    setWidth(width + data.deltaX)
+    setHeight(height + data.deltaY)
   }
 
   return (
@@ -82,15 +78,11 @@ export default function Caption(props: CaptionProps) {
           height={height + 5}
           width={width + 5}
         >
-          <div
-            xmlns="http://www.w3.org/1999/xhtml"
-            className={divClassName}
-            style={divStyle}
-            onClick={onClick}
-          >
-            {isEditing && <CaptionMover />}
+          <div xmlns="http://www.w3.org/1999/xhtml" className={divClassName} style={divStyle}>
+            {isEditing && <CaptionTextboxEditorMenu id={id} />}
             {isEditing && <CaptionResizer afterResize={afterResize} onResize={onResize} />}
             <CaptionTextbox
+              id={id}
               ref={textboxRef}
               isEditing={isEditing}
               currentlyEdited={props.currentlyEdited}

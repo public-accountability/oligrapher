@@ -66,6 +66,7 @@ export default function CaptionEditor({ id }: CaptionEditorProps) {
       </Box>
 
       <Box>
+        <CaptionEditorSelect
           name="size"
           value={caption.size}
           onChange={createOnChangeHandler("size")}
