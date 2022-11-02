@@ -1,17 +1,10 @@
+import { noop } from "lodash"
 import React from "react"
-import { useSelector } from "react-redux"
+import { useHotkeys } from "react-hotkeys-hook"
+import { useDispatch } from "react-redux"
 import { Caption } from "../graph/caption"
-import { editModeSelector } from "../util/selectors"
 
-export const styleForCaption = (caption: Caption) => {
-  return {
-    fontFamily: caption.font,
-    fontSize: caption.size + "px",
-    fontWeight: caption.weight,
-  }
-}
-
-type CaptionTextboxPropTypes = {
+type CaptionTextboxProps = {
   currentlyEdited: boolean
   isEditing: boolean
   caption: Caption
@@ -20,21 +13,55 @@ type CaptionTextboxPropTypes = {
   width: number
 }
 
-export default function CaptionTextbox(props: CaptionTextboxPropTypes) {
-  const className = `caption-text-text caption-text-${props.status}${
-    props.isEditing ? " editing" : ""
-  }`
-  const style = {
-    fontFamily: props.caption.font,
-    fontSize: props.caption.size + "px",
-    fontWeight: props.caption.weight,
-    height: props.height + "px",
-    width: props.width + "px",
-  }
+// div representing a caption
+// contentEditable=true when editing
+// https://stackoverflow.com/questions/49639144/why-does-react-warn-against-an-contenteditable-component-having-children-managed
+const CaptionTextBox = React.forwardRef<HTMLDivElement, CaptionTextboxProps>(
+  function captionTextBox(props, ref) {
+    const dispatch = useDispatch()
 
-  return (
-    <div className={className} style={style}>
-      {props.caption.text}
-    </div>
-  )
-}
+    const className = `caption-text-text caption-text-${props.status}${
+      props.isEditing ? " editing" : ""
+    }${props.currentlyEdited ? " editor-open" : ""}`
+
+    const style = {
+      fontFamily: props.caption.font,
+      fontSize: props.caption.size + "px",
+      fontWeight: props.caption.weight,
+      height: props.height + "px",
+      width: props.width + "px",
+    }
+
+    const onBlur = props.currentlyEdited
+      ? function (event: React.ChangeEvent) {
+          const attributes = { text: event.target.textContent }
+          dispatch({ type: "UPDATE_CAPTION", attributes })
+        }
+      : noop
+
+    const onKeyDown = props.currentlyEdited
+      ? function (event: React.KeyboardEvent) {
+          if (event.key === "Enter") {
+            event.preventDefault()
+            ref.current.blur()
+          }
+        }
+      : noop
+
+    return (
+      <div
+        ref={ref}
+        className={className}
+        style={style}
+        onBlur={onBlur}
+        onKeyDown={onKeyDown}
+        contentEditable={props.currentlyEdited}
+        suppressContentEditableWarning={true}
+      >
+        {props.caption.text}
+      </div>
+    )
+  }
+)
+
+export default CaptionTextBox

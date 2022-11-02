@@ -78,11 +78,12 @@ export function Root() {
   // prevent backspace form navigating away from page in firefox and possibly other browsers
   useEffect(() => {
     window.addEventListener("keydown", event => {
-      const isBackspace = event.key === "Backspace"
-      const isInput = ["INPUT", "TEXTAREA", "SELECT"].includes(event.target.tagName)
-
-      if (isBackspace && !isInput) {
-        event.preventDefault()
+      if (event.key === "Backspace") {
+        if (!["INPUT", "TEXTAREA", "SELECT"].includes(event.target.tagName)) {
+          if (!event.target.classList.contains("editor-open")) {
+            event.preventDefault()
+          }
+        }
       }
     })
   }, [])

@@ -22,7 +22,6 @@ import {
   addEdge,
   calculateViewBoxFromGraph,
 } from "./graph/graph"
-import Caption from "./graph/caption"
 import { newEdgeFromNodes } from "./graph/edge"
 import { curveSimilarEdges } from "./graph/curve"
 import type { State } from "./util/defaultState"
@@ -379,8 +378,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
 
   builder.addCase("ADD_CAPTION", (state, action) => {
     addCaption(state.graph, action.caption)
-    // Does not work because the caption has not yet rendered
-    // FloatingEditor.toggleEditor(state.display, "caption", action.caption.id)
+    state.display.tool = null
   })
 
   builder.addCase("UPDATE_CAPTION", (state, action) => {
@@ -437,8 +435,15 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("CLICK_CAPTION", (state, action) => {
-    clearSelection(state.display)
-    FloatingEditor.toggleEditor(state.display, "caption", action.id)
+    if (
+      !(
+        state.display.floatingEditor.type === "caption" &&
+        state.display.floatingEditor.id === action.id
+      )
+    ) {
+      // clearSelection(state.display)
+      FloatingEditor.toggleEditor(state.display, "caption", action.id)
+    }
   })
 
   builder.addCase("ZOOM_IN", (state, action) => {

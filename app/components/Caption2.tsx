@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Caption } from "../graph/caption"
 import { DraggableEventHandler } from "react-draggable"
@@ -31,6 +31,8 @@ export default function Caption(props: CaptionProps) {
   const storyMode = useSelector(storyModeSelector)
   const editMode = useSelector(editModeSelector)
 
+  const textboxRef = React.createRef<HTMLDivElement>()
+
   // hide editing controls when in presentation mode or annotation editor is open
   const isEditing = editMode && !storyMode
 
@@ -42,7 +44,9 @@ export default function Caption(props: CaptionProps) {
     height: height + "px",
   }
 
-  const divClassName = `caption-text caption-text-${props.status} ${isEditing ? "editing" : ""}`
+  const divClassName = `caption-text caption-text-${props.status} ${isEditing ? "editing" : ""} ${
+    props.currentlyEdited ? " editor-open" : ""
+  }`
 
   const onClick = () => {
     dispatch({ type: "CLICK_CAPTION", id })
@@ -87,6 +91,7 @@ export default function Caption(props: CaptionProps) {
             {isEditing && <CaptionMover />}
             {isEditing && <CaptionResizer afterResize={afterResize} onResize={onResize} />}
             <CaptionTextbox
+              ref={textboxRef}
               isEditing={isEditing}
               currentlyEdited={props.currentlyEdited}
               caption={props.caption}

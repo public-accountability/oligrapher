@@ -988,6 +988,10 @@ div.lock {
     }
 
     &.editing:hover {
+      border: 1px solid $oligrapher_blue_dark;
+    }
+
+    &.editor-open {
       border: 1px dotted $oligrapher_blue_dark;
     }
   }
