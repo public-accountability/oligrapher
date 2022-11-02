@@ -1,7 +1,6 @@
 import React from "react"
 import { useSelector } from "../util/helpers"
-// import Caption from "./Caption"
-import Caption2 from "./Caption2"
+import Caption from "./Caption"
 import {
   editModeSelector,
   annotationHasHighlightsSelector,

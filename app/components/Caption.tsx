@@ -1,63 +1,105 @@
-import React, { useCallback, useState } from "react"
+import React, { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-
-import DraggableComponent from "./DraggableComponent"
-import CaptionTextbox from "./CaptionTextbox"
-import CaptionEditorTextarea from "./CaptionEditorTextarea"
 import { Caption } from "../graph/caption"
+import { DraggableEventHandler } from "react-draggable"
+import { editModeSelector, storyModeSelector, svgScaleSelector } from "../util/selectors"
 
-type CaptionPropTypes = {
+import CaptionResizer from "./CaptionResizer"
+import DraggableComponent from "./DraggableComponent"
+import { eventHalt } from "../util/helpers"
+import CaptionMover from "./CaptionMover"
+import CaptionTextbox from "./CaptionTextbox"
+
+type CaptionProps = {
   caption: Caption
-  status: "normal" | "highlighted" | "faded"
   currentlyEdited: boolean
+  status: "normal" | "highlighted" | "faded"
 }
 
-export default function Caption({ caption, currentlyEdited, status }: CaptionPropTypes) {
-  const { id, x, y, width, height } = caption
-  const [foreignObjectSize, setForeignObjectSize] = useState({ width, height })
-  const isHighlighting = useSelector(state => state.annotations.isHighlighting)
-
+// <g>
+//    <foreignObject>
+//      <div>
+//        <div.caption-text-move>
+//        <div.caption-text-resize>
+//        <div.caption-text-text>
+export default function Caption(props: CaptionProps) {
+  const id = props.caption.id
+  const scale = useSelector(svgScaleSelector)
   const dispatch = useDispatch()
-  const onClick = useCallback(() => {
-    if (isHighlighting) {
-      dispatch({ type: "SWAP_CAPTION_HIGHLIGHT", id })
-    } else {
-      dispatch({ type: "CLICK_CAPTION", id })
-    }
-  }, [id, isHighlighting])
+  const [width, setWidth] = useState(props.caption.width)
+  const [height, setHeight] = useState(props.caption.height)
+  const storyMode = useSelector(storyModeSelector)
+  const editMode = useSelector(editModeSelector)
 
-  const updateCaption = useCallback(
-    attributes => dispatch({ type: "UPDATE_CAPTION", attributes, id }),
-    [dispatch, id]
-  )
-  const moveCaption = useCallback(
-    deltas => dispatch({ type: "MOVE_CAPTION", deltas, id }),
-    [dispatch, id]
-  )
+  const textboxRef = React.createRef<HTMLDivElement>()
+
+  // hide editing controls when in presentation mode or annotation editor is open
+  const isEditing = editMode && !storyMode
+
+  const divStyle = {
+    fontFamily: props.caption.font,
+    fontSize: props.caption.size + "px",
+    fontWeight: props.caption.weight,
+    width: width + "px",
+    height: height + "px",
+  }
+
+  const divClassName = `caption-text caption-text-${props.status} ${isEditing ? "editing" : ""} ${
+    props.currentlyEdited ? " editor-open" : ""
+  }`
+
+  const onClick = () => {
+    dispatch({ type: "CLICK_CAPTION", id })
+  }
+
+  const onResize: DraggableEventHandler = (event, data) => {
+    eventHalt(event)
+    setWidth(width + data.deltaX)
+    setHeight(height + data.deltaY)
+  }
+
+  const afterResize: DraggableEventHandler = (event, _data) => {
+    eventHalt(event)
+    dispatch({ type: "RESIZE_CAPTION", id, width, height })
+  }
+
+  const afterMove: DraggableEventHandler = (event, data) => {
+    const deltas = { x: data.x, y: data.y }
+    dispatch({ type: "MOVE_CAPTION", id, deltas })
+  }
 
   return (
     <DraggableComponent
-      disabled={currentlyEdited}
-      enableUserSelectHack={currentlyEdited}
-      onStop={moveCaption}
-      onClick={onClick}
-      handle=".oligrapher-caption"
+      disabled={!isEditing}
+      scale={scale}
+      handle=".caption-text-move"
+      onStop={afterMove}
     >
       <g className="oligrapher-caption" id={`caption-${id}`}>
         <foreignObject
-          x={Math.round(x)}
-          y={Math.round(y)}
-          width={foreignObjectSize.width}
-          height={foreignObjectSize.height}
+          x={props.caption.x}
+          y={props.caption.y}
+          height={height + 5}
+          width={width + 5}
         >
-          {currentlyEdited && (
-            <CaptionEditorTextarea
-              caption={caption}
-              updateCaption={updateCaption}
-              setForeignObjectSize={setForeignObjectSize}
+          <div
+            xmlns="http://www.w3.org/1999/xhtml"
+            className={divClassName}
+            style={divStyle}
+            onClick={onClick}
+          >
+            {isEditing && <CaptionMover />}
+            {isEditing && <CaptionResizer afterResize={afterResize} onResize={onResize} />}
+            <CaptionTextbox
+              ref={textboxRef}
+              isEditing={isEditing}
+              currentlyEdited={props.currentlyEdited}
+              caption={props.caption}
+              status={props.status}
+              height={height}
+              width={width}
             />
-          )}
-          {!currentlyEdited && <CaptionTextbox caption={caption} status={status} />}
+          </div>
         </foreignObject>
       </g>
     </DraggableComponent>
