@@ -61,6 +61,11 @@ export const editedCaptionIdSelector = (state: State): string | null => {
     return null
   }
 }
+
+export const svgScaleSelector: Selector<State, number> = state => {
+  return state.display.svgScale
+}
+
 export const svgHeightSelector: Selector<State, number> = state => {
   return state.display.svgHeight
 }

@@ -88,6 +88,7 @@ export type DisplayModesState = { editor: boolean; story: boolean }
 export interface DisplayState {
   zoom: number // transform = `scale(${zoom})`
   viewBox: Viewbox
+  svgScale: number
   svgHeight: number // Height of SVG element
   showHeader: boolean
   showZoomControl: boolean
@@ -185,6 +186,7 @@ const defaultState: State = {
   display: {
     zoom: 1,
     viewBox: { minX: 0, minY: 0, h: 1200, w: 800 },
+    svgScale: 1,
     svgHeight: 400,
     showHeader: true,
     showZoomControl: true,

@@ -1,11 +1,10 @@
-import React, { useContext, useState } from "react"
+import React, { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Caption } from "../graph/caption"
 import { DraggableEventHandler } from "react-draggable"
-import { editModeSelector, storyModeSelector } from "../util/selectors"
+import { editModeSelector, storyModeSelector, svgScaleSelector } from "../util/selectors"
 import { MdOpenWith } from "react-icons/md"
 import CaptionResizer from "./CaptionResizer"
-import ScaleContext from "../util/ScaleContext"
 import DraggableComponent from "./DraggableComponent"
 import { eventHalt } from "../util/helpers"
 
@@ -23,14 +22,14 @@ type CaptionProps = {
 //        <div.caption-text-text>
 export default function Caption(props: CaptionProps) {
   const id = props.caption.id
-
-  const scale = useContext(ScaleContext)
+  const scale = useSelector(svgScaleSelector)
   const dispatch = useDispatch()
   const [width, setWidth] = useState(props.caption.width)
   const [height, setHeight] = useState(props.caption.height)
   const storyMode = useSelector(storyModeSelector)
   const editMode = useSelector(editModeSelector)
 
+  // hide editing controls when in presentation mode or annotation editor is open
   const isEditing = editMode && !storyMode
 
   const divStyle = {

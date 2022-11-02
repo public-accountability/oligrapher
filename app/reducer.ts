@@ -43,10 +43,12 @@ import { updateLock } from "./util/lock"
 import FloatingEditor from "./util/floatingEditor"
 import { swapSelection, clearSelection, selectionCount } from "./util/selection"
 import { getElementForGraphItem, isLittleSisId, omit } from "./util/helpers"
+import { calculateSvgScale } from "./util/dimensions"
 
 const ZOOM_INTERVAL = 1.2
 
 const DISPLAY_ACTIONS = new Set([
+  "SET_SVG_SCALE",
   "SET_SVG_HEIGHT",
   "SET_SVG_ZOOM",
   "SET_VIEWBOX",
@@ -377,7 +379,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
 
   builder.addCase("ADD_CAPTION", (state, action) => {
     addCaption(state.graph, action.caption)
-    // Does not work because the caption is not yet rendered
+    // Does not work because the caption has not yet rendered
     // FloatingEditor.toggleEditor(state.display, "caption", action.caption.id)
   })
 
@@ -612,8 +614,8 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     action => DISPLAY_ACTIONS.has(action.type),
     (state, action) => {
       switch (action.type) {
-        case "SET_SVG_TOP":
-          state.display.svgTop = action.svgTop
+        case "SET_SVG_SCALE":
+          state.display.svgScale = calculateSvgScale(state.display.zoom)
           break
         case "SET_SVG_HEIGHT":
           state.display.svgHeight = action.height

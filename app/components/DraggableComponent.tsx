@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react"
 import Draggable, { DraggableEventHandler, DraggableProps } from "react-draggable"
-import ScaleContext from "../util/ScaleContext"
+import { useSelector } from "react-redux"
+import { svgScaleSelector } from "../util/selectors"
 
 interface DraggableComponentProps extends DraggableProps {
   onClick?: DraggableEventHandler
@@ -10,7 +11,7 @@ interface DraggableComponentProps extends DraggableProps {
 //   - adds another callback, onClick, for click events
 export function DraggableComponent(props: DraggableComponentProps) {
   const [dragStartPos, setDragStartPos] = useState({ x: 0, y: 0 })
-  const scale = useContext(ScaleContext)
+  const scale = useSelector(svgScaleSelector)
 
   const onStart: DraggableEventHandler = (evt, data) => {
     evt.stopPropagation() // see https://github.com/react-grid-layout/react-draggable/issues/11
