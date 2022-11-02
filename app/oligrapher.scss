@@ -972,21 +972,27 @@ div.lock {
   /*   line-height: 1.2em; */
   /* } */
 
+  foreignObject {
+    overflow: visible;
+  }
 
+  // div enclosed by foreignObject
   .caption-text {
     position: relative;
     border: 0;
-    overflow: hidden;
+    // overflow: hidden;
 
     &.editing {
-      border: 1px solid $oligrapher_blue_dark;
-      /* resize: both; */
+      border: 1px solid $oligrapher_blue;
+      margin: 1px
     }
 
     &.editing:hover {
-      border: 1px solid $oligrapher_blue;
+      border: 1px dotted $oligrapher_blue_dark;
     }
+  }
 
+  .caption-text-text {
     &.caption-text-highlighted {
       text-shadow: 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00;
     }
@@ -997,6 +1003,7 @@ div.lock {
   }
 
   @mixin caption_handle_positioning {
+    padding: 1px;
     width: 18px;
     height: 18px;
     position: absolute;
@@ -1007,6 +1014,7 @@ div.lock {
     @include caption_handle_positioning;
     top: 0;
     right: 0;
+    // padding: 5px;
 
     &:hover {
       cursor: move;
@@ -1017,26 +1025,25 @@ div.lock {
     @include caption_handle_positioning;
     bottom: 0;
     right: 0;
+    // padding: 5;
 
     &:hover {
       cursor: nwse-resize;
     }
   }
 
-  .caption-text-text {}
+  /* .edit-caption-textarea { */
+  /*   resize: both; */
+  /*   border: 1px solid $oligrapher_blue; */
+  /*   overflow: hidden; */
+  /* } */
 
-  .edit-caption-textarea {
-    resize: both;
-    border: 1px solid $oligrapher_blue;
-    overflow: hidden;
-  }
-
-  .edit-caption-textarea {
-    margin: 0;
-    box-sizing: border-box;
-    padding: 15px;
-    background-color: rgba(0, 0, 0, 0);
-  }
+  /* .edit-caption-textarea { */
+  /*   margin: 0; */
+  /*   box-sizing: border-box; */
+  /*   padding: 15px; */
+  /*   background-color: rgba(0, 0, 0, 0); */
+  /* } */
 
 
 }

@@ -8,24 +8,33 @@ export const styleForCaption = (caption: Caption) => {
     fontFamily: caption.font,
     fontSize: caption.size + "px",
     fontWeight: caption.weight,
-    height: caption.height + "px",
-    width: caption.width + "px",
   }
 }
 
 type CaptionTextboxPropTypes = {
+  currentlyEdited: boolean
+  isEditing: boolean
   caption: Caption
-  status: string
+  status: "normal" | "highlighted" | "faded"
+  height: number
+  width: number
 }
 
-export default function CaptionTextbox({ caption, status }: CaptionTextboxPropTypes) {
-  const style = styleForCaption(caption)
-  const editMode = useSelector(editModeSelector)
-  const className = `caption-text caption-text-${status}` + (editMode ? " editing" : "")
+export default function CaptionTextbox(props: CaptionTextboxPropTypes) {
+  const className = `caption-text-text caption-text-${props.status}${
+    props.isEditing ? " editing" : ""
+  }`
+  const style = {
+    fontFamily: props.caption.font,
+    fontSize: props.caption.size + "px",
+    fontWeight: props.caption.weight,
+    height: props.height + "px",
+    width: props.width + "px",
+  }
 
   return (
-    <div xmlns="http://www.w3.org/1999/xhtml" className={className} style={style}>
-      {caption.text}
+    <div className={className} style={style}>
+      {props.caption.text}
     </div>
   )
 }

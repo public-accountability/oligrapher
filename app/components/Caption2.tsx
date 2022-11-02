@@ -3,10 +3,12 @@ import { useDispatch, useSelector } from "react-redux"
 import { Caption } from "../graph/caption"
 import { DraggableEventHandler } from "react-draggable"
 import { editModeSelector, storyModeSelector, svgScaleSelector } from "../util/selectors"
-import { MdOpenWith } from "react-icons/md"
+
 import CaptionResizer from "./CaptionResizer"
 import DraggableComponent from "./DraggableComponent"
 import { eventHalt } from "../util/helpers"
+import CaptionMover from "./CaptionMover"
+import CaptionTextbox from "./CaptionTextbox"
 
 type CaptionProps = {
   caption: Caption
@@ -64,17 +66,17 @@ export default function Caption(props: CaptionProps) {
 
   return (
     <DraggableComponent
-      disabled={props.currentlyEdited || !isEditing}
+      disabled={!isEditing}
       scale={scale}
       handle=".caption-text-move"
       onStop={afterMove}
     >
       <g className="oligrapher-caption" id={`caption-${id}`}>
         <foreignObject
-          x={props.caption.x - 1}
-          y={props.caption.y - 1}
-          width={width + 4}
-          height={height + 4}
+          x={props.caption.x}
+          y={props.caption.y}
+          height={height + 5}
+          width={width + 5}
         >
           <div
             xmlns="http://www.w3.org/1999/xhtml"
@@ -82,20 +84,16 @@ export default function Caption(props: CaptionProps) {
             style={divStyle}
             onClick={onClick}
           >
-            {isEditing && (
-              <div className="caption-text-move" onClick={eventHalt}>
-                <MdOpenWith />
-              </div>
-            )}
-            {isEditing && (
-              <CaptionResizer
-                scale={scale}
-                onStart={eventHalt}
-                onStop={afterResize}
-                onDrag={onResize}
-              />
-            )}
-            <div className="caption-text-text">{props.caption.text}</div>
+            {isEditing && <CaptionMover />}
+            {isEditing && <CaptionResizer afterResize={afterResize} onResize={onResize} />}
+            <CaptionTextbox
+              isEditing={isEditing}
+              currentlyEdited={props.currentlyEdited}
+              caption={props.caption}
+              status={props.status}
+              height={height}
+              width={width}
+            />
           </div>
         </foreignObject>
       </g>

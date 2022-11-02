@@ -118,7 +118,7 @@ export function Root() {
                 <Header />
               </Grid>
             )}
-            <Grid item sm={showAnnotationsOnRight ? 8 : 12} sx={10}>
+            <Grid item sm={showAnnotationsOnRight ? 8 : 12}>
               <div id="oligrapher-graph-container">
                 <Graph />
                 {editorMode && <Editor />}
@@ -128,12 +128,12 @@ export function Root() {
               </div>
             </Grid>
             {showAnnotationsOnRight && (
-              <Grid item sm={4} sx={10}>
+              <Grid item sm={4}>
                 <Annotations />
               </Grid>
             )}
             {showAnnotationsOnBottom && (
-              <Grid item sm={12} sx={10}>
+              <Grid item sm={12}>
                 <CondensedAnnotations />
               </Grid>
             )}
