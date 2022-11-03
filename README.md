@@ -127,7 +127,7 @@ The ```id``` of the graph itself is optional, Oligrapher will generate it if not
   - ```arrow:``` Direction of the arrow: ``` 'left', 'right', 'both' or false ```  (default is ```false```)
   - ```dash:``` the kind of dash displayed in edge's line (default is ```null```, a solid line)
   - ```cx:``` x-coordinate of the control point for the edge's quadratic [Bezier curve](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Bezier_Curves), *relative to the midpoint of the straight line between the two nodes* (if not specified, this is computed to display a slight curve)
-  - ```cy:``` y-coordinate of the control point for the edge's quadratic [Bezier curve](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Bezier_Curves), *relative to the midpoint of the straight line between the two nodes* (if not specified, this is computed to display a slight curve)fa
+  - ```cy:``` y-coordinate of the control point for the edge's quadratic [Bezier curve](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Bezier_Curves), *relative to the midpoint of the straight line between the two nodes* (if not specified, this is computed to display a slight curve)
 
 ### Caption Attributes
 - ```id:``` **(required)** an integer or string uniquely identifying the caption
@@ -135,6 +135,9 @@ The ```id``` of the graph itself is optional, Oligrapher will generate it if not
   - ```text:``` **(required)** the caption's text content
   - ```x:``` x-coordinate of the caption's position
   - ```y:``` y-coordinate of the caption's position
+  - ```size:``` caption font-size
+  - ```font:``` caption font-family
+  - ```weight:``` caption font-weight
 
 ### Annotation Attributes
 

@@ -21,7 +21,7 @@ export default function CaptionEditorSelect(props: CaptionEditorSelectProps) {
       id={`caption-editor-select-${props.name}`}
       MenuProps={{ id: "caption-editor-select-menu", transitionDuration: 0 }}
       value={props.value}
-      onChange={props.onChange(props.name)}
+      onChange={props.onChange}
       variant="outlined"
     >
       {props.options.map(({ value, label }) => (
@@ -35,7 +35,7 @@ export default function CaptionEditorSelect(props: CaptionEditorSelectProps) {
 
 interface CaptionEditorSelectProps {
   value: string
-  onChange: (name: string) => () => void
+  onChange: React.ChangeEvent<HTMLSelectElement>
   options: Array<{ value: any; label: any }>
   name: string
 }

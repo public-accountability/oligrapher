@@ -6,6 +6,7 @@ import { Annotation } from "./annotations"
 import { LsMap, urls } from "../datasources/littlesis3"
 import { Selector } from "react-redux"
 import { Viewbox, calculateAnnotationViewBox } from "../graph/graph"
+import { Caption } from "../graph/caption"
 
 export function displayModesSelector(state: State): DisplayModesState {
   return state.display.modes
@@ -54,13 +55,18 @@ export const pannableSelector: Selector<State, boolean> = state => {
   )
 }
 
-export const editedCaptionIdSelector = (state: State): string | null => {
-  if (state.display.floatingEditor.type === "caption") {
-    return state.display.floatingEditor.id
-  } else {
-    return null
-  }
+export const openCaptionSelector = (state: State): string | null => {
+  return state.display.openCaption
 }
+
+export const captionEntriesSelector = (state: State) => {
+  return Object.entries<Caption>(state.graph.captions)
+}
+
+export const svgScaleSelector: Selector<State, number> = state => {
+  return state.display.svgScale
+}
+
 export const svgHeightSelector: Selector<State, number> = state => {
   return state.display.svgHeight
 }

@@ -2,6 +2,8 @@ import merge from "lodash/merge"
 import { nanoid } from "nanoid/non-secure"
 import { svgCoordinatesFromMouseEvent } from "../util/dimensions"
 
+type FontChoice = "Arial" | "Monospace" | "Times New Roman"
+
 export interface CaptionAttributes {
   id?: string
   text?: string
@@ -9,7 +11,7 @@ export interface CaptionAttributes {
   y?: number
   width?: number
   height?: number
-  font?: string
+  font?: FontChoice
   size?: string
   weight?: string
 }
@@ -21,16 +23,16 @@ export interface Caption extends CaptionAttributes {
   y: number
   width: number
   height: number
-  font: string
+  font: FontChoice
   size: string
   weight: string
 }
 
 export const captionDefaults: CaptionAttributes = {
-  width: 200,
-  height: 100,
+  width: 300,
+  height: 200,
   font: "Arial",
-  size: "20",
+  size: "12",
   weight: "400",
 }
 

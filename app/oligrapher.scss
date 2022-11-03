@@ -278,6 +278,7 @@ $edge_highlight_color: $oligrapher_blue;
     display: flex;
     flex-direction: column;
     border: 1px solid #ccc;
+    margin-top: 1em;
     @extend %box_shadow;
 
     button {
@@ -714,23 +715,6 @@ $edge_highlight_color: $oligrapher_blue;
   }
 }
 
-/* Caption Editor */
-
-#oligrapher-container div.oligrapher-caption-editor {
-  width: 230px;
-  max-height: 375px;
-  padding: 10px;
-  box-sizing: border-box;
-
-  select {
-    margin-top: 5px;
-    margin-right: 5px;
-    background-color: white;
-    font-size: 0.8em;
-    border: 1px solid $oligrapher_gray;
-  }
-}
-
 /* Style Nodes */
 
 #oligrapher-container .oligrapher-graph-editor .oligrapher-style-nodes {
@@ -963,81 +947,29 @@ div.lock {
 
 /* Captions */
 
-#oligrapher-container #oligrapher-graph-container .oligrapher-caption {
-  /* foreignObject, */
-  /* textarea, */
-  /* div { */
-  /*   box-sizing: border-box; */
-  /*   line-height: 1.2em; */
-  /* } */
+#oligrapher-container #oligrapher-graph-container g.oligrapher-caption {
+  cursor: pointer;
 
+  &.editing {
+  }
 
-  .caption-text {
-    position: relative;
-    border: 0;
-    overflow: hidden;
+  &.dragging {
+    cursor: grabbing;
+  }
 
-    &.editing {
-      border: 1px solid $oligrapher_blue_dark;
-      /* resize: both; */
-    }
+  &.oligrapher-caption-normal {}
 
-    &.editing:hover {
-      border: 1px solid $oligrapher_blue;
-    }
-
-    &.caption-text-highlighted {
+  &.oligrapher-caption-highlighted {
+    text tspan {
       text-shadow: 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00;
     }
+  }
 
-    &.caption-text-faded {
+  &.oligrapher-caption-faded {
+    text tspan {
       color: #ddd;
     }
   }
-
-  @mixin caption_handle_positioning {
-    width: 18px;
-    height: 18px;
-    position: absolute;
-    color: $oligrapher_blue_dark;
-  }
-
-  .caption-text-move {
-    @include caption_handle_positioning;
-    top: 0;
-    right: 0;
-
-    &:hover {
-      cursor: move;
-    }
-  }
-
-  .caption-text-resize {
-    @include caption_handle_positioning;
-    bottom: 0;
-    right: 0;
-
-    &:hover {
-      cursor: nwse-resize;
-    }
-  }
-
-  .caption-text-text {}
-
-  .edit-caption-textarea {
-    resize: both;
-    border: 1px solid $oligrapher_blue;
-    overflow: hidden;
-  }
-
-  .edit-caption-textarea {
-    margin: 0;
-    box-sizing: border-box;
-    padding: 15px;
-    background-color: rgba(0, 0, 0, 0);
-  }
-
-
 }
 
 /* User message */

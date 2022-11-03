@@ -37,6 +37,8 @@ export default function* rootSaga() {
     watchEditMode(),
     watchLockTakeover(),
     watchLockRelease(),
+    watchZoom(),
+    // setScale(),
     // watchGraphChanges()
     // watchReleaseNode()
   ])
@@ -89,6 +91,33 @@ export function* watchLockRelease() {
 export function* watchExportImage() {
   yield takeLatest("EXPORT_IMAGE_REQUESTED", exportImage)
 }
+
+export function* watchZoom() {
+  yield takeEvery(["RESET_VIEW", "SET_ZOOM", "ZOOM_IN", "ZOOM_OUT"], function* () {
+    yield put({ type: "SET_SVG_SCALE" })
+  })
+}
+
+// export function* setScale() {
+//   yield takeEvery(
+//     [
+//       "TOGGLE_ANNOTATIONS",
+//       "HIDE_ANNOTATIONS",
+//       "SHOW_ANNOTATIONS",
+//       "RESET_VIEW",
+//       "ZOOM_IN",
+//       "ZOOM_OUT",
+//       "SET_ZOOM",
+//       "HIDE_HEADER",
+//       "SHOW_HEADER",
+//       "COLLAPSE_HEADER",
+//       "EXPAND_HEADER",
+//     ],
+//     function* () {
+//       yield put({ type: "SET_SVG_SCALE" })
+//     }
+//   )
+// }
 
 // automatically fetches edges when a node is added from LittleSis
 export function* addNode(action: any): SagaIterator {
