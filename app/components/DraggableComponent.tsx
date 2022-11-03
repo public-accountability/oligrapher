@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useState } from "react"
 import Draggable, { DraggableEventHandler, DraggableProps } from "react-draggable"
 import { useSelector } from "react-redux"
 import { svgScaleSelector } from "../util/selectors"
@@ -7,14 +7,14 @@ interface DraggableComponentProps extends DraggableProps {
   onClick?: DraggableEventHandler
 }
 
-// Wrapper around Draggable from react-draggable which
-//   - adds another callback, onClick, for click events
+// Wrapper around Draggable from react-draggable which adds another callback `onClick`
+// stopPropagation() is called on all events (see https://github.com/react-grid-layout/react-draggable/issues/11)
 export function DraggableComponent(props: DraggableComponentProps) {
   const [dragStartPos, setDragStartPos] = useState({ x: 0, y: 0 })
   const scale = useSelector(svgScaleSelector)
 
   const onStart: DraggableEventHandler = (evt, data) => {
-    evt.stopPropagation() // see https://github.com/react-grid-layout/react-draggable/issues/11
+    evt.stopPropagation()
     setDragStartPos({ x: evt.screenX, y: evt.screenY })
     props.onStart && props.onStart(evt, data)
   }
@@ -24,7 +24,6 @@ export function DraggableComponent(props: DraggableComponentProps) {
     props.onDrag && props.onDrag(evt, data)
   }
 
-  // see https://github.com/react-grid-layout/react-draggable/issues/531
   const onStop: DraggableEventHandler = (evt, data) => {
     evt.stopPropagation()
     const mouseHasBarelyMoved =

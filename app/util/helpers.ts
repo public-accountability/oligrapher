@@ -4,9 +4,10 @@ import isFunction from "lodash/isFunction"
 import toNumber from "lodash/toNumber"
 import ConfirmSave from "../components/ConfirmSave"
 import EmptySave from "../components/EmptySave"
-import { Graph, hasContents } from "../graph/graph"
+import { hasContents } from "../graph/graph"
+import { State } from "./defaultState"
 
-export function classNames(...classes: Array<string | undefined>): string {
+export function classNames(...classes: Array<string | undefined | false>): string {
   return classes.filter(Boolean).join(" ")
 }
 
@@ -72,11 +73,9 @@ export function useSaveMap() {
   const dispatch = useDispatch()
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [emptyOpen, setEmptyOpen] = useState(false)
-  const isSaving = useSelector<StateWithHistory>(
-    state => state.display.saveMapStatus === "REQUESTED"
-  )
-  const version = useSelector<StateWithHistory>(state => state.attributes.version)
-  const isEmpty = useSelector<StateWithHistory>(state => !hasContents(state.graph))
+  const isSaving = useSelector<State>(state => state.display.saveMapStatus === "REQUESTED")
+  const version = useSelector<State>(state => state.attributes.version)
+  const isEmpty = useSelector<State>(state => !hasContents(state.graph))
 
   const saveMap = useCallback(() => {
     if (isEmpty) {

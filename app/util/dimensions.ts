@@ -52,3 +52,8 @@ export function calculateSvgScale(zoom: number): number {
   const scale = (svg.getBoundingClientRect().width / svg.viewBox.baseVal.width) * zoom
   return scale
 }
+
+export function zoomForScale(scale: number): number {
+  const svg = getElementById(SVG_ID)
+  return scale / (svg.getBoundingClientRect().width / svg.viewBox.baseVal.width)
+}

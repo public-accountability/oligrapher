@@ -41,26 +41,10 @@ import { Point, translatePoint } from "./util/geometry"
 import { updateLock } from "./util/lock"
 import FloatingEditor from "./util/floatingEditor"
 import { swapSelection, clearSelection, selectionCount } from "./util/selection"
-import { getElementForGraphItem, isLittleSisId, omit } from "./util/helpers"
-import { calculateSvgScale } from "./util/dimensions"
+import { getElementForGraphItem, isLittleSisId } from "./util/helpers"
+import { calculateSvgScale, zoomForScale } from "./util/dimensions"
 
 const ZOOM_INTERVAL = 1.2
-
-const DISPLAY_ACTIONS = new Set([
-  "SET_SVG_SCALE",
-  "SET_SVG_HEIGHT",
-  "SET_SVG_ZOOM",
-  "SET_VIEWBOX",
-  "COLLAPSE_HEADER",
-  "EXPAND_HEADER",
-  "COLLAPSE_HEADER",
-  "EXPAND_HEADER",
-  "SET_ZOOM",
-  "HIDE_HEADER",
-  "SHOW_HEADER",
-  "HIDE_ZOOM_CONTROL",
-  "SHOW_ZOOM_CONTROL",
-])
 
 const ACTION_TO_MESSAGE = {
   FORCE_LAYOUT_REQUESTED: "Generating force-directed layout...",
@@ -115,8 +99,19 @@ function addToPastHistory(state: State): void {
 // happen if the open editors have stale data
 function closeToolAndFloatingEditor(state: State): void {
   state.display.tool = null
+  state.display.openCaption = null
   state.display.floatingEditor.type = null
   state.display.floatingEditor.id = null
+}
+
+function zoomOutIfMaxScale(state: State) {
+  const maxScale = 3.2
+  const currentScale = calculateSvgScale(state.display.zoom)
+  if (currentScale > maxScale) {
+    const zoom = zoomForScale(maxScale)
+    state.display.zoom = zoom
+    state.display.svgScale = calculateSvgScale(zoom)
+  }
 }
 
 const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
@@ -378,7 +373,6 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
 
   builder.addCase("ADD_CAPTION", (state, action) => {
     addCaption(state.graph, action.caption)
-    state.display.tool = null
   })
 
   builder.addCase("UPDATE_CAPTION", (state, action) => {
@@ -398,8 +392,10 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("REMOVE_CAPTION", (state, action) => {
+    if (state.display.openCaption === action.id) {
+      state.display.openCaption = null
+    }
     delete state.graph.captions[action.id]
-    FloatingEditor.clear(state.display)
   })
 
   builder.addCase("APPLY_FORCE_LAYOUT", (state, action) => {
@@ -416,6 +412,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   builder.addCase("RESET_VIEW", (state, action) => {
     state.display.viewBox = calculateViewBoxFromGraph(state.graph)
     state.display.zoom = 1
+    zoomOutIfMaxScale(state)
   })
 
   builder.addCase("CLICK_EDGE", (state, action) => {
@@ -447,14 +444,20 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("TOGGLE_CAPTION_EDITOR", (state, action) => {
-    if (
-      state.display.floatingEditor.type === "caption" &&
-      state.display.floatingEditor.id === action.id
-    ) {
-      FloatingEditor.clear(state.display)
+    if (state.display.openCaption === action.id) {
+      state.display.openCaption = null
     } else {
-      FloatingEditor.toggleEditor(state.display, "caption", action.id)
+      state.display.openCaption = action.id
     }
+
+    // if (
+    //   state.display.floatingEditor.type === "caption" &&
+    //   state.display.floatingEditor.id === action.id
+    // ) {
+    //   FloatingEditor.clear(state.display)
+    // } else {
+    //   FloatingEditor.toggleEditor(state.display, "caption", action.id)
+    // }
   })
 
   builder.addCase("ZOOM_IN", (state, action) => {
@@ -491,9 +494,15 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
         clearSelection(state.display)
       }
     }
+    if (prevTool === "text") {
+      state.display.openCaption = null
+    }
   })
 
   builder.addCase("CLOSE_TOOL", (state, action) => {
+    if (state.display.tool === "text") {
+      state.display.openCaption = null
+    }
     state.display.tool = null
   })
 
@@ -618,51 +627,54 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     state.display.zoom = clamp(state.display.zoom + action.deltaY * -0.01, 0.25, 10)
   })
 
+  builder.addCase("SET_SVG_SCALE", (state, action) => {
+    state.display.svgScale = calculateSvgScale(state.display.zoom)
+  })
+
+  builder.addCase("ADJUST_SVG_SCALE", (state, action) => {
+    zoomOutIfMaxScale(state)
+  })
+
+  builder.addCase("SET_SVG_HEIGHT", (state, action) => {
+    state.display.svgHeight = action.height
+  })
+
+  builder.addCase("SET_VIEWBOX", (state, action) => {
+    state.display.viewBox = action.viewBox
+  })
+
+  builder.addCase("COLLAPSE_HEADER", (state, action) => {
+    state.display.headerIsCollapsed = true
+  })
+
+  builder.addCase("EXPAND_HEADER", (state, action) => {
+    state.display.headerIsCollapsed = false
+  })
+
+  builder.addCase("SET_ZOOM", (state, action) => {
+    state.display.zoom = action.zoom
+  })
+
+  builder.addCase("HIDE_HEADER", (state, action) => {
+    state.display.showHeader = false
+  })
+
+  builder.addCase("SHOW_HEADER", (state, action) => {
+    state.display.showHeader = true
+  })
+
+  builder.addCase("HIDE_ZOOM_CONTROL", (state, action) => {
+    state.display.showZoomControl = false
+  })
+
+  builder.addCase("SHOW_ZOOM_CONTROL", (state, action) => {
+    state.display.showZoomControl = true
+  })
+
   builder.addMatcher(
     action => MESSAGE_ACTIONS.has(action.type),
     (state, action) => {
       state.display.userMessage = ACTION_TO_MESSAGE[action.type]
-    }
-  )
-
-  // Simple assignment action to state.display
-  builder.addMatcher(
-    action => DISPLAY_ACTIONS.has(action.type),
-    (state, action) => {
-      switch (action.type) {
-        case "SET_SVG_SCALE":
-          state.display.svgScale = calculateSvgScale(state.display.zoom)
-          break
-        case "SET_SVG_HEIGHT":
-          state.display.svgHeight = action.height
-          // state.display.svgSize.height = action.height
-          break
-        case "SET_VIEWBOX":
-          state.display.viewBox = action.viewBox
-          break
-        case "COLLAPSE_HEADER":
-          state.display.headerIsCollapsed = true
-          break
-        case "EXPAND_HEADER":
-          state.display.headerIsCollapsed = false
-          break
-        case "SET_ZOOM":
-          state.display.zoom = action.zoom
-          break
-        case "HIDE_HEADER":
-          state.display.showHeader = false
-          break
-        case "SHOW_HEADER":
-          state.display.showHeader = true
-          break
-        case "HIDE_ZOOM_CONTROL":
-          state.display.showZoomControl = false
-          break
-        case "SHOW_ZOOM_CONTROL":
-          state.display.showZoomControl = true
-          break
-        default:
-      }
     }
   )
 }

@@ -61,6 +61,7 @@ export function Root() {
   const hasUnsavedChanges = useSelector(hasUnsavedChangesSelector)
   const showHeader = useSelector(showHeaderSelector)
   const showZoomControl = useSelector(showZoomControlSelector)
+
   const editorMode = useSelector(editModeSelector)
   const debugMode = useSelector(debugModeSelector)
   const embedMode = useSelector(embedSelector)
@@ -86,6 +87,11 @@ export function Root() {
         }
       }
     })
+  }, [])
+
+  // Reset view after initial render
+  useEffect(() => {
+    dispatch({ type: "RESET_VIEW" })
   }, [])
 
   useEffect(() => {
