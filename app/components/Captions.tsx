@@ -1,13 +1,11 @@
 import React from "react"
 import { useSelector } from "../util/helpers"
-import Caption from "./Caption"
 import {
-  editModeSelector,
   annotationHasHighlightsSelector,
+  captionEntriesSelector,
   highlightedCaptionIdsSelector,
-  editedCaptionIdSelector,
 } from "../util/selectors"
-import { State } from "../util/defaultState"
+import Caption from "./Caption"
 
 type CaptionAppearance = "normal" | "highlighted" | "faded"
 
@@ -28,11 +26,9 @@ function calculateAppearance(
 }
 
 export default function Captions() {
-  const captions = useSelector<State>(state => Object.entries(state.graph.captions))
-  const editedCaptionId = useSelector(editedCaptionIdSelector)
+  const captions = useSelector(captionEntriesSelector)
   const highlightedCaptionIds = useSelector(highlightedCaptionIdsSelector)
   const annotationHasHighlights = useSelector(annotationHasHighlightsSelector)
-  const editMode = useSelector(editModeSelector)
 
   return (
     <g className="captions">
@@ -40,7 +36,6 @@ export default function Captions() {
         <Caption
           key={id}
           caption={caption}
-          currentlyEdited={editMode && id === editedCaptionId}
           status={calculateAppearance(id, highlightedCaptionIds, annotationHasHighlights)}
         />
       ))}

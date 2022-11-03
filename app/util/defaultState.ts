@@ -97,7 +97,9 @@ export interface DisplayState {
   floatingEditor: FloatingEditorType
   draggedNode: string | null
   overNode: string | null
+  overCaption: string | null
   tool: "node" | "text" | "organize" | "settings" | "editors" | "help" | null
+  openCaption: string | null
   saveMapStatus: AsyncStatus
   cloneMapStatus: AsyncStatus
   deleteMapStatus: AsyncStatus
@@ -201,7 +203,9 @@ const defaultState: State = {
     },
     draggedNode: null,
     overNode: null,
+    overCaption: null,
     tool: null,
+    openCaption: null,
     saveMapStatus: null,
     cloneMapStatus: null,
     deleteMapStatus: null,

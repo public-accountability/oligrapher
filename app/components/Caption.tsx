@@ -1,98 +1,94 @@
 import React, { useState } from "react"
+import { classNames, eventHalt } from "../util/helpers"
 import { useDispatch, useSelector } from "react-redux"
 import { Caption } from "../graph/caption"
 import { DraggableEventHandler } from "react-draggable"
 import { editModeSelector, storyModeSelector, svgScaleSelector } from "../util/selectors"
 
-import CaptionResizer from "./CaptionResizer"
 import DraggableComponent from "./DraggableComponent"
-import { eventHalt } from "../util/helpers"
-import CaptionTextbox from "./CaptionTextbox"
-import CaptionTextboxEditorMenu from "./CaptionTextboxEditorMenu"
 
 type CaptionProps = {
   caption: Caption
-  currentlyEdited: boolean
   status: "normal" | "highlighted" | "faded"
 }
 
-// <g>
-//    <foreignObject>
-//      <div>
-//        <div.caption-text-move>
-//        <div.caption-text-resize>
-//        <div.caption-text-text>
+const TSpan: React.FC<React.SVGProps<SVGTSpanElement> & { text: string }> = ({ x, text }) => {
+  return (
+    <tspan x={x} dy="1em">
+      {text}
+    </tspan>
+  )
+}
+
 export default function Caption(props: CaptionProps) {
   const id = props.caption.id
-  const scale = useSelector(svgScaleSelector)
   const dispatch = useDispatch()
-  const [width, setWidth] = useState(props.caption.width)
-  const [height, setHeight] = useState(props.caption.height)
+  const scale = useSelector(svgScaleSelector)
   const storyMode = useSelector(storyModeSelector)
   const editMode = useSelector(editModeSelector)
-
-  const textboxRef = React.createRef<HTMLDivElement>()
-
   // hide editing controls when in presentation mode or annotation editor is open
   const isEditing = editMode && !storyMode
 
-  const divStyle = {
-    fontFamily: props.caption.font,
-    fontSize: props.caption.size + "px",
-    fontWeight: props.caption.weight,
-    width: width + "px",
-    height: height + "px",
+  const [isDragging, setDragging] = useState(false)
+
+  const onMouseEnter = () => {
+    dispatch({ type: "MOUSE_ENTERED_CAPTION", id })
+  }
+  const onMouseLeave = () => {
+    dispatch({ type: "MOUSE_LEFT_CAPTION", id })
   }
 
-  const divClassName = `caption-text caption-text-${props.status} ${isEditing ? "editing" : ""} ${
-    props.currentlyEdited ? " editor-open" : ""
-  }`
+  const onDrag: DraggableEventHandler = () => {
+    setDragging(true)
+  }
 
-  const afterMove: DraggableEventHandler = (event, data) => {
+  const onClick: DraggableEventHandler = event => {
+    event.preventDefault()
+    setDragging(false)
+    dispatch({ type: "CLICK_CAPTION", id })
+  }
+
+  const afterMove: DraggableEventHandler = (_event, data) => {
     const deltas = { x: data.x, y: data.y }
     dispatch({ type: "MOVE_CAPTION", id, deltas })
+    setDragging(false)
   }
 
-  const afterResize: DraggableEventHandler = (event, _data) => {
-    eventHalt(event)
-    dispatch({ type: "RESIZE_CAPTION", id, width, height })
-  }
+  const gClassName = classNames(
+    "oligrapher-caption",
+    `oligrapher-caption-${props.status}`,
+    isEditing ? "editing" : undefined,
+    isDragging ? "dragging" : undefined
+  )
 
-  const onResize: DraggableEventHandler = (event, data) => {
-    eventHalt(event)
-    setWidth(width + data.deltaX)
-    setHeight(height + data.deltaY)
+  const textAttributes = {
+    x: props.caption.x,
+    y: props.caption.y,
+    fontSize: props.caption.size,
+    fontFamily: props.caption.font,
+    fontWeight: props.caption.weight,
   }
 
   return (
     <DraggableComponent
       disabled={!isEditing}
       scale={scale}
-      handle=".caption-text-move"
       onStop={afterMove}
+      onClick={onClick}
+      onDrag={onDrag}
     >
-      <g className="oligrapher-caption" id={`caption-${id}`}>
-        <foreignObject
-          x={props.caption.x}
-          y={props.caption.y}
-          height={height + 5}
-          width={width + 5}
-        >
-          <div xmlns="http://www.w3.org/1999/xhtml" className={divClassName} style={divStyle}>
-            {isEditing && <CaptionTextboxEditorMenu id={id} />}
-            {isEditing && <CaptionResizer afterResize={afterResize} onResize={onResize} />}
-            <CaptionTextbox
-              id={id}
-              ref={textboxRef}
-              isEditing={isEditing}
-              currentlyEdited={props.currentlyEdited}
-              caption={props.caption}
-              status={props.status}
-              height={height}
-              width={width}
-            />
-          </div>
-        </foreignObject>
+      <g
+        className={gClassName}
+        id={`caption-${id}`}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        onMouseMove={e => e.stopPropagation()}
+      >
+        <text {...textAttributes}>
+          {props.caption.text.split("\n").map((t, i) => (
+            <TSpan key={i} x={props.caption.x} text={t} />
+          ))}
+        </text>
       </g>
     </DraggableComponent>
   )

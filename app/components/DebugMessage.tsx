@@ -42,6 +42,7 @@ export default function () {
     "display.viewBox.w",
     "display.viewBox.h",
     "display.overNode",
+    "display.overCaption",
     "display.selection.node",
     "display.selection.edge",
     "display.floatingEditor",

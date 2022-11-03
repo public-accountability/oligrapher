@@ -3,9 +3,10 @@ import { useDispatch } from "react-redux"
 import range from "lodash/range"
 import toString from "lodash/toString"
 import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import TextField from "@mui/material/TextField"
+import Stack from "@mui/material/Stack"
 import { useSelector } from "../util/helpers"
-import EditorHeader from "./EditorHeader"
-import EditorSubmitButtons from "./EditorSubmitButtons"
 import CaptionEditorSelect from "./CaptionEditorSelect"
 import { useHotkeys } from "react-hotkeys-hook"
 
@@ -37,45 +38,52 @@ export default function CaptionEditor({ id }: CaptionEditorProps) {
     }
 
   useHotkeys("escape", () => {
-    dispatch({ type: "CLOSE_EDITOR" })
+    dispatch({ type: "TOGGLE_CAPTION_EDITOR", id })
   })
 
   useHotkeys("del", removeCaption)
 
   return (
     <div className="oligrapher-caption-editor" data-testid="oligrapher-caption-editor">
-      <EditorHeader title="Customize Caption" />
-
-      <Box sx={{ mt: "10px" }}>
-        <CaptionEditorSelect
-          name="font"
-          title="Font"
-          value={caption.font}
-          onChange={createOnChangeHandler("font")}
-          options={OPTIONS.fontFamily}
+      <Box sx={{ mt: 2 }}>
+        <TextField
+          label="Text"
+          multiline
+          rows={4}
+          value={caption.text}
+          onChange={createOnChangeHandler("text")}
+          variant="filled"
         />
       </Box>
 
       <Box>
-        <CaptionEditorSelect
-          name="weight"
-          value={caption.weight}
-          onChange={createOnChangeHandler("weight")}
-          options={OPTIONS.weight}
-        />
+        <Stack spacing={2} sx={{ mr: 1 }}>
+          <CaptionEditorSelect
+            name="font"
+            title="Font"
+            value={caption.font}
+            onChange={createOnChangeHandler("font")}
+            options={OPTIONS.fontFamily}
+          />
+          <CaptionEditorSelect
+            name="weight"
+            value={caption.weight}
+            onChange={createOnChangeHandler("weight")}
+            options={OPTIONS.weight}
+          />
+          <CaptionEditorSelect
+            name="size"
+            value={caption.size}
+            onChange={createOnChangeHandler("size")}
+            options={OPTIONS.fontSize}
+          />
+        </Stack>
       </Box>
 
-      <Box>
-        <CaptionEditorSelect
-          name="size"
-          value={caption.size}
-          onChange={createOnChangeHandler("size")}
-          options={OPTIONS.fontSize}
-        />
-      </Box>
-
-      <Box>
-        <EditorSubmitButtons hideSubmitButton={true} handleDelete={removeCaption} page="main" />
+      <Box sx={{ mt: 2, mb: 1 }}>
+        <Button onClick={removeCaption} variant="contained" color="secondary" size="small">
+          Delete
+        </Button>
       </Box>
     </div>
   )

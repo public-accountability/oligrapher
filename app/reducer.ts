@@ -24,6 +24,7 @@ import {
 } from "./graph/graph"
 import { newEdgeFromNodes } from "./graph/edge"
 import { curveSimilarEdges } from "./graph/curve"
+import Caption, { newCaption } from "./graph/caption"
 import type { State } from "./util/defaultState"
 
 import {
@@ -371,6 +372,14 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     FloatingEditor.clear(state.display)
   })
 
+  builder.addCase("MOUSE_ENTERED_CAPTION", (state, action) => {
+    state.display.overCaption = action.id
+  })
+
+  builder.addCase("MOUSE_LEFT_CAPTION", (state, action) => {
+    state.display.overCaption = null
+  })
+
   builder.addCase("ADD_CAPTION", (state, action) => {
     addCaption(state.graph, action.caption)
   })
@@ -395,6 +404,11 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     if (state.display.openCaption === action.id) {
       state.display.openCaption = null
     }
+
+    if ((state.display.overCaption = action.id)) {
+      state.display.overCaption = null
+    }
+
     delete state.graph.captions[action.id]
   })
 
@@ -432,32 +446,20 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("CLICK_CAPTION", (state, action) => {
-    // if (
-    //   !(
-    //     state.display.floatingEditor.type === "caption" &&
-    //     state.display.floatingEditor.id === action.id
-    //   )
-    // ) {
-    //   // clearSelection(state.display)
-    //   FloatingEditor.toggleEditor(state.display, "caption", action.id)
-    // }
-  })
-
-  builder.addCase("TOGGLE_CAPTION_EDITOR", (state, action) => {
     if (state.display.openCaption === action.id) {
       state.display.openCaption = null
     } else {
-      state.display.openCaption = action.id
+      if (state.display.tool === "text") {
+        state.display.openCaption = action.id
+      }
     }
+  })
 
-    // if (
-    //   state.display.floatingEditor.type === "caption" &&
-    //   state.display.floatingEditor.id === action.id
-    // ) {
-    //   FloatingEditor.clear(state.display)
-    // } else {
-    //   FloatingEditor.toggleEditor(state.display, "caption", action.id)
-    // }
+  builder.addCase("CLICK_BACKGROUND", (state, action) => {
+    if (state.display.tool === "text" && !state.display.overCaption && !state.display.overNode) {
+      const caption = Caption.new({ text: "New Caption", ...action.point })
+      addCaption(state.graph, caption)
+    }
   })
 
   builder.addCase("ZOOM_IN", (state, action) => {

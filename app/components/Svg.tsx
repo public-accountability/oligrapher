@@ -3,7 +3,12 @@ import { useDispatch, useSelector } from "react-redux"
 
 import Caption from "../graph/caption"
 import { xy, Point } from "../util/geometry"
-import { svgRectToViewbox, SVG_ID, viewBoxToString } from "../util/dimensions"
+import {
+  svgCoordinatesFromMouseEvent,
+  svgRectToViewbox,
+  SVG_ID,
+  viewBoxToString,
+} from "../util/dimensions"
 
 import {
   currentViewboxSelector,
@@ -60,8 +65,7 @@ export default function Svg(props: { children: React.ReactNode }) {
     divAttrs.style = { cursor: "crosshair" }
 
     divAttrs.onClick = event => {
-      const caption = Caption.fromEvent(event)
-      dispatch({ type: "ADD_CAPTION", caption })
+      dispatch({ type: "CLICK_BACKGROUND", point: svgCoordinatesFromMouseEvent(event) })
     }
   }
 

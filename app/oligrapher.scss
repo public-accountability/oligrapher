@@ -715,23 +715,6 @@ $edge_highlight_color: $oligrapher_blue;
   }
 }
 
-/* Caption Editor */
-
-#oligrapher-container div.oligrapher-caption-editor {
-  width: 230px;
-  max-height: 375px;
-  padding: 10px;
-  box-sizing: border-box;
-
-  select {
-    margin-top: 5px;
-    margin-right: 5px;
-    background-color: white;
-    font-size: 0.8em;
-    border: 1px solid $oligrapher_gray;
-  }
-}
-
 /* Style Nodes */
 
 #oligrapher-container .oligrapher-graph-editor .oligrapher-style-nodes {
@@ -964,80 +947,28 @@ div.lock {
 
 /* Captions */
 
-#oligrapher-container #oligrapher-graph-container .oligrapher-caption {
-  foreignObject {
-    overflow: visible;
+#oligrapher-container #oligrapher-graph-container g.oligrapher-caption {
+  cursor: pointer;
+
+  &.editing {
   }
 
-  // div enclosed by foreignObject
-  .caption-text {
-    position: relative;
-    border: 0;
-    // overflow: hidden;
-
-    &.editing {
-      border: 1px solid $oligrapher_blue;
-      margin: 1px
-    }
-
-    &.editing:focus-within {
-      border: 1px dotted $oligrapher_blue_dark;
-    }
+  &.dragging {
+    cursor: grabbing;
   }
 
-  .caption-text-text {
-    &:focus {
-      outline: 0px solid transparent;
-      background-color: rgba(216, 216, 216, 0.2);
-    }
+  &.oligrapher-caption-normal {}
 
-    &.caption-text-highlighted {
+  &.oligrapher-caption-highlighted {
+    text tspan {
       text-shadow: 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00, 0 0 5px #ffff00;
     }
+  }
 
-    &.caption-text-faded {
+  &.oligrapher-caption-faded {
+    text tspan {
       color: #ddd;
     }
-  }
-
-  .caption-textbox-editor-menu {
-    position: absolute;
-    display: flex;
-    flex-direction: row;
-    gap: 2px;
-    top: 0;
-    right: 0;
-    padding-top: 2px;
-    padding-right: 2px;
-  }
-
-
-  @mixin caption_editor_handle($cursor) {
-    width: 15px;
-    height: 15px;
-    color: $oligrapher_blue;
-
-    &:hover {
-      cursor: $cursor;
-      color: $oligrapher_blue_dark;
-    }
-  }
-
-  .caption-text-open {
-    @include caption_editor_handle(pointer);
-  }
-
-  .caption-text-move {
-    @include caption_editor_handle(move);
-  }
-
-  .caption-text-resize {
-    @include caption_editor_handle(nwse-resize);
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    padding-right: 2px;
-    padding-bottom: 2px;
   }
 }
 
