@@ -1,6 +1,7 @@
 import { put, select, call, takeEvery, all, takeLatest } from "redux-saga/effects"
 import { SagaIterator } from "redux-saga"
 import cloneDeep from "lodash/cloneDeep"
+import without from "lodash/without"
 
 import { isLittleSisId } from "./util/helpers"
 import {
@@ -15,10 +16,6 @@ import {
 import { paramsForSaveSelector } from "./util/selectors"
 import { forceLayout, calculateViewBoxFromGraph } from "./graph/graph"
 import { downloadSvg } from "./util/imageExport"
-
-// redux-undo places present state at state.present, so we use our own
-// select() to "transparently" make this change to all our saga selectors
-//const select = (selector: Selector<any>) => sagaSelect(convertSelectorForUndo(selector))
 
 const delay = (time: number) => new Promise(resolve => setTimeout(resolve, time))
 const RESET_DELAY = process.env.NODE_ENV === "test" ? 10 : 5000
@@ -236,12 +233,14 @@ export function* doRemoveEditor(action: any): SagaIterator {
 }
 
 export function* interlocks(action: any): SagaIterator {
-  const [node1Id, node2Id] = yield select(state => state.display.selection.node)
-  const nodeIds = yield select(state => Object.keys(state.graph.nodes).filter(isLittleSisId))
+  const selectedNodes = yield select(state => state.display.selection.node.filter(isLittleSisId))
+  const otherNodes = yield select(state =>
+    without(Object.keys(state.graph.nodes).filter(isLittleSisId), selectedNodes)
+  )
 
   try {
-    const { nodes, edges } = yield call(getInterlocks, node1Id, node2Id, nodeIds)
-    yield put({ type: "INTERLOCKS_SUCCESS", node1Id, node2Id, nodes, edges })
+    const { nodes, edges } = yield call(getInterlocks, selectedNodes, otherNodes)
+    yield put({ type: "INTERLOCKS_SUCCESS", nodes, edges })
   } catch (error) {
     yield put({ type: "INTERLOCKS_FAILED" })
   }

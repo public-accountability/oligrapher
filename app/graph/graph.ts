@@ -572,6 +572,8 @@ function buildForceLayout(graph: Graph) {
   // return new Springy.Layout.ForceDirected(gr, stiffness, repulsion, damping, minEnergyThreshold);
 }
 
+export function addInterlocks2(graph: Graph, nodes: Node[], edges: Edge[]) {}
+
 export function addInterlocks(
   graph: Graph,
   node1Id: string,

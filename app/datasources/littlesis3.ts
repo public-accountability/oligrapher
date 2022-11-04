@@ -132,7 +132,7 @@ export function getEdges(entity1Id: string, entity2Ids: string[]): Promise<LsEdg
     .json()
 }
 
-export function getInterlocks(
+export function getInterlocks_legacy(
   entity1Id: string,
   entity2Id: string,
   entityIds: string[]
@@ -143,6 +143,21 @@ export function getInterlocks(
       entity1_id: entity1Id,
       entity2_id: entity2Id,
       entity_ids: entityIds.join(","),
+      num: 10,
+    })
+    .get()
+    .json()
+}
+
+export function getInterlocks(
+  entityIds: string[],
+  otherNodes: string[]
+): Promise<{ nodes: Node[]; edges: Edge[] }> {
+  return wretch
+    .url(urls.getInterlocks())
+    .query({
+      entity_ids: entityIds.join(","),
+      other_ids: otherNOdes.join(","),
       num: 10,
     })
     .get()

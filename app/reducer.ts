@@ -21,6 +21,7 @@ import {
   addInterlocks,
   addEdge,
   calculateViewBoxFromGraph,
+  addInterlocks2,
 } from "./graph/graph"
 import { newEdgeFromNodes } from "./graph/edge"
 import { curveSimilarEdges } from "./graph/curve"
@@ -418,9 +419,10 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("INTERLOCKS_SUCCESS", (state, action) => {
-    addInterlocks(state.graph, action.node1Id, action.node2Id, action.nodes, action.edges)
-    state.display.userMessage =
-      action.nodes.length > 0 ? `Fetched ${action.nodes.length} interlocks` : "No interlocks found"
+    addInterlocks2(state.graph)
+    // addInterlocks(state.graph, action.node1Id, action.node2Id, action.nodes, action.edges)
+    // state.display.userMessage =
+    //   action.nodes.length > 0 ? `Fetched ${action.nodes.length} interlocks` : "No interlocks found"
   })
 
   builder.addCase("RESET_VIEW", (state, action) => {
