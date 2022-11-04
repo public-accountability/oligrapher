@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+    <title>New Map</title>
+    <link rel="stylesheet" href="oligrapher.css">
+    <script src="oligrapher.js"></script>
+    <style>
+     html, body {
+       margin: 0;
+       height: 100%;
+       width: 100%;
+       overflow: hidden;
+     }
+
+     #oligrapher {
+       height: 100%;
+       width: 100%;
+     }
+    </style>
+  </head>
+
+  <body>
+    <div id="oligrapher"></div>
+    <script>
+     const oli = new Oligrapher({
+       attributes: {
+         title: "New Map",
+         user: { id: 1, name: "mapmaker" },
+         owner: { id: 1, name: "mapmaker"  }
+       }
+     })
+    </script>
+  </body>
+</html>
