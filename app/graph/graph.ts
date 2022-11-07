@@ -277,11 +277,7 @@ export function newGraph(attributes: GraphAttributes | undefined): Graph {
   )
 }
 
-export function addNode(
-  graph: Graph,
-  attributes: NodeAttributes,
-  position: Point | undefined | false
-): Graph {
+export function addNode(graph: Graph, attributes: NodeAttributes, position?: Point | false): Graph {
   let node = newNode(attributes)
 
   // skip if already contains node with same id
@@ -570,37 +566,6 @@ function buildForceLayout(graph: Graph) {
   // let minEnergyThreshold = 0.1
 
   // return new Springy.Layout.ForceDirected(gr, stiffness, repulsion, damping, minEnergyThreshold);
-}
-
-export function addInterlocks2(graph: Graph, nodes: Node[], edges: Edge[]) {}
-
-export function addInterlocks(
-  graph: Graph,
-  node1Id: string,
-  node2Id: string,
-  nodes: Node[],
-  edges: Edge[]
-) {
-  const n1 = graph.nodes[node1Id]
-  const n2 = graph.nodes[node2Id]
-  const { x: x1, y: y1 } = n1
-  const { x: x2, y: y2 } = n2
-
-  const midX = (x1 + x2) / 2
-  const midY = (y1 + y2) / 2
-  const angle = Math.atan2(x1 - x2, y2 - y1)
-  const num = Object.keys(nodes).length
-  const spacing = Math.max(50, 200 - num * 10)
-
-  nodes.forEach((node: Node, i: number) => {
-    const x = midX + Math.cos(angle) * ((-(num - 1) * spacing) / 2 + i * spacing)
-    const y = midY + Math.sin(angle) * ((-(num - 1) * spacing) / 2 + i * spacing)
-    addNode(graph, assign(node, { x, y }))
-  })
-
-  addEdgesIfNodes(graph, edges)
-
-  return graph
 }
 
 export function hasContents(graph: Graph): boolean {

@@ -10,6 +10,7 @@ import {
   removeEditor,
   getEdges,
   getInterlocks,
+  getInterlocks2,
   takeoverLock,
   releaseLock,
 } from "./datasources/littlesis3"
@@ -19,6 +20,7 @@ import { downloadSvg } from "./util/imageExport"
 
 const delay = (time: number) => new Promise(resolve => setTimeout(resolve, time))
 const RESET_DELAY = process.env.NODE_ENV === "test" ? 10 : 5000
+export const INTERLOCKS_V2 = false
 
 export default function* rootSaga() {
   yield all([
@@ -234,13 +236,24 @@ export function* doRemoveEditor(action: any): SagaIterator {
 
 export function* interlocks(action: any): SagaIterator {
   const selectedNodes = yield select(state => state.display.selection.node.filter(isLittleSisId))
+
   const otherNodes = yield select(state =>
     without(Object.keys(state.graph.nodes).filter(isLittleSisId), selectedNodes)
   )
 
   try {
-    const { nodes, edges } = yield call(getInterlocks, selectedNodes, otherNodes)
-    yield put({ type: "INTERLOCKS_SUCCESS", nodes, edges })
+    if (INTERLOCKS_V2) {
+      const { nodes, edges } = yield call(getInterlocks2, selectedNodes, otherNodes)
+      yield put({ type: "INTERLOCKS_SUCCESS_2", selectedNodes, nodes, edges })
+    } else {
+      const { nodes, edges } = yield call(
+        getInterlocks,
+        selectedNodes[0],
+        selectedNodes[1],
+        otherNodes
+      )
+      yield put({ type: "INTERLOCKS_SUCCESS", selectedNodes, nodes, edges })
+    }
   } catch (error) {
     yield put({ type: "INTERLOCKS_FAILED" })
   }
