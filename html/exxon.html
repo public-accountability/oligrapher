@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+    <title>Oligrapher - Exxon Graph</title>
+    <link rel="stylesheet" href="oligrapher.css">
+    <script src="oligrapher.js"></script>
+    <style>
+     html, body {
+       margin: 0;
+       height: 100%;
+       width: 100%;
+     }
+
+     #oligrapher {
+       height: 100%;
+       width: 100%;
+     }
+    </style>
+  </head>
+
+  <body>
+    <div id="oligrapher"></div>
+    <script>
+
+     const configuration = {
+       "graph": {
+         "nodes": {
+           "2": {
+             "name": "ExxonMobil",
+             "x": -8.241662418141118,
+             "y": -34.25727844238282,
+             "scale": 1,
+             "color": "#ccc",
+             "edgeIds": [],
+             "id": "2",
+             "description": "Oil and gas exploration, production, and marketing",
+             "image": "https://littlesis.org/images/profile/74/74554da5d54555b99dd37cf3f7b79f55.png",
+             "url": "https://littlesis.org/org/2-ExxonMobil"
+           },
+           "1045": {
+             "name": "Rex Tillerson",
+             "x": 252.52640648802668,
+             "y": -32.030183571227255,
+             "scale": 1,
+             "color": "#ccc",
+             "edgeIds": [],
+             "id": "1045",
+             "description": "former Secretary of State. former Chairman and CEO of Exxon Mobil. former Boy Scouts president.",
+             "image": "https://littlesis.org/images/profile/0a/0ac271651b9ce34b675d27b41d923ecb.jpg",
+             "url": "https://littlesis.org/person/1045-Rex_Tillerson"
+           }
+         },
+         "edges": {},
+         "captions": {}
+       },
+       "annotations": {
+         "currentIndex": 0,
+         "list": [],
+         "sources": null
+       },
+       "settings": {
+         "embed": false,
+         "logActions": true,
+         "logoUrl": "https://littlesis.org/assets/lilsis-logo-trans-200-74169fd94db9637c31388ad2060b48720f94450b40c45c23a3889cf480f02c52.png",
+       },
+       "attributes": {
+         "id": 8140,
+         "title": "test map",
+         "subtitle": null,
+         "date": "November 01, 2021",
+         "owner": {
+           "id": 1,
+           "name": "exampleuser",
+         },
+         "user": {
+           "id": 1,
+           "name": "exampleuser",
+         },
+         "settings": {
+           "private": true,
+           "clone": false,
+           "list_sources": false,
+           "defaultStoryMode": true,
+           "defaultExploreMode": false,
+           "allowPanning": true,
+           "edgeDraggingWhenPresenting": false,
+           "nodeDraggingWhenPresenting": false,
+           "storyModeOnly": false,
+           "exploreModeOnly": false,
+           "automaticallyAddEdges": true,
+           "scrollToZoom": false,
+           "useClassicAddConnections": false,
+           "debug": true,
+           "showControlpoint": false
+         },
+         "editors": [],
+         "lock": {
+           "locked": false
+         }
+       }
+     }
+
+
+
+     const oli = new Oligrapher(configuration)
+    </script>
+  </body>
+</html>

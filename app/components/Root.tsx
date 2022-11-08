@@ -1,5 +1,6 @@
 import React, { useRef, useLayoutEffect, useEffect, useCallback } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import useResizeObserver from "@react-hook/resize-observer"
 import { ThemeProvider, useTheme } from "@mui/material/styles"
 import useMediaQuery from "@mui/material/useMediaQuery"
 import Grid from "@mui/material/Unstable_Grid2"
@@ -26,6 +27,8 @@ import {
   debugModeSelector,
   embedSelector,
 } from "../util/selectors"
+import { getElementById } from "../util/helpers"
+import { calculateSvgHeight } from "../util/dimensions"
 
 export const ROOT_CONTAINER_ID = "oligrapher-container"
 
@@ -61,20 +64,21 @@ export function Root() {
   const hasUnsavedChanges = useSelector(hasUnsavedChangesSelector)
   const showHeader = useSelector(showHeaderSelector)
   const showZoomControl = useSelector(showZoomControlSelector)
-
   const editorMode = useSelector(editModeSelector)
   const debugMode = useSelector(debugModeSelector)
-  const embedMode = useSelector(embedSelector)
-  const headerIsCollapsed = useSelector(headerIsCollapsedSelector)
   const showFloatingEditors = useSelector(showFloatingEditorsSelector)
 
   const showAnnotationsOnRight = showAnnotations && !smallScreen
   const showAnnotationsOnBottom = showAnnotations && smallScreen
-  const showCondensedHeader = showHeader && (embedMode || (!editorMode && !smallScreen))
 
   const svgRef = React.useRef(null)
   const containerRef = React.useRef(null)
-  const headerGridRef = React.useRef(null)
+
+  // Set svg height and scale when resized
+  useResizeObserver(containerRef, _entry => {
+    dispatch({ type: "SET_SVG_HEIGHT" })
+    dispatch({ type: "SET_SVG_SCALE" })
+  })
 
   // prevent backspace form navigating away from page in firefox and possibly other browsers
   useEffect(() => {
@@ -89,18 +93,14 @@ export function Root() {
     })
   }, [])
 
-  // Reset view after initial render
+  // Reset view once after page is loaded
   useEffect(() => {
     dispatch({ type: "RESET_VIEW" })
   }, [])
 
+  // Set svg height and scale whenever root is re-rendered
   useEffect(() => {
-    // Set SVG Height to fill container to bottom
-    if (headerGridRef.current && containerRef.current) {
-      let height = containerRef.current.clientHeight - headerGridRef.current.clientHeight - 1
-      dispatch({ type: "SET_SVG_HEIGHT", height })
-    }
-    // Set Scale
+    dispatch({ type: "SET_SVG_HEIGHT" })
     dispatch({ type: "SET_SVG_SCALE" })
   })
 
@@ -114,37 +114,36 @@ export function Root() {
     }
   }, [hasUnsavedChanges])
 
-  // spacing={1} alignItems="stretch"
   return (
     <ThemeProvider theme={theme}>
       <SvgRefContext.Provider value={svgRef}>
         <div id={ROOT_CONTAINER_ID} ref={containerRef}>
-          <Grid container>
-            {showHeader && (
-              <Grid ref={headerGridRef} item sm={12}>
-                <Header />
+          {showHeader && <Header />}
+          <div style={{ flex: 1 }}>
+            <Grid container style={{ height: "100%" }}>
+              <Grid sm={showAnnotationsOnRight ? 8 : 12}>
+                <div id="oligrapher-graph-container">
+                  <Graph />
+                  {editorMode && <Editor />}
+                  {showZoomControl && <ZoomControl />}
+                  {showFloatingEditors && <FloatingEditors />}
+                  <UserMessage />
+                </div>
               </Grid>
-            )}
-            <Grid item sm={showAnnotationsOnRight ? 8 : 12}>
-              <div id="oligrapher-graph-container">
-                <Graph />
-                {editorMode && <Editor />}
-                {showZoomControl && <ZoomControl />}
-                {showFloatingEditors && <FloatingEditors />}
-                <UserMessage />
-              </div>
+              {showAnnotationsOnRight && (
+                <Grid sm={4}>
+                  <Annotations />
+                </Grid>
+              )}
             </Grid>
-            {showAnnotationsOnRight && (
-              <Grid item sm={4}>
-                <Annotations />
-              </Grid>
-            )}
-            {showAnnotationsOnBottom && (
-              <Grid item sm={12}>
-                <CondensedAnnotations />
-              </Grid>
-            )}
-          </Grid>
+          </div>
+
+          {showAnnotationsOnBottom && (
+            <div style={{ flex: 1 }}>
+              <CondensedAnnotations />
+            </div>
+          )}
+
           {debugMode && <DebugMessage />}
         </div>
       </SvgRefContext.Provider>

@@ -1,9 +1,9 @@
 import React, { useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
+import { IoIosLink } from "react-icons/io"
 
 import EditorHeader from "./EditorHeader"
 import SizePicker from "./SizePicker"
-import EditorHotKeys from "./EditorHotKeys"
 import NodeEditorImage from "./NodeEditorImage"
 import NodeEditorMain from "./NodeEditorMain"
 import NodeEditorColor from "./NodeEditorColor"
@@ -13,8 +13,7 @@ import { Node as NodeType } from "../graph/node"
 import NodeEditorSwitcher from "./NodeEditorSwitcher"
 import Button from "@mui/material/Button"
 import { isLittleSisId } from "../util/helpers"
-
-import { IoIosLink } from "react-icons/io"
+import useEditorHotkeys from "../util/useEditorHotkeys"
 
 export type NodeEditorPages = "main" | "color" | "size" | "image"
 
@@ -36,46 +35,46 @@ export default function NodeEditor({ id }: { id: string }) {
 
   const isLsNode = isLittleSisId(id)
 
-  return (
-    <EditorHotKeys remove={removeNode}>
-      <div className="oligrapher-node-editor">
-        <EditorHeader title="Customize Node">
-          {isLsNode && (
-            <div title={`LittleSis Entity ID: ${id}`} className="node-littlesis-link">
-              <IoIosLink />
-            </div>
-          )}
-        </EditorHeader>
+  useEditorHotkeys(removeNode)
 
-        <NodeEditorSwitcher currentPage={page} setPage={setPage} />
-        <main>
-          {page === "main" && (
-            <NodeEditorMain
-              node={node}
-              updateNode={updateNode}
-              openAddConnections={openAddConnections}
-            />
-          )}
-          {page === "color" && (
-            <NodeEditorColor color={node.color} onChange={handleColorChange} colors={colors} />
-          )}
-          {page === "size" && <SizePicker scale={node.scale} onChange={handleScaleChange} />}
-          {page === "image" && <NodeEditorImage id={id} image={node.image} />}
-        </main>
-        <footer>
-          {page === "main" && (
-            <Button
-              onClick={removeNode}
-              variant="contained"
-              color="secondary"
-              size="small"
-              disableElevation={true}
-            >
-              Delete
-            </Button>
-          )}
-        </footer>
-      </div>
-    </EditorHotKeys>
+  return (
+    <div className="oligrapher-node-editor">
+      <EditorHeader title="Customize Node">
+        {isLsNode && (
+          <div title={`LittleSis Entity ID: ${id}`} className="node-littlesis-link">
+            <IoIosLink />
+          </div>
+        )}
+      </EditorHeader>
+
+      <NodeEditorSwitcher currentPage={page} setPage={setPage} />
+      <main>
+        {page === "main" && (
+          <NodeEditorMain
+            node={node}
+            updateNode={updateNode}
+            openAddConnections={openAddConnections}
+          />
+        )}
+        {page === "color" && (
+          <NodeEditorColor color={node.color} onChange={handleColorChange} colors={colors} />
+        )}
+        {page === "size" && <SizePicker scale={node.scale} onChange={handleScaleChange} />}
+        {page === "image" && <NodeEditorImage id={id} image={node.image} />}
+      </main>
+      <footer>
+        {page === "main" && (
+          <Button
+            onClick={removeNode}
+            variant="contained"
+            color="secondary"
+            size="small"
+            disableElevation={true}
+          >
+            Delete
+          </Button>
+        )}
+      </footer>
+    </div>
   )
 }
