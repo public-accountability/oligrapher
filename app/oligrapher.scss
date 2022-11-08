@@ -673,10 +673,6 @@ $edge_highlight_color: $oligrapher_blue;
   @extend %floating_editor_box;
   width: 292px;
 
-  form input {
-    width: 92%;
-  }
-
   .edit-edge-style {
       display: flex;
       align-items: flex-start;

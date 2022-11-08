@@ -29,8 +29,9 @@ export default function EdgeEditor({ id }: { id: string }) {
       <EditorHeader title="Customize Edge" />
       <Box sx={{ m: "5px", mb: "25px" }}>
         <Input
+          style={{ width: "100%" }}
           type="text"
-          placeholder="label"
+          placeholder="Label"
           value={edge?.label}
           onChange={event => updateEdge({ label: event.target.value })}
         />
@@ -38,7 +39,7 @@ export default function EdgeEditor({ id }: { id: string }) {
       <Box>
         <EditEdgeStyle edge={edge} nodes={nodes} updateEdge={updateEdge} />
       </Box>
-      <Box sx={{ width: 200, ml: "5px" }}>
+      <Box sx={{ m: "5px", mr: "55px" }}>
         <Typography id="edge-scale-slider-label" gutterBottom>
           Scale <em>{edge.scale}x</em>
         </Typography>
