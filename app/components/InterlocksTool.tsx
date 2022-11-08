@@ -18,8 +18,11 @@ export default function InterlocksTool() {
       <div className="oligrapher-interlocks">
         <p>Select two nodes that were imported from LittleSis to fetch their interlocks.</p>
         <p>
-          If a node was imported from LittleSis, you'll see a <IoIosLink /> icon at the bottom of
-          the form when editing it.
+          If a node was imported from LittleSis, you'll see a <IoIosLink /> icon at the top of the
+          form when editing it.
+        </p>
+        <p>
+          LittleSis Nodes Selected: <code>{lsNodes.length}</code>
         </p>
         <Button
           disabled={!twoLsNodes}

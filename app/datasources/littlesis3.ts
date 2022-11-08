@@ -16,6 +16,7 @@ export const urls = {
   findConnections: () => `${API_URL}/oligrapher/find_connections`,
   getEdges: () => `${API_URL}/oligrapher/get_edges`,
   getInterlocks: () => `${API_URL}/oligrapher/get_interlocks`,
+  getInterlocks2: () => `${API_URL}/oligrapher/get_interlocks2`,
   // Uses our regular api
   getRelationship: (id: string) => `${API_URL}/api/relationships/${id}`,
   // Uses jsserver
@@ -143,6 +144,21 @@ export function getInterlocks(
       entity1_id: entity1Id,
       entity2_id: entity2Id,
       entity_ids: entityIds.join(","),
+      num: 10,
+    })
+    .get()
+    .json()
+}
+
+export function getInterlocks2(
+  entityIds: string[],
+  otherNodes: string[]
+): Promise<{ nodes: Node[]; edges: Edge[] }> {
+  return wretch
+    .url(urls.getInterlocks2())
+    .query({
+      entity_ids: entityIds.join(","),
+      other_ids: otherNodes.join(","),
       num: 10,
     })
     .get()
