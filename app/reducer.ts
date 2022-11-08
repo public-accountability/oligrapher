@@ -439,6 +439,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   builder.addCase("RESET_VIEW", (state, action) => {
     state.display.viewBox = calculateViewBoxFromGraph(state.graph)
     state.display.zoom = 1
+    state.display.svgScale = calculateSvgScale(state.display.zoom)
     zoomOutIfMaxScale(state)
   })
 
