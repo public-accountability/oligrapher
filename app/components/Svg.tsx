@@ -38,16 +38,16 @@ export default function Svg(props: { children: React.ReactNode }) {
   const [startPosition, setStartPosition] = useState<Point>({ x: 0, y: 0 })
 
   const svgAttrs: React.SVGProps<SVGSVGElement> = {
-    height: svgHeight,
+    height: "99%",
     width: "100%",
-    viewBox: viewBoxToString(viewBox),
     preserveAspectRatio: "xMidYMid",
+    viewBox: viewBoxToString(viewBox),
     xmlns: "http://www.w3.org/2000/svg",
     id: SVG_ID,
   }
 
   const divAttrs: React.HTMLProps<HTMLDivElement> = {
-    style: { height: "100%", width: "100%" },
+    style: { height: svgHeight, width: "100%" },
   }
 
   if (scrollToZoom) {
@@ -58,11 +58,11 @@ export default function Svg(props: { children: React.ReactNode }) {
   }
 
   if (pointerDown) {
-    divAttrs.style = { cursor: "grabbing" }
+    divAttrs.style.cursor = "grabbing"
   }
 
   if (textToolOpen) {
-    divAttrs.style = { cursor: "crosshair" }
+    divAttrs.style.cursor = "crosshair"
 
     divAttrs.onClick = event => {
       dispatch({ type: "CLICK_BACKGROUND", point: svgCoordinatesFromMouseEvent(event) })

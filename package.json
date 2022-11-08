@@ -28,6 +28,7 @@
     "@hello-pangea/dnd": "^16.0.1",
     "@mui/lab": "^5.0.0-alpha.107",
     "@mui/material": "^5.10.13",
+    "@react-hook/resize-observer": "^1.2.6",
     "@reduxjs/toolkit": "^1.9.0",
     "@types/lodash": "^4.14.188",
     "@types/react-redux": "^7.1.24",
@@ -41,10 +42,9 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.5",
-    "react-hotkeys-hook": "^4.0.2",
+    "react-hotkeys-hook": "^4.0.3",
     "react-icons": "^4.6.0",
     "react-redux": "^8.0.5",
-    "react-resize-detector": "^7.1.2",
     "redux": "^4.2.0",
     "redux-logger": "^3.0.6",
     "redux-saga": "^1.2.1",
@@ -72,9 +72,15 @@
     "whatwg-fetch": "^3.6.2"
   },
   "jest": {
-    "testMatch": ["**/test/**/*.test.[jt]s?(x)"],
-    "transformIgnorePatterns": ["node_modules/(?!(p-limit|yocto-queue|nanoid)/)"],
+    "testMatch": [
+      "**/test/**/*.test.[jt]s?(x)"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(p-limit|yocto-queue|nanoid)/)"
+    ],
     "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": ["./jest.setup.js"]
+    "setupFilesAfterEnv": [
+      "./jest.setup.js"
+    ]
   }
 }

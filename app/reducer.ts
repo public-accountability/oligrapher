@@ -44,7 +44,7 @@ import { updateLock } from "./util/lock"
 import FloatingEditor from "./util/floatingEditor"
 import { swapSelection, clearSelection, selectionCount } from "./util/selection"
 import { getElementForGraphItem, isLittleSisId } from "./util/helpers"
-import { calculateSvgScale, zoomForScale } from "./util/dimensions"
+import { calculateSvgHeight, calculateSvgScale, zoomForScale } from "./util/dimensions"
 
 const ZOOM_INTERVAL = 1.2
 
@@ -472,6 +472,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     if (state.display.tool === "text" && !state.display.overCaption && !state.display.overNode) {
       const caption = Caption.new({ text: "New Caption", ...action.point })
       addCaption(state.graph, caption)
+      state.display.openCaption = caption.id
     }
   })
 
@@ -651,7 +652,12 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("SET_SVG_HEIGHT", (state, action) => {
+    state.display.svgHeight = calculateSvgHeight()
+  })
+
+  builder.addCase("SET_SVG_DIMENSIONS", (state, action) => {
     state.display.svgHeight = action.height
+    // state.display.svgWidth = action.width
   })
 
   builder.addCase("SET_VIEWBOX", (state, action) => {
