@@ -479,10 +479,12 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
 
   builder.addCase("ZOOM_IN", (state, action) => {
     state.display.zoom = state.display.zoom * (action.interval || ZOOM_INTERVAL)
+    state.display.svgScale = calculateSvgScale(state.display.zoom)
   })
 
   builder.addCase("ZOOM_OUT", (state, action) => {
     state.display.zoom = state.display.zoom / (action.interval || ZOOM_INTERVAL)
+    state.display.svgScale = calculateSvgScale(state.display.zoom)
   })
 
   builder.addCase("TOGGLE_ANNOTATIONS", (state, action) => {
@@ -642,6 +644,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   // https://developer.mozilla.org/en-US/docs/Web/API/Element/wheel_event
   builder.addCase("SET_ZOOM_FROM_SCROLL", (state, action) => {
     state.display.zoom = clamp(state.display.zoom + action.deltaY * -0.01, 0.25, 10)
+    state.display.svgScale = calculateSvgScale(state.display.zoom)
   })
 
   builder.addCase("SET_SVG_SCALE", (state, action) => {
@@ -675,6 +678,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
 
   builder.addCase("SET_ZOOM", (state, action) => {
     state.display.zoom = action.zoom
+    state.display.svgScale = calculateSvgScale(state.display.zoom)
   })
 
   builder.addCase("HIDE_HEADER", (state, action) => {
