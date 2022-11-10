@@ -227,6 +227,8 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("CLICK_NODE", (state, action) => {
+    // Remove history entry from DRAG_NODE_STOP
+    state.history.past.pop()
     // Because CLICK_NODE is triggered instead of MOVE_NODE by DraggableComponent
     // and can happen after small (< 5) movement we still need call this function
     moveNodeAndEdges(state, action.id, action.deltas || { x: 0, y: 0 })
@@ -289,6 +291,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("DRAG_NODE_START", (state, action) => {
+    addToPastHistory(state)
     state.display.draggedNode = action.id
   })
 
@@ -307,7 +310,6 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("MOVE_NODE_OR_ADD_EDGE_FROM_DRAG", (state, action) => {
-    addToPastHistory(state)
     // When dragging over another node create a new edge
     if (state.display.overNode && state.display.overNode !== action.id) {
       const node1 = state.graph.nodes[action.id]
