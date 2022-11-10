@@ -49,8 +49,14 @@ export function svgRectToViewbox(rect: SVGRect): Viewbox {
 
 export function calculateSvgScale(zoom: number): number {
   const svg = getElementById(SVG_ID) as SVGSVGElement
-  const scale = (svg.getBoundingClientRect().width / svg.viewBox.baseVal.width) * zoom
-  return scale
+  const clientRect = svg.getBoundingClientRect()
+  const viewBox = svg.viewBox.baseVal
+
+  if (clientRect.width / clientRect.height > viewBox.width / viewBox.height) {
+    return (clientRect.height / viewBox.height) * zoom
+  } else {
+    return (clientRect.width / viewBox.width) * zoom
+  }
 }
 
 export function zoomForScale(scale: number): number {
