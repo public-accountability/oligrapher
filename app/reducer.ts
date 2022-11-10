@@ -363,14 +363,17 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("ADD_EDGES", (state, action) => {
+    addToPastHistory(state)
     addEdgesIfNodes(state.graph, action.edges)
   })
 
   builder.addCase("UPDATE_EDGE", (state, action) => {
+    addToPastHistory(state)
     updateEdge(state.graph, action.id, action.attributes)
   })
 
   builder.addCase("REMOVE_EDGE", (state, action) => {
+    addToPastHistory(state)
     removeEdge(state.graph, action.id)
     FloatingEditor.clear(state.display)
   })
@@ -384,14 +387,17 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("ADD_CAPTION", (state, action) => {
+    addToPastHistory(state)
     addCaption(state.graph, action.caption)
   })
 
   builder.addCase("UPDATE_CAPTION", (state, action) => {
+    addToPastHistory(state)
     merge(state.graph.captions[action.id], action.attributes)
   })
 
   builder.addCase("MOVE_CAPTION", (state, action) => {
+    addToPastHistory(state)
     merge(
       state.graph.captions[action.id],
       translatePoint(state.graph.captions[action.id], action.deltas)
@@ -404,6 +410,8 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("REMOVE_CAPTION", (state, action) => {
+    addToPastHistory(state)
+
     if (state.display.openCaption === action.id) {
       state.display.openCaption = null
     }
@@ -421,6 +429,10 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("INTERLOCKS_SUCCESS", (state, action) => {
+    if (action.nodes.length > 0) {
+      addToPastHistory(state)
+    }
+
     addInterlocks(
       state.graph,
       action.selectedNodes[0],
@@ -433,6 +445,8 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("INTERLOCKS_SUCCESS_2", (state, action) => {
+    addToPastHistory(state)
+
     addInterlocks2(state.graph, action.selectedNodes, action.nodes, action.edges)
     state.display.userMessage =
       action.nodes.length > 0 ? `Fetched ${action.nodes.length} interlocks` : "No interlocks found"
