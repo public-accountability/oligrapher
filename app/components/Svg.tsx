@@ -11,6 +11,7 @@ import {
 } from "../util/dimensions"
 
 import {
+  allowCreateNewCaptionSelector,
   currentViewboxSelector,
   pannableSelector,
   scrollToZoomSelector,
@@ -31,14 +32,14 @@ export default function Svg(props: { children: React.ReactNode }) {
   const dispatch = useDispatch()
   const viewBox = useSelector(currentViewboxSelector)
   const pannable = useSelector(pannableSelector)
-  const textToolOpen = useSelector(textToolOpenSelector)
+  const allowCreateNewCaption = useSelector(allowCreateNewCaptionSelector)
   const scrollToZoom = useSelector(scrollToZoomSelector)
   const svgHeight = useSelector(svgHeightSelector)
   const [pointerDown, setPointerDown] = useState(false)
   const [startPosition, setStartPosition] = useState<Point>({ x: 0, y: 0 })
 
   const svgAttrs: React.SVGProps<SVGSVGElement> = {
-    height: "99%",
+    height: "100%",
     width: "100%",
     preserveAspectRatio: "xMidYMid",
     viewBox: viewBoxToString(viewBox),
@@ -61,12 +62,12 @@ export default function Svg(props: { children: React.ReactNode }) {
     divAttrs.style.cursor = "grabbing"
   }
 
-  if (textToolOpen) {
+  if (allowCreateNewCaption) {
     divAttrs.style.cursor = "crosshair"
+  }
 
-    divAttrs.onClick = event => {
-      dispatch({ type: "CLICK_BACKGROUND", point: svgCoordinatesFromMouseEvent(event) })
-    }
+  divAttrs.onClick = event => {
+    dispatch({ type: "CLICK_BACKGROUND", point: svgCoordinatesFromMouseEvent(event) })
   }
 
   // Panning

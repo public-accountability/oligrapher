@@ -25,7 +25,7 @@ import {
 import { addInterlocks, addInterlocks2 } from "./graph/interlocks"
 import { newEdgeFromNodes } from "./graph/edge"
 import { curveSimilarEdges } from "./graph/curve"
-import Caption, { newCaption } from "./graph/caption"
+import Caption from "./graph/caption"
 import type { State } from "./util/defaultState"
 
 import {
@@ -459,6 +459,10 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     }
   })
 
+  builder.addCase("REMOVE_OPEN_CAPTION", (state, action) => {
+    state.display.openCaption = null
+  })
+
   builder.addCase("CLICK_CAPTION", (state, action) => {
     if (state.display.openCaption === action.id) {
       state.display.openCaption = null
@@ -470,7 +474,12 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("CLICK_BACKGROUND", (state, action) => {
-    if (state.display.tool === "text" && !state.display.overCaption && !state.display.overNode) {
+    if (
+      state.display.tool === "text" &&
+      !state.display.openCaption &&
+      !state.display.overCaption &&
+      !state.display.overNode
+    ) {
       const caption = Caption.new({ text: "New Caption", ...action.point })
       addCaption(state.graph, caption)
       state.display.openCaption = caption.id
