@@ -1,14 +1,7 @@
 #!/bin/bash
 
-# npx esbuild \
-#     --bundle \
-#     --outfile=html/oligrapher.js \
-#     --servedir=html \
-#     --sourcemap \
-#     --target=firefox102 \
-#     --define:API_URL='"http://localhost:8081"' \
-#     index.ts
-
+commit=$(git rev-parse HEAD)
+version="$(jq -r '.version' package.json)"
 
 npx esbuild \
     --watch \
@@ -18,4 +11,6 @@ npx esbuild \
     --target=firefox102 \
     --loader:.js=jsx \
     --define:API_URL='"http://127.0.0.1:8081"' \
+    --define:OLIGRAPHER_COMMIT="\"$commit\"" \
+    --define:OLIGRAPHER_VERSION="\"$version\"" \
     index.ts

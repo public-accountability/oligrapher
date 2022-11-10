@@ -46,6 +46,10 @@ export const textToolOpenSelector: Selector<State, boolean> = state => {
   return state.display.tool === "text"
 }
 
+export const allowCreateNewCaptionSelector = (state: State) => {
+  return state.display.tool === "text" && !state.display.openCaption
+}
+
 export const pannableSelector: Selector<State, boolean> = state => {
   return (
     state.attributes.settings.allowPanning &&

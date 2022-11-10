@@ -4,10 +4,7 @@ set -euo pipefail
 mkdir -p build dist
 
 commit=$(git rev-parse HEAD)
-
-printf "\033[93mCompiling build/oligrapher.scss\033[0m\n"
-npx sass app/oligrapher.scss build/oligrapher.css --style=compressed
-npx sass app/oligrapher.scss build/oligrapher-dev.css
+version="$(jq -r '.version' package.json)"
 
 printf "\033[93mCompiling build/oligrapher.js\033[0m\n"
 npx esbuild \
@@ -18,28 +15,18 @@ npx esbuild \
     --loader:.js=jsx \
     --target=firefox91,safari14,chrome104 \
     --define:API_URL='"https://littlesis.org"' \
+    --define:OLIGRAPHER_COMMIT="\"$commit\"" \
+    --define:OLIGRAPHER_VERSION="\"$version\"" \
     index.ts
 
-printf "\033[93mCompiling build/oligrapher-dev.js\033[0m\n"
-npx esbuild \
-    --bundle \
-    --outfile=build/oligrapher-dev.js \
-    --sourcemap \
-    --target=firefox102 \
-    --loader:.js=jsx \
-    --define:API_URL='""' \
-    index.ts
+printf "\033[93mCompiling build/oligrapher.scss\033[0m\n"
+npx sass app/oligrapher.scss build/oligrapher.css --style=compressed
 
 printf "\033[93mMaking copies for \033[94m$commit\033[93m in dist/\033[0m\n"
-
 cp build/oligrapher.css dist/oligrapher-$commit.css
 cp build/oligrapher.css.map dist/oligrapher-$commit.css.map
-cp build/oligrapher-dev.css dist/oligrapher-dev-$commit.css
-cp build/oligrapher-dev.css.map dist/oligrapher-dev-$commit.css.map
 cp build/oligrapher.js dist/oligrapher-$commit.js
 cp build/oligrapher.js.map dist/oligrapher-$commit.js.map
-cp build/oligrapher-dev.js dist/oligrapher-dev-$commit.js
-cp build/oligrapher-dev.js.map dist/oligrapher-dev-$commit.js.map
 
 printf "\033[93mCompressing...\033[0m\n"
 find ./dist -type f -name "*oligrapher-$commit*" ! -name '*.gz' ! -name '*.br' -print0 |

@@ -9,10 +9,12 @@ import { openCaptionSelector } from "../util/selectors"
 export default function TextTool() {
   const openCaption = useSelector(openCaptionSelector)
 
+  const text = openCaption ? "Edit caption" : "Click anywhere to create a new caption"
+
   return (
     <Toolbox title="Add Text">
       <Box>
-        <div>Click anywhere to create a new caption.</div>
+        <div>{text}</div>
       </Box>
       <Box>{openCaption && <CaptionEditor id={openCaption} />}</Box>
     </Toolbox>

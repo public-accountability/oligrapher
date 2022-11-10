@@ -25,7 +25,7 @@ import {
 import { addInterlocks, addInterlocks2 } from "./graph/interlocks"
 import { newEdgeFromNodes } from "./graph/edge"
 import { curveSimilarEdges } from "./graph/curve"
-import Caption, { newCaption } from "./graph/caption"
+import Caption from "./graph/caption"
 import type { State } from "./util/defaultState"
 
 import {
@@ -227,6 +227,8 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("CLICK_NODE", (state, action) => {
+    // Remove history entry from DRAG_NODE_STOP
+    state.history.past.pop()
     // Because CLICK_NODE is triggered instead of MOVE_NODE by DraggableComponent
     // and can happen after small (< 5) movement we still need call this function
     moveNodeAndEdges(state, action.id, action.deltas || { x: 0, y: 0 })
@@ -289,6 +291,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("DRAG_NODE_START", (state, action) => {
+    addToPastHistory(state)
     state.display.draggedNode = action.id
   })
 
@@ -307,7 +310,6 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("MOVE_NODE_OR_ADD_EDGE_FROM_DRAG", (state, action) => {
-    addToPastHistory(state)
     // When dragging over another node create a new edge
     if (state.display.overNode && state.display.overNode !== action.id) {
       const node1 = state.graph.nodes[action.id]
@@ -361,14 +363,17 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("ADD_EDGES", (state, action) => {
+    addToPastHistory(state)
     addEdgesIfNodes(state.graph, action.edges)
   })
 
   builder.addCase("UPDATE_EDGE", (state, action) => {
+    addToPastHistory(state)
     updateEdge(state.graph, action.id, action.attributes)
   })
 
   builder.addCase("REMOVE_EDGE", (state, action) => {
+    addToPastHistory(state)
     removeEdge(state.graph, action.id)
     FloatingEditor.clear(state.display)
   })
@@ -382,14 +387,17 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("ADD_CAPTION", (state, action) => {
+    addToPastHistory(state)
     addCaption(state.graph, action.caption)
   })
 
   builder.addCase("UPDATE_CAPTION", (state, action) => {
+    addToPastHistory(state)
     merge(state.graph.captions[action.id], action.attributes)
   })
 
   builder.addCase("MOVE_CAPTION", (state, action) => {
+    addToPastHistory(state)
     merge(
       state.graph.captions[action.id],
       translatePoint(state.graph.captions[action.id], action.deltas)
@@ -402,6 +410,8 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("REMOVE_CAPTION", (state, action) => {
+    addToPastHistory(state)
+
     if (state.display.openCaption === action.id) {
       state.display.openCaption = null
     }
@@ -419,6 +429,10 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("INTERLOCKS_SUCCESS", (state, action) => {
+    if (action.nodes.length > 0) {
+      addToPastHistory(state)
+    }
+
     addInterlocks(
       state.graph,
       action.selectedNodes[0],
@@ -431,6 +445,8 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("INTERLOCKS_SUCCESS_2", (state, action) => {
+    addToPastHistory(state)
+
     addInterlocks2(state.graph, action.selectedNodes, action.nodes, action.edges)
     state.display.userMessage =
       action.nodes.length > 0 ? `Fetched ${action.nodes.length} interlocks` : "No interlocks found"
@@ -459,6 +475,10 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     }
   })
 
+  builder.addCase("REMOVE_OPEN_CAPTION", (state, action) => {
+    state.display.openCaption = null
+  })
+
   builder.addCase("CLICK_CAPTION", (state, action) => {
     if (state.display.openCaption === action.id) {
       state.display.openCaption = null
@@ -470,7 +490,12 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("CLICK_BACKGROUND", (state, action) => {
-    if (state.display.tool === "text" && !state.display.overCaption && !state.display.overNode) {
+    if (
+      state.display.tool === "text" &&
+      !state.display.openCaption &&
+      !state.display.overCaption &&
+      !state.display.overNode
+    ) {
       const caption = Caption.new({ text: "New Caption", ...action.point })
       addCaption(state.graph, caption)
       state.display.openCaption = caption.id
@@ -479,10 +504,12 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
 
   builder.addCase("ZOOM_IN", (state, action) => {
     state.display.zoom = state.display.zoom * (action.interval || ZOOM_INTERVAL)
+    state.display.svgScale = calculateSvgScale(state.display.zoom)
   })
 
   builder.addCase("ZOOM_OUT", (state, action) => {
     state.display.zoom = state.display.zoom / (action.interval || ZOOM_INTERVAL)
+    state.display.svgScale = calculateSvgScale(state.display.zoom)
   })
 
   builder.addCase("TOGGLE_ANNOTATIONS", (state, action) => {
@@ -642,6 +669,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   // https://developer.mozilla.org/en-US/docs/Web/API/Element/wheel_event
   builder.addCase("SET_ZOOM_FROM_SCROLL", (state, action) => {
     state.display.zoom = clamp(state.display.zoom + action.deltaY * -0.01, 0.25, 10)
+    state.display.svgScale = calculateSvgScale(state.display.zoom)
   })
 
   builder.addCase("SET_SVG_SCALE", (state, action) => {
@@ -675,6 +703,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
 
   builder.addCase("SET_ZOOM", (state, action) => {
     state.display.zoom = action.zoom
+    state.display.svgScale = calculateSvgScale(state.display.zoom)
   })
 
   builder.addCase("HIDE_HEADER", (state, action) => {

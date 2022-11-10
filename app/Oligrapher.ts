@@ -21,6 +21,9 @@ import { getElementForGraphItem } from "./util/helpers"
 
 */
 export default class Oligrapher {
+  static COMMIT = OLIGRAPHER_COMMIT
+  static VERSION = OLIGRAPHER_VERSION
+
   store: EnhancedStore<State>
   element: HTMLElement
 

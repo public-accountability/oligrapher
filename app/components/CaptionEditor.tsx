@@ -31,6 +31,7 @@ export default function CaptionEditor({ id }: CaptionEditorProps) {
   const dispatch = useDispatch()
   const caption = useSelector(state => state.graph.captions[id])
   const removeCaption = () => dispatch({ type: "REMOVE_CAPTION", id })
+  const closeEditor = () => dispatch({ type: "REMOVE_OPEN_CAPTION" })
 
   const createOnChangeHandler =
     (attributeName: string) => (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -81,7 +82,17 @@ export default function CaptionEditor({ id }: CaptionEditorProps) {
       </Box>
 
       <Box sx={{ mt: 2, mb: 1 }}>
-        <Button onClick={removeCaption} variant="contained" color="secondary" size="small">
+        <Button onClick={closeEditor} variant="outlined" color="primary" size="small">
+          Close
+        </Button>
+
+        <Button
+          onClick={removeCaption}
+          variant="contained"
+          color="secondary"
+          size="small"
+          sx={{ float: "right" }}
+        >
           Delete
         </Button>
       </Box>
