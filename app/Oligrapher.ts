@@ -9,7 +9,7 @@ import { urls } from "./datasources/littlesis3"
 import { State } from "./util/defaultState"
 import { graphStats } from "./graph/graph"
 import { getElementForGraphItem } from "./util/helpers"
-
+import consumer from "./util/consumer"
 /*
   Main entry point of Oligrapher.
 
@@ -24,10 +24,19 @@ export default class Oligrapher {
   static COMMIT = OLIGRAPHER_COMMIT
   static VERSION = OLIGRAPHER_VERSION
 
+  configuration: object
   store: EnhancedStore<State>
   element: HTMLElement
+  consumer: any
 
   constructor(configuration = {}) {
+    if (window.Oligrapher.instance) {
+      console.warn("redefining window.Oligrapher.instance")
+    }
+
+    window.Oligrapher.instance = this
+
+    this.configuration = configuration
     this.store = createOligrapherStore(configuration)
 
     const element = document.getElementById(this.store.getState().settings.domId)
@@ -37,20 +46,23 @@ export default class Oligrapher {
     }
 
     this.element = element
-
-    const isEmbedded = this.store.getState().settings.embed
+    this.consumer = consumer
 
     const root = createRoot(this.element)
 
     root.render(React.createElement(Provider, { store: this.store }, React.createElement(Root)))
   }
 
-  graph() {
-    return this.store.getState().graph
+  get state() {
+    return this.store.getState()
   }
 
-  graphStats() {
-    return graphStats(this.graph())
+  get graph() {
+    return this.state.graph
+  }
+
+  get graphStats() {
+    return graphStats(this.graph)
   }
 
   toSvg() {
