@@ -217,11 +217,32 @@ export const highlightedCaptionIdsSelector: Selector<State, string[]> = state =>
   return []
 }
 
-export const enableLockSelector: Selector<State, boolean> = state => {
-  const isOwner = userIsOwnerSelector(state)
-  const { id, editors } = state.attributes
+export const enableActionCableSelector: Selector<State, boolean> = state => {
+  return !!state.attributes.id && userCanEditSelector(state)
+}
 
-  return Boolean(id) && (!isOwner || editors.length > 0)
+export const userHasLockSelector: Selector<State, boolean> = state => {
+  return (
+    state.display.lock.locked &&
+    state.attributes.user &&
+    state.display.lock.user_id === state.attributes.user.id
+  )
+}
+
+export const otherUserHasLockSelector: Selector<State, boolean> = state => {
+  return state.display.lock.locked && state.display.lock.user_id !== state.attributes.user.id
+}
+
+export const lockUsernameSelector: Selector<State, string | null> = state => {
+  if (state.display.lock.locked && state.display.lock.user_id) {
+    if (state.display.lock.user_id === state.attributes.owner.id) {
+      return state.attributes.owner.name
+    } else {
+      return state.attributes.editors.find(e => e.id === state.display.lock.user_id).name
+    }
+  } else {
+    return null
+  }
 }
 
 export const paramsForSaveSelector = (state: State): LsMap => {

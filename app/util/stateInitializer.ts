@@ -8,7 +8,6 @@ import {
   NodeMap,
   EdgeMap,
   CaptionMap,
-  newGraph,
   calculateViewBoxFromGraph,
   updateEdgeFromNodes,
   registerEdgeWithNodes,
@@ -17,7 +16,6 @@ import { Edge, newEdge } from "../graph/edge"
 import { Node, newNode } from "../graph/node"
 import { Caption, captionDefaults } from "../graph/caption"
 import { userCanEditSelector, paramsForSaveSelector } from "./selectors"
-import { transformLockData } from "./lock"
 
 /*
   Edges, Nodes, and Captions used to contain a `display` element.
@@ -89,7 +87,6 @@ function calculateStoryMode(state: any): boolean {
 // Handles object for Oligrapher instance configuration
 //    - Converts legacy oligrapher data
 //    - Performs initial display state calculations,
-//    - FIXME and adds graph history
 export default function stateInitializer(legacyState: any): State {
   let state = merge({}, defaultState, legacyState)
 
@@ -97,16 +94,11 @@ export default function stateInitializer(legacyState: any): State {
 
   state.display.modes.editor = userCanEditSelector(state)
   state.display.viewBox = calculateViewBoxFromGraph(state.graph)
-  // state.display.svgOffset = computeSvgOffset(state.display.viewBox)
   state.display.modes.story = calculateStoryMode(state)
 
-  if (legacyState.attributes?.lock) {
-    state.attributes.lock = transformLockData(legacyState.attributes.lock)
-  }
-
-  // if map has id, it's been saved before, let's keep the data
+  // If map has id, it's been saved before, let's keep the data
   // for comparison against current data when user leaves app
-  if (legacyState.attributes?.id) {
+  if (state.attributes?.id) {
     state.lastSavedData = paramsForSaveSelector(state)
   }
 

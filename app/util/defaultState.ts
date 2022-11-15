@@ -1,6 +1,5 @@
 import { Graph, Viewbox } from "../graph/graph"
 import { Annotation } from "./annotations"
-import { LockState, defaultLockState } from "./lock"
 import { LsMap } from "../datasources/littlesis3"
 
 export interface GraphState extends Graph {
@@ -19,7 +18,12 @@ export interface Editor {
   name: string
   url: string
   id: number
-  pending?: boolean
+  pending: boolean
+}
+
+export interface Lock {
+  locked: boolean
+  user_id: number | null
 }
 
 export interface UserSettings {
@@ -50,7 +54,6 @@ export interface AttributesState {
   owner: User | null
   settings: UserSettings
   editors: Editor[]
-  lock: LockState
   shareUrl: string | null
   bugReportUrl: string | null
   helpUrl: string | null
@@ -105,6 +108,7 @@ export interface DisplayState {
   deleteMapStatus: AsyncStatus
   userMessage: string | null
   selection: Selection
+  lock: Lock
 }
 
 export interface SettingsState {
@@ -176,7 +180,6 @@ const defaultState: State = {
       showControlpoint: false,
     },
     editors: [],
-    lock: defaultLockState,
     shareUrl: null,
     bugReportUrl: "https://littlesis.org/bug_report",
     helpUrl: "https://littlesis.org/help/oligrapher",
@@ -215,6 +218,11 @@ const defaultState: State = {
       edge: [],
       caption: [],
       isSelecting: false,
+    },
+    lock: {
+      locked: false,
+      user_has_lock: false,
+      user_id: null,
     },
   },
 

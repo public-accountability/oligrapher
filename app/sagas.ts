@@ -11,8 +11,6 @@ import {
   getEdges,
   getInterlocks,
   getInterlocks2,
-  takeoverLock,
-  releaseLock,
 } from "./datasources/littlesis3"
 import { paramsForSaveSelector } from "./util/selectors"
 import { forceLayout, calculateViewBoxFromGraph } from "./graph/graph"
@@ -33,9 +31,6 @@ export default function* rootSaga() {
     watchRemoveEditor(),
     watchInterlocks(),
     watchExportImage(),
-    watchEditMode(),
-    watchLockTakeover(),
-    watchLockRelease(),
   ])
 }
 
@@ -69,18 +64,6 @@ export function* watchRemoveEditor() {
 
 export function* watchInterlocks() {
   yield takeEvery(["INTERLOCKS_REQUESTED"], interlocks)
-}
-
-export function* watchEditMode() {
-  yield takeEvery(["SET_EDITOR_MODE"], calculateViewBox)
-}
-
-export function* watchLockTakeover() {
-  yield takeEvery(["LOCK_TAKEOVER_REQUESTED"], doTakeoverLock)
-}
-
-export function* watchLockRelease() {
-  yield takeEvery(["LOCK_RELEASE_REQUESTED"], doReleaseLock)
 }
 
 export function* watchExportImage() {
@@ -134,7 +117,7 @@ export function* save(): SagaIterator {
   yield put({ type: "SAVE_RESET" })
 }
 
-// Attempt to clone map
+// Clone map
 export function* clone(): SagaIterator {
   const id = yield select(state => state.attributes.id)
 
@@ -150,7 +133,7 @@ export function* clone(): SagaIterator {
   yield put({ type: "CLONE_RESET" })
 }
 
-// Attempt to delete map
+// Delete map
 export function* deleteMap(): SagaIterator {
   const id = yield select(state => state.attributes.id)
 
@@ -229,56 +212,6 @@ export function* interlocks(action: any): SagaIterator {
 
   yield call(delay, RESET_DELAY)
   yield put({ type: "INTERLOCKS_RESET" })
-}
-
-export function* calculateViewBox(action: any): SagaIterator {
-  // recalculate only if switching out of editor mode
-  if (action.enabled === false) {
-    const graph = yield select(state => state.graph)
-    const viewBox = calculateViewBoxFromGraph(graph)
-    yield put({ type: "SET_VIEWBOX", viewBox })
-  }
-}
-
-export function* doTakeoverLock(action: any): SagaIterator {
-  const id = yield select(state => state.attributes.id)
-
-  try {
-    const lock = yield call(takeoverLock, id)
-
-    if (!lock.user_has_lock) {
-      throw "Unexpected lock takeover response"
-    }
-
-    // if we fire this action, the RefreshModal will appear superfluously
-    // yield put({ type: 'LOCK_TAKEOVER_SUCCESS', lock })
-    window.location.reload()
-  } catch (error) {
-    yield put({ type: "LOCK_TAKEOVER_FAILED" })
-  }
-
-  yield call(delay, RESET_DELAY)
-  yield put({ type: "LOCK_TAKEOVER_RESET" })
-}
-
-export function* doReleaseLock(action: any): SagaIterator {
-  const id = yield select(state => state.attributes.id)
-
-  try {
-    const lock = yield call(releaseLock, id)
-
-    if (!lock.lock_released) {
-      throw "Unexpected lock release response"
-    }
-
-    yield put({ type: "LOCK_RELEASE_SUCCESS" })
-    yield put({ type: "SET_EDITOR_MODE", enabled: false })
-  } catch (error) {
-    yield put({ type: "LOCK_RELEASE_FAILED" })
-  }
-
-  yield call(delay, RESET_DELAY)
-  yield put({ type: "LOCK_RELEASE_RESET" })
 }
 
 export function* exportImage(action: any): SagaIterator {

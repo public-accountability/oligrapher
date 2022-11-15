@@ -1,0 +1,13 @@
+#!/bin/bash
+
+printf "\033[93mCompiling build/oligrapher-dev.js\033[0m\n"
+npx esbuild \
+    --outfile=build/oligrapher-dev.js \
+    --bundle \
+    --sourcemap \
+    --loader:.js=jsx \
+    --target=firefox102 \
+    --define:API_URL='"http://localhost:8081"' \
+    --define:OLIGRAPHER_COMMIT="\"development\"" \
+    --define:OLIGRAPHER_VERSION="\"0.0.0\"" \
+    index.ts

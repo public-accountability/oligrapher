@@ -10,7 +10,6 @@ import InterlocksTool from "./InterlocksTool"
 import Settings from "./Settings"
 import Editors from "./Editors"
 import Help from "./Help"
-import LockManager from "./LockManager"
 import EditorMenu from "./EditorMenu"
 
 /*
@@ -19,11 +18,9 @@ import EditorMenu from "./EditorMenu"
 export function Editor() {
   const tool = useSelector(state => state.display.tool)
   const className = "oligrapher-graph-editor" + (tool === "text" ? " text-tool" : "")
-  const enableLock = useSelector(enableLockSelector)
 
   return (
     <div className={className} id="oligrapher-graph-editor">
-      {enableLock && <LockManager />}
       <EditorMenu />
       {tool === "node" && <NodeTool />}
       {tool === "text" && <TextTool />}

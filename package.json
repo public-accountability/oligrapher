@@ -5,6 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "build": "bin/build",
+    "build-dev": "bin/build-dev",
     "dev": "bin/dev",
     "release": "bin/release",
     "serve": "http-server -c-1 -p 8000 html",
@@ -29,6 +30,7 @@
     "@hello-pangea/dnd": "^16.0.1",
     "@mui/lab": "^5.0.0-alpha.107",
     "@mui/material": "^5.10.13",
+    "@rails/actioncable": "^7.0.4",
     "@react-hook/resize-observer": "^1.2.6",
     "@reduxjs/toolkit": "^1.9.0",
     "@types/lodash": "^4.14.188",
@@ -73,15 +75,11 @@
     "whatwg-fetch": "^3.6.2"
   },
   "jest": {
-    "testMatch": [
-      "**/test/**/*.test.[jt]s?(x)"
-    ],
+    "testMatch": ["**/test/**/*.test.[jt]s?(x)"],
     "transformIgnorePatterns": [
       "node_modules/(?!(p-limit|yocto-queue|nanoid|react-hotkeys-hook)/)"
     ],
     "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": [
-      "./jest.setup.js"
-    ]
+    "setupFilesAfterEnv": ["./jest.setup.js"]
   }
 }

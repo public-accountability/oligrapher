@@ -40,7 +40,6 @@ import {
 
 import updateSetting from "./util/updateSetting"
 import { Point, translatePoint } from "./util/geometry"
-import { updateLock } from "./util/lock"
 import FloatingEditor from "./util/floatingEditor"
 import { swapSelection, clearSelection, selectionCount } from "./util/selection"
 import { getElementForGraphItem, isLittleSisId } from "./util/helpers"
@@ -60,10 +59,10 @@ const ACTION_TO_MESSAGE = {
   INTERLOCKS_REQUESTED: "Fetching interlocks...",
   INTERLOCKS_FAILED: "Failed to fetch interlocks",
   INTERLOCKS_RESET: null,
-  LOCK_TAKEOVER_REQUESTED: "Taking over map lock...",
-  LOCK_TAKEOVER_SUCCESS: "Took over map lock",
-  LOCK_TAKEOVER_FAILED: "Failed to take over map lock",
-  LOCK_TAKEOVER_RESET: null,
+  // LOCK_TAKEOVER_REQUESTED: "Taking over map lock...",
+  // LOCK_TAKEOVER_SUCCESS: "Took over map lock",
+  // LOCK_TAKEOVER_FAILED: "Failed to take over map lock",
+  // LOCK_TAKEOVER_RESET: null,
   LOCK_RELEASE_REQUESTED: "Releasing map lock...",
   LOCK_RELEASE_SUCCESS: "Released map lock",
   LOCK_RELEASE_FAILED: "Failed to release map lock",
@@ -660,11 +659,10 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("SET_LOCK", (state, action) => {
-    state.attributes.lock = updateLock(state.attributes.lock, action.lock)
-    if (action.lock.editors) {
-      state.attributes.editors = action.lock.editors
-    }
+    state.display.lock = action.lock
   })
+
+  builder.addCase("CHANNEL_SUBSCRIBED", (state, action) => {})
 
   // https://developer.mozilla.org/en-US/docs/Web/API/Element/wheel_event
   builder.addCase("SET_ZOOM_FROM_SCROLL", (state, action) => {

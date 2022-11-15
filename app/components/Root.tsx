@@ -1,7 +1,7 @@
-import React, { useRef, useLayoutEffect, useEffect, useCallback } from "react"
+import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import useResizeObserver from "@react-hook/resize-observer"
-import { ThemeProvider, useTheme } from "@mui/material/styles"
+import { ThemeProvider } from "@mui/material/styles"
 import useMediaQuery from "@mui/material/useMediaQuery"
 import Grid from "@mui/material/Unstable_Grid2"
 import Header from "./Header"
@@ -15,20 +15,17 @@ import Annotations from "./Annotations"
 import CondensedAnnotations from "./CondensedAnnotations"
 import theme from "../util/theme"
 import SvgRefContext from "../util/SvgRefContext"
+import LockManager from "./LockManager"
 
 import {
   showAnnotationsSelector,
   hasUnsavedChangesSelector,
   showHeaderSelector,
   showZoomControlSelector,
-  headerIsCollapsedSelector,
   showFloatingEditorsSelector,
   editModeSelector,
   debugModeSelector,
-  embedSelector,
 } from "../util/selectors"
-import { getElementById } from "../util/helpers"
-import { calculateSvgHeight } from "../util/dimensions"
 
 export const ROOT_CONTAINER_ID = "oligrapher-container"
 
@@ -56,7 +53,7 @@ const handleBeforeunload = (event: BeforeUnloadEvent) => {
 //        <DebugMessage>
 //      Grid-Item
 //         <Annotations> or  <CondensedAnnotations>
-export function Root() {
+export function Root(props: { cable?: any }) {
   const dispatch = useDispatch()
   const smallScreen = useMediaQuery("(max-height:600px)")
 
@@ -145,6 +142,7 @@ export function Root() {
           )}
 
           {debugMode && <DebugMessage />}
+          <LockManager />
         </div>
       </SvgRefContext.Provider>
     </ThemeProvider>

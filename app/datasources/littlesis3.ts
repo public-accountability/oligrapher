@@ -7,7 +7,6 @@ import { Graph } from "../graph/graph"
 import { ArrowType } from "../graph/arrow"
 import { Node } from "../graph/node"
 import { Edge } from "../graph/edge"
-import { LockState } from "../util/lock"
 
 // API_URL is set by the "define" option of esbuild
 export const urls = {
@@ -29,8 +28,6 @@ export const urls = {
   deleteOligrapher: (id: number) => `${API_URL}/oligrapher/${id}`,
   // Locking
   editors: (id: number) => `${API_URL}/oligrapher/${id}/editors`,
-  lock: (id: number) => `${API_URL}/oligrapher/${id}/lock`,
-  releaseLock: (id: number) => `${API_URL}/oligrapher/${id}/release_lock`,
 }
 
 const isInteger = (x: any): boolean => RegExp("^[0-9]+$").test(x.toString())
@@ -234,21 +231,6 @@ export const editors = {
   remove: removeEditor,
 }
 
-export function lock(id: number): Promise<LockState> {
-  validateId(id)
-  return wretch.url(urls.lock(id)).headers(headers()).get().json()
-}
-
-export function takeoverLock(id: number): Promise<LockState> {
-  validateId(id)
-  return wretch.url(urls.lock(id)).headers(headers()).post().json()
-}
-
-export function releaseLock(id: number): Promise<any> {
-  validateId(id)
-  return wretch.url(urls.releaseLock(id)).headers(headers()).post().json()
-}
-
 type DataUrlResult = { dataurl: string }
 
 export function getDataUrl(url: string): Promise<DataUrlResult> {
@@ -265,7 +247,5 @@ export default {
   cloneOligrapher,
   addEditor,
   removeEditor,
-  lock,
-  takeoverLock,
   getDataUrl,
 }

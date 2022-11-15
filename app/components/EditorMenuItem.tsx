@@ -62,7 +62,7 @@ type EditorMenuItemPropTypes = {
   inUse: boolean
 }
 
-export default function EditorMenuItem({ item, inUse, disabled = false }: EditorMenuItemPropTypes) {
+export default function EditorMenuItem({ item, inUse, disabled }: EditorMenuItemPropTypes) {
   const { title, icon } = MENU[item]
   const dispatch = useDispatch()
   const helpUrl = useSelector(state => state.attributes.helpUrl)
