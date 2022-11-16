@@ -109,7 +109,7 @@ export function Edge({ id, currentlyEdited }: EdgeProps) {
     status,
     arrow,
   }
-  const edgeLabelProps = { bezier, width, id, scale, status, arrow, label }
+  const edgeLabelProps = { bezier, width, id, scale, status, arrow, label, url, showLink: editMode }
   const edgeHandleProps = {
     bezier,
     width,
@@ -129,11 +129,7 @@ export function Edge({ id, currentlyEdited }: EdgeProps) {
         <ConditionalLink condition={!editMode} url={url}>
           {highlighted && <EdgeHighlight {...edgeHighlightProps} />}
           <EdgeLine {...edgeLineProps} />
-          {label && (
-            <ConditionalLink condition={editMode} url={url}>
-              <EdgeLabel {...edgeLabelProps} />
-            </ConditionalLink>
-          )}
+          {label && <EdgeLabel {...edgeLabelProps} />}
           <EdgeHandle {...edgeHandleProps} />
         </ConditionalLink>
         {showControlpoint && (isDragging || isHovering) && (
