@@ -4,6 +4,7 @@ import Button from "@mui/material/Button"
 import { IoIosLink } from "react-icons/io"
 
 import Toolbox from "./Toolbox"
+import InterlocksNodeList from "./InterlocksNodeList"
 import { isLittleSisId } from "../util/helpers"
 import { interlocksStateSelector } from "../util/selectors"
 
@@ -31,9 +32,7 @@ export default function InterlocksTool2() {
         >
           Get interlocks
         </Button>
-        <div>
-          {interlocksState.nodes && <pre>{JSON.stringify(interlocksState.nodes, null, 2)}</pre>}
-        </div>
+        {interlocksState.nodes && <InterlocksNodeList nodes={interlocksState.nodes} />}
       </div>
     </Toolbox>
   )
