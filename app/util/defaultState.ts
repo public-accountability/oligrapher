@@ -1,6 +1,6 @@
 import { Graph, Viewbox } from "../graph/graph"
 import { Annotation } from "./annotations"
-import { LsMap } from "../datasources/littlesis3"
+import type { LsMap, LsNode, LsEdge } from "../datasources/littlesis3"
 
 export interface GraphState extends Graph {
   present: Graph
@@ -86,6 +86,13 @@ export interface AnnotationsState {
 
 export type DisplayModesState = { editor: boolean; story: boolean }
 
+export type InterlocksState = {
+  status: AsyncStatus
+  selectedNodes: string[] | null
+  nodes: LsNode[] | null
+  edges: LsEdge[] | null
+}
+
 export interface DisplayState {
   zoom: number // transform = `scale(${zoom})`
   viewBox: Viewbox
@@ -107,6 +114,7 @@ export interface DisplayState {
   userMessage: string | null
   selection: Selection
   lock: Lock
+  interlocks: InterlocksState
 }
 
 export interface SettingsState {
@@ -222,6 +230,13 @@ const defaultState: State = {
     lock: {
       locked: false,
       user_id: null,
+    },
+
+    interlocks: {
+      status: null,
+      selectedNodes: null,
+      nodes: null,
+      edges: null,
     },
   },
 

@@ -56,7 +56,7 @@ const validateId = (id: number): void => {
 
 // API
 
-interface LsNode {
+export interface LsNode {
   id: string
   name: string
   description?: string
@@ -71,7 +71,7 @@ export interface LsEdge {
   label: string
   arrow: ArrowType | null
   dash: boolean
-  url?: string
+  url: string
 }
 
 export interface LsNodeWithEdges extends LsNode {
@@ -89,6 +89,7 @@ export interface LsMap {
     list_sources: boolean
     settings: string
     annotations_data: string
+    oligrapher_commit: string
   }
 }
 

@@ -178,10 +178,6 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     swapHighlight(state.annotations, "edge", action.id)
   })
 
-  builder.addCase("SWAP_CAPTION_HIGHLIGHT", (state, action) => {
-    swapHighlight(draft.annotations, "caption", action.id)
-  })
-
   builder.addCase("SET_EDITOR_MODE", (state, action) => {
     state.annotations.currentIndex = 0
     clearSelection(state.display)
@@ -443,12 +439,31 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
       action.nodes.length > 0 ? `Fetched ${action.nodes.length} interlocks` : "No interlocks found"
   })
 
-  builder.addCase("INTERLOCKS_SUCCESS_2", (state, action) => {
-    addToPastHistory(state)
+  builder.addCase("INTERLOCKS_REQUESTED_2", (state, action) => {
+    state.display.interlocks.status = "REQUESTED"
+    state.display.interlocks.selectedNodes = action.selectedNodes
+    state.display.interlocks.nodes = null
+    state.display.interlocks.edges = null
+  })
 
-    addInterlocks2(state.graph, action.selectedNodes, action.nodes, action.edges)
+  builder.addCase("INTERLOCKS_SUCCESS_2", (state, action) => {
+    // addToPastHistory(state)
+    state.display.interlocks.status = "SUCCESS"
+    state.display.interlocks.selectedNodes = action.selectedNodes
+    state.display.interlocks.nodes = action.nodes
+    state.display.interlocks.edges = action.edges
     state.display.userMessage =
-      action.nodes.length > 0 ? `Fetched ${action.nodes.length} interlocks` : "No interlocks found"
+      action.nodes.length > 0 ? `Found ${action.nodes.length} interlocks` : "No interlocks found"
+  })
+
+  builder.addCase("INTERLOCKS_FAILED_2", (state, action) => {
+    state.display.interlocks.status = "FAILED"
+    state.display.userMessage = "Interlocks request failed"
+  })
+
+  builder.addCase("INTERLOCKS_RESET_2", (state, action) => {
+    state.display.interlocks.status = null
+    state.display.userMessage = null
   })
 
   builder.addCase("RESET_VIEW", (state, action) => {

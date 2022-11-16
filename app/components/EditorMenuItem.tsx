@@ -45,7 +45,7 @@ const MENU = {
   },
 }
 
-type MenuItemType =
+export type MenuItemType =
   | "node"
   | "text"
   | "style"

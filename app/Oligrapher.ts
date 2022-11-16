@@ -30,11 +30,12 @@ export default class Oligrapher {
   consumer: any
 
   constructor(configuration = {}) {
-    if (window.Oligrapher.instance) {
-      console.warn("redefining window.Oligrapher.instance")
+    if (window.Oligrapher) {
+      if (window.Oligrapher.instance) {
+        console.warn("redefining window.Oligrapher.instance")
+      }
+      window.Oligrapher.instance = this
     }
-
-    window.Oligrapher.instance = this
 
     this.configuration = configuration
     this.store = createOligrapherStore(configuration)

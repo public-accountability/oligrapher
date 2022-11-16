@@ -13,61 +13,25 @@ import {
   getInterlocks2,
 } from "./datasources/littlesis3"
 import { paramsForSaveSelector } from "./util/selectors"
-import { forceLayout, calculateViewBoxFromGraph } from "./graph/graph"
+import { forceLayout } from "./graph/graph"
 import { downloadSvg } from "./util/imageExport"
 
 const delay = (time: number) => new Promise(resolve => setTimeout(resolve, time))
 const RESET_DELAY = process.env.NODE_ENV === "test" ? 10 : 5000
-export const INTERLOCKS_V2 = false
 
 export default function* rootSaga() {
   yield all([
-    watchAddNode(),
-    watchSave(),
-    watchClone(),
-    watchDelete(),
-    watchForceLayout(),
-    watchAddEditor(),
-    watchRemoveEditor(),
-    watchInterlocks(),
-    watchExportImage(),
+    takeEvery("ADD_NODE", addNode),
+    takeEvery(["SAVE_REQUESTED"], save),
+    takeEvery(["CLONE_REQUESTED"], clone),
+    takeEvery(["DELETE_REQUESTED"], deleteMap),
+    takeEvery(["FORCE_LAYOUT_REQUESTED"], generateForceLayout),
+    takeEvery(["ADD_EDITOR_REQUESTED"], doAddEditor),
+    takeEvery(["REMOVE_EDITOR_REQUESTED"], doRemoveEditor),
+    takeEvery(["INTERLOCKS_REQUESTED"], interlocks),
+    takeEvery(["INTERLOCKS_REQUESTED_2"], interlocks2),
+    takeLatest("EXPORT_IMAGE_REQUESTED", exportImage),
   ])
-}
-
-export function* watchAddNode() {
-  yield takeEvery("ADD_NODE", addNode)
-}
-
-export function* watchSave() {
-  yield takeEvery(["SAVE_REQUESTED"], save)
-}
-
-export function* watchClone() {
-  yield takeEvery(["CLONE_REQUESTED"], clone)
-}
-
-export function* watchDelete() {
-  yield takeEvery(["DELETE_REQUESTED"], deleteMap)
-}
-
-export function* watchForceLayout() {
-  yield takeEvery(["FORCE_LAYOUT_REQUESTED"], generateForceLayout)
-}
-
-export function* watchAddEditor() {
-  yield takeEvery(["ADD_EDITOR_REQUESTED"], doAddEditor)
-}
-
-export function* watchRemoveEditor() {
-  yield takeEvery(["REMOVE_EDITOR_REQUESTED"], doRemoveEditor)
-}
-
-export function* watchInterlocks() {
-  yield takeEvery(["INTERLOCKS_REQUESTED"], interlocks)
-}
-
-export function* watchExportImage() {
-  yield takeLatest("EXPORT_IMAGE_REQUESTED", exportImage)
 }
 
 // automatically fetches edges when a node is added from LittleSis
@@ -184,6 +148,24 @@ export function* doRemoveEditor(action: any): SagaIterator {
 
   yield call(delay, RESET_DELAY)
   yield put({ type: "REMOVE_EDITOR_RESET" })
+}
+
+export function* interlocks2(): SagaIterator {
+  const selectedNodes = yield select(state => state.display.selection.node.filter(isLittleSisId))
+
+  const otherNodes = yield select(state =>
+    without(Object.keys(state.graph.nodes).filter(isLittleSisId), selectedNodes)
+  )
+
+  try {
+    const { nodes, edges } = yield call(getInterlocks2, selectedNodes, otherNodes)
+    yield put({ type: "INTERLOCKS_SUCCESS_2", selectedNodes, nodes, edges })
+  } catch (error) {
+    yield put({ type: "INTERLOCKS_FAILED_2" })
+  }
+
+  yield call(delay, RESET_DELAY)
+  yield put({ type: "INTERLOCKS_RESET_2" })
 }
 
 export function* interlocks(action: any): SagaIterator {
