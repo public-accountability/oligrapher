@@ -6,9 +6,9 @@ import { MdClose } from "react-icons/md"
 //  This isn't a box of tools. It's a box with one tool
 export default function Toolbox({ title, children }: ToolboxProps) {
   const dispatch = useDispatch()
-  const closeTool: () => void = useCallback(() => dispatch({ type: "CLOSE_TOOL" }), [dispatch])
+  const closeTool = useCallback(() => dispatch({ type: "CLOSE_TOOL" }), [dispatch])
 
-  useHotkeys("escape", closeTool, { filter: () => true })
+  useHotkeys("escape", closeTool)
 
   return (
     <div className="oligrapher-toolbox">
