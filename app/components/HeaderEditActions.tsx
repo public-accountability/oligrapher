@@ -14,9 +14,14 @@ import { userIsOwnerSelector } from "../util/selectors"
 
 export default function HeaderEditActions() {
   const dispatch = useDispatch()
-  const { id, shareUrl, bugReportUrl } = useSelector(state => state.attributes)
+  const id = useSelector(state => state.attributes.id)
   const userIsOwner = useSelector(userIsOwnerSelector)
-  const { clone: isCloneable, private: isPrivate } = useSelector(state => state.attributes.settings)
+  const {
+    shareUrl,
+    bugReportUrl,
+    clone: isCloneable,
+    private: isPrivate,
+  } = useSelector(state => state.attributes.settings)
 
   const toggleRef = useRef() as React.RefObject<HTMLButtonElement>
 

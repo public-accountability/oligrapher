@@ -55,8 +55,6 @@ export interface AttributesState {
   settings: UserSettings
   editors: Editor[]
   shareUrl: string | null
-  bugReportUrl: string | null
-  helpUrl: string | null
 }
 
 export type FloatingEditorTypeType = "node" | "connections" | "edge" | "caption"
@@ -116,6 +114,8 @@ export interface SettingsState {
   embed: boolean
   noEditing: boolean
   logActions: boolean
+  bugReportUrl: string | null
+  helpUrl: string | null
 }
 
 export interface StateWithoutHistory {
@@ -153,7 +153,8 @@ const defaultState: State = {
   },
 
   // Graph attributes and metadata
-  // Some attributes are editable in the graph header.
+  // Stored in NetworkMap in Rails
+  // Some attributes are editable in the graph header
   attributes: {
     id: null,
     title: null,
@@ -181,8 +182,6 @@ const defaultState: State = {
     },
     editors: [],
     shareUrl: null,
-    bugReportUrl: "https://littlesis.org/bug_report",
-    helpUrl: "https://littlesis.org/help/oligrapher",
   },
 
   // This section of the state is not sync'd with the server;
@@ -219,21 +218,23 @@ const defaultState: State = {
       caption: [],
       isSelecting: false,
     },
+    // Sync'd with OligrapherLockService using action cable
     lock: {
       locked: false,
-      user_has_lock: false,
       user_id: null,
     },
   },
 
   // Global settings
-  // These settings are NOT changable via the settings interface;
+  // These settings are NOT changable via the settings interface
   // those are located at above under attributes.settings
   settings: {
     domId: "oligrapher",
     embed: false,
     noEditing: false,
     logActions: false,
+    bugReportUrl: "https://littlesis.org/bug_report",
+    helpUrl: "https://littlesis.org/help/oligrapher",
   },
 
   // for Undo/Redo

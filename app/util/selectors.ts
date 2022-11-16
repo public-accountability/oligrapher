@@ -257,6 +257,7 @@ export const paramsForSaveSelector = (state: State): LsMap => {
       list_sources: state.attributes.settings.list_sources,
       settings: JSON.stringify(state.attributes.settings),
       annotations_data: JSON.stringify(state.annotations.list),
+      oligrapher_commit: OLIGRAPHER_COMMIT,
     },
   }
 }
