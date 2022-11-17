@@ -386,13 +386,11 @@ $edge_highlight_color: $oligrapher_blue;
   background-color: white;
   @extend %box_shadow;
 
-  header {
-    @extend %toolbox_header;
-  }
+  // header {
+  //   @extend %toolbox_header;
+  // }
 
   .node-tool {
-    font-size: 14px;
-
     input {
       display: block;
       margin-bottom: 10px;
@@ -415,7 +413,6 @@ $edge_highlight_color: $oligrapher_blue;
 }
 
 #oligrapher-container .entity-search-result {
-  font-size: 15px;
   margin-top: 10px;
 
   a {
@@ -748,9 +745,11 @@ $edge_highlight_color: $oligrapher_blue;
   }
 }
 
-#oligrapher-container .oligrapher-graph-editor .oligrapher-interlocks {
-  font-size: 14px;
-  line-height: 1.2em;
+#oligrapher-container div.oligrapher-interlocks {
+  display: flex;
+  flex-direction: column;
+  overflow: "auto";
+  height: 100%;
 }
 
 #oligrapher-container .oligrapher-graph-editor .oligrapher-settings {
