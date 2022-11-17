@@ -466,6 +466,10 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     state.display.userMessage = null
   })
 
+  builder.addCase("ADD_ALL_INTERLOCKS", (state, action) => {
+    console.log("ADD_ALL_INTERLOCKS")
+  })
+
   builder.addCase("RESET_VIEW", (state, action) => {
     state.display.svgHeight = calculateSvgHeight()
     state.display.viewBox = calculateViewBoxFromGraph(state.graph)

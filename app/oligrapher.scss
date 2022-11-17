@@ -750,6 +750,16 @@ $edge_highlight_color: $oligrapher_blue;
   flex-direction: column;
   overflow: "auto";
   height: 100%;
+
+
+  .oligrapher-interlocks-node-list {
+    // li {
+    //   &:hover {
+    //     background-color: $oligrapher_blue;
+    //     cursor: pointer;
+    //   }
+    // }
+  }
 }
 
 #oligrapher-container .oligrapher-graph-editor .oligrapher-settings {

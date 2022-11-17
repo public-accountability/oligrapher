@@ -1,7 +1,9 @@
 import React, { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import Button from "@mui/material/Button"
+import IconButton from "@mui/material/IconButton"
 import { IoIosLink } from "react-icons/io"
+import { MdAddCircle } from "react-icons/md"
 
 import Toolbox from "./Toolbox"
 import InterlocksNodeList from "./InterlocksNodeList"
@@ -35,16 +37,28 @@ export default function InterlocksTool2() {
           <p>
             LittleSis Nodes Selected: <code>{lsNodes.length}</code>
           </p>
-          <Button
-            disabled={buttonDisabled}
-            onClick={() => dispatch({ type: "INTERLOCKS_REQUESTED_2", selectedNodes: lsNodes })}
-            variant="contained"
-            color="primary"
-            disableElevation={true}
-          >
-            Get interlocks
-          </Button>
+
+          <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+            <Button
+              disabled={buttonDisabled}
+              onClick={() => dispatch({ type: "INTERLOCKS_REQUESTED_2", selectedNodes: lsNodes })}
+              variant="contained"
+              color="primary"
+              disableElevation={true}
+            >
+              Get interlocks
+            </Button>
+
+            <IconButton
+              aria-label="add all to map"
+              disabled={interlocksState.nodes === null || interlocksState.nodes.length === 0}
+              onClick={() => dispatch({ type: "ADD_ALL_INTERLOCKS" })}
+            >
+              <MdAddCircle />
+            </IconButton>
+          </div>
         </div>
+
         <div ref={nodeListContainer} style={{ overflow: "auto", maxHeight: `${maxHeight}px` }}>
           {interlocksState.nodes && <InterlocksNodeList nodes={interlocksState.nodes} />}
         </div>
