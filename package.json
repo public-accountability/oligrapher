@@ -45,7 +45,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.5",
-    "react-hotkeys-hook": "^4.0.3",
+    "react-hotkeys-hook": "^4.0.4",
     "react-icons": "^4.6.0",
     "react-redux": "^8.0.5",
     "redux": "^4.2.0",
@@ -75,15 +75,11 @@
     "whatwg-fetch": "^3.6.2"
   },
   "jest": {
-    "testMatch": [
-      "**/test/**/*.test.[jt]s?(x)"
-    ],
+    "testMatch": ["**/test/**/*.test.[jt]s?(x)"],
     "transformIgnorePatterns": [
       "node_modules/(?!(p-limit|yocto-queue|nanoid|react-hotkeys-hook)/)"
     ],
     "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": [
-      "./jest.setup.js"
-    ]
+    "setupFilesAfterEnv": ["./jest.setup.js"]
   }
 }
