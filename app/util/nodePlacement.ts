@@ -1,6 +1,7 @@
 import { Node } from "../graph/node"
+import { Point } from "./geometry"
 
-export function lineBetween(node1: Node, node2: Node, newNodes: Node[]): Node[] {
+export function lineBetween(node1: Point, node2: Point, newNodes: Node[]): Node[] {
   const midX = (node1.x + node2.x) / 2
   const midY = (node1.y + node2.y) / 2
   const angle = Math.atan2(node1.x - node2.x, node2.y - node1.y)

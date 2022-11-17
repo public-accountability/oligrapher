@@ -39,7 +39,7 @@ import {
 } from "./util/annotations"
 
 import updateSetting from "./util/updateSetting"
-import { Point, translatePoint } from "./util/geometry"
+import { Point, polygonCenter, translatePoint } from "./util/geometry"
 import FloatingEditor from "./util/floatingEditor"
 import { swapSelection, clearSelection, selectionCount } from "./util/selection"
 import { getElementForGraphItem, isLittleSisId } from "./util/helpers"
@@ -467,8 +467,26 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("ADD_ALL_INTERLOCKS", (state, action) => {
-    console.log("ADD_ALL_INTERLOCKS")
+    addToPastHistory(state)
+    const center = polygonCenter(
+      Object.values(state.graph.nodes).filter(n =>
+        state.display.interlocks.selectedNodes.includes(n.id)
+      )
+    )
+
+    state.display.interlocks.nodes.forEach(lsNode => {
+      addNode(state.graph, lsNode, center)
+    })
+
+    addEdgesIfNodes(state.graph, state.display.interlocks.edges)
+
+    state.display.selection.node = []
+    state.display.interlocks.selectedNodes = null
+    state.display.interlocks.nodes = null
+    state.display.interlocks.edges = null
   })
+
+  builder.addCase("ADD_INTERLOCKS_NODE", (state, action) => {})
 
   builder.addCase("RESET_VIEW", (state, action) => {
     state.display.svgHeight = calculateSvgHeight()
