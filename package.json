@@ -1,6 +1,6 @@
 {
   "name": "@public-accountability/oligrapher",
-  "version": "4.0.7",
+  "version": "4.0.8",
   "description": "Network graph visualizer built for LittleSis",
   "main": "index.ts",
   "scripts": {
@@ -75,11 +75,15 @@
     "whatwg-fetch": "^3.6.2"
   },
   "jest": {
-    "testMatch": ["**/test/**/*.test.[jt]s?(x)"],
+    "testMatch": [
+      "**/test/**/*.test.[jt]s?(x)"
+    ],
     "transformIgnorePatterns": [
       "node_modules/(?!(p-limit|yocto-queue|nanoid|react-hotkeys-hook)/)"
     ],
     "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": ["./jest.setup.js"]
+    "setupFilesAfterEnv": [
+      "./jest.setup.js"
+    ]
   }
 }
