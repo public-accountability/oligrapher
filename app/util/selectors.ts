@@ -13,6 +13,8 @@ import { LsMap, urls } from "../datasources/littlesis3"
 import { Selector } from "react-redux"
 import { Viewbox, calculateAnnotationViewBox } from "../graph/graph"
 import { Caption } from "../graph/caption"
+import { isLittleSisId } from "./helpers"
+import { Point, polygonCenter } from "./geometry"
 
 export function displayModesSelector(state: State): DisplayModesState {
   return state.display.modes
@@ -287,4 +289,19 @@ export const futureHistorySelector = (state: State): StateWithoutHistory[] => st
 
 export const interlocksStateSelector = (state: State): InterlocksState => {
   return state.display.interlocks
+}
+
+export const selectedLsNodesSelector = (state: State): string[] =>
+  state.display.selection.node.filter(isLittleSisId)
+
+export const interlocksSelectedCentroidSelector = (state: State): Point => {
+  if (!state.display.interlocks.selectedNodes) {
+    throw new Error("no nodes selected")
+  }
+
+  return polygonCenter(
+    Object.values(state.graph.nodes).filter(n =>
+      state.display.interlocks.selectedNodes.includes(n.id)
+    )
+  )
 }

@@ -89,6 +89,7 @@ export type DisplayModesState = { editor: boolean; story: boolean }
 export type InterlocksState = {
   status: AsyncStatus
   selectedNodes: string[] | null
+  previousNodes: string[] | null
   nodes: LsNode[] | null
   edges: LsEdge[] | null
 }

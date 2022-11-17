@@ -42,7 +42,7 @@ export default function LockManager() {
       }
 
       return () => {
-        if (consumer.subscriptions.subscriptions.length > 0) {
+        if (consumer && consumer.subscriptions.subscriptions.length > 0) {
           consumer.remove(consumer.subscriptions.subscriptions[0])
         }
       }

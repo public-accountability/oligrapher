@@ -10,11 +10,12 @@
      html, body {
        margin: 0;
        height: 100%;
-       overflow: hidden;
+       width: 100%;
      }
 
      #oligrapher {
-       height: 100vh;
+       height: 100%;
+       width: 100%;
      }
     </style>
   </head>
@@ -2703,7 +2704,7 @@
        "graph": graph,
        "annotations": annotations,
        "settings": {
-         "logActions": false,
+         "logActions": true,
          "noEditing": false,
          "defaultStoryMode": false,
          "scrollToZoom": true
@@ -2732,11 +2733,10 @@
          "settings": {
            "private": false,
            "clone": true,
-           "debug": true,
-           "showControlpoint": true
+           "debug": false,
+           "showControlpoint": false
          },
          "editors": [],
-         "shareUrl": null
        }
      })
     </script>

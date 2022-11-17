@@ -22,7 +22,7 @@ import {
   calculateViewBoxFromGraph,
 } from "./graph/graph"
 
-import { addInterlocks, addInterlocks2 } from "./graph/interlocks"
+import { addInterlocks } from "./graph/interlocks"
 import { newEdgeFromNodes } from "./graph/edge"
 import { curveSimilarEdges } from "./graph/curve"
 import Caption from "./graph/caption"
@@ -44,6 +44,8 @@ import FloatingEditor from "./util/floatingEditor"
 import { swapSelection, clearSelection, selectionCount } from "./util/selection"
 import { getElementForGraphItem, isLittleSisId } from "./util/helpers"
 import { calculateSvgHeight, calculateSvgScale, zoomForScale } from "./util/dimensions"
+import { lineBetween } from "./util/nodePlacement"
+import { interlocksSelectedCentroidSelector } from "./util/selectors"
 
 const ZOOM_INTERVAL = 1.2
 
@@ -56,17 +58,6 @@ const ACTION_TO_MESSAGE = {
   REMOVE_EDITOR_REQUESTED: "Removing editor...",
   REMOVE_EDITOR_FAILED: "Failed to remove editor",
   REMOVE_EDITOR_RESET: null,
-  INTERLOCKS_REQUESTED: "Fetching interlocks...",
-  INTERLOCKS_FAILED: "Failed to fetch interlocks",
-  INTERLOCKS_RESET: null,
-  // LOCK_TAKEOVER_REQUESTED: "Taking over map lock...",
-  // LOCK_TAKEOVER_SUCCESS: "Took over map lock",
-  // LOCK_TAKEOVER_FAILED: "Failed to take over map lock",
-  // LOCK_TAKEOVER_RESET: null,
-  LOCK_RELEASE_REQUESTED: "Releasing map lock...",
-  LOCK_RELEASE_SUCCESS: "Released map lock",
-  LOCK_RELEASE_FAILED: "Failed to release map lock",
-  LOCK_RELEASE_RESET: null,
   EXPORT_IMAGE_REQUESTED: "Exporting...",
   EXPORT_IMAGE_SUCCESS: "Exported map",
   EXPORT_IMAGE_FAILED: "Failed to export",
@@ -106,7 +97,7 @@ function closeToolAndFloatingEditor(state: State): void {
 }
 
 function zoomOutIfMaxScale(state: State) {
-  const maxScale = 3.2
+  const maxScale = 2.9
   const currentScale = calculateSvgScale(state.display.zoom)
   if (currentScale > maxScale) {
     const zoom = zoomForScale(maxScale)
@@ -442,6 +433,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   builder.addCase("INTERLOCKS_REQUESTED_2", (state, action) => {
     state.display.interlocks.status = "REQUESTED"
     state.display.interlocks.selectedNodes = action.selectedNodes
+    state.display.interlocks.previousNodes = null
     state.display.interlocks.nodes = null
     state.display.interlocks.edges = null
   })
@@ -466,8 +458,82 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     state.display.userMessage = null
   })
 
+  builder.addCase("ADD_ALL_INTERLOCKS", (state, action) => {
+    addToPastHistory(state)
+
+    // place in line between two nodes -- the only option in previous version of interlocks
+    if (state.display.interlocks.selectedNodes.length === 2) {
+      const n1 = state.graph.nodes[state.display.interlocks.selectedNodes[0]]
+      const n2 = state.graph.nodes[state.display.interlocks.selectedNodes[1]]
+
+      lineBetween(n1, n2, state.display.interlocks.nodes).forEach(node => {
+        addNode(state.graph, node)
+      })
+    } else {
+      // automatically place near center
+      const center = interlocksSelectedCentroidSelector(state)
+
+      state.display.interlocks.nodes.forEach(lsNode => {
+        addNode(state.graph, lsNode, center)
+      })
+    }
+
+    addEdgesIfNodes(state.graph, state.display.interlocks.edges)
+
+    state.display.interlocks.previousNodes = state.display.interlocks.nodes.map(n => n.id)
+    state.display.interlocks.selectedNodes = null
+    state.display.interlocks.nodes = null
+    state.display.interlocks.edges = null
+
+    // clear selection
+    state.display.selection.node = []
+  })
+
+  builder.addCase("SELECT_PREVIOUS_INTERLOCKS", (state, action) => {
+    if (state.display.interlocks.previousNodes) {
+      state.display.selection.node = state.display.interlocks.previousNodes
+      state.display.interlocks.previousNodes = null
+    }
+  })
+
+  builder.addCase("ADD_INTERLOCKS_NODE", (state, action) => {
+    addToPastHistory(state)
+
+    const indexOf = state.display.interlocks.nodes.findIndex(n => n.id === action.id)
+
+    if (indexOf === -1) {
+      throw new Error("interlocks data error")
+    }
+
+    // add node to map and remove it from interlocks
+    addNode(
+      state.graph,
+      state.display.interlocks.nodes[indexOf],
+      interlocksSelectedCentroidSelector(state)
+    )
+    state.display.interlocks.nodes.splice(indexOf, 1)
+
+    // add associated edges to map and remove those edges from interlocks
+    const mapNodes = new Set(Object.keys(state.graph.nodes))
+    const newEdges = []
+    state.display.interlocks.edges.forEach((lsEdge, index) => {
+      if (mapNodes.has(lsEdge.node1_id) && mapNodes.has(lsEdge.node2_id)) {
+        newEdges.push(lsEdge)
+        state.display.interlocks.edges.splice(index, 1)
+      }
+    })
+
+    addEdgesIfNodes(state.graph, newEdges)
+  })
+
   builder.addCase("RESET_VIEW", (state, action) => {
+    state.display.svgHeight = calculateSvgHeight()
     state.display.viewBox = calculateViewBoxFromGraph(state.graph)
+
+    // if (state.display.viewBox.h < state.display.svgHeight) {
+    //   state.display.viewBox.h = state.display.svgHeight
+    // }
+
     state.display.zoom = 1
     state.display.svgScale = calculateSvgScale(state.display.zoom)
     zoomOutIfMaxScale(state)
@@ -593,12 +659,12 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     }
 
     state.display.saveMapStatus = "SUCCESS"
-    state.display.userMessage = "Saved map :)"
+    state.display.userMessage = "Saved map"
   })
 
   builder.addCase("SAVE_FAILED", (state, action) => {
     state.display.saveMapStatus = "FAILED"
-    state.display.userMessage = "Failed to save map :("
+    state.display.userMessage = "Failed to save map"
   })
 
   builder.addCase("SAVE_RESET", (state, action) => {
@@ -613,12 +679,12 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
 
   builder.addCase("CLONE_SUCCESS", (state, action) => {
     state.display.cloneMapStatus = "SUCCESS"
-    state.display.userMessage = "Cloned map :)"
+    state.display.userMessage = "Cloned map"
   })
 
   builder.addCase("CLONE_FAILED", (state, action) => {
     state.display.cloneMapStatus = "FAILED"
-    state.display.userMessage = "Failed to clone map :("
+    state.display.userMessage = "Failed to clone map"
   })
 
   builder.addCase("CLONE_RESET", (state, action) => {
@@ -633,12 +699,12 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
 
   builder.addCase("DELETE_SUCCESS", (state, action) => {
     state.display.deleteMapStatus = "SUCCESS"
-    state.display.userMessage = "Deleted map :)"
+    state.display.userMessage = "Deleted map"
   })
 
   builder.addCase("DELETE_FAILED", (state, action) => {
     state.display.deleteMapStatus = "FAILED"
-    state.display.userMessage = "Failed to delete map :("
+    state.display.userMessage = "Failed to delete map"
   })
 
   builder.addCase("DELETE_RESET", (state, action) => {
@@ -697,21 +763,20 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     state.display.svgHeight = calculateSvgHeight()
   })
 
-  builder.addCase("SET_SVG_DIMENSIONS", (state, action) => {
-    state.display.svgHeight = action.height
-    // state.display.svgWidth = action.width
-  })
-
   builder.addCase("SET_VIEWBOX", (state, action) => {
     state.display.viewBox = action.viewBox
   })
 
   builder.addCase("COLLAPSE_HEADER", (state, action) => {
     state.display.headerIsCollapsed = true
+    state.display.svgHeight = calculateSvgHeight()
+    state.display.svgScale = calculateSvgScale(state.display.zoom)
   })
 
   builder.addCase("EXPAND_HEADER", (state, action) => {
     state.display.headerIsCollapsed = false
+    state.display.svgHeight = calculateSvgHeight()
+    state.display.svgScale = calculateSvgScale(state.display.zoom)
   })
 
   builder.addCase("SET_ZOOM", (state, action) => {

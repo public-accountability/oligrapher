@@ -25,6 +25,7 @@ import {
   showFloatingEditorsSelector,
   editModeSelector,
   debugModeSelector,
+  svgHeightSelector,
 } from "../util/selectors"
 
 export const ROOT_CONTAINER_ID = "oligrapher-container"
@@ -64,6 +65,7 @@ export function Root(props: { cable?: any }) {
   const editorMode = useSelector(editModeSelector)
   const debugMode = useSelector(debugModeSelector)
   const showFloatingEditors = useSelector(showFloatingEditorsSelector)
+  const svgHeight = useSelector(svgHeightSelector)
 
   const showAnnotationsOnRight = showAnnotations && !smallScreen
   const showAnnotationsOnBottom = showAnnotations && smallScreen
@@ -116,7 +118,7 @@ export function Root(props: { cable?: any }) {
       <SvgRefContext.Provider value={svgRef}>
         <div id={ROOT_CONTAINER_ID} ref={containerRef}>
           {showHeader && <Header />}
-          <div style={{ flex: 1 }}>
+          <div style={{ flex: 1, height: "100%", overflow: "hidden" }}>
             <Grid container style={{ height: "100%" }}>
               <Grid sm={showAnnotationsOnRight ? 8 : 12}>
                 <div id="oligrapher-graph-container">
@@ -128,7 +130,7 @@ export function Root(props: { cable?: any }) {
                 </div>
               </Grid>
               {showAnnotationsOnRight && (
-                <Grid sm={4}>
+                <Grid sm={4} style={{ flex: 1, height: "100%" }}>
                   <Annotations />
                 </Grid>
               )}

@@ -4,6 +4,7 @@
     "module": "commonjs",
     "jsx": "react",
     "moduleResolution": "node",
+    "isolatedModules": true,
     "strict": true,
     "noEmit": true,
     "allowJs": true,
