@@ -22,7 +22,7 @@ import {
   calculateViewBoxFromGraph,
 } from "./graph/graph"
 
-import { addInterlocks, addInterlocks2 } from "./graph/interlocks"
+import { addInterlocks } from "./graph/interlocks"
 import { newEdgeFromNodes } from "./graph/edge"
 import { curveSimilarEdges } from "./graph/curve"
 import Caption from "./graph/caption"
@@ -39,7 +39,7 @@ import {
 } from "./util/annotations"
 
 import updateSetting from "./util/updateSetting"
-import { Point, polygonCenter, translatePoint } from "./util/geometry"
+import { Point, translatePoint } from "./util/geometry"
 import FloatingEditor from "./util/floatingEditor"
 import { swapSelection, clearSelection, selectionCount } from "./util/selection"
 import { getElementForGraphItem, isLittleSisId } from "./util/helpers"
@@ -58,17 +58,6 @@ const ACTION_TO_MESSAGE = {
   REMOVE_EDITOR_REQUESTED: "Removing editor...",
   REMOVE_EDITOR_FAILED: "Failed to remove editor",
   REMOVE_EDITOR_RESET: null,
-  INTERLOCKS_REQUESTED: "Fetching interlocks...",
-  INTERLOCKS_FAILED: "Failed to fetch interlocks",
-  INTERLOCKS_RESET: null,
-  // LOCK_TAKEOVER_REQUESTED: "Taking over map lock...",
-  // LOCK_TAKEOVER_SUCCESS: "Took over map lock",
-  // LOCK_TAKEOVER_FAILED: "Failed to take over map lock",
-  // LOCK_TAKEOVER_RESET: null,
-  // LOCK_RELEASE_REQUESTED: "Releasing map lock...",
-  // LOCK_RELEASE_SUCCESS: "Released map lock",
-  // LOCK_RELEASE_FAILED: "Failed to release map lock",
-  // LOCK_RELEASE_RESET: null,
   EXPORT_IMAGE_REQUESTED: "Exporting...",
   EXPORT_IMAGE_SUCCESS: "Exported map",
   EXPORT_IMAGE_FAILED: "Failed to export",
@@ -660,12 +649,12 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     }
 
     state.display.saveMapStatus = "SUCCESS"
-    state.display.userMessage = "Saved map :)"
+    state.display.userMessage = "Saved map"
   })
 
   builder.addCase("SAVE_FAILED", (state, action) => {
     state.display.saveMapStatus = "FAILED"
-    state.display.userMessage = "Failed to save map :("
+    state.display.userMessage = "Failed to save map"
   })
 
   builder.addCase("SAVE_RESET", (state, action) => {
@@ -680,12 +669,12 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
 
   builder.addCase("CLONE_SUCCESS", (state, action) => {
     state.display.cloneMapStatus = "SUCCESS"
-    state.display.userMessage = "Cloned map :)"
+    state.display.userMessage = "Cloned map"
   })
 
   builder.addCase("CLONE_FAILED", (state, action) => {
     state.display.cloneMapStatus = "FAILED"
-    state.display.userMessage = "Failed to clone map :("
+    state.display.userMessage = "Failed to clone map"
   })
 
   builder.addCase("CLONE_RESET", (state, action) => {
@@ -700,12 +689,12 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
 
   builder.addCase("DELETE_SUCCESS", (state, action) => {
     state.display.deleteMapStatus = "SUCCESS"
-    state.display.userMessage = "Deleted map :)"
+    state.display.userMessage = "Deleted map"
   })
 
   builder.addCase("DELETE_FAILED", (state, action) => {
     state.display.deleteMapStatus = "FAILED"
-    state.display.userMessage = "Failed to delete map :("
+    state.display.userMessage = "Failed to delete map"
   })
 
   builder.addCase("DELETE_RESET", (state, action) => {

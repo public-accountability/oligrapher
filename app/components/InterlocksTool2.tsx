@@ -28,7 +28,7 @@ export default function InterlocksTool2() {
   })
 
   return (
-    <Toolbox title="Interlocks2">
+    <Toolbox title="Interlocks">
       <div className="oligrapher-interlocks">
         <div>
           <p>
