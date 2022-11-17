@@ -44,6 +44,8 @@ import FloatingEditor from "./util/floatingEditor"
 import { swapSelection, clearSelection, selectionCount } from "./util/selection"
 import { getElementForGraphItem, isLittleSisId } from "./util/helpers"
 import { calculateSvgHeight, calculateSvgScale, zoomForScale } from "./util/dimensions"
+import { lineBetween } from "./util/nodePlacement"
+import { interlocksSelectedCentroidSelector } from "./util/selectors"
 
 const ZOOM_INTERVAL = 1.2
 
@@ -468,25 +470,62 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
 
   builder.addCase("ADD_ALL_INTERLOCKS", (state, action) => {
     addToPastHistory(state)
-    const center = polygonCenter(
-      Object.values(state.graph.nodes).filter(n =>
-        state.display.interlocks.selectedNodes.includes(n.id)
-      )
-    )
 
-    state.display.interlocks.nodes.forEach(lsNode => {
-      addNode(state.graph, lsNode, center)
-    })
+    // place in line between two nodes -- the only option in previous version of interlocks
+    if (state.display.interlocks.selectedNodes.length === 2) {
+      const n1 = state.graph.nodes[state.display.interlocks.selectedNodes[0]]
+      const n2 = state.graph.nodes[state.display.interlocks.selectedNodes[1]]
+
+      lineBetween(n1, n2, state.display.interlocks.nodes).forEach(node => {
+        addNode(state.graph, node)
+      })
+    } else {
+      // automatically place near center
+      const center = interlocksSelectedCentroidSelector(state)
+
+      state.display.interlocks.nodes.forEach(lsNode => {
+        addNode(state.graph, lsNode, center)
+      })
+    }
 
     addEdgesIfNodes(state.graph, state.display.interlocks.edges)
 
+    // clear selection and interlocks
     state.display.selection.node = []
     state.display.interlocks.selectedNodes = null
     state.display.interlocks.nodes = null
     state.display.interlocks.edges = null
   })
 
-  builder.addCase("ADD_INTERLOCKS_NODE", (state, action) => {})
+  builder.addCase("ADD_INTERLOCKS_NODE", (state, action) => {
+    addToPastHistory(state)
+
+    const indexOf = state.display.interlocks.nodes.findIndex(n => n.id === action.id)
+
+    if (indexOf === -1) {
+      throw new Error("interlocks data error")
+    }
+
+    // add node to map and remove it from interlocks
+    addNode(
+      state.graph,
+      state.display.interlocks.nodes[indexOf],
+      interlocksSelectedCentroidSelector(state)
+    )
+    state.display.interlocks.nodes.splice(indexOf, 1)
+
+    // add associated edges to map and remove those edges from interlocks
+    const mapNodes = new Set(Object.keys(state.graph.nodes))
+    const newEdges = []
+    state.display.interlocks.edges.forEach((lsEdge, index) => {
+      if (mapNodes.has(lsEdge.node1_id) && mapNodes.has(lsEdge.node2_id)) {
+        newEdges.push(lsEdge)
+        state.display.interlocks.edges.splice(index, 1)
+      }
+    })
+
+    addEdgesIfNodes(state.graph, newEdges)
+  })
 
   builder.addCase("RESET_VIEW", (state, action) => {
     state.display.svgHeight = calculateSvgHeight()
