@@ -1,14 +1,13 @@
 import React, { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import Button from "@mui/material/Button"
-import IconButton from "@mui/material/IconButton"
 import { IoIosLink } from "react-icons/io"
-import { MdAddCircle } from "react-icons/md"
 
 import Toolbox from "./Toolbox"
 import InterlocksNodeList from "./InterlocksNodeList"
 import { interlocksStateSelector, selectedLsNodesSelector } from "../util/selectors"
 import { useClientRect } from "../util/helpers"
+import InterlocksActionButton from "./InterlocksActionButton"
 
 export default function InterlocksTool2() {
   const dispatch = useDispatch()
@@ -48,14 +47,7 @@ export default function InterlocksTool2() {
             >
               Get interlocks
             </Button>
-
-            <IconButton
-              aria-label="add all to map"
-              disabled={interlocksState.nodes === null || interlocksState.nodes.length === 0}
-              onClick={() => dispatch({ type: "ADD_ALL_INTERLOCKS" })}
-            >
-              <MdAddCircle />
-            </IconButton>
+            <InterlocksActionButton interlocksState={interlocksState} />
           </div>
         </div>
 

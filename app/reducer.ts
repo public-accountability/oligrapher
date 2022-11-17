@@ -433,6 +433,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   builder.addCase("INTERLOCKS_REQUESTED_2", (state, action) => {
     state.display.interlocks.status = "REQUESTED"
     state.display.interlocks.selectedNodes = action.selectedNodes
+    state.display.interlocks.previousNodes = null
     state.display.interlocks.nodes = null
     state.display.interlocks.edges = null
   })
@@ -479,11 +480,20 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
 
     addEdgesIfNodes(state.graph, state.display.interlocks.edges)
 
-    // clear selection and interlocks
-    state.display.selection.node = []
+    state.display.interlocks.previousNodes = state.display.interlocks.nodes.map(n => n.id)
     state.display.interlocks.selectedNodes = null
     state.display.interlocks.nodes = null
     state.display.interlocks.edges = null
+
+    // clear selection
+    state.display.selection.node = []
+  })
+
+  builder.addCase("SELECT_PREVIOUS_INTERLOCKS", (state, action) => {
+    if (state.display.interlocks.previousNodes) {
+      state.display.selection.node = state.display.interlocks.previousNodes
+      state.display.interlocks.previousNodes = null
+    }
   })
 
   builder.addCase("ADD_INTERLOCKS_NODE", (state, action) => {
