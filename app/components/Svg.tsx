@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react"
 import { useDispatch, useSelector } from "react-redux"
 
-import Caption from "../graph/caption"
 import { xy, Point } from "../util/geometry"
 import {
   svgCoordinatesFromMouseEvent,
@@ -16,7 +15,6 @@ import {
   pannableSelector,
   scrollToZoomSelector,
   svgHeightSelector,
-  textToolOpenSelector,
 } from "../util/selectors"
 import SvgRefContext from "../util/SvgRefContext"
 
@@ -48,7 +46,7 @@ export default function Svg(props: { children: React.ReactNode }) {
   }
 
   const divAttrs: React.HTMLProps<HTMLDivElement> = {
-    style: { height: svgHeight, width: "100%" },
+    style: { height: svgHeight - 10, width: "100%", overflow: "hidden" },
   }
 
   if (scrollToZoom) {

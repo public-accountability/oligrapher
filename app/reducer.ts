@@ -106,7 +106,7 @@ function closeToolAndFloatingEditor(state: State): void {
 }
 
 function zoomOutIfMaxScale(state: State) {
-  const maxScale = 3.2
+  const maxScale = 2.9
   const currentScale = calculateSvgScale(state.display.zoom)
   if (currentScale > maxScale) {
     const zoom = zoomForScale(maxScale)
@@ -467,7 +467,13 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("RESET_VIEW", (state, action) => {
+    state.display.svgHeight = calculateSvgHeight()
     state.display.viewBox = calculateViewBoxFromGraph(state.graph)
+
+    // if (state.display.viewBox.h < state.display.svgHeight) {
+    //   state.display.viewBox.h = state.display.svgHeight
+    // }
+
     state.display.zoom = 1
     state.display.svgScale = calculateSvgScale(state.display.zoom)
     zoomOutIfMaxScale(state)
@@ -697,21 +703,20 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     state.display.svgHeight = calculateSvgHeight()
   })
 
-  builder.addCase("SET_SVG_DIMENSIONS", (state, action) => {
-    state.display.svgHeight = action.height
-    // state.display.svgWidth = action.width
-  })
-
   builder.addCase("SET_VIEWBOX", (state, action) => {
     state.display.viewBox = action.viewBox
   })
 
   builder.addCase("COLLAPSE_HEADER", (state, action) => {
     state.display.headerIsCollapsed = true
+    state.display.svgHeight = calculateSvgHeight()
+    state.display.svgScale = calculateSvgScale(state.display.zoom)
   })
 
   builder.addCase("EXPAND_HEADER", (state, action) => {
     state.display.headerIsCollapsed = false
+    state.display.svgHeight = calculateSvgHeight()
+    state.display.svgScale = calculateSvgScale(state.display.zoom)
   })
 
   builder.addCase("SET_ZOOM", (state, action) => {

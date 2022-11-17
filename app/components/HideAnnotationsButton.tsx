@@ -1,5 +1,7 @@
 import React, { useCallback } from "react"
 import { useDispatch } from "react-redux"
+import IconButton from "@mui/material/IconButton"
+
 import { MdClose } from "react-icons/md"
 
 export default function HideAnnotationsButton() {
@@ -7,8 +9,8 @@ export default function HideAnnotationsButton() {
   const hide = useCallback(() => dispatch({ type: "TOGGLE_ANNOTATIONS" }), [dispatch])
 
   return (
-    <div className="oligrapher-annotations-hide" onClick={hide} title="Hide annotations">
+    <IconButton aria-label="Hide annotations" title="Hide annotations" onClick={hide}>
       <MdClose />
-    </div>
+    </IconButton>
   )
 }

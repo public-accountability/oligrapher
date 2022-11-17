@@ -5,12 +5,11 @@ import { IoIosLink } from "react-icons/io"
 
 import Toolbox from "./Toolbox"
 import InterlocksNodeList from "./InterlocksNodeList"
-import { isLittleSisId } from "../util/helpers"
-import { interlocksStateSelector } from "../util/selectors"
+import { interlocksStateSelector, selectedLsNodesSelector } from "../util/selectors"
 
 export default function InterlocksTool2() {
   const dispatch = useDispatch()
-  const lsNodes = useSelector(state => state.display.selection.node.filter(isLittleSisId))
+  const lsNodes = useSelector(selectedLsNodesSelector)
   const interlocksState = useSelector(interlocksStateSelector)
   const buttonDisabled = !!interlocksState.status || lsNodes.length < 2
 

@@ -66,7 +66,7 @@ export function zoomForScale(scale: number): number {
 
 export function calculateSvgHeight(): number {
   const containerHeight = getElementById("oligrapher-container").clientHeight
-  const headerHeight = getElementById("oligrapher-header").clientHeight
+  const headerHeight = document.getElementById("oligrapher-header")?.clientHeight || 0
   const svgHeight = containerHeight - headerHeight - 1
   return svgHeight
 }
