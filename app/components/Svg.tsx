@@ -12,17 +12,20 @@ import {
 import {
   allowCreateNewCaptionSelector,
   currentViewboxSelector,
+  currentZoomSelector,
   pannableSelector,
   scrollToZoomSelector,
   svgHeightSelector,
+  svgScaleSelector,
 } from "../util/selectors"
 import SvgRefContext from "../util/SvgRefContext"
 
-const pointFromEvent = (event: React.MouseEvent, svg: SVGSVGElement): Point => {
-  const invertedSVGMatrix = svg.getScreenCTM().inverse()
-  return xy(
-    DOMPoint.fromPoint({ x: event.clientX, y: event.clientY }).matrixTransform(invertedSVGMatrix)
-  )
+const pointFromEvent = (event: React.MouseEvent, svg: SVGSVGElement, zoom: number): Point => {
+  // once this bug is resolved https://bugzilla.mozilla.org/show_bug.cgi?id=1610093
+  // I suspect that .scale(zoom) can be removed
+  const matrix = svg.getScreenCTM().scale(zoom).inverse()
+  const p = new DOMPoint(event.clientX, event.clientY)
+  return xy(p.matrixTransform(matrix))
 }
 
 export default function Svg(props: { children: React.ReactNode }) {
@@ -33,6 +36,7 @@ export default function Svg(props: { children: React.ReactNode }) {
   const allowCreateNewCaption = useSelector(allowCreateNewCaptionSelector)
   const scrollToZoom = useSelector(scrollToZoomSelector)
   const svgHeight = useSelector(svgHeightSelector)
+  const zoom = useSelector(currentZoomSelector)
   const [pointerDown, setPointerDown] = useState(false)
   const [startPosition, setStartPosition] = useState<Point>({ x: 0, y: 0 })
 
@@ -65,7 +69,7 @@ export default function Svg(props: { children: React.ReactNode }) {
   }
 
   divAttrs.onClick = event => {
-    dispatch({ type: "CLICK_BACKGROUND", point: svgCoordinatesFromMouseEvent(event) })
+    dispatch({ type: "CLICK_BACKGROUND", point: pointFromEvent(event, svgRef.current, zoom) })
   }
 
   // Panning
@@ -74,7 +78,7 @@ export default function Svg(props: { children: React.ReactNode }) {
     divAttrs.onMouseDown = event => {
       event.preventDefault()
       setPointerDown(true)
-      setStartPosition(pointFromEvent(event, svgRef.current))
+      setStartPosition(pointFromEvent(event, svgRef.current, zoom))
     }
 
     divAttrs.onMouseUp = event => {
@@ -90,7 +94,7 @@ export default function Svg(props: { children: React.ReactNode }) {
       }
 
       event.preventDefault()
-      const currentPosition = pointFromEvent(event, svgRef.current)
+      const currentPosition = pointFromEvent(event, svgRef.current, zoom)
       const diffX = currentPosition.x - startPosition.x
       const diffY = currentPosition.y - startPosition.y
       svgRef.current.viewBox.baseVal.x -= diffX
