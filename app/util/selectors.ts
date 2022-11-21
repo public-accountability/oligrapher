@@ -9,7 +9,7 @@ import {
   InterlocksState,
 } from "./defaultState"
 import { Annotation } from "./annotations"
-import { LsMap, urls } from "../datasources/littlesis3"
+import { LsMap, urls } from "../datasources/littlesis"
 import { Selector } from "react-redux"
 import { Viewbox, calculateAnnotationViewBox } from "../graph/graph"
 import { Caption } from "../graph/caption"

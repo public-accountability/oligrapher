@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux"
 import isArray from "lodash/isArray"
 
 import { useSelector } from "../util/helpers"
-import { findConnections } from "../datasources/littlesis3"
+import { findConnections } from "../datasources/littlesis"
 import { makeCancelable, callWithTargetValue } from "../util/helpers"
 import EditorHeader from "./EditorHeader"
 import AddConnectionsCategory from "./AddConnectionsCategory"

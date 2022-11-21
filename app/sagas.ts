@@ -11,7 +11,7 @@ import {
   getEdges,
   getInterlocks,
   getInterlocks2,
-} from "./datasources/littlesis3"
+} from "./datasources/littlesis"
 import { paramsForSaveSelector } from "./util/selectors"
 import { forceLayout } from "./graph/graph"
 import { downloadSvg } from "./util/imageExport"

@@ -4,7 +4,7 @@ import LoadingButton from "@mui/lab/LoadingButton"
 import TextField from "@mui/material/TextField"
 import { useDispatch } from "react-redux"
 
-import { getDataUrl } from "../datasources/littlesis3"
+import { getDataUrl } from "../datasources/littlesis"
 
 const isDataUrl = (str: string) => str && str.slice(0, 5) === "data:"
 
