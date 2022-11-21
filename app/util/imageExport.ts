@@ -65,7 +65,7 @@ export async function downloadSvg(title: string) {
     const data = serializeToString(svgElement)
     const svgBlob = new Blob([data], { type: "image/svg+xml;charset=utf-8" })
     const dataurl = URL.createObjectURL(svgBlob)
-    const filename = slugify(title) + ".jpeg"
+    const filename = slugify(title) + ".svg"
     simulateClick(filename, dataurl)
     URL.revokeObjectURL(dataurl)
     return true

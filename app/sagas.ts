@@ -176,18 +176,13 @@ export function* interlocks(action: any): SagaIterator {
   )
 
   try {
-    if (INTERLOCKS_V2) {
-      const { nodes, edges } = yield call(getInterlocks2, selectedNodes, otherNodes)
-      yield put({ type: "INTERLOCKS_SUCCESS_2", selectedNodes, nodes, edges })
-    } else {
-      const { nodes, edges } = yield call(
-        getInterlocks,
-        selectedNodes[0],
-        selectedNodes[1],
-        otherNodes
-      )
-      yield put({ type: "INTERLOCKS_SUCCESS", selectedNodes, nodes, edges })
-    }
+    const { nodes, edges } = yield call(
+      getInterlocks,
+      selectedNodes[0],
+      selectedNodes[1],
+      otherNodes
+    )
+    yield put({ type: "INTERLOCKS_SUCCESS", selectedNodes, nodes, edges })
   } catch (error) {
     yield put({ type: "INTERLOCKS_FAILED" })
   }
