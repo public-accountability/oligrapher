@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { classNames, eventHalt } from "../util/helpers"
+import { classNames } from "../util/helpers"
 import { useDispatch, useSelector } from "react-redux"
 import { Caption } from "../graph/caption"
 import { DraggableEventHandler } from "react-draggable"
