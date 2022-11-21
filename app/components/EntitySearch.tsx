@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react"
 import { useDispatch } from "react-redux"
 import isArray from "lodash/isArray"
 
-import { findNodes } from "../datasources/littlesis3"
+import { findNodes } from "../datasources/littlesis"
 import { makeCancelable } from "../util/helpers"
 
 import EntitySearchResults from "./EntitySearchResults"

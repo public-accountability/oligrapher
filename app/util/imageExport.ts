@@ -1,7 +1,7 @@
 import slugify from "slugify"
 import pLimit from "p-limit"
 import { getElementById } from "./helpers"
-import { getDataUrl } from "../datasources/littlesis3"
+import { getDataUrl } from "../datasources/littlesis"
 
 async function convertImage(image: SVGElement) {
   const url = image.getAttribute("href")

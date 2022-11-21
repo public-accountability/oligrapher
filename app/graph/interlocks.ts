@@ -1,4 +1,4 @@
-import { LsEdge } from "../datasources/littlesis3"
+import { LsEdge } from "../datasources/littlesis"
 import { lineBetween } from "../util/nodePlacement"
 import { Edge } from "./edge"
 import Graph, { Graph as GraphType } from "./graph"

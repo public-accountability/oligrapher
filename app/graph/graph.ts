@@ -16,7 +16,7 @@ import {
 } from "./edge"
 import { Caption } from "./caption"
 import { curveSimilarEdges } from "./curve"
-import { LsEdge } from "../datasources/littlesis3"
+import { LsEdge } from "../datasources/littlesis"
 import { Annotation } from "../util/annotations"
 
 export interface NodeMap {

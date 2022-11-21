@@ -2,7 +2,7 @@ import React from "react"
 import List from "@mui/material/List"
 import ListItemText from "@mui/material/ListItemText"
 import ListItemButton from "@mui/material/ListItemButton"
-import type { LsNode } from "../datasources/littlesis3"
+import type { LsNode } from "../datasources/littlesis"
 import { useDispatch } from "react-redux"
 
 function NodeListItem({ node }) {

@@ -1,6 +1,6 @@
 import { Graph, Viewbox } from "../graph/graph"
 import { Annotation } from "./annotations"
-import type { LsMap, LsNode, LsEdge } from "../datasources/littlesis3"
+import type { LsMap, LsNode, LsEdge } from "../datasources/littlesis"
 
 export interface GraphState extends Graph {
   present: Graph
