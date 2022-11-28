@@ -1,17 +1,17 @@
 import React, { useState } from "react"
 import { useDispatch } from "react-redux"
+import Input from "@mui/material/Input"
 
-import { useClientRect, callWithTargetValue } from "../util/helpers"
+import { useClientRect } from "../util/helpers"
 import EntitySearch from "./EntitySearch"
 import Toolbox from "./Toolbox"
 
 export default function NodeTool() {
   const dispatch = useDispatch()
   const [searchValue, setSearchValue] = useState("")
-  const [maxHeight, setMaxHeight] = useState()
+  const [maxHeight, setMaxHeight] = useState(0)
   const trimmed = searchValue.trim()
   const doSearch = trimmed.length > 2
-  const handleInputChange = callWithTargetValue(setSearchValue)
 
   const onClickCreateNew = () => {
     dispatch({ type: "ADD_NODE", node: { name: trimmed } })
@@ -31,12 +31,13 @@ export default function NodeTool() {
   return (
     <Toolbox title="Add Node">
       <div className="node-tool" ref={ref}>
-        <input
+        <Input
           autoFocus
           type="text"
           placeholder="Search database"
+          disableUnderline={true}
           value={searchValue}
-          onChange={handleInputChange}
+          onChange={event => setSearchValue(event.target.value)}
           data-testid="add-node-input"
         />
 

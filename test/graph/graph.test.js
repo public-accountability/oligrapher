@@ -39,18 +39,18 @@ describe("Graph", function () {
 
   test("Stats", function () {
     const graph = Graph.new()
-    const n1 = Node.new({ x: -10, y: 30 })
+    const n1 = Node.new({ x: -100, y: 30 })
     const n2 = Node.new({ x: 0, y: -30 })
-    const n3 = Node.new({ x: 10, y: 0 })
+    const n3 = Node.new({ x: 50, y: 0 })
     Graph.addNodes(graph, [n1, n2, n3])
     const edge = Edge.newEdgeFromNodes(n1, n2)
     Graph.addEdge(graph, edge)
     const stats = Graph.graphStats(graph)
     expect(stats.nodeCount).toEqual(3)
     expect(stats.edgeCount).toEqual(1)
-    expect(stats.minNodeX).toEqual(-10)
+    expect(stats.minNodeX).toEqual(-100)
     expect(stats.minNodeY).toEqual(-30)
-    expect(stats.maxNodeX).toEqual(10)
+    expect(stats.maxNodeX).toEqual(50)
     expect(stats.maxNodeY).toEqual(30)
   })
 

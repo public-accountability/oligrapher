@@ -213,7 +213,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   })
 
   builder.addCase("CLICK_NODE", (state, action) => {
-    // Remove history entry from DRAG_NODE_STOP
+    // Remove history entry from DRAG_NODE_START
     state.history.past.pop()
     // Because CLICK_NODE is triggered instead of MOVE_NODE by DraggableComponent
     // and can happen after small (< 5) movement we still need call this function
@@ -283,6 +283,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
 
   builder.addCase("DRAG_NODE_STOP", (state, action) => {
     state.display.draggedNode = null
+    // state.display.selection.node = [action.id]
   })
 
   builder.addCase("DRAG_NODE", (state, action) => {

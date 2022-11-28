@@ -277,22 +277,19 @@ export function newGraph(attributes: GraphAttributes | undefined): Graph {
   )
 }
 
-export function addNode(graph: Graph, attributes: NodeAttributes, position?: Point | false): Graph {
-  let node = newNode(attributes)
-
-  // skip if already contains node with same id
+export function addNode(graph: Graph, attributes: NodeAttributes, position?: Point): Graph {
+  const node = newNode(attributes)
+  // skip if graph already contains node with same id
   if (Object.keys(graph.nodes).includes(node.id)) {
     return graph
   }
 
   // Place the node at random spaced position near a provided point
   // or the graph center, unless coordinates are provided
-  if (position || !isNumber(node.x) || !isNumber(node.y)) {
-    if (typeof position !== "object") {
-      position = calculateCenter(graph)
-    }
-
-    merge(node, findFreePositionNear(graph, position))
+  if (!isNumber(attributes.x) || !isNumber(attributes.y)) {
+    let point = findFreePositionNear(graph, position || calculateCenter(graph))
+    node.x = point.x
+    node.y = point.y
   }
 
   graph.nodes[node.id] = node
