@@ -1,6 +1,6 @@
 {
   "name": "@public-accountability/oligrapher",
-  "version": "4.0.9",
+  "version": "4.0.10",
   "description": "Network graph visualizer built for LittleSis",
   "main": "index.ts",
   "scripts": {
