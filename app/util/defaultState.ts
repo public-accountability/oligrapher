@@ -105,6 +105,7 @@ export interface DisplayState {
   modes: DisplayModesState
   floatingEditor: FloatingEditorType
   draggedNode: string | null
+  dragMultiple: boolean | null
   overNode: string | null
   overCaption: string | null
   tool: "node" | "text" | "organize" | "settings" | "editors" | "help" | null
@@ -213,6 +214,7 @@ const defaultState: State = {
       id: null,
     },
     draggedNode: null,
+    dragMultiple: null,
     overNode: null,
     overCaption: null,
     tool: null,

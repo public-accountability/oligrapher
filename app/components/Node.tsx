@@ -31,16 +31,16 @@ export default function Node({ id }: NodeProps) {
   // reference to outermost <g> for node
   const nodeRef = useRef(null)
 
-  const onStart: DraggableEventHandler = (_event, _data) => {
-    dispatch({ type: "DRAG_NODE_START", id: id })
+  const onStart: DraggableEventHandler = (event, _data) => {
+    dispatch({ type: "DRAG_NODE_START", id: id, shiftKey: event.shiftKey })
   }
 
   const onStop: DraggableEventHandler = (_event, data) => {
-    dispatch({ type: "DRAG_NODE_STOP" })
     const deltas = { x: data.x, y: data.y }
     if (editMode) {
       dispatch({ type: "MOVE_NODE_OR_ADD_EDGE_FROM_DRAG", id, deltas })
     }
+    dispatch({ type: "DRAG_NODE_STOP" })
   }
   const onDrag: DraggableEventHandler = (_event, data) => {
     const deltas = { x: data.x, y: data.y }
