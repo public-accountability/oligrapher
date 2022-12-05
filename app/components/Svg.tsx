@@ -69,7 +69,9 @@ export default function Svg(props: { children: React.ReactNode }) {
   }
 
   divAttrs.onClick = event => {
-    dispatch({ type: "CLICK_BACKGROUND", point: pointFromEvent(event, svgRef.current, zoom) })
+    if (event.target.id === "oligrapher-svg") {
+      dispatch({ type: "CLICK_BACKGROUND", point: pointFromEvent(event, svgRef.current, zoom) })
+    }
   }
 
   // Panning

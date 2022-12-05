@@ -580,6 +580,9 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
       const caption = Caption.new({ text: "New Caption", ...action.point })
       addCaption(state.graph, caption)
       state.display.openCaption = caption.id
+    } else if (state.display.modes.editor) {
+      clearSelection(state.display)
+      FloatingEditor.clear(state.display)
     }
   })
 
