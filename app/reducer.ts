@@ -279,16 +279,18 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
   builder.addCase("DRAG_NODE_START", (state, action) => {
     addToPastHistory(state)
     state.display.draggedNode = action.id
+    state.display.dragMultiple = action.shiftKey
   })
 
   builder.addCase("DRAG_NODE_STOP", (state, action) => {
     state.display.draggedNode = null
-    // state.display.selection.node = [action.id]
+    state.display.dragMultiple = null
   })
 
   builder.addCase("DRAG_NODE", (state, action) => {
     dragNodeEdges(state.graph, action.id, action.deltas)
-    if (hasOtherSelectedNodes(state, action.id)) {
+
+    if (state.display.dragMultiple && hasOtherSelectedNodes(state, action.id)) {
       loopOtherSelectedNodes(state, action.id, nodeId => {
         dragNodeEdges(state.graph, nodeId, action.deltas)
         getElementForGraphItem(nodeId, "node").setAttribute("transform", action.transform)
@@ -320,7 +322,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
       // reset edges back to original position
       dragNodeEdges(state.graph, action.id, { x: 0, y: 0 })
       // reset other selected nodes
-      if (hasOtherSelectedNodes(state, action.id)) {
+      if (state.display.dragMultiple && hasOtherSelectedNodes(state, action.id)) {
         loopOtherSelectedNodes(state, action.id, nodeId => {
           dragNodeEdges(state.graph, nodeId, { x: 0, y: 0 })
           getElementForGraphItem(nodeId, "node").setAttribute("transform", "translate(0,0)")
@@ -330,7 +332,7 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
     } else {
       moveNodeAndEdges(state, action.id, action.deltas)
       // and move other selected nodes
-      if (hasOtherSelectedNodes(state, action.id)) {
+      if (state.display.dragMultiple && hasOtherSelectedNodes(state, action.id)) {
         loopOtherSelectedNodes(state, action.id, nodeId => {
           moveNodeAndEdges(state, nodeId, action.deltas)
           getElementForGraphItem(nodeId, "node").setAttribute("transform", "translate(0,0)")
@@ -580,6 +582,9 @@ const builderCallback = (builder: ActionReducerMapBuilder<State>) => {
       const caption = Caption.new({ text: "New Caption", ...action.point })
       addCaption(state.graph, caption)
       state.display.openCaption = caption.id
+    } else if (state.display.modes.editor) {
+      clearSelection(state.display)
+      FloatingEditor.clear(state.display)
     }
   })
 
