@@ -92,6 +92,7 @@ export default function Node({ id }: NodeProps) {
         onMouseLeave={onMouseLeave}
         onMouseMove={onMouseMove}
       >
+        {node.description && <title>{node.description}</title>}
         <NodeLabel node={node} uiState={uiState} />
         <NodeHalo node={node} uiState={uiState} />
         <NodeCircle node={node} uiState={uiState} />

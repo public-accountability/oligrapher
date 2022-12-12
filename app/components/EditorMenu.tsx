@@ -15,7 +15,7 @@ const MENU_ITEMS: MenuItemType[] = [
   //  'organize',
   "settings",
   "editors",
-  "help",
+  // "help",
 ]
 
 export default function EditorMenu() {
