@@ -126,6 +126,7 @@ export interface SettingsState {
   logActions: boolean
   bugReportUrl: string | null
   helpUrl: string | null
+  startInEditMode: boolean
 }
 
 export interface StateWithoutHistory {
@@ -253,6 +254,7 @@ const defaultState: State = {
     logActions: false,
     bugReportUrl: "https://littlesis.org/bug_report",
     helpUrl: "https://littlesis.org/help/oligrapher",
+    startInEditMode: false,
   },
 
   // for Undo/Redo

@@ -92,7 +92,7 @@ export default function stateInitializer(legacyState: any): State {
 
   state.graph = convertGraph(state.graph)
 
-  state.display.modes.editor = userCanEditSelector(state)
+  state.display.modes.editor = state.settings.startInEditMode && userCanEditSelector(state)
   state.display.viewBox = calculateViewBoxFromGraph(state.graph)
   state.display.modes.story = calculateStoryMode(state)
 
