@@ -1,6 +1,6 @@
 {
   "name": "@public-accountability/oligrapher",
-  "version": "4.0.13",
+  "version": "4.0.14",
   "description": "Network graph visualizer built for LittleSis",
   "main": "index.ts",
   "scripts": {
@@ -29,9 +29,8 @@
     "@hello-pangea/color-picker": "^3.2.2",
     "@hello-pangea/dnd": "^16.2.0",
     "@mui/lab": "^5.0.0-alpha.124",
-    "@mui/material": "^5.11.14",
+    "@mui/material": "^5.11.15",
     "@rails/actioncable": "^7.0.4",
-    "@react-hook/resize-observer": "^1.2.6",
     "@reduxjs/toolkit": "^1.9.3",
     "@types/lodash": "^4.14.192",
     "@types/react-redux": "^7.1.25",
@@ -54,6 +53,7 @@
     "sass": "^1.60.0",
     "slugify": "^1.6.6",
     "typescript": "^5.0.2",
+    "use-resize-observer": "^9.1.0",
     "wretch": "^2.5.1"
   },
   "devDependencies": {
