@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import useResizeObserver from "@react-hook/resize-observer"
+import useResizeObserver from "use-resize-observer"
 import { ThemeProvider } from "@mui/material/styles"
 import useMediaQuery from "@mui/material/useMediaQuery"
 import Grid from "@mui/material/Unstable_Grid2"
@@ -71,12 +71,17 @@ export function Root(props: { cable?: any }) {
   const showAnnotationsOnBottom = showAnnotations && smallScreen
 
   const svgRef = React.useRef(null)
-  const containerRef = React.useRef(null)
+  const containerRef = React.useRef<HTMLDivElement>(null)
 
   // Set svg height and scale when resized
-  useResizeObserver(containerRef, _entry => {
-    dispatch({ type: "SET_SVG_HEIGHT" })
-    dispatch({ type: "SET_SVG_SCALE" })
+  useResizeObserver({
+    ref: containerRef,
+    onResize: () => {
+      console.debug("Resize detected. Updating svg height and scale.")
+      dispatch({ type: "SET_SVG_HEIGHT" })
+      dispatch({ type: "SET_SVG_SCALE" })
+      dispatch({ type: "RESET_VIEW" })
+    }
   })
 
   // prevent backspace form navigating away from page in firefox and possibly other browsers
@@ -94,14 +99,10 @@ export function Root(props: { cable?: any }) {
 
   // Reset view once after page is loaded
   useEffect(() => {
-    dispatch({ type: "RESET_VIEW" })
-  }, [])
-
-  // Set svg height and scale whenever root is re-rendered
-  useEffect(() => {
     dispatch({ type: "SET_SVG_HEIGHT" })
     dispatch({ type: "SET_SVG_SCALE" })
-  })
+    dispatch({ type: "RESET_VIEW" })
+  }, [])
 
   // Check for unsaved changed in beforeunload event
   useEffect(() => {
@@ -116,7 +117,7 @@ export function Root(props: { cable?: any }) {
   return (
     <ThemeProvider theme={theme}>
       <SvgRefContext.Provider value={svgRef}>
-        <div id={ROOT_CONTAINER_ID} ref={containerRef}>
+        <div id={ROOT_CONTAINER_ID} ref={containerRef} className="oligrapher-root-container">
           {showHeader && <Header />}
           <div style={{ flex: 1, height: "100%", overflow: "hidden" }}>
             <Grid container style={{ height: "100%" }}>
