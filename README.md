@@ -4,7 +4,7 @@ Oligrapher is a JavaScript app for visualizing network graphs. It allows a user 
 
 Oligrapher was originally developed by [LittleSis](https://littlesis.org) before it was separated into a standalone library. LittleSis has a large collection of [maps created with Oligrapher](https://littlesis.org/oligrapher).
 
-Oligrapher is built with [React](https://reactjs.com) and [Redux](https://redux.js.org) and is bundled with [Webpack](https://webpack.js.org)
+Oligrapher is built with [React](https://reactjs.com) and [Redux](https://redux.js.org) and is bundled with [esbuild](https://esbuild.github.io/)
 
 - [Features](#features)
 - [Install](#install)
@@ -56,24 +56,23 @@ To run this app in development mode:
 git clone https://github.com/public-accountability/oligrapher
 cd oligrapher
 npm install
-npm run dev-server
+npm run dev
+npm run serve
 ```
 
-Start the webpack dev server : `npm run dev-server`
-
-Then point your browser to [localhost:8090/dev.html](http://localhost:8090/dev.html) to view a demo graph.
+Then point your browser to [localhost:8000](http://localhost:8000) to view a blank graph.
 
 Also available:
 
-`/index.html` blank map
-`/editor.html` example map in editor mode
-`/embedded.html` embedded-mode
-`/article.html` an map in embedded-mode using an inframe
+- example maps : `/exxon.html` & `/dev.html`
+- larger map with annotations : `/dev.html`
+- map in embedded-mode using an inframe : `/article.html`
 
+Production build: `npm run build`
 
 Development build: `npm run build-dev`
 
-Production build: `npm run build-prod`
+Build css: `npx sass app/oligrapher.scss build/oligrapher.css --style=compressed`
 
 Run tests: `npm test`
 
