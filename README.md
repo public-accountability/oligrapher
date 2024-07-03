@@ -50,7 +50,7 @@ See [defaultState.ts](./app/util/defaultState.ts) for configuration options
 Development
 -----------
 
-Oligographer development requires the [jq](https://jqlang.github.io/jq/download/) command line tool.
+Oligrapher development requires the [jq](https://jqlang.github.io/jq/download/) command line tool.
 Installation instructions for jq can be found [here](https://jqlang.github.io/jq/download/).  
 
 To run this app in development mode:
