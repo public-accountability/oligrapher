@@ -50,10 +50,9 @@ See [defaultState.ts](./app/util/defaultState.ts) for configuration options
 Development
 -----------
 
-Oligrapher development requires the [jq](https://jqlang.github.io/jq/download/) command line tool.
-Installation instructions for jq can be found [here](https://jqlang.github.io/jq/download/).  
+Oligrapher development requires [jq](https://jqlang.github.io/jq/), a JSON manipulation command line tool.  Installation instructions can be found [here](https://jqlang.github.io/jq/download/).  
 
-To run this app in development mode:
+To run Oligrapher in development mode:
 
 ```
 git clone https://github.com/public-accountability/oligrapher
