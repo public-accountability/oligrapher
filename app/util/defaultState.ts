@@ -48,7 +48,8 @@ export interface AttributesState {
   id: number | null
   title: string | null
   subtitle: string | null
-  date: string | null
+  created_date: string | null
+  modified_date: string | null
   version: number | null
   user: User | null
   owner: User | null
@@ -170,7 +171,8 @@ const defaultState: State = {
     id: null,
     title: null,
     subtitle: null,
-    date: null,
+    created_date: null,
+    modified_date: null,
     version: 3,
     user: null,
     owner: null,

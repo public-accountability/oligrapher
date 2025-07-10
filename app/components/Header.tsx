@@ -29,7 +29,7 @@ export default function Header() {
   const smallScreen = useMediaQuery("(max-height:600px)")
 
   const editMode = useSelector(editModeSelector)
-  const { title, subtitle, owner, editors, date } = useSelector<State, AttributesState>(
+  const { title, subtitle, owner, editors, created_date, modified_date } = useSelector<State, AttributesState>(
     state => state.attributes
   )
   const isCollapsed = useSelector(headerIsCollapsedSelector)
@@ -87,7 +87,7 @@ export default function Header() {
 
           <div id="oligrapher-header-bottom" className={editMode ? "editing" : ""}>
             <div id="oligrapher-header-left-wrapper">
-              {!hideAttribution && owner && <Attribution users={users} date={date} />}
+              {!hideAttribution && owner && <Attribution users={users} created_date={created_date} modified_date={modified_date} />}
             </div>
 
             <div id="oligrapher-header-right-wrapper">

@@ -23,25 +23,26 @@ const renderUsers = function(users: User[]) {
 }
 
 
-const renderDate = function(date: string) {
+const renderDate = function(created_date: string, modified_date: string) {
   return (
     <div id="oligrapher-attribution-date">
-      {date}
+      Created on {created_date}.  Last updated on {modified_date}.
     </div>
   )
 }
 
 
-export default function Attribution({ users, date }: AttributionProps) {
+export default function Attribution({ users, created_date, modified_date }: AttributionProps) {
   return (
     <div id="oligrapher-attribution">
       {renderUsers(users)}
-      {renderDate(date)}
+      {renderDate(created_date, modified_date)}
     </div>
   )
 }
 
 interface AttributionProps {
   users: User[],
-  date: string
+  created_date: string,
+  modified_date: string
 }
