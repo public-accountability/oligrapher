@@ -8,3 +8,4 @@ mocha/
 /html/oligrapher.css*
 /html/oligrapher.js*
 /coverage
+.direnv/
