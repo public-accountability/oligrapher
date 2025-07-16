@@ -13,6 +13,6 @@ test("Attribution renders users byline", async function(){
 })
 
 test("Attribution renders date", async function(){
-  const result = renderWithStore(Attribution, { users, date: "Test Date"})
-  expect(result.container.querySelector('#oligrapher-attribution-date').textContent).toEqual("Test Date")
+  const result = renderWithStore(Attribution, { users, create_date: "July 10, 2025", modified_date "July 16, 2025"})
+  expect(result.container.querySelector('#oligrapher-attribution-date').textContent).toEqual("Created on July 10, 2025.  Last updated on July 16, 2025.")
 })
