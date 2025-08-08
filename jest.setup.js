@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event"
 import React from "react"
 import { Provider } from "react-redux"
 import { render } from "@testing-library/react"
-import { rest } from "msw"
+import { http } from "msw"
 import { setupServer } from "msw/node"
 import createOligrapherStore from "./app/util/store"
 import { isElement } from "react-dom/test-utils"
@@ -14,7 +14,7 @@ global.API_URL = ""
 global.OLIGRAPHER_COMMIT = "b49f3feea29bbe57f8c6615eca03842b44e9b1fd"
 global.OLIGRAPHER_VERSION = "test"
 
-global.rest = rest
+global.http = http
 global.setupServer = setupServer
 global.createElement = React.createElement
 
@@ -31,4 +31,10 @@ global.renderWithStore = (Element, props = null, configuration = {}) => {
 }
 
 global.jsonHandler = (url, data) =>
-  rest.get(url, (req, res, ctx) => res(ctx.delay(), ctx.json(data)))
+  http.get(url, () => {
+    return new Response(JSON.stringify(data), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+  })
