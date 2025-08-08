@@ -81,7 +81,7 @@
     "transformIgnorePatterns": [
       "node_modules/(?!(p-limit|yocto-queue|nanoid|react-hotkeys-hook)/)"
     ],
-    "testEnvironment": "jsdom",
+    "testEnvironment": "jest-fixed-jsdom",
     "setupFilesAfterEnv": [
       "./jest.setup.js"
     ]
