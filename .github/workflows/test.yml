@@ -16,6 +16,7 @@ jobs:
       with:
         node-version: 24
         # node-version: ${{ matrix.node-version }}
+    - run: sudo apt update
     - run: sudo apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
     - run: npm ci --include=dev
     - run: npm test
