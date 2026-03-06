@@ -23,7 +23,6 @@
   },
   "homepage": "https://littlesis.org/oligrapher",
   "dependencies": {
-    "@ckeditor/ckeditor5-build-classic": "^36.0.1",
     "@ckeditor/ckeditor5-react": "^5.1.0",
     "@emotion/react": "^11.10.6",
     "@hello-pangea/color-picker": "^3.2.2",
@@ -35,6 +34,7 @@
     "@types/lodash": "^4.14.192",
     "@types/react-redux": "^7.1.25",
     "@types/redux-logger": "^3.0.9",
+    "ckeditor5": "^47.6.0",
     "d3-force": "^3.0.0",
     "esbuild": "^0.25.0",
     "immer": "^9.0.21",
