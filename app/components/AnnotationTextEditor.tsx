@@ -32,71 +32,6 @@ import {
 
 import 'ckeditor5/ckeditor5.css';
 
-class Editor extends ClassicEditor {
-    static builtinPlugins = [
-        Essentials,
-        CKFinderUploadAdapter,
-        Autoformat,
-        Bold,
-        Italic,
-        BlockQuote,
-        CKBox,
-        CKFinder,
-        CloudServices,
-        EasyImage,
-        Heading,
-        Image,
-        ImageCaption,
-        ImageStyle,
-        ImageToolbar,
-        ImageUpload,
-        Indent,
-        Link,
-        List,
-        MediaEmbed,
-        Paragraph,
-        PasteFromOffice,
-        PictureEditing,
-        Table,
-        TableToolbar,
-        TextTransformation
-    ];
-
-    static defaultConfig = {
-        toolbar: {
-            items: [
-                'undo', 'redo',
-                '|', 'heading',
-                '|', 'bold', 'italic',
-                '|', 'link', 'uploadImage', 'insertTable', 'blockQuote', 'mediaEmbed',
-                '|', 'bulletedList', 'numberedList', 'outdent', 'indent'
-            ]
-        },
-        image: {
-            toolbar: [
-                'imageStyle:inline',
-                'imageStyle:block',
-                'imageStyle:side',
-                '|',
-                'toggleImageCaption',
-                'imageTextAlternative'
-            ]
-        },
-        table: {
-            contentToolbar: [
-                'tableColumn',
-                'tableRow',
-                'mergeTableCells'
-            ]
-        },
-        language: 'en'
-    };
-}
-
-Editor
-    .create( document.querySelector( '#editor' ), { licenseKey: 'GPL' })
-    .catch( error => console.error( error ) );
-
 const nullifyIfEmpty = (s: string): string | null => (s === "" ? null : s)
 
 type AnnotationTextEditorPropTypes = {
@@ -113,6 +48,7 @@ export default function AnnotationTextEditor({ text, onChange }: AnnotationTextE
   )
 
   const config = {
+    licenseKey: 'GPL',
     placeholder: "Annotation text",
     toolbar: [
       "bold",
@@ -128,7 +64,7 @@ export default function AnnotationTextEditor({ text, onChange }: AnnotationTextE
 
   return (
     <CKEditor
-      editor={Editor}
+      editor={ClassicEditor}
       data={text || "<p></p>"}
       onChange={handleChange}
       config={config}
