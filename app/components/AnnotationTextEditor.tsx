@@ -93,6 +93,10 @@ class Editor extends ClassicEditor {
     };
 }
 
+Editor
+    .create( document.querySelector( '#editor' ), { licenseKey: 'GPL' })
+    .catch( error => console.error( error ) );
+
 const nullifyIfEmpty = (s: string): string | null => (s === "" ? null : s)
 
 type AnnotationTextEditorPropTypes = {
