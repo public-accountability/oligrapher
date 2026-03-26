@@ -126,7 +126,7 @@ export default function AnnotationTextEditor({ text, onChange }: AnnotationTextE
 
   return (
     <CKEditor
-      editor={ClassicEditor}
+      editor={Editor}
       data={text || "<p></p>"}
       onChange={handleChange}
       config={config}
