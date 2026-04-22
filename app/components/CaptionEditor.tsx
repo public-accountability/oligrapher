@@ -20,7 +20,7 @@ const OPTIONS = {
     { value: "400", label: "Normal" },
     { value: "700", label: "Bold" },
   ],
-  fontSize: range(8, 31, 2)
+  fontSize: range(8, 49, 2)
     .map(toString)
     .map(i => ({ value: i, label: i })),
 }
