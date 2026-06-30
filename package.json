@@ -29,6 +29,7 @@
     "@ckeditor/ckeditor5-build-classic": "^36.0.1",
     "@ckeditor/ckeditor5-react": "^5.1.0",
     "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.14.1",
     "@hello-pangea/color-picker": "^3.2.2",
     "@hello-pangea/dnd": "^16.2.0",
     "@mui/lab": "^5.0.0-alpha.124",
