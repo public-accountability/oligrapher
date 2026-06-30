@@ -1,0 +1,6 @@
+{
+  "1114937": {
+    "active": true,
+    "notes": "CVE-2026-28343 ckeditor5.  CKEditor 5 has Cross-site Scripting (XSS) in the HTML Support package."
+  }
+}
