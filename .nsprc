@@ -1,6 +1,18 @@
 {
   "1114937": {
     "active": true,
-    "notes": "CVE-2026-28343 ckeditor5.  CKEditor 5 has Cross-site Scripting (XSS) in the HTML Support package."
+    "notes": "CVE-2026-28343.  CKEditor 5 has Cross-site Scripting (XSS) in the HTML Support package."
+  },
+  "1243495": {
+    "active": true,
+    "notes": "CVE-2026-116687. CKEditor: Cross-site scripting (XSS) in the engine package."
+  },
+  "1243496": {
+    "active": true,
+    "notes": "CVE-2026-116687. CKEditor: Cross-site scripting (XSS) in the engine package."
+  },
+  "1243505": {
+    "active": true,
+    "notes": "CVE-2026-93753. deepmerge mergeObject() allows prototype poisoning of returned objects."
   }
 }
